@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login{% endblock %}
+ 
+{% block body %}
+	<div class="container">
+	 <div class="login-container">
+	<h2 class="regular-header login-button-header">
+        Inicia sesi&oacuten con tu cuenta Khan Academy
+    </h2>
+	<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %} 
+        <table> 
+            {{ form.as_table }} 
+        </table> 
+        <input type="submit" class="kui-button kui-button-plain kui-button-primary" id="ini_sesion" value="Iniciar sesion">     
+    </form> 
+    <div>	
+    <a id="forgot-hint" class="login-bottom-link" href="http://es.khanacademy.org/forgotpw" target="_top"> Olvidaste tu contrase&ntildea?</a>
+    <span class="inline-separator">|</span>
+    <a class="signup-link login-bottom-link" target="_top" href="http://es.khanacademy.org/signup?continue=">Crea una cuenta.</a>
+    </div>
+    
+   	</div>
+   	</div>
+   	
+   	
+   
+
+{% endblock %}

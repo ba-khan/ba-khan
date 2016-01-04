@@ -1,0 +1,22 @@
+.container{
+
+  height: 500;
+  /*IMPORTANTE*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.login-container{
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+}
+
+#ini_sesion{
+	position: relative;
+    left: 60px;
+}
