@@ -3,6 +3,9 @@ from .forms import loginForm
 from django.contrib.auth import  login,authenticate,logout
 from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+from django.contrib import auth
+
 
 #from django.shortcuts import render_to_response
 
@@ -84,6 +87,7 @@ def create_callback_server():
 
 # Make an authenticated API call using the given rauth session.
 #/api/v1/user?userId=&username=javierperezferrada&email=
+
 def get_api_resource(session):
     resource_url = '/api/v1/user?userId=&username=&email='
 
@@ -101,11 +105,13 @@ def get_api_resource(session):
     end = time.time()
     json_response = response.json()
     email = json_response['email']
+    username = json_response['username']
+    kaid = json_response['kaid']
     if email == 'javierperezferrada@gmail.com':
-         return True
+        user = auth.authenticate(username=username, password=kaid)
+        return True
     else:
         return False
-    
 
 def run_tests(request):
     global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
