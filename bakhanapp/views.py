@@ -73,7 +73,7 @@ def create_callback_server():
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
-            self.wfile.write("<HEAD> <meta http-equiv='refresh' content='1; url=javascript:window.close();'> </HEAD> ")
+            self.wfile.write("<a href='http://127.0.0.1:8000/inicio'><h1> Listo. </h1> </a> ")
             #webbrowser.open('http://www.google.cl')
             
 
@@ -88,7 +88,7 @@ def create_callback_server():
 # Make an authenticated API call using the given rauth session.
 #/api/v1/user?userId=&username=javierperezferrada&email=
 
-def get_api_resource(session):
+def get_api_resource(session,request):
     resource_url = '/api/v1/user?userId=&username=&email='
 
     url = SERVER_URL + resource_url
@@ -106,11 +106,13 @@ def get_api_resource(session):
     json_response = response.json()
     email = json_response['email']
     username = json_response['username']
-    kaid = json_response['kaid']
-    if email == 'javierperezferrada@gmail.com':
-        user = auth.authenticate(username=username, password=kaid)
+    user = auth.authenticate(username=email, password=email)
+    if user:
+        auth.login(request, user)
         return True
     else:
+        #user = User.objects.create_user(username=email,email=email,password=email)
+        #user.save()
         return False
 
 def run_tests(request):
@@ -152,7 +154,7 @@ def run_tests(request):
         params={'oauth_verifier': VERIFIER})
 
     # Repeatedly prompt user for a resource and make authenticated API calls.
-    if get_api_resource(session):
+    if get_api_resource(session,request):
         return HttpResponseRedirect('/inicio')
     else:
         return HttpResponseRedirect('/acceso/denegado')
