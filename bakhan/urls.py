@@ -10,3 +10,4 @@ urlpatterns = [
     url(r'^$', 'bakhanapp.views.login', name='login'),
     url(r'^inicio/', 'bakhanapp.views.inicio', name='inicio'),
 ]
+#hola
