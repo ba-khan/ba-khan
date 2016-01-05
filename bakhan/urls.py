@@ -12,3 +12,4 @@ urlpatterns = [
     url(r'^run/', 'bakhanapp.views.run_tests', name='run_tests'),
     url(r'^acceso/denegado/', 'bakhanapp.views.denegado', name='denegado'),
 ]
+#chao
