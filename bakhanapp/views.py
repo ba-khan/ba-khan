@@ -1,5 +1,9 @@
 from django.shortcuts import render,HttpResponseRedirect,render_to_response
 from .forms import loginForm
+from django.contrib.auth import  login,authenticate,logout
+from django.contrib.auth.decorators import login_required,permission_required
+from django.contrib.auth.forms import AuthenticationForm
+
 #from django.shortcuts import render_to_response
 
 import cgi
@@ -8,6 +12,7 @@ import SimpleHTTPServer
 import SocketServer
 import time
 import webbrowser
+
 
 def log(request):
     return render(request, 'log.html')
@@ -32,14 +37,15 @@ def login(request):
         form = loginForm()
 
     return render(request, 'login.html', {'form': form})
-   # return render_to_response('login.html')
+    # return render_to_response('login.html')
 
+@login_required()
 def inicio(request):
     return render_to_response('inicio.html',)
 
 
-# You can get a CONSUMER_KEY and CONSUMER_SECRET for your app here:
-# http://www.khanacademy.org/api-apps/register
+
+
 CONSUMER_KEY = 'uhPpmjAMXqKwVYyJ' #clave generada para Alonsoccer
 CONSUMER_SECRET = 'cY8yWWjaKBVPUQfd' #clave generada para Alonsoccer
     
@@ -62,13 +68,12 @@ def create_callback_server():
             VERIFIER = params['oauth_verifier'][0]
 
             self.send_response(200)
-            self.send_header('Content-Type', 'text/plain')
+            self.send_header('Content-Type', 'text/html')
             self.end_headers()
-            self.wfile.write('OAuth request token fetched and authorized;' +
-                ' you can close this window. B!tch.')
+            self.wfile.write("<HEAD> <meta http-equiv='refresh' content='1; url=javascript:window.close();'> </HEAD> ")
             #webbrowser.open('http://www.google.cl')
             
-            
+
 
         def log_request(self, code='-', size='-'):
             pass
@@ -130,7 +135,8 @@ def run_tests(request):
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
-    webbrowser.open(authorize_url)
+    #return HttpResponseRedirect(authorize_url)
+    webbrowser.open_new(authorize_url)
 
     callback_server.handle_request()
     callback_server.server_close()
