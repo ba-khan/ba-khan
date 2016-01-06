@@ -1,6 +1,79 @@
 from django.db import models
 
 # Create your models here.
+class Administrador(models.Model):
+    kaid = models.CharField(max_length=30,primary_key=True)
+    nombre = models.CharField(max_length=50)
+    mail = models.EmailField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.nombre
+
+class Estudiante(models.Model):
+    kaid = models.CharField(max_length=30,primary_key=True)
+    nombre = models.CharField(max_length=50)
+    mail = models.EmailField(max_length=50)
+    nombreApoderado = models.CharField(max_length=50)
+    mailApoderado = models.EmailField()
+    observacion = models.CharField(max_length=300)
+    puntos = models.IntegerField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.nombre
+
+class Grupo(models.Model):
+    nombre = models.CharField(max_length=50)
+    tipo = models.CharField(max_length=50)
+    kaid_est_tutor = models.CharField(max_length=30)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.nombre
+    
+class Grupo_Estudiante(models.Model):
+    id_grupo = models.ForeignKey(Grupo)
+    kaid_est = models.ForeignKey(Estudiante)
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.id_grupo
+
+class Mision(models.Model):
+    nombre = models.CharField(max_length=50)
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.nombre
+
+class Habilidad(models.Model):
+    nombre = models.CharField(max_length=50)
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.nombre
+ 
+class Estudiante_Habilidad(models.Model):
+    id_habilidad = models.ForeignKey(Habilidad)
+    kaid_est = models.ForeignKey(Estudiante)
+    total_done = models.IntegerField()
+    total_correct = models.IntegerField()
+    streak = models.IntegerField()
+    longest_streak = models.IntegerField()
+    id_mision = models.CharField() #nulleable
+    exercises_states = models.CharField()
+    exercise_progress = models.CharField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.id_habilidad
+    
+class Nota(models.Model):
+    kaid_est = models.CharField(max_length=30)
+    id_evaluacion = models.CharField(max_length=30)
+    nota = models.IntegerField()
+    puntos_desempeno = models.IntegerField()
+    puntos_empeno = models.IntegerField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.nota
+
 class Establecimiento(models.Model):
     nombre = models.CharField(max_length=50)
     ciudad = models.CharField(max_length=30)
@@ -26,12 +99,6 @@ class Curso(models.Model):
     def __unicode__(self): # __unicode__ on Python 2
         return self.nivel
     
-class Configuracion_Evaluacion(models.Model):
-    id_profesor = models.ForeignKey(Profesor)
-    id_materia = models.ForeignKey(Materia)
-    porcentaje_exigencia = models.IntegerField()
-    puntaje_max = models.IntegerField()
-    
 class Evaluacion_habilidad(models.Model):
     id_conf_ev = models.ForeignKey(Configuracion_Evaluacion)
     id_habilidad = models.ForeignKey(Habilidad)
@@ -46,11 +113,28 @@ class Video(models.Model):
     def __unicode__(self): # __unicode__ on Python 2
         return self.nombre
 
+class Estudiante_Video(models.Model):
+    id_video = models.ForeignKey(Video)
+    kaid_est = models.ForeignKey(Estudiante)
+    seconds_watched = models.IntegerField()
+    points_earned = models.IntegerField()
+    last_second_watched = models.IntegerField()
+    is_video_complete = models.BooleanField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.id_video
+
 class Asignatura(models.Model):
     nombre = models.CharField(max_length=50)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.nombre
+
+class Configuracion_Evaluacion(models.Model):
+    id_profesor = models.ForeignKey(Profesor)
+    id_asignatura = models.ForeignKey(Asignatura)
+    porcentaje_exigencia = models.IntegerField()
+    puntaje_max = models.IntegerField()
 
 class Estudiante_Curso(models.Model):
     id_curso = models.ForeignKey(Curso)
