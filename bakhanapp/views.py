@@ -16,6 +16,8 @@ import SocketServer
 import time
 import webbrowser
 
+import os
+
 
 def log(request):
     return render(request, 'log.html')
@@ -73,7 +75,38 @@ def create_callback_server():
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
-            self.wfile.write("<a href='http://127.0.0.1:8000/inicio'><h1> Listo. </h1> </a> ")
+            self.wfile.write("""<html lang="es">
+                            <head>
+                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                                <meta name="description" content="">
+                                <meta name="keywords" content="">
+                                <meta name="author" content="">
+                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/shared-package-426ede.css'>
+                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/nav-package-642efd.css'>
+                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/react-package-9b6f9e.css'>
+                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/odometer-package-be2a23.css'><link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/dashboard-package-756fe7.css'>
+                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/mobile-package-0edccb.css'>
+                                <link href="/static/estilo.css" rel="stylesheet">                               
+                                <title>BA-Khan</title>                                                               
+                                <script>
+                                    function closeMe(){
+                                        var win = window.open("about:blank","_self");
+                                        win.close();
+                                    }
+                                </script>                          
+                            </head>
+                              <body>                             
+                                <div class="container">
+                                     <div class="login-container">
+                                        <h2 class="regular-header login-button-header">
+                                            Ya puede cerrar esta pestana.
+                                        </h2>
+                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/inicio"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
+                                       </div>
+                                   </div>                           
+                              </body>                           
+                            </html>""")
             #webbrowser.open('http://www.google.cl')
             
 
@@ -144,8 +177,8 @@ def run_tests(request):
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
     #return HttpResponseRedirect(authorize_url)
-    webbrowser.open_new(authorize_url)
-
+    webbrowser.open(authorize_url, new=0)
+    
     callback_server.handle_request()
     callback_server.server_close()
 
