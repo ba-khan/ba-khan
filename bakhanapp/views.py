@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponseRedirect,render_to_response
+from django.template.context import RequestContext
 from .forms import loginForm
 from django.contrib.auth import  login,authenticate,logout
 from django.contrib.auth.decorators import login_required,permission_required
@@ -6,8 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 
+from .models import Class
 
-#from django.shortcuts import render_to_response
 
 import cgi
 import rauth
@@ -16,37 +17,34 @@ import SocketServer
 import time
 import webbrowser
 
-import os
-
-
 def log(request):
     return render(request, 'log.html')
 
-def denegado(request):
-    return render(request, 'denegado.html')
-
-def login(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = loginForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/inicio/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = loginForm()
-
-    return render(request, 'login.html', {'form': form})
-    # return render_to_response('login.html')
+def rejected(request):
+    return render(request, 'rejected.html')
 
 @login_required()
-def inicio(request):
-    return render_to_response('inicio.html',)
+def home(request):
+    return render_to_response('home.html',)
+
+@login_required()
+def teacher(request):
+    return render_to_response('teacher.html',)
+
+@login_required()
+def getTeacherClasses(request):
+    #Esta funcion entrega todos los cursos que tiene a cargo el profesor.
+    classes = Class.objects.filter(kaid_teacher='2')
+    return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
+    
+    #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
+    
+@login_required()
+def getStudentClass(request):
+    return render_to_response('studentClass.html',)
+    #classes = Class.objects.filter(teacher=request.user.id)
+    #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
+    
 
 
 
@@ -102,7 +100,7 @@ def create_callback_server():
                                         <h2 class="regular-header login-button-header">
                                             Ya puede cerrar esta pestana.
                                         </h2>
-                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/inicio"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
+                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/home"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
                                        </div>
                                    </div>                           
                               </body>                           
@@ -133,12 +131,12 @@ def get_api_resource(session,request):
         url = split_url[0]
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
 
-    start = time.time()
+    #start = time.time()
     response = session.get(url, params=params)
-    end = time.time()
+    #end = time.time()
     json_response = response.json()
     email = json_response['email']
-    username = json_response['username']
+    #username = json_response['username']
     user = auth.authenticate(username=email, password=email)
     if user:
         auth.login(request, user)
@@ -148,7 +146,7 @@ def get_api_resource(session,request):
         #user.save()
         return False
 
-def run_tests(request):
+def authenticate(request):
     global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
     
     # Set consumer key, consumer secret, and server base URL from user input or
@@ -188,8 +186,27 @@ def run_tests(request):
 
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
-        return HttpResponseRedirect('/inicio')
+        return HttpResponseRedirect('/home')
     else:
-        return HttpResponseRedirect('/acceso/denegado')
+        return HttpResponseRedirect('/access/rejected')
 
+#funcion no utilizada por el momento, ya que se esta redirigiendo toda la autentificacion a K.A.
+def login(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = loginForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/inicio/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = loginForm()
+
+    return render(request, 'login.html', {'form': form})
+    # return render_to_response('login.html')
 

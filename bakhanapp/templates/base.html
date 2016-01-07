@@ -16,6 +16,15 @@
     <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/odometer-package-be2a23.css'><link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/dashboard-package-756fe7.css'>
     <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/mobile-package-0edccb.css'>
 	<link href="{% static 'estilo.css' %}" rel="stylesheet">
+	
+  <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+      <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+      <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+      <script>
+         $(function() {
+            $( "#accordion-1" ).accordion();
+         });
+      </script>
 	 
     <title>{% block title %}{% endblock %}</title>
   	
