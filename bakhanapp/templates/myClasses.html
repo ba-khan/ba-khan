@@ -8,56 +8,21 @@
 	<h3>Hola Profesor {{ user.username }}</h3>
 	
 	{% if classes %}
-<div class="example" data-text="example">
-    <table id="example_table" class="dataTable striped border bordered" data-role="datatable" data-searching="true">
-        <thead>
-            <tr>
-                    <th>Institucion</th>
-                    <th>Nivel</th>
-                    <th>Letra</th>
-                    <th></th>            
-            </tr>
-        </thead>
-        <tbody>
-        {% for class in classes %}  
-            <tr>
-                    <td>{{ class.id_institution }}</td>
-                    <td>{{ class.level }}</td>
-                    <td>{{ class.letter }}</td>
-
-                    
-                    <td><a href="class/{{ class.id }}">Ver</a></td>
-            </tr>
-{% endfor %}
-</table>
-</div>
-{% endif %}
-	
-	<div id="accordion">
-  <h3>Section 1</h3>
-  <div>
-  </div>
-  <h3>Section 2</h3>
-  <div>
-  </div>
-  <h3>Section 3</h3>
-  <div>
-    <ul>
-      <li>List item one</li>
-      <li>List item two</li>
-      <li>List item three</li>
-    </ul>
-  </div>
-  <h3>Section 4</h3>
-  <div>
-
-  </div>
-</div>
-   
-   <div style="width:400px;height:400px;background-color:#FC0;position:relative;">
-    <a href="#" class="algo">Presioname!</a>
-	</div>
-   
+		<div class="example" data-text="example">
+		    <table id="example_table" class="dataTable striped border bordered" data-role="datatable" data-searching="true">
+		        <tbody>
+		        {% for class in classes %}  
+		            <tr>
+		                 <td>{{ class.level }}</td>
+		                 <td>{{ class.letter }}</td>                  
+		                 <td><a href="class/{{ class.id }}">Ver</a></td>
+		            </tr>
+				{% endfor %}
+			</table>
+		</div>
+	{% endif %}
+		
+  
 
 {% endblock %}
 

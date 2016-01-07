@@ -20,3 +20,7 @@
 	position: relative;
     left: 60px;
 }
+
+#row{
+	display: in-line;
+}

@@ -38,8 +38,10 @@ def teacher(request):
 def getTeacherClasses(request):
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor.
     classes = Class.objects.filter(kaid_teacher='2')
+    N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+    for i in range(len(classes)):
+        classes[i].level = N[int(classes[i].level)] 
     return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
-    
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
 @login_required()
