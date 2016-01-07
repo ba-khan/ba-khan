@@ -95,7 +95,7 @@ class Curso(models.Model):
     nivel = models.CharField(max_length=50)
     letra = models.CharField(max_length=2)
     profesor = models.ForeignKey(Profesor)
-    
+        
     def __unicode__(self): # __unicode__ on Python 2
         return self.nivel
   
@@ -104,6 +104,7 @@ class Asignatura(models.Model):
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.nombre  
+    
   
 class Configuracion_Evaluacion(models.Model):
     id_profesor = models.ForeignKey(Profesor)

@@ -9,9 +9,9 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'bakhanapp.views.log', name='log'),
-    url(r'^inicio/', 'bakhanapp.views.inicio', name='inicio'),
-    url(r'^run/', 'bakhanapp.views.run_tests', name='run_tests'),
-    url(r'^acceso/denegado/', 'bakhanapp.views.denegado', name='denegado'),
+    url(r'^home/', 'bakhanapp.views.home', name='home'),
+    url(r'^authenticate/', 'bakhanapp.views.authenticate', name='authenticate'),
+    url(r'^access/rejected/', 'bakhanapp.views.rejected', name='rejected'),
     url(r'^logout$', logout, {'template_name': 'log.html', }, name="logout"),
 ]
 #chao
