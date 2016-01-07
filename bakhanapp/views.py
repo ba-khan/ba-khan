@@ -1,5 +1,4 @@
 from django.shortcuts import render,HttpResponseRedirect,render_to_response
-from django.template.context import RequestContext
 from .forms import loginForm
 from django.contrib.auth import  login,authenticate,logout
 from django.contrib.auth.decorators import login_required,permission_required
@@ -7,8 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 
-from .models import Curso
 
+#from django.shortcuts import render_to_response
 
 import cgi
 import rauth
@@ -17,11 +16,14 @@ import SocketServer
 import time
 import webbrowser
 
+import os
+
+
 def log(request):
     return render(request, 'log.html')
 
-def rejected(request):
-    return render(request, 'rejected.html')
+def denegado(request):
+    return render(request, 'denegado.html')
 
 def login(request):
     # if this is a POST request we need to process the form data
@@ -43,14 +45,8 @@ def login(request):
     # return render_to_response('login.html')
 
 @login_required()
-def home(request):
-    return render_to_response('home.html',)
-
-@login_required()
-def get_grades_teacher(request):
-    #Esta funcion entrega todos los cursos que tiene a cargo el profesor.
-    cursos = Curso.objects.filter(profesor=request.user.id)
-    return render_to_response('mis_cursos.html', {'cursos': cursos}, context_instance=RequestContext(request))
+def inicio(request):
+    return render_to_response('inicio.html',)
 
 
 
@@ -106,7 +102,7 @@ def create_callback_server():
                                         <h2 class="regular-header login-button-header">
                                             Ya puede cerrar esta pestana.
                                         </h2>
-                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/home"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
+                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/inicio"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
                                        </div>
                                    </div>                           
                               </body>                           
@@ -152,7 +148,7 @@ def get_api_resource(session,request):
         #user.save()
         return False
 
-def authenticate(request):
+def run_tests(request):
     global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
     
     # Set consumer key, consumer secret, and server base URL from user input or
@@ -192,8 +188,8 @@ def authenticate(request):
 
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
-        return HttpResponseRedirect('/home')
+        return HttpResponseRedirect('/inicio')
     else:
-        return HttpResponseRedirect('/access/rejected')
+        return HttpResponseRedirect('/acceso/denegado')
 
 

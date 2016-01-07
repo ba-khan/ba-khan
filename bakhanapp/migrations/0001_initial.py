@@ -11,77 +11,135 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Administrador',
+            name='Administrator',
             fields=[
-                ('kaid', models.CharField(max_length=30, serialize=False, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
+                ('kaid_administrator', models.CharField(max_length=30, serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
                 ('mail', models.EmailField(max_length=254)),
             ],
         ),
         migrations.CreateModel(
-            name='Asignatura',
+            name='Assesment',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
+                ('start_date', models.DateField()),
+                ('end_date', models.DateField()),
             ],
         ),
         migrations.CreateModel(
-            name='Configuracion_Evaluacion',
+            name='Assesment_Config',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('porcentaje_exigencia', models.IntegerField()),
-                ('puntaje_max', models.IntegerField()),
-                ('id_asignatura', models.ForeignKey(to='bakhanapp.Asignatura')),
+                ('approval_percentage', models.IntegerField()),
+                ('top_score', models.IntegerField()),
             ],
         ),
         migrations.CreateModel(
-            name='Curso',
+            name='Assesment_skill',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nivel', models.CharField(max_length=50)),
-                ('letra', models.CharField(max_length=2)),
+                ('id_assesment_conf', models.ForeignKey(to='bakhanapp.Assesment_Config')),
             ],
         ),
         migrations.CreateModel(
-            name='Curso_Asignatura',
+            name='Chapter',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('id_asignatura', models.ForeignKey(to='bakhanapp.Asignatura')),
-                ('id_curso', models.ForeignKey(to='bakhanapp.Curso')),
+                ('id_chapter_name', models.CharField(max_length=50, serialize=False, primary_key=True)),
+                ('name_esp', models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Establecimiento',
+            name='Class',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-                ('ciudad', models.CharField(max_length=30)),
-                ('direccion', models.CharField(max_length=100)),
-                ('telefono', models.CharField(max_length=30)),
+                ('level', models.CharField(max_length=50)),
+                ('letter', models.CharField(max_length=2)),
             ],
         ),
         migrations.CreateModel(
-            name='Estudiante',
+            name='Class_Subject',
             fields=[
-                ('kaid', models.CharField(max_length=30, serialize=False, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id_class', models.ForeignKey(to='bakhanapp.Class')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Grade',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('grade', models.IntegerField()),
+                ('performance_point', models.IntegerField()),
+                ('effort_points', models.IntegerField()),
+                ('id_assesment', models.ForeignKey(to='bakhanapp.Assesment')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Group',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+                ('type', models.CharField(max_length=50)),
+                ('start_date', models.DateField()),
+                ('end_date', models.DateField()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Group_Student',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id_group', models.ForeignKey(to='bakhanapp.Group')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Institution',
+            fields=[
+                ('id_institution', models.IntegerField(serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+                ('city', models.CharField(max_length=30)),
+                ('address', models.CharField(max_length=100)),
+                ('phone', models.CharField(max_length=30)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Skill',
+            fields=[
+                ('id_skill_name', models.CharField(max_length=100, serialize=False, primary_key=True)),
+                ('name_esp', models.CharField(max_length=100)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Skill_Attempt',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('errors', models.IntegerField()),
+                ('mission', models.CharField(max_length=100)),
+                ('time_taken', models.IntegerField()),
+                ('count_hints', models.IntegerField()),
+                ('skipped', models.BooleanField()),
+                ('id_skill_name', models.ForeignKey(to='bakhanapp.Skill')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Student',
+            fields=[
+                ('kaid_student', models.CharField(max_length=30, serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
                 ('mail', models.EmailField(max_length=50)),
-                ('nombreApoderado', models.CharField(max_length=50)),
-                ('mailApoderado', models.EmailField(max_length=254)),
-                ('observacion', models.CharField(max_length=300)),
-                ('puntos', models.IntegerField()),
+                ('tutor_name', models.CharField(max_length=50)),
+                ('tutor_mail', models.EmailField(max_length=254)),
+                ('points', models.IntegerField()),
             ],
         ),
         migrations.CreateModel(
-            name='Estudiante_Curso',
+            name='Student_Class',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('id_curso', models.ForeignKey(to='bakhanapp.Curso')),
-                ('id_estudiante', models.ForeignKey(to='bakhanapp.Estudiante')),
+                ('id_class', models.ForeignKey(to='bakhanapp.Class')),
+                ('kaid_student', models.ForeignKey(to='bakhanapp.Student')),
             ],
         ),
         migrations.CreateModel(
-            name='Estudiante_Habilidad',
+            name='Student_Skill',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('total_done', models.IntegerField()),
@@ -90,171 +148,158 @@ class Migration(migrations.Migration):
                 ('longest_streak', models.IntegerField()),
                 ('exercises_states', models.CharField(max_length=30)),
                 ('exercise_progress', models.CharField(max_length=30)),
+                ('id_skill_name', models.ForeignKey(to='bakhanapp.Skill')),
+                ('kaid_student', models.ForeignKey(to='bakhanapp.Student')),
             ],
         ),
         migrations.CreateModel(
-            name='Estudiante_Video',
+            name='Student_Video',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('total_seconds_watched', models.IntegerField()),
+                ('total_points_earned', models.IntegerField()),
+                ('last_second_watched', models.IntegerField()),
+                ('is_video_complete', models.BooleanField()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Subject',
+            fields=[
+                ('id_subject', models.CharField(max_length=50, serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Subtopic',
+            fields=[
+                ('id_subtopic_name', models.CharField(max_length=50, serialize=False, primary_key=True)),
+                ('name_esp', models.CharField(max_length=50)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Teacher',
+            fields=[
+                ('kaid_teacher', models.CharField(max_length=30, serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+                ('id_institution', models.ForeignKey(to='bakhanapp.Institution')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Topic',
+            fields=[
+                ('id_topic_name', models.CharField(max_length=50, serialize=False, primary_key=True)),
+                ('name_esp', models.CharField(max_length=50)),
+                ('id_chapter_name', models.ForeignKey(to='bakhanapp.Chapter')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Video',
+            fields=[
+                ('id_video_name', models.CharField(max_length=100, serialize=False, primary_key=True)),
+                ('name_esp', models.CharField(max_length=100)),
+                ('id_subtopic_name', models.ForeignKey(to='bakhanapp.Subtopic')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Video_Playing',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('seconds_watched', models.IntegerField()),
                 ('points_earned', models.IntegerField()),
                 ('last_second_watched', models.IntegerField()),
                 ('is_video_complete', models.BooleanField()),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Evaluacion',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('fecha_termino', models.DateField()),
-                ('id_conf_ev', models.ForeignKey(to='bakhanapp.Configuracion_Evaluacion')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Evaluacion_habilidad',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('id_conf_ev', models.ForeignKey(to='bakhanapp.Configuracion_Evaluacion')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Grupo',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-                ('tipo', models.CharField(max_length=50)),
-                ('fecha_inicio', models.DateField()),
-                ('fecha_fin', models.DateField()),
-                ('kaid_est_tutor', models.ForeignKey(to='bakhanapp.Estudiante', null=True)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Grupo_Estudiante',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('id_grupo', models.ForeignKey(to='bakhanapp.Grupo')),
-                ('kaid_est', models.ForeignKey(to='bakhanapp.Estudiante')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Habilidad',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Mision',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Nota',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('kaid_est', models.CharField(max_length=30)),
-                ('id_evaluacion', models.CharField(max_length=30)),
-                ('nota', models.IntegerField()),
-                ('puntos_desempeno', models.IntegerField()),
-                ('puntos_empeno', models.IntegerField()),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Profesor',
-            fields=[
-                ('kaid', models.CharField(max_length=30, serialize=False, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Subtema',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Tema',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Unidad',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
-                ('id_unidad', models.ForeignKey(to='bakhanapp.Asignatura')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Video',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('nombre', models.CharField(max_length=50)),
+                ('id_skill_name', models.ForeignKey(to='bakhanapp.Skill')),
+                ('kaid_student', models.ForeignKey(to='bakhanapp.Student')),
             ],
         ),
         migrations.AddField(
-            model_name='tema',
-            name='id_unidad',
-            field=models.ForeignKey(to='bakhanapp.Unidad'),
+            model_name='subtopic',
+            name='id_topic_name',
+            field=models.ForeignKey(to='bakhanapp.Topic'),
         ),
         migrations.AddField(
-            model_name='subtema',
-            name='id_tema',
-            field=models.ForeignKey(to='bakhanapp.Tema'),
-        ),
-        migrations.AddField(
-            model_name='evaluacion_habilidad',
-            name='id_habilidad',
-            field=models.ForeignKey(to='bakhanapp.Habilidad'),
-        ),
-        migrations.AddField(
-            model_name='estudiante_video',
-            name='id_video',
+            model_name='student_video',
+            name='id_video_name',
             field=models.ForeignKey(to='bakhanapp.Video'),
         ),
         migrations.AddField(
-            model_name='estudiante_video',
-            name='kaid_est',
-            field=models.ForeignKey(to='bakhanapp.Estudiante'),
+            model_name='student_video',
+            name='kaid_student',
+            field=models.ForeignKey(to='bakhanapp.Student'),
         ),
         migrations.AddField(
-            model_name='estudiante_habilidad',
-            name='id_habilidad',
-            field=models.ForeignKey(to='bakhanapp.Habilidad'),
+            model_name='skill_attempt',
+            name='kaid_student',
+            field=models.ForeignKey(to='bakhanapp.Student'),
         ),
         migrations.AddField(
-            model_name='estudiante_habilidad',
-            name='id_mision',
-            field=models.ForeignKey(to='bakhanapp.Mision', null=True),
+            model_name='skill',
+            name='id_subtopic_name',
+            field=models.ForeignKey(to='bakhanapp.Subtopic'),
         ),
         migrations.AddField(
-            model_name='estudiante_habilidad',
-            name='kaid_est',
-            field=models.ForeignKey(to='bakhanapp.Estudiante'),
+            model_name='group_student',
+            name='kaid_student',
+            field=models.ForeignKey(to='bakhanapp.Student'),
         ),
         migrations.AddField(
-            model_name='curso_asignatura',
-            name='id_profesor',
-            field=models.ForeignKey(to='bakhanapp.Profesor'),
+            model_name='group',
+            name='kaid_student_tutor',
+            field=models.ForeignKey(to='bakhanapp.Student', null=True),
         ),
         migrations.AddField(
-            model_name='curso',
-            name='establecimiento',
-            field=models.ForeignKey(to='bakhanapp.Establecimiento'),
+            model_name='grade',
+            name='kaid_student',
+            field=models.ForeignKey(to='bakhanapp.Student'),
         ),
         migrations.AddField(
-            model_name='curso',
-            name='profesor',
-            field=models.ForeignKey(to='bakhanapp.Profesor'),
+            model_name='class_subject',
+            name='id_subject',
+            field=models.ForeignKey(to='bakhanapp.Subject'),
         ),
         migrations.AddField(
-            model_name='configuracion_evaluacion',
-            name='id_profesor',
-            field=models.ForeignKey(to='bakhanapp.Profesor'),
+            model_name='class_subject',
+            name='kaid_teacher',
+            field=models.ForeignKey(to='bakhanapp.Teacher'),
+        ),
+        migrations.AddField(
+            model_name='class',
+            name='id_institution',
+            field=models.ForeignKey(to='bakhanapp.Institution'),
+        ),
+        migrations.AddField(
+            model_name='class',
+            name='kaid_teacher',
+            field=models.ForeignKey(to='bakhanapp.Teacher'),
+        ),
+        migrations.AddField(
+            model_name='chapter',
+            name='id_subject',
+            field=models.ForeignKey(to='bakhanapp.Subject'),
+        ),
+        migrations.AddField(
+            model_name='assesment_skill',
+            name='id_skill_name',
+            field=models.ForeignKey(to='bakhanapp.Skill'),
+        ),
+        migrations.AddField(
+            model_name='assesment_config',
+            name='id_subject',
+            field=models.ForeignKey(to='bakhanapp.Subject'),
+        ),
+        migrations.AddField(
+            model_name='assesment_config',
+            name='kaid_teacher',
+            field=models.ForeignKey(to='bakhanapp.Teacher'),
+        ),
+        migrations.AddField(
+            model_name='assesment',
+            name='id_assesment_conf',
+            field=models.ForeignKey(to='bakhanapp.Assesment_Config'),
+        ),
+        migrations.AddField(
+            model_name='administrator',
+            name='id_institution',
+            field=models.ForeignKey(to='bakhanapp.Institution'),
         ),
     ]
