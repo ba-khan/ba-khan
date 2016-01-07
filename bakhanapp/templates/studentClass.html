@@ -7,4 +7,24 @@
 	
 	<h1>Estudiantes de un Curso</h1>
 
+	{% if studentclasses %}
+		<div class="example" data-text="example">
+   	 	<table id="example_table" class="dataTable striped border bordered" data-role="datatable" data-searching="true">
+        <thead>
+            <tr>
+                    <th>id_class</th>
+                    <th>kaid_student</th>          
+            </tr>
+        </thead>
+        <tbody>
+        {% for studentclass in studentclasses %}  
+            <tr>
+                    <td>{{ studentclass.id_class_id }}</td>
+                    <td>{{ studentclass.kaid_student_id }}</td>
+            </tr>
+		{% endfor %}
+		</table>
+		</div>
+	{% endif %}
+
 {% endblock %}

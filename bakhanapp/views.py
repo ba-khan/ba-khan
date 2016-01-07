@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 
 from .models import Class
+from .models import Student
+from .models import Student_Class
 
 
 import cgi
@@ -16,6 +18,7 @@ import SimpleHTTPServer
 import SocketServer
 import time
 import webbrowser
+from bakhanapp.models import Student_Class
 
 def log(request):
     return render(request, 'log.html')
@@ -40,8 +43,9 @@ def getTeacherClasses(request):
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
 @login_required()
-def getStudentClass(request):
-    return render_to_response('studentClass.html',)
+def getStudentClass(request, id_class):
+    studentclasses = Student_Class.objects.filter(id_class_id=id_class)
+    return render_to_response('studentClass.html', {'studentclasses': studentclasses}, context_instance=RequestContext(request))
     #classes = Class.objects.filter(teacher=request.user.id)
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
@@ -142,8 +146,8 @@ def get_api_resource(session,request):
         auth.login(request, user)
         return True
     else:
-        #user = User.objects.create_user(username=email,email=email,password=email)
-        #user.save()
+        user = User.objects.create_user(username=email,email=email,password=email)
+        user.save()
         return False
 
 def authenticate(request):
