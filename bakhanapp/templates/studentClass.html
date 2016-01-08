@@ -4,26 +4,32 @@
  
 {% block body %}
 	<h1>BA-Khan</h1>
-	
-	<h1>Estudiantes de un Curso</h1>
 
-	{% if studentclasses %}
+	{% for class in curso %}  
+            {{ class.level }} {{ class.letter }}
+	{% endfor %}
+	{% if students %}
 		<div class="example" data-text="example">
    	 	<table id="example_table" class="dataTable striped border bordered" data-role="datatable" data-searching="true">
         <thead>
             <tr>
-                    <th>id_class</th>
-                    <th>kaid_student</th>          
+                    <th>Estudiantes</th>
+                    <th>- % recom. completas</th>
+                    <th>- Tiempo en ejercicios</th>
+                    <th>- Tiempo en videos</th>
+                    <th>- % correctos</th>
+                    <th>- Evaluacion 1</th>
+                    <th>- Mision</th>        
             </tr>
         </thead>
         <tbody>
-        {% for studentclass in studentclasses %}  
+		{% for student in students %}  
             <tr>
-                    <td>{{ studentclass.id_class_id }}</td>
-                    <td>{{ studentclass.kaid_student_id }}</td>
+                    <td>{{ student.name }} </td>
             </tr>
 		{% endfor %}
 		</table>
+		
 		</div>
 	{% endif %}
 

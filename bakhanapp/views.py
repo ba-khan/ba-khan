@@ -46,8 +46,10 @@ def getTeacherClasses(request):
     
 @login_required()
 def getStudentClass(request, id_class):
-    studentclasses = Student_Class.objects.filter(id_class_id=id_class)
-    return render_to_response('studentClass.html', {'studentclasses': studentclasses}, context_instance=RequestContext(request))
+    #Select * from student where kaid_student in (Select kaid_student from student_class where id_class_id = id_class)
+    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+    curso = Class.objects.filter(id=id_class)
+    return render_to_response('studentClass.html', {'students': students, 'curso': curso}, context_instance=RequestContext(request))
     #classes = Class.objects.filter(teacher=request.user.id)
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
