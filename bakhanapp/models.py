@@ -172,6 +172,7 @@ class Skill_Attempt(models.Model):
     time_taken = models.IntegerField()
     count_hints = models.IntegerField()
     skipped = models.BooleanField()
+    date = models.DateField()
     
 class Video_Playing(models.Model):
     id_skill_name = models.ForeignKey(Skill)

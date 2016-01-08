@@ -37,6 +37,14 @@ def home(request):
 def teacher(request):
     return render_to_response('teacher.html',)
 
+def getTotalExerciseTime(kaid_s):
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en toda su historia.
+    query = Student_Video.objects.filter(kaid_student=kaid_s)
+    time = 0
+    for register in query:
+        time = time + register.total_seconds_watched
+    return time
+
 def getTotalVideoTime(kaid_s):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en toda su historia.
     query = Student_Video.objects.filter(kaid_student=kaid_s)
