@@ -10,7 +10,10 @@ from django.contrib import auth
 from .models import Class
 from .models import Student
 from .models import Student_Class
+from .models import Student_Video
+from .models import Video_Playing
 
+import datetime
 
 import cgi
 import rauth
@@ -18,7 +21,7 @@ import SimpleHTTPServer
 import SocketServer
 import time
 import webbrowser
-from bakhanapp.models import Student_Class
+
 
 def log(request):
     return render(request, 'log.html')
@@ -34,6 +37,23 @@ def home(request):
 def teacher(request):
     return render_to_response('teacher.html',)
 
+def getTotalVideoTime(kaid_s):
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en toda su historia.
+    query = Student_Video.objects.filter(kaid_student=kaid_s)
+    time = 0
+    for register in query:
+        time = time + register.total_seconds_watched
+    return time
+
+def getVideoTimeBetween(kaid_s,t_begin,t_end):
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
+    query_set = Video_Playing.objects.filter(kaid_student=kaid_s)
+    time = 0
+    for register in query_set:
+        if register.date>=t_begin and register.date<=t_end:
+            time = time + register.total_seconds_watched
+    return time
+
 @login_required()
 def getTeacherClasses(request):
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
@@ -42,7 +62,6 @@ def getTeacherClasses(request):
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
     return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
-    #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
 @login_required()
 def getClassStudents(request, id_class):
@@ -51,10 +70,6 @@ def getClassStudents(request, id_class):
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     classroom = Class.objects.filter(id=id_class)
     return render_to_response('studentClass.html', {'students': students, 'classroom': classroom}, context_instance=RequestContext(request))
-    #classes = Class.objects.filter(teacher=request.user.id)
-    #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
-
-
 
 
 CONSUMER_KEY = 'uhPpmjAMXqKwVYyJ' #clave generada para Alonsoccer

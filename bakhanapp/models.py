@@ -180,3 +180,4 @@ class Video_Playing(models.Model):
     points_earned = models.IntegerField()
     last_second_watched = models.IntegerField()
     is_video_complete = models.BooleanField()
+    date = models.DateField()
