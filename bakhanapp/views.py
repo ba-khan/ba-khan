@@ -36,7 +36,7 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
-    #Esta funcion entrega todos los cursos que tiene a cargo el profesor.
+    #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
     classes = Class.objects.filter(kaid_teacher='2')
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
@@ -45,14 +45,14 @@ def getTeacherClasses(request):
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
 @login_required()
-def getStudentClass(request, id_class):
+def getClassStudents(request, id_class):
+    #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
     #Select * from student where kaid_student in (Select kaid_student from student_class where id_class_id = id_class)
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    curso = Class.objects.filter(id=id_class)
-    return render_to_response('studentClass.html', {'students': students, 'curso': curso}, context_instance=RequestContext(request))
+    classroom = Class.objects.filter(id=id_class)
+    return render_to_response('studentClass.html', {'students': students, 'classroom': classroom}, context_instance=RequestContext(request))
     #classes = Class.objects.filter(teacher=request.user.id)
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
-    
 
 
 
