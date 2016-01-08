@@ -46,7 +46,7 @@ def getTotalExerciseTime(kaid_s):
         time = time + register.time_taken
     return time
 
-def getVideoTimeBetween(kaid_s,t_begin,t_end):
+def getExerciseTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
     query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s)
     time = 0
