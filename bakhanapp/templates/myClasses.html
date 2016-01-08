@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% load  smart_if %}
+
+<!--http://librosweb.es/libro/django_1_0/capitulo_10/extender_el_sistema_de_plantillas_2.html-->
+<!--en views agregar-->
+<!--from django import template-->
+<!--register = template.Library()-->
+
 {% block title %}Mis Cursos{% endblock %}
  
 {% block body %}
@@ -7,22 +15,31 @@
 
 	<h3>Hola Profesor {{ user.username }}</h3>
 	
+	
+
 	{% if classes %}
-		<div class="example" data-text="example">
-		    <table id="example_table" class="dataTable striped border bordered" data-role="datatable" data-searching="true">
-		        <tbody>
-		        {% for class in classes %}  
-		            <tr>
-		                 <td>{{ class.level }}</td>
-		                 <td>{{ class.letter }}</td>                  
-		                 <td><a href="class/{{ class.id }}">Ver</a></td>
-		            </tr>
-				{% endfor %}
-			</table>
-		</div>
-	{% endif %}
 		
-  
+		{% for class in classes %}  
+			<fieldset>
+				{% ifchanged class.level.0 %} 
+	    		<legend>{{ class.level }}</legend>	    		
+
+	    							    		
+		    		{% for klass in classes %} 
+		    		
+		    			{% if klass.level == class.level %}
+		    			
+		    				{{ klass.letter }} <td><a href="class/{{ class.id }}">Ver</a></td> <br/>
+							
+		    			{% endif %}
+		    			
+		    		{% endfor %}
+		    		
+		    	{% endifchanged %}
+		    	
+	  		</fieldset>
+		{% endfor %}
+		
+	{% endif %}
 
 {% endblock %}
-
