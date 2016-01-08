@@ -12,6 +12,7 @@ from .models import Student
 from .models import Student_Class
 from .models import Student_Video
 from .models import Video_Playing
+from .models import Skill_Attempt
 
 import datetime
 
@@ -38,11 +39,20 @@ def teacher(request):
     return render_to_response('teacher.html',)
 
 def getTotalExerciseTime(kaid_s):
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en toda su historia.
-    query = Student_Video.objects.filter(kaid_student=kaid_s)
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en toda su historia.
+    query = Skill_Attempt.objects.filter(kaid_student=kaid_s)
     time = 0
     for register in query:
-        time = time + register.total_seconds_watched
+        time = time + register.time_taken
+    return time
+
+def getVideoTimeBetween(kaid_s,t_begin,t_end):
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
+    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s)
+    time = 0
+    for register in query_set:
+        if register.date>=t_begin and register.date<=t_end:
+            time = time + register.time_taken
     return time
 
 def getTotalVideoTime(kaid_s):
