@@ -48,11 +48,10 @@ def getTotalExerciseTime(kaid_s):
 
 def getExerciseTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
-    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s)
+    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_begin)
     time = 0
     for register in query_set:
-        if register.date>=t_begin and register.date<=t_end:
-            time = time + register.time_taken
+        time = time + register.time_taken
     return time
 
 def getTotalVideoTime(kaid_s):
@@ -65,11 +64,12 @@ def getTotalVideoTime(kaid_s):
 
 def getVideoTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
-    query_set = Video_Playing.objects.filter(kaid_student=kaid_s)
+    query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_begin)
+    #query_set = query_set.filter(date__gte = t_begin)
+    #query_set = query_set.filter(date__lte = t_begin)
     time = 0
     for register in query_set:
-        if register.date>=t_begin and register.date<=t_end:
-            time = time + register.total_seconds_watched
+        time = time + register.total_seconds_watched
     return time
 
 @login_required()
