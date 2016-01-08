@@ -7,6 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 
+from django.views.generic.detail import DetailView
+
 from .models import Class
 from .models import Student
 from .models import Student_Class
@@ -19,6 +21,20 @@ import SocketServer
 import time
 import webbrowser
 from bakhanapp.models import Student_Class
+
+from django.views.generic.list import ListView
+from django.utils import timezone
+
+from .models import Class
+
+class ClassListView(ListView):
+
+    model = Class
+
+    def get_context_data(self, **kwargs):
+        context = super(ClassListView, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
 
 def log(request):
     return render(request, 'log.html')
@@ -38,8 +54,10 @@ def teacher(request):
 def getTeacherClasses(request):
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor.
     classes = Class.objects.filter(kaid_teacher='2')
+    N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+    for i in range(len(classes)):
+        classes[i].level = N[int(classes[i].level)] 
     return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
-    
     #return render_to_response('myCourses.html', {'classes': classes}, context_instance=RequestContext(request))
     
 @login_required()

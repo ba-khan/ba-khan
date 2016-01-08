@@ -2,6 +2,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.views import logout
 
+from bakhanapp.views import ClassListView
+
 urlpatterns = [
     # Examples:
     # url(r'^$', 'bakhan.views.home', name='home'),
@@ -9,7 +11,8 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'bakhanapp.views.log', name='log'),
-    url(r'^home/$', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
+    #url(r'^home/$', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
+    url(r'^home/$', ClassListView.as_view(), name='myClasses'),
     url(r'^home/teacher/$', 'bakhanapp.views.teacher', name='teacher'),
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
     url(r'^home/class/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getStudentClass', name='getStudentClass'),

@@ -1,0 +1,8 @@
+<h1>Cursos</h1>
+<ul>
+{% for classes in object_list %}
+    <li>{{ classes.level }} - {{ classes.letter }}</li>
+{% empty %}
+    <li>No tiene cursos asociados.</li>
+{% endfor %}
+</ul>
