@@ -43,12 +43,12 @@ def teacher(request):
 
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
-    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False).count()
+    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False).count()
     return incorrect
 
 def getExerciseIncorrectBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante en un tiempo determinado.
-    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,date__gte = t_begin,date__lte = t_end).count()
+    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False,date__gte = t_begin,date__lte = t_end).count()
     return incorrect
 
 def getTotalExerciseCorrect(kaid_s):
@@ -109,6 +109,11 @@ def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
     #Select * from student where kaid_student in (Select kaid_student from student_class where id_class_id = id_class)
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+    for student in students:
+        student.t_exercise= 1#getTotalExerciseTime(student.kaid_student)
+        student.t_video= 1#getTotalVideoTime(student.kaid_student)
+        student.correct= 1#getTotalExerciseCorrect(student.kaid_student)
+        student.incorrect= 1#getTotalExerciseIncorrect(student.kaid_student)
     classroom = Class.objects.filter(id=id_class)
     return render_to_response('studentClass.html', {'students': students, 'classroom': classroom}, context_instance=RequestContext(request))
 

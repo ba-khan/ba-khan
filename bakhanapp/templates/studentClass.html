@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Home{% endblock %}
+{% block title %}{% for class in classroom %}  
+            {{ class.level }} {{ class.letter }}
+	{% endfor %}
+	{% endblock %}
  
 {% block body %}
 	<h1>BA-Khan</h1>
 
-	{% for class in curso %}  
+	{% for class in classroom %}  
             {{ class.level }} {{ class.letter }}
 	{% endfor %}
 	{% if students %}
@@ -14,11 +17,10 @@
         <thead>
             <tr>
                     <th>Estudiantes</th>
-                    <th>- % recom. completas</th>
                     <th>- Tiempo en ejercicios</th>
                     <th>- Tiempo en videos</th>
-                    <th>- % correctos</th>
-                    <th>- Evaluacion 1</th>
+                    <th>- Correctos</th>
+                    <th>- Incorrectos</th>
                     <th>- Mision</th>        
             </tr>
         </thead>
@@ -26,6 +28,10 @@
 		{% for student in students %}  
             <tr>
                     <td>{{ student.name }} </td>
+                    <td>{{ student.t_exercise }} </td>
+                    <td>{{ student.t_video }} </td>
+                    <td>{{ student.correct }} </td>
+                    <td>{{ student.incorrect }} </td>
             </tr>
 		{% endfor %}
 		</table>
