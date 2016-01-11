@@ -7,6 +7,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 
+from django import template
+register = template.Library()
+
 from .models import Class
 from .models import Student
 from .models import Student_Class
