@@ -20,6 +20,8 @@ from .models import Skill_Attempt
 from .models import Assesment_Skill
 from .models import Skill_Progress
 from .models import Class_Subject
+from .models import Assesment
+from .models import Grade
 
 import datetime
 
@@ -45,17 +47,10 @@ def home(request):
 def teacher(request):
     return render_to_response('teacher.html',)
 
-def getGradeStudent(kaid_student,id_class,t_begin,t_end):
-    #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
-    #y un rango de fechas.
-    scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
-    configured_skills = Assesment_Skill.objects.filter(id_assesment_config=id_assesment_conf).values('id_skill_name')#skills en la configuracion actual
-    points = 0
-    for skill in configured_skills:
-        last_level = Skill_Progress.objects.filter(id_skill_name=skill,date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
-        points = points + scores[last_level]
-    points = points / len(configured_skills)
-    return points
+def getGradeStudent(id_assesment,kaid_student):
+    #Funcion que entrega la nota de un estudiante en una evaluacion.
+    grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student)
+    return grade
 
 def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
     #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
@@ -137,11 +132,16 @@ def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
     #Select * from student where kaid_student in (Select kaid_student from student_class where id_class_id = id_class)
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+    evaluations_class = Assesment.objects.filter(id_class=id_class).values('id_assesment')
     for student in students:
         student.t_exercise= 1#getTotalExerciseTime(student.kaid_student)
         student.t_video= 1#getTotalVideoTime(student.kaid_student)
         student.correct= 1#getTotalExerciseCorrect(student.kaid_student)
         student.incorrect= 1#getTotalExerciseIncorrect(student.kaid_student)
+        grades=[]
+        for i in range(len(evaluations_class)):
+            grades[i] = getGradeStudent(evaluations_class[i].id_assesment,student.kaid_student)
+        student.grades=grades   
     classroom = Class.objects.filter(id_class=id_class)
     return render_to_response('studentClass.html', {'students': students, 'classroom': classroom}, context_instance=RequestContext(request))
 
