@@ -19,6 +19,7 @@ from .models import Video_Playing
 from .models import Skill_Attempt
 from .models import Assesment_Skill
 from .models import Skill_Progress
+from .models import Class_Subject
 
 import datetime
 
@@ -45,7 +46,7 @@ def teacher(request):
     return render_to_response('teacher.html',)
 
 def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
-    #Función que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
+    #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
     #y un rango de fechas.
     scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
     configured_skills = Assesment_Skill.objects.filter(id_assesment_config=id_assesment_conf).values('id_skill_name')#skills en la configuracion actual
@@ -56,8 +57,6 @@ def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
     points = points / len(configured_skills)
     return points
         
-    
-
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
     incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False).count()
@@ -115,7 +114,7 @@ def getVideoTimeBetween(kaid_s,t_begin,t_end):
 @login_required()
 def getTeacherClasses(request):
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
-    classes = Class.objects.filter(kaid_teacher='2')
+    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
