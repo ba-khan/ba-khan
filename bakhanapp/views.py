@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 
 from django import template
+from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
 from .models import Class
@@ -16,6 +17,8 @@ from .models import Student_Class
 from .models import Student_Video
 from .models import Video_Playing
 from .models import Skill_Attempt
+from .models import Assesment_Skill
+from .models import Skill_Progress
 
 import datetime
 
@@ -40,6 +43,20 @@ def home(request):
 @login_required()
 def teacher(request):
     return render_to_response('teacher.html',)
+
+def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
+    #Función que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
+    #y un rango de fechas.
+    scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
+    configured_skills = Assesment_Skill.objects.filter(id_assesment_config=id_assesment_conf).values('id_skill_name')#skills en la configuracion actual
+    points = 0
+    for skill in configured_skills:
+        last_level = Skill_Progress.objects.filter(id_skill_name=skill,date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
+        points = points + scores[last_level]
+    points = points / len(configured_skills)
+    return points
+        
+    
 
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
