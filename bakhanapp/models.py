@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
 class Institution(models.Model):
@@ -150,7 +151,9 @@ class Assesment(models.Model):
     id_assesment_conf = models.ForeignKey(Assesment_Config)
     start_date = models.DateField()
     end_date = models.DateField()
-    id_group = models.ForeignKey(Group)
+    id_group = models.ForeignKey(Group,null=True)
+    id_class = models.ForeignKey(Class,null=True)
+    name = models.CharField(max_length=150)
 
 class Grade(models.Model):
     id_grade = models.AutoField(primary_key=True)
