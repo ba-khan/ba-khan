@@ -41,6 +41,26 @@ def home(request):
 def teacher(request):
     return render_to_response('teacher.html',)
 
+def getTotalExerciseIncorrect(kaid_s):
+    #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
+    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False).count()
+    return incorrect
+
+def getExerciseIncorrectBetween(kaid_s,t_begin,t_end):
+    #Esta funcion entrega el total de ejercicios incorrectos de un estudiante en un tiempo determinado.
+    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,date__gte = t_begin,date__lte = t_end).count()
+    return incorrect
+
+def getTotalExerciseCorrect(kaid_s):
+    #Esta funcion entrega el total de ejercicios correctos de un estudiante.
+    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True).count()
+    return correct
+
+def getExerciseCorrectBetween(kaid_s,t_begin,t_end):
+    #Esta funcion entrega el total de ejercicios correctos de un estudiante en un tiempo determinado.
+    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True,date__gte = t_begin,date__lte = t_end).count()
+    return correct
+
 def getTotalExerciseTime(kaid_s):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en toda su historia.
     query = Skill_Attempt.objects.filter(kaid_student=kaid_s)
@@ -51,7 +71,7 @@ def getTotalExerciseTime(kaid_s):
 
 def getExerciseTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
-    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_begin)
+    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
     time = 0
     for register in query_set:
         time = time + register.time_taken
@@ -67,7 +87,7 @@ def getTotalVideoTime(kaid_s):
 
 def getVideoTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
-    query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_begin)
+    query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
     #query_set = query_set.filter(date__gte = t_begin)
     #query_set = query_set.filter(date__lte = t_begin)
     time = 0
