@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'bakhanapp.views.log', name='log'),
     url(r'^home/$', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
+    url(r'^home/test$', 'bakhanapp.views.test', name='test'),
     url(r'^home/teacher/$', 'bakhanapp.views.teacher', name='teacher'),
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
     url(r'^home/class/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),

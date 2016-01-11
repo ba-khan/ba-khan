@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.http import JsonResponse
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -31,7 +32,20 @@ import SimpleHTTPServer
 import SocketServer
 import time
 import webbrowser
+import json
+from django.core import serializers
 
+
+def test(request):
+    qs = Class.objects.all()
+    test = ['uno']    
+    data = serializers.serialize('json', qs)
+    for return_obj in serializers.deserialize("json",data):
+      print return_obj
+    json_data = json.dumps(return_obj)
+    #render(request, "test_json.html", {'json_data': json_data})
+    return render_to_response('test_json.html', {'json_data': json_data}, context_instance=RequestContext(request))
+    
 
 def log(request):
     return render(request, 'log.html')
