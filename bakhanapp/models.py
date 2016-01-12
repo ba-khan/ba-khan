@@ -124,8 +124,7 @@ class Subtopic(models.Model):
 
 class Skill(models.Model):
     id_skill_name = models.CharField(max_length=150,primary_key=True)
-    name_spanish = models.CharField(max_length=150)
-    id_subtopic_name = models.ForeignKey(Subtopic)
+    name_spanish = models.CharField(max_length=150,null=True)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -169,11 +168,10 @@ class Grade(models.Model):
 
 class Video(models.Model):
     id_video_name = models.CharField(max_length=150,primary_key=True)
-    name_spanish = models.CharField(max_length=150)
-    id_subtopic_name = models.ForeignKey(Subtopic)
+    name_spanish = models.CharField(max_length=150,null=True)
     
     def __unicode__(self): # __unicode__ on Python 2
-        return self.name_esp
+        return self.name_spanish
 
 class Student_Skill(models.Model):
     id_student_skill = models.AutoField(primary_key=True)
@@ -231,3 +229,19 @@ class Skill_Progress(models.Model):
     to_level = models.CharField(max_length=50)
     from_level = models.CharField(max_length=50)
     date = models.DateField()
+
+class Subtopic_Video(models.Model):
+    id_subtopic_video = models.AutoField(primary_key=True)
+    id_video_name = models.ForeignKey(Video)
+    id_subtopic_name = models.ForeignKey(Subtopic)
+    
+    class Meta:
+        unique_together = ('id_video_name', 'id_subtopic_name')
+        
+class Subtopic_Skill(models.Model):
+    id_subtopic_skill = models.AutoField(primary_key=True)
+    id_skill_name = models.ForeignKey(Skill)
+    id_subtopic_name = models.ForeignKey(Subtopic)
+    
+    class Meta:
+        unique_together = ('id_skill_name', 'id_subtopic_name')
