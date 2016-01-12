@@ -227,7 +227,7 @@ class Video_Playing(models.Model):
 
 class Skill_Progress(models.Model):
     id_skill_progress = models.AutoField(primary_key=True)
-    id_skill_name = models.ForeignKey(Skill)
+    id_student_skill = models.ForeignKey(Student_Skill)
     to_level = models.CharField(max_length=50)
     from_level = models.CharField(max_length=50)
     date = models.DateField()
