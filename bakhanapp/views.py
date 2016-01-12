@@ -40,9 +40,10 @@ def test(request):
     qs = Class.objects.all()
     test = ['uno']    
     data = serializers.serialize('json', qs)
-    for return_obj in serializers.deserialize("json",data):
-      print return_obj
-    json_data = json.dumps(return_obj)
+    struct = json.loads(data)
+    json_data = json.dumps(struct)
+    #json_data = json.dumps(struct[0])#funciona enviando un registro de la base de datos
+    #json_data = json.dumps(data)
     #render(request, "test_json.html", {'json_data': json_data})
     return render_to_response('test_json.html', {'json_data': json_data}, context_instance=RequestContext(request))
     
