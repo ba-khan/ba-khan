@@ -37,8 +37,7 @@ from django.core import serializers
 
 
 def test(request):
-    qs = Class.objects.all()
-    test = ['uno']    
+    qs = Class.objects.all()    
     data = serializers.serialize('json', qs)
     struct = json.loads(data)
     json_data = json.dumps(struct)

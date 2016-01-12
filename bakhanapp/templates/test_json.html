@@ -7,7 +7,7 @@
 <div id='baz'></div>
 	<script>
     var jsonObject = JSON.parse('{{ json_data | escapejs }}');
-    $("#baz").html(jsonObject[2]['fields']['letter']);
+    $("#baz").html(jsonObject[1]['fields']['letter']);
 </script>
 
 
