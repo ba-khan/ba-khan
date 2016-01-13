@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponseRedirect,render_to_response
+from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect
 from django.template.context import RequestContext
 from .forms import loginForm
 from .forms import AssesmentConfigForm
@@ -49,20 +49,25 @@ def home(request):
 def teacher(request):
     return render_to_response('teacher.html',)
 
-def newTeacherAssesmentConfig(request):
+def deleteAssesmentConfig(request,id_assesment_config):
+    Assesment_Config.objects.get(id_assesment_config=id_assesment_config).delete()
+    return render_to_response('home.html',)
+
+def newAssesmentConfig(request):
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
     if request.method == 'POST':
         form = AssesmentConfigForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.save()
-            return HttpResponseRedirect('/home/mensajes')
+            return redirect('configuraciones')
     else:
         form = AssesmentConfigForm(request.POST, request.FILES)
-    return render_to_response('newTeacherAssesmentConfig.html',{'form': form}, context_instance=RequestContext(request))
+    return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs}, context_instance=RequestContext(request))
 
 
 @login_required()
-def getTeacherAssesmentConfigs(request):
+def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs}, context_instance=RequestContext(request))

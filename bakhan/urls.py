@@ -13,16 +13,15 @@ urlpatterns = [
     url(r'^inicio/cursos/$', 'bakhanapp.views.getTeacherClasses', name='cursos'),
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
     url(r'^inicio/configuraciones/$', 'bakhanapp.views.getTeacherAssesmentConfigs', name='configuraciones'),
+    url(r'^inicio/configuraciones/nueva$', 'bakhanapp.views.newAssesmentConfig', name='nueva_configuracion'),
+    #url(r'^inicio/configuraciones/eliminar/(?P<id_assesment_config>[0-9]+)/$' 'bakhanapp.views.deleteAssesmentConfig'),
 
     url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
 
 
     url(r'^authenticate/', 'bakhanapp.views.authenticate', name='authenticate'),
     url(r'^access/rejected/', 'bakhanapp.views.rejected', name='rejected'),
-    url(r'^logout$', logout, {'template_name': 'log.html', }, name="salir"),
-    url(r'^home/teacher/$', 'bakhanapp.views.teacher', name='teacher'),
-    url(r'^home/teacher/assesment/configs$', 'bakhanapp.views.getTeacherAssesmentConfigs', name='getTeacherAssesmentConfigs'),
-    url(r'^home/teacher/assesment/configs/new$', 'bakhanapp.views.newTeacherAssesmentConfig', name='newTeacherAssesmentConfig'),
+
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]
 

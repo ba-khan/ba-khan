@@ -1,0 +1,20 @@
+{% extends 'myAssesmentConfigs.html' %}
+{% load static %}
+
+
+{% block title %}Nueva Configuracion{% endblock %}
+ 
+{% block new %}
+	<div class='container'> 
+    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %} 
+        <table> 
+            {{ form.as_table }} 
+        </table> 
+        <a href="{% url 'configuraciones' %}">Cancelar</a>
+        <button type="submit" >Guardar</button>
+    </form> 
+	</div>
+
+
+
+{% endblock %}

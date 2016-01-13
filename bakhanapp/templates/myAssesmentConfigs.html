@@ -8,23 +8,24 @@
 
 	{% if assesment_configs %}
 		
-		<TABLE BORDER=1 WIDTH=100%>
+		<TABLE BORDER=1 >
 		{% for config in assesment_configs %}  
 			<tr>
 				<td>{{ config.id_assesment_config }}</td>
 				<td>{{ config.top_score }}</td>
 				<td>{{ config.name }}</td>
-			</tr>
-				
-		    	
-	  		
+				<td><a href="">Editar</a></td>
+				<td><a href="">Eliminar</a></td>
+			</tr> 		
 		{% endfor %}
 		</TABLE>
 		
 	{% endif %}
-	
 
 	
+	<a href="{% url 'nueva_configuracion' %}">Nueva</a>
+		{% block new %} {% endblock %}
+		
 
 	</div>
 
