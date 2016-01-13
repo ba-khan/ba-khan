@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Mis Configuarciones de Evaluacion{% endblock %}
+ 
+{% block body %}
+
+	{% if assesment_configs %}
+		
+		<TABLE BORDER=1 WIDTH=100%>
+		{% for config in assesment_configs %}  
+			<tr>
+				<td>{{ config.id_assesment_config }}</td>
+				<td>{{ config.top_score }}</td>
+				<td>{{ config.name }}</td>
+			</tr>
+				
+		    	
+	  		
+		{% endfor %}
+		</TABLE>
+		
+	{% endif %}
+	
+
+	
+
+	</div>
+
+{% endblock %}

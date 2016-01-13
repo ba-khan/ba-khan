@@ -21,6 +21,7 @@ from .models import Assesment_Skill
 from .models import Skill_Progress
 from .models import Class_Subject
 from .models import Assesment
+from .models import Assesment_Config
 from .models import Grade
 
 import datetime
@@ -46,6 +47,12 @@ def home(request):
 @login_required()
 def teacher(request):
     return render_to_response('teacher.html',)
+
+@login_required()
+def getTeacherAssesmentConfigs(request):
+    #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
+    return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs}, context_instance=RequestContext(request))
 
 def getGradeStudent(id_assesment,kaid_student):
     #Funcion que entrega la nota de un estudiante en una evaluacion.
