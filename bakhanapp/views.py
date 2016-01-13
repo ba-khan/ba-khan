@@ -65,7 +65,19 @@ def newAssesmentConfig(request):
         form = AssesmentConfigForm(request.POST, request.FILES)
     return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs}, context_instance=RequestContext(request))
 
-
+def editAssesmentConfig(request,id_assesment_config):
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
+    if request.method == 'POST':
+        config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
+        form = AssesmentConfigForm(request.POST, request.FILES,instance=config)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            return redirect('configuraciones')
+    else:
+        config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
+        form = AssesmentConfigForm(instance=config)
+    return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs}, context_instance=RequestContext(request))
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor

@@ -14,7 +14,7 @@
 				<td>{{ config.id_assesment_config }}</td>
 				<td>{{ config.top_score }}</td>
 				<td>{{ config.name }}</td>
-				<td><a href="">Editar</a></td>
+				<td><a href="{% url 'editar_configuracion' config.id_assesment_config %}">Editar</a></td>
 				<td><a href="{% url 'eliminar_configuracion' config.id_assesment_config %}">Eliminar</a></td>
 			</tr> 		
 		{% endfor %}
