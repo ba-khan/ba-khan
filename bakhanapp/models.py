@@ -184,7 +184,7 @@ class Student_Skill(models.Model):
     total_correct = models.IntegerField()
     streak = models.IntegerField()
     longest_streak = models.IntegerField()
-    skill_progress = models.CharField(max_length=50)
+    last_skill_progress = models.CharField(max_length=50)
     total_hints = models.IntegerField()
     struggling = models.BooleanField()
     
