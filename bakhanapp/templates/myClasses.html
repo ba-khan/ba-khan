@@ -22,7 +22,7 @@
 		    		{% for klass in classes %} 	    			
 		    			{% if klass.level == class.level %}
 		    				<tr>
-		    				<td WIDTH=150>{{ klass.letter }} </td> <td> <a href="{{ klass.id_class }}">Ver</a> <br/></td>
+		    				<td WIDTH=150>{{ klass.letter }} </td> <td> <a href="{% url 'getClassStudents' klass.id_class %}">Ver</a> <br/></td>
 		    				</tr>
 		    			{% endif %}	
 		    		{% endfor %}
@@ -31,4 +31,8 @@
 		</TABLE>	
 	{% endif %}
 	</div>
+
+	{% block curso %} {% endblock %}
+
 {% endblock %}
+

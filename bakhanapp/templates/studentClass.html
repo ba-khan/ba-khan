@@ -1,12 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'myClasses.html' %}
 {% load static %}
 {% block title %}{% for class in classroom %}  
             {{ class.level }} {{ class.letter }}
 	{% endfor %}
 	{% endblock %}
  
-{% block body %}
-	<h1>BA-Khan</h1>
+{% block curso %}
+	
 
 	{% for class in classroom %}  
             {{ class.level }} {{ class.letter }}
@@ -21,7 +21,7 @@
                     <th>- Tiempo en videos</th>
                     <th>- Correctos</th>
                     <th>- Incorrectos</th>
-                    <th>- Mision</th>        
+                    <th>- Puntaje</th>        
             </tr>
         </thead>
         <tbody>
@@ -32,6 +32,7 @@
                     <td>{{ student.t_video }} </td>
                     <td>{{ student.correct }} </td>
                     <td>{{ student.incorrect }} </td>
+                    <td>{{ student.grades.grade }} </td>
             </tr>
 		{% endfor %}
 		</table>

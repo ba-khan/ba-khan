@@ -168,19 +168,23 @@ def getTeacherClasses(request):
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
     #Select * from student where kaid_student in (Select kaid_student from student_class where id_class_id = id_class)
+    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
+    N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+    for i in range(len(classes)):
+        classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     evaluations_class = Assesment.objects.filter(id_class=id_class).values('id_assesment')
     for student in students:
-        student.t_exercise= 1#getTotalExerciseTime(student.kaid_student)
-        student.t_video= 1#getTotalVideoTime(student.kaid_student)
-        student.correct= 1#getTotalExerciseCorrect(student.kaid_student)
-        student.incorrect= 1#getTotalExerciseIncorrect(student.kaid_student)
+        student.t_exercise= getTotalExerciseTime(student.kaid_student)
+        student.t_video= getTotalVideoTime(student.kaid_student)
+        student.correct= getTotalExerciseCorrect(student.kaid_student)
+        student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
         grades=[]
         for i in range(len(evaluations_class)):
             grades[i] = getGradeStudent(evaluations_class[i].id_assesment,student.kaid_student)
         student.grades=grades   
     classroom = Class.objects.filter(id_class=id_class)
-    return render_to_response('studentClass.html', {'students': students, 'classroom': classroom}, context_instance=RequestContext(request))
+    return render_to_response('studentClass.html', {'students': students, 'classroom': classroom,'classes': classes}, context_instance=RequestContext(request))
 
 
 CONSUMER_KEY = 'uhPpmjAMXqKwVYyJ' #clave generada para Alonsoccer
