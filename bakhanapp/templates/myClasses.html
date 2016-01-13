@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'home.html' %}
 {% load static %}
 
 {% load  smart_if %}
@@ -14,40 +14,23 @@
 	<h1>BA-Khan</h1>
 
 	<h3>Hola Profesor {{ user.username }}</h3>
-	
-	
-
-	{% if classes %}
-		
-		<TABLE BORDER=1 WIDTH=100%>
+	{% if classes %}	
+		<TABLE BORDER=1 >
 		{% for class in classes %}  
-			
 				{% ifchanged class.level.0 %} 
 				<tr>
 				<td colspan="2"> {{ class.level }} </td>		    		
 	    		</tr>				    		
-		    		{% for klass in classes %} 
-		    			
+		    		{% for klass in classes %} 	    			
 		    			{% if klass.level == class.level %}
 		    				<tr>
-		    				<td WIDTH=150>{{ klass.letter }} </td> <td> <a href="class/{{ klass.id_class }}">Ver</a> <br/></td>
+		    				<td WIDTH=150>{{ klass.letter }} </td> <td> <a href="{{ klass.id_class }}">Ver</a> <br/></td>
 		    				</tr>
-		    			{% endif %}
-		    			
+		    			{% endif %}	
 		    		{% endfor %}
-		    		
-		    	
-		    	{% endifchanged %}
-		    	
-	  		
+		    	{% endifchanged %} 		
 		{% endfor %}
-		</TABLE>
-		
+		</TABLE>	
 	{% endif %}
-	
-
-	
-
 	</div>
-
 {% endblock %}

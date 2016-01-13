@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponseRedirect,render_to_response
 from django.template.context import RequestContext
 from .forms import loginForm
+from .forms import AssesmentConfigForm
 from django.contrib.auth import  login,authenticate,logout
 from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -34,8 +35,8 @@ import time
 import webbrowser
 
 
-def log(request):
-    return render(request, 'log.html')
+def login(request):
+    return render(request, 'login.html')
 
 def rejected(request):
     return render(request, 'rejected.html')
@@ -47,6 +48,18 @@ def home(request):
 @login_required()
 def teacher(request):
     return render_to_response('teacher.html',)
+
+def newTeacherAssesmentConfig(request):
+    if request.method == 'POST':
+        form = AssesmentConfigForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.save()
+            return HttpResponseRedirect('/home/mensajes')
+    else:
+        form = AssesmentConfigForm(request.POST, request.FILES)
+    return render_to_response('newTeacherAssesmentConfig.html',{'form': form}, context_instance=RequestContext(request))
+
 
 @login_required()
 def getTeacherAssesmentConfigs(request):
@@ -204,7 +217,7 @@ def create_callback_server():
                                         <h2 class="regular-header login-button-header">
                                             Ya puede cerrar esta pestana.
                                         </h2>
-                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/home"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
+                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/inicio"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
                                        </div>
                                    </div>                           
                               </body>                           
@@ -290,7 +303,7 @@ def authenticate(request):
 
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
-        return HttpResponseRedirect('/home')
+        return HttpResponseRedirect('/inicio')
     else:
         return HttpResponseRedirect('/access/rejected')
 

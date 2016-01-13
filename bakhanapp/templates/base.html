@@ -31,6 +31,10 @@
     {% block head %}{% endblock %}
 </head>
   <body>
+    <h1>BA-Khan</h1>
+      <a href="{% url 'cursos' %}">Cursos</a>
+      <a href="{% url 'configuraciones' %}">Configuraciones</a>
+      <a href="{% url 'salir' %}">salir</a>
     {% block body %}{% endblock %}
   </body>
 
