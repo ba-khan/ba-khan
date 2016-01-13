@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
     url(r'^inicio/configuraciones/$', 'bakhanapp.views.getTeacherAssesmentConfigs', name='configuraciones'),
     url(r'^inicio/configuraciones/nueva$', 'bakhanapp.views.newAssesmentConfig', name='nueva_configuracion'),
-    #url(r'^inicio/configuraciones/eliminar/(?P<id_assesment_config>[0-9]+)/$' 'bakhanapp.views.deleteAssesmentConfig'),
+    url(r'^inicio/configuraciones/eliminar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.deleteAssesmentConfig',name='eliminar_configuracion'),
 
     url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
 

@@ -15,7 +15,7 @@
 				<td>{{ config.top_score }}</td>
 				<td>{{ config.name }}</td>
 				<td><a href="">Editar</a></td>
-				<td><a href="">Eliminar</a></td>
+				<td><a href="{% url 'eliminar_configuracion' config.id_assesment_config %}">Eliminar</a></td>
 			</tr> 		
 		{% endfor %}
 		</TABLE>

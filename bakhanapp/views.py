@@ -51,7 +51,7 @@ def teacher(request):
 
 def deleteAssesmentConfig(request,id_assesment_config):
     Assesment_Config.objects.get(id_assesment_config=id_assesment_config).delete()
-    return render_to_response('home.html',)
+    return redirect('configuraciones')
 
 def newAssesmentConfig(request):
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
