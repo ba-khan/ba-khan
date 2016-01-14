@@ -165,8 +165,9 @@ def getTeacherClasses(request):
     return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
     
 def getClassGrades(request,id_class):
+    #Funcion que entrega todas las notas de los estudiantes de un curso.
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__grade')
+    grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade')
     return grades
 
 @login_required()

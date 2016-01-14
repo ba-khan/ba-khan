@@ -6,14 +6,16 @@
 	{% endblock %}
  
 {% block curso %}
-	
+    {% load static %}
+    {% load  smart_if %}
+    	
 
 	{% for class in classroom %}  
             {{ class.level }} {{ class.letter }}
 	{% endfor %}
 	{% if students %}
 		<div class="example" data-text="example">
-   	 	<table id="example_table" class="dataTable striped border bordered" data-role="datatable" data-searching="true">
+   	 	<table >
         <thead>
             <tr>
                     <th>Estudiantes</th>
@@ -21,8 +23,8 @@
                     <th>- Tiempo en videos</th>
                     <th>- Correctos</th>
                     <th>- Incorrectos</th>
-                    {% for grade in student.grades %}
-                    <th>Evaluacion</th>
+                    {% for grade in grades %}
+                    <th>- {{ grade.name }}</th>
                     {% endfor %}      
             </tr>
         </thead>
@@ -34,17 +36,14 @@
                     <td>{{ student.t_video }} </td>
                     <td>{{ student.correct }} </td>
                     <td>{{ student.incorrect }} </td>
-                    {% if grades %}
-                        {% for grade in grades %} 
-                            <td>{{ grade.name }}</td>
-                            <td>{{ grade.grade__grade }}</td>
-                      
-                        {% endfor %}
-                    {% endif %}
+                    {% for grade in grades %}
+                        {% if grade.grade__kaid_student == student.kaid_student %}
+                            <td> {{ grade.grade__grade }}</td>
+                        {% endif %} 
+                    {% endfor %}  
             </tr>
         {% endfor %}
         </table>
         </div>
     {% endif %}
-
 {% endblock %}
