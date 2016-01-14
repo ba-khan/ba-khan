@@ -21,7 +21,9 @@
                     <th>- Tiempo en videos</th>
                     <th>- Correctos</th>
                     <th>- Incorrectos</th>
-                    <th>- Puntaje</th>        
+                    {% for grade in student.grades %}
+                    <th>Evaluacion</th>
+                    {% endfor %}      
             </tr>
         </thead>
         <tbody>
@@ -32,12 +34,17 @@
                     <td>{{ student.t_video }} </td>
                     <td>{{ student.correct }} </td>
                     <td>{{ student.incorrect }} </td>
-                    <td>{{ student.grades.grade }} </td>
+                    {% if grades %}
+                        {% for grade in grades %} 
+                            <td>{{ grade.name }}</td>
+                            <td>{{ grade.grade__grade }}</td>
+                      
+                        {% endfor %}
+                    {% endif %}
             </tr>
-		{% endfor %}
-		</table>
-		
-		</div>
-	{% endif %}
+        {% endfor %}
+        </table>
+        </div>
+    {% endif %}
 
 {% endblock %}

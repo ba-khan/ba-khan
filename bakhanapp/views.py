@@ -86,7 +86,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
 
 def getGradeStudent(id_assesment,kaid_student):
     #Funcion que entrega la nota de un estudiante en una evaluacion.
-    grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student)
+    grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student).values('grade')
     return grade
 
 def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
@@ -139,10 +139,10 @@ def getExerciseTimeBetween(kaid_s,t_begin,t_end):
 
 def getTotalVideoTime(kaid_s):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en toda su historia.
-    query = Student_Video.objects.filter(kaid_student=kaid_s)
+    query = Video_Playing.objects.filter(kaid_student=kaid_s)
     time = 0
     for register in query:
-        time = time + register.total_seconds_watched
+        time = time + register.seconds_watched
     return time
 
 def getVideoTimeBetween(kaid_s,t_begin,t_end):
@@ -164,27 +164,30 @@ def getTeacherClasses(request):
         classes[i].level = N[int(classes[i].level)] 
     return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
     
+def getClassGrades(request,id_class):
+    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+    grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__grade')
+    return grades
+
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
     #Select * from student where kaid_student in (Select kaid_student from student_class where id_class_id = id_class)
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
+
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    evaluations_class = Assesment.objects.filter(id_class=id_class).values('id_assesment')
+    evaluations_class = Assesment.objects.filter(id_class=id_class)#.values('id_assesment')
     for student in students:
         student.t_exercise= getTotalExerciseTime(student.kaid_student)
         student.t_video= getTotalVideoTime(student.kaid_student)
         student.correct= getTotalExerciseCorrect(student.kaid_student)
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
-        grades=[]
-        for i in range(len(evaluations_class)):
-            grades[i] = getGradeStudent(evaluations_class[i].id_assesment,student.kaid_student)
-        student.grades=grades   
     classroom = Class.objects.filter(id_class=id_class)
-    return render_to_response('studentClass.html', {'students': students, 'classroom': classroom,'classes': classes}, context_instance=RequestContext(request))
+    grades = getClassGrades(request,id_class)
+    return render_to_response('studentClass.html', {'students': students, 'classroom': classroom,'classes': classes,'grades':grades}, context_instance=RequestContext(request))
 
 
 CONSUMER_KEY = 'uhPpmjAMXqKwVYyJ' #clave generada para Alonsoccer
@@ -327,24 +330,4 @@ def authenticate(request):
         return HttpResponseRedirect('/inicio')
     else:
         return HttpResponseRedirect('/access/rejected')
-
-#funcion no utilizada por el momento, ya que se esta redirigiendo toda la autentificacion a K.A.
-def login(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = loginForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/inicio/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = loginForm()
-
-    return render(request, 'login.html', {'form': form})
-    # return render_to_response('login.html')
 

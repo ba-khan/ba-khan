@@ -157,6 +157,9 @@ class Assesment(models.Model):
     id_class = models.ForeignKey(Class,null=True)
     name = models.CharField(max_length=150)
 
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
 class Grade(models.Model):
     id_grade = models.AutoField(primary_key=True)
     kaid_student = models.ForeignKey(Student)
