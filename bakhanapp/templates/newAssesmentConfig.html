@@ -15,6 +15,36 @@
     </form> 
 	</div>
 
-
+	<div>
+	{% if chapters %}
+		<div>
+		{% for chapter in chapters %} 
+			
+			<h2><input type="checkbox">{{ chapter.name_spanish }}</h2>
+			{% if topics %}
+				{% for topic in topics %}
+					{% if topic.id_chapter_name_id == chapter.id_chapter_name %}
+						<h3>{{ topic.name_spanish }}</h3>
+						{% if subtopics %}
+							{% for subtopic in subtopics %}
+								{% if subtopic.id_topic_name_id == topic.id_topic_name %}
+									<h4>{{ subtopic.name_spanish }}</h4>
+									{% if subtopic_skills %}
+										{% for subtopic_skill in subtopic_skills %}
+											{% if subtopic_skill.id_subtopic_name == subtopic.id_subtopic_name %}
+												<p>{{ subtopic_skill.id_skill_name }}</p>
+								    		{% endif %}	
+										{% endfor %}
+									{% endif %}
+					    		{% endif %}	
+							{% endfor %}
+						{% endif %}
+		    		{% endif %}	
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
+		</div>
+	{% endif %}
+	</div>
 
 {% endblock %}

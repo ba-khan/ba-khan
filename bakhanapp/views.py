@@ -24,6 +24,7 @@ from .models import Class_Subject
 from .models import Assesment
 from .models import Assesment_Config
 from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
+from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
 
 import datetime
 
@@ -63,7 +64,12 @@ def newAssesmentConfig(request):
             return redirect('configuraciones')
     else:
         form = AssesmentConfigForm(request.POST, request.FILES)
-    return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs}, context_instance=RequestContext(request))
+        chapters = Chapter.objects.all()
+        topics = Topic.objects.all()
+        subtopics = Subtopic.objects.all()
+        subtopic_skills = Subtopic_Skill.objects.all()
+    return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs,
+        'chapters':chapters,'topics':topics,'subtopics':subtopics,'subtopic_skills':subtopic_skills}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
@@ -78,6 +84,7 @@ def editAssesmentConfig(request,id_assesment_config):
         config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
         form = AssesmentConfigForm(instance=config)
     return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs}, context_instance=RequestContext(request))
+
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
@@ -351,3 +358,26 @@ def authenticate(request):
     else:
         return HttpResponseRedirect('/access/rejected')
 
+def getTopictree():
+    topictree=[]
+    temp=[]
+    chapters=Chapter.objects.filter(id_subject_name_id='math')
+    for chapter in chapters:
+        topics=Topic.objects.filter(id_chapter_name_id=chapter.id_chapter_name)
+        #print(chapter)
+        for topic in topics:
+            subtopics=Subtopic.objects.filter(id_topic_name_id=topic.id_topic_name)
+            #print(topic)
+            for subtopic in subtopics:
+                subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopic.id_subtopic_name)
+                for subtopic_skill in subtopic_skills:
+                    skills=Skill.objects.filter(id_skill_name=subtopic_skill.id_skill_name_id)
+                    for skill in skills:
+                        temp.append(chapter)
+                        temp.append(topic)
+                        temp.append(subtopic)
+                        temp.append(skill)
+                        print(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
+                        topictree.append(temp)
+                        temp=[]
+    return topictree
