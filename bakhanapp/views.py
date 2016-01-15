@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.db.models import Count
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -19,11 +20,10 @@ from .models import Student_Video
 from .models import Video_Playing
 from .models import Skill_Attempt
 from .models import Assesment_Skill
-from .models import Skill_Progress
 from .models import Class_Subject
 from .models import Assesment
 from .models import Assesment_Config
-from .models import Grade
+from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
 
 import datetime
 
@@ -167,8 +167,27 @@ def getTeacherClasses(request):
 def getClassGrades(request,id_class):
     #Funcion que entrega todas las notas de los estudiantes de un curso.
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade')
+    grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade') #inner join Django
     return grades
+
+def getClassSkills(request,id_class):
+    #Funcion que entrega todos los niveles de dominio de los estudiantes de un curso
+    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#devuelve todos los estudiantes de una clase
+    students_skills = Skill.objects.filter(student_skill__kaid_student__in=students).values('name_spanish', 'student_skill__kaid_student', 
+                                                                                            'student_skill__last_skill_progress') #inner join Django
+    nivel=['practiced','mastery1','mastery2','mastery3']
+    practiced = students_skills.filter(student_skill__last_skill_progress='practiced')
+
+    return students_skills
+
+'''
+>>> q = Blog.objects.annotate(Count('entry'))
+# The name of the first blog
+>>> q[0].name
+'Blogasaurus'
+# The number of entries on the first blog
+>>> q[0].entry__count
+42'''
 
 @login_required()
 def getClassStudents(request, id_class):
@@ -188,7 +207,11 @@ def getClassStudents(request, id_class):
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
     classroom = Class.objects.filter(id_class=id_class)
     grades = getClassGrades(request,id_class)
-    return render_to_response('studentClass.html', {'students': students, 'classroom': classroom,'classes': classes,'grades':grades}, context_instance=RequestContext(request))
+    s_skills = getClassSkills(request,id_class)
+    return render_to_response('studentClass.html',
+                                {'students': students, 'classroom': classroom,'classes': classes,'grades':grades,'s_skills':s_skills}, 
+                                context_instance=RequestContext(request)
+                            )
 
 
 CONSUMER_KEY = 'uhPpmjAMXqKwVYyJ' #clave generada para Alonsoccer

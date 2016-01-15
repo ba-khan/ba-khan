@@ -41,6 +41,11 @@
                             <td> {{ grade.grade__grade }}</td>
                         {% endif %} 
                     {% endfor %}  
+                    {% for s_skill in s_skills %}
+                        {% if s_skill.student_skill__kaid_student == student.kaid_student %}
+                            <td> {{ s_skill.student_skill__last_skill_progress }}</td>
+                        {% endif %} 
+                    {% endfor %}  
             </tr>
         {% endfor %}
         </table>
