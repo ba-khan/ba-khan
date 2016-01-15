@@ -180,14 +180,6 @@ def getClassSkills(request,id_class):
 
     return students_skills
 
-'''
->>> q = Blog.objects.annotate(Count('entry'))
-# The name of the first blog
->>> q[0].name
-'Blogasaurus'
-# The number of entries on the first blog
->>> q[0].entry__count
-42'''
 
 @login_required()
 def getClassStudents(request, id_class):
