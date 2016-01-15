@@ -171,15 +171,15 @@ def getClassGrades(request,id_class):
     return grades
 
 def getClassSkills(request,id_class):
-    #Funcion que entrega todos los niveles de dominio de los estudiantes de un curso
+    #Funcion que entrega un arreglo con la cantidad de habilidades en cada nivel de dominio
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#devuelve todos los estudiantes de una clase
-    students_skills = Skill.objects.filter(student_skill__kaid_student__in=students).values('name_spanish', 'student_skill__kaid_student', 
-                                                                                            'student_skill__last_skill_progress') #inner join Django
-    nivel=['practiced','mastery1','mastery2','mastery3']
-    practiced = students_skills.filter(student_skill__last_skill_progress='practiced')
-
+    students_skills = Student_Skill.objects.filter(kaid_student__in=students).values('last_skill_progress','kaid_student').annotate(scount=Count('kaid_student'))
+    print students_skills
     return students_skills
 
+def getTotalNivel(kaid_student,nivel):
+    total = Student_Skill.objects.filter(kaid_student=kaid_student,last_skill_progress=nivel).count()
+    return total
 
 @login_required()
 def getClassStudents(request, id_class):
@@ -197,6 +197,10 @@ def getClassStudents(request, id_class):
         student.t_video= getTotalVideoTime(student.kaid_student)
         student.correct= getTotalExerciseCorrect(student.kaid_student)
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
+        student.practiced = getTotalNivel(student.kaid_student,'practiced')
+        student.mastery1 = getTotalNivel(student.kaid_student,'mastery1')
+        student.mastery2 = getTotalNivel(student.kaid_student,'mastery2')
+        student.mastery3 = getTotalNivel(student.kaid_student,'mastery3')
     classroom = Class.objects.filter(id_class=id_class)
     grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)

@@ -23,6 +23,10 @@
                     <th>- Tiempo en videos</th>
                     <th>- Correctos</th>
                     <th>- Incorrectos</th>
+                    <th>- Practiced</th>
+                    <th>- Mastery1</th>
+                    <th>- Mastery2</th>
+                    <th>- Mastery3</th>
                     {% for grade in grades %}
                     <th>- {{ grade.name }}</th>
                     {% endfor %}      
@@ -36,16 +40,16 @@
                     <td>{{ student.t_video }} </td>
                     <td>{{ student.correct }} </td>
                     <td>{{ student.incorrect }} </td>
+                    <td>{{ student.practiced }} </td>
+                    <td>{{ student.mastery1 }} </td>
+                    <td>{{ student.mastery2 }} </td>
+                    <td>{{ student.mastery3 }} </td>
                     {% for grade in grades %}
                         {% if grade.grade__kaid_student == student.kaid_student %}
                             <td> {{ grade.grade__grade }}</td>
                         {% endif %} 
                     {% endfor %}  
-                    {% for s_skill in s_skills %}
-                        {% if s_skill.student_skill__kaid_student == student.kaid_student %}
-                            <td> {{ s_skill.student_skill__last_skill_progress }}</td>
-                        {% endif %} 
-                    {% endfor %}  
+                 
             </tr>
         {% endfor %}
         </table>
