@@ -157,6 +157,8 @@ class Assesment(models.Model):
     id_group = models.ForeignKey(Group)
     id_class = models.ForeignKey(Class,null=True)
     name = models.CharField(max_length=150)
+    min_grade = models.IntegerField()
+    max_grade = models.IntegerField()
 
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
