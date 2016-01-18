@@ -411,6 +411,49 @@ def authenticate(request):
         return HttpResponseRedirect('/inicio')
     else:
         return HttpResponseRedirect('/access/rejected')
+    
+def run_tests():
+    global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
+    
+    # Set consumer key, consumer secret, and server base URL from user input or
+    # use default values.
+    CONSUMER_KEY = CONSUMER_KEY
+    CONSUMER_SECRET = CONSUMER_SECRET
+    SERVER_URL = SERVER_URL
+
+    # Create an OAuth1Service using rauth.
+    service = rauth.OAuth1Service(
+           name='test',
+           consumer_key=CONSUMER_KEY,
+           consumer_secret=CONSUMER_SECRET,
+           request_token_url=SERVER_URL + '/api/auth2/request_token',
+           access_token_url=SERVER_URL + '/api/auth2/access_token',
+           authorize_url=SERVER_URL + '/api/auth2/authorize',
+           base_url=SERVER_URL + '/api/auth2')
+
+    callback_server = create_callback_server()
+
+    # 1. Get a request token.
+    request_token, secret_request_token = service.get_request_token(
+        params={'oauth_callback': 'http://%s:%d/' %
+            (CALLBACK_BASE, callback_server.server_address[1])})
+    
+    # 2. Authorize your request token.
+    authorize_url = service.get_authorize_url(request_token)
+    webbrowser.open(authorize_url)
+
+    callback_server.handle_request()
+    callback_server.server_close()
+
+    # 3. Get an access token.
+    session = service.get_auth_session(request_token, secret_request_token,
+        params={'oauth_verifier': VERIFIER})
+
+    # Repeatedly prompt user for a resource and make authenticated API calls.
+    #print
+    #while(True):
+    #    get_api_resource(session)
+    return session
 
 def getTopictree():
     topictree=[]

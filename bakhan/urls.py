@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^inicio/configuraciones/eliminar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.deleteAssesmentConfig',name='eliminar_configuracion'),
     url(r'^inicio/configuraciones/editar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.editAssesmentConfig',name='editar_configuracion'),
     url(r'^inicio/configuraciones/aplicar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.newAssesment',name='nueva_evaluacion'),
+    url(r'^home/poblarbd/$', 'bakhanapp.views.poblarBD', name='poblarBD'),
     url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
 
 
