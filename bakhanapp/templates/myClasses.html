@@ -70,4 +70,14 @@
 			</div>
 		</div>
 		</div>
+		
+		<script>
+			$(function () {
+		      $(document).tooltip({
+		          content: function () {
+		              return $(this).prop('title');
+		          }
+		      });
+		  	});
+		</script>
 {% endblock %}

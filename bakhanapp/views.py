@@ -260,8 +260,10 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)
+    assesment_configs = Assesment_Config.objects.filter(id_assesment_config=1)
+    print assesment_configs
     return render_to_response('studentClass.html',
-                                {'students': students, 'classroom': classroom,'classes': classes,'grades':grades,'s_skills':s_skills}, 
+                                {'students': students, 'classroom': classroom,'classes': classes,'grades':grades,'s_skills':s_skills, 'assesment_configs':assesment_configs}, 
                                 context_instance=RequestContext(request)
                             )
 

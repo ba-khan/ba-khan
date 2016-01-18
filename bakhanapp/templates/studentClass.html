@@ -40,13 +40,26 @@
 
             <tr>
                 <th>Estudiantes</th>
-                <th>Tiempo en ejercicios</th>
-                <th>Tiempo en videos</th>
-                <th>Correctos</th>
-                <th>Incorrectos</th>
-                {% for grade in grades %}
-                	<th>{{ grade.name }}</th>
-                {% endfor %}      
+                    <th>- Tiempo en ejercicios</th>
+                    <th>- Tiempo en videos</th>
+                    <th>- Correctos</th>
+                    <th>- Incorrectos</th>
+                    <th>- Practiced</th>
+                    <th>- Mastery1</th>
+                    <th>- Mastery2</th>
+                    <th>- Mastery3</th>
+                    <th id="tooltip"><a title="{% for assesment_config in assesment_configs %}
+                                                    {{ "Nombre: " }}
+                                                    {{ assesment_config.name }}
+                                                    {{ "<hr>% aprobacion: " }}
+                                                    {{ assesment_config.approval_percentage }}
+                                                    {{ "<hr>Puntaje maximo: " }}
+                                                    {{ assesment_config.top_score }}
+                                                {% endfor %}
+                     ">- Evaluacion 1</a></th>
+                    {% for grade in grades %}
+                    <th>- {{ grade.name }}</th>
+                    {% endfor %}    
             </tr>
      	</thead>
      	<tbody> 
