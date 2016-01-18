@@ -157,8 +157,8 @@ class Assesment(models.Model):
     id_group = models.ForeignKey(Group)
     id_class = models.ForeignKey(Class,null=True)
     name = models.CharField(max_length=150)
-    min_grade = models.IntegerField()
     max_grade = models.IntegerField()
+    min_grade = models.IntegerField()
 
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
@@ -205,6 +205,7 @@ class Student_Video(models.Model):
     total_points_earned = models.IntegerField()
     last_second_watched = models.IntegerField()
     is_video_complete = models.BooleanField()
+    youtube_id = models.CharField(max_length=15)
     
     class Meta:
         unique_together = ('id_video_name', 'kaid_student')
@@ -234,14 +235,14 @@ class Video_Playing(models.Model):
     points_earned = models.IntegerField()
     last_second_watched = models.IntegerField()
     is_video_complete = models.BooleanField()
-    date = models.DateField()
+    date = models.DateTimeField()
 
 class Skill_Progress(models.Model):
     id_skill_progress = models.AutoField(primary_key=True)
     id_student_skill = models.ForeignKey(Student_Skill)
     to_level = models.CharField(max_length=50)
     from_level = models.CharField(max_length=50)
-    date = models.DateField()
+    date = models.DateTimeField()
     
 class Subtopic_Video(models.Model):
     id_subtopic_video = models.AutoField(primary_key=True)
