@@ -1,44 +1,56 @@
 {% load static %}
 
- <!DOCTYPE html>
+<!DOCTYPE html>
 
-<html lang="es">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
-    
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/shared-package-426ede.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/nav-package-642efd.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/react-package-9b6f9e.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/odometer-package-be2a23.css'><link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/dashboard-package-756fe7.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/mobile-package-0edccb.css'>
-  	<link href="{% static 'estilo.css' %}" rel="stylesheet">
-  	
-    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-       <script>
-        $(function() {
-          $( "#dialog" ).dialog();
-        });
-        </script>
-	 
-    <title>{% block title %}{% endblock %}</title>
-  	
-    {% block head %}{% endblock %}
-</head>
-  <body>
-    <h1>BA-Khan</h1>
-      <a href="{% url 'cursos' %}">Cursos</a>
-      <a href="{% url 'configuraciones' %}">Configuraciones</a>
-      <a href="{% url 'salir' %}">salir</a>
-    {% block body %}{% endblock %}
-  </body>
+<html class=" modernizr-no-touchevents modernizr-flexbox modernizr-no-flexboxtweener" itemscope="" itemtype="http://schema.org/Organization" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/" lang="es"><head prefix="">
+	<body>
+			
+		<title>Tus estudiantes | Khan Academy</title>
+		
+		<!-- Agregados por Alonso-->
+		<link rel="shortcut icon" href="https://www.khanacademy.org/favicon.ico?leaf">       
+		<link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://www.khanacademy.org/images/apple-touch-icon-57x57-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://www.khanacademy.org/images/apple-touch-icon-72x72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://www.khanacademy.org/images/apple-touch-icon-114x114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://www.khanacademy.org/images/apple-touch-icon-144x144-precomposed.png">
 
+		<link rel="stylesheet" type="text/css" href="https://www.khanacademy.org/genfiles/stylesheets/en/shared-package-f742d5.css">
+		<link rel="stylesheet" type="text/css" href="https://www.khanacademy.org/genfiles/stylesheets/en/react-package-9b6f9e.css">
+		<link rel="stylesheet" type="text/css" href="https://www.khanacademy.org/genfiles/stylesheets/en/checklist-package-88f605.css">
+		<link rel="stylesheet" type="text/css" href="https://www.khanacademy.org/genfiles/stylesheets/en/eduorg-picker-package-565b42.css">
+		<link rel="stylesheet" type="text/css" href="https://www.khanacademy.org/genfiles/stylesheets/en/learn-storm-package-8e6223.css">
+		<link rel="stylesheet" type="text/css" href="https://www.khanacademy.org/genfiles/stylesheets/en/coach-homepage-package-48d6a1.css">
+		
+		<!-- Agregados por Javier-->
+		<link href="{% static 'estilo.css' %}" rel="stylesheet">	
+	    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+	</head>
+	<body class="lang-es ">
+	<div class="pure-hidden-xs pure-hidden-sm">
+		<div class="wide-learn-menu-background-container" style="display: none;">
+			<div class="contained-and-centered">
+				<div class="wide-learn-menu-background"></div>
+			</div>
+		</div>
+	</div>
+	<!-- Inicio barra de arriba (class="selected")-->
+	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered" data-reactid=".1"><span class="float-left" data-reactid=".1.0"><h3 class="children-students-title" data-reactid=".1.0.0"><span data-reactid=".1.0.0.0">Tus estudiantes</span></h3></span>
+	<a class="" href="{% url 'home' %}" id="nav-dashboard"><span>Inicio</span></a>
+	<a class="" href="{% url 'cursos' %}"><span>Cursos</span></a>
+	<a class="" href="{% url 'configuraciones' %}"><span>configuraciones</span></a>
+	<a class="" href="https://Pautas" id="nav-exercises" data-reactid=".1.5"><span data-reactid="">Pautas</span></a>
+	</span></nav>
+	<!-- Fin barra de arriba -->
+		
+		
+	{% block body %}
+	
+	{% endblock %}	
+		
 </html>

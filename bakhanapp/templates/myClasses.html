@@ -1,38 +1,73 @@
-{% extends 'home.html' %}
+{% extends 'base.html' %}
 {% load static %}
-
 {% load  smart_if %}
 
-<!--http://librosweb.es/libro/django_1_0/capitulo_10/extender_el_sistema_de_plantillas_2.html-->
-<!--en views agregar-->
-<!--from django import template-->
-<!--register = template.Library()-->
+{% block body %}		
+		
+	<div id="page-container" role="main">
+		<div id="page-container-inner">
+			<div id="coach-homepage">
+				<div class="coach-homepage-main" data-reactid="">
+					<div class="contained-and-centered" data-reactid="">
+						<div class="checklist-section" data-reactid="">
+							<div class="progress-header" data-reactid="">
+								<div class="header-label" data-reactid=""><img class="checklist-badge" src="href="https://www.khanacademy.org/genfiles/stylesheets/en/productive-40x40.png" data-reactid=""><span class="header-text" data-reactid="">Hola Profesor Jirafales</span>
+								</div>
+								<div class="progress-bar-container" data-reactid=".2.0.0.0.1">
+									<div class="toggle-component header-text" data-reactid=""><span data-reactid="">Ver Pautas</span>
+									</div>
+								</div>
+							</div>
+						</div>
 
-{% block title %}Mis Cursos{% endblock %}
- 
-{% block body %}
+						{% if classes %}
+						<div class="span9" style="width:96%;" data-reactid=".2.0.1.1">
+						 {% for class in classes %}
+						  {% ifchanged class.level.0 %}
+						   {% for klass in classes %}
+							{% if klass.level == class.level %}
+								<div>
+									
+									<!-- comienza el cuadro de grupo -->
+										<div class="dashboard-section-container"  data-reactid=""><div data-reactid=""><noscript data-reactid=""></noscript></div>
+										<div class="section-header class-card-header" data-reactid="">
+										<div class="signup-code" data-reactid="">
+										</div></div>
+										<div class="section-body class-card-body" data-reactid=""><div class="mission-badge" data-reactid="">
+										<div data-reactid=""></div><span data-reactid=""></span></a></div>
+										<!-- comienza grupo de estudiantes -->
+										<div class="student-list" data-reactid=""><ul data-reactid="">
+										<!-- columna 1 -->
+										<div class="student-list-column" style="width:33.333333333333336%;" data-reactid="" >
+										<font size="4">{{ class.level }} {{ klass.letter }}</font>
+											
+										</div>
+										<!-- columna 2 -->
+										<div class="student-list-column" style="width:33.333333333333336%;" data-reactid="">
+										<font size="2"><a role="button" aria-disabled="false" href="{% url 'getClassStudents' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;" data-reactid="">Ver Curso</a></font>
+											
+										</div>
+										<!-- columna 3 -->
+										<div class="student-list-column" style="width:33.333333333333336%;" data-reactid="">
+										<font size="2"><a role="button" aria-disabled="false" href="" class="kui-button kui-button-plain kui-button-primary" style="width:100%;" data-reactid="">Ver Grupos</a></font>
+											
+										</div></ul>
+									</div>
+									
+								</div>
+							</div>
+							{% endif %}
+						   {% endfor %}
+						  {% endifchanged %} 
+						 {% endfor %}
+						{% endif %}	
+					
+					<div id="end-of-page-spacer">
+						&nbsp;
+					</div>
 
-	{% if classes %}	
-		<TABLE BORDER=1 >
-		{% for class in classes %}  
-				{% ifchanged class.level.0 %} 
-				<tr>
-				<td colspan="2"> {{ class.level }} </td>		    		
-	    		</tr>				    		
-		    		{% for klass in classes %} 	    			
-		    			{% if klass.level == class.level %}
-		    				<tr>
-		    				<td WIDTH=150>{{ klass.letter }} </td> <td> <a href="{% url 'getClassStudents' klass.id_class %}">Ver</a> <br/></td>
-		    				</tr>
-		    			{% endif %}	
-		    		{% endfor %}
-		    	{% endifchanged %} 		
-		{% endfor %}
-		</TABLE>	
-	{% endif %}
-	</div>
-
-	{% block curso %} {% endblock %}
-
+				</div>
+			</div>
+		</div>
+		</div>
 {% endblock %}
-

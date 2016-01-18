@@ -1,40 +1,55 @@
-{% extends 'myClasses.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}{% for class in classroom %}  
-            {{ class.level }} {{ class.letter }}
-	{% endfor %}
-	{% endblock %}
- 
-{% block curso %}
-    {% load static %}
-    {% load  smart_if %}
-    	
+{% load  smart_if %}
 
+{% block body %}		
+	<head>
+		<!-- http://tablesorter.com/docs/ -->
+		<script type="text/javascript" src="{% static 'jquery.js'%}"></script> 
+		<script type="text/javascript" src="{% static 'jquery.tablesorter.js'%}"></script> 
+		<script>$(document).ready(function() 
+		    { 
+		        $("#myTable").tablesorter(); 
+		    } 
+			); 
+	  </script>
+	</head>
+	
+	<style>
+	table, th, td {
+	    border: 1px solid black;
+	    border-collapse: collapse;
+	}
+	th, td {
+    	padding: 15px;
+	}
+	th {
+    	background-color: #7EB442;
+	}
+	
+	</style>
+	
+	<div align="center">
+	<table  id="myTable" class="tablesorter" id="simple" style="width:99%">	
 	{% for class in classroom %}  
-            {{ class.level }} {{ class.letter }}
-             <a href="{% url 'nueva_evaluacion' class.id_class %}">Nueva Evaluacion</a>
+            <caption>{{ class.level }} {{ class.letter }}</caption>
+            <a href="{% url 'nueva_evaluacion' class.id_class %}">Nueva Evaluacion</a>
 	{% endfor %}
-
+	<thead>
 	{% if students %}
-		<div class="example" data-text="example">
-   	 	<table >
-        <thead>
+
             <tr>
-                    <th>Estudiantes</th>
-                    <th>- Tiempo en ejercicios</th>
-                    <th>- Tiempo en videos</th>
-                    <th>- Correctos</th>
-                    <th>- Incorrectos</th>
-                    <th>- Practiced</th>
-                    <th>- Mastery1</th>
-                    <th>- Mastery2</th>
-                    <th>- Mastery3</th>
-                    {% for grade in grades %}
-                    <th>- {{ grade.name }}</th>
-                    {% endfor %}      
+                <th>Estudiantes</th>
+                <th>Tiempo en ejercicios</th>
+                <th>Tiempo en videos</th>
+                <th>Correctos</th>
+                <th>Incorrectos</th>
+                {% for grade in grades %}
+                	<th>{{ grade.name }}</th>
+                {% endfor %}      
             </tr>
-        </thead>
-        <tbody>
+     	</thead>
+     	<tbody> 
 		{% for student in students %}  
             <tr>
                     <td>{{ student.name }} </td>
@@ -42,19 +57,16 @@
                     <td>{{ student.t_video }} </td>
                     <td>{{ student.correct }} </td>
                     <td>{{ student.incorrect }} </td>
-                    <td>{{ student.practiced }} </td>
-                    <td>{{ student.mastery1 }} </td>
-                    <td>{{ student.mastery2 }} </td>
-                    <td>{{ student.mastery3 }} </td>
                     {% for grade in grades %}
                         {% if grade.grade__kaid_student == student.kaid_student %}
                             <td> {{ grade.grade__grade }}</td>
                         {% endif %} 
                     {% endfor %}  
-                 
             </tr>
         {% endfor %}
+        </tbody>
         </table>
         </div>
     {% endif %}
+
 {% endblock %}
