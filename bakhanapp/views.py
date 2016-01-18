@@ -48,7 +48,6 @@ import simplejson
 import sys
 from pprint import pprint
 import codecs
-import yaml
 from lib2to3.fixer_util import String
 from django.core import serializers
 
