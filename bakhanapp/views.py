@@ -108,6 +108,31 @@ def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
     points = points / len(configured_skills)
     return points
         
+def setGrades(id_assesment,id_assesment_config):
+    #Funcion que guarda las notas obtenidas por los estudiantes de un curso segun una configuracion de evaluacion.
+    assesment = Assesment.objects.filter(id_assesment=id_assesment)#obtengo assesment
+    assesment_config = Assesment_Config.objects.filter(id_assesment_config=id_assesment_config)#consulta los datos de la assesment_config involucrada
+    if assesment.id_class:#si la evaluacion es para un curso completo
+        students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=assesment.id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
+        for student in students:
+            grade = Grade()#crea un nuevo registro grade
+            grade.kaid_student = student.kaid_student#asigna el identificador del estudiante 
+            grade.performance_points = getSkillPoints(student.kaid_student,id_assesment_config,assesment.start_date,assesment.end_date)#asigna los puntos obtenidos por desempenio
+            #calcular la nota
+            if grade.performance_points >= (assesment_config.aproval_percentage*100):#si obtiene mas que nota cuatro.
+                x1 = assesment_config.aproval_percentage*100
+                x2 = 100
+                y1 = 4
+                y2 = assesment.max_grade
+                grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
+            else:#si los puntos son menores al porcentaje de aprobacion
+                x1 = 0
+                x2 = assesment_config.aproval_percentage*100
+                y1 = assesment.min_grade
+                y2 = 4
+                grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
+            grade.save()
+
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
     incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False).count()
