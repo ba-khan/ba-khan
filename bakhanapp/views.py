@@ -149,17 +149,13 @@ def setGrades(id_assesment,id_assesment_config):
                 grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
             grade.save()
 
-def newAssesment(request,id_assesment_config):
+def newAssesment(request,id_class):#,id_assesment_config):
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-    if request.method == 'POST':
-        form = AssesmentForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            return redirect('configuraciones')
-    else:
-        form = AssesmentForm(request.POST, request.FILES)
-    return render_to_response('newAssesment.html',{'form': form,'assesment_configs':assesment_configs}, context_instance=RequestContext(request))
+    return render_to_response('newAssesment.html',{'assesment_configs':assesment_configs,'id_class':id_class}, context_instance=RequestContext(request))
+
+def newAssesment2(request,id_class,id_assesment_config):
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
+    return render_to_response('base.html',{'assesment_configs':assesment_configs}, context_instance=RequestContext(request))
 
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.

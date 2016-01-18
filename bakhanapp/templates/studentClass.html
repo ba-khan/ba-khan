@@ -12,7 +12,9 @@
 
 	{% for class in classroom %}  
             {{ class.level }} {{ class.letter }}
+             <a href="{% url 'nueva_evaluacion' class.id_class %}">Nueva Evaluacion</a>
 	{% endfor %}
+
 	{% if students %}
 		<div class="example" data-text="example">
    	 	<table >
