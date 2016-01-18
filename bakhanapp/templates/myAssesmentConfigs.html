@@ -16,6 +16,7 @@
 				<td>{{ config.name }}</td>
 				<td><a href="{% url 'editar_configuracion' config.id_assesment_config %}">Editar</a></td>
 				<td><a href="{% url 'eliminar_configuracion' config.id_assesment_config %}">Eliminar</a></td>
+				<td><a href="{% url 'nueva_evaluacion' config.id_assesment_config %}">Aplicar</a></td>
 			</tr> 		
 		{% endfor %}
 		</TABLE>
@@ -28,5 +29,6 @@
 		
 
 	</div>
+	{% block pop %} {% endblock %}
 
 {% endblock %}

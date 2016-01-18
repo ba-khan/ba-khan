@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'bakhanDB',
         'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': '192.168.1.134',
         'PORT':'',
     }
 }
