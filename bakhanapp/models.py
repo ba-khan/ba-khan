@@ -2,7 +2,7 @@
 from django.db import models
 
 from django.db.models.fields.related import ForeignKey
- 
+
 
 # Create your models here.
 class Institution(models.Model):
@@ -128,6 +128,7 @@ class Subtopic(models.Model):
 class Skill(models.Model):
     id_skill_name = models.CharField(max_length=150,primary_key=True)
     name_spanish = models.CharField(max_length=150,null=True)
+    name = models.CharField(max_length=150,null=True)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -153,7 +154,7 @@ class Assesment(models.Model):
     id_assesment_conf = models.ForeignKey(Assesment_Config)
     start_date = models.DateField()
     end_date = models.DateField()
-    id_group = models.ForeignKey(Group,null=True)
+    id_group = models.ForeignKey(Group)
     id_class = models.ForeignKey(Class,null=True)
     name = models.CharField(max_length=150)
 
@@ -175,8 +176,7 @@ class Grade(models.Model):
 class Video(models.Model):
     id_video_name = models.CharField(max_length=150,primary_key=True)
     name_spanish = models.CharField(max_length=150,null=True)
-    id_subtopic_name = models.ForeignKey(Subtopic)
-
+    
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
 
@@ -211,7 +211,8 @@ class Skill_Attempt(models.Model):
     id_skill_attempt = models.AutoField(primary_key=True)
     id_skill_name = models.ForeignKey(Skill)
     kaid_student = models.ForeignKey(Student)
-    errors = models.IntegerField()
+    problem_number = models.IntegerField()
+    count_attempts = models.IntegerField()
     mission = models.CharField(max_length=150,null=True)
     time_taken = models.IntegerField()
     count_hints = models.IntegerField()
@@ -219,6 +220,9 @@ class Skill_Attempt(models.Model):
     points_earned = models.IntegerField()
     date = models.DateField()
     correct = models.BooleanField()
+    
+    class Meta:
+        unique_together = ('id_skill_name', 'kaid_student', 'problem_number')
     
 class Video_Playing(models.Model):
     id_video_playing = models.AutoField(primary_key=True)
@@ -236,7 +240,7 @@ class Skill_Progress(models.Model):
     to_level = models.CharField(max_length=50)
     from_level = models.CharField(max_length=50)
     date = models.DateField()
-
+    
 class Subtopic_Video(models.Model):
     id_subtopic_video = models.AutoField(primary_key=True)
     id_video_name = models.ForeignKey(Video)
@@ -252,3 +256,4 @@ class Subtopic_Skill(models.Model):
     
     class Meta:
         unique_together = ('id_skill_name', 'id_subtopic_name')
+        
