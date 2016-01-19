@@ -9,7 +9,7 @@
 	{% if assesment_configs %}
 	<ul>	
 		{% for config in assesment_configs %}  
-			<li>	<a href="{% url 'nueva_evaluacion2' id_class config.id_assesment_config %}">{{ config.name }}</a></li>
+			<li><a href="{% url 'nueva_evaluacion2' id_class config.id_assesment_config %}">{{ config.name }}</a></li>
 		{% endfor %}
 	</ul>
 	{% endif %}
