@@ -21,26 +21,24 @@
 	</span></nav>
 	<!-- Fin barra de arriba -->
 	
-	<div id="page-container" role="main">
-			<div id="page-container-inner">
-				<div id="coach-homepage">
-					<div class="coach-homepage-main" data-reactid="">
-						<div class="contained-and-centered" data-reactid="">
-							<div class="checklist-section" data-reactid="">
-								<div class="progress-header" data-reactid="">
-									<div class="header-label" data-reactid=""><img class="checklist-badge" src="Tus%20estudiantes%20_%20Khan%20Academy_archivos/productive-40x40.png" data-reactid=""><span class="header-text" data-reactid="">Hola Profesor Jirafales</span>
-									</div>
-									<div class="progress-bar-container" data-reactid=".2.0.0.0.1">
-										<div class="toggle-component header-text" data-reactid=""><span data-reactid="">Ver Pautas</span>
-										</div>
-									</div>
-								</div>
-							</div>
+
+
+
+	<div class="coach-homepage-main">
+		<div class="contained-and-centered">
+			<div class="checklist-section">
+				<div class="progress-header">
+					<div class="header-label"><img class="checklist-badge" src="https://es.khanacademy.org/images/badges/moon/productive-40x40.png"><span class="header-text">Hola Profesor {{ request.user.username }}</span></div>
+					<div class="progress-bar-container">
+						<div class="toggle-component header-text"><span>Ver Pautas</span>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 	</div>
+
+
 	{% block body2 %}
 		
 	{% endblock %}
