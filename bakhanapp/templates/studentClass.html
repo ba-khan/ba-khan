@@ -51,9 +51,9 @@
                     <th id="tooltip"><a title="{% for assesment_config in assesment_configs %}
                                                     {{ "Nombre: " }}
                                                     {{ assesment_config.name }}
-                                                    {{ "<hr>% aprobacion: " }}
+                                                    {{ "<hr style='margin: 0'>% aprobacion: " }}
                                                     {{ assesment_config.approval_percentage }}
-                                                    {{ "<hr>Puntaje maximo: " }}
+                                                    {{ "<hr style='margin: 0'>Puntaje maximo: " }}
                                                     {{ assesment_config.top_score }}
                                                 {% endfor %}
                      ">- Evaluacion 1</a></th>
@@ -81,5 +81,14 @@
         </table>
         </div>
     {% endif %}
+    	<script>
+			$(function () {
+		      $(document).tooltip({
+		          content: function () {
+		              return $(this).prop('title');
+		          }
+		      });
+		  	});
+		</script>
 
 {% endblock %}
