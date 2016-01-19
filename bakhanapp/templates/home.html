@@ -3,6 +3,24 @@
 {% block title %}Inicio{% endblock %}
  
 {% block body %}
+	<body class="lang-es ">
+	<div class="pure-hidden-xs pure-hidden-sm">
+		<div class="wide-learn-menu-background-container" style="display: none;">
+			<div class="contained-and-centered">
+				<div class="wide-learn-menu-background"></div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Inicio barra de arriba (class="selected")-->
+	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered" data-reactid=".1"><span class="float-left" data-reactid=".1.0"><h3 class="children-students-title" data-reactid=".1.0.0"><span data-reactid=".1.0.0.0">Tus estudiantes</span></h3></span>
+	<a class="" href="{% url 'home' %}" id="nav-dashboard"><span>Inicio</span></a>
+	<a class="" href="{% url 'cursos' %}"><span>Cursos</span></a>
+	<a class="" href="{% url 'configuraciones' %}"><span>configuraciones</span></a>
+	<a class="" href="https://Pautas" id="nav-exercises" data-reactid=".1.5"><span data-reactid="">Pautas</span></a>
+	</span></nav>
+	<!-- Fin barra de arriba -->
+	
 	<div id="page-container" role="main">
 			<div id="page-container-inner">
 				<div id="coach-homepage">
@@ -23,8 +41,9 @@
 				</div>
 			</div>
 	</div>
+	{% block body2 %}
+		
+	{% endblock %}
+
 {% endblock %}	
 
-{% block body2 %}
-	
-{% endblock %}

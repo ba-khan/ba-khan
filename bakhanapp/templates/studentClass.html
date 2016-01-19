@@ -1,8 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'home.html' %}
 {% load static %}
 {% load  smart_if %}
 
-{% block body %}		
+{% block title %}
+	Dashboard
+{% endblock %}
+{% block body2 %}		
 	<head>
 		<!-- http://tablesorter.com/docs/ -->
 		<script type="text/javascript" src="{% static 'jquery.js'%}"></script> 
