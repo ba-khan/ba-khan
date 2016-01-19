@@ -73,6 +73,10 @@
                     <td>{{ student.t_video }} </td>
                     <td>{{ student.correct }} </td>
                     <td>{{ student.incorrect }} </td>
+                    <td>{{ student.practiced }} </td>
+                    <td>{{ student.mastery1 }} </td>
+                    <td>{{ student.mastery2 }} </td>
+                    <td>{{ student.mastery3 }} </td>
                     {% for grade in grades %}
                         {% if grade.grade__kaid_student == student.kaid_student %}
                             <td> {{ grade.grade__grade }}</td>
