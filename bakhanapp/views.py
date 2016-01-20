@@ -118,35 +118,36 @@ def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
     configured_skills = Assesment_Skill.objects.filter(id_assesment_config=id_assesment_conf).values('id_skill_name')#skills en la configuracion actual
     points = 0
     for skill in configured_skills:
-        last_level = Skill_Progress.objects.filter(id_skill_name=skill,date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
+        id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_name'],kaid_student_id=kaid_student).values('id_student_skill')
+        last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skills[0]['id_student_skill'],date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
         points = points + scores[last_level]
     points = points / len(configured_skills)
     return points
         
-def setGrades(id_assesment,id_assesment_config):
+def setGrades(id_assesment,id_assesment_config,id_class):
     #Funcion que guarda las notas obtenidas por los estudiantes de un curso segun una configuracion de evaluacion.
-    assesment = Assesment.objects.filter(id_assesment=id_assesment)#obtengo assesment
+    assesment = Assesment.objects.filter(id_assesment=id_assesment).values('id_assesment','start_date','end_date','max_grade','min_grade')#obtengo assesment
+    #print assesment[0]['id_assesment']
     assesment_config = Assesment_Config.objects.filter(id_assesment_config=id_assesment_config)#consulta los datos de la assesment_config involucrada
-    if assesment.id_class:#si la evaluacion es para un curso completo
-        students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=assesment.id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
-        for student in students:
-            grade = Grade()#crea un nuevo registro grade
-            grade.kaid_student = student.kaid_student#asigna el identificador del estudiante 
-            grade.performance_points = getSkillPoints(student.kaid_student,id_assesment_config,assesment.start_date,assesment.end_date)#asigna los puntos obtenidos por desempenio
-            #calcular la nota
-            if grade.performance_points >= (assesment_config.aproval_percentage*100):#si obtiene mas que nota cuatro.
-                x1 = assesment_config.aproval_percentage*100
-                x2 = 100
-                y1 = 4
-                y2 = assesment.max_grade
-                grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
-            else:#si los puntos son menores al porcentaje de aprobacion
-                x1 = 0
-                x2 = assesment_config.aproval_percentage*100
-                y1 = assesment.min_grade
-                y2 = 4
-                grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
-            grade.save()
+    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
+    for student in students:
+        grade = Grade()#crea un nuevo registro grade
+        grade.kaid_student_id = student.kaid_student#asigna el identificador del estudiante 
+        grade.performance_points = getSkillPoints(student.kaid_student,id_assesment_config,assesment[0]['start_date'],assesment[0]['end_date'])#asigna los puntos obtenidos por desempenio
+        #calcular la nota
+        if grade.performance_points >= (assesment_config.aproval_percentage*100):#si obtiene mas que nota cuatro.
+            x1 = assesment_config.aproval_percentage*100
+            x2 = 100
+            y1 = 4
+            y2 = assesment[0]['max_grade']
+            grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
+        else:#si los puntos son menores al porcentaje de aprobacion
+            x1 = 0
+            x2 = assesment_config.aproval_percentage*100
+            y1 = assesment[0]['min_grade']
+            y2 = 4
+            grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
+        grade.save()
 
 def newAssesment(request,id_class):#,id_assesment_config):
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
@@ -166,6 +167,7 @@ def newAssesment2(request,id_class,id_assesment_config):
                        min_grade = args['min_grade']
                        )
         new.save()
+        setGrades(new.id_assesment,new.id_assesment_conf_id,args['id_class'])
         return redirect('home')
     else:
         form = AssesmentForm(request.POST, request.FILES)
