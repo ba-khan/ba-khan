@@ -1,10 +1,155 @@
 {% extends 'home.html' %}
 {% load static %}
 
+{% block title %}
+	Grupos
+{% endblock %}
 
-{% block title %}Nueva Evaluacion{% endblock %}
- 
 {% block body2 %}
-	<h1>Evaluacion para curso {{ id_class }} en base a configuracion: {{ assesment_config.0.name}}</h1>
+	<head>
+		<script>
+
+		        function start(e) {
+		            e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
+		            e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
+		            e.dataTransfer.setDragImage(e.target, 70, 2.5); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
+		            e.target.style.opacity = '0.4'; 
+		        }
+		
+		        function end(e){
+		            e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
+		            e.dataTransfer.clearData("Data");
+		        }
+		
+		        function enter(e) {
+		            e.target.style.border = ''; 
+		        }
+		
+		        function leave(e) {
+		            e.target.style.border = ''; 
+		        }
+		
+		        function over(e) {
+		        
+		            var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
+		            var id = e.target.id; // Elemento sobre el que se arrastra
+		            
+		            // return false para que se pueda soltar
+		            if (id == 'Reforzamiento'){
+		                return false; // Cualquier elemento se puede soltar sobre el div destino 1
+		            }
+		
+		            if (id == 'Intermedios'){
+		                return false; 
+		            }   
+		
+		            if (id == 'Avanzados')
+		                return false;
+		    
+		            if (id == 'SinGrupo')
+		                return false;
+		                
+		        }
+		
+		    
+		        /**
+		        * 
+		        * Mueve el elemento
+		        *
+		        **/
+		        function drop(e){
+		
+		            var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+		            e.target.appendChild(document.getElementById(elementoArrastrado));
+		            e.target.style.border = '';  // Quita el borde
+
+		
+		            tamElemX = $('#'+elementoArrastrado).width();
+		            tamElemY = $('#'+elementoArrastrado).height();
+		    
+		            posXCont = $('#'+e.target.id).position().left;
+		            posYCont = $('#'+e.target.id).position().top;
+		
+		            // Posicion absoluta del raton
+		            x = e.layerX;
+		            y = e.layerY;
+		
+		            // Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
+		            if (posXCont + tamContX <= x + tamElemX){
+		                x = posXCont + tamContX - tamElemX - 15;
+		            }
+		
+		            if (posYCont + tamContY <= y + tamElemY){
+		                y = posYCont + tamContY - tamElemY;
+		            }
+		
+		            document.getElementById(elementoArrastrado).style.position = "absolute";
+		            document.getElementById(elementoArrastrado).style.left = x + "px";
+		            document.getElementById(elementoArrastrado).style.top = y + "px";
+		        }
+		
+		</script>
+	</head>
+	    <style>
+    	body{ background: #FFFFFF; }
+		h1 { color: #CA7218; }
+		
+
+		#SinGrupo, #Avanzados, #Intermedios, #Reforzamiento {
+		    float: left;
+		    width: 15.4%;
+		    height: 400px;
+		    padding: 10px;
+		    margin: 10px;
+		 	overflow-y: scroll;
+		    border: 1px solid #D9D9D9;
+		    border-radius: 5px;
+		}		
+		
+		#SinGrupo{
+		    background: #FFFFFF;
+		}
+		
+		#Avanzados {
+		    background: #B6D7A8;
+		}
+		
+		#Intermedios {
+		    background: #FFE599;
+		}
+		
+		#Reforzamiento {
+		    background: #EA9999;
+		}
+		
+		.cuadradito {
+		    background: #F5F5F5;
+		    border: 1px solid #D9D9D9;
+		    border-radius: 3px;
+		    width: 140px;
+		    height: 5px;
+		    padding: 0 10px 15px;
+		    margin: 5px;
+		    cursor: move;
+		    word-wrap: break-word;
+		    overflow: hidden;
+		}
+
+    </style>
+    <section>
+	        <div id="SinGrupo" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)" ><ul>No agrupados</ul>
+	            
+	            {% for student in students %}  
+					<div title="{{ student.name }}" class="cuadradito" id="{{ student.kaid_student }}" draggable="true" ondragstart="start(event)" ondragend="end(event)">{{ student.name }}</div>
+				{% endfor %} 
+	
+	        </div>
+        
+        <div id="Avanzados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Avanzados</div>
+        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios</div>
+        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento</div>
+    </section>
+
+
 
 {% endblock %}

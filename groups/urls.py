@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     # ex: /polls/
-    url(r'^$', views.groups, name='groups'),
+    url(r'^$', views.getGroups, name='getGroups'),
+    
 
 ]
