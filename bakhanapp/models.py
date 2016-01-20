@@ -154,8 +154,6 @@ class Assesment(models.Model):
     id_assesment_conf = models.ForeignKey(Assesment_Config)
     start_date = models.DateField()
     end_date = models.DateField()
-    id_group = models.ForeignKey(Group)
-    id_class = models.ForeignKey(Class,null=True)
     name = models.CharField(max_length=150)
     max_grade = models.IntegerField()
     min_grade = models.IntegerField()
