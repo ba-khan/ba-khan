@@ -14,10 +14,23 @@
         <button type="submit" >Guardar</button>
     </form> 
 	</div>
+	<div id="topictree">
+	</div>
 
-	<div>
-	{% if chapters %}
-		<div>
-		{% for chapter in chapters %} 
+	<script>
+	var topictree = JSON.parse('{{ topictree | escapejs }}');
+	var id_skills = [];
+	$('#topictree').on('changed.jstree', function (e, data) {
+	    //var i, j, r = [];
+	    //for(i = 0, j = data.selected.length; i < j; i++) {
+	      //r.push(data.instance.get_node(data.selected[i]).text);
+	    //}
+	    console.log("data selected");
+	    console.log(data.selected);
+	    console.log("id skills");
+	    id_skills=$('#topictree').jstree('get_bottom_selected').attr('skill_id');
+	    console.log(id_skills);
+  }).jstree(topictree);
+	</script>
 
 {% endblock %}

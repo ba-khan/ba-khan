@@ -50,6 +50,7 @@ from pprint import pprint
 import codecs
 from lib2to3.fixer_util import String
 from django.core import serializers
+from django.db import connection
 
 
 def login(request):
@@ -60,7 +61,7 @@ def rejected(request):
 
 @login_required()
 def home(request):
-    return render_to_response('home.html',)
+    return render_to_response('home.html',context_instance=RequestContext(request))
 
 @login_required()
 def teacher(request):
@@ -80,12 +81,10 @@ def newAssesmentConfig(request):
             return redirect('configuraciones')
     else:
         form = AssesmentConfigForm(request.POST, request.FILES)
-        chapters = Chapter.objects.all()
-        topics = Topic.objects.all()
-        subtopics = Subtopic.objects.all()
-        subtopic_skills = Subtopic_Skill.objects.all()
-    return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs,
-        'chapters':chapters,'topics':topics,'subtopics':subtopics,'subtopic_skills':subtopic_skills}, context_instance=RequestContext(request))
+    start_time = time.time()
+    topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
+    print("--- %s seconds ---" % (time.time() - start_time))
+    return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs,'topictree':topictree}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
@@ -469,29 +468,87 @@ def run_tests():
     #    get_api_resource(session)
     return session
 
-def getTopictree():
-    topictree=[]
-    temp=[]
-    chapters=Chapter.objects.filter(id_subject_name_id='math')
-    for chapter in chapters:
-        topics=Topic.objects.filter(id_chapter_name_id=chapter.id_chapter_name)
+def getTopictree(subject):
+    topictree_json={}
+    topictree_json['checkbox']={'keep_selected_style':False}
+    topictree_json['plugins']=['checkbox']
+    #topictree=[]
+    string_query ='''select c.name_spanish as chapter_name, t.name_spanish as topic_name, st.name_spanish as subtopic_name, s.id_skill_name as skill_id, s.name_spanish as skill_name
+                 from bakhanapp_chapter c, bakhanapp_skill s, bakhanapp_topic t, bakhanapp_subtopic st, bakhanapp_subtopic_skill ss
+                 where c.id_chapter_name=t.id_chapter_name_id and t.id_topic_name=st.id_topic_name_id and st.id_subtopic_name=ss.id_subtopic_name_id and ss.id_skill_name_id=s.id_skill_name
+                 order by c.name_spanish, t.name_spanish, st.name_spanish'''
+    cursor=connection.cursor()
+    cursor.execute(string_query)
+    query_result = dictfetchall(cursor)
+    last_chapter=''
+    last_topic=''
+    last_subtopic=''
+    last_skill=''
+    chapters=[]
+    for query_tuple in query_result:
+        current_chapter=query_tuple['chapter_name']
+        current_topic=query_tuple['topic_name']
+        current_subtopic=query_tuple['subtopic_name']
+        current_skill=query_tuple['skill_name']
+        current_skill_id=query_tuple['skill_id']
+        
+        if last_chapter=="" or last_chapter!=current_chapter:
+            chapter={"text":current_chapter,"children":[]}
+            chapters.append(chapter)
+            last_chapter=current_chapter
+
+        if last_topic=="" or last_topic!=current_topic:
+            topic={"text":current_topic,"children":[]}
+            chapter["children"].append(topic)
+            last_topic=current_topic    
+        
+        if last_subtopic=="" or last_subtopic!=current_subtopic:
+            subtopic={"text":current_subtopic,"children":[]}
+            topic["children"].append(subtopic)
+            last_subtopic=current_subtopic 
+        skill={"text":current_skill, "id_skill": current_skill_id ,"children":[]}
+        subtopic["children"].append(skill)
+    #temp=[]
+    #chapters=Chapter.objects.filter(id_subject_name_id=subject)
+    #for chapter in chapters:
+    #    chapter_obj={'text':chapter.name_spanish,'children':[]}
+    #    topics=Topic.objects.filter(id_chapter_name_id=chapter.id_chapter_name)
         #print(chapter)
-        for topic in topics:
-            subtopics=Subtopic.objects.filter(id_topic_name_id=topic.id_topic_name)
+    #    for topic in topics:
+    #        topic_obj={'text':topic.name_spanish,'children':[]}
+    #        subtopics=Subtopic.objects.filter(id_topic_name_id=topic.id_topic_name)
             #print(topic)
-            for subtopic in subtopics:
-                subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopic.id_subtopic_name)
-                for subtopic_skill in subtopic_skills:
-                    skills=Skill.objects.filter(id_skill_name=subtopic_skill.id_skill_name_id)
-                    for skill in skills:
-                        temp.append(chapter)
-                        temp.append(topic)
-                        temp.append(subtopic)
-                        temp.append(skill)
-                        print(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
-                        topictree.append(temp)
-                        temp=[]
-    return topictree
+    #        for subtopic in subtopics:
+    #            subtopic_obj={'text':subtopic.name_spanish,'children':[]}
+    #            subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopic.id_subtopic_name)
+    #            for subtopic_skill in subtopic_skills:
+    #                skills=Skill.objects.filter(id_skill_name=subtopic_skill.id_skill_name_id)
+    #                for skill in skills:
+    #                    skill_obj={'text': skill.name_spanish, 'children':[]}
+    #                    subtopic_obj['children'].append(skill_obj)
+                        #temp.append(chapter)
+                        #temp.append(topic)
+                        #temp.append(subtopic)
+                        #temp.append(skill)
+                        #print(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
+                        #topictree.append(temp)
+    #                    temp=[]
+    #            topic_obj['children'].append(subtopic_obj)
+    #        chapter_obj['children'].append(topic_obj)
+    #    topictree.append(chapter_obj)
+    topictree_json['core']={'data':chapters}
+    #topictree_data=serialize('json',topictree_json)
+    topictree_json_string=json.dumps(topictree_json)
+    print topictree_json_string
+    return topictree_json_string
+
+def dictfetchall(cursor):
+    #Returns all rows from a cursor as a dict
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
 
 def get_api_resource2(session,llamada,server):
 

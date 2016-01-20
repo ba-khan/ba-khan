@@ -14,29 +14,28 @@
 			{% ifchanged class.level.0 %}
 				{% for klass in classes %}
 					{% if klass.level == class.level %}
-						<div>		
+		
 							<!-- comienza el cuadro de grupo -->
-							<div class="dashboard-section-container"  data-reactid=""><div data-reactid=""><noscript data-reactid=""></noscript></div>
-							<div class="section-header class-card-header" data-reactid="">
-							<div class="signup-code" data-reactid="">
-							</div></div>
-							<div class="section-body class-card-body" data-reactid=""><div class="mission-badge" data-reactid="">
-							<div data-reactid=""></div><span data-reactid=""></span></a></div>
-							<!-- comienza grupo de estudiantes -->
-							<div class="student-list" data-reactid=""><ul data-reactid="">
-							<!-- columna 1 -->
-							<div class="student-list-column" style="width:33.333333333333336%;" data-reactid="" >
-							<font size="4">{{ class.level }} {{ klass.letter }}</font>		
+							<div class="dashboard-section-container">
+								<div class="section-body class-card-body">
+									<!-- comienza grupo de estudiantes -->
+									<div class="student-list"><ul>
+										<!-- columna 1 -->
+										<div class="student-list-column" style="width:33.333333333333336%;">
+											<font size="4">{{ class.level }} {{ klass.letter }}</font>		
+										</div>
+										<!-- columna 2 -->
+										<div class="student-list-column" style="width:33.333333333333336%;">
+											<font size="2"><a role="button" aria-disabled="false" href="{% url 'getClassStudents' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Curso</a></font>
+										</div>
+										<!-- columna 3 -->
+										<div class="student-list-column" style="width:33.333333333333336%;">
+											<font size="2"><a role="button" aria-disabled="false" href="" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Grupos</a></font>
+										</div>
+									</ul></div>
+								</div>
 							</div>
-							<!-- columna 2 -->
-							<div class="student-list-column" style="width:33.333333333333336%;" data-reactid="">
-							<font size="2"><a role="button" aria-disabled="false" href="{% url 'getClassStudents' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;" data-reactid="">Ver Curso</a></font>
-							</div>
-							<!-- columna 3 -->
-							<div class="student-list-column" style="width:33.333333333333336%;" data-reactid="">
-							<font size="2"><a role="button" aria-disabled="false" href="" class="kui-button kui-button-plain kui-button-primary" style="width:100%;" data-reactid="">Ver Grupos</a></font>
-							</div></ul></div></div>
-						</div>
+
 					{% endif %}
 				{% endfor %}
 			{% endifchanged %} 
@@ -44,6 +43,6 @@
 	{% endif %}	
 	<div id="end-of-page-spacer">
 		&nbsp;
-	</div></div></div></div></div>
+	</div>
 	
 {% endblock %}

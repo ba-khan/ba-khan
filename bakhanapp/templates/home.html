@@ -13,34 +13,32 @@
 	</div>
 	
 	<!-- Inicio barra de arriba (class="selected")-->
-	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered" data-reactid=".1"><span class="float-left" data-reactid=".1.0"><h3 class="children-students-title" data-reactid=".1.0.0"><span data-reactid=".1.0.0.0">Tus estudiantes</span></h3></span>
-	<a class="" href="{% url 'home' %}" id="nav-dashboard"><span>Inicio</span></a>
+	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"><span>Tus estudiantes</span></h3></span>
+	<a class="" href="{% url 'home' %}"><span>Inicio</span></a>
 	<a class="" href="{% url 'cursos' %}"><span>Cursos</span></a>
 	<a class="" href="{% url 'configuraciones' %}"><span>configuraciones</span></a>
-	<a class="" href="https://Pautas" id="nav-exercises" data-reactid=".1.5"><span data-reactid="">Pautas</span></a>
+	<a class="" href="https://Pautas"><span>Pautas</span></a>
 	</span></nav>
 	<!-- Fin barra de arriba -->
 	
-	<div id="page-container" role="main">
-			<div id="page-container-inner">
-				<div id="coach-homepage">
-					<div class="coach-homepage-main" data-reactid="">
-						<div class="contained-and-centered" data-reactid="">
-							<div class="checklist-section" data-reactid="">
-								<div class="progress-header" data-reactid="">
-									<div class="header-label" data-reactid=""><img class="checklist-badge" src="Tus%20estudiantes%20_%20Khan%20Academy_archivos/productive-40x40.png" data-reactid=""><span class="header-text" data-reactid="">Hola Profesor Jirafales</span>
-									</div>
-									<div class="progress-bar-container" data-reactid=".2.0.0.0.1">
-										<div class="toggle-component header-text" data-reactid=""><span data-reactid="">Ver Pautas</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+
+
+
+
+	<div class="contained-and-centered">
+		<div class="checklist-section">
+			<div class="progress-header">
+				<div class="header-label">
+					<img class="checklist-badge" src="https://es.khanacademy.org/images/badges/moon/productive-40x40.png">
+					<span class="header-text">Hola Profesor {{ request.user.username }}</span>
 				</div>
+				<div><div class="toggle-component header-text"><span>Ver Pautas</span></div>
 			</div>
+		</div>
 	</div>
+
+
+
 	{% block body2 %}
 		
 	{% endblock %}
