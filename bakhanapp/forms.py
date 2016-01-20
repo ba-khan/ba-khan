@@ -15,4 +15,4 @@ class AssesmentConfigForm(forms.ModelForm):
 class AssesmentForm(forms.ModelForm):
     class Meta:
         model = Assesment
-        fields = ('id_assesment_conf','start_date','end_date','id_class','id_group','min_grade','max_grade','name',)
+        fields = ('id_assesment_conf','start_date','end_date','min_grade','max_grade','name',)
