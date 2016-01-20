@@ -6,13 +6,13 @@
  
 {% block body %}
 	<h1>Evaluacion para curso {{ id_class }} en base a configuracion: {{ assesment_config.0.name}}</h1>
-	<form >
+	<form action="" method="post">{% csrf_token %} 
 		<label for='start_date'>Inicio Evaluacion</label>
 		<input name='start_date' type='date'>
 		<label for='end_date'>Fin Evaluacion</label>
 		<input name='end_date' type='date'>
 		<label for='name'>Nombre</label>
-		<input name='nombre' >
+		<input name='name' >
 		<label for='min_grade'>Nota Minima</label>
 		<input name='min_grade' value='2'>
 		<label for='max_grade'>Nota Maxima</label>

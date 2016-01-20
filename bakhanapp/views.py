@@ -155,7 +155,22 @@ def newAssesment(request,id_class):#,id_assesment_config):
 
 def newAssesment2(request,id_class,id_assesment_config):
     assesment_config = Assesment_Config.objects.filter(id_assesment_config=id_assesment_config)
-    return render_to_response('formNewAssesment.html',{'assesment_config':assesment_config,'id_class':id_class}, context_instance=RequestContext(request))
+    if request.method == 'POST':
+        args = request.POST
+        config = Assesment_Config.objects.filter(id_assesment_config=args['id_assesment_conf'])
+        new= Assesment(start_date=args['start_date'],
+                       end_date=args['end_date'],
+                       id_assesment_conf_id=int(args['id_assesment_conf']),
+                       #id_class_id = args['id_class'],
+                       name = args['name'],
+                       max_grade=args['max_grade'],
+                       min_grade = args['min_grade']
+                       )
+        new.save()
+        return redirect('home')
+    else:
+        form = AssesmentForm(request.POST, request.FILES)
+    return render_to_response('formNewAssesment.html',{'form':form,'assesment_config':assesment_config,'id_class':id_class}, context_instance=RequestContext(request))
 
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
@@ -223,7 +238,7 @@ def getTeacherClasses(request):
 def getClassGrades(request,id_class):
     #Funcion que entrega todas las notas de los estudiantes de un curso.
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade') #inner join Django
+    #grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade') #inner join Django
     return grades
 
 def getClassSkills(request,id_class):
@@ -247,7 +262,7 @@ def getClassStudents(request, id_class):
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    evaluations_class = Assesment.objects.filter(id_class=id_class)#.values('id_assesment')
+    #evaluations_class = Assesment.objects.filter(id_class=id_class)#.values('id_assesment')
     for student in students:
         student.t_exercise= getTotalExerciseTime(student.kaid_student)
         student.t_video= getTotalVideoTime(student.kaid_student)
@@ -258,12 +273,13 @@ def getClassStudents(request, id_class):
         student.mastery2 = getTotalNivel(student.kaid_student,'mastery2')
         student.mastery3 = getTotalNivel(student.kaid_student,'mastery3')
     classroom = Class.objects.filter(id_class=id_class)
-    grades = getClassGrades(request,id_class)
+    #grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(id_assesment_config=1)
     print assesment_configs
     return render_to_response('studentClass.html',
-                                {'students': students, 'classroom': classroom,'classes': classes,'grades':grades,'s_skills':s_skills, 'assesment_configs':assesment_configs}, 
+                                {'students': students, 'classroom': classroom,'classes': classes,
+                                's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
                                 context_instance=RequestContext(request)
                             )
 
