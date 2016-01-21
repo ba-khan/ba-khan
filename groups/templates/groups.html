@@ -91,8 +91,6 @@
 		</script>
 	</head>
 	    <style>
-    	body{ background: #FFFFFF; }
-		h1 { color: #CA7218; }
 		
 
 		#SinGrupo, #Avanzados, #Intermedios, #Reforzamiento {
@@ -135,6 +133,13 @@
 		    overflow: hidden;
 		}
 
+		#topictree{
+			overflow-y: scroll;
+			height: 400px;
+			padding: 10px;
+		    margin: 10px;
+		}
+
     </style>
     <section>
 	        <div id="SinGrupo" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)" ><ul>No agrupados</ul>
@@ -148,7 +153,32 @@
         <div id="Avanzados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Avanzados</div>
         <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios</div>
         <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento</div>
+        <div id="topictree">
+		</div>
     </section>
+
+				<div class="student-list-column" style="width:33.333333333333336%;">
+					<font size="2"><a role="button" aria-disabled="false" href="" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Realizar Agrupación</a></font>
+				</div>
+
+
+
+
+	<script>
+	var topictree = JSON.parse('{{ topictree | escapejs }}');
+	var id_skills = [];
+	$('#topictree').on('changed.jstree', function (e, data) {
+	    //var i, j, r = [];
+	    //for(i = 0, j = data.selected.length; i < j; i++) {
+	      //r.push(data.instance.get_node(data.selected[i]).text);
+	    //}
+	    console.log("data selected");
+	    console.log(data.selected);
+	    console.log("id skills");
+	    id_skills=$('#topictree').jstree('get_bottom_selected').attr('skill_id');
+	    console.log(id_skills);
+  }).jstree(topictree);
+	</script>
 
 
 

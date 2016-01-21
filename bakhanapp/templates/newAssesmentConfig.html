@@ -5,32 +5,56 @@
 {% block title %}Nueva Configuracion{% endblock %}
  
 {% block new %}
-	<div class='container'> 
-    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %} 
-        <table> 
-            {{ form.as_table }} 
-        </table> 
+	<div id="assesment_div">
+	<div id="assesment_form" >
+    <form action="" method="post">{% csrf_token %}
+    	<label for='name'>Nombre de la Pauta</label>
+    	<input name="name" type="text">
+    	<label for='approval_percentage'>Nombre de la Pauta</label>
+    	<input name="approval_percentage" type="number">
+        <input name="skills" type="hidden" value="[]">
         <a href="{% url 'configuraciones' %}">Cancelar</a>
         <button type="submit" >Guardar</button>
     </form> 
 	</div>
-	<div id="topictree">
+	<div class="slider">
+	    <div class="left-color"></div>
+	</div>
+	<div id="topictree_div">
+		<input id="skill_search" type="text">
+		<div id="topictree">
+		</div>
+	</div>
 	</div>
 
 	<script>
-	var topictree = JSON.parse('{{ topictree | escapejs }}');
-	var id_skills = [];
-	$('#topictree').on('changed.jstree', function (e, data) {
-	    //var i, j, r = [];
-	    //for(i = 0, j = data.selected.length; i < j; i++) {
-	      //r.push(data.instance.get_node(data.selected[i]).text);
-	    //}
-	    console.log("data selected");
-	    console.log(data.selected);
-	    console.log("id skills");
-	    id_skills=$('#topictree').jstree('get_bottom_selected').attr('skill_id');
-	    console.log(id_skills);
-  }).jstree(topictree);
+		var topictree = JSON.parse('{{ topictree | escapejs }}');
+		$('#topictree').on('changed.jstree', function (e, data) {
+		    selected_skills=$('#topictree')
+		    			.jstree()
+		    			.get_bottom_selected(true);
+		    selected_skills_id=new Array();
+		    //Get selected skills (leaves of the topictree json)
+		    for (i=0;i< selected_skills.length;i++){
+		    	if (selected_skills[i].data){
+		    		selected_skills_id.push(selected_skills[i].data["skill_id"]);
+		    	}
+		    }
+		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
+		    selected_skills_id = selected_skills_id.filter(
+		    						function( item, index, inputArray ) {
+										return inputArray.indexOf(item) == index;
+									});
+			$('input[name="skills"]').val(JSON.stringify(selected_skills_id));
+	    }).jstree(topictree);
+	    var to=false;
+	    $('#skill_search').keyup(function () {
+		    if(to) { clearTimeout(to); }
+		    to = setTimeout(function () {
+		      var v = $('#skill_search').val();
+		      $('#topictree').jstree(true).search(v);
+		    }, 250);
+  		});
 	</script>
 
 {% endblock %}

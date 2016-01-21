@@ -52,6 +52,7 @@ from django.db import connection
 
 from bakhanapp.models import Group
 from django.utils import timezone
+from bakhanapp.views import getTopictree
 
 
 # Create your views here.
@@ -59,8 +60,8 @@ from django.utils import timezone
 def getGroups(request, id_class):
 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-
-    return render_to_response('groups.html',{'students': students},context_instance=RequestContext(request))
+    topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
+    return render_to_response('groups.html',{'students': students,'topictree':topictree},context_instance=RequestContext(request))
 
 def save_groups(request,id_class):
 	#Funcion de prueba que crea un nuevo grupo con datos de prueba
