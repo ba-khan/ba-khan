@@ -77,11 +77,11 @@ def make_groups(request,id_class):
 	#Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
 	students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
 	if request.method == 'POST':
-        args = request.POST
-        for s in students:
-        	#Por cada estudiante en id_class, se obtiene su agrupacion.
+		args = request.POST
+		for s in students:
+			#Por cada estudiante en id_class, se obtiene su agrupacion.
 			s.type = getTypeStudent(s.kaid_student,args) #args debe contener todas las id de las skill seleccionadas para el agrupamiento.
-        return s
+			return s
 
 def getTypeStudent(request,kaid_student,args):
 	#Funcion que entrega en que nivel grupo debe ser organizado un estudiante
