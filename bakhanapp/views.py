@@ -74,16 +74,27 @@ def deleteAssesmentConfig(request,id_assesment_config):
 def newAssesmentConfig(request):
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
     if request.method == 'POST':
-        form = AssesmentConfigForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            return redirect('configuraciones')
+        args = request.POST
+        skills_selected = eval(args['skills'])
+        teacher=Teacher.objects.get(pk="2")
+        subject=Subject.objects.get(pk="math")
+        new_assesment_config = Assesment_Config(name=args['name'],
+                               approval_percentage=args['approval_percentage'],
+                               kaid_teacher=teacher,
+                               top_score=0,
+                               id_subject_name=subject
+                               )
+        new_assesment_config.save()
+        #id_new_assesment_config=new_assesment_config.pk
+        for skill in skills_selected:
+            skill_tuple=Skill.objects.get(pk=skill)
+            new_assesment_skill=Assesment_Skill(id_assesment_config=new_assesment_config,
+                                                id_skill_name=skill_tuple)
+            new_assesment_skill.save()
+        return redirect('configuraciones')
     else:
         form = AssesmentConfigForm(request.POST, request.FILES)
-    start_time = time.time()
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
-    print("--- %s seconds ---" % (time.time() - start_time))
     return render_to_response('newAssesmentConfig.html',{'form': form,'assesment_configs': assesment_configs,'topictree':topictree}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):

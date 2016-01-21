@@ -1,5 +1,6 @@
 {% extends 'home.html' %}
 {% load static %}
+{% load  smart_if %}
 
 {% block title %}
 	Grupos
@@ -142,42 +143,80 @@
 
     </style>
     <section>
-	        <div id="SinGrupo" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)" ><ul>No agrupados</ul>
-	            
-	            {% for student in students %}  
-					<div title="{{ student.name }}" class="cuadradito" id="{{ student.kaid_student }}" draggable="true" ondragstart="start(event)" ondragend="end(event)">{{ student.name }}</div>
-				{% endfor %} 
-	
-	        </div>
-        
-        <div id="Avanzados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Avanzados</div>
-        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios</div>
-        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento</div>
-        <div id="topictree">
-		</div>
+    	
+			        <div id="SinGrupo" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)" ><ul>No agrupados</ul>  
+							
+			        </div>
+ 
+		        	<div id="Avanzados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
+
+		        	</div>
+ 
+		        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios</div>
+		        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento</div>
+
+	        <div id="topictree">
+			</div>
+ 
     </section>
+	<form action="" method="post">{% csrf_token %}
+        <input name="skills" type="hidden" value="[]">
+        <button type="submit" class="kui-button kui-button-plain kui-button-primary">Realizar Agrupacion</button>
+    </form> 
 
-				<div class="student-list-column" style="width:33.333333333333336%;">
-					<font size="2"><a role="button" aria-disabled="false" href="" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Realizar Agrupación</a></font>
-				</div>
-
-
+		<script type="text/javascript">
+		  $(document).ready(function(){
+		  	{% if students %}
+				{% for student in students %}
+					{% if student.type == 'ungrouped' %}
+						$("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+					{% endif%}
+					{% if student.type == 'reinforcement' %}
+						$("#Reforzamiento").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+					{% endif%}
+					{% if student.type == 'intermediate' %}
+						$("#Intermedios").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+					{% endif%}
+					{% if student.type == 'advanced' %}
+						$("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+					{% endif%}
+				{% endfor %}
+			{% endif %}	
+				$("#boton01").click(function(){
+				    $("p").html("<strong>Hola!!!!</strong>");
+				});
+			});
+		</script>	
 
 
 	<script>
-	var topictree = JSON.parse('{{ topictree | escapejs }}');
-	var id_skills = [];
-	$('#topictree').on('changed.jstree', function (e, data) {
-	    //var i, j, r = [];
-	    //for(i = 0, j = data.selected.length; i < j; i++) {
-	      //r.push(data.instance.get_node(data.selected[i]).text);
-	    //}
-	    console.log("data selected");
-	    console.log(data.selected);
-	    console.log("id skills");
-	    id_skills=$('#topictree').jstree('get_bottom_selected').attr('skill_id');
-	    console.log(id_skills);
-  }).jstree(topictree);
+		var topictree = JSON.parse('{{ topictree | escapejs }}');
+		$('#topictree').on('changed.jstree', function (e, data) {
+		    selected_skills=$('#topictree')
+		    			.jstree()
+		    			.get_bottom_selected(true);
+		    selected_skills_id=new Array();
+		    //Get selected skills (leaves of the topictree json)
+		    for (i=0;i< selected_skills.length;i++){
+		    	if (selected_skills[i].data){
+		    		selected_skills_id.push(selected_skills[i].data["skill_id"]);
+		    	}
+		    }
+		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
+		    selected_skills_id = selected_skills_id.filter(
+		    						function( item, index, inputArray ) {
+										return inputArray.indexOf(item) == index;
+									});
+			$('input[name="skills"]').val(JSON.stringify(selected_skills_id));
+	    }).jstree(topictree);
+	    var to=false;
+	    $('#skill_search').keyup(function () {
+		    if(to) { clearTimeout(to); }
+		    to = setTimeout(function () {
+		      var v = $('#skill_search').val();
+		      $('#topictree').jstree(true).search(v);
+		    }, 250);
+  		});
 	</script>
 
 

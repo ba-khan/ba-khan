@@ -58,41 +58,62 @@ from bakhanapp.views import getTopictree
 # Create your views here.
 @login_required()
 def getGroups(request, id_class):
-
-    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
+    if request.method == 'POST':
+        args = request.POST
+        skills_selected = eval(args['skills'])
+        students = makeGroups(id_class,skills_selected)
+    else:
+        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+        for s in students:
+            s.type = 'ungrouped'
     return render_to_response('groups.html',{'students': students,'topictree':topictree},context_instance=RequestContext(request))
 
+def makeGroups(id_class,skills_selected):
+    #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
+    #print skills_selected                                                         #aqui llegan bien las habilidades seleccionadas
+    students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
+    for s in students:
+        #Por cada estudiante en id_class, se obtiene su agrupacion.
+        s.type = getTypeStudent(s.kaid_student,skills_selected) #args debe contener todas las id de las skill seleccionadas para el agrupamiento.
+    return students
+
+def getTypeStudent(kaid_student,args):
+    #Funcion que entrega en que nivel grupo debe ser organizado un estudiante
+    #de acuerdo a su nivel en las skills seleccionadas por el profesor.
+    #skills = Group_Skill.objects.filter(id_group_id=id_group)
+    #aqui llegan bien las habilidades seleccionadas
+    reinforcement = 0
+    intermediate = 0
+    advanced = 0
+    total = len(args)
+    for skill in args:
+        student_progress = Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill).values('last_skill_progress')
+        #el problema esta con la variable student_progress
+        if student_progress:
+            if student_progress[0]["last_skill_progress"] == 'struggling' or student_progress[0]["last_skill_progress"] == 'unstarted':
+                reinforcement += 1
+            if student_progress[0]["last_skill_progress"] == 'mastery1' or student_progress[0]["last_skill_progress"] == 'mastery2' or student_progress[0]["last_skill_progress"] == 'practiced':
+                intermediate += 1
+            if student_progress[0]["last_skill_progress"] == 'mastery3':
+                advanced += 1
+    if reinforcement > 0:
+        return 'reinforcement'
+    elif intermediate > 0:
+        return 'intermediate'
+    elif advanced == total:
+        return 'advanced'
+    else:
+        return 'reinforcement'
+            
+
 def save_groups(request,id_class):
-	#Funcion de prueba que crea un nuevo grupo con datos de prueba
-	g = Group()
-	g.name = 'test'
-	g.type = 'avanzado'
-	g.start_date = timezone.now()
-	g.end_date = timezone.now()
-	g.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
-	g.save()
-	return render (request,'groups.html')
-
-def make_groups(request,id_class):
-	#Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
-	students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
-	if request.method == 'POST':
-		args = request.POST
-		for s in students:
-			#Por cada estudiante en id_class, se obtiene su agrupacion.
-			s.type = getTypeStudent(s.kaid_student,args) #args debe contener todas las id de las skill seleccionadas para el agrupamiento.
-			return s
-
-def getTypeStudent(request,kaid_student,args):
-	#Funcion que entrega en que nivel grupo debe ser organizado un estudiante
-	#de acuerdo a su nivel en las skills seleccionadas por el profesor.
-	#skills = Group_Skill.objects.filter(id_group_id=id_group)
-	for skill in args:
-		student_progress = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_id']).values('last_skill_progress')
-		if student_progress == 'struggling' or student_progress == 'unstarted':
-			return 'reinforcement'
-		if student_progress == 'mastery1' or student_progress == 'mastery2':
-			return 'intermediate'
-		else:
-			return 'advanced'
+    #Funcion de prueba que crea un nuevo grupo con datos de prueba
+    g = Group()
+    g.name = 'test'
+    g.type = 'avanzado'
+    g.start_date = timezone.now()
+    g.end_date = timezone.now()
+    g.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+    g.save()
+    return render (request,'groups.html')
