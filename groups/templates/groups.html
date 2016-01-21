@@ -169,16 +169,16 @@
 		  	{% if students %}
 				{% for student in students %}
 					{% if student.type == 'ungrouped' %}
-						$("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+						$("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' name='SinGrupo' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
 					{% endif%}
 					{% if student.type == 'reinforcement' %}
-						$("#Reforzamiento").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+						$("#Reforzamiento").append("<div title='{{ student.name }}' class='cuadradito' name='Reforzamiento' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
 					{% endif%}
 					{% if student.type == 'intermediate' %}
-						$("#Intermedios").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+						$("#Intermedios").append("<div title='{{ student.name }}' class='cuadradito' name='Intermedios' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
 					{% endif%}
 					{% if student.type == 'advanced' %}
-						$("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+						$("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' name='Avanzados' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
 					{% endif%}
 				{% endfor %}
 			{% endif %}	
