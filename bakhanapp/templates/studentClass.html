@@ -1,4 +1,4 @@
-{% extends 'home.html' %}
+﻿{% extends 'home.html' %}
 {% load static %}
 {% load  smart_if %}
 
@@ -18,76 +18,180 @@
 	  </script>
 	</head>
 	
-	<style>
-	table, th, td {
-	    border: 1px solid black;
-	    border-collapse: collapse;
-	}
-	th, td {
-    	padding: 15px;
-	}
-	th {
-    	background-color: #7EB442;
-	}
-	
-	</style>
-	
 	<div align="center">
-	<table  id="myTable" class="tablesorter" id="simple" style="width:99%">	
-	{% for class in classroom %}  
-            <caption>{{ class.level }} {{ class.letter }}</caption>
-            <a href="{% url 'nueva_evaluacion' class.id_class %}">Nueva Evaluacion</a>
-	{% endfor %}
-	<thead>
-	{% if students %}
+	
+	
+	<script type="text/javascript">
+		var jason = JSON.parse('{{ jason_data | escapejs }}');
+	        // column definitions
+	    var columns = [
+	        { head: 'Estudiantes', cl: 'name', html: ƒ('name') },
+	        { head: 'Tiempo en ejercicios', cl: 'skills_time', value: ƒ('skills_time'), valueF : ƒ('skills_time',length()) },
+	        { head: 'Tiempo en videos', cl: 'videos_time', valueF: ƒ('video_time', length()), value: ƒ('video_time') },
+	        { head: 'Correctos/Incorrectos', cl: 'num', id:'corrects', values: ƒ('corrects') },
+	        { head: 'Practiced', cl: 'name', html: ƒ('practiced') },
+	        { head: 'Mastery1', cl: 'name', html: ƒ('mastery1') },
+	        { head: 'Mastery2', cl: 'name', html: ƒ('mastery2') },
+	        { head: 'Mastery3', cl: 'name', html: ƒ('mastery3') },
+	        { head: 'Evaluacion1', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', html: ƒ('evaluacion') },
+	    ];
+	    
+	    
+	    
+	    
+	    
+	    function elMayor(data){
+	    	mayor=0;
+	    	console.log(data.length)
+	    	for (i=0; i<data.length; i++){
+	    		console.log(data[i])
+		    		if (data[i]>mayor){
+		    			mayor = parseInt(data[i]);
+		    			//console.log(data[i])
+		    		}
+	    	}
+	    	console.log(mayor)
+	    	return mayor
+	    };
+	    
+	    var skill_time = (d3.map(jason, function(d) { return d.skills_time }));
+	    console.log(skill_time);
+	    var escalarTiemposSkill = d3.scale.linear()
+                            .domain([0,elMayor(skill_time.keys())])
+                            .range([0,100]);
+                            
+        var videos_time = (d3.map(jason, function(d) { return d.video_time }));
+        console.log(videos_time.keys());
+        var escalarTiemposVideo = d3.scale.linear()
+                            .domain([0,elMayor(videos_time.keys())])
+                            .range([0,100]);
 
-            <tr>
-                <th>Estudiantes</th>
-                    <th>- Tiempo en ejercicios</th>
-                    <th>- Tiempo en videos</th>
-                    <th>- Correctos</th>
-                    <th>- Incorrectos</th>
-                    <th>- Practiced</th>
-                    <th>- Mastery1</th>
-                    <th>- Mastery2</th>
-                    <th>- Mastery3</th>
-                    <th id="tooltip"><a title="{% for assesment_config in assesment_configs %}
-                                                    {{ "Nombre: " }}
-                                                    {{ assesment_config.name }}
-                                                    {{ "<hr style='margin: 0'>% aprobacion: " }}
-                                                    {{ assesment_config.approval_percentage }}
-                                                    {{ "<hr style='margin: 0'>Puntaje maximo: " }}
-                                                    {{ assesment_config.top_score }}
-                                                {% endfor %}
-                     ">- Evaluacion 1</a></th>
-                    {% for grade in grades %}
-                    <th>- {{ grade.name }}</th>
-                    {% endfor %}    
-            </tr>
-     	</thead>
-     	<tbody> 
-		{% for student in students %}  
-            <tr>
-                    <td>{{ student.name }} </td>
-                    <td>{{ student.t_exercise }} </td>
-                    <td>{{ student.t_video }} </td>
-                    <td>{{ student.correct }} </td>
-                    <td>{{ student.incorrect }} </td>
-                    <td>{{ student.practiced }} </td>
-                    <td>{{ student.mastery1 }} </td>
-                    <td>{{ student.mastery2 }} </td>
-                    <td>{{ student.mastery3 }} </td>
-                    {% for grade in grades %}
-                        {% if grade.grade__kaid_student == student.kaid_student %}
-                            <td> {{ grade.grade__grade }}</td>
-                        {% endif %} 
-                    {% endfor %}  
-            </tr>
-        {% endfor %}
-        </tbody>
-        </table>
-        </div>
-    {% endif %}
+	    // create table
+	    var table = d3.select('body')
+	    	.append('div')
+	    	.attr('class', 'contained-and-centered')
+	    	.append('div')
+	    	.attr('align', 'center')
+	        .append('table')
+	        .attr('id','myTable')
+	        .attr('class', 'tablesorter')
+	        .style('width', '99%');
+	        
+	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').append('a').attr('href','{% url 'nueva_evaluacion' class.id_class %}').text(' Nueva Evaluacion{% endfor %}')
+
+	    // create table header
+	    table.append('thead').append('tr')
+	        .selectAll('th')
+	        .data(columns).enter()
+	        .append('th')
+	        .attr('class', ƒ('cl'))
+	        .attr('id', ƒ('id'))
+	        .attr('title', ƒ('tooltip'))
+	        .text(ƒ('head'));
+
+	    // create table body
+	    table.append('tbody')
+	        .selectAll('tr')
+	        .data(jason).enter()
+	        .append('tr')
+	        .selectAll('td')
+	        .data(function(row, i) {
+	            return columns.map(function(c) {
+	                // compute cell values for this specific row
+	                var cell = {};
+	                d3.keys(c).forEach(function(k) {
+	                    cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
+	                });
+	                return cell;
+	            });
+	        }).enter()
+	        .append('td')
+	        .html(ƒ('html'))
+	        .attr('class', ƒ('cl'))
+	        .attr('id', ƒ('id'));
+
+	    var tiempos_skill = table.select("tbody")
+	    	.selectAll(".skills_time")
+	    	.append("svg")
+	    	.style("width",function(d){return escalarTiemposSkill(d.value) })
+	    	.style("height","20")
+	    tiempos_skill
+	    	.append("rect")
+	    	.style("width",function(d){return escalarTiemposSkill(d.value)})
+	    	.style("height","20")
+	    	.style("fill","#FC8A3B");
+	    tiempos_skill
+	    	.append("text")
+		    .attr("x", function(d) { return escalarTiemposSkill(d.value) - 35; })
+		    .attr("y", 10)
+		    .attr("dy", ".35em")
+		    .attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+			.attr("fill", "white")
+		    .text(function(d) { return d.valueF });
+		    
+		 var tiempos_video = table.select("tbody")
+	    	.selectAll(".videos_time")
+	    	.append("svg")
+	    	.style("width",function(d){return escalarTiemposVideo(d.value) })
+	    	.style("height","20")
+	    tiempos_video
+	    	.append("rect")
+	    	.style("width",function(d){return escalarTiemposVideo(d.value)})
+	    	.style("height","20")
+	    	.style("fill","#FC8A3B");
+	    tiempos_video
+	    	.append("text")
+		    .attr("x", function(d) { return escalarTiemposVideo(d.value) - 35; })
+		    .attr("y", 10)
+		    .attr("dy", ".35em")
+		    .attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+			.attr("fill", "white")
+		    .text(function(d) { return d.valueF });
+		    
+
+		var correct_incorrect = table.select("tbody")
+	    	.selectAll(".num")
+	    	.append("svg")
+	    	.style("width","200")
+	    	.style("height","20")
+	    var correctos = 
+	    	correct_incorrect.append("rect")
+	    	.attr("x",100)
+	    	.style("width",function(d){return d.values[0]/10})
+	    	.style("height","20")
+	    	.style("fill","green");
+	    correct_incorrect
+	    	.append("text")
+		    .attr("x", function(d) { return 75+d.values[0]/10})
+		    .attr("y", 10)
+		    .attr("dy", ".35em")
+		    .attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+			.attr("fill", "white")
+		    .text(function(d) { return d.values[0] });
+	    var incorrectos = correct_incorrect.append("rect")
+	    	.attr("x",function(d){return (100-(d.values[1]/10))})
+	    	.style("width",function(d){return d.values[1]/10})
+	    	.style("height","20")
+	    	.style("fill","red");
+	    correct_incorrect
+	    	.append("text")
+		    .attr("x", function(d) { return (100 - (d.values[1]/10) + 5)})
+		    .attr("y", 10)
+		    .attr("dy", ".35em")
+		    .attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+			.attr("fill", "white")
+		    .text(function(d) { return d.values[1] });
+
+	    function length() {
+	        var fmt = d3.format('02d');
+	        return function(l) { return Math.floor(l / 60) + ':' + fmt(l % 60) + ''; };
+	    }
+	    </script>
+	
     	<script>
 			$(function () {
 		      $(document).tooltip({

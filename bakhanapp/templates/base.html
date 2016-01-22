@@ -4,13 +4,8 @@
 
 <html class=" modernizr-no-touchevents modernizr-flexbox modernizr-no-flexboxtweener" itemscope="" itemtype="http://schema.org/Organization" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:og="http://opengraphprotocol.org/schema/" lang="es">
 	<head>
-			
-		
-		<title>
-		{% block title %}
-		
-		{% endblock %}
-		</title>
+		<meta charset="ISO-8859-1">
+		<title>{% block title %}{% endblock %}</title>
 		
 		<!-- Agregados por Alonso-->
 
@@ -31,6 +26,33 @@
   		<!-- Agregados por Jordan-->
 		<link rel="stylesheet" href="{% static 'dist/themes/default/style.css'%}" />
 		<script src="{% static 'dist/jstree.min.js'%}"></script>
+		
+		<!-- Para utilizar d3 -->
+	    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	    <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+		<style type="text/css">
+			table, th, td {
+			    border: 1px solid black;
+			    border-collapse: collapse;
+			}
+			th, td {
+		    	padding: 15px;
+			}
+			th {
+		    	background-color: #7EB442;
+			}
+			div.correctos {
+				display: inline-block;
+				width: 75px;
+				height: 20px;	/* Gets overriden by D3-assigned height below */
+				margin-top: 2px;
+				margin-bottom: 2px;
+				background-color: #FC8A3B;
+			}
+			text{
+				font-weight: bold;
+			}
+		</style>
 	</head>
 	
 	<body>		

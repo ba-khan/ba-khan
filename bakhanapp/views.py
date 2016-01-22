@@ -22,6 +22,7 @@ from .models import Student
 from .models import Student_Class
 from .models import Student_Video
 from .models import Student_Skill
+from .models import Video
 from .models import Video_Playing
 from .models import Skill_Attempt
 from .models import Assesment_Skill
@@ -275,22 +276,58 @@ def getClassStudents(request, id_class):
         classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     #evaluations_class = Assesment.objects.filter(id_class=id_class)#.values('id_assesment')
+    jason = '['
+    json=[]
+    i=0
     for student in students:
+        i+=1
+        student_json={}
+        student_json["name"]=student.name
+        jason=jason+'{ "name": "'+(student.name)+'", '
         student.t_exercise= getTotalExerciseTime(student.kaid_student)
+        jason=jason+'"skills_time": "'+(str)(student.t_exercise)+'", '
+        student_json["skills_time"]=(str)(student.t_exercise)
         student.t_video= getTotalVideoTime(student.kaid_student)
+        jason=jason+'"video_time": "'+(str)(student.t_video)+'", '
+        student_json["video_time"]=(str)(student.t_video)
         student.correct= getTotalExerciseCorrect(student.kaid_student)
+        jason=jason+'"corrects": ['+(str)(student.correct)+', '
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
+        jason=jason+(str)(student.incorrect)+'], '
+        student_json["corrects"]=[(student.correct),(student.incorrect)]
         student.practiced = getTotalNivel(student.kaid_student,'practiced')
+        jason=jason+'"practiced": "'+(str)(student.practiced)+'", '
+        student_json["practiced"]=(student.practiced)
         student.mastery1 = getTotalNivel(student.kaid_student,'mastery1')
+        jason=jason+'"mastery1": "'+(str)(student.mastery1)+'", '
+        student_json["mastery1"]=(str)(student.mastery1)
         student.mastery2 = getTotalNivel(student.kaid_student,'mastery2')
+        jason=jason+'"mastery2": "'+(str)(student.mastery2)+'", '
+        student_json["mastery2"]=(student.mastery2)
         student.mastery3 = getTotalNivel(student.kaid_student,'mastery3')
+        jason=jason+'"mastery3": "'+(str)(student.mastery3)+'", '
+        student_json["mastery3"]=(str)(student.mastery3)
+        if (i==len(students)):
+            jason=jason+'"evaluacion": "'+(str)(7.0)+'"}'
+        else: 
+            jason=jason+'"evaluacion": "'+(str)(7.0)+'"},'
+        student_json["evaluacion"]=(str)(7.0)
+        json.append(student_json)
+    jason+="]"
+    #data = serializers.serialize('json', jason)
+    #struct = simplejson.loads(jason)
+    #jason_data = simplejson.dumps(jason)
+    print jason
+    #data = serializers.serialize('json', json)
+    #struct = json.loads(data)
+    #json_data = json.dumps(struct)
     classroom = Class.objects.filter(id_class=id_class)
     #grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(id_assesment_config=1)
     print assesment_configs
     return render_to_response('studentClass.html',
-                                {'students': students, 'classroom': classroom,'classes': classes,
+                                {'students': students, 'classroom': classroom,'jason_data': jason, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
                                 context_instance=RequestContext(request)
                             )
@@ -618,30 +655,50 @@ def poblar_skill():
         conn.commit()
     '''
 
-def poblar_skill_attempts(kaid_student, dates, session):
-    student_skills = Student_Skill.objects.all()
+def poblar_student_skill(student, dates, session):
+    llamada = "/api/v1/user/exercises?kaid="+student.kaid_student+"&userId=&username=&email=&exercises="
+    jason = get_api_resource2(session,llamada,SERVER_URL)
+    source = unicode(jason, 'ISO-8859-1')
+    data = simplejson.loads(source)
+    for j in range(len(data)):
+        skills = Skill.objects.filter(id_skill_name=data[j]["exercise_model"]["id"])
+        if (len(skills)>0):
+            student_skill = Student_Skill.objects.create(total_done = data[j]["total_done"],
+                                                               total_correct = data[j]["total_correct"],
+                                                               streak = data[j]["streak"],
+                                                               longest_streak = data[j]["longest_streak"],
+                                                               last_skill_progress = data[j]["exercise_progress"]["level"],
+                                                               total_hints = data[j]["last_count_hints"],
+                                                               struggling = data[j]["exercise_states"]["struggling"],
+                                                               id_skill_name_id = data[j]["exercise_model"]["id"],
+                                                               kaid_student_id = student.kaid_student
+                                                               )
+        else:
+            print "skill fantasma"
+
+def poblar_skill_attempts(student, dates, session):
+    student_skills = Student_Skill.objects.filter(kaid_student_id=student.kaid_student)
     for i in range(len(student_skills)):
         skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
-        print skills[0]["name"]
-        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId="+kaid_student+"&username=&email=&dt_start="+dates
+        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+student.name+"&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
-        for j in range(len(data)):
-            print data[j]["problem_number"]
-
-            skill_attempts = Skill_Attempt.objects.create(count_attempts = data[j]["count_attempts"],
+        if (data):
+            for j in range(len(data)):
+                skill_attempts = Skill_Attempt.objects.create(count_attempts = data[j]["count_attempts"],
                                                                    mission = data[j]["mission"],
                                                                    time_taken = data[j]["time_taken"],
                                                                    count_hints = data[j]["count_hints"],
                                                                    skipped = data[j]["skipped"],
-                                                                   points_earned = 0,
-                                                                   date = data[j]["time_done"][:10],
+                                                                   points_earned = data[j]["points_earned"],
+                                                                   date = data[j]["time_done"],
                                                                    correct = data[j]["correct"],
                                                                    id_skill_name_id = skills[0]["id_skill_name"],
-                                                                   kaid_student_id = data[j]["kaid"],
+                                                                   kaid_student_id = student.kaid_student,
                                                                    problem_number = data[j]["problem_number"]
                                                                    )
+            
 
 def poblar_topictree(session,buscar, reemplazar,cur,conn):
     topictree = get_api_resource2(session,"/api/v1/topictree",SERVER_URL2)
@@ -693,45 +750,47 @@ def poblar_topictree(session,buscar, reemplazar,cur,conn):
                         #subtopic_videos = subtopic_videos+(data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])+"\n"
                         id_subtopic_videos+=1
                         
-def poblar_skill_progress(kaid_student,dates,session):
-    llamada = "/api/v1/user/exercises/progress_changes?userId="+kaid_student+"&username=&email=&dt_start="+dates
+def poblar_skill_progress(student,dates,session):
+    llamada = "/api/v1/user/exercises/progress_changes?userId=&username="+student.name+"&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
+    print "exercises progress = "
+    print len(data) 
     for i in range(len(data)):
         skill = Skill.objects.filter(name=data[i]["exercise_name"]).values('id_skill_name','name')
-        #print skill[0]["id_skill_name"]
-        print skill[0]["name"]
-        student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
-        if (student_skill):
-            print student_skill[0]["id_student_skill"]
-            skill_progress = Skill_Progress.objects.create(to_level = data[i]["to_progress"]["level"],
-                                                                   from_level = data[i]["from_progress"]["level"],
-                                                                   date = data[i]["date"],
-                                                                   id_student_skill_id = student_skill[0]["id_student_skill"]
-                                                                   )
-            print data[i]["date"]
-            
-def poblar_student_video(kaid_student, dates, session):
-    llamada = "/api/v1/user/videos?userId="+kaid_student+"&username=&email=&dt_start="+dates
+        if (len(skill)>0):
+            student_skill=Student_Skill.objects.filter(kaid_student_id=student.kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
+            if (student_skill):
+                skill_progress = Skill_Progress.objects.create(to_level = data[i]["to_progress"]["level"],
+                                                                       from_level = data[i]["from_progress"]["level"],
+                                                                       date = data[i]["date"],
+                                                                       id_student_skill_id = student_skill[0]["id_student_skill"]
+                                                                       )
+
+def poblar_student_video(student, dates, session):
+    llamada = "/api/v1/user/videos?userId=&username="+student.name+"&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    for i in range(len(data)):
-        if data[i]["points"] >0 :
-            student_video = Student_Video.objects.create(total_seconds_watched = data[i]["seconds_watched"],
-                                                                       total_points_earned = data[i]["points"],
-                                                                       last_second_watched = data[i]["last_second_watched"],
-                                                                       is_video_complete = data[i]["completed"],
-                                                                       id_video_name_id = data[i]["video"]["id"],
-                                                                       kaid_student_id = kaid_student,
-                                                                       youtube_id = data[i]["video"]["youtube_id"]
-                                                                       )
+    if (data):
+        for i in range(len(data)):
+            video = Video.objects.filter(id_video_name=data[i]["video"]["id"])
+            if (video):
+                if data[i]["points"] >0 :
+                    student_video = Student_Video.objects.create(total_seconds_watched = data[i]["seconds_watched"],
+                                                                               total_points_earned = data[i]["points"],
+                                                                               last_second_watched = data[i]["last_second_watched"],
+                                                                               is_video_complete = data[i]["completed"],
+                                                                               id_video_name_id = data[i]["video"]["id"],
+                                                                               kaid_student_id = student.kaid_student,
+                                                                               youtube_id = data[i]["video"]["youtube_id"]
+                                                                               )
 
-def poblar_video_playing(kaid_student, dates, session):   
-    student_videos = Student_Video.objects.filter(kaid_student_id=kaid_student).values('youtube_id','id_video_name_id')
+def poblar_video_playing(student, dates, session):   
+    student_videos = Student_Video.objects.filter(kaid_student_id=student.kaid_student).values('youtube_id','id_video_name_id')
     for i in range(len(student_videos)):
-        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId"+kaid_student+"=&username=&email=&dt_start="+dates
+        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId=&username="+student.name+"&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL2)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
@@ -742,7 +801,7 @@ def poblar_video_playing(kaid_student, dates, session):
                                                                        is_video_complete = data[j]["is_video_completed"],
                                                                        date = data[j]["time_watched"],
                                                                        id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                       kaid_student_id = kaid_student
+                                                                       kaid_student_id = student.kaid_student
                                                                        )
             
 @login_required()
@@ -753,19 +812,35 @@ def poblarBD(session):
     #data = simplejson.loads(source)
     buscar = "'"
     reemplazar = " "
-    conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
-    cur = conn.cursor()
-    kaid_student = "kaid_485871758161384306203631"
-    dates = "2014-01-01T00%3A00%3A00Z&dt_end=2017-01-01T00%3A00%3A00Z"
+    #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
+    #cur = conn.cursor()
+    #kaid_student = "kaid_485871758161384306203631"
+    dates = "2014-01-01T00%3A00%3A00Z&dt_end=2017-01-01T00%3A00%3A00Z"  
     
-    #poblar_topictree(session,buscar, reemplazar,cur,conn)
+    '''
+    student_skills = Student_Skill.objects.all()
+    student_skills.delete()
+    
+    skill_attempts = Skill_Attempt.objects.all()
+    skill_attempts.delete()
+    
+    skill_progress = Skill_Progress.objects.all()
+    skill_progress.delete()
 
-    #poblar_skill()
-        
-    #poblar_skill_attempts(kaid_student, dates, session)
+    student_videos = Student_Video.objects.all()
+    student_videos.delete()
+
+    video_playings = Video_Playing.objects.all()
+    video_playings.delete()
+    '''
     
-    #poblar_skill_progress(kaid_student, dates, session)
-    
-    #poblar_student_video(kaid_student, dates, session)
-    
-    #poblar_video_playing(kaid_student, dates, session)    
+    #'''
+    students = Student.objects.all()
+    for i in range(len(students)):
+        print i
+        #poblar_student_skill(students[i], dates, session)
+        #poblar_skill_attempts(students[i], dates, session)
+        #poblar_skill_progress(students[i], dates, session)
+        #poblar_student_video(students[i], dates, session)
+        #poblar_video_playing(students[i], dates, session)
+    #'''
