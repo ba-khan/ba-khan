@@ -15,7 +15,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
-from .models import Class
+from .models import Class,Teacher
 from .models import Skill
 from .models import Skill_Progress
 from .models import Student
@@ -251,7 +251,7 @@ def getClassGrades(request,id_class):
     #Funcion que entrega todas las notas de los estudiantes de un curso.
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     #grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade') #inner join Django
-    return grades
+    #return grades
 
 def getClassSkills(request,id_class):
     #Funcion que entrega un arreglo con la cantidad de habilidades en cada nivel de dominio
