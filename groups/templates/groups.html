@@ -89,20 +89,66 @@
 		            document.getElementById(elementoArrastrado).style.top = y + "px";
 		        }
 		        
-		        function getGroup() {
+		        function getGroup2() {
 				   var divs = document.querySelectorAll('.cuadradito');
 				   var jsonArr = [];
+				   var aux = false;
 				   for (var i = 0; i < divs.length; i++) {
 				       	var kaid = divs[i].getAttribute('id');
 						var group = divs[i].getAttribute('name');
+						var x = group.localeCompare('ungrouped')
+						if(group=='ungrouped'){
+							aux = true;
+						}
 						jsonArr.push({
 					        kaid_student: kaid,
 					        group: group
 					    });
 				   	}
 				   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
-				   	document.getElementById("formJson").submit();
+				   	if(aux){
+				   		document.getElementById("formJson").submit();
+				   		alert('Agrupacion guardada correctamente')
+				   		aux = false;
+				   	}else{
+				   		alert('No hay agrupacion para guardar')
+				   	}
 				 }
+
+				function getGroup(){
+					var divs = document.querySelectorAll('.cuadradito');
+				   var jsonArr = [];
+				   var aux = false;
+				   for (var i = 0; i < divs.length; i++) {
+				       	var kaid = divs[i].getAttribute('id');
+						var group = divs[i].getAttribute('name');
+						var x = group.localeCompare('ungrouped')
+						if(group=='Avanzados' || group=='Intermedios' || group=='Reforzamiento'){
+							aux = true;
+						}
+						jsonArr.push({
+					        kaid_student: kaid,
+					        group: group
+					    });
+				   	}
+				   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
+				   	if(aux){
+
+				   		$.ajax({
+						    url: "{% url 'groups:getGroups' id_class %}",
+						    type: "POST",
+						    data: $("#formJson").serialize(),
+						    success: function (response) {
+						       //lo que haces si es exitoso
+						       alert('bien');
+						    }
+						});
+				   		aux = false;
+				   	}else{
+				   		alert('No hay agrupacion para guardar')
+				   	}
+					
+				}
 		
 		</script>
 	</head>
@@ -177,9 +223,16 @@
 	<form action="" method="post" id='formJson'>{% csrf_token %}
         <input name="skills" type="hidden" value="[]">
         <input name="student_groups" type="hidden" value=''>
-        <input type='button' onclick='getGroup()' class="kui-button kui-button-plain kui-button-primary" value=Guardar>
+        <input type='button' onclick='getGroup()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
         <button type="submit" class="kui-button kui-button-plain kui-button-primary">Realizar Agrupacion</button>
     </form> 
+    {% if messages %}
+	<ul class="messages">
+	    {% for message in messages %}
+	    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
 
 		<script type="text/javascript">
 		  $(document).ready(function(){
@@ -199,9 +252,7 @@
 					{% endif%}
 				{% endfor %}
 			{% endif %}	
-			{% if message %}
-				alert('Agrupacion guardada correctamente');
-			{% endif %}	
+
 			});
 		</script>	
 

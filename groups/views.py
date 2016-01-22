@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
+from django.contrib import messages
 from django.db.models import Count
 
 from django import template
@@ -94,17 +95,15 @@ def getGroups(request, id_class):
                 if g['group'] == 'Reforzamiento':
                     Group_Student(id_group_id=new_reinforcement.id_group,
                                   kaid_student_id=g['kaid_student']).save()
-            message = 'Agrupacion guardada correctamente'
             students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
             for s in students:
                 s.type = 'ungrouped'
-            return render_to_response('groups.html',{'students': students,'topictree':topictree,'message':message},context_instance=RequestContext(request))
         students = makeGroups(id_class,skills_selected)
     else:
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
         for s in students:
             s.type = 'ungrouped'
-    return render_to_response('groups.html',{'students': students,'topictree':topictree},context_instance=RequestContext(request))
+    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
