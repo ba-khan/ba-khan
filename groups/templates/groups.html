@@ -88,6 +88,21 @@
 		            document.getElementById(elementoArrastrado).style.left = x + "px";
 		            document.getElementById(elementoArrastrado).style.top = y + "px";
 		        }
+		        
+		        function getGroup() {
+				   var divs = document.querySelectorAll('.cuadradito');
+				   var jsonArr = [];
+				   for (var i = 0; i < divs.length; i++) {
+				       	var kaid = divs[i].getAttribute('id');
+						var group = divs[i].getAttribute('name');
+						jsonArr.push({
+					        kaid_student: kaid,
+					        group: group
+					    });
+				   	}
+				   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
+				   	document.getElementById("formJson").submit();
+				 }
 		
 		</script>
 	</head>
@@ -159,8 +174,10 @@
 			</div>
  
     </section>
-	<form action="" method="post">{% csrf_token %}
+	<form action="" method="post" id='formJson'>{% csrf_token %}
         <input name="skills" type="hidden" value="[]">
+        <input name="student_groups" type="hidden" value=''>
+        <input type='button' onclick='getGroup()' class="kui-button kui-button-plain kui-button-primary" value=Guardar>
         <button type="submit" class="kui-button kui-button-plain kui-button-primary">Realizar Agrupacion</button>
     </form> 
 
@@ -182,9 +199,9 @@
 					{% endif%}
 				{% endfor %}
 			{% endif %}	
-				$("#boton01").click(function(){
-				    $("p").html("<strong>Hola!!!!</strong>");
-				});
+			{% if message %}
+				alert('Agrupacion guardada correctamente');
+			{% endif %}	
 			});
 		</script>	
 

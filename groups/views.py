@@ -42,7 +42,6 @@ import webbrowser
 import psycopg2
 
 import json
-import simplejson
 import sys
 from pprint import pprint
 import codecs
@@ -50,7 +49,7 @@ from lib2to3.fixer_util import String
 from django.core import serializers
 from django.db import connection
 
-from bakhanapp.models import Group
+from bakhanapp.models import Group,Group_Student
 from django.utils import timezone
 from bakhanapp.views import getTopictree
 
@@ -62,6 +61,44 @@ def getGroups(request, id_class):
     if request.method == 'POST':
         args = request.POST
         skills_selected = eval(args['skills'])
+        if args["student_groups"]:#si se ha seleccionado la opcion guardar agrupacion.
+            new_advanced = Group()
+            new_advanced.name = 'test_advanced'
+            new_advanced.type = 'advanced'
+            new_advanced.start_date = timezone.now()
+            new_advanced.end_date = timezone.now()
+            new_advanced.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+            new_advanced.save()
+            new_intermediate = Group()
+            new_intermediate.name = 'test_intermediate'
+            new_intermediate.type = 'intermediate'
+            new_intermediate.start_date = timezone.now()
+            new_intermediate.end_date = timezone.now()
+            new_intermediate.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+            new_intermediate.save()
+            new_reinforcement = Group()
+            new_reinforcement.name = 'test_reinforcement'
+            new_reinforcement.type = 'reinforcement'
+            new_reinforcement.start_date = timezone.now()
+            new_reinforcement.end_date = timezone.now()
+            new_reinforcement.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+            new_reinforcement.save()
+            groups = eval(args['student_groups'])
+            for g in groups:
+                if g['group'] == 'Intermedios':
+                    Group_Student(id_group_id=new_intermediate.id_group,
+                                  kaid_student_id=g['kaid_student']).save()
+                if g['group'] == 'Avanzados':
+                    Group_Student(id_group_id=new_advanced.id_group,
+                                  kaid_student_id=g['kaid_student']).save()
+                if g['group'] == 'Reforzamiento':
+                    Group_Student(id_group_id=new_reinforcement.id_group,
+                                  kaid_student_id=g['kaid_student']).save()
+            message = 'Agrupacion guardada correctamente'
+            students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+            for s in students:
+                s.type = 'ungrouped'
+            return render_to_response('groups.html',{'students': students,'topictree':topictree,'message':message},context_instance=RequestContext(request))
         students = makeGroups(id_class,skills_selected)
     else:
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
@@ -102,7 +139,10 @@ def getTypeStudent(kaid_student,args):
     elif intermediate > 0:
         return 'intermediate'
     elif advanced == total:
-        return 'advanced'
+        if total == 0:
+            return 'ungrouped'
+        else:
+            return 'advanced'
     else:
         return 'reinforcement'
             
