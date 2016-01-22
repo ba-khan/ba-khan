@@ -21,73 +21,122 @@
 		            e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
 		            e.dataTransfer.clearData("Data");
 		        }
-		
-		        function enter(e) {
-		            e.target.style.border = ''; 
-		        }
-		
-		        function leave(e) {
-		            e.target.style.border = ''; 
-		        }
-		
-		        function over(e) {
-		        
-		            var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
-		            var id = e.target.id; // Elemento sobre el que se arrastra
-		            
-		            // return false para que se pueda soltar
-		            if (id == 'Reforzamiento'){
-		                return false; // Cualquier elemento se puede soltar sobre el div destino 1
-		            }
-		
-		            if (id == 'Intermedios'){
-		                return false; 
-		            }   
-		
-		            if (id == 'Avanzados')
-		                return false;
-		    
-		            if (id == 'SinGrupo')
-		                return false;
-		                
-		        }
-		
+
+		           function over(e) {
+       
+				           var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
+				           var id = e.target.id; // Elemento sobre el que se arrastra
+				           
+				           // return false para que se pueda soltar
+				           if (id == 'Reforzamiento'){
+				               return false; // Cualquier elemento se puede soltar sobre el div destino 1
+				           }
+				           if (id == 'Intermedios'){
+				               return false; 
+				           }   
+				           if (id == 'Avanzados'){
+				               return false;
+				   
+				}
+				           if (id == 'SinGrupo'){
+				               return false;
+				           }
+				           if (id == 'SubGrupoReforzamiento'){
+				               return false;
+				   
+				}
+				   
+				if (id == 'SubGrupoIntermedios'){
+				               return false;
+				   
+				}
+				   
+				if (id == 'SubGrupoAvanzados'){
+				               return false;
+				   
+				}
+				               
+				       }
+
 		    
 		        /**
 		        * 
 		        * Mueve el elemento
 		        *
 		        **/
-		        function drop(e){
-		
-		            var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
-		            e.target.appendChild(document.getElementById(elementoArrastrado));
-		            e.target.style.border = '';  // Quita el borde
+		         function drop(e){
+					           var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+					           
+					           document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+					           
+					           
+					//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+					$('select').empty();
+					$("#comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
+					   $("#comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
+					   $("#comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
+					   
+					   $("#comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
+					   $("#comboBoxIntermedios").append("<OPTION VALUE=2>{{ request.user.username }}</OPTION>");
+					   $("#comboBoxReforzamiento").append("<OPTION VALUE=3>{{ request.user.username }}</OPTION>");
+					var divs = document.querySelectorAll('.cuadradito');
+					   for (var i = 0; i < divs.length; i++) {
+					       var id1 = divs[i].getAttribute('id');
+					       var id2 = divs[i].getAttribute('title');
+					    
+					var id3 = divs[i].getAttribute('name');
+					       
 
-		
-		            tamElemX = $('#'+elementoArrastrado).width();
-		            tamElemY = $('#'+elementoArrastrado).height();
-		    
-		            posXCont = $('#'+e.target.id).position().left;
-		            posYCont = $('#'+e.target.id).position().top;
-		
-		            // Posicion absoluta del raton
-		            x = e.layerX;
-		            y = e.layerY;
-		
-		            // Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
-		            if (posXCont + tamContX <= x + tamElemX){
-		                x = posXCont + tamContX - tamElemX - 15;
-		            }
-		
-		            if (posYCont + tamContY <= y + tamElemY){
-		                y = posYCont + tamContY - tamElemY;
-		            }
-		
-		            document.getElementById(elementoArrastrado).style.position = "absolute";
-		            document.getElementById(elementoArrastrado).style.left = x + "px";
-		            document.getElementById(elementoArrastrado).style.top = y + "px";
-		        }
+					if(id3=="Avanzados" || id3=="SubGrupoAvanzados"){
+					       
+					$("#comboBoxIntermedios").append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
+					       
+					$("#comboBoxReforzamiento").append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
+					}
+					if(id3=="Intermedios" || id3=="SubGrupoIntermedios"){
+					       
+					$("#comboBoxReforzamiento").append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
+					}
+					   }   
+
+					           e.target.appendChild(document.getElementById(elementoArrastrado));
+					           e.target.style.border = '';  // Quita el borde
+
+					           tamElemX = $('#'+elementoArrastrado).width();
+					           tamElemY = $('#'+elementoArrastrado).height();
+					   
+					           posXCont = $('#'+e.target.id).position().left;
+					           posYCont = $('#'+e.target.id).position().top;
+					           // Posicion absoluta del raton
+					           x = e.layerX;
+					           y = e.layerY;
+					           // Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
+					           if (posXCont + tamContX <= x + tamElemX){
+					               x = posXCont + tamContX - tamElemX - 15;
+					           }
+					           if (posYCont + tamContY <= y + tamElemY){
+					               y = posYCont + tamContY - tamElemY;
+					           }
+					           document.getElementById(elementoArrastrado).style.position = "absolute";
+					           document.getElementById(elementoArrastrado).style.left = x + "px";
+					           document.getElementById(elementoArrastrado).style.top = y + "px";
+
+					       }
+					       
+					function crearSubGrupoAvanzados() {
+					var numDiv = document.getElementsByTagName("div").length;
+					   $("#Avanzados").append("<div id='SubGrupoAvanzados' class='subGrupo' title='"+numDiv+"' ondragenter='return enter(event)' ondragover='return over(event)' ondragleave='return leave(event)' ondrop='return drop(event)' >SubGrupo Avanzados</div>");
+
+					};
+					function crearSubGrupoIntermedios() {
+					var numDiv = document.getElementsByTagName("div").length;
+					   $("#Intermedios").append("<div id='SubGrupoIntermedios' class='subGrupo' title='' ondragenter='return enter(event)' ondragover='return over(event)' ondragleave='return leave(event)' ondrop='return drop(event)' >SubGrupo Intermedios</div>");
+					};
+					function crearSubGrupoReforzamiento() {
+					var numDiv = document.getElementsByTagName("div").length;
+					   $("#Reforzamiento").append("<div id='SubGrupoReforzamiento' class='subGrupo' title='' ondragenter='return enter(event)' ondragover='return over(event)' ondragleave='return leave(event)' ondrop='return drop(event)' >SubGrupo Reforzamiento</div>");
+					};
+
 		        
 		        function getGroup2() {
 				   var divs = document.querySelectorAll('.cuadradito');
@@ -153,47 +202,55 @@
 		</script>
 	</head>
 	    <style>
-		
+			#SinGrupo, #Avanzados, #Intermedios, #Reforzamiento {
+			   float: left;
+			   width: 15.4%;
+			   height: 400px;
+			   padding: 10px;
+			   margin: 10px;
+			   text-align: center;
+			overflow-y: scroll;
+			   border: 1px solid #D9D9D9;
+			   border-radius: 5px;
+			}
 
-		#SinGrupo, #Avanzados, #Intermedios, #Reforzamiento {
-		    float: left;
-		    width: 15.4%;
-		    height: 400px;
-		    padding: 10px;
-		    margin: 10px;
-		 	overflow-y: scroll;
-		    border: 1px solid #D9D9D9;
-		    border-radius: 5px;
-		}		
-		
-		#SinGrupo{
-		    background: #FFFFFF;
-		}
-		
-		#Avanzados {
-		    background: #B6D7A8;
-		}
-		
-		#Intermedios {
-		    background: #FFE599;
-		}
-		
-		#Reforzamiento {
-		    background: #EA9999;
-		}
-		
-		.cuadradito {
-		    background: #F5F5F5;
-		    border: 1px solid #D9D9D9;
-		    border-radius: 3px;
-		    width: 140px;
-		    height: 5px;
-		    padding: 0 10px 15px;
-		    margin: 5px;
-		    cursor: move;
-		    word-wrap: break-word;
-		    overflow: hidden;
-		}
+			#SinGrupo{
+			   background: #FFFFFF;
+			}
+
+			#Avanzados {
+			   background: #B6D7A8;
+			}
+			#Intermedios {
+			   background: #FFE599;
+			}
+			#Reforzamiento {
+			   background: #EA9999;
+			}
+			.cuadradito {
+			   background: #F5F5F5;
+			   border: 1px solid #D9D9D9;
+			   border-radius: 3px;
+			   width: 140px;
+			   height: 5px;
+			   padding: 0 10px 15px;
+			   margin: 5px;
+			   cursor: move;
+			   word-wrap: break-word;
+			   overflow: hidden;
+			}
+			.subGrupo {
+			   background: #FFFFFF;
+			   border: 1px solid #000000;
+			   border-radius: 3px;
+			   width: 170px;
+			   height: 140px;
+			   padding: 0 0px 15px;
+			   margin: 0px;
+			   word-wrap: break-word;
+			   overflow: hidden;
+			   background: rgba(255, 255, 255, 0.2);
+			}
 
 		#topictree{
 			overflow-y: scroll;
@@ -210,11 +267,24 @@
 			        </div>
  
 		        	<div id="Avanzados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
-
+		        		<SELECT id="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
+						<OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
+						</SELECT>
+						<button onclick="crearSubGrupoAvanzados(this);">nuevo sub-grupo</button>
 		        	</div>
  
-		        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios</div>
-		        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento</div>
+		        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios
+		        	 <SELECT id="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange="javascript:alert('prueba');"> 
+					<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
+					</SELECT>
+					<button onclick="crearSubGrupoIntermedios(this);">nuevo sub-grupo</button>
+		        </div>
+		        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento
+		        	<SELECT id="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange="javascript:alert('prueba');"> 
+					<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
+					</SELECT>
+					<button onclick="crearSubGrupoReforzamiento(this);">nuevo sub-grupo</button>
+		        </div>
 
 	        <div id="topictree">
 			</div>
