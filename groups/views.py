@@ -54,12 +54,15 @@ from django.db import connection
 from bakhanapp.models import Group,Group_Student
 from django.utils import timezone
 from bakhanapp.views import getTopictree
+import time
 
-
+def to_integer(dt_time):
+    return 10000*dt_time.year + 1000*dt_time.month + dt_time.day
 # Create your views here.
 @login_required()
 def getGroups(request, id_class):
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
+    groups = Master_Group.objects.all()
     if request.method == 'POST':
         args = request.POST
         skills_selected = eval(args['skills'])
@@ -73,6 +76,10 @@ def getGroups(request, id_class):
             tutors[0]['kaid_tutor_avanzados'] = 'kaid_1097501097555535353578558' 
             master = Master_Group()
             master.name = 'test'
+            fecha = timezone.now()
+            hoy= fecha.strftime("%Y-%m-%d %H:%M:%S")
+            t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
+            master.date = int(t)
             master.save()
             new_advanced = Group()
             new_advanced.name = 'test_advanced'
@@ -125,7 +132,7 @@ def getGroups(request, id_class):
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
         for s in students:
             s.type = 'ungrouped'
-    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class},context_instance=RequestContext(request))
+    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.

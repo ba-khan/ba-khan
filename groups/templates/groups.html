@@ -8,6 +8,7 @@
 
 {% block body2 %}
 	<head>
+		<script src="{% static 'd3-timeline.js' %}"></script>
 		<script>
 
 		        function start(e) {
@@ -296,6 +297,36 @@
 		}
 
     </style>
+    <style type="text/css">
+	    .axis path,
+	    .axis line {
+	      fill: none;
+	      stroke: black;
+	      shape-rendering: crispEdges;
+	    }
+
+	    .axis text {
+	      font-family: sans-serif;
+	      font-size: 10px;
+	    }
+
+	    .timeline-label {
+	      font-family: sans-serif;
+	      font-size: 12px;
+	    }
+
+	    #timeline2 .axis {
+	      transform: translate(0px,40px);
+	      -ms-transform: translate(0px,40px); /* IE 9 */
+	      -webkit-transform: translate(0px,40px); /* Safari and Chrome */
+	      -o-transform: translate(0px,40px); /* Opera */
+	      -moz-transform: translate(0px,40px); /* Firefox */
+	    }
+	    
+	    .coloredDiv {
+	      height:20px; width:20px; float:left;
+	    }
+	  </style>
     <section>
     	
 			        <div id="SinGrupo" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)" ><ul>No agrupados</ul>  
@@ -333,6 +364,18 @@
         <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
         <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion'>
     </form> 
+    <div>
+    	{% if groups %}
+	<ul class="groups">
+	    {% for g in groups %}
+	    <li>{{ g.date }}</li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
+
+
+    <div id="timeline2"></div>
+  </div>
     {% if messages %}
 	<ul class="messages">
 	    {% for message in messages %}
@@ -360,7 +403,33 @@
 				{% endfor %}
 			{% endif %}	
 
-			});
+			var testData = [
+					 {times: [{"starting_time": 1453766571, "ending_time": 1453766571}]},
+			    	 {times: [{"starting_time": 1453766665, "ending_time": 1453766665}]},
+			     ];
+
+
+
+			function timelineCircle() {
+		        var chart = d3.timeline()
+		          .tickFormat( //
+		            {format: d3.time.format("%d-%m-%Y"),
+		            tickTime: d3.time.hours,
+		            tickInterval: 1,
+		            tickSize: 30})
+		          .display("circle"); // toggle between rectangles and circles
+
+		        var svg = d3.select("#timeline2").append("svg").attr("width", width)
+		          .datum(testData).call(chart);
+		     	 }
+		     	 var width = 1000;
+
+				timelineCircle();	
+				});
+				
+			
+		      			
+
 		</script>	
 
 
