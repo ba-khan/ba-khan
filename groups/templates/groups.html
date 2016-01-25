@@ -83,33 +83,6 @@
 						}
 				    }
 		        };
-		        function fillComboBoxAvanzados(){
-					$(".comboBoxAvanzados").empty();
-					$(".comboBoxAvanzados").each(function() {
-					    $(this).append($("<option>", {
-					        text: "-Select-",
-					        value: 0
-					    }));
-					});
-		        };
-		        function fillComboBoxIntermedios(){
-					$(".comboBoxIntermedios").empty();
-					$(".comboBoxIntermedios").each(function() {
-					    $(this).append($("<option>", {
-					        text: "-Select-",
-					        value: 0
-					    }));
-					});
-		        };
-		        function fillComboBoxReforzamiento(){
-					$(".comboBoxReforzamiento").empty();
-					$(".comboBoxReforzamiento").each(function() {
-					    $(this).append($("<option>", {
-					        text: "-Select-",
-					        value: 0
-					    }));
-					});
-		        };
 
 				function drop(e){
 		        	var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
@@ -161,7 +134,7 @@
 					var cuadritos = openDiv.getElementsByClassName('cuadradito')
 					for(var i=0; i<cuadritos.length; i++)
 		                {
-		                    $("#SinGrupo").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='sinGrupo' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+		                    $("#Avanzados").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Avanzados' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
 		                }
 					parentDiv.removeChild(openDiv);
 				};
@@ -171,7 +144,7 @@
 					var cuadritos = openDiv.getElementsByClassName('cuadradito')
 					for(var i=0; i<cuadritos.length; i++)
 		                {
-		                    $("#SinGrupo").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='sinGrupo' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+		                    $("#Intermedios").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Intermedios' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
 		                }
 					parentDiv.removeChild(openDiv);
 				};
@@ -181,7 +154,7 @@
 					var cuadritos = openDiv.getElementsByClassName('cuadradito')
 					for(var i=0; i<cuadritos.length; i++)
 		                {
-		                    $("#SinGrupo").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='sinGrupo' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+		                    $("#Reforzamiento").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Reforzamiento' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
 		                }
 					parentDiv.removeChild(openDiv);
 				};
