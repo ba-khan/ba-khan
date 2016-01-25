@@ -31,7 +31,7 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Subtopic_Video
 from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
 from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
-from groups.models import Group_Skill
+from groups.models import Group_Skill,Master_Group
 
 import datetime
 
@@ -71,12 +71,16 @@ def getGroups(request, id_class):
             if tutors[0]['kaid_tutor_intermedios'] =='2':
                 tutors[0]['kaid_tutor_intermedios'] = 'kaid_1097501097555535353578558'
             tutors[0]['kaid_tutor_avanzados'] = 'kaid_1097501097555535353578558' 
+            master = Master_Group()
+            master.name = 'test'
+            master.save()
             new_advanced = Group()
             new_advanced.name = 'test_advanced'
             new_advanced.type = 'advanced'
             new_advanced.start_date = timezone.now()
             new_advanced.end_date = timezone.now()
             new_advanced.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
+            new_advanced.master = master.id
             new_advanced.save()
             new_intermediate = Group()
             new_intermediate.name = 'test_intermediate'
@@ -84,6 +88,7 @@ def getGroups(request, id_class):
             new_intermediate.start_date = timezone.now()
             new_intermediate.end_date = timezone.now()
             new_intermediate.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
+            new_intermediate.master = master.id
             new_intermediate.save()
             new_reinforcement = Group()
             new_reinforcement.name = 'test_reinforcement'
@@ -91,6 +96,7 @@ def getGroups(request, id_class):
             new_reinforcement.start_date = timezone.now()
             new_reinforcement.end_date = timezone.now()
             new_reinforcement.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
+            new_reinforcement.master = master.id
             new_reinforcement.save()
             for skills in skills_selected:
                 Group_Skill(id_group_id=new_advanced.id_group,

@@ -49,6 +49,7 @@ class Group(models.Model):
     kaid_student_tutor = models.ForeignKey(Student,null=True)
     start_date = models.DateField()
     end_date = models.DateField()
+    master = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
