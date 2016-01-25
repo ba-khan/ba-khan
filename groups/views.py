@@ -31,6 +31,7 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Subtopic_Video
 from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
 from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
+from groups.models import Group_Skill
 
 import datetime
 
@@ -84,6 +85,13 @@ def getGroups(request, id_class):
             new_reinforcement.end_date = timezone.now()
             new_reinforcement.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
             new_reinforcement.save()
+            for skills in skills_selected:
+                Group_Skill(id_group_id=new_advanced.id_group,
+                    id_skill_id=skills).save()
+                Group_Skill(id_group_id=new_intermediate.id_group,
+                    id_skill_id=skills).save()
+                Group_Skill(id_group_id=new_reinforcement.id_group,
+                    id_skill_id=skills).save()
             groups = eval(args['student_groups'])
             for g in groups:
                 if g['group'] == 'Intermedios':
