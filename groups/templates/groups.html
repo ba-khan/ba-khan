@@ -64,14 +64,8 @@
 		        * Mueve el elemento
 		        *
 		        **/
-		         function drop(e){
-					           var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
-					           
-					           document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
-					           
-					           
-					//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
-					$('select').empty();
+		        function fillComboBox(){
+		        	$('select').empty();
 					$("#comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 					   $("#comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
 					   $("#comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
@@ -98,6 +92,15 @@
 					$("#comboBoxReforzamiento").append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
 					}
 					   }   
+					};
+		         function drop(e){
+					           var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+					           
+					           document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+					           
+					           
+					//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+								fillComboBox();
 
 					           e.target.appendChild(document.getElementById(elementoArrastrado));
 					           e.target.style.border = '';  // Quita el borde
@@ -144,10 +147,7 @@
 						    type: "POST",
 						    data: $("#formJson").serialize(),
 						    success: function (response) {
-						    	$('#SinGrupo').html('<ul>No agrupados</ul>');
-						    	$('#Reforzamiento').html('<ul>Reforzamiento</ul>');
-						    	$('#Avanzados').html('<ul>Avanzados</ul>');
-						    	$('#Intermedios').html('<ul>Intermedios</ul>');
+						    	$('.cuadradito').remove();
 						       var student = JSON.parse(response);
 						       for(var i=0;i<student.length;i++){
 						       	if(student[i]['type']=='reinforcement'){
@@ -160,10 +160,11 @@
 						       		$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
 						       	}	
 						       }
+						       fillComboBox()
 						       alert('Agrupacion realizada correctamente.');
 						    }
 						});
-				 }
+				 };
 
 
 				function saveGroups(){
@@ -199,7 +200,7 @@
 				   		alert('No hay agrupacion para guardar')
 				   	}
 					
-				}
+				};
 		
 		</script>
 	</head>

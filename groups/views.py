@@ -121,7 +121,6 @@ def makeGroups(id_class,skills_selected):
         data.append(student)
         
     json_data = json.dumps(data)
-    print json_data
     return json_data
 
 def getTypeStudent(kaid_student,args):
