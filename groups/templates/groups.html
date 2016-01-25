@@ -138,33 +138,35 @@
 					};
 
 		        
-		        function getGroup2() {
-				   var divs = document.querySelectorAll('.cuadradito');
-				   var jsonArr = [];
-				   var aux = false;
-				   for (var i = 0; i < divs.length; i++) {
-				       	var kaid = divs[i].getAttribute('id');
-						var group = divs[i].getAttribute('name');
-						var x = group.localeCompare('ungrouped')
-						if(group=='ungrouped'){
-							aux = true;
-						}
-						jsonArr.push({
-					        kaid_student: kaid,
-					        group: group
-					    });
-				   	}
-				   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
-				   	if(aux){
-				   		document.getElementById("formJson").submit();
-				   		alert('Agrupacion guardada correctamente')
-				   		aux = false;
-				   	}else{
-				   		alert('No hay agrupacion para guardar')
-				   	}
+		        function makeGroups() {
+				   $.ajax({
+						    url: "{% url 'groups:getGroups' id_class %}",
+						    type: "POST",
+						    data: $("#formJson").serialize(),
+						    success: function (response) {
+						    	$('#SinGrupo').html('<ul>No agrupados</ul>');
+						    	$('#Reforzamiento').html('<ul>Reforzamiento</ul>');
+						    	$('#Avanzados').html('<ul>Avanzados</ul>');
+						    	$('#Intermedios').html('<ul>Intermedios</ul>');
+						       var student = JSON.parse(response);
+						       for(var i=0;i<student.length;i++){
+						       	if(student[i]['type']=='reinforcement'){
+						       		$("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+						       	}
+						       	if(student[i]['type']=='intermediate'){
+						       		$("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+						       	}
+						       	if(student[i]['type']=='advanced'){
+						       		$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+						       	}	
+						       }
+						       alert('Agrupacion realizada correctamente.');
+						    }
+						});
 				 }
 
-				function getGroup(){
+
+				function saveGroups(){
 					var divs = document.querySelectorAll('.cuadradito');
 				   var jsonArr = [];
 				   var aux = false;
@@ -189,7 +191,7 @@
 						    data: $("#formJson").serialize(),
 						    success: function (response) {
 						       //lo que haces si es exitoso
-						       alert('bien');
+						       alert('Grupos guardados correctamente.');
 						    }
 						});
 				   		aux = false;
@@ -293,8 +295,8 @@
 	<form action="" method="post" id='formJson'>{% csrf_token %}
         <input name="skills" type="hidden" value="[]">
         <input name="student_groups" type="hidden" value=''>
-        <input type='button' onclick='getGroup()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
-        <button type="submit" class="kui-button kui-button-plain kui-button-primary">Realizar Agrupacion</button>
+        <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
+        <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion'>
     </form> 
     {% if messages %}
 	<ul class="messages">

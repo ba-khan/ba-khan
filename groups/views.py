@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
-from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect
+from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
 from django.template.context import RequestContext
 from django.contrib.auth import  login,authenticate,logout
 from django.contrib.auth.decorators import login_required,permission_required
@@ -99,6 +99,7 @@ def getGroups(request, id_class):
             for s in students:
                 s.type = 'ungrouped'
         students = makeGroups(id_class,skills_selected)
+        return HttpResponse(students)
     else:
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
         for s in students:
@@ -109,10 +110,19 @@ def makeGroups(id_class,skills_selected):
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
     #print skills_selected                                                         #aqui llegan bien las habilidades seleccionadas
     students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
+    data = []  
     for s in students:
         #Por cada estudiante en id_class, se obtiene su agrupacion.
         s.type = getTypeStudent(s.kaid_student,skills_selected) #args debe contener todas las id de las skill seleccionadas para el agrupamiento.
-    return students
+        student={}
+        student["kaid_student"] = s.kaid_student
+        student["name"] = s.name
+        student["type"] = s.type
+        data.append(student)
+        
+    json_data = json.dumps(data)
+    print json_data
+    return json_data
 
 def getTypeStudent(kaid_student,args):
     #Funcion que entrega en que nivel grupo debe ser organizado un estudiante
