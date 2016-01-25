@@ -64,26 +64,33 @@ def getGroups(request, id_class):
         args = request.POST
         skills_selected = eval(args['skills'])
         if args["student_groups"]:#si se ha seleccionado la opcion guardar agrupacion.
+            tutors = eval(args['tutors'])
+            #provisorio: si no ha escogido un alumno tutor, se asigna uno arbitrario. finalmente se debe asignar el kaid profesor
+            if tutors[0]['kaid_tutor_reforzamiento'] == '3':
+                tutors[0]['kaid_tutor_reforzamiento'] = 'kaid_1097501097555535353578558'
+            if tutors[0]['kaid_tutor_intermedios'] =='2':
+                tutors[0]['kaid_tutor_intermedios'] = 'kaid_1097501097555535353578558'
+            tutors[0]['kaid_tutor_avanzados'] = 'kaid_1097501097555535353578558' 
             new_advanced = Group()
             new_advanced.name = 'test_advanced'
             new_advanced.type = 'advanced'
             new_advanced.start_date = timezone.now()
             new_advanced.end_date = timezone.now()
-            new_advanced.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+            new_advanced.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
             new_advanced.save()
             new_intermediate = Group()
             new_intermediate.name = 'test_intermediate'
             new_intermediate.type = 'intermediate'
             new_intermediate.start_date = timezone.now()
             new_intermediate.end_date = timezone.now()
-            new_intermediate.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+            new_intermediate.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
             new_intermediate.save()
             new_reinforcement = Group()
             new_reinforcement.name = 'test_reinforcement'
             new_reinforcement.type = 'reinforcement'
             new_reinforcement.start_date = timezone.now()
             new_reinforcement.end_date = timezone.now()
-            new_reinforcement.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
+            new_reinforcement.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
             new_reinforcement.save()
             for skills in skills_selected:
                 Group_Skill(id_group_id=new_advanced.id_group,

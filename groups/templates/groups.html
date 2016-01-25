@@ -174,7 +174,6 @@
 				   for (var i = 0; i < divs.length; i++) {
 				       	var kaid = divs[i].getAttribute('id');
 						var group = divs[i].getAttribute('name');
-						var x = group.localeCompare('ungrouped')
 						if(group=='Avanzados' || group=='Intermedios' || group=='Reforzamiento'){
 							aux = true;
 						}
@@ -183,6 +182,13 @@
 					        group: group
 					    });
 				   	}
+				   	var tutorsArr = [];
+				   	tutorsArr.push({
+				   		kaid_tutor_reforzamiento:$('#comboBoxReforzamiento').val(),
+				   		kaid_tutor_intermedios:$('#comboBoxIntermedios').val(),
+				   		kaid_tutor_avanzados:$('#comboBoxAvanzados').val()
+				   	});
+				   	$("input[name='tutors']").val(JSON.stringify(tutorsArr));
 				   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
 				   	if(aux){
 
@@ -278,13 +284,13 @@
 		        	</div>
  
 		        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios
-		        	 <SELECT id="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange="javascript:alert('prueba');"> 
+		        	 <SELECT id="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 					<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 					</SELECT>
 					<button onclick="crearSubGrupoIntermedios(this);">nuevo sub-grupo</button>
 		        </div>
 		        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento
-		        	<SELECT id="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange="javascript:alert('prueba');"> 
+		        	<SELECT id="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 					<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 					</SELECT>
 					<button onclick="crearSubGrupoReforzamiento(this);">nuevo sub-grupo</button>
@@ -297,6 +303,7 @@
 	<form action="" method="post" id='formJson'>{% csrf_token %}
         <input name="skills" type="hidden" value="[]">
         <input name="student_groups" type="hidden" value=''>
+        <input name="tutors" type="hidden" value=''>
         <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
         <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion'>
     </form> 
