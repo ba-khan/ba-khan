@@ -7,18 +7,32 @@
 {% block new %}
 	<div id="assesment_div">
 	<div id="assesment_form" >
-    <form action="" method="post">{% csrf_token %}
-    	<label for='name'>Nombre de la Pauta</label>
-    	<input name="name" type="text">
-    	<label for='approval_percentage'>Nombre de la Pauta</label>
-    	<input name="approval_percentage" type="number">
-        <input name="skills" type="hidden" value="[]">
-        <a href="{% url 'configuraciones' %}">Cancelar</a>
-        <button type="submit" >Guardar</button>
-    </form> 
-	</div>
-	<div class="slider">
-	    <div class="left-color"></div>
+	<div id="new_assesment_form_div">
+    	<form action="" method="post">{% csrf_token %}
+	    	<label for='name'>Nombre de la Pauta </label><br>
+	    	<input name="name" type="text"><br>
+	    	<label for='approval_percentage'>Porcentaje de Aprobacion </label><br>
+	    	<input name="approval_percentage" type="number"><br>
+	    	<input name="importance_skill_level" type="hidden">
+	    	<input name="importance_completed_rec" type="hidden">
+	        <input name="skills" type="hidden" value="[]">
+			<div id="skill_level_div">
+				<span id="importance_skill_level"> 50 </span>%</br>
+				Nivel de Dominio logrado
+			</div>
+			<div id="slider_up">
+				<div id="slider">
+					<div id="left-color">
+					</div>
+				</div>
+			</div>
+			<div id="completed_rec_div">
+				<span id="importance_completed_rec"> 50 </span>%</br>
+				Recomendaciones Completadas
+			</div><br>
+			<a href="{% url 'configuraciones' %}">Cancelar</a>
+			<button type="submit" >Guardar</button>
+		</form> 
 	</div>
 	<div id="topictree_div">
 		<input id="skill_search" type="text">
@@ -26,6 +40,8 @@
 		</div>
 	</div>
 	</div>
+	</div>
+	
 
 	<script>
 		var topictree = JSON.parse('{{ topictree | escapejs }}');
@@ -55,6 +71,34 @@
 		      $('#topictree').jstree(true).search(v);
 		    }, 250);
   		});
+		
+		var selected_value=50;
+		starting_values=[50];
+		$( "#slider" ).slider({
+			min: 0,
+			max: 100,
+			values: starting_values,
+      		slide: function (event, ui) {
+		        onSlide(ui)
+		    },
+		    create: function (event, ui) {
+		        onSlide({
+		            values: starting_values
+		        });
+		    }
+		});
+		
+		function onSlide(ui) {
+		    var total_width = $("#slider").width();
+		    selected_value = ui.values[0];
+		    importance_skill_level = selected_value;
+		    importance_completed_rec = 100 - selected_value; 
+		    $("#importance_skill_level").html(importance_skill_level);
+		    $('input[name="importance_skill_level"]').val(importance_skill_level);
+		    $("#importance_completed_rec").html(importance_completed_rec);
+		    $('input[name="importance_completed_rec"]').val(importance_completed_rec);
+		    $("#left-color").width(selected_value / 100 * total_width);
+		}
 	</script>
 
 {% endblock %}

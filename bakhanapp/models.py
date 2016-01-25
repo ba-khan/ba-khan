@@ -140,6 +140,8 @@ class Assesment_Config(models.Model):
     approval_percentage = models.IntegerField()
     top_score = models.IntegerField()
     name = models.CharField(max_length=100)
+    importance_skill_level=models.IntegerField()
+    importance_completed_rec=models.IntegerField()
     
 class Assesment_Skill(models.Model):
     id_assesment_skill = models.AutoField(primary_key=True)

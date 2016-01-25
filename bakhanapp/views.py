@@ -78,9 +78,11 @@ def newAssesmentConfig(request):
         args = request.POST
         skills_selected = eval(args['skills'])
         teacher=Teacher.objects.get(pk="2")
-        subject=Subject.objects.get(pk="math")
+        subject=Subject.objects.get(pk='math')
         new_assesment_config = Assesment_Config(name=args['name'],
                                approval_percentage=args['approval_percentage'],
+                               importance_skill_level=args['importance_skill_level'],
+                               importance_completed_rec=args['importance_completed_rec'],
                                kaid_teacher=teacher,
                                top_score=0,
                                id_subject_name=subject
