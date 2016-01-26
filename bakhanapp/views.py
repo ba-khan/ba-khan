@@ -53,6 +53,7 @@ from lib2to3.fixer_util import String
 from django.core import serializers
 from django.db import connection
 
+import random
 
 def login(request):
     return render(request, 'login.html')
@@ -267,6 +268,10 @@ def getTotalNivel(kaid_student,nivel):
     total = Student_Skill.objects.filter(kaid_student=kaid_student,last_skill_progress=nivel).count()
     return total
 
+def getClassAssesments(id_class):
+    assesments = Assesment.objects.filter(id_class_id=id_class)
+    return assesments
+
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
@@ -278,58 +283,98 @@ def getClassStudents(request, id_class):
         classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     #evaluations_class = Assesment.objects.filter(id_class=id_class)#.values('id_assesment')
-    jason = '['
-    json=[]
+    #jason = '['
+    
+    assesments = getClassAssesments(id_class)
+    assesment_array=[]
+    
+    for assesment in assesments:
+        assesment_json={}
+        assesment_json["id"]=assesment.id_assesment
+        assesment_json["name"]=assesment.name
+        assesment_json["config_name"]= assesment.id_assesment_conf.name
+        assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
+        assesment_json["top_score"]= assesment.id_assesment_conf.top_score
+        
+        print assesment.id_assesment_conf.name
+        assesment_array.append(assesment_json)
+        
+    json_array=[]
     i=0
     for student in students:
         i+=1
         student_json={}
         student_json["name"]=student.name
-        jason=jason+'{ "name": "'+(student.name)+'", '
+        #jason=jason+'{ "name": "'+(student.name)+'", '
         student.t_exercise= getTotalExerciseTime(student.kaid_student)
-        jason=jason+'"skills_time": "'+(str)(student.t_exercise)+'", '
+        #jason=jason+'"skills_time": "'+(str)(student.t_exercise)+'", '
         student_json["skills_time"]=(str)(student.t_exercise)
         student.t_video= getTotalVideoTime(student.kaid_student)
-        jason=jason+'"video_time": "'+(str)(student.t_video)+'", '
+        #jason=jason+'"video_time": "'+(str)(student.t_video)+'", '
         student_json["video_time"]=(str)(student.t_video)
         student.correct= getTotalExerciseCorrect(student.kaid_student)
-        jason=jason+'"corrects": ['+(str)(student.correct)+', '
+        #jason=jason+'"corrects": ['+(str)(student.correct)+', '
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
-        jason=jason+(str)(student.incorrect)+'], '
+        #jason=jason+(str)(student.incorrect)+'], '
         student_json["corrects"]=[(student.correct),(student.incorrect)]
         student.practiced = getTotalNivel(student.kaid_student,'practiced')
-        jason=jason+'"practiced": "'+(str)(student.practiced)+'", '
-        student_json["practiced"]=(student.practiced)
+        #jason=jason+'"practiced": "'+(str)(student.practiced)+'", '
+        skills_level={}
+        #student_json["practiced"]=(student.practiced)
+        skills_level["practiced"]=(student.practiced)
         student.mastery1 = getTotalNivel(student.kaid_student,'mastery1')
-        jason=jason+'"mastery1": "'+(str)(student.mastery1)+'", '
-        student_json["mastery1"]=(str)(student.mastery1)
+        #jason=jason+'"mastery1": "'+(str)(student.mastery1)+'", '
+        #student_json["mastery1"]=(str)(student.mastery1)
+        skills_level["mastery1"]=(student.mastery1)
         student.mastery2 = getTotalNivel(student.kaid_student,'mastery2')
-        jason=jason+'"mastery2": "'+(str)(student.mastery2)+'", '
-        student_json["mastery2"]=(student.mastery2)
+        #jason=jason+'"mastery2": "'+(str)(student.mastery2)+'", '
+        #student_json["mastery2"]=(student.mastery2)
+        skills_level["mastery2"]=(student.mastery2)
         student.mastery3 = getTotalNivel(student.kaid_student,'mastery3')
-        jason=jason+'"mastery3": "'+(str)(student.mastery3)+'", '
-        student_json["mastery3"]=(str)(student.mastery3)
-        if (i==len(students)):
-            jason=jason+'"evaluacion": "'+(str)(7.0)+'"}'
-        else: 
-            jason=jason+'"evaluacion": "'+(str)(7.0)+'"},'
-        student_json["evaluacion"]=(str)(7.0)
-        json.append(student_json)
-    jason+="]"
+        #jason=jason+'"mastery3": "'+(str)(student.mastery3)+'", '
+        #student_json["mastery3"]=(str)(student.mastery3)
+        skills_level["mastery3"]=(student.mastery3)
+        student_json["skills_level"]=skills_level
+        #if (i==len(students)):
+        #    jason=jason+'"evaluacion": "'+(str)(7.0)+'"}'
+        #else: 
+        #    jason=jason+'"evaluacion": "'+(str)(7.0)+'"},'
+        #student_json["evaluacion"]=(str)(7.0)
+        #assesment_array=[]
+        for assesment in assesment_array:
+            #assesment_data={}
+            student_assesment={}
+            id_assesment = "assesment"+(str)(assesment["id"])
+            #id_effort = "effort"+(str)(assesment["id"])
+            random_grade=round(random.uniform(2,7),1)
+            random_effort=round(random.uniform(1,100))
+            student_assesment["grade"]=random_grade
+            student_assesment["effort"]=random_effort
+            #assesment_data[id_assesment]=student_assesment
+            #assesment_array.append(assesment_data)
+            student_json[id_assesment]= student_assesment
+            #student_json[id_effort]=(str)(random_effort)
+        #student_json["assesments"]=assesment_array    
+        json_array.append(student_json)
+    #jason+="]"
     #data = serializers.serialize('json', jason)
     #struct = simplejson.loads(jason)
     #jason_data = simplejson.dumps(jason)
-    print jason
+    #print jason
     #data = serializers.serialize('json', json)
     #struct = json.loads(data)
-    #json_data = json.dumps(struct)
+    
+    
+    
+    json_dict={"students":json_array, "assesments":assesment_array}
+    json_data = json.dumps(json_dict)
     classroom = Class.objects.filter(id_class=id_class)
     #grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(id_assesment_config=1)
-    print assesment_configs
+    #print assesment_configs
     return render_to_response('studentClass.html',
-                                {'students': students, 'classroom': classroom,'jason_data': jason, 'classes': classes,
+                                {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
                                 context_instance=RequestContext(request)
                             )

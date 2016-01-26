@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bakhanapp',
     'groups',
+    'django_jenkins',
 )
 
 MIDDLEWARE_CLASSES = (
