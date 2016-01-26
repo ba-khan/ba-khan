@@ -1,4 +1,4 @@
-﻿{% extends 'home.html' %}
+{% extends 'home.html' %}
 {% load static %}
 {% load  smart_if %}
 
@@ -22,20 +22,29 @@
 	
 	
 	<script type="text/javascript">
-		var jason = JSON.parse('{{ jason_data | escapejs }}');
-	        // column definitions
+		var json = JSON.parse('{{ jason_data | escapejs }}');
+		var students = json.students;
+		//var assesments=json.assesments;
+	    // column definitions
+	    //d3.f is a d3-jetpack function that saves code writing by replacing a line of code -> d3.f("name") = function(d){return d.name}
 	    var columns = [
-	        { head: 'Estudiantes', cl: 'name', html: ƒ('name') },
-	        { head: 'Tiempo en ejercicios', cl: 'skills_time', value: ƒ('skills_time'), valueF : ƒ('skills_time',length()) },
-	        { head: 'Tiempo en videos', cl: 'videos_time', valueF: ƒ('video_time', length()), value: ƒ('video_time') },
-	        { head: 'Correctos/Incorrectos', cl: 'num', id:'corrects', values: ƒ('corrects') },
-	        { head: 'Practiced', cl: 'name', html: ƒ('practiced') },
-	        { head: 'Mastery1', cl: 'name', html: ƒ('mastery1') },
-	        { head: 'Mastery2', cl: 'name', html: ƒ('mastery2') },
-	        { head: 'Mastery3', cl: 'name', html: ƒ('mastery3') },
-	        { head: 'Evaluacion1', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', html: ƒ('evaluacion') },
+	        { head: 'Estudiantes', cl: 'name', html: d3.f('name') },
+	        { head: 'Tiempo en ejercicios', cl: 'skills_time', value: d3.f('skills_time'), valueF : d3.f('skills_time',length()) },
+	        { head: 'Tiempo en videos', cl: 'videos_time', valueF: d3.f('video_time', length()), value: d3.f('video_time') },
+	        { head: 'Correctos/Incorrectos', cl: 'num', id:'corrects', values: d3.f('corrects') },
+	        { head: 'Habilidades dominadas', cl: 'stacked', values: d3.f('skills_level')}
+	        //{ head: 'Practiced', cl: 'name', html: d3.f('practiced') },
+	        //{ head: 'Mastery1', cl: 'name', html: d3.f('mastery1') },
+	        //{ head: 'Mastery2', cl: 'name', html: d3.f('mastery2') },
+	        //{ head: 'Mastery3', cl: 'name', html: d3.f('mastery3') },
+	        //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
 	    ];
 	    
+	     for (i=0; i<json["assesments"].length; i++){
+	    	var class_id="assesment"+json["assesments"][i]["id"];
+	    	console.log(class_id);
+	    	columns.push({head: json["assesments"][i]["name"], cl: class_id, id: 'tooltip', tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], values: d3.f(class_id)})//html: d3.f('evaluacion')})
+	    }
 	    
 	    
 	    
@@ -53,14 +62,17 @@
 	    	console.log(mayor)
 	    	return mayor
 	    };
-	    
-	    var skill_time = (d3.map(jason, function(d) { return d.skills_time }));
+	    console.log(students);
+	    console.log(students[0].skills_time);
+	    var skill_time=new Array();
+	    skill_time = d3.map(students, d3.f("skills_time"));
+	    console.log("skill_time");
 	    console.log(skill_time);
 	    var escalarTiemposSkill = d3.scale.linear()
                             .domain([0,elMayor(skill_time.keys())])
                             .range([0,100]);
                             
-        var videos_time = (d3.map(jason, function(d) { return d.video_time }));
+        var videos_time = (d3.map(students, function(d) { return d.video_time }));
         console.log(videos_time.keys());
         var escalarTiemposVideo = d3.scale.linear()
                             .domain([0,elMayor(videos_time.keys())])
@@ -84,15 +96,15 @@
 	        .selectAll('th')
 	        .data(columns).enter()
 	        .append('th')
-	        .attr('class', ƒ('cl'))
-	        .attr('id', ƒ('id'))
-	        .attr('title', ƒ('tooltip'))
-	        .text(ƒ('head'));
+	        .attr('class', d3.f('cl'))
+	        .attr('id', d3.f('id'))
+	        .attr('title', d3.f('tooltip'))
+	        .text(d3.f('head'));
 
 	    // create table body
 	    table.append('tbody')
 	        .selectAll('tr')
-	        .data(jason).enter()
+	        .data(students).enter()
 	        .append('tr')
 	        .selectAll('td')
 	        .data(function(row, i) {
@@ -106,9 +118,11 @@
 	            });
 	        }).enter()
 	        .append('td')
-	        .html(ƒ('html'))
-	        .attr('class', ƒ('cl'))
-	        .attr('id', ƒ('id'));
+	        .html(d3.f('html'))
+	        .attr('class', d3.f('cl'))
+	        .attr('id', d3.f('id'))
+	        .style('padding','5px')
+	        .style('vertical-align','middle');
 
 	    var tiempos_skill = table.select("tbody")
 	    	.selectAll(".skills_time")
@@ -130,7 +144,7 @@
 			.attr("fill", "white")
 		    .text(function(d) { return d.valueF });
 		    
-		 var tiempos_video = table.select("tbody")
+		var tiempos_video = table.select("tbody")
 	    	.selectAll(".videos_time")
 	    	.append("svg")
 	    	.style("width",function(d){return escalarTiemposVideo(d.value) })
@@ -185,7 +199,115 @@
 			.attr("font-size", "11px")
 			.attr("fill", "white")
 		    .text(function(d) { return d.values[1] });
-
+	    
+	   	var reprobate_colors = ["#C30202", "#FB6060"];
+	    //var approve_colors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
+	   	var approve_colors = ["#9CDCEB", "#1C758A"];
+	    var reprobateColour = d3.scale.linear()
+		  .domain([2, 3.9])//, 1.9 / (reprobate_colors.length - 1)))
+		  .range(reprobate_colors);
+  		var approveColour = d3.scale.linear()
+		  .domain([4.0,7.0])//d3.range(4,7, 3.0 / (approve_colors.length - 1)))
+		  .range(approve_colors);
+		
+		var effort_scalings = [];
+	    for (i=0; i<json["assesments"].length; i++){
+	    	assesment_id="assesment"+json["assesments"][i]["id"]
+	    	effort_scalings[assesment_id] = d3.scale.log()
+	    									.domain([d3.min(students,function(d){return d[assesment_id].effort;}),//d3.filter(students,function(d){return d[assesment_id].effort;})),
+	    										d3.max(students,function(d){return d[assesment_id].effort;})])//d3.filter(students,function(d){return d[assesment_id].effort;}))])
+	    									.range([11,22]);
+	    	//console.log("Min: "+d3.min(students,function(d){return d[assesment_id].effort;}))
+	    	//console.log("Max: "+d3.max(students,function(d){return d[assesment_id].effort;}))
+	    	console.log(effort_scalings[assesment_id](0.32));												
+	    	var assesments = table.select("tbody")
+		    	.selectAll(".assesment"+json["assesments"][i]["id"])
+		    	.append("svg")
+		    	.style("width", "44")//function(d){return escalarTiemposVideo(d.value) })
+		    	.style("height","44")
+			
+		    	
+		    
+	    	assesments.append("circle")
+	    		.attr("cx", function (d) { return 22.5; })
+	            .attr("cy", function (d) { return 22.5; })
+	    		.attr("r",function(d){
+	    			return effort_scalings[d.cl](d.values.effort);
+	    			//return d.values.effort*10;
+	    		})
+	    		.style("fill",
+	    				function(d){ 
+	    					if (d.values.grade<4.0){
+	    						return reprobateColour(d.values.grade);
+	    					}else{
+	    						return approveColour(d.values.grade);
+	    					}
+	    			  })
+	    		.style("stroke","black");
+	    	assesments.append("text")
+		        .attr("dx", function(d){return effort_scalings[d.cl](d.values.effort);})
+		        .attr("dy", function(d){return effort_scalings[d.cl](d.values.effort) + 10;})
+		        .text(function(d){return d.values.grade})
+		        .style("fill","white");
+		        
+	    }
+		
+	    var skill_levels_scaling=d3.scale.linear()
+	    							.domain([0,d3.max(students,function(d){
+	    								console.log(d);
+	    								var total_skills=0;
+	    								total_skills=total_skills+d.skills_level.practiced;
+	    								total_skills=total_skills+d.skills_level.mastery1;
+	    								total_skills=total_skills+d.skills_level.mastery2;
+	    								total_skills=total_skills+d.skills_level.mastery3;
+	    								return total_skills;
+	    							})])
+	    							.range([0,100]);
+	    
+	    //skills_level_colors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
+	    skills_level_colors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
+	    var skill_levels = table.select("tbody")
+	    	.selectAll(".stacked")
+	    	.append("svg")
+	    	.style("width","120")
+	    	.style("height","20")
+	    
+	    /*skill_levels.selectAll("rect")
+		      .data(function(d) { return d; })
+		    .enter().append("rect")
+		      .attr("x", function(d) { return x(d.x); })
+		      .attr("y", function(d) { return y(d.y + d.y0); })
+		      .attr("height", function(d) { return y(d.y0) - y(d.y + d.y0); })
+		      .attr("width", x.rangeBand() - 1);*/
+		skill_levels.selectAll('rect')
+		      .data(function(d){
+		    	  var skills_array=[];
+		    	  skills_array[0]=d.values.practiced;
+		    	  skills_array[1]=d.values.mastery1;
+		    	  skills_array[2]=d.values.mastery2;
+		    	  skills_array[3]=d.values.mastery3;
+		    	  var skills=[]
+		    	  for (var i=0;i<skills_array.length;i++){
+		    		  var offset=0;
+		    		  for (var j=i-1;j>=0;j--){
+		    			  offset=offset+skills_array[j];
+		    		  }
+		    		  skills.push({value: skills_array[i], prev_value: offset});
+		    	  }
+		    	  return skills;//.reverse();
+		      })
+		      .enter()
+		      .append('rect')
+		      .attr('width', function(d){
+		          return d.value;})
+		      .attr('x',function(d, i){
+		          return d.prev_value;})
+		    	  //return prev_width[i]; })
+		      .attr('y',0)
+		      .attr('height', 30)
+		      .style('fill', function(d, i){ return skills_level_colors[i]; });
+	    	
+	    
 	    function length() {
 	        var fmt = d3.format('02d');
 	        return function(l) { return Math.floor(l / 60) + ':' + fmt(l % 60) + ''; };

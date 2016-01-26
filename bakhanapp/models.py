@@ -155,6 +155,7 @@ class Assesment_Skill(models.Model):
 class Assesment(models.Model):
     id_assesment = models.AutoField(primary_key=True)
     id_assesment_conf = models.ForeignKey(Assesment_Config)
+    id_class = models.ForeignKey(Class)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=150)
