@@ -8,228 +8,215 @@
 
 {% block body2 %}
 	<head>
-		<script src="{% static 'd3-timeline.js' %}"></script>
 		<script>
-
-		        function start(e) {
-		            e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
-		            e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
-		            e.dataTransfer.setDragImage(e.target, 70, 2.5); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
-		            e.target.style.opacity = '0.4'; 
-		        };
-		
-		        function end(e){
-		            e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
-		            e.dataTransfer.clearData("Data");
-		        };
-
-				function over(e) {
-       
-					var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
-				    var id = e.target.id; // Elemento sobre el que se arrastra       
-					// return false para que se pueda soltar
-					if (id == 'Reforzamiento'){
-						return false; // Cualquier elemento se puede soltar sobre el div destino 1
-					}
-					if (id == 'Intermedios'){
-						return false; 
-					}   
-					if (id == 'Avanzados'){
-						return false;
-					}				          
-					if (id == 'SinGrupo'){
-						return false;
-					}
-					if (id == 'SubGrupoReforzamiento'){
-				    	return false;
-				    }
-				    if (id == 'SubGrupoIntermedios'){
-				    	return false;
-				    }
-				    if (id == 'SubGrupoAvanzados'){
-				    	return false;
-				    }
-				};
+	        function start(e) {
+	            e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
+	            e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
+	            e.dataTransfer.setDragImage(e.target, 70, 2.5); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
+	            e.target.style.opacity = '0.4'; 
+	        };
+	        function end(e){
+	            e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
+	            e.dataTransfer.clearData("Data");
+	        };
+			function over(e) {
+   
+				var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
+			    var id = e.target.id; // Elemento sobre el que se arrastra       
+				// return false para que se pueda soltar
+				if (id == 'Reforzamiento'){
+					return false; // Cualquier elemento se puede soltar sobre el div destino 1
+				}
+				if (id == 'Intermedios'){
+					return false; 
+				}   
+				if (id == 'Avanzados'){
+					return false;
+				}				          
+				if (id == 'SinGrupo'){
+					return false;
+				}
+				if (id == 'SubGrupoReforzamiento'){
+			    	return false;
+			    }
+			    if (id == 'SubGrupoIntermedios'){
+			    	return false;
+			    }
+			    if (id == 'SubGrupoAvanzados'){
+			    	return false;
+			    }
+			};
+			function fillComboBox(){
+				//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+				$('select').empty();
+				$(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
+				$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
+				$(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
 				
-				function fillComboBox(){
-					//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
-					$('select').empty();
-					$(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
-					$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
-					$(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
-					
-					$(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
-					$(".comboBoxIntermedios").append("<OPTION VALUE=2>{{ request.user.username }}</OPTION>");
-					$(".comboBoxReforzamiento").append("<OPTION VALUE=3>{{ request.user.username }}</OPTION>");
-					
-					var divs = document.querySelectorAll('.cuadradito');
-				    for (var i = 0; i < divs.length; i++) {
-				        var id1 = divs[i].getAttribute('id');
-				        var id2 = divs[i].getAttribute('title');
-				     	var id3 = divs[i].getAttribute('name');				        
-
-						if(id3=="Avanzados" || id3=="SubGrupoAvanzados"){
-				        	$(".comboBoxIntermedios").each(function() {
-							    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
-							});
-				        	
-				        	$(".comboBoxReforzamiento").each(function() {
-							    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
-							});
-						}
-						if(id3=="Intermedios" || id3=="SubGrupoIntermedios"){
-							$(".comboBoxReforzamiento").each(function() {
-							    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
-							});
-						}
-				    }
-		        };
-
-				function drop(e){
-		        	var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
-		           
-		        	document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
-		           
-		           
-					//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
-					fillComboBox();
-					e.target.appendChild(document.getElementById(elementoArrastrado));
-					e.target.style.border = '';  // Quita el borde
-
-		           	tamElemX = $('#'+elementoArrastrado).width();
-		           	tamElemY = $('#'+elementoArrastrado).height();
-		   
-		           	posXCont = $('#'+e.target.id).position().left;
-		           	posYCont = $('#'+e.target.id).position().top;
-		           	// Posicion absoluta del raton
-		           	x = e.layerX;
-		           	y = e.layerY;
-		           	// Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
-		           	if (posXCont + tamContX <= x + tamElemX){
-		            	x = posXCont + tamContX - tamElemX - 15;
-		           	}
-		           	if (posYCont + tamContY <= y + tamElemY){
-		            	y = posYCont + tamContY - tamElemY;
-		           	}
-		           	document.getElementById(elementoArrastrado).style.position = "absolute";
-		           	document.getElementById(elementoArrastrado).style.left = x + "px";
-		           	document.getElementById(elementoArrastrado).style.top = y + "px";
-				};
-					       
-				function crearSubGrupoAvanzados() {
-					var numDiv = document.getElementsByTagName("div").length;
-				    $("#Avanzados").append("<div id='SubGrupoAvanzados' class='subGrupo' title='"+numDiv+"' ondragenter='return enter(event)' ondragover='return over(event)' ondragleave='return leave(event)' ondrop='return drop(event)' >SubGrupo Avanzados<a id='SubGrupoAvanzados' class='cerrar' onclick='javascript:closeThisDivAvanzados(this)'>[x]</a><SELECT id='comboBoxAvanzados' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
-				};
-				function crearSubGrupoIntermedios() {
-					var numDiv = document.getElementsByTagName("div").length;
-				    $("#Intermedios").append("<div id='SubGrupoIntermedios' class='subGrupo' title='' ondragenter='return enter(event)' ondragover='return over(event)' ondragleave='return leave(event)' ondrop='return drop(event)' >SubGrupo Intermedios<a id='SubGrupoIntermedios' class='cerrar' onclick='javascript:closeThisDivIntermedios(this)'>[x]</a><SELECT id='comboBoxIntermedios' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
-				};
-				function crearSubGrupoReforzamiento() {
-					var numDiv = document.getElementsByTagName("div").length;
-				    $("#Reforzamiento").append("<div id='SubGrupoReforzamiento' class='subGrupo' title='' ondragenter='return enter(event)' ondragover='return over(event)' ondragleave='return leave(event)' ondrop='return drop(event)'>SubGrupo Reforzamiento<a id='SubGrupoReforzamiento' class='cerrar' onclick='javascript:closeThisDivReforzamiento(this)'>[x]</a><SELECT id='comboBoxReforzamiento' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
-				};
+				$(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
+				$(".comboBoxIntermedios").append("<OPTION VALUE=2>{{ request.user.username }}</OPTION>");
+				$(".comboBoxReforzamiento").append("<OPTION VALUE=3>{{ request.user.username }}</OPTION>");
 				
-				function closeThisDivAvanzados(div) { 
-					var openDiv = document.getElementById(div.id); 
-					var parentDiv = document.getElementById('Avanzados');
-					var cuadritos = openDiv.getElementsByClassName('cuadradito')
-					for(var i=0; i<cuadritos.length; i++)
-		                {
-		                    $("#Avanzados").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Avanzados' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
-		                }
-					parentDiv.removeChild(openDiv);
-				};
-				function closeThisDivIntermedios(div) {
-					var openDiv = document.getElementById(div.id); 
-					var parentDiv = document.getElementById('Intermedios');
-					var cuadritos = openDiv.getElementsByClassName('cuadradito')
-					for(var i=0; i<cuadritos.length; i++)
-		                {
-		                    $("#Intermedios").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Intermedios' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
-		                }
-					parentDiv.removeChild(openDiv);
-				};
-				function closeThisDivReforzamiento(div) { 
-					var openDiv = document.getElementById(div.id); 
-					var parentDiv = document.getElementById('Reforzamiento');
-					var cuadritos = openDiv.getElementsByClassName('cuadradito')
-					for(var i=0; i<cuadritos.length; i++)
-		                {
-		                    $("#Reforzamiento").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Reforzamiento' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
-		                }
-					parentDiv.removeChild(openDiv);
-				};
+				var divs = document.querySelectorAll('.cuadradito');
+			    for (var i = 0; i < divs.length; i++) {
+			        var id1 = divs[i].getAttribute('id');
+			        var id2 = divs[i].getAttribute('title');
+			     	var id3 = divs[i].getAttribute('name');				        
 
-		        
-		        function makeGroups() {
-				   $.ajax({
-						    url: "{% url 'groups:getGroups' id_class %}",
-						    type: "POST",
-						    data: $("#formJson").serialize(),
-						    success: function (response) {
-						    	$('.cuadradito').remove();
-						       var student = JSON.parse(response);
-						       for(var i=0;i<student.length;i++){
-						       	if(student[i]['type']=='reinforcement'){
-						       		$("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-						       	}
-						       	if(student[i]['type']=='intermediate'){
-						       		$("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-						       	}
-						       	if(student[i]['type']=='advanced'){
-						       		$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-						       	}	
-						       }
-						       fillComboBox()
-						       alert('Agrupacion realizada correctamente.');
-						    }
+					if(id3=="Avanzados" || id3=="SubGrupoAvanzados"){
+			        	$(".comboBoxIntermedios").each(function() {
+						    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
 						});
-				};
-
-
-				function saveGroups(){
-					var divs = document.querySelectorAll('.cuadradito');
-				   var jsonArr = [];
-				   var aux = false;
-				   for (var i = 0; i < divs.length; i++) {
-				       	var kaid = divs[i].getAttribute('id');
-						var group = divs[i].getAttribute('name');
-						if(group=='Avanzados' || group=='Intermedios' || group=='Reforzamiento'){
-							aux = true;
-						}
-						jsonArr.push({
-					        kaid_student: kaid,
-					        group: group
-					    });
-				   	}
-				   	var tutorsArr = [];
-				   	tutorsArr.push({
-				   		kaid_tutor_reforzamiento:$('#comboBoxReforzamiento').val(),
-				   		kaid_tutor_intermedios:$('#comboBoxIntermedios').val(),
-				   		kaid_tutor_avanzados:$('#comboBoxAvanzados').val()
-				   	});
-				   	$("input[name='tutors']").val(JSON.stringify(tutorsArr));
-				   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
-				   	if(aux){
-
-				   		$.ajax({
-						    url: "{% url 'groups:getGroups' id_class %}",
-						    type: "POST",
-						    data: $("#formJson").serialize(),
-						    success: function (response) {
-						       //lo que haces si es exitoso
-						       alert('Grupos guardados correctamente.');
-						       location.reload();
-						    }
+			        	
+			        	$(".comboBoxReforzamiento").each(function() {
+						    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
 						});
-				   		aux = false;
-				   	}else{
-				   		alert('No hay agrupacion para guardar')
-				   	}
-					
-				};
+					}
+					if(id3=="Intermedios" || id3=="SubGrupoIntermedios"){
+						$(".comboBoxReforzamiento").each(function() {
+						    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
+						});
+					}
+			    }
+	        };
+			function drop(e){
+	        	var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+	           
+	        	document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+	           
+	           
+				//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+				fillComboBox();
+				e.target.appendChild(document.getElementById(elementoArrastrado));
+				e.target.style.border = '';  // Quita el borde
 
-		
+	           	tamElemX = $('#'+elementoArrastrado).width();
+	           	tamElemY = $('#'+elementoArrastrado).height();
+	   
+	           	posXCont = $('#'+e.target.id).position().left;
+	           	posYCont = $('#'+e.target.id).position().top;
+	           	// Posicion absoluta del raton
+	           	x = e.layerX;
+	           	y = e.layerY;
+	           	
+	           	// Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
+	           	if (posXCont + tamContX <= x + tamElemX){
+	            	x = posXCont + tamContX - tamElemX - 15;
+	           	}
+
+	           	document.getElementById(elementoArrastrado).style.position = "absolute";
+	           	document.getElementById(elementoArrastrado).style.left = x + "px";
+	           	document.getElementById(elementoArrastrado).style.top = y + "px";
+			};       
+			function crearSubGrupoAvanzados() {
+				var numDiv = document.getElementsByTagName("div").length;
+			    $("#Avanzados").append("<div id='SubGrupoAvanzados' class='subGrupo' name='"+numDiv+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Avanzados<a id='SubGrupoAvanzados' name='"+numDiv+"' class='cerrar' onclick='javascript:closeThisDivAvanzados(this)'>[x]</a><SELECT id='comboBoxAvanzados' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+			};
+			function crearSubGrupoIntermedios() {
+				var numDiv = document.getElementsByTagName("div").length;
+			    $("#Intermedios").append("<div id='SubGrupoIntermedios' class='subGrupo' name='"+numDiv+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Intermedios<a id='SubGrupoIntermedios' name='"+numDiv+"' class='cerrar' onclick='javascript:closeThisDivIntermedios(this)'>[x]</a><SELECT id='comboBoxIntermedios' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+			};
+			function crearSubGrupoReforzamiento() {
+				var numDiv = document.getElementsByTagName("div").length;
+			    $("#Reforzamiento").append("<div id='SubGrupoReforzamiento' class='subGrupo' name='"+numDiv+"' ondragover='return over(event)' ondrop='return drop(event)'>SubGrupo Reforzamiento<a id='SubGrupoReforzamiento' name='"+numDiv+"' class='cerrar' onclick='javascript:closeThisDivReforzamiento(this)'>[x]</a><SELECT id='comboBoxReforzamiento' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+			};
+			function closeThisDivAvanzados(div) { 
+				var openDiv = document.getElementsByName(div.name); 
+				var parentDiv = document.getElementById('Avanzados');
+				var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
+				for(var i=0; i<cuadritos.length; i++)
+	                {
+	                    $("#Avanzados").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Avanzados' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+	                }
+				parentDiv.removeChild(openDiv[0]);
+			};
+			function closeThisDivIntermedios(div) {
+				var openDiv = document.getElementsByName(div.name); 
+				var parentDiv = document.getElementById('Intermedios');
+				var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
+				for(var i=0; i<cuadritos.length; i++)
+	                {
+	                    $("#Intermedios").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Intermedios' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+	                }
+				parentDiv.removeChild(openDiv[0]);
+			};
+			function closeThisDivReforzamiento(div) { 
+				var openDiv = document.getElementsByName(div.name);  
+				var parentDiv = document.getElementById('Reforzamiento');
+				var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
+				for(var i=0; i<cuadritos.length; i++)
+	                {
+	                    $("#Reforzamiento").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Reforzamiento' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+	                }
+				parentDiv.removeChild(openDiv[0]);
+			};
+
+	        
+	        function makeGroups() {
+			   $.ajax({
+					    url: "{% url 'groups:getGroups' id_class %}",
+					    type: "POST",
+					    data: $("#formJson").serialize(),
+					    success: function (response) {
+					    	$('.cuadradito').remove();
+					       var student = JSON.parse(response);
+					       for(var i=0;i<student.length;i++){
+					       	if(student[i]['type']=='reinforcement'){
+					       		$("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+					       	}
+					       	if(student[i]['type']=='intermediate'){
+					       		$("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+					       	}
+					       	if(student[i]['type']=='advanced'){
+					       		$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+					       	}	
+					       }
+					       fillComboBox()
+					       alert('Agrupacion realizada correctamente.');
+					    }
+					});
+			};
+			function saveGroups(){
+				var divs = document.querySelectorAll('.cuadradito');
+			   var jsonArr = [];
+			   var aux = false;
+			   for (var i = 0; i < divs.length; i++) {
+			       	var kaid = divs[i].getAttribute('id');
+					var group = divs[i].getAttribute('name');
+					if(group=='Avanzados' || group=='Intermedios' || group=='Reforzamiento'){
+						aux = true;
+					}
+					jsonArr.push({
+				        kaid_student: kaid,
+				        group: group
+				    });
+			   	}
+			   	var tutorsArr = [];
+			   	tutorsArr.push({
+			   		kaid_tutor_reforzamiento:$('#comboBoxReforzamiento').val(),
+			   		kaid_tutor_intermedios:$('#comboBoxIntermedios').val(),
+			   		kaid_tutor_avanzados:$('#comboBoxAvanzados').val()
+			   	});
+			   	$("input[name='tutors']").val(JSON.stringify(tutorsArr));
+			   	$("input[name='student_groups']").val(JSON.stringify(jsonArr));
+			   	if(aux){
+
+			   		$.ajax({
+					    url: "{% url 'groups:getGroups' id_class %}",
+					    type: "POST",
+					    data: $("#formJson").serialize(),
+					    success: function (response) {
+					       //lo que haces si es exitoso
+					       alert('Grupos guardados correctamente.');
+					       location.reload();
+					    }
+					});
+			   		aux = false;
+			   	}else{
+			   		alert('No hay agrupacion para guardar')
+			   	}
+				
+			};
 		</script>
 	</head>
 	    <style>
@@ -289,72 +276,39 @@
 			    background: rgba(255, 255, 255, 0.2);
 			}
 
-		#topictree{
-			overflow-y: scroll;
-			height: 400px;
-			padding: 10px;
-		    margin: 10px;
-		}
+			#topictree{
+				overflow-y: scroll;
+				height: 400px;
+				padding: 10px;
+			    margin: 10px;
+			}
 
-    </style>
-    <style type="text/css">
-	    .axis path,
-	    .axis line {
-	      fill: none;
-	      stroke: black;
-	      shape-rendering: crispEdges;
-	    }
-
-	    .axis text {
-	      font-family: sans-serif;
-	      font-size: 10px;
-	    }
-
-	    .timeline-label {
-	      font-family: sans-serif;
-	      font-size: 12px;
-	    }
-
-	    #timeline2 .axis {
-	      transform: translate(0px,40px);
-	      -ms-transform: translate(0px,40px); /* IE 9 */
-	      -webkit-transform: translate(0px,40px); /* Safari and Chrome */
-	      -o-transform: translate(0px,40px); /* Opera */
-	      -moz-transform: translate(0px,40px); /* Firefox */
-	    }
-	    
-	    .coloredDiv {
-	      height:20px; width:20px; float:left;
-	    }
-	  </style>
-    <section>
+    	</style>
+    	<section>
     	
-			        <div id="SinGrupo" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)" ><ul>No agrupados</ul>  
-							
-			        </div>
+	        <div id="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
  
-		        	<div id="Avanzados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
-		        		<SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
-						<OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
-						</SELECT>
-						<button onclick="crearSubGrupoAvanzados(this);">nuevo sub-grupo</button>
-		        	</div>
+        	<div id="Avanzados" ondragover="return over(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
+        		<SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
+				<OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
+				</SELECT>
+				<button onclick="crearSubGrupoAvanzados(this);">nuevo sub-grupo</button>
+        	</div>
  
-		        <div id="Intermedios" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Intermedios
-		        	 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
-					<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
-					</SELECT>
-					<button onclick="crearSubGrupoIntermedios(this);">nuevo sub-grupo</button>
-		        </div>
-		        <div id="Reforzamiento" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">Reforzamiento
-		        	<SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
-					<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
-					</SELECT>
-					<button onclick="crearSubGrupoReforzamiento(this);">nuevo sub-grupo</button>
-		        </div>
+	        <div id="Intermedios" ondragover="return over(event)" ondrop="return drop(event)">Intermedios
+	        	 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
+				<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
+				</SELECT>
+				<button onclick="crearSubGrupoIntermedios(this);">nuevo sub-grupo</button>
+	        </div>
+	        <div id="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)">Reforzamiento
+	        	<SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
+				<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
+				</SELECT>
+				<button onclick="crearSubGrupoReforzamiento(this);">nuevo sub-grupo</button>
+	        </div>
 
-	        <div id="topictree">
-			</div>
+	        <div id="topictree"></div>
  
     </section>
 	<form action="" method="post" id='formJson'>{% csrf_token %}
@@ -364,18 +318,6 @@
         <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
         <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion'>
     </form> 
-    <div>
-    	{% if groups %}
-	<ul class="groups">
-	    {% for g in groups %}
-	    <li>{{ g.date }}</li>
-	    {% endfor %}
-	</ul>
-	{% endif %}
-
-
-    <div id="timeline2"></div>
-  </div>
     {% if messages %}
 	<ul class="messages">
 	    {% for message in messages %}
@@ -383,10 +325,9 @@
 	    {% endfor %}
 	</ul>
 	{% endif %}
-
-		<script type="text/javascript">
-		  $(document).ready(function(){
-		  	{% if students %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+	  		{% if students %}
 				{% for student in students %}
 					{% if student.type == 'ungrouped' %}
 						$("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' name='SinGrupo' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
@@ -402,37 +343,8 @@
 					{% endif%}
 				{% endfor %}
 			{% endif %}	
-
-			var testData = [
-					 {times: [{"starting_time": 1453766571, "ending_time": 1453766571}]},
-			    	 {times: [{"starting_time": 1453766665, "ending_time": 1453766665}]},
-			     ];
-
-
-
-			function timelineCircle() {
-		        var chart = d3.timeline()
-		          .tickFormat( //
-		            {format: d3.time.format("%d-%m-%Y"),
-		            tickTime: d3.time.hours,
-		            tickInterval: 1,
-		            tickSize: 30})
-		          .display("circle"); // toggle between rectangles and circles
-
-		        var svg = d3.select("#timeline2").append("svg").attr("width", width)
-		          .datum(testData).call(chart);
-		     	 }
-		     	 var width = 1000;
-
-				timelineCircle();	
-				});
-				
-			
-		      			
-
-		</script>	
-
-
+		});
+	</script>	
 	<script>
 		var topictree = JSON.parse('{{ topictree | escapejs }}');
 		$('#topictree').on('changed.jstree', function (e, data) {
@@ -462,7 +374,4 @@
 		    }, 250);
   		});
 	</script>
-
-
-
 {% endblock %}
