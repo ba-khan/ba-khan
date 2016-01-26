@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     # ex: /polls/
     url(r'^$', views.getGroups, name='getGroups'),
+
     
 
 ]

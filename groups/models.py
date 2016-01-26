@@ -5,6 +5,7 @@ from bakhanapp.models import Group,Skill,Student
 class Master_Group(models.Model):
 	name = models.CharField(max_length=50)
 	date = models.IntegerField()
+	kaid_teacher = models.CharField(max_length=40)
 
 class Group_Skill(models.Model):
 	id_group = models.ForeignKey(Group)

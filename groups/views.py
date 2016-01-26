@@ -56,13 +56,15 @@ from django.utils import timezone
 from bakhanapp.views import getTopictree
 import time
 
-def to_integer(dt_time):
-    return 10000*dt_time.year + 1000*dt_time.month + dt_time.day
+
 # Create your views here.
 @login_required()
 def getGroups(request, id_class):
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
-    groups = Master_Group.objects.all()
+    g = Master_Group.objects.all()
+    data = serializers.serialize('json', g)
+    struct = json.loads(data)
+    groups = json.dumps(struct)
     if request.method == 'POST':
         args = request.POST
         skills_selected = eval(args['skills'])
@@ -80,6 +82,7 @@ def getGroups(request, id_class):
             hoy= fecha.strftime("%Y-%m-%d %H:%M:%S")
             t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
             master.date = int(t)
+            master.kaid_teacher = '2'
             master.save()
             new_advanced = Group()
             new_advanced.name = 'test_advanced'

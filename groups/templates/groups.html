@@ -371,6 +371,12 @@
 	    <li>{{ g.date }}</li>
 	    {% endfor %}
 	</ul>
+	</div>
+
+	<div id='baz'></div>
+	<script>
+    
+	</script>
 	{% endif %}
 
 
@@ -404,9 +410,21 @@
 			{% endif %}	
 
 			var testData = [
-					 {times: [{"starting_time": 1453766571, "ending_time": 1453766571}]},
-			    	 {times: [{"starting_time": 1453766665, "ending_time": 1453766665}]},
 			     ];
+
+			var master_groups = JSON.parse('{{ groups | escapejs }}');
+			for (i=0;i<master_groups.length;i++){
+				times ={};
+				var arr=[];
+				dic = {};
+				dic.starting_time = master_groups[i]['fields']['date'];
+				dic.ending_time = master_groups[i]['fields']['date'];
+				arr.push(dic);
+				times.times = arr;
+				testData.push(times);
+			};
+    		
+
 
 
 
