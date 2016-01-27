@@ -491,33 +491,12 @@ window.onload = function() {
 		     ];
 
 		var master_groups = JSON.parse('{{ groups | escapejs }}');
-		var last_date;
 		for (i=0;i<master_groups.length;i++){
 			times ={};
 			var arr=[];
 			dic = {};
-			if(i==0){
-				dic.starting_time = master_groups[i]['fields']['date_int'];
-				dic.ending_time = master_groups[i]['fields']['date_int']+20;
-				last_date = master_groups[i]['fields']['date_int'];
-			}else{
-				var dif=master_groups[i]['fields']['date_int']-last_date;
-				var dif_cero;
-				if(dif<0){
-					dif_cero = dif;
-				}else{
-					dif_cero = 0;
-				}
-				if(dif<4000){
-					dic.starting_time = master_groups[i]['fields']['date_int']+4000-dif_cero;
-					dic.ending_time = master_groups[i]['fields']['date_int']+4020-dif_cero;
-					last_date = master_groups[i]['fields']['date_int']+4000-dif_cero;
-				}else{
-					dic.starting_time = master_groups[i]['fields']['date_int'];
-					dic.ending_time = master_groups[i]['fields']['date_int']+20;
-					last_date = master_groups[i]['fields']['date_int'];
-				}
-			}
+			dic.starting_time = master_groups[i]['fields']['date_int'];
+			dic.ending_time = master_groups[i]['fields']['date_int']+20;
 			arr.push(dic);
 			times.times = arr;
 			times.label = master_groups[i]['fields']['date'];
