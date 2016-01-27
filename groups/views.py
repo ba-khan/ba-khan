@@ -67,16 +67,12 @@ def getMakedGroup(request,id_class):
         g_e = Group_Student.objects.filter(id_group__in=g)
         data = serializers.serialize('json', g_e)
         struct = json.loads(data)
-        groups = json.dumps(struct)
+        students_groups = json.dumps(struct)
         g_c = Group.objects.filter(master=id_master_group)
         data2 = serializers.serialize('json', g_c)
         struct2 = json.loads(data2)
         groups_data = json.dumps(struct2)
-        test = {}
-        test['groups'] = groups
-        test['groups_data'] = groups_data
-        print test
-    return HttpResponse(test)
+    return HttpResponse(groups_data)
 
 
 @login_required()

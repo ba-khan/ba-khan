@@ -522,14 +522,20 @@ window.onload = function() {
       })
       .click(function (d, i, datum) {
       	//Funcion que carga todos los datos del grupo datum.id
+      	var groups
       	$.ajax({
 			   url: "{% url 'groups:getMakedGroup' id_class %}",
 			   type: "POST",
 			   data: {id_master_group : datum.id},
 			   success: function (response) {
-					//var gr = JSON.parse(response);
-			     	alert(response)
-			      
+			   		dict={};
+					groups = JSON.parse(response);
+					for(var i=0;i<groups.length;i++){
+						if(groups[i]['fields']['type'] == 'advanced'){
+							$('#Avanzados').addClass((groups[i]['pk']).toString());
+						}
+
+					}
 			   }
 		});
         //alert(datum.id);
@@ -544,7 +550,6 @@ window.onload = function() {
     var svg = d3.select("#timeline3").append("svg").attr("width", width)
       .datum(testData).call(chart);
   }
-
 
   
   timelineHover();
