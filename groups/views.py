@@ -78,10 +78,11 @@ def getGroups(request, id_class):
             tutors[0]['kaid_tutor_avanzados'] = 'kaid_1097501097555535353578558' 
             master = Master_Group()
             master.name = 'test'
+            master.date = timezone.now()
             fecha = timezone.now()
             hoy= fecha.strftime("%Y-%m-%d %H:%M:%S")
             t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
-            master.date = int(t)
+            master.date_int = int(t)
             master.kaid_teacher = '2'
             master.save()
             new_advanced = Group()

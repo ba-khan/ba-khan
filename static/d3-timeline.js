@@ -44,7 +44,7 @@
         showBorderFormat = {marginTop: 25, marginBottom: 0, width: 1, color: colorCycle},
         showAxisHeaderBackground = false,
         showAxisNav = false,
-        showAxisCalendarYear = false,
+        showAxisCalendarYear = true,
         axisBgColor = "white",
         chartData = {}
       ;
