@@ -30,7 +30,7 @@ from bakhanapp.models import Assesment_Config
 from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Subtopic_Video
 from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
-from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
+from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill,Group_Student
 from groups.models import Group_Skill,Master_Group
 
 import datetime
@@ -58,6 +58,27 @@ import time
 
 
 # Create your views here.
+def getMakedGroup(request,id_class):
+    #funcion que devuelve un json con los datos de grupos y alumnos
+    if request.method == 'POST':
+        args = request.POST
+        id_master_group = args['id_master_group']
+        g = Group.objects.filter(master=id_master_group).values('id_group')
+        g_e = Group_Student.objects.filter(id_group__in=g)
+        data = serializers.serialize('json', g_e)
+        struct = json.loads(data)
+        groups = json.dumps(struct)
+        g_c = Group.objects.filter(master=id_master_group)
+        data2 = serializers.serialize('json', g_c)
+        struct2 = json.loads(data2)
+        groups_data = json.dumps(struct2)
+        test = {}
+        test['groups'] = groups
+        test['groups_data'] = groups_data
+        print test
+    return HttpResponse(test)
+
+
 @login_required()
 def getGroups(request, id_class):
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)

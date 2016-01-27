@@ -500,6 +500,7 @@ window.onload = function() {
 			arr.push(dic);
 			times.times = arr;
 			times.label = master_groups[i]['fields']['date'];
+			times.id = master_groups[i]['pk'];
 			testData.push(times);
 		};
 
@@ -520,7 +521,18 @@ window.onload = function() {
         div.find('#name').text(datum.label);
       })
       .click(function (d, i, datum) {
-        alert(datum.label);
+      	//Funcion que carga todos los datos del grupo datum.id
+      	$.ajax({
+			   url: "{% url 'groups:getMakedGroup' id_class %}",
+			   type: "POST",
+			   data: {id_master_group : datum.id},
+			   success: function (response) {
+					//var gr = JSON.parse(response);
+			     	alert(response)
+			      
+			   }
+		});
+        //alert(datum.id);
       })
       .scroll(function (x, scale) {
         //$("#scrolled_date").text(scale.invert(x) + " to " + scale.invert(x+width));
