@@ -338,6 +338,9 @@ float: left;
 width: 896px;
 height: 40px;
 }
+#more_contain{
+  visibility: hidden;
+}
 
     </style>
     <style type="text/css">
@@ -407,7 +410,11 @@ height: 40px;
 <div align="left">
   <div>
     <div id="timeline3" style="overflow:auto "></div>
+    <div id='more_contain'>
+<img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
+</div>
   </div>
+
 
 <form action="" method="post" id='formJson'>{% csrf_token %}
        <input name="skills" type="hidden" value="[]">
@@ -422,6 +429,7 @@ height: 40px;
       <div id="scrolled_date"></div>
     </div>
 </div>
+
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -587,6 +595,12 @@ window.onload = function() {
          }
         });
         //alert(datum.id);
+        //<img src="smiley.gif" alt="Smiley face" height="42" width="42">
+        $('#more_contain').css('visibility', 'visible');
+        $('#more_contain').on("click","a,img", function (e) {
+            e.preventDefault();
+            location.reload();
+        });
       })
       .scroll(function (x, scale) {
         //$("#scrolled_date").text(scale.invert(x) + " to " + scale.invert(x+width));
