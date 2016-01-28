@@ -58,6 +58,19 @@ import time
 
 
 # Create your views here.
+def getStudentGroup(request,id_class):
+    #funcion que devuelve un json con los datos de grupos y alumnos
+    if request.method == 'POST':
+        args = request.POST
+        id_master_group = args['id_master_group']
+        g = Group.objects.filter(master=id_master_group).values('id_group')
+        g_e = Group_Student.objects.filter(id_group__in=g)
+        data = serializers.serialize('json', g_e)
+        struct = json.loads(data)
+        students_groups = json.dumps(struct)
+        print students_groups
+    return HttpResponse(students_groups)
+
 def getMakedGroup(request,id_class):
     #funcion que devuelve un json con los datos de grupos y alumnos
     if request.method == 'POST':

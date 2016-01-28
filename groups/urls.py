@@ -6,6 +6,7 @@ urlpatterns = [
     # ex: /polls/
     url(r'^$', views.getGroups, name='getGroups'),
     url(r'^historial/$', views.getMakedGroup, name='getMakedGroup'),
+    url(r'^estudiantes/$', views.getStudentGroup, name='getStudentGroup'),
     
 
 ]
