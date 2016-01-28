@@ -30,7 +30,7 @@ from bakhanapp.models import Assesment_Config
 from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Subtopic_Video
 from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
-from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
+from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill,Group_Student
 from groups.models import Group_Skill,Master_Group
 
 import datetime
@@ -58,10 +58,51 @@ import time
 
 
 # Create your views here.
+def getSkillGroup(request,id_class):
+    #funcion que devuelve un json con los skills de un grupo
+    if request.method == 'POST':
+        args = request.POST
+        id_master_group = args['id_master_group']
+        s = Group_Skill.objects.filter(id_group=id_master_group).values('id_skill_id')
+        n = Skill.objects.filter(id_skill_name__in=s)
+        data = serializers.serialize('json', n)
+        struct = json.loads(data)
+        skills = json.dumps(struct)
+    return HttpResponse(skills)
+
+def getStudentGroup(request,id_class):
+    #funcion que devuelve un json con los datos de grupos y alumnos
+    if request.method == 'POST':
+        args = request.POST
+        id_master_group = args['id_master_group']
+        g = Group.objects.filter(master=id_master_group).values('id_group')
+        g_e = Group_Student.objects.filter(id_group__in=g)
+        data = serializers.serialize('json', g_e)
+        struct = json.loads(data)
+        students_groups = json.dumps(struct)
+    return HttpResponse(students_groups)
+
+def getMakedGroup(request,id_class):
+    #funcion que devuelve un json con los datos de grupos y alumnos
+    if request.method == 'POST':
+        args = request.POST
+        id_master_group = args['id_master_group']
+        g = Group.objects.filter(master=id_master_group).values('id_group')
+        g_e = Group_Student.objects.filter(id_group__in=g)
+        data = serializers.serialize('json', g_e)
+        struct = json.loads(data)
+        students_groups = json.dumps(struct)
+        g_c = Group.objects.filter(master=id_master_group)
+        data2 = serializers.serialize('json', g_c)
+        struct2 = json.loads(data2)
+        groups_data = json.dumps(struct2)
+    return HttpResponse(groups_data)
+
+
 @login_required()
 def getGroups(request, id_class):
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
-    g = Master_Group.objects.all()
+    g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
     struct = json.loads(data)
     groups = json.dumps(struct)
@@ -84,6 +125,7 @@ def getGroups(request, id_class):
             t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
             master.date_int = int(t)
             master.kaid_teacher = '2'
+            master.id_class = id_class
             master.save()
             new_advanced = Group()
             new_advanced.name = 'test_advanced'
@@ -110,11 +152,7 @@ def getGroups(request, id_class):
             new_reinforcement.master = master.id
             new_reinforcement.save()
             for skills in skills_selected:
-                Group_Skill(id_group_id=new_advanced.id_group,
-                    id_skill_id=skills).save()
-                Group_Skill(id_group_id=new_intermediate.id_group,
-                    id_skill_id=skills).save()
-                Group_Skill(id_group_id=new_reinforcement.id_group,
+                Group_Skill(id_group_id=master.id,
                     id_skill_id=skills).save()
             groups = eval(args['student_groups'])
             for g in groups:

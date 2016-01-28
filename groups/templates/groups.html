@@ -330,10 +330,16 @@ height: 371px;
 padding: 10px;
    margin: 10px;
 }
+#topictree_div{
+  text-align: left;
+}
 #timeline3{
 float: left;
 width: 896px;
 height: 40px;
+}
+#more_contain{
+  visibility: hidden;
 }
 
     </style>
@@ -404,14 +410,18 @@ height: 40px;
 <div align="left">
   <div>
     <div id="timeline3" style="overflow:auto "></div>
+    <div id='more_contain'>
+<img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
+</div>
   </div>
+
 
 <form action="" method="post" id='formJson'>{% csrf_token %}
        <input name="skills" type="hidden" value="[]">
        <input name="student_groups" type="hidden" value=''>
        <input name="tutors" type="hidden" value=''>
-       <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
-       <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion'>
+       <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='save'>
+       <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='make'>
    </form>
        <div id="hoverRes">
       <div class="coloredDiv"></div>
@@ -419,6 +429,7 @@ height: 40px;
       <div id="scrolled_date"></div>
     </div>
 </div>
+
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -500,6 +511,7 @@ window.onload = function() {
 			arr.push(dic);
 			times.times = arr;
 			times.label = master_groups[i]['fields']['date'];
+			times.id = master_groups[i]['pk'];
 			testData.push(times);
 		};
 
@@ -520,7 +532,75 @@ window.onload = function() {
         div.find('#name').text(datum.label);
       })
       .click(function (d, i, datum) {
-        alert(datum.label);
+      	//Funcion que carga todos los datos del grupo datum.id
+      	var groups
+        var students
+        var skills
+      	$.ajax({ // solicita los grupos creados
+			   url: "{% url 'groups:getMakedGroup' id_class %}",
+			   type: "POST",
+         async: false,
+			   data: {id_master_group : datum.id},
+			   success: function (response) {
+					groups = JSON.parse(response);
+					for(var i=0;i<groups.length;i++){
+						if(groups[i]['fields']['type'] == 'advanced'){
+              $('#Avanzados').removeClass();
+							$('#Avanzados').addClass((groups[i]['pk']).toString());
+						}
+            if(groups[i]['fields']['type'] == 'intermediate'){
+              $('#Intermedios').removeClass();
+              $('#Intermedios').addClass((groups[i]['pk']).toString());
+            }
+            if(groups[i]['fields']['type'] == 'reinforcement'){
+              $('#Reforzamiento').removeClass();
+              $('#Reforzamiento').addClass((groups[i]['pk']).toString());
+            }
+					}
+			   }
+		    });
+        $.ajax({ // solicita los estudiantes de cada grupo
+         url: "{% url 'groups:getStudentGroup' id_class %}",
+         type: "POST",
+         async: false,
+         data: {id_master_group : datum.id},
+         success: function (response) {
+            students = JSON.parse(response);
+            for(var i=0;i<students.length;i++){
+              var g = "." + (students[i]['fields']['id_group']).toString();
+              var s = "#" + (students[i]['fields']['kaid_student']).toString();
+              $(s).appendTo(g);
+          }
+         }
+        });
+        $('#topictree').html('');
+        $('#topictree_div').empty();
+        $('#save').remove();
+        $('#make').remove();
+        $.ajax({ // solicita los estudiantes de cada grupo
+         url: "{% url 'groups:getSkillGroup' id_class %}",
+         type: "POST",
+         async: false,
+         data: {id_master_group : datum.id},
+         success: function (response) {
+            skills = JSON.parse(response);
+            for(var i=0;i<skills.length;i++){
+              //alert(skills[i]['fields']['name_spanish'])
+              $('#topictree_div').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
+              //var g = "." + (students[i]['fields']['id_group']).toString();
+              //var s = "#" + (students[i]['fields']['kaid_student']).toString();
+              //$(s).appendTo(g);
+
+          }
+         }
+        });
+        //alert(datum.id);
+        //<img src="smiley.gif" alt="Smiley face" height="42" width="42">
+        $('#more_contain').css('visibility', 'visible');
+        $('#more_contain').on("click","a,img", function (e) {
+            e.preventDefault();
+            location.reload();
+        });
       })
       .scroll(function (x, scale) {
         //$("#scrolled_date").text(scale.invert(x) + " to " + scale.invert(x+width));
@@ -532,7 +612,6 @@ window.onload = function() {
     var svg = d3.select("#timeline3").append("svg").attr("width", width)
       .datum(testData).call(chart);
   }
-
 
   
   timelineHover();

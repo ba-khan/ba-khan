@@ -7,9 +7,10 @@ class Master_Group(models.Model):
 	date = models.DateField()
 	date_int = models.IntegerField()
 	kaid_teacher = models.CharField(max_length=40)
+	id_class = models.IntegerField()
 
 class Group_Skill(models.Model):
-	id_group = models.ForeignKey(Group)
+	id_group = models.ForeignKey(Master_Group)
 	id_skill = models.ForeignKey(Skill)
 
 class Sub_Group(models.Model):
