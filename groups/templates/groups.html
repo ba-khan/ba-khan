@@ -523,7 +523,7 @@ window.onload = function() {
       .click(function (d, i, datum) {
       	//Funcion que carga todos los datos del grupo datum.id
       	var groups
-      	$.ajax({
+      	$.ajax({ // solicita los grupos creados
 			   url: "{% url 'groups:getMakedGroup' id_class %}",
 			   type: "POST",
 			   data: {id_master_group : datum.id},
@@ -532,12 +532,21 @@ window.onload = function() {
 					groups = JSON.parse(response);
 					for(var i=0;i<groups.length;i++){
 						if(groups[i]['fields']['type'] == 'advanced'){
+              $('#Avanzados').removeClass();
 							$('#Avanzados').addClass((groups[i]['pk']).toString());
 						}
-
+            if(groups[i]['fields']['type'] == 'intermediate'){
+              $('#Intermedios').removeClass();
+              $('#Intermedios').addClass((groups[i]['pk']).toString());
+            }
+            if(groups[i]['fields']['type'] == 'reinforcement'){
+              $('#Reforzamiento').removeClass();
+              $('#Reforzamiento').addClass((groups[i]['pk']).toString());
+            }
 					}
 			   }
-		});
+		    });
+        
         //alert(datum.id);
       })
       .scroll(function (x, scale) {
