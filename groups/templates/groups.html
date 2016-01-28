@@ -577,7 +577,7 @@ window.onload = function() {
         $('#topictree_div').empty();
         $('#save').remove();
         $('#make').remove();
-        $.ajax({ // solicita los estudiantes de cada grupo
+        $.ajax({ // solicita las habilidades de cada grupo
          url: "{% url 'groups:getSkillGroup' id_class %}",
          type: "POST",
          async: false,
@@ -594,6 +594,7 @@ window.onload = function() {
           }
          }
         });
+        $(".cuadradito").removeAttr("draggable");
         //alert(datum.id);
         //<img src="smiley.gif" alt="Smiley face" height="42" width="42">
         $('#more_contain').css('visibility', 'visible');
