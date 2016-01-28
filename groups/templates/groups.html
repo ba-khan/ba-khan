@@ -384,7 +384,7 @@ height: 40px;
         <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
 <OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
 </SELECT>
-<button onclick="crearSubGrupoAvanzados(this);">nuevo sub-grupo</button>
+<button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub'>nuevo sub-grupo</button>
         </div>
  
        <div id="Intermedios" ondragover="return over(event)" ondrop="return drop(event)">Intermedios
@@ -392,14 +392,14 @@ height: 40px;
 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 </SELECT>
-<button onclick="crearSubGrupoIntermedios(this);">nuevo sub-grupo</button>
+<button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub'>nuevo sub-grupo</button>
        </div>
        <div id="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)">Reforzamiento
        
 <SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 </SELECT>
-<button onclick="crearSubGrupoReforzamiento(this);">nuevo sub-grupo</button>
+<button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub'>nuevo sub-grupo</button>
        </div>
 <div class="input-wrapper" id="topictree_div" align="center">
 <input id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Busca temas y habilidades">
@@ -516,6 +516,7 @@ window.onload = function() {
 		};
 
 		var width = testData.length*100;
+
 		
 
   function timelineHover() {
@@ -547,14 +548,21 @@ window.onload = function() {
 						if(groups[i]['fields']['type'] == 'advanced'){
               $('#Avanzados').removeClass();
 							$('#Avanzados').addClass((groups[i]['pk']).toString());
+              //groups[i]['fields']['kaid_student_tutor']
+              $(".comboBoxAvanzados").html('');
+              $(".comboBoxAvanzados").append("<OPTION VALUE=0>"+groups[i]['fields']['kaid_student_tutor']+"</OPTION>");
 						}
             if(groups[i]['fields']['type'] == 'intermediate'){
               $('#Intermedios').removeClass();
               $('#Intermedios').addClass((groups[i]['pk']).toString());
+              $(".comboBoxIntermedios").html('');
+              $(".comboBoxIntermedios").append("<OPTION VALUE=0>"+groups[i]['fields']['kaid_student_tutor']+"</OPTION>");
             }
             if(groups[i]['fields']['type'] == 'reinforcement'){
               $('#Reforzamiento').removeClass();
               $('#Reforzamiento').addClass((groups[i]['pk']).toString());
+              $(".comboBoxReforzamiento").html('');
+              $(".comboBoxReforzamiento").append("<OPTION VALUE=0>"+groups[i]['fields']['kaid_student_tutor']+"</OPTION>");
             }
 					}
 			   }
@@ -595,6 +603,7 @@ window.onload = function() {
          }
         });
         $(".cuadradito").removeAttr("draggable");
+        $('.nuevo_sub').remove()
         //alert(datum.id);
         //<img src="smiley.gif" alt="Smiley face" height="42" width="42">
         $('#more_contain').css('visibility', 'visible');

@@ -96,6 +96,7 @@ def getMakedGroup(request,id_class):
         data2 = serializers.serialize('json', g_c)
         struct2 = json.loads(data2)
         groups_data = json.dumps(struct2)
+        print groups_data
     return HttpResponse(groups_data)
 
 
