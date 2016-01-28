@@ -562,7 +562,10 @@ window.onload = function() {
               $('#Reforzamiento').removeClass();
               $('#Reforzamiento').addClass((groups[i]['pk']).toString());
               $(".comboBoxReforzamiento").html('');
-              $(".comboBoxReforzamiento").append("<OPTION VALUE=0>"+groups[i]['fields']['kaid_student_tutor']+"</OPTION>");
+              var s = "#" + (groups[i]['fields']['kaid_student_tutor']).toString();
+              //$(s).appendTo(".comboBoxReforzamiento");
+              var name_tutor = $(s).attr('title');
+              $(".comboBoxReforzamiento").append("<OPTION VALUE=0>"+name_tutor+"</OPTION>");
             }
 					}
 			   }
