@@ -330,6 +330,9 @@ height: 371px;
 padding: 10px;
    margin: 10px;
 }
+#topictree_div{
+  text-align: left;
+}
 #timeline3{
 float: left;
 width: 896px;
@@ -410,8 +413,8 @@ height: 40px;
        <input name="skills" type="hidden" value="[]">
        <input name="student_groups" type="hidden" value=''>
        <input name="tutors" type="hidden" value=''>
-       <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar'>
-       <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion'>
+       <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='save'>
+       <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='make'>
    </form>
        <div id="hoverRes">
       <div class="coloredDiv"></div>
@@ -563,6 +566,9 @@ window.onload = function() {
          }
         });
         $('#topictree').html('');
+        $('#topictree_div').empty();
+        $('#save').remove();
+        $('#make').remove();
         $.ajax({ // solicita los estudiantes de cada grupo
          url: "{% url 'groups:getSkillGroup' id_class %}",
          type: "POST",
@@ -571,9 +577,12 @@ window.onload = function() {
          success: function (response) {
             skills = JSON.parse(response);
             for(var i=0;i<skills.length;i++){
+              //alert(skills[i]['fields']['name_spanish'])
+              $('#topictree_div').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
               //var g = "." + (students[i]['fields']['id_group']).toString();
               //var s = "#" + (students[i]['fields']['kaid_student']).toString();
               //$(s).appendTo(g);
+
           }
          }
         });
