@@ -524,9 +524,11 @@ window.onload = function() {
       	//Funcion que carga todos los datos del grupo datum.id
       	var groups
         var students
+        var skills
       	$.ajax({ // solicita los grupos creados
 			   url: "{% url 'groups:getMakedGroup' id_class %}",
 			   type: "POST",
+         async: false,
 			   data: {id_master_group : datum.id},
 			   success: function (response) {
 					groups = JSON.parse(response);
@@ -549,6 +551,7 @@ window.onload = function() {
         $.ajax({ // solicita los estudiantes de cada grupo
          url: "{% url 'groups:getStudentGroup' id_class %}",
          type: "POST",
+         async: false,
          data: {id_master_group : datum.id},
          success: function (response) {
             students = JSON.parse(response);
@@ -559,6 +562,8 @@ window.onload = function() {
           }
          }
         });
+        $('#topictree').html('');
+
         //alert(datum.id);
       })
       .scroll(function (x, scale) {
