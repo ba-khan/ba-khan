@@ -58,6 +58,19 @@ import time
 
 
 # Create your views here.
+def getSkillGroup(request,id_class):
+    #funcion que devuelve un json con los skills de un grupo
+    if request.method == 'POST':
+        args = request.POST
+        id_master_group = args['id_master_group']
+        g = Group.objects.filter(master=id_master_group).values('id_group')
+        g_e = Group_Student.objects.filter(id_group__in=g)
+        data = serializers.serialize('json', g_e)
+        struct = json.loads(data)
+        students_groups = json.dumps(struct)
+        print students_groups
+    return HttpResponse(students_groups)
+
 def getStudentGroup(request,id_class):
     #funcion que devuelve un json con los datos de grupos y alumnos
     if request.method == 'POST':
@@ -91,7 +104,7 @@ def getMakedGroup(request,id_class):
 @login_required()
 def getGroups(request, id_class):
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
-    g = Master_Group.objects.all()
+    g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
     struct = json.loads(data)
     groups = json.dumps(struct)
@@ -114,6 +127,7 @@ def getGroups(request, id_class):
             t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
             master.date_int = int(t)
             master.kaid_teacher = '2'
+            master.id_class = id_class
             master.save()
             new_advanced = Group()
             new_advanced.name = 'test_advanced'
@@ -140,11 +154,7 @@ def getGroups(request, id_class):
             new_reinforcement.master = master.id
             new_reinforcement.save()
             for skills in skills_selected:
-                Group_Skill(id_group_id=new_advanced.id_group,
-                    id_skill_id=skills).save()
-                Group_Skill(id_group_id=new_intermediate.id_group,
-                    id_skill_id=skills).save()
-                Group_Skill(id_group_id=new_reinforcement.id_group,
+                Group_Skill(id_group_id=master.id,
                     id_skill_id=skills).save()
             groups = eval(args['student_groups'])
             for g in groups:

@@ -563,7 +563,20 @@ window.onload = function() {
          }
         });
         $('#topictree').html('');
-
+        $.ajax({ // solicita los estudiantes de cada grupo
+         url: "{% url 'groups:getSkillGroup' id_class %}",
+         type: "POST",
+         async: false,
+         data: {id_master_group : datum.id},
+         success: function (response) {
+            skills = JSON.parse(response);
+            for(var i=0;i<skills.length;i++){
+              //var g = "." + (students[i]['fields']['id_group']).toString();
+              //var s = "#" + (students[i]['fields']['kaid_student']).toString();
+              //$(s).appendTo(g);
+          }
+         }
+        });
         //alert(datum.id);
       })
       .scroll(function (x, scale) {
