@@ -157,8 +157,11 @@ def getGroups(request, id_class):
             }
 
             for sub in subGroups:
-                Group(type=sub['name'],master=master.id).save()
-                dicSub[sub['name']] = group.id_group
+                new_group = Group(type=sub['name'],master=master.id)
+                new_group.save()
+                dicSub[sub['name']] = new_group.id_group
+
+            print dicSub
 
             for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
                 if g['group'] == 'Intermedios':
