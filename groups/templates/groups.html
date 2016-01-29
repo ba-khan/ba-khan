@@ -223,8 +223,8 @@ function saveGroups(){
   for (var i = 0; i < divs.length; i++) {    
     var kaid = divs[i].getAttribute('id');
     var group = divs[i].getAttribute('name');
-    if(group=='Avanzados' || group=='Intermedios' || 
-      group=='Reforzamiento'){
+    if(group=='Avanzados' || group=='Intermedios' || group=='Reforzamiento' ||
+       group.substring(0,19)=='SubGrupoIntermedios' || group.substring(0,17)=='SubGrupoAvanzados' || group.substring(0,21)=='SubGrupoReforzamiento'){
       aux = true;
     }
     jsonArr.push({
