@@ -238,6 +238,15 @@ function saveGroups(){
   kaid_tutor_intermedios:$('#comboBoxIntermedios').val(),  
   kaid_tutor_avanzados:$('#comboBoxAvanzados').val()  
   });  
+
+  arrSubGroups = [];
+  $('.subGrupo').each(function(indice, elemento) {
+    arrSubGroups.push({
+      name: $(elemento).attr('id')
+    });
+    //console.log('El elemento con el índice '+indice+' contiene '+$(elemento).attr('id'))  ;
+  });
+  $("input[name='subGroups']").val(JSON.stringify(arrSubGroups)); 
   $("input[name='tutors']").val(JSON.stringify(tutorsArr));  
   $("input[name='student_groups']").val(JSON.stringify(jsonArr));  
   if(aux){  
@@ -411,6 +420,7 @@ height: 40px;
        <input name="skills" type="hidden" value="[]">
        <input name="student_groups" type="hidden" value=''>
        <input name="tutors" type="hidden" value=''>
+       <input name="subGroups" type="hidden" value=''>
        <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='save'>
        <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='make'>
    </form>
