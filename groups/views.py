@@ -96,7 +96,6 @@ def getMakedGroup(request,id_class):
         data2 = serializers.serialize('json', g_c)
         struct2 = json.loads(data2)
         groups_data = json.dumps(struct2)
-        print groups_data
     return HttpResponse(groups_data)
 
 
@@ -128,26 +127,26 @@ def getGroups(request, id_class):
             master.kaid_teacher = '2'
             master.id_class = id_class
             master.save()
-            new_advanced = Group()
-            new_advanced.type = 'Avanzados'
-            new_advanced.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
-            new_advanced.master = master.id
-            new_advanced.save()
-            new_intermediate = Group()
-            new_intermediate.type = 'Intermedios'
-            new_intermediate.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
-            new_intermediate.master = master.id
-            new_intermediate.save()
-            new_reinforcement = Group()
-            new_reinforcement.type = 'Reforzamiento'
-            new_reinforcement.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
-            new_reinforcement.master = master.id
-            new_reinforcement.save()
-            new_ungrouped = Group()
-            new_ungrouped.type = 'SinGrupo'
-            new_ungrouped.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
-            new_ungrouped.master = master.id
-            new_ungrouped.save()
+            new_Avanzados = Group()
+            new_Avanzados.type = 'Avanzados'
+            new_Avanzados.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
+            new_Avanzados.master = master.id
+            new_Avanzados.save()
+            new_Intermedios = Group()
+            new_Intermedios.type = 'Intermedios'
+            new_Intermedios.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
+            new_Intermedios.master = master.id
+            new_Intermedios.save()
+            new_Reforzamiento = Group()
+            new_Reforzamiento.type = 'Reforzamiento'
+            new_Reforzamiento.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
+            new_Reforzamiento.master = master.id
+            new_Reforzamiento.save()
+            new_SinGrupo = Group()
+            new_SinGrupo.type = 'SinGrupo'
+            new_SinGrupo.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
+            new_SinGrupo.master = master.id
+            new_SinGrupo.save()
             for skills in skills_selected:
                 Group_Skill(id_group_id=master.id,
                     id_skill_id=skills).save()
@@ -156,18 +155,19 @@ def getGroups(request, id_class):
             subGroups = eval(args['subGroups'])
 
             dicSub = {
-                'SinGrupo' : new_ungrouped.id_group,
-                'Avanzados' : new_advanced.id_group,
-                'Intermedios' : new_intermediate.id_group,
-                'Reforzamiento' : new_reinforcement.id_group
+                'SinGrupo' : new_SinGrupo.id_group,
+                'Avanzados' : new_Avanzados.id_group,
+                'Intermedios' : new_Intermedios.id_group,
+                'Reforzamiento' : new_Reforzamiento.id_group
             }
 
+            print dicSub
             for sub in subGroups:
                 new_group = Group(type=sub['name'],master=master.id)
                 new_group.save()
                 dicSub[sub['name']] = new_group.id_group
 
-            print dicSub
+            
 
             for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
                 #print 
@@ -177,13 +177,13 @@ def getGroups(request, id_class):
                 
             students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
             for s in students:
-                s.type = 'ungrouped'
+                s.type = 'SinGrupo'
         students = makeGroups(id_class,skills_selected)
         return HttpResponse(students)
     else:
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
         for s in students:
-            s.type = 'ungrouped'
+            s.type = 'SinGrupo'
     return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
@@ -208,31 +208,31 @@ def getTypeStudent(kaid_student,args):
     #de acuerdo a su nivel en las skills seleccionadas por el profesor.
     #skills = Group_Skill.objects.filter(id_group_id=id_group)
     #aqui llegan bien las habilidades seleccionadas
-    reinforcement = 0
-    intermediate = 0
-    advanced = 0
+    Reforzamiento = 0
+    Intermedios = 0
+    Avanzados = 0
     total = len(args)
     for skill in args:
         student_progress = Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill).values('last_skill_progress')
         #el problema esta con la variable student_progress
         if student_progress:
             if student_progress[0]["last_skill_progress"] == 'struggling' or student_progress[0]["last_skill_progress"] == 'unstarted':
-                reinforcement += 1
+                Reforzamiento += 1
             if student_progress[0]["last_skill_progress"] == 'mastery1' or student_progress[0]["last_skill_progress"] == 'mastery2' or student_progress[0]["last_skill_progress"] == 'practiced':
-                intermediate += 1
+                Intermedios += 1
             if student_progress[0]["last_skill_progress"] == 'mastery3':
-                advanced += 1
-    if reinforcement > 0:
-        return 'reinforcement'
-    elif intermediate > 0:
-        return 'intermediate'
-    elif advanced == total:
+                Avanzados += 1
+    if Reforzamiento > 0:
+        return 'Reforzamiento'
+    elif Intermedios > 0:
+        return 'Intermedios'
+    elif Avanzados == total:
         if total == 0:
-            return 'ungrouped'
+            return 'SinGrupo'
         else:
-            return 'advanced'
+            return 'Avanzados'
     else:
-        return 'reinforcement'
+        return 'Reforzamiento'
             
 
 def save_groups(request,id_class):
