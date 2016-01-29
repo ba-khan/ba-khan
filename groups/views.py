@@ -129,20 +129,25 @@ def getGroups(request, id_class):
             master.id_class = id_class
             master.save()
             new_advanced = Group()
-            new_advanced.type = 'advanced'
+            new_advanced.type = 'Avanzados'
             new_advanced.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
             new_advanced.master = master.id
             new_advanced.save()
             new_intermediate = Group()
-            new_intermediate.type = 'intermediate'
+            new_intermediate.type = 'Intermedios'
             new_intermediate.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
             new_intermediate.master = master.id
             new_intermediate.save()
             new_reinforcement = Group()
-            new_reinforcement.type = 'reinforcement'
+            new_reinforcement.type = 'Reforzamiento'
             new_reinforcement.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
             new_reinforcement.master = master.id
             new_reinforcement.save()
+            new_ungrouped = Group()
+            new_ungrouped.type = 'SinGrupo'
+            new_ungrouped.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
+            new_ungrouped.master = master.id
+            new_ungrouped.save()
             for skills in skills_selected:
                 Group_Skill(id_group_id=master.id,
                     id_skill_id=skills).save()
@@ -151,6 +156,7 @@ def getGroups(request, id_class):
             subGroups = eval(args['subGroups'])
 
             dicSub = {
+                'SinGrupo' : new_ungrouped.id_group,
                 'Avanzados' : new_advanced.id_group,
                 'Intermedios' : new_intermediate.id_group,
                 'Reforzamiento' : new_reinforcement.id_group
@@ -164,6 +170,10 @@ def getGroups(request, id_class):
             print dicSub
 
             for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
+                #print 
+                print dicSub[str(g['group'])]
+                Group_Student(id_group_id=new_intermediate.id_group,
+                                  kaid_student_id=g['kaid_student']).save()
                 if g['group'] == 'Intermedios':
                     Group_Student(id_group_id=new_intermediate.id_group,
                                   kaid_student_id=g['kaid_student']).save()
