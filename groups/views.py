@@ -129,26 +129,17 @@ def getGroups(request, id_class):
             master.id_class = id_class
             master.save()
             new_advanced = Group()
-            new_advanced.name = 'test_advanced'
             new_advanced.type = 'advanced'
-            new_advanced.start_date = timezone.now()
-            new_advanced.end_date = timezone.now()
             new_advanced.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
             new_advanced.master = master.id
             new_advanced.save()
             new_intermediate = Group()
-            new_intermediate.name = 'test_intermediate'
             new_intermediate.type = 'intermediate'
-            new_intermediate.start_date = timezone.now()
-            new_intermediate.end_date = timezone.now()
             new_intermediate.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
             new_intermediate.master = master.id
             new_intermediate.save()
             new_reinforcement = Group()
-            new_reinforcement.name = 'test_reinforcement'
             new_reinforcement.type = 'reinforcement'
-            new_reinforcement.start_date = timezone.now()
-            new_reinforcement.end_date = timezone.now()
             new_reinforcement.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
             new_reinforcement.master = master.id
             new_reinforcement.save()
