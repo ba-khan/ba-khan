@@ -376,7 +376,7 @@ height: 40px;
 	    	border = 1px solid black;
 	    }
 	  </style>
-    <section>
+    <section id='content'>
    
        <div id="SinGrupo" name="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
  
@@ -538,7 +538,7 @@ window.onload = function() {
       	var groups
         var students
         var skills
-      	$.ajax({ // solicita los grupos creados
+      	$.ajax({ // solicita los grupos creados en la agrupacion seleccionada
 			   url: "{% url 'groups:getMakedGroup' id_class %}",
 			   type: "POST",
          async: false,
@@ -546,28 +546,10 @@ window.onload = function() {
 			   success: function (response) {
 					groups = JSON.parse(response);
 					for(var i=0;i<groups.length;i++){
-						if(groups[i]['fields']['type'] == 'Avanzados'){
-              $('#Avanzados').removeClass();
-							$('#Avanzados').addClass((groups[i]['pk']).toString());
-              //groups[i]['fields']['kaid_student_tutor']
-              $(".comboBoxAvanzados").html('');
-              $(".comboBoxAvanzados").append("<OPTION VALUE=0>"+groups[i]['fields']['kaid_student_tutor']+"</OPTION>");
-						}
-            if(groups[i]['fields']['type'] == 'Intermedios'){
-              $('#Intermedios').removeClass();
-              $('#Intermedios').addClass((groups[i]['pk']).toString());
-              $(".comboBoxIntermedios").html('');
-              $(".comboBoxIntermedios").append("<OPTION VALUE=0>"+groups[i]['fields']['kaid_student_tutor']+"</OPTION>");
-            }
-            if(groups[i]['fields']['type'] == 'Reforzamiento'){
-              $('#Reforzamiento').removeClass();
-              $('#Reforzamiento').addClass((groups[i]['pk']).toString());
-              $(".comboBoxReforzamiento").html('');
-              var s = "#" + (groups[i]['fields']['kaid_student_tutor']).toString();
-              //$(s).appendTo(".comboBoxReforzamiento");
-              var name_tutor = $(s).attr('title');
-              $(".comboBoxReforzamiento").append("<OPTION VALUE=0>"+name_tutor+"</OPTION>");
-            }
+            //alert(groups[i]['fields']['type'])
+            t = "#"+groups[i]['fields']['type'];
+            $(t).remove();
+            $("#content").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'></div>")
 					}
 			   }
 		    });
