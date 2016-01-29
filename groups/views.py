@@ -171,18 +171,10 @@ def getGroups(request, id_class):
 
             for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
                 #print 
-                print dicSub[str(g['group'])]
-                Group_Student(id_group_id=new_intermediate.id_group,
+                #print dicSub[str(g['group'])]
+                Group_Student(id_group_id=dicSub[str(g['group'])],
                                   kaid_student_id=g['kaid_student']).save()
-                if g['group'] == 'Intermedios':
-                    Group_Student(id_group_id=new_intermediate.id_group,
-                                  kaid_student_id=g['kaid_student']).save()
-                if g['group'] == 'Avanzados':
-                    Group_Student(id_group_id=new_advanced.id_group,
-                                  kaid_student_id=g['kaid_student']).save()
-                if g['group'] == 'Reforzamiento':
-                    Group_Student(id_group_id=new_reinforcement.id_group,
-                                  kaid_student_id=g['kaid_student']).save()
+                
             students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
             for s in students:
                 s.type = 'ungrouped'
