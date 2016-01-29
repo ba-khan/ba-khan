@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
-from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect
+from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
 from django.template.context import RequestContext
 from .forms import loginForm
 from .forms import AssesmentConfigForm,AssesmentForm
@@ -15,24 +15,31 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
-from .models import Class,Teacher
-from .models import Skill
-from .models import Skill_Progress
-from .models import Student
-from .models import Student_Class
-from .models import Student_Video
-from .models import Student_Skill
-from .models import Video
-from .models import Video_Playing
-from .models import Skill_Attempt
-from .models import Assesment_Skill
-from .models import Class_Subject
-from .models import Assesment
-from .models import Assesment_Config
-from .models import Subtopic_Skill
-from .models import Subtopic_Video
-from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
-from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
+from bakhanapp.models import Class
+from bakhanapp.models import Teacher
+from bakhanapp.models import Skill
+from bakhanapp.models import Skill_Progress
+from bakhanapp.models import Student
+from bakhanapp.models import Student_Class
+from bakhanapp.models import Student_Video
+from bakhanapp.models import Student_Skill
+from bakhanapp.models import Video
+from bakhanapp.models import Video_Playing
+from bakhanapp.models import Skill_Attempt
+from bakhanapp.models import Assesment_Skill
+from bakhanapp.models import Class_Subject
+from bakhanapp.models import Assesment
+from bakhanapp.models import Assesment_Config
+from bakhanapp.models import Subtopic_Skill
+from bakhanapp.models import Subtopic_Video
+from bakhanapp.models import Grade,Skill
+from bakhanapp.models import Student_Skill
+from bakhanapp.models import Skill_Progress
+from bakhanapp.models import Subject
+from bakhanapp.models import Chapter
+from bakhanapp.models import Topic
+from bakhanapp.models import Subtopic
+from bakhanapp.models import Subtopic_Skill
 
 import datetime
 
@@ -60,6 +67,64 @@ def login(request):
 
 def rejected(request):
     return render(request, 'rejected.html')
+
+def getSkillAssesment(request,id_class):
+    if request.method == 'POST':
+        args = request.POST
+        id_asses_config = args['id_asses_config']
+        g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
+        n = Skill.objects.filter(id_skill_name__in=g)
+        data = serializers.serialize('json', n)
+        struct = json.loads(data)
+        skills = json.dumps(struct)
+    return HttpResponse(skills)
+
+def newAssesment3(request):
+    print "newAssesment"
+    if request.method == 'POST':
+        args = request.POST
+        fecha1=args['fecha_inicio']
+        fecha2=args['fecha_termino']
+        nota1=eval(args['nota_minima'])
+        nota2=eval(args['nota_maxima'])
+        id_config=(args['input_id_config'])
+        nombre_config=args['input_nombre']
+        students=eval(args['input_kaid'])
+        print "fecha inicio: "
+        print fecha1
+        print "fecha termino: "
+        print fecha2
+        print "nota minima: "
+        print nota1
+        print "nota maxima: "
+        print nota2
+        print "id_config: "
+        print id_config
+        print "nombre_config: "
+        print nombre_config
+        new_assesment = Assesment(start_date=fecha1,
+                               end_date=fecha2,
+                               id_assesment_conf_id=id_config,
+                               min_grade=nota1,
+                               max_grade=nota2,
+                               name=nombre_config
+                               )
+        new_assesment.save()
+        id_new_assesment=new_assesment.pk
+        for s in students:
+            #s['kaid_student']
+            #id_new_assesment
+            new_grade = Grade(grade=0,
+                               teacher_grade=0,
+                               performance_points=0,
+                               effort_points=0,
+                               id_assesment_id=id_new_assesment,
+                               kaid_student_id=s['kaid_student']
+                               )
+            new_grade.save()
+            
+            
+    return HttpResponse()
 
 @login_required()
 def home(request):
@@ -371,7 +436,7 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     #grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)
-    assesment_configs = Assesment_Config.objects.filter(id_assesment_config=1)
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
     #print assesment_configs
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,

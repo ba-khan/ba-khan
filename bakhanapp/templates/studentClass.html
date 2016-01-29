@@ -6,22 +6,69 @@
 	Dashboard
 {% endblock %}
 {% block body2 %}		
-	<head>
-		<!-- http://tablesorter.com/docs/ -->
-		<script type="text/javascript" src="{% static 'jquery.js'%}"></script> 
-		<script type="text/javascript" src="{% static 'jquery.tablesorter.js'%}"></script> 
-		<script>$(document).ready(function() 
-		    { 
-		        $("#myTable").tablesorter(); 
-		    } 
-			); 
-	  </script>
-	</head>
 	
+	<div style="margin:10px"><button onclick="muestra_oculta(&quot;contenido_a_mostrar&quot;)">Nueva Evaluacion</button></div>
+	<div id="contenido_a_mostrar" style="display:none;">
+			<div style="float:top">
+				<div style="float:left">
+					<select style="margin:10px" onChange="fillParameters(this.value)">
+						<OPTION VALUE=0>Seleccionar Pauta</OPTION>
+						{% for config in assesment_configs %}
+							<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>						
+						{% endfor %}
+					</select>
+				</div>
+				<div class="parametros" id="parametros">Parametros</div>
+				<div class="skills" id="skills">Skills</div>
+			<form action="" method="post" id='formJson'>{% csrf_token %}
+				<input name="nota_minima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota minima"/>
+				<input name="nota_maxima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota maxima"/>
+				<input name="fecha_inicio" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha inicio"/>
+				<input name="fecha_termino" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha termino"/>
+				<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Nombre configuracion"/>
+				<input name="input_id_config" id="input_id_config" style="display:none;" "class="" value="" >
+				<input name="input_kaid" id="input_kaid" style="display:none;" "class="" value="" >
+			</form>
+			</div>
+			<section>
+				<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
+			    <div class="flechas"><IMG SRC="http://1.bp.blogspot.com/_qgZA1ny_dAs/S0QKBZIBjwI/AAAAAAAADiE/ne7stP8FB60/s320/arrow3b.png" onClick="EvaluarTodos()"></div>
+				<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
+				<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
+			</section>
+			<div style="margin:10px">
+			</div>
+			<input type="button" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion">
+	</div>
 	<div align="center">
 	
 	
 	<script type="text/javascript">
+	
+		$(document).ready(function(){
+	  		noEvaluarTodos()
+		});
+		
+		function noEvaluarTodos(){
+			{% if students %}
+				$("#sinEvaluar").empty();
+				$("#Evaluados").empty();
+				{% for student in students %}
+					$("#sinEvaluar").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+				{% endfor %}
+			{% endif %}
+		}
+		
+		function EvaluarTodos(){
+			{% if students %}
+				$("#sinEvaluar").empty();
+				$("#Evaluados").empty();
+				{% for student in students %}	
+					$("#Evaluados").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+				{% endfor %}
+			{% endif %}
+		}
+	
 		var json = JSON.parse('{{ jason_data | escapejs }}');
 		var students = json.students;
 		//var assesments=json.assesments;
@@ -312,16 +359,120 @@
 	        var fmt = d3.format('02d');
 	        return function(l) { return Math.floor(l / 60) + ':' + fmt(l % 60) + ''; };
 	    }
+	    
+	    function start(e) {
+            e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
+            e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
+            e.dataTransfer.setDragImage(e.target, 0, 0); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
+            e.target.style.opacity = '0.4'; 
+        };
+
+        function end(e){
+            e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
+            e.dataTransfer.clearData("Data");
+        };
+
+        function enter(e) {
+            e.target.style.border = '3px dotted #555'; 
+        };
+
+        function leave(e) {
+            e.target.style.border = ''; 
+        };
+
+        function over(e) {
+            var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
+            var id = e.target.id; // Elemento sobre el que se arrastra
+            
+            // return false para que se pueda soltar
+            if (id == 'sinEvaluar'){
+                return false; // Cualquier elemento se puede soltar sobre el div destino 1
+            }
+
+            if (id == 'Evaluados'){
+                return false; // En el Evaluados se puede soltar cualquier elemento menos el elemento con id=arrastrable3
+            }   
+        };
+
+        function drop(e){
+
+            var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+            e.target.appendChild(document.getElementById(elementoArrastrado));
+            e.target.style.border = '';  // Quita el borde
+            tamContX = $('#'+e.target.id).width();
+            tamContY = $('#'+e.target.id).height();
+
+            tamElemX = $('#'+elementoArrastrado).width();
+            tamElemY = $('#'+elementoArrastrado).height();
+    
+            posXCont = $('#'+e.target.id).position().left;
+            posYCont = $('#'+e.target.id).position().top;
+
+        }
+        function muestra_oculta(id){
+			if (document.getElementById){ //se obtiene el id
+				var el = document.getElementById(id); //se define la variable "el" igual a nuestro div
+				el.style.display = (el.style.display == 'none') ? 'block' : 'none'; //damos un atributo display:none que oculta el div
+		}
+	}
+	
+	function fillParameters(id) {
+		$("#parametros").empty();
+		$("#parametros").append("<div>Parametros:</div>");
+		{% for config in assesment_configs %}
+			if ({{config.id_assesment_config}}== id){
+				$("#parametros").append("<div>Porcentaje de aprovacion: {{ config.approval_percentage }}</div>");
+				$("#parametros").append("<div>Importancia de Skill: {{ config.importance_skill_level }}</div>");	
+				$("#parametros").append("<div>Importancia de Recomendaciones: {{ config.importance_completed_rec }}</div>");
+				document.getElementById("input_id_config").value = "{{config.id_assesment_config}}";
+			}
+		{% endfor %}
+		fillSkills(id);
+	};
+	
+	function fillSkills(id_config){
+		$.ajax({
+			url: "{% url 'bakhanapp.views.getSkillAssesment' 1 %}",
+			type: "POST",
+			data: {id_asses_config: id_config},
+			success: function (response) {
+				skills = JSON.parse(response);
+				$("#skills").empty();
+				$("#skills").append("<div>Skills:</div>");
+				for(var i=0;i<skills.length;i++){
+					$("#skills").append("<div>"+skills[i]['fields']['name_spanish']+"</div>");					
+				}
+			}
+		});
+	}
+	
+	function realizarEvaluacion(){
+		alert("realizando evaluacion");
+		var openDiv = document.getElementById('Evaluados'); 
+		var cuadritos = openDiv.getElementsByClassName('cuadradito')
+		var kaids =[];
+		if (cuadritos.length>0){
+			for (var i = 0; i < cuadritos.length; i++) {
+				kaids.push({
+					kaid_student:cuadritos[i].id
+				});
+			}
+			$("input[name='input_kaid']").val(JSON.stringify(kaids))
+			$.ajax({
+				url: "{% url 'bakhanapp.views.newAssesment3' %}",
+				type: "POST",
+				data: $("#formJson").serialize(),
+				success: function(response){
+					alert('guardado assesment config');
+					location.reload();
+				}
+			});
+		
+		}else{
+			alert("no hay gente a evaluar");
+		}
+	}
 	    </script>
 	
-    	<script>
-			$(function () {
-		      $(document).tooltip({
-		          content: function () {
-		              return $(this).prop('title');
-		          }
-		      });
-		  	});
-		</script>
 
 {% endblock %}

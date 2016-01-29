@@ -21,6 +21,9 @@ urlpatterns = [
     url(r'^inicio/configuraciones/editar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.editAssesmentConfig',name='editar_configuracion'),
     url(r'^home/poblarbd/$', 'bakhanapp.views.poblarBD', name='poblarBD'),
     url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
+    
+    url(r'^inicio/cursos/(?P<id_class>[0-9]+)/habilidades/$', 'bakhanapp.views.getSkillAssesment', name='getSkillAssesment'), 
+    url(r'^inicio/curso/evaluacion/$', 'bakhanapp.views.newAssesment3', name='newAssesment3'),
 
 
     url(r'^authenticate/', 'bakhanapp.views.authenticate', name='authenticate'),
