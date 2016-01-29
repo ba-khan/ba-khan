@@ -149,8 +149,16 @@ def getGroups(request, id_class):
             groups = eval(args['student_groups'])
 
             subGroups = eval(args['subGroups'])
+
+            dicSub = {
+                'Avanzados' : new_advanced.id_group,
+                'Intermedios' : new_intermediate.id_group,
+                'Reforzamiento' : new_reinforcement.id_group
+            }
+
             for sub in subGroups:
                 Group(type=sub['name'],master=master.id).save()
+                dicSub[sub['name']] = group.id_group
 
             for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
                 if g['group'] == 'Intermedios':
