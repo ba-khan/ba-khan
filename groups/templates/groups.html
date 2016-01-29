@@ -39,11 +39,11 @@ return false;
 if (id == 'SinGrupo'){
 return false;
 }
-if (id == 'SubGrupoReforzamiento'){
+if (id.substring(0,21) == 'SubGrupoReforzamiento'){
    
 return false;
    }
-   if (id == 'SubGrupoIntermedios'){
+   if (id.substring(0,19) == 'SubGrupoIntermedios'){
    
 return false;
    }
@@ -69,7 +69,7 @@ var divs = document.querySelectorAll('.cuadradito');
 var id3 = divs[i].getAttribute('name');
        
 
-if(id3=="Avanzados" || id3=="SubGrupoAvanzados"){
+if(id3=="Avanzados" || id3.substring(0,17) =="SubGrupoAvanzados"){
        
 $(".comboBoxIntermedios").each(function() {
    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
@@ -80,7 +80,7 @@ $(".comboBoxReforzamiento").each(function() {
    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
 });
 }
-if(id3=="Intermedios" || id3=="SubGrupoIntermedios"){
+if(id3=="Intermedios" || id3.substring(0,19)=="SubGrupoIntermedios"){
 $(".comboBoxReforzamiento").each(function() {
    $(this).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
 });
@@ -142,12 +142,13 @@ function crearSubGrupoAvanzados() {
    cont+=1;
 };
 function crearSubGrupoIntermedios() {
-var numDiv = document.getElementsByTagName("div").length;
-   $("#Intermedios").append("<div id='SubGrupoIntermedios' class='subGrupo' name='"+numDiv+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Intermedios<a id='SubGrupoIntermedios' name='"+numDiv+"' class='cerrar' onclick='javascript:closeThisDivIntermedios(this)'>[x]</a><SELECT id='comboBoxIntermedios' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#Intermedios").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Intermedios<a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivIntermedios(this)'>[x]</a><SELECT id='comboBoxIntermedios' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   cont+=1;
 };
 function crearSubGrupoReforzamiento() {
-var numDiv = document.getElementsByTagName("div").length;
-   $("#Reforzamiento").append("<div id='SubGrupoReforzamiento' class='subGrupo' name='"+numDiv+"' ondragover='return over(event)' ondrop='return drop(event)'>SubGrupo Reforzamiento<a id='SubGrupoReforzamiento' name='"+numDiv+"' class='cerrar' onclick='javascript:closeThisDivReforzamiento(this)'>[x]</a><SELECT id='comboBoxReforzamiento' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+
+   $("#Reforzamiento").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'>SubGrupo Reforzamiento<a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivReforzamiento(this)'>[x]</a><SELECT id='comboBoxReforzamiento' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   cont+=1;
 };
 function closeThisDivAvanzados(div) { 
 var openDiv = document.getElementsByName(div.name); 
