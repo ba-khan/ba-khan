@@ -10,6 +10,7 @@ Grupos
 <head>
 <script src="{% static 'd3-timeline.js' %}"></script>
 <script>
+cont=0;
        function start(e) {
            e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
            e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
@@ -46,7 +47,7 @@ return false;
    
 return false;
    }
-   if (id == 'SubGrupoAvanzados'){
+   if (id.substring(0,17) == 'SubGrupoAvanzados'){
    
 return false;
    }
@@ -87,13 +88,14 @@ $(".comboBoxReforzamiento").each(function() {
    }
        };
 function drop(e){
+
+
        
 var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
           
        
 document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
-          
-          
+//document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
 //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
 fillComboBox();
 e.target.appendChild(document.getElementById(elementoArrastrado));
@@ -121,7 +123,8 @@ y = e.layerY;
 if (posXCont + tamContX <= x + tamElemX){
            
 x = posXCont + tamContX - tamElemX - 15;
-          
+         
+
 }
 
           
@@ -130,10 +133,13 @@ document.getElementById(elementoArrastrado).style.position = "absolute";
 document.getElementById(elementoArrastrado).style.left = x + "px";
           
 document.getElementById(elementoArrastrado).style.top = y + "px";
+
+
 };       
 function crearSubGrupoAvanzados() {
-var numDiv = document.getElementsByTagName("div").length;
-   $("#Avanzados").append("<div id='SubGrupoAvanzados' class='subGrupo' name='"+numDiv+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Avanzados<a id='SubGrupoAvanzados' name='"+numDiv+"' class='cerrar' onclick='javascript:closeThisDivAvanzados(this)'>[x]</a><SELECT id='comboBoxAvanzados' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+
+   $("#Avanzados").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Avanzados<a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivAvanzados(this)'>[x]</a><SELECT id='comboBoxAvanzados' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   cont+=1;
 };
 function crearSubGrupoIntermedios() {
 var numDiv = document.getElementsByTagName("div").length;
@@ -210,60 +216,44 @@ $("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' nam
 });
 };
 function saveGroups(){
-var divs = document.querySelectorAll('.cuadradito');
+  var divs = document.querySelectorAll('.cuadradito');
   var jsonArr = [];
   var aux = false;
-  for (var i = 0; i < divs.length; i++) {
-      
-var kaid = divs[i].getAttribute('id');
-var group = divs[i].getAttribute('name');
-if(group=='Avanzados' || group=='Intermedios' || group=='Reforzamiento'){
-aux = true;
-}
-jsonArr.push({
-       kaid_student: kaid,
-       group: group
-   });
-  
-}
-  
-var tutorsArr = [];
-  
-tutorsArr.push({
-  
-kaid_tutor_reforzamiento:$('#comboBoxReforzamiento').val(),
-  
-kaid_tutor_intermedios:$('#comboBoxIntermedios').val(),
-  
-kaid_tutor_avanzados:$('#comboBoxAvanzados').val()
-  
-});
-  
-$("input[name='tutors']").val(JSON.stringify(tutorsArr));
-  
-$("input[name='student_groups']").val(JSON.stringify(jsonArr));
-  
-if(aux){
-
-  
-$.ajax({
-   url: "{% url 'groups:getGroups' id_class %}",
-   type: "POST",
-   data: $("#formJson").serialize(),
-   success: function (response) {
-      //lo que haces si es exitoso
-      alert('Grupos guardados correctamente.');
-      location.reload();
-   }
-});
-  
-aux = false;
-  
-}else{
-  
-alert('No hay agrupacion para guardar')
-  
-}
+  for (var i = 0; i < divs.length; i++) {    
+    var kaid = divs[i].getAttribute('id');
+    var group = divs[i].getAttribute('name');
+    if(group=='Avanzados' || group=='Intermedios' || 
+      group=='Reforzamiento'){
+      aux = true;
+    }
+    jsonArr.push({
+     kaid_student: kaid,
+     group: group
+    });    
+  }
+  var tutorsArr = []; 
+  tutorsArr.push({  
+  kaid_tutor_reforzamiento:$('#comboBoxReforzamiento').val(),
+  kaid_tutor_intermedios:$('#comboBoxIntermedios').val(),  
+  kaid_tutor_avanzados:$('#comboBoxAvanzados').val()  
+  });  
+  $("input[name='tutors']").val(JSON.stringify(tutorsArr));  
+  $("input[name='student_groups']").val(JSON.stringify(jsonArr));  
+  if(aux){  
+  $.ajax({
+     url: "{% url 'groups:getGroups' id_class %}",
+     type: "POST",
+     data: $("#formJson").serialize(),
+     success: function (response) {
+        //lo que haces si es exitoso
+        alert('Grupos guardados correctamente.');
+        location.reload();
+     }
+  });  
+  aux = false;  
+  }else{  
+  alert('No hay agrupacion para guardar')  
+  }
 };
 </script>
 </head>
@@ -378,23 +368,23 @@ height: 40px;
 	  </style>
     <section>
    
-       <div id="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
+       <div id="SinGrupo" name="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
  
-        <div id="Avanzados" ondragover="return over(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
+        <div id="Avanzados" name="Avanzados" ondragover="return over(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
         <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
 <OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub'>nuevo sub-grupo</button>
         </div>
  
-       <div id="Intermedios" ondragover="return over(event)" ondrop="return drop(event)">Intermedios
+       <div id="Intermedios" name="Intermedios" ondragover="return over(event)" ondrop="return drop(event)">Intermedios
        
 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub'>nuevo sub-grupo</button>
        </div>
-       <div id="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)">Reforzamiento
+       <div id="Reforzamiento" name="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)">Reforzamiento
        
 <SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>

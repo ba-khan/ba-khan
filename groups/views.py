@@ -156,7 +156,7 @@ def getGroups(request, id_class):
                 Group_Skill(id_group_id=master.id,
                     id_skill_id=skills).save()
             groups = eval(args['student_groups'])
-            for g in groups:
+            for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
                 if g['group'] == 'Intermedios':
                     Group_Student(id_group_id=new_intermediate.id_group,
                                   kaid_student_id=g['kaid_student']).save()
