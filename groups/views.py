@@ -105,7 +105,7 @@ def getGroups(request, id_class):
     g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
     struct = json.loads(data)
-    groups = json.dumps(struct)
+    groups = json.dumps(struct)#arreglo en json con los master de las agrupaciones.
     if request.method == 'POST':
         args = request.POST
         skills_selected = eval(args['skills'])
@@ -163,7 +163,7 @@ def getGroups(request, id_class):
 
             print dicSub
             for sub in subGroups:
-                new_group = Group(type=sub['name'],master=master.id)
+                new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
                 new_group.save()
                 dicSub[sub['name']] = new_group.id_group
 
