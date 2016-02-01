@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'groups',
     'login',
     'populate',
+    'evaluations',
     'django_jenkins',
 )
 

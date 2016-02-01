@@ -195,7 +195,7 @@
 	        .attr('id','myTable')
 	        .style('width', '99%');
 	        
-	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').append('a').attr('href','{% url 'nueva_evaluacion' class.id_class %}').text(' Nueva Evaluacion{% endfor %}')
+	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text('{% endfor %}')
 
 	    // create table header
 	    table.append('thead').append('tr')
