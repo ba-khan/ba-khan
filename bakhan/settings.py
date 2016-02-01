@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'populate',
     'evaluations',
     'django_jenkins',
+    'AssesmentConfigs',
 )
 
 MIDDLEWARE_CLASSES = (

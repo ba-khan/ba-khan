@@ -17,12 +17,7 @@ urlpatterns = [
     url(r'^inicio/cursos/$', 'bakhanapp.views.getTeacherClasses', name='cursos'),
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
     
-    url(r'^inicio/configuraciones/$', 'bakhanapp.views.getTeacherAssesmentConfigs', name='configuraciones'),
-    url(r'^inicio/configuraciones/nueva$', 'bakhanapp.views.newAssesmentConfig', name='nueva_configuracion'),
-    url(r'^inicio/configuraciones/eliminar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.deleteAssesmentConfig',name='eliminar_configuracion'),
-    url(r'^inicio/configuraciones/editar/(?P<id_assesment_config>[0-9]+)/$', 'bakhanapp.views.editAssesmentConfig',name='editar_configuracion'),
-    
-    
+    url(r'^inicio/pautas/', include('AssesmentConfigs.urls', namespace="AssesmentConfigs")),
     
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/habilidades/$', 'bakhanapp.views.getSkillAssesment', name='getSkillAssesment'), 
     

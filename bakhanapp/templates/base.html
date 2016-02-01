@@ -17,16 +17,15 @@
 		<link rel='stylesheet' type='text/css' href="{% static 'css khan/shared-package-d75335.css'%}">
 		<link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
 		
-		<!-- Agregados por Tomas-->
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  		<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-  		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  		
-  		<!-- Agregados por Javier-->
-  		<script src="{% static 'DjangoAjax.js' %}"></script>​
-  	  	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<!-- Agregados por Javier-->
+  		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+  		<script src="{% static 'DjangoAjax.js' %}"></script>
 	  	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	  	<script src="{% static 'd3-timeline.js'%}"></script>
+	  	
+	  	<!-- Agregados por Tomas-->
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   		
   		<!-- Agregados por Jordan-->
 		<link rel="stylesheet" href="{% static 'dist/themes/default/style.css'%}" />
@@ -61,7 +60,7 @@
 			}
 		</style>
 	</head>
-	
+	<div id="hover" style="display:none"></div>
 	<body>		
 	{% block body %}
 	
