@@ -3,9 +3,7 @@
 from django import forms
 from .models import Assesment_Config,Assesment
 
-class loginForm(forms.Form):
-    usuario = forms.CharField(label='Usuario', max_length=100)
-    password = forms.CharField(widget=forms.PasswordInput,label='Contraseña', max_length=100)
+
 
 class AssesmentConfigForm(forms.ModelForm):
     class Meta:

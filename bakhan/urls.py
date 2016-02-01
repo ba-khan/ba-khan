@@ -8,7 +8,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', 'bakhanapp.views.login', name='login'),
+    url(r'^',  include('login.urls', namespace="login")),
     url(r'^inicio/$', 'bakhanapp.views.home', name='home'),
     url(r'^inicio/cursos/$', 'bakhanapp.views.getTeacherClasses', name='cursos'),
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
@@ -26,8 +26,7 @@ urlpatterns = [
     url(r'^inicio/curso/evaluacion/$', 'bakhanapp.views.newAssesment3', name='newAssesment3'),
 
 
-    url(r'^authenticate/', 'bakhanapp.views.authenticate', name='authenticate'),
-    url(r'^access/rejected/', 'bakhanapp.views.rejected', name='rejected'),
+    
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]

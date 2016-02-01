@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bakhanapp',
     'groups',
+    'login',
     'django_jenkins',
 )
 
