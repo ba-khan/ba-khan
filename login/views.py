@@ -240,7 +240,7 @@ def run_tests():
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
-    webbrowser.open(authorize_url)
+    #urlib2.urlopen(authorize_url)
 
     callback_server.handle_request()
     callback_server.server_close()

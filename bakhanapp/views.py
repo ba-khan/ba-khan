@@ -74,43 +74,6 @@ def getSkillAssesment(request,id_class):
         skills = json.dumps(struct)
     return HttpResponse(skills)
 
-def newAssesment3(request):
-    if request.method == 'POST':
-        args = request.POST
-        fecha1=args['fecha_inicio']
-        fecha2=args['fecha_termino']
-        nota1=eval(args['nota_minima'])
-        nota2=eval(args['nota_maxima'])
-        id_config=(args['input_id_config'])
-        nombre_config=args['input_nombre']
-        students=eval(args['input_kaid'])
-        id_class=eval(args['input_id_class'])
-
-        new_assesment = Assesment(start_date=fecha1,
-                               end_date=fecha2,
-                               id_assesment_conf_id=id_config,
-                               min_grade=nota1,
-                               max_grade=nota2,
-                               name=nombre_config,
-                               id_class_id=id_class
-                               )
-        new_assesment.save()
-        id_new_assesment=new_assesment.pk
-        for s in students:
-            #s['kaid_student']
-            #id_new_assesment
-            new_grade = Grade(grade=0,
-                               teacher_grade=0,
-                               performance_points=0,
-                               effort_points=0,
-                               id_assesment_id=id_new_assesment,
-                               kaid_student_id=s['kaid_student']
-                               )
-            new_grade.save()
-            update_assesment_configs = Assesment_Config.objects.get(pk=id_config)
-            update_assesment_configs.applied = True
-            update_assesment_configs.save() 
-    return HttpResponse()
 
 @login_required()
 def home(request):
