@@ -271,7 +271,7 @@ function saveGroups(){
 </script>
 </head>
    <style>
-#SinGrupo, #Avanzados, #Intermedios, #Reforzamiento {
+#SinGrupo, #Avanzados, #Intermedios, #Reforzamiento, #skills {
   float: left;
   width: 15.4%;
   height: 400px;
@@ -331,18 +331,32 @@ color: #000000
 overflow-y: scroll;
 height: 371px;
 padding: 10px;
-   margin: 10px;
+margin: 10px;
 }
 #topictree_div{
+text-align: left;
+height: 371px;
+padding: 10px;
+margin: 10px;
+}
+#skills{
   text-align: left;
+  display: none;
+
 }
 #timeline3{
+overflow-x: scroll;
 float: left;
 width: 896px;
 height: 40px;
 }
 #more_contain{
   visibility: hidden;
+}
+#containerTimeLine{
+  display: inline;
+  clear:both;
+  width: 100%;
 }
 
     </style>
@@ -409,13 +423,14 @@ height: 40px;
 <i class="icon-search"></i>
 <div id="topictree" align="left"></div>
 </div>
+<div id="skills"></div>
     </section>
 <div align="left">
-  <div>
-    <div id="timeline3" style="overflow:auto "></div>
+  <div id='containerTimeLine'>
+    <div id="timeline3" ></div>
     <div id='more_contain'>
-<img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
-</div>
+      <img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
+    </div>
   </div>
 
 
@@ -518,11 +533,7 @@ window.onload = function() {
 			times.id = master_groups[i]['pk'];
 			testData.push(times);
 		};
-
 		var width = testData.length*100;
-    alert(width);
-
-		
 
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.
@@ -605,8 +616,7 @@ window.onload = function() {
           }
          }
         });
-        $('#topictree').html('');
-        $('#topictree_div').empty();
+        $('#topictree_div').remove();
         $('#save').remove();
         $('#make').remove();
         $.ajax({ // solicita las habilidades de cada grupo
@@ -616,9 +626,11 @@ window.onload = function() {
          data: {id_master_group : datum.id},
          success: function (response) {
             skills = JSON.parse(response);
+            $('#skills').empty();
+            $('#skills').css('display','inline');
             for(var i=0;i<skills.length;i++){
               //alert(skills[i]['fields']['name_spanish'])
-              $('#topictree_div').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
+              $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
               //var g = "." + (students[i]['fields']['id_group']).toString();
               //var s = "#" + (students[i]['fields']['kaid_student']).toString();
               //$(s).appendTo(g);
@@ -640,16 +652,11 @@ window.onload = function() {
       })
       .display("circle")
       .itemMargin(0);
-
-
     var svg = d3.select("#timeline3").append("svg").attr("width", width)
       .datum(testData).call(chart);
   }
-
-  
   timelineHover();
   $("#timeline3").scrollLeft(width);//lleva el scrollbar al final
- 
 }
 </script>
 {% endblock %}
