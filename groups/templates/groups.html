@@ -547,9 +547,18 @@ window.onload = function() {
 					groups = JSON.parse(response);
 					for(var i=0;i<groups.length;i++){
             //alert(groups[i]['fields']['type'])
-            t = "#"+groups[i]['fields']['type'];
-            $(t).remove();
-            $("#content").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'></div>")
+            t = "#"+groups[i]['fields']['type'];//type grupo
+            //$(t).remove();
+            $("#content").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
+            if (t.substring(1,22) == 'SubGrupoReforzamiento'){
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
+            }
+            if (t.substring(1,20) == 'SubGrupoIntermedios'){
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
+            }
+            if (t.substring(1,18) == 'SubGrupoAvanzados'){
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
+            }
 					}
 			   }
 		    });
@@ -563,7 +572,7 @@ window.onload = function() {
             for(var i=0;i<students.length;i++){
               var g = "." + (students[i]['fields']['id_group']).toString();
               var s = "#" + (students[i]['fields']['kaid_student']).toString();
-              $(s).appendTo(g);
+              $(s).appendTo(g);//agrega cada estudiante a su correspondiente agrupacion.
           }
          }
         });
