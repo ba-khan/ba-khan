@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'bakhanapp',
     'groups',
     'login',
+    'populate',
     'django_jenkins',
 )
 
