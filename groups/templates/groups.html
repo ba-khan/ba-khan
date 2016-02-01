@@ -347,18 +347,32 @@ margin: 10px;
 #timeline3{
 overflow-x: scroll;
 float: left;
-width: 896px;
-height: 40px;
+width: 70%;
+height: 60px;
 }
 #more_contain{
-  visibility: hidden;
+  width: 30%;
+  display:none;
+  float:right;
+}
+img:hover{
+  border: 1px solid green;
 }
 #containerTimeLine{
   display: inline;
   clear:both;
   width: 100%;
 }
-
+#save{
+  float:right;
+}
+#make{
+  float:right;
+}
+#name{
+  float:right;
+  width: 10%;
+}
     </style>
     <style type="text/css">
 	    .axis path,
@@ -431,6 +445,8 @@ height: 40px;
     <div id='more_contain'>
       <img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
     </div>
+    <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='save'>
+    <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='make'>
   </div>
 
 
@@ -439,8 +455,7 @@ height: 40px;
        <input name="student_groups" type="hidden" value=''>
        <input name="tutors" type="hidden" value=''>
        <input name="subGroups" type="hidden" value=''>
-       <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='save'>
-       <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='make'>
+       
    </form>
        <div id="hoverRes">
       <div class="coloredDiv"></div>
@@ -641,7 +656,7 @@ window.onload = function() {
         $('.nuevo_sub').remove()
         //alert(datum.id);
         //<img src="smiley.gif" alt="Smiley face" height="42" width="42">
-        $('#more_contain').css('visibility', 'visible');
+        $('#more_contain').css('display', 'inline');
         $('#more_contain').on("click","a,img", function (e) {
             e.preventDefault();
             location.reload();
