@@ -7,39 +7,41 @@
 {% endblock %}
 {% block body2 %}		
 	
-	<div style="margin:10px"><button onclick="muestra_oculta(&quot;contenido_a_mostrar&quot;)">Nueva Evaluacion</button></div>
+	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="muestra_oculta(&quot;contenido_a_mostrar&quot;)">Nueva Evaluacion</button></div>
 	<div id="contenido_a_mostrar" style="display:none;">
-			<div style="float:top">
-				<div style="float:left">
-					<select style="margin:10px" onChange="fillParameters(this.value)">
-						<OPTION VALUE=0>Seleccionar Pauta</OPTION>
-						{% for config in assesment_configs %}
-							<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>						
-						{% endfor %}
-					</select>
-				</div>
-				<div class="parametros" id="parametros">Parametros</div>
-				<div class="skills" id="skills">Skills</div>
-			<form action="" method="post" id='formJson'>{% csrf_token %}
-				<input name="nota_minima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota minima"/>
-				<input name="nota_maxima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota maxima"/>
-				<input name="fecha_inicio" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha inicio"/>
-				<input name="fecha_termino" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha termino"/>
-				<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Nombre configuracion"/>
-				<input name="input_id_config" id="input_id_config" style="display:none;" "class="" value="" >
-				<input name="input_kaid" id="input_kaid" style="display:none;" "class="" value="" >
-			</form>
+			<div id="inputs" align="left">
+				<select style="margin:10px;" onChange="fillParameters(this.value)">
+					<OPTION VALUE=0>Seleccionar Pauta</OPTION>
+					{% for config in assesment_configs %}
+						<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>						
+					{% endfor %}
+				</select>
+				<form action="" method="post" id='formJson'>{% csrf_token %}
+					<p class="label_input">Nombre Configuracion</p>
+					<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Nombre configuracion"/>
+					<p class="label_input">Nota Minima</p>
+					<input name="nota_minima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota minima"/>
+					<p class="label_input">Nota Maxima</p>
+					<input name="nota_maxima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota maxima"/>
+					<p class="label_input">Fecha Inicio</p>
+					<input name="fecha_inicio" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha inicio"/>
+					<p class="label_input">Fecha Termino</p>
+					<input name="fecha_termino" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha termino"/>
+					<input name="input_id_config" id="input_id_config" style="display:none;" "class="" value="" >
+					<input name="input_kaid" id="input_kaid" style="display:none;" "class="" value="" >
+					<input name="input_id_class" id="input_id_class" style="display:none;" "class="" value="" >
+				</form>
 			</div>
-			<section>
-				<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
-			    <div class="flechas"><IMG SRC="http://1.bp.blogspot.com/_qgZA1ny_dAs/S0QKBZIBjwI/AAAAAAAADiE/ne7stP8FB60/s320/arrow3b.png" onClick="EvaluarTodos()"></div>
-				<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
-				<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
-			</section>
-			<div style="margin:10px">
-			</div>
-			<input type="button" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion">
+			<div class="parametros" id="parametros">Parametros</div>
+			<div class="skills" id="skills" align="left">Skills</div>
+			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
+		    <div class="flechas"><IMG SRC="http://1.bp.blogspot.com/_qgZA1ny_dAs/S0QKBZIBjwI/AAAAAAAADiE/ne7stP8FB60/s320/arrow3b.png" onClick="EvaluarTodos()"></div>
+			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
+			<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
+			<div><input type="button" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
 	</div>
+			
+	
 	<div align="center">
 	
 	<script type="text/javascript">
@@ -1008,6 +1010,9 @@
 			}
 		{% endfor %}
 		fillSkills(id);
+		{% for class in classroom %}
+			document.getElementById("input_id_class").value = "{{class.id_class}}";
+		{% endfor %}
 	};
 	
 	function fillSkills(id_config){

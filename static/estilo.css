@@ -26,7 +26,7 @@
 }
 #sinEvaluar, #Evaluados {
 	float: left;
-	width: 90%;
+	width: 740px;
 	height: 90px;
 	padding: 10px;
 	margin: 10px;
@@ -53,36 +53,42 @@
 }
 
 .parametros,.skills{
-	float: left;
 	border: 1px solid #D9D9D9;
 	border-radius: 5px;
-	width: 40%;
+	width: 350px;
 	height: 90px;
 	padding: 10px;
 	margin: 10px;
 	overflow: hidden;
-	overflow-y: scroll;
-	overflow-y: auto;
+	overflow: scroll;
+	overflow: auto;
 	background: #FFFFFF;
+	float:left;
 }
 
 .textoInput{
-	float: left;
 	width: 23%;
 	margin: 10px;
 }
 
 .flechas{
-	float:left;
 	top: 50%;
 	height: 90px;
 	vertical-align:middle;
 	padding-top: 30px;
 	margin-top: 10px;
+	float:left;
 }
-#skill_search{
+#input_nombre,#skill_search{
+	padding-left: 10px;
 	margin-left:5px;
-	width:155px;
+	width:171px;
+	margin-bottom: 10px;
+}
+#inputs{
+	width:200px;
+	float:left;
+	height: 270px;
 }
 body{
 	background: #EEEEEE;
@@ -90,6 +96,11 @@ body{
 #contenido_a_mostrar{
 	border: 1px solid #C6D1AD;
 	border-radius:5px;
+	height: 450px;
+	width:1050px;
+}
+.label_input{
+	margin:5px;
 }
 th{
 	color:#555;

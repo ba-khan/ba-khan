@@ -143,6 +143,7 @@ class Assesment_Config(models.Model):
     name = models.CharField(max_length=100)
     importance_skill_level=models.IntegerField()
     importance_completed_rec=models.IntegerField()
+    applied=models.BooleanField()
     
 class Assesment_Skill(models.Model):
     id_assesment_skill = models.AutoField(primary_key=True)
@@ -173,6 +174,7 @@ class Grade(models.Model):
     teacher_grade = models.IntegerField(null=True)
     performance_points = models.IntegerField()
     effort_points = models.IntegerField()
+    comment = models.CharField(max_length=300,null=True)
     
     class Meta:
         unique_together = ('kaid_student', 'id_assesment')
