@@ -591,28 +591,28 @@ window.onload = function() {
             tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
             //alert($(tutor).attr('title'));
             if (type == '#Avanzados'){
-              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' style='border:1px solid #D9D9D9'>"+
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' >"+
                 $(tutor).attr('title')+"</div>");
             }
             if (type == '#Intermedios'){
-              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' style='border:1px solid #D9D9D9'>"
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' >"
                 +$(tutor).attr('title')+"</div>");
             }
             if (type == '#Reforzamiento'){
-              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' style='border:1px solid #D9D9D9'>"
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' >"
                 +$(tutor).attr('title')+"</div>");
             }
             if (type.substring(1,22) == 'SubGrupoReforzamiento'){
-              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' style='border:1px solid #D9D9D9'>"+$(tutor).attr('title')+"</div>");
+              $("#Reforzamiento").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"'>"+$(tutor).attr('title')+"</div>");
             }
             if (type.substring(1,20) == 'SubGrupoIntermedios'){
-              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' style='border:1px solid #D9D9D9'>"+$(tutor).attr('title')+"</div>");
+              $("#Intermedios").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' >"+$(tutor).attr('title')+"</div>");
             }
             if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' style='border:1px solid #D9D9D9'>"+$(tutor).attr('title')+"</div>");
+              $("#Avanzados").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' >"+$(tutor).attr('title')+"</div>");
             }
 					}
 			   }
