@@ -258,9 +258,18 @@ def getTotalExerciseIncorrect(kaid_s):
     incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False).count()
     return incorrect
 
-def getExerciseIncorrectBetween(kaid_s,t_begin,t_end):
+#def getExerciseIncorrectBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante en un tiempo determinado.
-    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False,date__gte = t_begin,date__lte = t_end).count()
+#    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False,date__gte = t_begin,date__lte = t_end).count()
+#    return incorrect
+
+def getExerciseIncorrectBetween(kaid_s,t_begin,t_end,id_assesment_conf):
+    assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_conf)
+    skills = []
+    for a in assesment_skills:
+        skills.append(a.id_skill_name)
+    #Esta funcion entrega el total de ejercicios incorrectos de un estudiante en un tiempo determinado.
+    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False,date__gte = t_begin,date__lte = t_end, id_skill_name_id__in = skills).count()
     return incorrect
 
 def getTotalExerciseCorrect(kaid_s):
@@ -268,9 +277,18 @@ def getTotalExerciseCorrect(kaid_s):
     correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True).count()
     return correct
 
-def getExerciseCorrectBetween(kaid_s,t_begin,t_end):
+#def getExerciseCorrectBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el total de ejercicios correctos de un estudiante en un tiempo determinado.
-    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True,date__gte = t_begin,date__lte = t_end).count()
+#    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True,date__gte = t_begin,date__lte = t_end).count()
+#    return correct
+
+def getExerciseCorrectBetween(kaid_s,t_begin,t_end,id_assesment_conf):
+    assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_conf)
+    skills = []
+    for a in assesment_skills:
+        skills.append(a.id_skill_name)
+    #Esta funcion entrega el total de ejercicios correctos de un estudiante en un tiempo determinado.
+    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True,date__gte = t_begin,date__lte = t_end, id_skill_name_id__in = skills).count()
     return correct
 
 def getTotalExerciseTime(kaid_s):
@@ -281,9 +299,21 @@ def getTotalExerciseTime(kaid_s):
         time = time + register.time_taken
     return time
 
-def getExerciseTimeBetween(kaid_s,t_begin,t_end):
+#def getExerciseTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
-    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
+#    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
+#    time = 0
+#    for register in query_set:
+#        time = time + register.time_taken
+#    return time
+
+def getExerciseTimeBetween(kaid_s,t_begin,t_end,id_assesment_conf):
+    assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_conf)
+    skills = []
+    for a in assesment_skills:
+        skills.append(a.id_skill_name)
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
+    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end, id_skill_name_id__in = skills)
     time = 0
     for register in query_set:
         time = time + register.time_taken
@@ -297,6 +327,16 @@ def getTotalVideoTime(kaid_s):
         time = time + register.seconds_watched
     return time
 
+#def getVideoTimeBetween(kaid_s,t_begin,t_end):
+    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
+#    query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
+    #query_set = query_set.filter(date__gte = t_begin)
+    #query_set = query_set.filter(date__lte = t_begin)
+#    time = 0
+#    for register in query_set:
+#        time = time + register.total_seconds_watched
+#    return time
+
 def getVideoTimeBetween(kaid_s,t_begin,t_end):
     #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
     query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
@@ -304,7 +344,7 @@ def getVideoTimeBetween(kaid_s,t_begin,t_end):
     #query_set = query_set.filter(date__lte = t_begin)
     time = 0
     for register in query_set:
-        time = time + register.total_seconds_watched
+        time = time + register.seconds_watched
     return time
 
 @login_required()
@@ -337,6 +377,13 @@ def getClassAssesments(id_class):
     assesments = Assesment.objects.filter(id_class_id=id_class)
     return assesments
 
+def getLastSkillsLevel(kaid_student,level):
+    if level == 'struggling':
+        total = Student_Skill.objects.filter(kaid_student=kaid_student, struggling=True).count()
+    else:    
+        total = Student_Skill.objects.filter(kaid_student=kaid_student,last_skill_progress=level,struggling=False).count()
+    return total
+
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado
@@ -360,8 +407,40 @@ def getClassStudents(request, id_class):
         assesment_json["config_name"]= assesment.id_assesment_conf.name
         assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
         assesment_json["top_score"]= assesment.id_assesment_conf.top_score
-        
-        print assesment.id_assesment_conf.name
+        assesment_json["max_grade"]=assesment.max_grade
+        assesment_json["min_grade"]=assesment.min_grade
+        assesment_json["assesment_student"]=[]
+        for student in students:
+            student_json={}
+            student_json["name"]=student.name
+            completed_percentage=round(random.uniform(0,1),2)
+            total_rec=round(random.uniform(0,1),2)
+            student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+            student.t_exercise= getExerciseTimeBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
+            student_json["skills_time"]=student.t_exercise
+            student.t_video= getVideoTimeBetween(student.kaid_student,assesment.start_date,assesment.end_date)
+            student_json["video_time"]=student.t_video
+            student.correct= getExerciseCorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
+            student.incorrect= getExerciseIncorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
+            student_json["corrects"]=[(student.correct),(student.incorrect)]
+            skills_level={}
+            #student.struggling = getLastSkillsLevel(student.kaid_student, 'struggling')
+            #skills_level["struggling"]=(student.struggling)
+            skills_level["struggling"]=round(random.uniform(1,20),0)
+            #student.practiced = getLastSkillsLevel(student.kaid_student,'practiced')
+            #skills_level["practiced"]=(student.practiced)
+            skills_level["practiced"]=round(random.uniform(1,20),0)
+            #student.mastery1 = getLastSkillsLevel(student.kaid_student,'mastery1')
+            #skills_level["mastery1"]=(student.mastery1)
+            skills_level["mastery1"]=round(random.uniform(1,20),0)
+            #student.mastery2 = getLastSkillsLevel(student.kaid_student,'mastery2')
+            #skills_level["mastery2"]=(student.mastery2)
+            skills_level["mastery2"]=round(random.uniform(1,20),0)
+            #student.mastery3 = getLastSkillsLevel(student.kaid_student,'mastery3')
+            #skills_level["mastery3"]=(student.mastery3)
+            skills_level["mastery3"]=round(random.uniform(0,20),0)
+            student_json["skills_level"]=skills_level
+            assesment_json["assesment_student"].append(student_json)
         assesment_array.append(assesment_json)
         
     json_array=[]
@@ -370,74 +449,44 @@ def getClassStudents(request, id_class):
         i+=1
         student_json={}
         student_json["name"]=student.name
-        #jason=jason+'{ "name": "'+(student.name)+'", '
         student.t_exercise= getTotalExerciseTime(student.kaid_student)
-        #jason=jason+'"skills_time": "'+(str)(student.t_exercise)+'", '
-        student_json["skills_time"]=(str)(student.t_exercise)
+        completed_percentage=round(random.uniform(0,1),2)
+        total_rec=round(random.uniform(0,1),2)
+        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+        student_json["skills_time"]=student.t_exercise
         student.t_video= getTotalVideoTime(student.kaid_student)
-        #jason=jason+'"video_time": "'+(str)(student.t_video)+'", '
-        student_json["video_time"]=(str)(student.t_video)
+        student_json["video_time"]=student.t_video
         student.correct= getTotalExerciseCorrect(student.kaid_student)
-        #jason=jason+'"corrects": ['+(str)(student.correct)+', '
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
-        #jason=jason+(str)(student.incorrect)+'], '
         student_json["corrects"]=[(student.correct),(student.incorrect)]
-        student.practiced = getTotalNivel(student.kaid_student,'practiced')
-        #jason=jason+'"practiced": "'+(str)(student.practiced)+'", '
         skills_level={}
-        #student_json["practiced"]=(student.practiced)
+        student.struggling = getLastSkillsLevel(student.kaid_student, 'struggling')
+        skills_level["struggling"]=(student.struggling)
+        student.practiced = getLastSkillsLevel(student.kaid_student,'practiced')
         skills_level["practiced"]=(student.practiced)
-        student.mastery1 = getTotalNivel(student.kaid_student,'mastery1')
-        #jason=jason+'"mastery1": "'+(str)(student.mastery1)+'", '
-        #student_json["mastery1"]=(str)(student.mastery1)
+        student.mastery1 = getLastSkillsLevel(student.kaid_student,'mastery1')
         skills_level["mastery1"]=(student.mastery1)
-        student.mastery2 = getTotalNivel(student.kaid_student,'mastery2')
-        #jason=jason+'"mastery2": "'+(str)(student.mastery2)+'", '
-        #student_json["mastery2"]=(student.mastery2)
+        student.mastery2 = getLastSkillsLevel(student.kaid_student,'mastery2')
         skills_level["mastery2"]=(student.mastery2)
-        student.mastery3 = getTotalNivel(student.kaid_student,'mastery3')
-        #jason=jason+'"mastery3": "'+(str)(student.mastery3)+'", '
-        #student_json["mastery3"]=(str)(student.mastery3)
+        student.mastery3 = getLastSkillsLevel(student.kaid_student,'mastery3')
         skills_level["mastery3"]=(student.mastery3)
         student_json["skills_level"]=skills_level
-        #if (i==len(students)):
-        #    jason=jason+'"evaluacion": "'+(str)(7.0)+'"}'
-        #else: 
-        #    jason=jason+'"evaluacion": "'+(str)(7.0)+'"},'
-        #student_json["evaluacion"]=(str)(7.0)
-        #assesment_array=[]
         for assesment in assesment_array:
-            #assesment_data={}
             student_assesment={}
             id_assesment = "assesment"+(str)(assesment["id"])
-            #id_effort = "effort"+(str)(assesment["id"])
             random_grade=round(random.uniform(2,7),1)
             random_effort=round(random.uniform(1,100))
             student_assesment["grade"]=random_grade
             student_assesment["effort"]=random_effort
-            #assesment_data[id_assesment]=student_assesment
-            #assesment_array.append(assesment_data)
             student_json[id_assesment]= student_assesment
-            #student_json[id_effort]=(str)(random_effort)
-        #student_json["assesments"]=assesment_array    
         json_array.append(student_json)
-    #jason+="]"
-    #data = serializers.serialize('json', jason)
-    #struct = simplejson.loads(jason)
-    #jason_data = simplejson.dumps(jason)
-    #print jason
-    #data = serializers.serialize('json', json)
-    #struct = json.loads(data)
-    
     
     
     json_dict={"students":json_array, "assesments":assesment_array}
     json_data = json.dumps(json_dict)
     classroom = Class.objects.filter(id_class=id_class)
-    #grades = getClassGrades(request,id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-    #print assesment_configs
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
