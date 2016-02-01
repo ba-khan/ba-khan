@@ -195,7 +195,7 @@
 	        .attr('id','myTable')
 	        .style('width', '99%');
 	        
-	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').append('a').attr('href','{% url 'nueva_evaluacion' class.id_class %}').text(' Nueva Evaluacion{% endfor %}')
+	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text('{% endfor %}')
 
 	    // create table header
 	    table.append('thead').append('tr')
@@ -1044,7 +1044,7 @@
 			}
 			$("input[name='input_kaid']").val(JSON.stringify(kaids))
 			$.ajax({
-				url: "{% url 'bakhanapp.views.newAssesment3' %}",
+				url: "{% url 'evaluations:newAssesment3' %}",
 				type: "POST",
 				data: $("#formJson").serialize(),
 				success: function(response){
