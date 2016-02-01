@@ -519,7 +519,7 @@ function editConfig(id){
 function confirmEdit(answer,id){
 	if (answer==1){
 		$.ajax({
-			url: "/inicio/configuraciones/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
+			url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
 			type: "POST",
 			data: $("#form".concat(id)).serialize(),
 				success: function(response){
@@ -557,7 +557,7 @@ function deleteConfig(id){
 function confirmDelete(answer,id){
 	if (answer==1){
 		$.ajax({
-			url: "/inicio/configuraciones/eliminar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
+			url: "/inicio/pautas/eliminar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
 			type: "POST",
 				success: function(response){
 					$('.response').remove();

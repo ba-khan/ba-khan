@@ -12,42 +12,21 @@ from django.db.models import Count
 
 from django import template
 from bakhanapp.models import Assesment_Skill
-from django.views.i18n import null_javascript_catalog
-import bakhanapp
+
 register = template.Library()
 
-from bakhanapp.models import Class,Teacher
+
 from bakhanapp.models import Skill
-from bakhanapp.models import Skill_Attempt
-from bakhanapp.models import Assesment_Skill
-from bakhanapp.models import Assesment
+
 from bakhanapp.models import Assesment_Config
 
-from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
-from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill
 
 from bakhanapp.views import getTopictree
 
-import datetime
 
-import cgi
-import rauth
-import SimpleHTTPServer
-import SocketServer
-import time
-import webbrowser
-import psycopg2
 
 import json
-import simplejson
-import sys
-from pprint import pprint
-import codecs
-from lib2to3.fixer_util import String
-from django.core import serializers
-from django.db import connection
 
-import random
 
 # Create your views here.
 @login_required()
