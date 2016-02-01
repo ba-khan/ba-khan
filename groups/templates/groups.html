@@ -545,11 +545,33 @@ window.onload = function() {
 			   data: {id_master_group : datum.id},
 			   success: function (response) {
 					groups = JSON.parse(response);
+          //Eliminar las agrupaciones anteriores mostradas en pantalla.
+          $('.cuadradito').appendTo('#SinGrupo');
+          $('select').remove();
+          $('#Avanzados').empty();
+          $('#Intermedios').empty();
+          $('#Reforzamiento').empty();
 					for(var i=0;i<groups.length;i++){
+            //en este for se crean todos los div segun la agrupacion seleccionada.
             //alert(groups[i]['fields']['type'])
             t = "#"+groups[i]['fields']['type'];//type grupo
             //$(t).remove();
-            $("#content").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
+
+            //$("#content").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
+
+            
+
+            //Agrega cada subgrupo en el div que le corresponde.
+            t = "#"+groups[i]['fields']['type'];//type grupo
+            if (t == '#Avanzados'){
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"'>Hello</div>");
+            }
+            if (t == '#Intermedios'){
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' >Hello</div>");
+            }
+            if (t == '#Reforzamiento'){
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' >Hello</div>");
+            }
             if (t.substring(1,22) == 'SubGrupoReforzamiento'){
               $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' id='"+groups[i]['fields']['type']+"'>Hello</div>");
             }
@@ -593,7 +615,6 @@ window.onload = function() {
               //var g = "." + (students[i]['fields']['id_group']).toString();
               //var s = "#" + (students[i]['fields']['kaid_student']).toString();
               //$(s).appendTo(g);
-
           }
          }
         });
