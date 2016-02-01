@@ -44,11 +44,8 @@ class Student(models.Model):
     
 class Group(models.Model):
     id_group = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
     kaid_student_tutor = models.ForeignKey(Student,null=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
     master = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
