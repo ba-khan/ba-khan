@@ -203,7 +203,12 @@ def authenticate(request):
     return render_to_response('aut.html',{'url': authorize_url,'call': callback_server}, context_instance=RequestContext(request))
 
 def wait(request):
-    callback_server = create_callback_server()
+    if request.method == 'GET':
+        args = request.GET
+        #print args['server']
+    #return HttpResponse(args)
+    #print 'in wait'
+    callback_server = args['server']
 
     callback_server.handle_request()
     callback_server.server_close()
@@ -214,7 +219,7 @@ def wait(request):
 
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
-        return HttpResponseRedirect("/inicio")
+        return HttpResponse(args)
     else:
         return HttpResponseRedirect("/access/rejected/ %}")
     

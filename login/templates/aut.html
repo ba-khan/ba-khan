@@ -1,16 +1,29 @@
 <html>
 <head>
 	<title>Autorizacion</title>
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  	<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script type="text/javascript">
 		{% if url %}	
 		window.open("{{ url }}" , "ventana1" , "width=500,height=1000,scrollbars=NO") ;
-		//window.open("/wait","_self");
 		{% endif%}
+		//window.open("/wait","_self");
+		{% if call %}
+		
+		$.ajax({
+		     url: "{% url 'login:wait' %}",
+		     type: "GET",
+		     data: {'server':"{{ call }}"},
+		     success: function (response) {
+		        //lo que haces si es exitoso
+		        alert(response);
+		        //location.reload();
+		     }
+		  });  
+		{% endif %}
 	</script>
 </head>
 <body>
-	{% if call %}
-		<h1>{{ call }}</h1>
-	{% endif %}
+	
 </body>
 </html>
