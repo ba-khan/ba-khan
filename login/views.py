@@ -201,14 +201,8 @@ def authenticate(request):
     authorize_url = service.get_authorize_url(request_token)
     #return HttpResponseRedirect(authorize_url)
 
-    req = urllib2.Request(authorize_url)
-    response=urllib2.urlopen(req)
-    print response.read()
+    return render_to_response('aut.html',{'url': authorize_url}, context_instance=RequestContext(request))
 
-    def say_hello():
-        print '<h1>Hello from CGI-Land</h1>'
-    #with open('templates/login.html') as f:
-    #    print f.read()
 
     callback_server.handle_request()
     callback_server.server_close()
