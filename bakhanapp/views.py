@@ -102,6 +102,18 @@ def getGradeStudent(id_assesment,kaid_student):
     grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student).values('grade')
     return grade
 
+def getAssesment(request):
+	if request.method == 'POST':
+		args = request.POST
+		print args
+		id_assesment=args['assesment']
+		print id_assesment
+		update_assesment = Assesment.objects.filter(id_assesment=id_assesment)
+		data = serializers.serialize('json', update_assesment)
+        struct = json.loads(data)
+        assesment_data = json.dumps(struct)
+	return HttpResponse(assesment_data)
+
 def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
     #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
     #y un rango de fechas.
@@ -253,7 +265,7 @@ def getClassSkills(request,id_class):
     #Funcion que entrega un arreglo con la cantidad de habilidades en cada nivel de dominio
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#devuelve todos los estudiantes de una clase
     students_skills = Student_Skill.objects.filter(kaid_student__in=students).values('last_skill_progress','kaid_student').annotate(scount=Count('kaid_student'))
-    print students_skills
+    #print students_skills
     return students_skills
 
 def getTotalNivel(kaid_student,nivel):
@@ -448,7 +460,7 @@ def getTopictree(subject):
         skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false"}
         topictree.append(skill_obj)
         id=id+1
-    print("--- %s seconds ---" % (time.time() - start_time))
+    #print("--- %s seconds ---" % (time.time() - start_time))
     #print topictree
     #temp=[]
     #chapters=Chapter.objects.filter(id_subject_name_id=subject)

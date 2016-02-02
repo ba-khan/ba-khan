@@ -13,16 +13,16 @@
 	    	<form action="" method="post" id='formGrade'>{% csrf_token %}
 				<p style="margin:0px;">
 					Nombre Estudiante
-					<input name="input_grade_nombre" id="input_grade_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" style="align:left;"/>
-					<input name="input_grade_id" id="input_id_grade" type="text" style="display:none;"/>
+					<input name="input_grade_nombre" id="input_grade_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;"/>
+					<input name="input_grade_id" id="input_id_grade" class="vaciar" type="text" style="display:none;"/>
 					Nota:
-					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" style="align:left;width:30px;padding:5px"/>
+					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
 					Nota Profesor
-					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" style="align:left;width:30px;padding:5px"/>
+					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
 				</p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario
-					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc" style="width:550px;height:50px;padding-top:5px"></textarea>
-					<input name="input_comment" id="input_comment" type="text" style="display:none;"/>
+					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:550px;height:50px;padding-top:5px"></textarea>
+					<input name="input_comment" class="vaciar" id="input_comment" type="text" style="display:none;"/>
 				</p>
 			</form>
 			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" value="Modificar Nota"></div>
@@ -31,13 +31,13 @@
 	
 	
 	
-	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="muestra_oculta(&quot;contenido_a_mostrar&quot;)">Nueva Evaluacion</button></div>
+	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluacion</button></div>
 	<div id="contenido_a_mostrar" style="display:none;">
 			<div id="inputs" align="left">
-				<select style="margin:10px;" onChange="fillParameters(this.value)">
+				<select id="comboBox" style="margin:10px;" onChange="fillParameters(this.value)">
 					<OPTION VALUE=0>Seleccionar Pauta</OPTION>
 					{% for config in assesment_configs %}
-						<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>						
+						<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>
 					{% endfor %}
 				</select>
 				<form action="" method="post" id='formJson'>{% csrf_token %}
@@ -62,7 +62,8 @@
 		    <div class="flechas"><IMG SRC="http://1.bp.blogspot.com/_qgZA1ny_dAs/S0QKBZIBjwI/AAAAAAAADiE/ne7stP8FB60/s320/arrow3b.png" onClick="EvaluarTodos()"></div>
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 			<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
-			<div><input type="button" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
+			<div><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
+			<div><input type="button" id="button_editar" onClick="alert('metodo para editar')" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
 	</div>
 			
 	
@@ -93,10 +94,10 @@
         function Needle(el,id) {
           
           this.el = el;
-          console.log("g recommendation "+id);
-          console.log(this.el);
+          //console.log("g recommendation "+id);
+          //console.log(this.el);
           this.id = id;
-          console.log(this.id);
+          //console.log(this.id);
           this.len = 30;//width / 3;
           this.radius = 7;//this.len / 6;
         }
@@ -119,8 +120,8 @@
           this.el.transition().delay(100).ease('quad').duration(200).select('.needle').tween('reset-progress', function() {
             return function(percentOfPercent) {
               var progress = (1 - percentOfPercent) * oldValue;
-              console.log("existe id? ");
-              console.log(id);
+              //console.log("existe id? ");
+              //console.log(id);
               repaintGauge(progress,id);
               return d3.select(this).attr('d', recalcPointerPos.call(self, progress));
             };
@@ -129,8 +130,8 @@
           this.el.transition().delay(300).ease('bounce').duration(1500).select('.needle').tween('progress', function() {
             return function(percentOfPercent) {
               var progress = percentOfPercent * perc;
-              console.log("existe id? ");
-              console.log(id);
+              //console.log("existe id? ");
+              //console.log(id);
               repaintGauge(progress,id);
               return d3.select(this).attr('d', recalcPointerPos.call(self, progress));
             };
@@ -160,8 +161,8 @@
 		var json = JSON.parse('{{ jason_data | escapejs }}');
 		var students = json.students;
 		var assesments=json.assesments;
-		console.log("assesments");
-		console.log(assesments);
+		//console.log("assesments");
+		//console.log(assesments);
 		var data = [];
 		data.push(students);
 	    // column definitions
@@ -227,7 +228,7 @@
 	        .attr('id','myTable')
 	        .style('width', '99%');
 	        
-	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text('{% endfor %}')
+	 	table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text('{% endfor %}')
 
 	    // create table header
 	    table.append('thead').append('tr')
@@ -243,7 +244,9 @@
 	    //table.selectAll('.assesment').append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
 	    for (i=0; i<json["assesments"].length; i++){
 	    	var class_id="assesment"+json["assesments"][i]["id"];
-	    	
+	    	var class_id_id=json["assesments"][i]["id"];
+	    	//aqui CTM
+	    	table.select('th.'+class_id).append('div').attr("id",class_id_id).html('<button type="button" onClick="editarAssesment('+class_id_id+')">editar</button>');
 	    	table.select('th.'+class_id).append('button').attr('onclick',function(d) { return 'changeData('+d.number+')' }).text(d3.f('head_assesment'));
 	    	table.select('th.'+class_id).append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
 	    		
@@ -266,7 +269,7 @@
 		
 	    var skill_time=new Array();
 	    skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
-	    console.log(skill_time);
+	    //console.log(skill_time);
 	    var skillsTimeScaling = d3.scale.linear()
                             .domain([0,Greatest(skill_time.keys())])
                             .range([0,150]);
@@ -289,7 +292,7 @@
 	    var changeData = function (dataIndex) {
 	    	backgroundJobs = data[dataIndex+1];
 	    	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
-		    console.log(skill_time);
+		    //console.log(skill_time);
 		    skillsTimeScaling = d3.scale.linear()
 	                            .domain([0,Greatest(skill_time.keys())])
 	                            .range([0,150]);
@@ -301,8 +304,8 @@
 	        corrects= corrects.keys().map(function(d){
 	        	return parseInt(d);
 	        })
-	        console.log("corrects");
-	        console.log(corrects);
+	        //console.log("corrects");
+	        //console.log(corrects);
 	        escalarCorrectIncorrect = d3.scale.linear()
 	                            .domain([0,d3.max(corrects)])
 	                            .range([0,75]);
@@ -314,7 +317,7 @@
         /////////// escala de skill_levels de jordan y tu
         var skill_levels_scaling=d3.scale.linear()
 		.domain([0,d3.max(students,function(d){
-			console.log(d);
+			//console.log(d);
 			var total_skills=0;
 				total_skills=total_skills+d.skills_level.struggling;
 				total_skills=total_skills+d.skills_level.practiced;
@@ -606,7 +609,7 @@
 			    		  }
 			    		  skills.push({id_level:j, value: skills_array[j], prev_value: offset});
 			    	  }
-			    	  console.log(skills);
+			    	  //console.log(skills);
 			    	  return skills;
 			      })
 			      .enter()
@@ -656,7 +659,7 @@
 	    									.domain([d3.min(students,function(d){return d[assesment_id].effort;}),//d3.filter(students,function(d){return d[assesment_id].effort;})),
 	    										d3.max(students,function(d){return d[assesment_id].effort;})])//d3.filter(students,function(d){return d[assesment_id].effort;}))])
 	    									.range([11,22]);
-	    	console.log(effort_scalings[assesment_id](0.32));												
+	    	//console.log(effort_scalings[assesment_id](0.32));												
 	    	var assesments = tbody.selectAll("td.assesment"+json["assesments"][i]["id"])
 		    	.append("svg")
 		    	.style("width", "44")//function(d){return escalarTiemposVideo(d.value) })
@@ -748,7 +751,7 @@
 
 		  	    var arc1 = d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
 		  	    arc1.startAngle(arcStartRad).endAngle(arcEndRad);
-		  	    console.log(arc1);
+		  	    //console.log(arc1);
 	    		return arc1;});*/
 	    	g_rec.append('svg:path').attr('class', "arc chart-empty").attr("id",function(d,i){return "chart-empty"+i;});/*.attr('d', function(d){
 	    		
@@ -771,17 +774,17 @@
 	    			arc1_array.push(d3.svg.arc().outerRadius(50).innerRadius(30)
 	    				.startAngle(arcStartRad)
 	    				.endAngle(arcEndRad));
-	    			console.log(arc1_array[i]);
+	    			//console.log(arc1_array[i]);
 	    			arcStartRad = percToRad(next_start);
 	  		      	arcEndRad = arcStartRad + percToRad((1 - completed_perc) / 2);
 	    			arc2_array.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
 	    					.startAngle(arcStartRad + padRad)
 	    					.endAngle(arcEndRad));
-	    			console.log(arc2_array[i]);
+	    			//console.log(arc2_array[i]);
 	    			d3.select("#chart-filled"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc1_array[i]);
 	    			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);
 	    			var d3_needle = new Needle(d3.select(this),i);
-	    			console.log(d3_needle);
+	    			//console.log(d3_needle);
 	    			d3_needle.render();
 	    			d3_needle.moveTo(completed_perc);
 		    		d3_needles.push(d3_needle);
@@ -841,7 +844,7 @@
 	    			arc2_array[i]//.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
 	    					.startAngle(arcStartRad + padRad)
 	    					.endAngle(arcEndRad);
-	    			console.log(arc2_array[i]);
+	    			//console.log(arc2_array[i]);
 	    			d3.select("#chart-filled"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc1_array[i]);
 	    			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);
 	    			//var d3_needle = new Needle(d3.select(this));
@@ -935,7 +938,7 @@
 	    
 	    var repaintGauge = function(perc,i) 
 	    {
-	    	console.log("repaintgauge i "+i);
+	    	//console.log("repaintgauge i "+i);
 	    	var completed_perc = perc
     		var next_start = totalPercent;
 		    arcStartRad = percToRad(next_start);
@@ -945,13 +948,13 @@
     			arc1_array[i]
     				.startAngle(arcStartRad)
     				.endAngle(arcEndRad);
-    			console.log(arc1_array[i]);
+    			//console.log(arc1_array[i]);
     			arcStartRad = percToRad(next_start);
   		      	arcEndRad = arcStartRad + percToRad((1 - completed_perc) / 2);
     			arc2_array[i]//.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
     					.startAngle(arcStartRad + padRad)
     					.endAngle(arcEndRad);
-    			console.log(arc2_array[i]);
+    			//console.log(arc2_array[i]);
     			d3.select("#chart-filled"+i).attr("d",arc1_array[i]);
     			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
     			//var d3_needle = new Needle(d3.select(this));
@@ -1086,7 +1089,7 @@
 				type: "POST",
 				data: $("#formJson").serialize(),
 				success: function(response){
-					alert('guardado assesment config');
+					$(".vaciar").empty();
 					location.reload();
 				}
 			});
@@ -1100,7 +1103,6 @@
 		var comentario = $('#textarea_coment').val()
 		$("input[name='input_comment']").val(comentario)
 		alert("entrando al ajax")
-		
 		$.ajax({
 			url: "{% url 'bakhanapp.views.updateGrade' %}",
 			type: "POST",
@@ -1109,12 +1111,46 @@
 				alert('guardada las notas');
 				location.reload();
 			}
-		});
-		
+		});		
 		$('#hover').fadeOut();
 		$('#popup').fadeOut();
 	}
+	function nuevaEvaluacion(){
+		muestra_oculta('contenido_a_mostrar')
+		$('#button_realizar').show()
+		$('#button_editar').hide()
+		$('#comboBox').prop('disabled', false);
+		$("#comboBox option[value=0]").prop('selected', 'selected').change();
+		$("input[name='input_nombre']").empty();
+		$("input[name='fecha_inicio']").empty();
+		$("input[name='fecha_termino']").empty();
+		$("input[name='nota_maxima']").empty();
+		$("input[name='nota_minima']").empty();
+	}
+	function editarAssesment(id_assesment){
+		alert("configuracion: "+id_assesment)
+		muestra_oculta('contenido_a_mostrar')
+		
+		$.ajax({
+			url: "{% url 'bakhanapp.views.getAssesment' %}",
+			type: "POST",
+			data: {assesment:id_assesment},
+			success: function(response){
+				alert('volvio de el views');
+				json_assesment=JSON.parse(response);
+				$("input[name='input_nombre']").val(json_assesment[0]['fields']['name']);
+				$("input[name='fecha_inicio']").val(json_assesment[0]['fields']['start_date']);
+				$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
+				$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
+				$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
+				alert(json_assesment[0]['fields']['id_assesment_conf']);
+				$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
+				$('#comboBox').prop('disabled', true);
+			}
+		});	
+		$('#button_realizar').hide()
+		$('#button_editar').show()
+	}
 	    </script>
-	
 
 {% endblock %}
