@@ -16,6 +16,7 @@ urlpatterns = [
 
     url(r'^inicio/cursos/$', 'bakhanapp.views.getTeacherClasses', name='cursos'),
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
+    url(r'^inicio/curso/updategrade/$', 'bakhanapp.views.updateGrade', name='updateGrade'),
     
     url(r'^inicio/pautas/', include('AssesmentConfigs.urls', namespace="AssesmentConfigs")),
     

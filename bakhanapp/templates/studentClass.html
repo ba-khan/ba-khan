@@ -7,6 +7,30 @@
 {% endblock %}
 {% block body2 %}		
 	
+	<div id="popup" style="display:none">
+    	<div id="close">X</div>
+    		<div style="align:left;">
+	    	<form action="" method="post" id='formGrade'>{% csrf_token %}
+				<p style="margin:0px;">
+					Nombre Estudiante
+					<input name="input_grade_nombre" id="input_grade_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" style="align:left;"/>
+					<input name="input_grade_id" id="input_id_grade" type="text" style="display:none;"/>
+					Nota:
+					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" style="align:left;width:30px;padding:5px"/>
+					Nota Profesor
+					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" style="align:left;width:30px;padding:5px"/>
+				</p>
+				<p style="margin-top:10px;margin-bottom:0px;">Comentario
+					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc" style="width:550px;height:50px;padding-top:5px"></textarea>
+					<input name="input_comment" id="input_comment" type="text" style="display:none;"/>
+				</p>
+			</form>
+			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" value="Modificar Nota"></div>
+    	</div>
+    </div>
+	
+	
+	
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="muestra_oculta(&quot;contenido_a_mostrar&quot;)">Nueva Evaluacion</button></div>
 	<div id="contenido_a_mostrar" style="display:none;">
 			<div id="inputs" align="left">
@@ -123,6 +147,14 @@
 	
 		$(document).ready(function(){
 	  		noEvaluarTodos()
+	  		$("#hover").click(function(){
+	  	        $(this).fadeOut();
+	  	    	$("#popup").fadeOut();
+	  	    });
+	  	  	$("#close").click(function(){
+	  	        $("#hover").fadeOut();
+	  	    	$("#popup").fadeOut();
+	  	    });
 		});
 
 		var json = JSON.parse('{{ jason_data | escapejs }}');
@@ -644,7 +676,13 @@
 	    					}else{
 	    						return approveColour(students[i][assesment_id].grade);
 	    					}
-	    			  });
+	    			  })
+		    	.on("click",function(d){
+	    			$("input[name='input_grade_id']").val(d.value.grade_id)
+	    			$("input[name='input_grade']").val(d.value.grade)
+	    			$("#hover").fadeIn().css('display', '');
+	    			$("#popup").fadeIn().css('display', '');
+	    		});
 		    	
 	    	assesments.append("text")
 		        .attr("dx", function(d,i){return effort_scalings[d.cl](students[i][assesment_id].effort);})
@@ -1056,6 +1094,25 @@
 		}else{
 			alert("no hay gente a evaluar");
 		}
+	}
+	function modificarNota(){
+		alert('modificar nota');
+		var comentario = $('#textarea_coment').val()
+		$("input[name='input_comment']").val(comentario)
+		alert("entrando al ajax")
+		
+		$.ajax({
+			url: "{% url 'bakhanapp.views.updateGrade' %}",
+			type: "POST",
+			data: $("#formGrade").serialize(),
+			success: function(response){
+				alert('guardada las notas');
+				location.reload();
+			}
+		});
+		
+		$('#hover').fadeOut();
+		$('#popup').fadeOut();
 	}
 	    </script>
 	

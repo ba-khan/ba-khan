@@ -63,6 +63,20 @@ import random
 
 
 
+def updateGrade(request):
+    if request.method == 'POST':
+        args = request.POST
+        teacher_grade=eval(args['input_grade_teacher'])
+        teacher_comment=args['input_comment']
+        id_grade=eval(args['input_grade_id'])
+
+        update_grade = Grade.objects.get(pk=id_grade)
+        update_grade.teacher_grade = teacher_grade
+        update_grade.comment = teacher_comment 
+        update_grade.save() 
+
+    return HttpResponse()
+
 def getSkillAssesment(request,id_class):
     if request.method == 'POST':
         args = request.POST
@@ -351,6 +365,7 @@ def getClassStudents(request, id_class):
             random_effort=round(random.uniform(1,100))
             student_assesment["grade"]=random_grade
             student_assesment["effort"]=random_effort
+            student_assesment["grade_id"]=37
             student_json[id_assesment]= student_assesment
         json_array.append(student_json)
     
