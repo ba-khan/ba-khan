@@ -9,6 +9,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count
+import urllib2
+import cgi
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -60,6 +62,7 @@ from django.core import serializers
 from django.db import connection
 
 import random
+import cgitb
 
 def login(request):
     return render(request, 'login.html')
@@ -197,8 +200,16 @@ def authenticate(request):
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
     #return HttpResponseRedirect(authorize_url)
-    webbrowser.open(authorize_url, new=0)
-    
+
+    req = urllib2.Request(authorize_url)
+    response=urllib2.urlopen(req)
+    print response.read()
+
+    def say_hello():
+        print '<h1>Hello from CGI-Land</h1>'
+    #with open('templates/login.html') as f:
+    #    print f.read()
+
     callback_server.handle_request()
     callback_server.server_close()
 
@@ -240,7 +251,7 @@ def run_tests():
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
-    #urlib2.urlopen(authorize_url)
+    urllib2.urlopen(authorize_url)
 
     callback_server.handle_request()
     callback_server.server_close()
