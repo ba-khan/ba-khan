@@ -32,10 +32,11 @@ import json
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-    print assesment_configs
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2').order_by('-id_assesment_config')
+
     json_array=[]
     for assesment_config in assesment_configs:
+        print assesment_config.id_assesment_config
         assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config)
         config_json={}
         config_json["id_assesment_config"]=assesment_config.id_assesment_config
@@ -52,7 +53,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
             config_json["assesment_skills"].append(assesment_skill.id_skill_name_id)
         #print config_json["assesment_skills"]
         json_array.append(config_json)
-
+    
     json_dict={"assesmentConfigs":json_array}
     json_data = json.dumps(json_dict)
     #print (json_data)
