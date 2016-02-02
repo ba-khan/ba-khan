@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.login, name='login'),
     url(r'^authenticate/', views.authenticate, name='authenticate'),
+    url(r'^wait/', views.wait, name='wait'),
     url(r'^access/rejected/', views.rejected, name='rejected'),
     url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
     #url(r'^historial/$', views.getMakedGroup, name='getMakedGroup'),

@@ -200,9 +200,10 @@ def authenticate(request):
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
     #return HttpResponseRedirect(authorize_url)
+    return render_to_response('aut.html',{'url': authorize_url,'call': callback_server}, context_instance=RequestContext(request))
 
-    return render_to_response('aut.html',{'url': authorize_url}, context_instance=RequestContext(request))
-
+def wait(request):
+    callback_server = create_callback_server()
 
     callback_server.handle_request()
     callback_server.server_close()
