@@ -93,7 +93,7 @@ width:50%;
 	margin-right:5px;
 	padding-top: 4px;
 }
-#form input{
+.form input{
 	float:right;
 	margin-right:10%;
 }
@@ -172,6 +172,12 @@ margin-right:10px
 }
 .applied{
 	color:red;
+}
+#cancelDelete{
+	margin-left:50px
+}
+#cancelEdit{
+	margin-left:50px
 }
 </style>
 
@@ -324,7 +330,7 @@ function onSlide(ui,id) {
 						</div><br>
 						<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
 						<script>slidear(0);</script>
-						<a href='javascript:saveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a>
+						<div style="float:left;margin-left:125px"><a href='javascript:saveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
 					</form>
 				</div>
 				<div id="skills">
@@ -373,13 +379,17 @@ function onSlide(ui,id) {
 			</div><br>
 			<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
 			<script>slidear({{ forloop.counter }});</script>
-			<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary">Editar Pauta</a>
-			<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Eliminar Pauta</a>
-			<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
-			<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
+			<div style="float:left;margin-left:50px">
+				<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Editar Pauta</a>
+				<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Eliminar Pauta</a>
+			</div>
+			<div style="float:left;margin-left:50px">
+				<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
+				<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
+			</div>
 		</form>
 		{% if config.applied %}
-			<p class="applied"> Pauta aplicada. No editable. </p>
+			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
 		{% endif %} 
 	</div>
 	
@@ -461,6 +471,8 @@ function saveConfig(id){
 		data: $("#form0").serialize(),
 			success: function(response){
 				//alert(response);
+				$('#deleteConfig').css('display', 'none');
+				$('#editConfig').css('display', 'none');
 				$('.response').remove();
 				$("#hover").fadeIn().css('display', '');
 				$("#popup").fadeIn().css('display', '');
@@ -507,9 +519,13 @@ function editConfig(id){
 	if (configs[id-1]["applied"]==false){
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
+		$('.response').remove();
+		$('#deleteConfig').css('display', 'none');
+		$("#acceptEdit").remove();
+		$("#cancelEdit").remove();
 		$("#editConfig").css('display','');
-		$("#editConfig").append("<a href='javascript:confirmEdit(1,"+id+")' class='kui-button kui-button-plain kui-button-primary'>Aceptar</a>");
-		$("#editConfig").append("<a href='javascript:confirmEdit(0,"+id+")' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a>");
+		$("#editConfig").append("<a href='javascript:confirmEdit(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
+		$("#editConfig").append("<a href='javascript:confirmEdit(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
 	}
 	else{
 		alert("no se puede borrar");
@@ -546,8 +562,12 @@ function deleteConfig(id){
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 		$("#deleteConfig").css('display','');
-		$("#deleteConfig").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary'>Aceptar</a>");
-		$("#deleteConfig").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a>");
+		$('.response').remove();
+		$('#editConfig').css('display', 'none');
+		$("#acceptDelete").remove();
+		$("#cancelDelete").remove();
+		$("#deleteConfig").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+		$("#deleteConfig").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
 	}
 	else{
 		alert("no se puede borrar");
