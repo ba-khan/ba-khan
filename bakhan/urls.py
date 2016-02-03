@@ -18,8 +18,10 @@ urlpatterns = [
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
     url(r'^inicio/curso/updategrade/$', 'bakhanapp.views.updateGrade', name='updateGrade'),
     url(r'^inicio/curso/obtenerassesment/$', 'bakhanapp.views.getAssesment', name='getAssesment'),
-    
+
     url(r'^inicio/pautas/', include('AssesmentConfigs.urls', namespace="AssesmentConfigs")),
+    
+    url(r'^inicio/cursos/(?P<id_class>[0-9]+)/contactos/', include('Contacts.urls', namespace="Contacts")),
     
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/habilidades/$', 'bakhanapp.views.getSkillAssesment', name='getSkillAssesment'), 
     
