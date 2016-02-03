@@ -42,6 +42,7 @@ class Student(models.Model):
         pass
     
 class Tutor(models.Model):
+    id_tutor = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50,null=True)
     phone = models.IntegerField(null=True)
