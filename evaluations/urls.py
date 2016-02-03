@@ -9,4 +9,9 @@ urlpatterns = [
     #url(r'^access/rejected/', views.rejected, name='rejected'),
     #url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
     #url(r'^historial/$', views.getMakedGroup, name='getMakedGroup'),
+    url(r'^updategrade/$', views.updateGrade, name='updateGrade'),
+    url(r'^obtenerassesment/$', views.getAssesment, name='getAssesment'),
+    url(r'^obtenerassesment1/$', views.getStudentAssesment, name='getStudentAssesment'),
+    url(r'^(?P<id_class>[0-9]+)/habilidades/$', 'bakhanapp.views.getSkillAssesment', name='getSkillAssesment'), 
+    url(r'^updateassesment/$', views.updateAssesment, name='updateAssesment'),
 ]

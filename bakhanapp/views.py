@@ -63,20 +63,6 @@ import random
 
 
 
-def updateGrade(request):
-    if request.method == 'POST':
-        args = request.POST
-        teacher_grade=eval(args['input_grade_teacher'])
-        teacher_comment=args['input_comment']
-        id_grade=eval(args['input_grade_id'])
-
-        update_grade = Grade.objects.get(pk=id_grade)
-        update_grade.teacher_grade = teacher_grade
-        update_grade.comment = teacher_comment 
-        update_grade.save() 
-
-    return HttpResponse()
-
 def getSkillAssesment(request,id_class):
     if request.method == 'POST':
         args = request.POST
@@ -101,18 +87,6 @@ def getGradeStudent(id_assesment,kaid_student):
     #Funcion que entrega la nota de un estudiante en una evaluacion.
     grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student).values('grade')
     return grade
-
-def getAssesment(request):
-	if request.method == 'POST':
-		args = request.POST
-		print args
-		id_assesment=args['assesment']
-		print id_assesment
-		update_assesment = Assesment.objects.filter(id_assesment=id_assesment)
-		data = serializers.serialize('json', update_assesment)
-        struct = json.loads(data)
-        assesment_data = json.dumps(struct)
-	return HttpResponse(assesment_data)
 
 def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
     #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 

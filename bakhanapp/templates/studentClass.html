@@ -9,7 +9,7 @@
 	
 	<div id="popup" style="display:none">
     	<div id="close">X</div>
-    		<div style="align:left;">
+    	<div style="align:left;">
 	    	<form action="" method="post" id='formGrade'>{% csrf_token %}
 				<p style="margin:0px;">
 					Nombre Estudiante
@@ -53,6 +53,7 @@
 					<input name="fecha_termino" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha termino"/>
 					<input name="input_id_config" id="input_id_config" style="display:none;" "class="" value="" >
 					<input name="input_kaid" id="input_kaid" style="display:none;" "class="" value="" >
+					<input name="input_id_assesment" id="input_id_assesment" style="display:none;" "class="" value="" >
 					<input name="input_id_class" id="input_id_class" style="display:none;" "class="" value="" >
 				</form>
 			</div>
@@ -63,7 +64,7 @@
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 			<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
 			<div><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
-			<div><input type="button" id="button_editar" onClick="alert('metodo para editar')" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
+			<div><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
 	</div>
 			
 	
@@ -1058,7 +1059,7 @@
 	
 	function fillSkills(id_config){
 		$.ajax({
-			url: "{% url 'bakhanapp.views.getSkillAssesment' 1 %}",
+			url: "{% url 'evaluations:getSkillAssesment' 1 %}",
 			type: "POST",
 			data: {id_asses_config: id_config},
 			success: function (response) {
@@ -1104,7 +1105,7 @@
 		$("input[name='input_comment']").val(comentario)
 		alert("entrando al ajax")
 		$.ajax({
-			url: "{% url 'bakhanapp.views.updateGrade' %}",
+			url: "{% url 'evaluations:updateGrade' %}",
 			type: "POST",
 			data: $("#formGrade").serialize(),
 			success: function(response){
@@ -1121,35 +1122,88 @@
 		$('#button_editar').hide()
 		$('#comboBox').prop('disabled', false);
 		$("#comboBox option[value=0]").prop('selected', 'selected').change();
-		$("input[name='input_nombre']").empty();
-		$("input[name='fecha_inicio']").empty();
-		$("input[name='fecha_termino']").empty();
-		$("input[name='nota_maxima']").empty();
-		$("input[name='nota_minima']").empty();
+		$("input[name='input_nombre']").val("");
+		$("input[name='fecha_inicio']").val("");
+		$("input[name='fecha_termino']").val("");
+		$("input[name='nota_maxima']").val("");
+		$("input[name='nota_minima']").val("");
+		noEvaluarTodos();
 	}
 	function editarAssesment(id_assesment){
-		alert("configuracion: "+id_assesment)
-		muestra_oculta('contenido_a_mostrar')
-		
+		$('#contenido_a_mostrar').show();		
 		$.ajax({
-			url: "{% url 'bakhanapp.views.getAssesment' %}",
+			url: "{% url 'evaluations:getAssesment' %}",
+			async:false,
 			type: "POST",
 			data: {assesment:id_assesment},
 			success: function(response){
-				alert('volvio de el views');
 				json_assesment=JSON.parse(response);
 				$("input[name='input_nombre']").val(json_assesment[0]['fields']['name']);
 				$("input[name='fecha_inicio']").val(json_assesment[0]['fields']['start_date']);
 				$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
 				$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
 				$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
-				alert(json_assesment[0]['fields']['id_assesment_conf']);
 				$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 				$('#comboBox').prop('disabled', true);
 			}
-		});	
+		});
+		M_student = [];
+		$.ajax({
+			url: "{% url 'evaluations:getStudentAssesment' %}",
+			async:false,
+			type: "POST",
+			data: {assesment:id_assesment},
+			success: function(response){
+				json_student=JSON.parse(response);
+				for (i=0;i<json_student.length;i++){
+					M_student.push(json_student[i]['fields']['kaid_student']);
+				}
+			}
+		});
+		{% if students %}
+			$("#sinEvaluar").empty();
+			$("#Evaluados").empty();
+			{% for student in students %}
+			if(M_student.indexOf("{{student.kaid_student}}") != -1){
+				$("#Evaluados").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+			}else{
+				$("#sinEvaluar").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+			}
+			{% endfor %}
+		{% endif %}
+		$("input[name='input_id_assesment']").val(id_assesment)
 		$('#button_realizar').hide()
 		$('#button_editar').show()
+	}
+	function updateAssesment(){
+		id_assesment = $("input[name='input_id_assesment']").val();
+		alert('metodo updateAssesment: '+id_assesment);
+		
+		alert("realizando evaluacion");
+		var openDiv = document.getElementById('Evaluados'); 
+		var cuadritos = openDiv.getElementsByClassName('cuadradito')
+		var kaids =[];
+		if (cuadritos.length>0){
+			for (var i = 0; i < cuadritos.length; i++) {
+				kaids.push({
+					kaid_student:cuadritos[i].id
+				});
+			}
+			$("input[name='input_kaid']").val(JSON.stringify(kaids))
+			$.ajax({
+				url: "{% url 'evaluations:updateAssesment' %}",
+				type: "POST",
+				data: $("#formJson").serialize(),
+				success: function(response){
+					$(".vaciar").empty();
+					location.reload();
+				}
+			});
+
+		}else{
+			alert("no hay gente a evaluar");
+		}
+
 	}
 	    </script>
 
