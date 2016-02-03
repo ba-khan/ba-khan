@@ -8,6 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count
+from django.core.mail import send_mail
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -163,6 +164,9 @@ def newAssesment3(request):
         for s in students:
             #s['kaid_student']
             #id_new_assesment
+            aux = s['kaid_student']
+            print aux
+            sendMail(aux)
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
@@ -173,5 +177,13 @@ def newAssesment3(request):
             new_grade.save()
             update_assesment_configs = Assesment_Config.objects.get(pk=id_config)
             update_assesment_configs.applied = True
-            update_assesment_configs.save() 
+            update_assesment_configs.save()
+    return HttpResponse()
+
+def sendMail(kaid):
+    print "metodo mail"
+    print kaid
+    mail = Student.objects.get(pk=kaid).email
+    print mail
+    send_mail('probando django', 'holaaaaa como estas, saludos don', 'bakhanacademy@gmail.com', [mail], fail_silently=False)
     return HttpResponse()
