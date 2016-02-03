@@ -31,8 +31,7 @@ class Student(models.Model):
     kaid_student = models.CharField(max_length=40,primary_key=True)
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
-    tutor_name = models.CharField(max_length=50,null=True)
-    tutor_email = models.EmailField(max_length=50,null=True)
+    phone = models.IntegerField(null=True)
     points = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
@@ -41,6 +40,12 @@ class Student(models.Model):
         
     class Admin:
         pass
+    
+class Tutor(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50,null=True)
+    phone = models.IntegerField(null=True)
+    kaid_student_child = models.ForeignKey(Student,null=True)
     
 class Group(models.Model):
     id_group = models.AutoField(primary_key=True)
