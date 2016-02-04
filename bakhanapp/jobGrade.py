@@ -16,7 +16,7 @@ def begin():
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
 	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date =%s",[currentDate])#consulta las evaluaciones que vencen hoy.
 	for evaluation in assesment: # itero sobre cada evaluacion que vence hoy.
-		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id']})
+		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],'start_date':evaluation['start_date'],'end_date':evaluation['end_date']})
 
 	for ev in assesment_expired:
 		print ev['id_assesment_config']
@@ -24,9 +24,10 @@ def begin():
 		skills_selected = skills(ev['id_assesment_config'])
 		for s in skills_selected:
 			print s
-		#grades_involved = grades(evaluation['id_assesment'])
-		#for g in grades_involved:
-			#point = getStudentPoints(g['kaid_student_id'],skills_selected,evaluation['start_date'],evaluation['end_date'])
+		grades_involved = grades(evaluation['id_assesment'])
+		for g in grades_involved:
+			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
+			print point
 	
 
 
@@ -41,26 +42,26 @@ def getStudentPoints(kaid_student,configured_skills,beginDate,endDate):
         #last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skills[0]['id_student_skill'],date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
         progress = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         progress.execute('''SELECT 
-  bakhanapp_student_skill.kaid_student_id, 
-  bakhanapp_skill_progress.to_level,
-  bakhanapp_skill_progress.date, 
-  bakhanapp_student_skill.id_skill_name_id
-FROM 
-  public.bakhanapp_student_skill, 
-  public.bakhanapp_skill_progress
-WHERE 
-  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
-  bakhanapp_student_skill.kaid_student_id = %s AND 
-  bakhanapp_student_skill.id_skill_name_id = %s and
-  bakhanapp_skill_progress.date = (select max(bakhanapp_skill_progress.date) from public.bakhanapp_student_skill, 
-  public.bakhanapp_skill_progress
-WHERE 
-  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
-  bakhanapp_student_skill.kaid_student_id = %s AND 
-  bakhanapp_student_skill.id_skill_name_id = %s)''',[kaid_student,skill['id_skill_name_id'],kaid_student,skill['id_skill_name_id']])
+			  bakhanapp_student_skill.kaid_student_id, 
+			  bakhanapp_skill_progress.to_level,
+			  bakhanapp_skill_progress.date, 
+			  bakhanapp_student_skill.id_skill_name_id
+			FROM 
+			  public.bakhanapp_student_skill, 
+			  public.bakhanapp_skill_progress
+			WHERE 
+			  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
+			  bakhanapp_student_skill.kaid_student_id = %s AND 
+			  bakhanapp_student_skill.id_skill_name_id = %s and
+			  bakhanapp_skill_progress.date = (select max(bakhanapp_skill_progress.date) from public.bakhanapp_student_skill, 
+			  public.bakhanapp_skill_progress
+			WHERE 
+			  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
+			  bakhanapp_student_skill.kaid_student_id = %s AND 
+			  bakhanapp_student_skill.id_skill_name_id = %s)''',[kaid_student,skill[0],kaid_student,skill[0]])
         for p in progress:
         	points = points + scores[p['to_level']]
-        	print p['to_level']
+        	#print p['to_level']
     return points
 
 
@@ -85,13 +86,17 @@ def skills(id_assesment_config):
 
 def grades(id_assesment):
 	#entrega todas las notas asociadas a la evaluacion id_assesment
+	grades_involved=[]
 	grades = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)#hace que la respuesta a la consulta se entrege como diccionario.
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
 	grades.execute('''SELECT * FROM 
 			  public.bakhanapp_grade
 			WHERE  
 			  bakhanapp_grade.id_assesment_id = %d'''%(id_assesment))
-	return grades
+	for g in grades:
+		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id']})
+	#print grades_involved
+	return grades_involved
 
 
 
