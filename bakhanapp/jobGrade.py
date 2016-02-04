@@ -20,7 +20,9 @@ def begin():
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
 	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date =%s",[currentDate])#consulta las evaluaciones que vencen hoy.
 	for evaluation in assesment: # itero sobre cada evaluacion que vence hoy.
-		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],'start_date':evaluation['start_date'],'end_date':evaluation['end_date'],'max_grade':evaluation['max_grade'],'min_grade':evaluation['min_grade']})
+		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],
+			'start_date':evaluation['start_date'],'end_date':evaluation['end_date'],'max_grade':evaluation['max_grade'],'min_grade':evaluation['min_grade'],
+			'name':evaluation['name']})
 	assesment.close()
 	for ev in assesment_expired:
 		per = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -42,10 +44,10 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-	send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Usted ha obtenido la siguiente calificación')
-	send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Su pupilo ha obtenido la siguiente calificación')
+		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Usted ha obtenido la siguiente calificación',ev['name'])
+		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Su pupilo ha obtenido la siguiente calificación',ev['name'])
 
-def send_mail(name,email,points,grade,typeMsg):
+def send_mail(name,email,points,grade,typeMsg,evaluation):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -136,7 +138,8 @@ def send_mail(name,email,points,grade,typeMsg):
 																						<td>
 																							<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">
 																								<strong>"""+name+""",</strong>
-																									<br>"""+typeMsg+"""</p>
+																									<br>"""+typeMsg+""" en evaluacion:<br>
+																									"""+evaluation+"""</p>
 																								</td>
 																							</tr>
 																						</tbody>
