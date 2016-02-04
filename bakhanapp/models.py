@@ -46,7 +46,7 @@ class Tutor(models.Model):
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50,null=True)
     phone = models.IntegerField(null=True)
-    kaid_student_child = models.ForeignKey(Student,null=True)
+    kaid_student_child = models.ForeignKey(Student)
     
 class Group(models.Model):
     id_group = models.AutoField(primary_key=True)
