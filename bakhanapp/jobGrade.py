@@ -12,7 +12,7 @@ from email.mime.multipart import MIMEMultipart
 conn = psycopg2.connect(database='bakhanDB',user='postgres',password='root', host='146.83.216.177')
 
 def begin():
-	#Funcion que calcula y guarda las notas de los estudiantes al finalizar el tiempo de una evaluacion.
+	#Función que calcula y guarda las notas de los estudiantes al finalizar el tiempo de una evaluacion.
 	currentDate = time.strftime("%Y-%m-%d") #fecha actual.
 	#print currentDate
 	assesment_expired=[]#diccionario para la iteracion, ya que dictcursor da problemas al iterar.
@@ -42,9 +42,9 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-	send_mail()
+	send_mail(70,7)
 
-def send_mail():
+def send_mail(points,grade):
 	me = "bakhanacademy@gmail.com"
 	you = "javierperezferrada@gmail.com"
 
@@ -55,13 +55,14 @@ def send_mail():
 	msg['To'] = you
 
 	# Create the body of the message (a plain-text and an HTML version).
-	text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
+	text = ""
 	html = """\
 	<html>
 	  <head></head>
 	  <body>
 		<div>
-			<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2c3747" style="background-color:#e2e2e2; font-size:12px; font-family:Helvetica,Arial,Geneva,sans-serif">
+			<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2c3747" style="background-color:#e2e2e2; 
+			font-size:12px; font-family:Helvetica,Arial,Geneva,sans-serif">
 				<tbody>
 					<tr>
 						<td>
@@ -77,14 +78,18 @@ def send_mail():
 																<tbody>
 																	<tr>
 																		<td>
-																			<table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#2c3747" style="margin-top:20px">
+																			<table cellpadding="0" cellspacing="0" border="0" width="600" align="center" 
+																			bgcolor="#2c3747" style="margin-top:20px">
 																				<tbody>
 																					<tr>
 																						<td>
-																							<table cellpadding="10" cellspacing="0" border="0" width="600" align="center">
+																							<table cellpadding="10" cellspacing="0" border="0" width="600" 
+																							align="center">
 																								<tbody>
 																									<tr>
-																										<td align="center" width="175" valign="middle"><a target="_blank"><img src="http://www.khanacademy.org/imaget/ka-email-banner-logo.png?code=bWFzdGVyeV90YXNrX2VtYWlsX29wZW4KX2dhZV9iaW5nb19yYW5kb206U2ZfQWNMb29ROGVOc0taUndkVEgzdEc3dEhBSERLem0xN1JianJpcQ==" width="194" height="20" border="0" alt="Khan Academy"> 
+																										<td align="center" width="175" valign="middle">
+																										<a target="_blank">
+																											<img src="http://www.khanacademy.org/imaget/ka-email-banner-logo.png?code=bWFzdGVyeV90YXNrX2VtYWlsX29wZW4KX2dhZV9iaW5nb19yYW5kb206U2ZfQWNMb29ROGVOc0taUndkVEgzdEc3dEhBSERLem0xN1JianJpcQ==" width="194" height="20" border="0" alt="Khan Academy"> 
 																										</a>
 																									</td>
 																								</tr>
@@ -110,11 +115,14 @@ def send_mail():
 							<tbody>
 								<tr>
 									<td>
-										<table cellpadding="0" cellspacing="0" width="600" align="center" style="border-width:1px; border-spacing:0px; border-style:solid; border-color:#cccccc; border-collapse:collapse; background-color:#ffffff">
+										<table cellpadding="0" cellspacing="0" width="600" align="center" style="border-width:1px; border-spacing:0px;
+										border-style:solid; border-color:#cccccc; border-collapse:collapse; background-color:#ffffff">
 											<tbody>
 												<tr>
-													<td style="background-color:#f7f7f7; font-family:Helvetica Neue,Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-bottom:1px solid #ddd">
-														<table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px">
+													<td style="background-color:#f7f7f7; font-family:Helvetica Neue,Calibri,Helvetica,Arial,sans-serif; 
+													font-size:15px; color:black; border-bottom:1px solid #ddd">
+														<table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; 
+														font-size:15px; line-height:24px">
 															<tbody>
 																<tr>
 																	<td>
@@ -126,8 +134,8 @@ def send_mail():
 																					</td>
 																						<td>
 																							<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">
-																								<strong>'+student.name+',</strong>
-																									<br>Tienes una Nueva Evaluacion en curso</p>
+																								<strong>"""+'nombre estudiante'+""",</strong>
+																									<br>Ha finalizado una evaluacion</p>
 																								</td>
 																							</tr>
 																						</tbody>
@@ -140,22 +148,25 @@ def send_mail():
 															</tr>
 															<tr>
 																<td>
-																	<table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:10px 50px">
+																	<table cellpadding="0" cellspacing="0" border="0" width="500" align="center" 
+																	style="margin:10px 50px">
 																	<tbody>
 																		<tr>
 																			<td>
-																				<a target="_blank"><div style="padding:20px 0" id="Cuadro_Azul"><table width="500" cellpadding="0" cellspacing="0" border="0" style="background-color:#1C758A; border-radius:4px">
+																				<a target="_blank"><div style="padding:20px 0" id="Cuadro_Azul">
+																					<table width="500" cellpadding="0" cellspacing="0" border="0" 
+																					style="background-color:#1C758A; border-radius:4px">
 																					<tbody>
 																						<tr>
 																							<td style="padding:25px 5px; vertical-align:top">
-																								<div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:none; color:#fff; font-size:18px; text-decoration:none; line-height:28px"><p>
-																									<div>Fecha Inicio: '+fecha_1+'</div></p><p><div>Fecha Termino: '+fecha_2+'
-																									</div>
+																								<div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:none; color:#fff; font-size:18px; text-decoration:none; line-height:28px">
+																								<p>
+																									<div>Puntos Obtenidos: """+str(points)+"""</div>
 																								</p>
 																								<p>
-																									<div>Nota Minima: '+str(nota_1)+'</div>
-																								</p><p><div>Nota Maxima: '+str(nota_2)+'</div>
-																							</p>
+																									<div>Nota Obtenida: """+str(grade)+"""</div>
+																								</p>
+																								
 																						</div>
 																					</td>
 																				</tr>
@@ -172,19 +183,7 @@ def send_mail():
 														</table>
 													</td>
 												</tr>
-												<tr>
-													<td style="background-color:#f7f7f7; font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-top:1px solid #ddd">
-														<table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px">
-															<tbody>
-																<tr>
-																	<td><a href="https://es.khanacademy.org/" target="_blank" style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:1px solid #76a015; background-color:#7fac05; color:white; display:inline-block; padding:0 32px; margin:0; border-radius:5px; font-size:16px; line-height:40px; text-decoration:none; display:block; text-align:center; font-size:20px; line-height:45px; background-color:#1C758A; border-color:#1C758A">Anda a Khan para empezar a Practicar
-																	</a>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-												</td>
-											</tr>
+												
 										</tbody>
 									</table>
 								</td>
