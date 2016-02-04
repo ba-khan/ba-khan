@@ -42,11 +42,12 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-	send_mail(70,7)
+	send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Usted ha obtenido la siguiente calificación')
+	send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Su pupilo ha obtenido la siguiente calificación')
 
-def send_mail(points,grade):
+def send_mail(name,email,points,grade,typeMsg):
 	me = "bakhanacademy@gmail.com"
-	you = "javierperezferrada@gmail.com"
+	you = email
 
 	# Create message container - the correct MIME type is multipart/alternative.
 	msg = MIMEMultipart('alternative')
@@ -134,8 +135,8 @@ def send_mail(points,grade):
 																					</td>
 																						<td>
 																							<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">
-																								<strong>"""+'nombre estudiante'+""",</strong>
-																									<br>Ha finalizado una evaluacion</p>
+																								<strong>"""+name+""",</strong>
+																									<br>"""+typeMsg+"""</p>
 																								</td>
 																							</tr>
 																						</tbody>
@@ -174,9 +175,7 @@ def send_mail(points,grade):
 																		</table>
 																	</div>
 																</a>
-																<a target="_blank" style="text-decoration:none">
-																	<div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:12px; line-height:20px; font-weight:bold; text-transform:uppercase; color:#777; margin-top:20px">Ejercicios a Evaluar:
-																	</div>'+skill_assesment+'</a><br>
+																<br>
 																	</td>
 																</tr>
 															</tbody>
