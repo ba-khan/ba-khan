@@ -16,24 +16,46 @@ def begin():
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
 	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date =%s",[currentDate])#consulta las evaluaciones que vencen hoy.
 	for evaluation in assesment: # itero sobre cada evaluacion que vence hoy.
-		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],'start_date':evaluation['start_date'],'end_date':evaluation['end_date']})
-
+		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],'start_date':evaluation['start_date'],'end_date':evaluation['end_date'],'max_grade':evaluation['max_grade'],'min_grade':evaluation['min_grade']})
+	assesment.close()
 	for ev in assesment_expired:
-		print ev['id_assesment_config']
-		#print "Nombre ,id ,fecha: %s, %d,%s " % (row['name'],row['id_assesment'],row['end_date'])
+		per = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		per.execute('''SELECT 
+				  bakhanapp_assesment_config.approval_percentage
+				FROM 
+				  public.bakhanapp_assesment_config
+				WHERE 
+				  bakhanapp_assesment_config.id_assesment_config = %d'''%(ev['id_assesment_config']))
+		for p in per:
+			approval_percentage = p['approval_percentage']
+		per.close()
 		skills_selected = skills(ev['id_assesment_config'])
-		for s in skills_selected:
-			print s
 		grades_involved = grades(evaluation['id_assesment'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
+			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
 			set_points = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-			set_points.execute('update public.bakhanapp_grade set performance_points =%d where id_grade = %d '%(point,g['id_grade']))
+			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-			#print point
-	
 
+	
+def getGrade(percentage,points,min_grade,max_grade):
+    #calcula la nota
+    if points >= percentage:#si obtiene mas que nota cuatro.
+        x1 = percentage
+        x2 = 100.0
+        y1 = 4.0
+        y2 = max_grade
+        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
+    else:#si los puntos son menores al porcentaje de aprobacion
+        x1 = 0.0
+        x2 = percentage
+        y1 = min_grade
+        y2 = 4.0
+        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
+    print grade
+    return grade
 
 def getStudentPoints(kaid_student,configured_skills,beginDate,endDate):
     #entrega el promedio de la puntuacion obtenida por el alumno kaid_student en las habilidades skills 
@@ -67,6 +89,7 @@ def getStudentPoints(kaid_student,configured_skills,beginDate,endDate):
         for p in progress:
         	points = points + scores[p['to_level']]
         	#print p['to_level']
+        progress.close()
     points = points / len(configured_skills)
     return points
 
@@ -88,6 +111,7 @@ def skills(id_assesment_config):
 			  bakhanapp_assesment_config.id_assesment_config = %d'''%(id_assesment_config))
 	for s in skills:
 		skills_selected.append(s)
+	skills.close()
 	return skills_selected
 
 def grades(id_assesment):
@@ -102,6 +126,7 @@ def grades(id_assesment):
 	for g in grades:
 		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id']})
 	#print grades_involved
+	grades.close()
 	return grades_involved
 
 
