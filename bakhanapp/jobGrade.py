@@ -301,12 +301,25 @@ def grades(id_assesment):
 	grades_involved=[]
 	grades = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)#hace que la respuesta a la consulta se entrege como diccionario.
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
-	grades.execute('''SELECT * FROM 
-			  public.bakhanapp_grade
-			WHERE  
-			  bakhanapp_grade.id_assesment_id = %d'''%(id_assesment))
+	grades.execute('''SELECT 
+		  bakhanapp_student.name AS name_student, 
+		  bakhanapp_student.email AS email_student, 
+		  bakhanapp_tutor.name AS name_tutor, 
+		  bakhanapp_tutor.email AS email_tutor, 
+		  bakhanapp_grade.id_grade, 
+		  bakhanapp_grade.grade, 
+		  bakhanapp_grade.kaid_student_id
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_student, 
+		  public.bakhanapp_tutor
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_student.kaid_student AND
+		  bakhanapp_grade.kaid_student_id = bakhanapp_tutor.kaid_student_child_id and
+		  bakhanapp_grade.id_assesment_id = %d'''%(id_assesment))
 	for g in grades:
-		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id']})
+		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id'],
+			'name_student':g['name_student'],'email_student':g['email_student'],'name_tutor':g['name_tutor'],'email_tutor':g['email_tutor']})
 	#print grades_involved
 	grades.close()
 	return grades_involved
