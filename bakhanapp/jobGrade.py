@@ -31,7 +31,7 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d where id_grade = %d '%(point,g['id_grade']))
 			conn.commit()
 			set_points.close()
-			print point
+			#print point
 	
 
 
@@ -62,7 +62,8 @@ def getStudentPoints(kaid_student,configured_skills,beginDate,endDate):
 			WHERE 
 			  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
 			  bakhanapp_student_skill.kaid_student_id = %s AND 
-			  bakhanapp_student_skill.id_skill_name_id = %s)''',[kaid_student,skill[0],kaid_student,skill[0]])
+			  bakhanapp_student_skill.id_skill_name_id = %s and
+			  bakhanapp_skill_progress.date>= %s)''',[kaid_student,skill[0],kaid_student,skill[0],beginDate])
         for p in progress:
         	points = points + scores[p['to_level']]
         	#print p['to_level']
