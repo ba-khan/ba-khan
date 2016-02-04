@@ -71,7 +71,6 @@
 	<script type="text/javascript">
 	
 	var Needle = (function() {
-
         /** 
           * Helper function that returns the `d` value
           * for moving the needle
@@ -93,12 +92,9 @@
         function Needle(el,id) {
           
           this.el = el;
-          //console.log("g recommendation "+id);
-          //console.log(this.el);
           this.id = id;
-          //console.log(this.id);
-          this.len = 30;//width / 3;
-          this.radius = 7;//this.len / 6;
+          this.len = 24;//width / 3;
+          this.radius = 4;//this.len / 6;
         }
 
         Needle.prototype.render = function() {
@@ -119,8 +115,6 @@
           this.el.transition().delay(100).ease('quad').duration(200).select('.needle').tween('reset-progress', function() {
             return function(percentOfPercent) {
               var progress = (1 - percentOfPercent) * oldValue;
-              //console.log("existe id? ");
-              //console.log(id);
               repaintGauge(progress,id);
               return d3.select(this).attr('d', recalcPointerPos.call(self, progress));
             };
@@ -129,8 +123,6 @@
           this.el.transition().delay(300).ease('bounce').duration(1500).select('.needle').tween('progress', function() {
             return function(percentOfPercent) {
               var progress = percentOfPercent * perc;
-              //console.log("existe id? ");
-              //console.log(id);
               repaintGauge(progress,id);
               return d3.select(this).attr('d', recalcPointerPos.call(self, progress));
             };
@@ -155,34 +147,40 @@
 	  	        $("#hover").fadeOut();
 	  	    	$("#popup").fadeOut();
 	  	    });
+	  		$('body').append('<div id="sortMenu"></div>');
+	  		$('table#studentsDashboard').tableSort({
+	  			animation: 'slide',
+	  			speed: 1200
+	  		});
 		});
 
 		var json = JSON.parse('{{ jason_data | escapejs }}');
 		var students = json.students;
 		var assesments=json.assesments;
-		//console.log("assesments");
-		//console.log(assesments);
+		console.log("assesments");
+		console.log(assesments);
 		var data = [];
 		data.push(students);
 	    // column definitions
 	    //d3.f is a d3-jetpack function that saves code writing by replacing a line of code -> d3.f("name") = function(d){return d.name}
 	    var columns = [
-	        { head: 'Estudiantes', cl: 'name', html: d3.f('name') },
-	        { head: 'Recomendaciones completadas', cl: 'recommendations', values: d3.f('recommendations')},
-	        { head: 'Tiempo en ejercicios', cl: 'skills_time', value: d3.f('skills_time'), valueF : d3.f('skills_time',length()) },
-	        { head: 'Tiempo en videos', cl: 'videos_time', valueF: d3.f('video_time', length()), value: d3.f('video_time') },
-	        { head: 'Ejercicios desarrollados', cl: 'exercises', id:'corrects', values: d3.f('corrects') },
-	        { head: 'Habilidades dominadas', cl: 'skills_level', value: d3.f('skills_level')}
+	        { head: 'Estudiantes', cl: 'name', html: d3.f('name'), type:'text'},
+	        { head: 'Recomendaciones completadas', cl: 'recommendations', values: d3.f('recommendations'), type:'numeric'},
+	        { head: 'Ejercicios desarrollados', cl: 'exercises', values: d3.f('corrects') , type:'numeric'},
+	        { head: 'Tiempo en ejercicios', cl: 'skills_time', value: d3.f('skills_time'), valueF : d3.f('skills_time',length()) , type:'numeric'},
+	        { head: 'Tiempo en videos', cl: 'videos_time', valueF: d3.f('video_time', length()), value: d3.f('video_time') , type:'numeric'},
+	        { head: 'Habilidades dominadas', cl: 'skills_level', value: d3.f('skills_level'), type:'numeric'}
 	        //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
 	    ];
 	    
 	    for (i=0; i<json["assesments"].length; i++){
 	    	var class_id="assesment"+json["assesments"][i]["id"];
 	    	//console.log(class_id);
-	    	columns.push({head_assesment: json["assesments"][i]["name"], number: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id)})//html: d3.f('evaluacion')})
+	    	columns.push({head_assesment: json["assesments"][i]["name"], number: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
 	    	data.push(assesments[i]["assesment_student"]);
 	    }
 	    
+	    var selectedAssesment=false;
 	    //for (i in data){ console.log(data[i])}
 		var barWidth, chart, chartInset, degToRad, repaintGauge,
 		    height, margin, numSections, padRad, percToDeg, percToRad, 
@@ -207,7 +205,7 @@
 		};*/
 		
 		width = 200;//el[0][0].offsetWidth - margin.left - margin.right;
-		height = 55;
+		height = 50;
 		radius = Math.min(width, height) / 2;
 		barWidth = 40 * width / 300;
 		
@@ -224,10 +222,10 @@
 	    	.append('div')
 	    	.attr('align', 'center')
 	        .append('table')
-	        .attr('id','myTable')
+	        .attr('id','studentsDashboard')
 	        .style('width', '99%');
 	        
-	 	table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text('{% endfor %}')
+	    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluacion{% endfor %}')
 
 	    // create table header
 	    table.append('thead').append('tr')
@@ -237,17 +235,148 @@
 	        .attr('class', d3.f('cl'))
 	        .attr('id', d3.f('id'))
 	        .attr('title', d3.f('tooltip'))
+	        .attr('data-sortBy',d3.f('type'))
 	        .text(d3.f('head'));
+	    
+	    var sortDivName=table.select('th.name').append('div').attr("class","sort-div");
+    	sortDivName.append("img")
+    		.attr("class","ascSort")
+    		.attr("name","name")
+    		.attr("column",function(d){
+    			return $('th.name').index();
 
+    		})
+    		.attr("src","{% static 'tablesorter/arrow_asc.png' %}");
+    		/*.on("click",function(d){
+    			var th_index_selected = $('th.name').index();
+    			ascendingSort(th_index_selected);
+    		});*/
+    	sortDivName.append("img")
+    		.attr("class","descSort")
+    		.attr("name","name")
+    		.attr("column",function(d){
+    			return $('th.name').index();
+
+    		})
+    		.attr("src","{% static 'tablesorter/arrow_desc.png' %}");
+    		/*.on("click", function(d){
+    			var th_index = $('th.name').index();
+    			//descendingSort(th_index);
+    		});*/
+	    
+	    var sortDivSkillsTime=table.select('th.skills_time').append('div').attr("class","sort-div");
+    	sortDivSkillsTime.append("img")
+    		.attr("class","ascSort")
+    		.attr("name","skills_time")
+    		.attr("column",function(d){
+    			return $('th.skills_time').index();
+
+    		})
+    		.attr("src","{% static 'tablesorter/arrow_asc.png' %}");
+    		/*.on("click",function(d){
+    			var th_index_selected = $("th.skills_time").index();
+    			d3.selectAll("td.skills_time").attr("data-sortAs",function(d){return d.value;})
+    		});*/
+    	sortDivSkillsTime.append("img")
+    		.attr("class","descSort")
+    		.attr("name","skills_time")
+    		.attr("column",function(d){
+    			return $('th.skills_time').index();
+    		})
+    		.attr("src","{% static 'tablesorter/arrow_desc.png' %}");
+    		/*.on("click", function(d){
+    			var th_index = $('th.skills_time').index();
+    		});*/
+    	
+
+    	var sortDivVideosTime=table.select('th.videos_time').append('div').attr("class","sort-div");
+        sortDivVideosTime.append("img")
+        	.attr("class","ascSort")
+        	.attr("name","videos_time")
+        	.attr("column",function(d){
+        		return $('th.videos_time').index();
+
+        	})
+        	.attr("src","{% static 'tablesorter/arrow_asc.png' %}");
+        		/*.on("click",function(d){
+        			var th_index_selected = $("th.skills_time").index();
+        			d3.selectAll("td.skills_time").attr("data-sortAs",function(d){return d.value;})
+        		});*/
+        sortDivVideosTime.append("img")
+        	.attr("class","descSort")
+        	.attr("name","videos_time")
+        	.attr("column",function(d){
+        		return $('th.videos_time').index();
+        	})
+        	.attr("src","{% static 'tablesorter/arrow_desc.png' %}");
+        		/*.on("click", function(d){
+        			var th_index = $('th.skills_time').index();
+        		});*/
+
+   		var sortDivRec=table.select('th.recommendations').append('div').attr("class","sort-div");
+        sortDivRec.append("img")
+           	.attr("class","ascSort")
+           	.attr("name","recommendations")
+           	.attr("column",function(d){
+           		return $('th.recommendations').index();
+
+           	})
+           	.attr("src","{% static 'tablesorter/arrow_asc.png' %}");
+           	/*.on("click",function(d){
+           		tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
+           	});*/
+        sortDivRec.append("img")
+           	.attr("class","descSort")
+           	.attr("name","recommendations")
+           	.attr("column",function(d){
+           		return $('th.recommendations').index();
+           	})
+           	.attr("src","{% static 'tablesorter/arrow_desc.png' %}");
+           	/*.on("click", function(d){
+           		tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
+           	});*/
+                		
 	    //table.selectAll('.assesment').append('button').attr('onclick',function(d) { return 'changeData('+d.number+')' }).text(d3.f('head_assesment'));
 	    //table.selectAll('.assesment').append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
 	    for (i=0; i<json["assesments"].length; i++){
 	    	var class_id="assesment"+json["assesments"][i]["id"];
-	    	var class_id_id=json["assesments"][i]["id"];
-	    	//aqui CTM
-	    	table.select('th.'+class_id).append('div').attr("id",class_id_id).html('<button type="button" onClick="editarAssesment('+class_id_id+')">editar</button>');
-	    	table.select('th.'+class_id).append('button').attr('onclick',function(d) { return 'changeData('+d.number+')' }).text(d3.f('head_assesment'));
-	    	table.select('th.'+class_id).append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
+	    	var number_class_id=json["assesments"][i]["id"];
+	    	table.select('th.'+class_id)
+	    		.append('div')
+	    		.attr("id",number_class_id).html('<button type="button" onClick="editarAssesment('+number_class_id+')">editar</button>');
+	    	table.select('th.'+class_id)
+	    		.append('button')
+	    		.attr("id",class_id)
+	    		.attr("class","assesment kui-button kui-button-plain kui-button-primary")
+	    		.attr('onclick',function(d) { return 'changeData('+d.number+',"'+d.cl+'")' }).text(d3.f('head_assesment'));
+	    	var sort_div=table.select('th.'+class_id).append('div').attr("class","sort-div");
+	    	sort_div.append("img")
+	    		.attr("src","{% static 'tablesorter/arrow_asc.png' %}")
+	    		.on("mouseover",function(d){
+	    			var position = d3.mouse(this);
+	    		    d3.select('#sortMenu')
+	    		      .html("<ul><li>Nota</li><li>Esfuerzo</li></ul>")
+	    		      .style('position', 'absolute')
+	    		      .style('left', (this.x + position[0]) + "px")
+	    		      .style('top', (this.y + position[1]) + "px")
+	    		      .style('display', 'block');
+
+	    		    d3.event.preventDefault();
+	    		});
+	    	sort_div.append("img")
+	    		.attr("src","{% static 'tablesorter/arrow_desc.png' %}")
+	    		.on("mouseover",function(d){
+	    			var position = d3.mouse(this);
+	    		    d3.select('#sortMenu')
+	    		      .html("<ul><li>Nota</li><li>Esfuerzo</li></ul>")
+	    		      .style('position', 'absolute')
+	    		      .style('left', (this.x + position[0]) + "px")
+	    		      .style('top', (this.y + position[1]) + "px")
+	    		      .style('display', 'block');
+
+	    		    d3.event.preventDefault();
+	    		});
+	    	
 	    		
 	    	
 	    }	    
@@ -268,7 +397,7 @@
 		
 	    var skill_time=new Array();
 	    skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
-	    //console.log(skill_time);
+	    console.log(skill_time);
 	    var skillsTimeScaling = d3.scale.linear()
                             .domain([0,Greatest(skill_time.keys())])
                             .range([0,150]);
@@ -288,10 +417,35 @@
         ///////////////////////////////////////////////////
 	    
 	    
-	    var changeData = function (dataIndex) {
-	    	backgroundJobs = data[dataIndex+1];
-	    	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
-		    //console.log(skill_time);
+	    var changeData = function (dataIndex , assesment) {
+        	if (!selectedAssesment){
+		    	backgroundJobs = data[dataIndex+1];
+		    	selectedAssesment=true;
+		    	//Filters every circle that is not from the clicked assesment and show them almost transparent
+		    	tbody.selectAll("circle:not(."+assesment+")")
+		    		.filter(".assesment")
+		    		.transition()
+		    		.duration(750)
+		    		.style("opacity",0.15);
+		    	//Disable other assesment buttons
+		    	$("button.assesment").filter(":not(#"+assesment+")").prop("disabled",true);
+		    	$("button.assesment").filter(":not(#"+assesment+")").css("pointer-events","none");
+		    	$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,0.1);
+        	}else{
+        		backgroundJobs = data[0];
+        		selectedAssesment=false;
+        		tbody.selectAll("circle:not(."+assesment+")")
+		    		.filter(".assesment")
+		    		.transition()
+		    		.duration(750)
+		    		.style("opacity",1);
+        		//Enable back other assesment buttons
+        		$("button.assesment").filter(":not(#"+assesment+")").prop("disabled",false);
+        		$("button.assesment").filter(":not(#"+assesment+")").css("pointer-events","initial");
+        		$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,1);
+        	}
+        	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
+		    console.log(skill_time);
 		    skillsTimeScaling = d3.scale.linear()
 	                            .domain([0,Greatest(skill_time.keys())])
 	                            .range([0,150]);
@@ -303,8 +457,8 @@
 	        corrects= corrects.keys().map(function(d){
 	        	return parseInt(d);
 	        })
-	        //console.log("corrects");
-	        //console.log(corrects);
+	        console.log("corrects");
+	        console.log(corrects);
 	        escalarCorrectIncorrect = d3.scale.linear()
 	                            .domain([0,d3.max(corrects)])
 	                            .range([0,75]);
@@ -316,7 +470,7 @@
         /////////// escala de skill_levels de jordan y tu
         var skill_levels_scaling=d3.scale.linear()
 		.domain([0,d3.max(students,function(d){
-			//console.log(d);
+			console.log(d);
 			var total_skills=0;
 				total_skills=total_skills+d.skills_level.struggling;
 				total_skills=total_skills+d.skills_level.practiced;
@@ -356,8 +510,9 @@
 
 	    	rows.enter()
 	    		.append("tr");
+	    	//rows.transition().sort(function (a, b) { return a == null || b == null ? 0 : stringCompare(a[attrName], b[attrName]); });
 	        
-	        rows.order();
+	        //rows.order();
 
 	        var cells = rows.selectAll("td")
 	    		.data(function(row,i) {
@@ -453,14 +608,14 @@
 		    var tiempos_skill = tbody.selectAll('.skills_time')
 		    	.append("svg")
 		    	.attr("class","skills_time")
-		    	.style("width","100%")
-		    	.style("height","20px");
+		    	.style("width","160")
+		    	.style("height","30");
 		    tiempos_skill
 		    	.append("rect")
 		    	.attr("class","skills_time")
-		    	.attr("width","0")
-		    	.transition().duration(750)
+		    	.attr("y",12)
 		    	.style("fill","#FC8A3B")
+		    	.attr("width","0").transition().duration(750)
 		    	.attr("width",function(d){return skillsTimeScaling(d.value)})
 		    	.attr("height","20")
 		    	.style("fill","#FC8A3B");
@@ -468,8 +623,8 @@
 		    tiempos_skill
 		    	.append("text")
 		    	.attr("class","skills_time")
-			    .attr("x", function(d) { return skillsTimeScaling(d.value)+5 })
-			    .attr("y", 10)
+			    .attr("x", 0)//function(d) { return skillsTimeScaling(d.value)+2 })
+			    .attr("y", 5)
 			    .attr("dy", ".35em")
 				.attr("fill", "black")
 			    .text(function(d) { return d.valueF });
@@ -481,7 +636,7 @@
 		    	.attr("width",function(d){return skillsTimeScaling(d.value)});
 		    skills_time_texts = tbody.selectAll('.skills_time text')
 		    	.transition().duration(750)
-			    .attr("x", function(d) { return skillsTimeScaling(d.value)+5 })
+			    //.attr("x", function(d) { return skillsTimeScaling(d.value)+2 })
 			    .text(function(d) { return d.valueF });
 		    }
 	    
@@ -489,22 +644,22 @@
 		    var tiempos_video = tbody.selectAll(".videos_time")
 		    	.append("svg")
 		    	.attr("class","videos_time")
-		    	.style("width","100%")
-		    	.style("height","20px")
+		    	.style("width","160")
+		    	.style("height","30")
 		    tiempos_video
 		    	.append("rect")
 		    	.attr("class","videos_time")
+		    	.attr("y",12)
 		    	.style("fill","#FC8A3B")
-		    	.attr("width","0").transition().duration(750)
-		    	.attr("width",function(d){return escalarTiemposVideo(d.value)})
 		    	.attr("height","20")
-		    	.style("fill","#FC8A3B");
+		    	.attr("width","0").transition().duration(750)
+		    	.attr("width",function(d){return escalarTiemposVideo(d.value)});
 		    
 		    tiempos_video
 		    	.append("text")
 		    	.attr("class","videos_time")
-			    .attr("x", function(d) { return escalarTiemposVideo(d.value)+5; })
-			    .attr("y", 10)
+			    .attr("x", 0 )//function(d) { return escalarTiemposVideo(d.value)+5; })
+			    .attr("y", 5)
 			    .attr("dy", ".35em")
 				.attr("fill", "black")
 			    .text(function(d) { return d.valueF });
@@ -516,7 +671,7 @@
 	    		.attr("width",function(d){return escalarTiemposVideo(d.value)});
 	    	var video_times_texts = tbody.selectAll('.videos_time text')
 	    		.transition().duration(750)
-	    		.attr("x", function(d) { return escalarTiemposVideo(d.value)+5; })
+	    		//.attr("x", function(d) { return escalarTiemposVideo(d.value)+5; })
 	    		.text(function(d) { return d.valueF });
 
 		}
@@ -525,42 +680,52 @@
 		    var correct_incorrect = tbody.selectAll(".exercises")
 		    	.append("svg")
 		    	.attr("class","exercises")
-		    	.style("width","210")
-		    	.style("height","20");
+		    	.style("width","160")
+		    	.style("height","30");
 		    
 		    var incorrectos = correct_incorrect.append("rect")
 		    	  .attr("class","incorrect")
 		    	  .attr("height","20")
-		    	  .attr("x",100)
+		    	  .attr("x",80)
+		    	  .attr("y",12)
 		    	  .transition().duration(750)
-		    	  .attr("x", function(d) { return 100-escalarCorrectIncorrect(d.values[1]); })
+		    	  .attr("x", function(d) { return 80-escalarCorrectIncorrect(d.values[1]); })
 			      .attr("width", function(d){return escalarCorrectIncorrect(d.values[1]); })
 		    	  .style("fill","red");
 	
 		    correct_incorrect
 		    	.append("text")
 		    	.attr("class","incorrect")
-			    .attr("x", function(d) { return  70-escalarCorrectIncorrect(d.values[1]);})
-			    .attr("y", 10)
+			    .attr("x", function(d){
+			    	//var textWidth=d3.selection(this).getBBox();
+			    	//console.log(d3.selection(this).node().getBoundingClientRect().width);
+			    	return 80;
+			    ;})//function(d) { return  80-escalarCorrectIncorrect(d.values[1]);})
+			    .attr("y", 5)
 			    .attr("dy", ".35em")
 				.attr("fill", "black")
 			    .text(function(d) { return d.values[1] });
-		    
+			correct_incorrect.selectAll("text")
+				.attr("transform",function(d){
+					var textWidth = d3.select(this).node().getBBox().width;
+					return "translate("+(-(d3.select(this).node().getBBox().width+3))+",0)";
+					});
 		    var correctos = 
 		    	correct_incorrect.append("rect")
 		    	.attr("class","correct")
-		    	.attr("x",100)
+		    	.attr("x",80)
+		    	.attr("y",12)
 		    	.style("fill","green")
 		    	.attr("width","0").transition().duration(750)
 		    	.attr("width",function(d){return escalarCorrectIncorrect(d.values[0])})
-		    	.attr("height","20px")
+		    	.attr("height","20")
 		    	.style("fill","#9DB63B");
 		    
 		    correct_incorrect
 		    	.append("text")
 		    	.attr("class","correct")
-			    .attr("x", function(d) { return 110+escalarCorrectIncorrect(d.values[0])})
-			    .attr("y", 10)
+			    .attr("x", 83)//function(d) { return 93+escalarCorrectIncorrect(d.values[0])})
+			    .attr("y", 5)
 			    .attr("dy", ".35em")
 				.attr("fill", "black")
 			    .text(function(d) { return d.values[0] });
@@ -569,20 +734,23 @@
 	    function drawCorrectIncorrectUpdate(){
 		    var incorrect_bars = tbody.selectAll("rect.incorrect")
 		    	  .transition().duration(750)
-		    	  .attr("x", function(d) { return 100-escalarCorrectIncorrect(d.values[1]); })
+		    	  .attr("x", function(d) { return 80-escalarCorrectIncorrect(d.values[1]); })
 			      .attr("width", function(d){return escalarCorrectIncorrect(d.values[1]); });
 
 		    var incorrect_texts = tbody.selectAll("text.incorrect")//correct_incorrect
+		    	.text(function(d) { return d.values[1] })
 			    .transition().duration(750)
-		    	.attr("x", function(d) { return  70-escalarCorrectIncorrect(d.values[1]);})
-			    .text(function(d) { return d.values[1] });
+		    	.attr("transform",function(d){
+					var textWidth = d3.select(this).node().getBBox().width;
+					return "translate("+(-(d3.select(this).node().getBBox().width+3))+",0)";
+				});
 		    
 		    var correct_bars = tbody.selectAll("rect.correct")
 		    	.transition().duration(750)
 		    	.attr("width",function(d){return escalarCorrectIncorrect(d.values[0])})
 		    var correct_texts = tbody.selectAll("text.correct")
 		    	.transition().duration(750)
-			    .attr("x", function(d) { return 110+escalarCorrectIncorrect(d.values[0])})
+			    //.attr("x", function(d) { return 80+escalarCorrectIncorrect(d.values[0])})
 			    .text(function(d) { return d.values[0] });
 		    }
 	    
@@ -608,7 +776,7 @@
 			    		  }
 			    		  skills.push({id_level:j, value: skills_array[j], prev_value: offset});
 			    	  }
-			    	  //console.log(skills);
+			    	  console.log(skills);
 			    	  return skills;
 			      })
 			      .enter()
@@ -658,14 +826,16 @@
 	    									.domain([d3.min(students,function(d){return d[assesment_id].effort;}),//d3.filter(students,function(d){return d[assesment_id].effort;})),
 	    										d3.max(students,function(d){return d[assesment_id].effort;})])//d3.filter(students,function(d){return d[assesment_id].effort;}))])
 	    									.range([11,22]);
-	    	//console.log(effort_scalings[assesment_id](0.32));												
-	    	var assesments = tbody.selectAll("td.assesment"+json["assesments"][i]["id"])
+	    	console.log(effort_scalings[assesment_id](0.32));												
+	    	var assesments = tbody.selectAll("td.assesment"+json["assesments"][i]["id"]).attr("class","assesment assesment"+json["assesments"][i]["id"])
 		    	.append("svg")
-		    	.style("width", "44")//function(d){return escalarTiemposVideo(d.value) })
-		    	.style("height","44")
+		    	.style("width","100%")
+	    		.style("height",height);
+		    	//.style("width", "44")//function(d){return escalarTiemposVideo(d.value) })
+		    	//.style("height","44")
 			
 	    	assesments.append("circle")
-	    		.attr("class","assesment")
+	    		.attr("class","assesment assesment"+json["assesments"][i]["id"])
 	    		.attr("cx", function (d) { return 22.5; })
 	            .attr("cy", function (d) { return 22.5; })
 	    		.attr("r",function(d,i){
@@ -678,21 +848,16 @@
 	    					}else{
 	    						return approveColour(students[i][assesment_id].grade);
 	    					}
-	    			  })
-		    	.on("click",function(d){
-	    			$("input[name='input_grade_id']").val(d.value.grade_id)
-	    			$("input[name='input_grade']").val(d.value.grade)
-	    			$("#hover").fadeIn().css('display', '');
-	    			$("#popup").fadeIn().css('display', '');
-	    		});
+	    			  });
 		    	
 	    	assesments.append("text")
+	    		.attr("class","assesment assesment"+json["assesments"][i]["id"])
 		        .attr("dx", function(d,i){return effort_scalings[d.cl](students[i][assesment_id].effort);})
 		        .attr("dy", function(d,i){return effort_scalings[d.cl](students[i][assesment_id].effort) + 10;})
 		        .text(function(d,i){return students[i][assesment_id].grade})
 		        .style("fill","white");
 		    	
-		    $("td."+assesment_id).tipsy({ 
+		    $("circle."+assesment_id).tipsy({ 
 		        gravity: 'n',
 		        opacity: 0.9,
 		        html: true, 
@@ -702,6 +867,16 @@
 		          return '<ul><li>Nota '+d.grade+'</li><li>Esfuerzo '+d.effort+'</li></ul>' ; 
 		        }
 		      });
+		    /*$("text."+assesment_id).tipsy({ 
+		        gravity: 'n',
+		        opacity: 0.9,
+		        html: true, 
+		        title: function() {
+		          var d = this.__data__;
+		          d = d.value;
+		          return '<ul><li>Nota '+d.grade+'</li><li>Esfuerzo '+d.effort+'</li></ul>' ; 
+		        }
+		      });*/
 		        
 	    }
 		}
@@ -730,13 +905,14 @@
 	    }
 		
 	    function drawRecommendations(){
+	    	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
 	    	var recommendations = tbody.selectAll('.recommendations')
 	    							.append("svg")
 	    							.attr("class","recommendations")
 	    							.style("width","100%")
-	    							.style("height","100%");
+	    							.style("height",height);
 	    	var g_rec = recommendations.append('g').attr("class","recommendations")
-	    		.attr('transform', "translate(" + (width / 3) + ", " + (height) + ")");
+	    		.attr('transform', "translate(" + width/3 + ", " + (height) + ")");
 	    	/*g_rec.each(function(d,i){
 	    		arc1_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
 	    		arc2_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
@@ -750,7 +926,7 @@
 
 		  	    var arc1 = d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
 		  	    arc1.startAngle(arcStartRad).endAngle(arcEndRad);
-		  	    //console.log(arc1);
+		  	    console.log(arc1);
 	    		return arc1;});*/
 	    	g_rec.append('svg:path').attr('class', "arc chart-empty").attr("id",function(d,i){return "chart-empty"+i;});/*.attr('d', function(d){
 	    		
@@ -770,20 +946,17 @@
 			    arcEndRad = arcStartRad + percToRad(completed_perc / 2);
 			    next_start += completed_perc / 2;
 	    			//arc1_array.push(d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth)
-	    			arc1_array.push(d3.svg.arc().outerRadius(50).innerRadius(30)
+	    			arc1_array.push(d3.svg.arc().outerRadius(40).innerRadius(25)
 	    				.startAngle(arcStartRad)
 	    				.endAngle(arcEndRad));
-	    			//console.log(arc1_array[i]);
 	    			arcStartRad = percToRad(next_start);
 	  		      	arcEndRad = arcStartRad + percToRad((1 - completed_perc) / 2);
-	    			arc2_array.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
+	    			arc2_array.push(d3.svg.arc().outerRadius(40).innerRadius(25)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
 	    					.startAngle(arcStartRad + padRad)
 	    					.endAngle(arcEndRad));
-	    			//console.log(arc2_array[i]);
 	    			d3.select("#chart-filled"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc1_array[i]);
 	    			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);
 	    			var d3_needle = new Needle(d3.select(this),i);
-	    			//console.log(d3_needle);
 	    			d3_needle.render();
 	    			d3_needle.moveTo(completed_perc);
 		    		d3_needles.push(d3_needle);
@@ -794,63 +967,23 @@
 		
 	    function drawRecommendationsUpdate2(){
 	    	var g_rec = tbody.selectAll('g.recommendations');
-	    							/*.append("svg")
-	    							.attr("class","recommendations")
-	    							.style("width","100%")
-	    							.style("height","100%");*/
-	    	//var g_rec = recommendations.append('g').attr("class","recommendations")
-	    	//	.attr('transform', "translate(" + (width / 3) + ", " + (height) + ")");
-	    	/*g_rec.each(function(d,i){
-	    		arc1_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-	    		arc2_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-	    	})*/
-	    	//g_rec.append('svg:path').attr('class', "arc chart-filled").attr("id",function(d,i){return "chart-filled"+i;});/*.attr('d', function(d){
-		    	/*var next_start = totalPercent;
-		    	var perc = 40;
-		    	arcStartRad = percToRad(next_start);
-		    	arcEndRad = arcStartRad + percToRad(perc / 2);
-		    	next_start += perc / 2;
-
-		  	    var arc1 = d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-		  	    arc1.startAngle(arcStartRad).endAngle(arcEndRad);
-		  	    console.log(arc1);
-	    		return arc1;});*/
-	    	//g_rec.append('svg:path').attr('class', "arc chart-empty").attr("id",function(d,i){return "chart-empty"+i;});/*.attr('d', function(d){
-	    		
-	    	/*});*/
-	    	//g_rec.append
-	    	
-	    	
-	    	//var gRecNeedleCenter = tbody.selectAll("g.recommendations").append('circle').attr('class', 'needle-center').attr('cx', 0).attr('cy', 0).attr('r', 5);
-	    	//var gRecNeedle =tbody.selectAll("g.recommendations").append('path').attr('class', 'needle').attr('d', recalcPointerPos(50,5,34));
-	    	//var d3_needles = new Array();
-	    	//var g_rec_array = g_rec
-	    	//var perc=0.5;
 	    	g_rec.each(function(d,i){
-	    		//console.log("i: "+i+" reco:"+d.values.completed_perc);
 	    		var completed_perc = d.values.completed_perc;
 	    		var next_start = totalPercent;
 			    arcStartRad = percToRad(next_start);
 			    arcEndRad = arcStartRad + percToRad(completed_perc / 2);
 			    next_start += completed_perc / 2;
-	    			//arc1_array.push(d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth)
 	    			arc1_array[i]
 	    				.startAngle(arcStartRad)
 	    				.endAngle(arcEndRad);
-	    			//console.log(arc1_array[i]);
 	    			arcStartRad = percToRad(next_start);
 	  		      	arcEndRad = arcStartRad + percToRad((1 - completed_perc) / 2);
-	    			arc2_array[i]//.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
+	    			arc2_array[i]
 	    					.startAngle(arcStartRad + padRad)
 	    					.endAngle(arcEndRad);
-	    			//console.log(arc2_array[i]);
 	    			d3.select("#chart-filled"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc1_array[i]);
 	    			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);
-	    			//var d3_needle = new Needle(d3.select(this));
-	    			//console.log(d3_needle);
-	    			//d3_needle.render();
 	    			d3_needles[i].moveTo(completed_perc);
-		    		//d3_needles.push(d3_needle);
 	    		});
 	
 	 		
@@ -858,67 +991,16 @@
 	    
 	    function drawRecommendationsUpdate(){
 	    	var g_rec = tbody.selectAll('g.recommendations');
-	    							/*.append("svg")
-	    							.attr("class","recommendations")
-	    							.style("width","100%")
-	    							.style("height","100%");*/
-	    	//var g_rec = recommendations.append('g').attr("class","recommendations")
-	    	//	.attr('transform', "translate(" + (width / 3) + ", " + (height) + ")");
-	    	/*g_rec.each(function(d,i){
-	    		arc1_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-	    		arc2_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-	    	})*/
-	    	//g_rec.append('svg:path').attr('class', "arc chart-filled").attr("id",function(d,i){return "chart-filled"+i;});/*.attr('d', function(d){
-		    	/*var next_start = totalPercent;
-		    	var perc = 40;
-		    	arcStartRad = percToRad(next_start);
-		    	arcEndRad = arcStartRad + percToRad(perc / 2);
-		    	next_start += perc / 2;
-
-		  	    var arc1 = d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-		  	    arc1.startAngle(arcStartRad).endAngle(arcEndRad);
-		  	    console.log(arc1);
-	    		return arc1;});*/
-	    	//g_rec.append('svg:path').attr('class', "arc chart-empty").attr("id",function(d,i){return "chart-empty"+i;});/*.attr('d', function(d){
-	    		
-	    	/*});*/
-	    	//g_rec.append
-	    	
-	    	
-	    	//var gRecNeedleCenter = tbody.selectAll("g.recommendations").append('circle').attr('class', 'needle-center').attr('cx', 0).attr('cy', 0).attr('r', 5);
-	    	//var gRecNeedle =tbody.selectAll("g.recommendations").append('path').attr('class', 'needle').attr('d', recalcPointerPos(50,5,34));
-	    	//var d3_needles = new Array();
-	    	//var g_rec_array = g_rec
-	    	//var perc=0.5;
 	    	g_rec.each(function(d,i){
-	    		//console.log("i: "+i+" reco:"+d.values.completed_perc);
 	    		var completed_perc = d.values.completed_perc;
-	    		/*var next_start = totalPercent;
-			    arcStartRad = percToRad(next_start);
-			    arcEndRad = arcStartRad + percToRad(completed_perc / 2);
-			    next_start += completed_perc / 2;*/
-	    			//arc1_array.push(d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth)
-	    			/*arc1_array[i]
-	    				.startAngle(arcStartRad)
-	    				.endAngle(arcEndRad);*/
-	    			//console.log(arc1_array[i]);
-	    			/*arcStartRad = percToRad(next_start);
-	  		      	arcEndRad = arcStartRad + percToRad((1 - completed_perc) / 2);*/
-	    			//arc2_array[i]//.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
-	    					/*.startAngle(arcStartRad + padRad)
-	    					.endAngle(arcEndRad);
-	    			console.log(arc2_array[i]);
-	    			d3.select("#chart-filled"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc1_array[i]);
-	    			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);*/
-	    			//var d3_needle = new Needle(d3.select(this));
-	    			//console.log(d3_needle);
-	    			//d3_needle.render();
 	    			d3_needles[i].moveTo(completed_perc);
-		    		//d3_needles.push(d3_needle);
 	    		});
 	
-	 		
+	    	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
 	    }
+	    
+	    
+	    
 	    
 	    
 	    function recalcPointerPos(len,radius,perc) {
@@ -937,7 +1019,6 @@
 	    
 	    var repaintGauge = function(perc,i) 
 	    {
-	    	//console.log("repaintgauge i "+i);
 	    	var completed_perc = perc
     		var next_start = totalPercent;
 		    arcStartRad = percToRad(next_start);
@@ -947,19 +1028,13 @@
     			arc1_array[i]
     				.startAngle(arcStartRad)
     				.endAngle(arcEndRad);
-    			//console.log(arc1_array[i]);
     			arcStartRad = percToRad(next_start);
   		      	arcEndRad = arcStartRad + percToRad((1 - completed_perc) / 2);
     			arc2_array[i]//.push(d3.svg.arc().outerRadius(50).innerRadius(30)//radius - chartInset).innerRadius(radius - chartInset - barWidth)
     					.startAngle(arcStartRad + padRad)
     					.endAngle(arcEndRad);
-    			//console.log(arc2_array[i]);
     			d3.select("#chart-filled"+i).attr("d",arc1_array[i]);
     			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
-    			//var d3_needle = new Needle(d3.select(this));
-    			//console.log(d3_needle);
-    			//d3_needle.render();
-    			//d3_needles[i].moveTo(completed_perc);
 	    }		
 		
 		function noEvaluarTodos(){

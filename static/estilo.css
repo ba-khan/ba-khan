@@ -131,7 +131,7 @@ td.videos_time{
 }*/
 
 .chart-gauge{
-	width: 400px;
+	width: auto;
 	margin: 100px auto  
 } 
 .chart-filled{
@@ -143,6 +143,13 @@ td.videos_time{
 .needle, .needle-center{
 	fill: #464A4F;
 }
+
+#sortMenu {
+	width:150px;
+	position:absolute;
+	display:none;
+}
+
 #close{
   position:absolute;
   background:#9DB63B;
