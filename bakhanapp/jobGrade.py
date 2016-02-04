@@ -4,6 +4,8 @@
 import os
 import psycopg2, psycopg2.extras
 import time
+import smtplib
+from email.mime.text import MIMEText
 
 conn = psycopg2.connect(database='bakhanDB',user='postgres',password='root', host='146.83.216.177')
 
@@ -38,6 +40,24 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
+	send_mail()
+
+def send_mail():
+	fromaddr = 'bakhanacademy@gmail.com'
+	toaddrs  = 'javierperezferrada@gmail.com'
+	msg = 'There was a terrible error that occured and I wanted you to know!'
+
+
+	# Credentials (if needed)
+	username = 'bakhanacademy'
+	password = 'a123456789b'
+
+	# The actual mail send
+	server = smtplib.SMTP('smtp.gmail.com:587')
+	server.starttls()
+	server.login(username,password)
+	server.sendmail(fromaddr, toaddrs, msg)
+	server.quit()
 
 	
 def getGrade(percentage,points,min_grade,max_grade):
