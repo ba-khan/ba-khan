@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -71,7 +72,7 @@ def updateGrade(request):
         update_grade = Grade.objects.get(pk=id_grade)
         update_grade.teacher_grade = teacher_grade
         update_grade.comment = teacher_comment 
-        update_grade.save() 
+        update_grade.save()
 
     return HttpResponse()
 
@@ -123,9 +124,7 @@ def updateAssesment(request):
                                id_assesment_id=id_assesment,
                                kaid_student_id=s['kaid_student']
                                )
-            new_grade.save()
-        
-        
+            new_grade.save() 
         
     return HttpResponse()
 
@@ -162,11 +161,9 @@ def newAssesment3(request):
         new_assesment.save()
         id_new_assesment=new_assesment.pk
         for s in students:
-            #s['kaid_student']
-            #id_new_assesment
             aux = s['kaid_student']
             print aux
-            sendMail(aux)
+            sendMail(aux,nota1,nota2,fecha1,fecha2)
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
@@ -180,10 +177,14 @@ def newAssesment3(request):
             update_assesment_configs.save()
     return HttpResponse()
 
-def sendMail(kaid):
-    print "metodo mail"
-    print kaid
-    mail = Student.objects.get(pk=kaid).email
-    print mail
-    send_mail('probando django', 'holaaaaa como estas, saludos don', 'bakhanacademy@gmail.com', [mail], fail_silently=False)
+def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2):
+    student = Student.objects.get(pk=kaid)
+    subject = 'Nueva Evaluacion'
+    text_content = 'Mensaje...nLinea 2nLinea3'
+    html_content = '<div><table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2c3747" style="background-color:#e2e2e2; font-size:12px; font-family:Helvetica,Arial,Geneva,sans-serif"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#e2e2e2"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#2c3747" style="margin-top:20px"><tbody><tr><td><table cellpadding="10" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td align="center" width="175" valign="middle"><a target="_blank"><img src="http://www.khanacademy.org/imaget/ka-email-banner-logo.png?code=bWFzdGVyeV90YXNrX2VtYWlsX29wZW4KX2dhZV9iaW5nb19yYW5kb206U2ZfQWNMb29ROGVOc0taUndkVEgzdEc3dEhBSERLem0xN1JianJpcQ==" width="194" height="20" border="0" alt="Khan Academy"> </a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" width="600" align="center" style="border-width:1px; border-spacing:0px; border-style:solid; border-color:#cccccc; border-collapse:collapse; background-color:#ffffff"><tbody><tr><td style="background-color:#f7f7f7; font-family:Helvetica Neue,Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-bottom:1px solid #ddd"><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px"><tbody><tr><td><table width="500" cellpadding="0" cellspacing="0" border="0" style=""><tbody><tr><td><img src="http://www.khanacademy.org/images/mission-badges/arithmetic-100x100.png?4" width="70" height="70" style="left:-10px"> </td><td><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333"><strong>'+student.name+',</strong><br>Tienes una Nueva Evaluacion en curso</p></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:10px 50px"><tbody><tr><td><a target="_blank"><div style="padding:20px 0" id="Cuadro_Azul"><table width="500" cellpadding="0" cellspacing="0" border="0" style="background-color:#1C758A; border-radius:4px"><tbody><tr><td style="padding:25px 5px; vertical-align:top"><div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:none; color:#fff; font-size:18px; text-decoration:none; line-height:28px"><p><div>Fecha Inicio: '+fecha_1+'</div></p><p><div>Fecha Termino: '+fecha_2+'</div></p><p><div>Nota Minima: '+str(nota_1)+'</div></p><p><div>Nota Maxima: '+str(nota_2)+'</div></p></div></td></tr></tbody></table></div></a><a target="_blank" style="text-decoration:none"><div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:12px; line-height:20px; font-weight:bold; text-transform:uppercase; color:#777; margin-top:20px">Ejercicios a Evaluar:</div><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio 1</p><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio 2</p><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio 3</p><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio ...</p></a><br></td></tr></tbody></table></td></tr><tr><td style="background-color:#f7f7f7; font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-top:1px solid #ddd"><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px"><tbody><tr><td><a href="https://es.khanacademy.org/" target="_blank" style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:1px solid #76a015; background-color:#7fac05; color:white; display:inline-block; padding:0 32px; margin:0; border-radius:5px; font-size:16px; line-height:40px; text-decoration:none; display:block; text-align:center; font-size:20px; line-height:45px; background-color:#1C758A; border-color:#1C758A">Anda a Khan para empezar a Practicar</a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div>'
+    from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
+    to = student.email
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
     return HttpResponse()
