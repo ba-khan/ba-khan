@@ -14,7 +14,7 @@ def begin():
 	assesment_expired=[]#diccionario para la iteracion, ya que dictcursor da problemas al iterar.
 	assesment = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)#hace que la respuesta a la consulta se entrege como diccionario.
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
-	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date =%s",[currentDate])#consulta las evaluaciones que vencen hoy.
+	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date <=%s",[currentDate])#consulta las evaluaciones que vencen hoy.
 	for evaluation in assesment: # itero sobre cada evaluacion que vence hoy.
 		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],'start_date':evaluation['start_date'],'end_date':evaluation['end_date'],'max_grade':evaluation['max_grade'],'min_grade':evaluation['min_grade']})
 	assesment.close()
