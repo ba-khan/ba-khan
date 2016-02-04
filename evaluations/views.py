@@ -41,6 +41,7 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
+from bakhanapp.models import Tutor
 
 import datetime
 
@@ -183,6 +184,7 @@ def newAssesment3(request):
 
 def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2,skill_assesment):
     student = Student.objects.get(pk=kaid)
+    tutor = Tutor.objects.get(kaid_student_child=kaid)
     subject = 'Nueva Evaluacion'
     text_content = 'Mensaje...nLinea 2nLinea3'
     print 'antes del html_content'
@@ -190,7 +192,8 @@ def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2,skill_assesment):
     from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
     print 'antes del to student.mail'
     to = str(student.email)
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    to2 = str(tutor.email)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
     return HttpResponse()
@@ -200,6 +203,19 @@ def getSkillAssesment(id_asses_config):
     g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
     n = Skill.objects.filter(id_skill_name__in=g)
     for i in n :
-        mnsj_skills = mnsj_skills+'<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+str(i)+'</p>'
-
+        skill = str(i)
+        print skill
+        skill = strip_accents(skill)
+        print skill
+        mnsj_skills = mnsj_skills+'<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skill+'</p>'
     return mnsj_skills
+
+def strip_accents(text):
+    try:
+        text = unicode(text, 'utf-8')
+    except NameError: # unicode is a default on python 3 
+        pass
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore')
+    text = text.decode("utf-8")
+    return str(text)
