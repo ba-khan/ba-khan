@@ -12,14 +12,14 @@ from email.mime.multipart import MIMEMultipart
 conn = psycopg2.connect(database='bakhanDB',user='postgres',password='root', host='146.83.216.177')
 
 def begin():
-	#Función que calcula y guarda las notas de los estudiantes al finalizar el tiempo de una evaluacion.
+	#Función que calcula y guarda las notas de los estudiantes al finalizar el tiempo de una evaluacion y envia los respesctivos correos.
 	currentDate = time.strftime("%Y-%m-%d") #fecha actual.
 	#print currentDate
 	assesment_expired=[]#diccionario para la iteracion, ya que dictcursor da problemas al iterar.
 	assesment = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)#hace que la respuesta a la consulta se entrege como diccionario.
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
-	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date =%s",[currentDate])#consulta las evaluaciones que vencen hoy.
-	for evaluation in assesment: # itero sobre cada evaluacion que vence hoy.
+	assesment.execute("SELECT * FROM public.bakhanapp_assesment where end_date <=%s",[currentDate])#consulta las evaluaciones que ya vencieron.
+	for evaluation in assesment: # guarda la informacion obtenida de las evaluaciones en un arreglo que ocntiene diccionario.
 		assesment_expired.append({'id_assesment': evaluation['id_assesment'],'id_assesment_config':evaluation['id_assesment_conf_id'],
 			'start_date':evaluation['start_date'],'end_date':evaluation['end_date'],'max_grade':evaluation['max_grade'],'min_grade':evaluation['min_grade'],
 			'name':evaluation['name']})
