@@ -848,7 +848,13 @@
 	    					}else{
 	    						return approveColour(students[i][assesment_id].grade);
 	    					}
-	    			  });
+	    			  })
+	    		.on("click",function(d){
+	    			$("input[name='input_grade_id']").val(d.value.grade_id)
+	    			$("input[name='input_grade']").val(d.value.grade)
+	    			$("#hover").fadeIn().css('display', '');
+	    			$("#popup").fadeIn().css('display', '');
+	    		});
 		    	
 	    	assesments.append("text")
 	    		.attr("class","assesment assesment"+json["assesments"][i]["id"])
