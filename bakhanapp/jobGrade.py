@@ -27,6 +27,10 @@ def begin():
 		grades_involved = grades(evaluation['id_assesment'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
+			set_points = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+			set_points.execute('update public.bakhanapp_grade set performance_points =%d where id_grade = %d '%(point,g['id_grade']))
+			conn.commit()
+			set_points.close()
 			print point
 	
 
@@ -62,6 +66,7 @@ def getStudentPoints(kaid_student,configured_skills,beginDate,endDate):
         for p in progress:
         	points = points + scores[p['to_level']]
         	#print p['to_level']
+    points = points / len(configured_skills)
     return points
 
 
