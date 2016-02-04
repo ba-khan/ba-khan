@@ -80,7 +80,7 @@ def updateGrade(request):
 
     return HttpResponse()
 
-def getAssesment(request):
+def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
     if request.method == 'POST':
         args = request.POST
         print args
@@ -93,7 +93,7 @@ def getAssesment(request):
         
     return HttpResponse(assesment_data)
 
-def updateAssesment(request):
+def updateAssesment(request): #modifica una evaluacion 
     if request.method =='POST':
         args = request.POST
         id_assesment=args['input_id_assesment']
@@ -132,7 +132,7 @@ def updateAssesment(request):
         
     return HttpResponse()
 
-def getStudentAssesment(request):
+def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion
     if request.method =='POST':
         args = request.POST
         id_assesment=args['assesment']
@@ -142,7 +142,7 @@ def getStudentAssesment(request):
         student_data = json.dumps(struct2)
     return HttpResponse(student_data)
 
-def newAssesment3(request):
+def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y una tupla en grade para cada student, ademas envia mails a todos
     if request.method == 'POST':
         args = request.POST
         fecha1=args['fecha_inicio']
@@ -182,7 +182,7 @@ def newAssesment3(request):
             update_assesment_configs.save()
     return HttpResponse()
 
-def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2,skill_assesment):
+def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2,skill_assesment): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     student = Student.objects.get(pk=kaid)
     tutor = Tutor.objects.get(kaid_student_child=kaid)
     subject = 'Nueva Evaluacion'
@@ -198,7 +198,7 @@ def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2,skill_assesment):
     msg.send()
     return HttpResponse()
 
-def getSkillAssesment(id_asses_config):
+def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
     mnsj_skills = ''
     g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
     n = Skill.objects.filter(id_skill_name__in=g)
@@ -210,10 +210,10 @@ def getSkillAssesment(id_asses_config):
         mnsj_skills = mnsj_skills+'<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skill+'</p>'
     return mnsj_skills
 
-def strip_accents(text):
+def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     try:
         text = unicode(text, 'utf-8')
-    except NameError: # unicode is a default on python 3 
+    except NameError:
         pass
     text = unicodedata.normalize('NFD', text)
     text = text.encode('ascii', 'ignore')
