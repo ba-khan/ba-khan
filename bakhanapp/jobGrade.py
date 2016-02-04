@@ -6,6 +6,8 @@ import psycopg2, psycopg2.extras
 import time
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 conn = psycopg2.connect(database='bakhanDB',user='postgres',password='root', host='146.83.216.177')
 
@@ -43,23 +45,55 @@ def begin():
 	send_mail()
 
 def send_mail():
-	fromaddr = 'bakhanacademy@gmail.com'
-	toaddrs  = 'javierperezferrada@gmail.com'
-	msg = 'There was a terrible error that occured and I wanted you to know!'
+	me = "bakhanacademy@gmail.com"
+	you = "javierperezferrada@gmail.com"
+
+	# Create message container - the correct MIME type is multipart/alternative.
+	msg = MIMEMultipart('alternative')
+	msg['Subject'] = "Link"
+	msg['From'] = me
+	msg['To'] = you
+
+	# Create the body of the message (a plain-text and an HTML version).
+	text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
+	html = """\
+	<html>
+	  <head></head>
+	  <body>
+	    <p>Hi!<br>
+	       How are you?<br>
+	       Here is the <a href="http://www.python.org">link</a> you wanted.
+	    </p>
+	  </body>
+	</html>
+	"""
+
+	# Record the MIME types of both parts - text/plain and text/html.
+	part1 = MIMEText(text, 'plain')
+	part2 = MIMEText(html, 'html')
+
+	# Attach parts into message container.
+	# According to RFC 2046, the last part of a multipart message, in this case
+	# the HTML message, is best and preferred.
+	msg.attach(part1)
+	msg.attach(part2)
 
 
-	# Credentials (if needed)
-	username = 'bakhanacademy'
-	password = 'a123456789b'
-
-	# The actual mail send
-	server = smtplib.SMTP('smtp.gmail.com:587')
-	server.starttls()
-	server.login(username,password)
-	server.sendmail(fromaddr, toaddrs, msg)
-	server.quit()
-
-	
+	try: 
+		username = 'bakhanacademy@gmail.com'
+		password = 'a123456789b'
+		 
+		# Enviando el correo
+		server = smtplib.SMTP('smtp.gmail.com:587')
+		server.starttls()
+		server.login(username,password)
+		server.sendmail(me, you, msg.as_string())
+		server.quit()
+		print "Correo enviado" 
+	except: 
+		print """Error: el mensaje no pudo enviarse. 
+		Compruebe que sendmail se encuentra instalado en su sistema"""
+		
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
     if points >= percentage:#si obtiene mas que nota cuatro.
