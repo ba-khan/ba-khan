@@ -45,8 +45,8 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Usted ha obtenido la siguiente calificación',ev['name'])
-		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Su pupilo ha obtenido la siguiente calificación',ev['name'])
+		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
@@ -122,7 +122,7 @@ def skills(id_assesment_config):
 		  bakhanapp_assesment_skill.id_assesment_config_id = %d'''%(id_assesment_config))
 	for s in skills:
 		skills_selected.append({'id_assesment_config_id':s['id_assesment_config_id'],'id_skill_name':s['id_skill_name_id'],'name':s['name']})
-		spanish_skills = spanish_skills + s['name']
+		spanish_skills = spanish_skills +'<li>'+ s['name'] + '</li>'
 	skills.close()
 	return skills_selected,spanish_skills
 
@@ -154,7 +154,7 @@ def grades(id_assesment):
 	grades.close()
 	return grades_involved
 
-def send_mail(name,email,points,grade,typeMsg,evaluation):
+def send_mail(name,email,points,grade,typeMsg,evaluation,skills):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -285,6 +285,9 @@ def send_mail(name,email,points,grade,typeMsg,evaluation):
 																		</table>
 																	</div>
 																</a>
+																<a target="_blank" style="text-decoration:none">
+																	<div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:12px; line-height:20px; font-weight:bold; text-transform:uppercase; color:#777; margin-top:20px">Ejercicios a Evaluar:
+																	</div>"""+skills+"""</a><br>
 																<br>
 																	</td>
 																</tr>
