@@ -45,8 +45,8 @@ def begin():
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-		send_mail('javier perez',"javierperezferrada@gmail.com",70,7,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota

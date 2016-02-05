@@ -52,6 +52,9 @@ ORDER BY
 update public.bakhanapp_grade set performance_points =20 where id_grade = 197; 
 
 #####################################################################
+update public.bakhanapp_tutor set email ='tutorbakhan@yopmail.com' ;
+
+########################################################################  
 SELECT 
   bakhanapp_student.name AS name_student, 
   bakhanapp_student.email AS email_student, 
@@ -66,5 +69,16 @@ FROM
   public.bakhanapp_tutor
 WHERE 
   bakhanapp_grade.kaid_student_id = bakhanapp_student.kaid_student AND
-  bakhanapp_grade.kaid_student_id = bakhanapp_tutor.kaid_student_child_id;
+  bakhanapp_grade.kaid_student_id = bakhanapp_tutor.kaid_student_child_id and
+  bakhanapp_grade.id_assesment_id = 67;
 
+########################################################################
+SELECT 
+  bakhanapp_assesment_skill.id_assesment_config_id, 
+  bakhanapp_assesment_skill.id_skill_name_id, 
+  bakhanapp_skill.name_spanish AS name
+FROM 
+  public.bakhanapp_assesment_skill, 
+  public.bakhanapp_skill
+WHERE 
+  bakhanapp_assesment_skill.id_skill_name_id = bakhanapp_skill.id_skill_name;
