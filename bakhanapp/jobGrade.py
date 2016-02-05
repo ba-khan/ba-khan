@@ -43,11 +43,11 @@ def begin():
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
 			set_points = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 			print 'id_nota: %d, nota: %2.f'%(g['id_grade'],grade)
-			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
+			set_points.execute("update public.bakhanapp_grade set performance_points =%d,grade =%.2f,evaluated = 'TRUE' where id_grade = %d "%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-			#send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			#send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
@@ -139,7 +139,8 @@ def grades(id_assesment):
 		  bakhanapp_tutor.email AS email_tutor, 
 		  bakhanapp_grade.id_grade, 
 		  bakhanapp_grade.grade, 
-		  bakhanapp_grade.kaid_student_id
+		  bakhanapp_grade.kaid_student_id,
+		  bakhanapp_grade.evaluated
 		FROM 
 		  public.bakhanapp_grade, 
 		  public.bakhanapp_student, 
@@ -147,6 +148,7 @@ def grades(id_assesment):
 		WHERE 
 		  bakhanapp_grade.kaid_student_id = bakhanapp_student.kaid_student AND
 		  bakhanapp_grade.kaid_student_id = bakhanapp_tutor.kaid_student_child_id and
+		  bakhanapp_grade.evaluated = 'FALSE' and
 		  bakhanapp_grade.id_assesment_id = %d'''%(id_assesment))
 	for g in grades:
 		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id'],
