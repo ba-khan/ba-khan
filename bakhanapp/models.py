@@ -178,6 +178,7 @@ class Grade(models.Model):
     performance_points = models.IntegerField()
     effort_points = models.IntegerField()
     comment = models.CharField(max_length=300,null=True)
+    evaluated = models.BooleanField(default=False)
     
     class Meta:
         unique_together = ('kaid_student', 'id_assesment')
