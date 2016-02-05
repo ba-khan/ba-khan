@@ -6,6 +6,179 @@
 
 {% block body2 %}
 
-<p>Contactos</p>
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+
+
+
+<script>
+	window.onload = function() {
+            editableGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+
+		// we build and load the metadata in Javascript
+		editableGrid.load({ metadata: [
+			{ name: "student_name", datatype: "string", editable: false },
+			{ name: "student_email", datatype: "email", editable: true },
+			{ name: "student_phone", datatype: "integer", editable: true },
+			
+			{ name: "tutor_name", datatype: "string", editable: true},
+			{ name: "tutor_email", datatype: "email", editable: true },
+			{ name: "tutor_phone", datatype: "integer", editable: true },
+			{ name: "action", datatype: "html", editable: false }
+		]});
+
+		// then we attach to the HTML table and render it
+		editableGrid.attachToHTMLTable('htmlgrid');
+		editableGrid.addCellValidator("student_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 40000000 && parseInt(value) < 99999999); } }));
+		editableGrid.addCellValidator("tutor_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 40000000 && parseInt(value) < 99999999); } }));
+		
+		var searchField = document.getElementById('searchField');
+		searchField.addEventListener(
+		    'keyup',
+		    function (){
+		    	editableGrid.filter(searchField.value);
+		    }
+		);
+		
+		editableGrid.renderGrid();
+	} 
+	
+</script>
+
+<br>
+<div class="container">
+<div class="main-content">
+
+<br>
+<h1 style="text-align:center;">Contactos</h1>
+<label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+<br><br>
+<table id="htmlgrid" class="testgrid">
+	<tr>
+		<th>Estudiante</th>
+		<th>E-Mail</th>
+		<th>Telefono</th>
+		<th>Apoderado</th>
+		<th>E-Mail</th>
+		<th>Telefono</th>
+		<th></th>
+	</tr>
+	{% for data in datas %}
+	<tr id="R{{ forloop.counter }}">
+		<td>{{ data.0.name }}</td>
+		<td>{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
+		<td id="sPhone{{ forloop.counter }}">{{ data.0.phone }}</td>
+		<td>{{ data.1.name }}</td>
+		<td>{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
+		<td>{{ data.1.phone }}</td>
+		<td class="editablegrid-action" data-title="action" style="width:100px">
+			<a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+</div>
+<br>
+</div>
+<div id="popup" style="display:none">
+	<div id="close">X</div>
+	
+</div>
+<br>
+</div> <!-- cerrar div principal del home  -->
+
+<script>
+
+
+function saveData(id){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$('.response').remove();
+	$('.question').remove();
+	
+	tr = document.getElementById("R"+id);
+	invalids = tr.getElementsByClassName("invalid").length;
+	if (invalids>0){
+		response = "Campos invalidos";
+		$("#popup").append("<p class='response'>"+response+"</p>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+	else{
+		$('.response').remove();
+		$('.question').remove();
+		$("#popup").append("<p class='question'>Desea guardar cambios de contacto?</p>");
+		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Guardar</a>");
+		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+
+}
+
+function confirmSave(answer,id){
+	if (answer==1){
+		tr = $(document.getElementById("R"+id));
+		var tdJson = new Object();
+
+				tdJson.studentName= tr["context"]["children"][0].innerText;
+				tdJson.studentEmail= tr["context"]["children"][1].innerText;
+				tdJson.studentPhone= tr["context"]["children"][2].innerText;
+				tdJson.tutorName= tr["context"]["children"][3].innerText;
+				tdJson.tutorEmail= tr["context"]["children"][4].innerText;
+				tdJson.tutorPhone= tr["context"]["children"][5].innerText;
+		
+		$.ajax({
+			url: "{% url 'Contacts:guardar_contactos' id_class %}",
+			type: "POST",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(tdJson),
+				success: function(response){
+					$("#acceptSave").remove();
+					$("#cancelSave").remove();
+					$('.response').remove();
+					$('.question').remove();
+					$("#hover").fadeIn().css('display', '');
+					$("#popup").fadeIn().css('display', '');
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					auxResponse = response;
+					if (auxResponse == "Cambios guardados correctamente"){
+						reloadLocation();
+					}
+				}
+		});
+		$("#hover").fadeOut().css('display', 'none');
+		$("#popup").fadeOut().css('display', 'none');
+	}
+	if (answer==0){
+		$("#hover").fadeOut(1000).css('display', 'none');
+		$("#popup").fadeOut(1000).css('display', 'none');
+	}
+}
+
+$(document).ready(function(){
+	  
+	  //chiusura al click sulla parte scura
+	  $("#hover").click(function(){
+	        $(this).fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	  //chiusura al click sul pulsante
+	  $("#close").click(function(){
+	        $("#hover").fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	});
+</script>
 
 {% endblock %}

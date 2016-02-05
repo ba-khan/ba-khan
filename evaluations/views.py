@@ -1,3 +1,4 @@
+#!/usr/bin/end python
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
@@ -40,8 +41,11 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
+from bakhanapp.models import Tutor
 
 import datetime
+
+import unicodedata
 
 import cgi
 import rauth
@@ -76,7 +80,7 @@ def updateGrade(request):
 
     return HttpResponse()
 
-def getAssesment(request):
+def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
     if request.method == 'POST':
         args = request.POST
         print args
@@ -89,7 +93,7 @@ def getAssesment(request):
         
     return HttpResponse(assesment_data)
 
-def updateAssesment(request):
+def updateAssesment(request): #modifica una evaluacion 
     if request.method =='POST':
         args = request.POST
         id_assesment=args['input_id_assesment']
@@ -128,7 +132,7 @@ def updateAssesment(request):
         
     return HttpResponse()
 
-def getStudentAssesment(request):
+def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion
     if request.method =='POST':
         args = request.POST
         id_assesment=args['assesment']
@@ -138,7 +142,7 @@ def getStudentAssesment(request):
         student_data = json.dumps(struct2)
     return HttpResponse(student_data)
 
-def newAssesment3(request):
+def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y una tupla en grade para cada student, ademas envia mails a todos
     if request.method == 'POST':
         args = request.POST
         fecha1=args['fecha_inicio']
@@ -160,10 +164,19 @@ def newAssesment3(request):
                                )
         new_assesment.save()
         id_new_assesment=new_assesment.pk
+        skill_assesment = getSkillAssesment(id_config)
+        x=0
         for s in students:
+            x=x+1
             aux = s['kaid_student']
             print aux
-            sendMail(aux,nota1,nota2,fecha1,fecha2)
+            if x>10 :
+                print 'esperando'
+                # Wait for 5 seconds
+                time.sleep(5)
+                x=0
+                print 'siguiendo'
+            sendMail(aux,nota1,nota2,fecha1,fecha2,skill_assesment)
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
@@ -177,14 +190,44 @@ def newAssesment3(request):
             update_assesment_configs.save()
     return HttpResponse()
 
-def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2):
+def sendMail(kaid,nota_1,nota_2,fecha_1,fecha_2,skill_assesment): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     student = Student.objects.get(pk=kaid)
+    tutor = Tutor.objects.get(kaid_student_child=kaid)
     subject = 'Nueva Evaluacion'
     text_content = 'Mensaje...nLinea 2nLinea3'
-    html_content = '<div><table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2c3747" style="background-color:#e2e2e2; font-size:12px; font-family:Helvetica,Arial,Geneva,sans-serif"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#e2e2e2"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#2c3747" style="margin-top:20px"><tbody><tr><td><table cellpadding="10" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td align="center" width="175" valign="middle"><a target="_blank"><img src="http://www.khanacademy.org/imaget/ka-email-banner-logo.png?code=bWFzdGVyeV90YXNrX2VtYWlsX29wZW4KX2dhZV9iaW5nb19yYW5kb206U2ZfQWNMb29ROGVOc0taUndkVEgzdEc3dEhBSERLem0xN1JianJpcQ==" width="194" height="20" border="0" alt="Khan Academy"> </a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" width="600" align="center" style="border-width:1px; border-spacing:0px; border-style:solid; border-color:#cccccc; border-collapse:collapse; background-color:#ffffff"><tbody><tr><td style="background-color:#f7f7f7; font-family:Helvetica Neue,Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-bottom:1px solid #ddd"><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px"><tbody><tr><td><table width="500" cellpadding="0" cellspacing="0" border="0" style=""><tbody><tr><td><img src="http://www.khanacademy.org/images/mission-badges/arithmetic-100x100.png?4" width="70" height="70" style="left:-10px"> </td><td><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333"><strong>'+student.name+',</strong><br>Tienes una Nueva Evaluacion en curso</p></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:10px 50px"><tbody><tr><td><a target="_blank"><div style="padding:20px 0" id="Cuadro_Azul"><table width="500" cellpadding="0" cellspacing="0" border="0" style="background-color:#1C758A; border-radius:4px"><tbody><tr><td style="padding:25px 5px; vertical-align:top"><div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:none; color:#fff; font-size:18px; text-decoration:none; line-height:28px"><p><div>Fecha Inicio: '+fecha_1+'</div></p><p><div>Fecha Termino: '+fecha_2+'</div></p><p><div>Nota Minima: '+str(nota_1)+'</div></p><p><div>Nota Maxima: '+str(nota_2)+'</div></p></div></td></tr></tbody></table></div></a><a target="_blank" style="text-decoration:none"><div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:12px; line-height:20px; font-weight:bold; text-transform:uppercase; color:#777; margin-top:20px">Ejercicios a Evaluar:</div><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio 1</p><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio 2</p><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio 3</p><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">Ejercicio ...</p></a><br></td></tr></tbody></table></td></tr><tr><td style="background-color:#f7f7f7; font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-top:1px solid #ddd"><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px"><tbody><tr><td><a href="https://es.khanacademy.org/" target="_blank" style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:1px solid #76a015; background-color:#7fac05; color:white; display:inline-block; padding:0 32px; margin:0; border-radius:5px; font-size:16px; line-height:40px; text-decoration:none; display:block; text-align:center; font-size:20px; line-height:45px; background-color:#1C758A; border-color:#1C758A">Anda a Khan para empezar a Practicar</a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div>'
+    print 'antes del html_content'
+    html_content = '<div><table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#2c3747" style="background-color:#e2e2e2; font-size:12px; font-family:Helvetica,Arial,Geneva,sans-serif"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#e2e2e2"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" border="0" width="600" align="center" bgcolor="#2c3747" style="margin-top:20px"><tbody><tr><td><table cellpadding="10" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td align="center" width="175" valign="middle"><a target="_blank"><img src="http://www.khanacademy.org/imaget/ka-email-banner-logo.png?code=bWFzdGVyeV90YXNrX2VtYWlsX29wZW4KX2dhZV9iaW5nb19yYW5kb206U2ZfQWNMb29ROGVOc0taUndkVEgzdEc3dEhBSERLem0xN1JianJpcQ==" width="194" height="20" border="0" alt="Khan Academy"> </a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table><table cellpadding="0" cellspacing="0" border="0" width="600" align="center"><tbody><tr><td><table cellpadding="0" cellspacing="0" width="600" align="center" style="border-width:1px; border-spacing:0px; border-style:solid; border-color:#cccccc; border-collapse:collapse; background-color:#ffffff"><tbody><tr><td style="background-color:#f7f7f7; font-family:Helvetica Neue,Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-bottom:1px solid #ddd"><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px"><tbody><tr><td><table width="500" cellpadding="0" cellspacing="0" border="0" style=""><tbody><tr><td><img src="http://www.khanacademy.org/images/mission-badges/arithmetic-100x100.png?4" width="70" height="70" style="left:-10px"> </td><td><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333"><strong>'+student.name+',</strong><br>Tienes una Nueva Evaluacion en curso</p></td></tr></tbody></table></td></tr></tbody></table></td></tr><tr><td><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:10px 50px"><tbody><tr><td><a target="_blank"><div style="padding:20px 0" id="Cuadro_Azul"><table width="500" cellpadding="0" cellspacing="0" border="0" style="background-color:#1C758A; border-radius:4px"><tbody><tr><td style="padding:25px 5px; vertical-align:top"><div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:none; color:#fff; font-size:18px; text-decoration:none; line-height:28px"><p><div>Fecha Inicio: '+fecha_1+'</div></p><p><div>Fecha Termino: '+fecha_2+'</div></p><p><div>Nota Minima: '+str(nota_1)+'</div></p><p><div>Nota Maxima: '+str(nota_2)+'</div></p></div></td></tr></tbody></table></div></a><a target="_blank" style="text-decoration:none"><div style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:12px; line-height:20px; font-weight:bold; text-transform:uppercase; color:#777; margin-top:20px">Ejercicios a Evaluar:</div>'+skill_assesment+'</a><br></td></tr></tbody></table></td></tr><tr><td style="background-color:#f7f7f7; font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:15px; color:black; border-top:1px solid #ddd"><table cellpadding="0" cellspacing="0" border="0" width="500" align="center" style="margin:28px 50px; font-size:15px; line-height:24px"><tbody><tr><td><a href="https://es.khanacademy.org/" target="_blank" style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; border:1px solid #76a015; background-color:#7fac05; color:white; display:inline-block; padding:0 32px; margin:0; border-radius:5px; font-size:16px; line-height:40px; text-decoration:none; display:block; text-align:center; font-size:20px; line-height:45px; background-color:#1C758A; border-color:#1C758A">Anda a Khan para empezar a Practicar</a></td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table></div>'
     from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
-    to = student.email
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    print 'antes del to student.mail'
+    to = str(student.email)
+    to2 = str(tutor.email)
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
     return HttpResponse()
+
+def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
+    mnsj_skills = ''
+    g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
+    n = Skill.objects.filter(id_skill_name__in=g)
+    for i in n :
+        skill = str(i)
+        print skill
+        skill = strip_accents(skill)
+        print skill
+        mnsj_skills = mnsj_skills+'<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skill+'</p>'
+    return mnsj_skills
+
+def strip_accents(text): #reemplaza las letras con acento por letras sin acento
+    try:
+        text = unicode(text, 'utf-8')
+    except NameError:
+        pass
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore')
+    text = text.decode("utf-8")
+    return str(text)
+
+def sendWhatsapp(phone):
+    #aqui va la magia
+    return ()
