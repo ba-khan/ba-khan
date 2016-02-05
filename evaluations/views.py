@@ -165,9 +165,17 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         new_assesment.save()
         id_new_assesment=new_assesment.pk
         skill_assesment = getSkillAssesment(id_config)
+        x=0
         for s in students:
+            x=x+1
             aux = s['kaid_student']
             print aux
+            if x>10 :
+                print 'esperando'
+                # Wait for 5 seconds
+                time.sleep(5)
+                x=0
+                print 'siguiendo'
             sendMail(aux,nota1,nota2,fecha1,fecha2,skill_assesment)
             new_grade = Grade(grade=0,
                                teacher_grade=0,
@@ -219,3 +227,7 @@ def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     text = text.encode('ascii', 'ignore')
     text = text.decode("utf-8")
     return str(text)
+
+def sendWhatsapp(phone):
+    #aqui va la magia
+    return ()
