@@ -47,7 +47,12 @@ def begin():
 			conn.commit()
 			set_points.close()
 			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			send_whatsapp(g['name_student'],g['phone_student'],'Le informamos que ha finalizado una evaluacion para usted, por favor revise su correo electronico.')
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			send_whatsapp(g['name_tutor'],g['phone_tutor'],'Le informamos que ha finalizado una evaluacion para su pupilo, por favor revise su correo electronico.')
+
+def send_whatsapp(name_student,phone,msg):
+	os.system('yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569'+phone+' '+name_student+' '+msg)
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
@@ -134,9 +139,11 @@ def grades(id_assesment):
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
 	grades.execute('''SELECT 
 		  bakhanapp_student.name AS name_student, 
-		  bakhanapp_student.email AS email_student, 
+		  bakhanapp_student.email AS email_student,
+		  bakhanapp_student.phone AS phone_student,  
 		  bakhanapp_tutor.name AS name_tutor, 
 		  bakhanapp_tutor.email AS email_tutor, 
+		  bakhanapp_tutor.phone AS phone_tutor,
 		  bakhanapp_grade.id_grade, 
 		  bakhanapp_grade.grade, 
 		  bakhanapp_grade.kaid_student_id,
@@ -152,7 +159,8 @@ def grades(id_assesment):
 		  bakhanapp_grade.id_assesment_id = %d'''%(id_assesment))
 	for g in grades:
 		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id'],
-			'name_student':g['name_student'],'email_student':g['email_student'],'name_tutor':g['name_tutor'],'email_tutor':g['email_tutor']})
+			'name_student':g['name_student'],'email_student':g['email_student'],'phone_student':g['phone_student'],
+			'name_tutor':g['name_tutor'],'email_tutor':g['email_tutor'],'phone_tutor':g['phone_tutor']})
 	#print grades_involved
 	grades.close()
 	return grades_involved
