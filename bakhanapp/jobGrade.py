@@ -25,7 +25,8 @@ def begin():
 			'name':evaluation['name']})
 	assesment.close()
 	for ev in assesment_expired:
-		per = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+		print 'evaluacion: %s, id_evaluacion: %d'%( ev['name'],ev['id_assesment'])
+		per = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)#consulta el porcentaje de aprovacion de la configuracion aplicada en la evaluacion.
 		per.execute('''SELECT 
 				  bakhanapp_assesment_config.approval_percentage
 				FROM 
@@ -36,17 +37,17 @@ def begin():
 			approval_percentage = p['approval_percentage']
 		per.close()
 		skills_selected,spanish_skills = skills(ev['id_assesment_config'])
-		print spanish_skills
-		grades_involved = grades(evaluation['id_assesment'])
+		grades_involved = grades(ev['id_assesment'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
 			set_points = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+			print 'id_nota: %d, nota: %2.f'%(g['id_grade'],grade)
 			set_points.execute('update public.bakhanapp_grade set performance_points =%d,grade =%.2f where id_grade = %d '%(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			#send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			#send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
@@ -62,7 +63,7 @@ def getGrade(percentage,points,min_grade,max_grade):
         y1 = min_grade
         y2 = 4.0
         grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
-    print grade
+    #print grade
     return grade
 
 def getStudentPoints(kaid_student,configured_skills,beginDate,endDate):
