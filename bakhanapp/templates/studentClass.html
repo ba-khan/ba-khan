@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body2 %}		
 	
-	<div id="popup" style="display:none">
+	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
     	<div style="align:left;">
 	    	<form action="" method="post" id='formGrade'>{% csrf_token %}
@@ -28,7 +28,14 @@
 			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" value="Modificar Nota"></div>
     	</div>
     </div>
-	
+
+    <div id="popup_resumen" class="popup" style="display:none">
+    	<div id="close">X</div>
+    	<div style="align:left;">
+	    	aqui va el resumen :D
+    	</div>
+    </div>
+
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluacion</button></div>
 	<div id="contenido_a_mostrar" style="display:none;">
 			<div id="inputs" align="left">
@@ -142,6 +149,7 @@
 	  		$("#hover").click(function(){
 	  	        $(this).fadeOut();
 	  	    	$("#popup").fadeOut();
+	  	    	$("#popup_resumen").fadeOut();
 	  	    });
 	  	  	$("#close").click(function(){
 	  	        $("#hover").fadeOut();
@@ -344,6 +352,9 @@
 	    	table.select('th.'+class_id)
 	    		.append('div')
 	    		.attr("id",number_class_id).html('<button type="button" onClick="editarAssesment('+number_class_id+')">editar</button>');
+	    	table.select('th.'+class_id)
+	    		.append('div')
+	    		.attr("id",number_class_id).html('<button type="button" onClick="resumenAssesment()">resumen</button>');
 	    	table.select('th.'+class_id)
 	    		.append('button')
 	    		.attr("id",class_id)
@@ -1283,6 +1294,11 @@
 			alert("no hay gente a evaluar");
 		}
 
+	}
+
+	function resumenAssesment(){
+		$("#hover").fadeIn().css('display', '');
+	    $("#popup_resumen").fadeIn().css('display', '');
 	}
 	    </script>
 

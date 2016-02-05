@@ -168,7 +168,7 @@ td.videos_time{
   box-shadow:0 0 10px 0 #9DB63B;
 }
 
-#popup{
+.popup{
   position:absolute;
   width:600px;
   height:180px;
