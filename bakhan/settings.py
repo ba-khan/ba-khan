@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django_jenkins',
     'AssesmentConfigs',
     'Contacts',
+    'ManagementTeam',
 )
 
 MIDDLEWARE_CLASSES = (

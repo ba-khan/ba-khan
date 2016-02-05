@@ -18,7 +18,8 @@ class Institution(models.Model):
 class Administrator(models.Model):
     kaid_administrator = models.CharField(max_length=40,primary_key=True)
     name = models.CharField(max_length=50)
-    email = models.EmailField()
+    email = models.EmailField(max_length=50,null=True)
+    phone = models.IntegerField(null=True)
     id_institution = models.ForeignKey(Institution)
     
     def __unicode__(self): # __unicode__ on Python 2
@@ -30,7 +31,7 @@ class Administrator(models.Model):
 class Student(models.Model):
     kaid_student = models.CharField(max_length=40,primary_key=True)
     name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
+    email = models.EmailField(max_length=50,null=True)
     phone = models.IntegerField(null=True)
     points = models.IntegerField()
     
