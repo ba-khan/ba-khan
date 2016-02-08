@@ -46,7 +46,7 @@ from bakhanapp.models import Tutor
 import datetime
 
 import unicodedata
-
+import os
 import cgi
 import rauth
 import SimpleHTTPServer
@@ -177,6 +177,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
                 x=0
                 print 'siguiendo'
             sendMail(aux,nota1,nota2,fecha1,fecha2,skill_assesment)
+            #sendWhatsapp(aux,nota1,nota2,fecha1,fecha2,id_config)
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
@@ -228,6 +229,22 @@ def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     text = text.decode("utf-8")
     return str(text)
 
-def sendWhatsapp(phone):
-    #aqui va la magia
+def sendWhatsapp(kaid,nota_1,nota_2,fecha_1,fecha_2,id_asses_config):
+    student = Student.objects.get(pk=kaid)
+    mensaje = 'Hola '+student.name+' tienes una evaluacion que comienza el '+fecha_1+' y termina el '+fecha_2+' que incluira las habilidades: \n'
+    g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
+    n = Skill.objects.filter(id_skill_name__in=g)
+    for i in n :
+        skill = str(i)
+        skill = strip_accents(skill)
+        mensaje = mensaje+'-'+skill+'\n'
+    phone = str(student.phone)
+    whatsapp(mensaje,phone)
     return ()
+
+
+def whatsapp(msg,num):
+    mensaje = msg
+    numero = num
+    os.system("yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%s '%s'"%(numero,mensaje))
+    return HttpResponse()
