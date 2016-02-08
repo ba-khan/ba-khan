@@ -57,12 +57,16 @@ def begin():
 				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
 				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
 				domainLevel.get(g['kaid_student_id'],None))
-			#send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+			"""send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))"""
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
 				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
 				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
 				domainLevel.get(g['kaid_student_id'],None))
-			#send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+			"""send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))"""
 def getDomainLevel(assesment,beginDate,endDate):
 	domain = {}
 	domainLevel = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -194,8 +198,11 @@ def getTimeVideo(assesment,beginDate,endDate):
 
 
 
-def send_whatsapp(name_student,phone,msg,point,grade,skills):
-	os.system("""yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%d '%s,%s %d con una puntuacion de %d, las habilidades evaluadas fueron:\n %s'"""%(phone,name_student,msg,point,grade,skills))
+def send_whatsapp(name_student,phone,msg,point,grade,skills,time_video,time_excercice,total_corrects,total_incorrects,domain):
+	os.system("""yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%d '%s,%s %d con una puntuacion de %d, las habilidades evaluadas fueron:\n %s \n
+		tiempo en videos: %d \n tiempo en Ejercicios: %d \n Total Correctos: %d \n Total Incorrectos: %d \n 
+		Practicado: %d, Nivel 1: %d, Nivel 2: %d, Dominados: %d, En Dificultad: %d '"""%(phone,name_student,msg,point,grade,skills,time_video,time_excercice,
+			total_corrects,total_incorrects,domain['practiced'],domain['mastery1'],domain['mastery2'],domain['mastery3'],domain['struggling']))
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
