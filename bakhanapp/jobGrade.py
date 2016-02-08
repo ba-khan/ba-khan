@@ -52,7 +52,7 @@ def begin():
 			send_whatsapp(g['name_tutor'],g['phone_tutor'],'Le informamos que ha finalizado una evaluacion para su pupilo, por favor revise su correo electronico.')
 
 def send_whatsapp(name_student,phone,msg):
-	os.system('yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569'+str(phone)+' '+name_student+' '+msg)
+	os.system('yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%d %s %s'%(phone,name_student,msg))
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
