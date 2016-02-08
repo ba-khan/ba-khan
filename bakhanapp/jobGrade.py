@@ -42,6 +42,7 @@ def begin():
 		excercice_times = getTimeExcercice(ev['id_assesment'],ev['start_date'],ev['end_date'])
 		total_corrects = getTotalCorrect(ev['id_assesment'],ev['start_date'],ev['end_date'])
 		total_incorrects = getTotalIncorrect(ev['id_assesment'],ev['start_date'],ev['end_date'])
+		domainLevel = getDomainLevel(ev['id_assesment'],ev['start_date'],ev['end_date'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
@@ -54,12 +55,45 @@ def begin():
 			#envia correos y whatsapp
 			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],
 				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
-				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None))
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))
 			#send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
 				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
-				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None))
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))
 			#send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+def getDomainLevel(assesment,beginDate,endDate):
+	domain = {}
+	domainLevel = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	domainLevel.execute("""SELECT 
+		  bakhanapp_grade.kaid_student_id, 
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery1' THEN 1 ELSE null END) as mastery1,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery2' THEN 1 ELSE null END) as mastery2,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery3' THEN 1 ELSE null END) as mastery3,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='practiced' THEN 1 ELSE null END) as practiced,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='struggling' THEN 1 ELSE null END) as struggling
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_assesment, 
+		  public.bakhanapp_assesment_skill, 
+		  public.bakhanapp_skill_progress, 
+		  public.bakhanapp_student_skill
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_student_skill.kaid_student_id AND
+		  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+		  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+		  bakhanapp_assesment_skill.id_skill_name_id = bakhanapp_student_skill.id_skill_name_id AND
+		  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_progress.date >= '%s' AND
+		  bakhanapp_skill_progress.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id"""%(assesment,beginDate,endDate))
+	for level in domainLevel:
+		domain[level['kaid_student_id']]={'struggling':level['struggling'],'practiced':level['practiced'],'mastery1':level['mastery1'],'mastery2':level['mastery2'],'mastery3':level['mastery3']}
+	domainLevel.close()
+	return domain
 
 def getTotalIncorrect(assesment,beginDate,endDate):
 	incorrects = {}
@@ -274,7 +308,7 @@ def grades(id_assesment):
 	grades.close()
 	return grades_involved
 
-def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_excercice,total_corrects,total_incorrects):
+def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_excercice,total_corrects,total_incorrects,domain):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -409,7 +443,21 @@ def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_
 																								<p>
 																									<div>Ejercicios incorrectos: """+str(total_incorrects)+"""</div>
 																								</p>
-																								
+																								<p>
+																									<div>Nivel de dominio :Practicadas: """+str(domain['practiced'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Nivel 1: """+str(domain['mastery1'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Nivel 2: """+str(domain['mastery2'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Practicadas: """+str(domain['mastery3'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :En dificultad: """+str(domain['struggling'])+"""</div>
+																								</p>
 																						</div>
 																					</td>
 																				</tr>
