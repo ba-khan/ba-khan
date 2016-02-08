@@ -57,16 +57,16 @@ def begin():
 				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
 				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
 				domainLevel.get(g['kaid_student_id'],None))
-			"""send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+			send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
 				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
-				domainLevel.get(g['kaid_student_id'],None))"""
+				domainLevel.get(g['kaid_student_id'],None))
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
 				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
 				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
 				domainLevel.get(g['kaid_student_id'],None))
-			"""send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+			send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
 				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
-				domainLevel.get(g['kaid_student_id'],None))"""
+				domainLevel.get(g['kaid_student_id'],None))
 def getDomainLevel(assesment,beginDate,endDate):
 	domain = {}
 	domainLevel = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
