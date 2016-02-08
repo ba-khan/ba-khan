@@ -82,3 +82,29 @@ FROM
   public.bakhanapp_skill
 WHERE 
   bakhanapp_assesment_skill.id_skill_name_id = bakhanapp_skill.id_skill_name;
+
+##########################################################################
+SELECT 
+  bakhanapp_grade.kaid_student_id, 
+  sum(bakhanapp_video_playing.seconds_watched) 
+FROM 
+  public.bakhanapp_grade, 
+  public.bakhanapp_video_playing
+WHERE 
+  bakhanapp_grade.kaid_student_id = bakhanapp_video_playing.kaid_student_id AND
+  bakhanapp_grade.id_assesment_id = 181
+group by bakhanapp_grade.kaid_student_id;
+
+##############################################################################
+SELECT 
+  bakhanapp_grade.kaid_student_id, 
+  sum(bakhanapp_video_playing.seconds_watched) 
+FROM 
+  public.bakhanapp_grade, 
+  public.bakhanapp_video_playing
+WHERE 
+  bakhanapp_grade.kaid_student_id = bakhanapp_video_playing.kaid_student_id AND
+  bakhanapp_grade.id_assesment_id = 181 AND 
+  bakhanapp_video_playing.date >= '2016-01-01' 
+GROUP BY 
+  bakhanapp_grade.kaid_student_id;

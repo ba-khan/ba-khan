@@ -38,18 +38,46 @@ def begin():
 		per.close()
 		skills_selected,spanish_skills = skills(ev['id_assesment_config'])
 		grades_involved = grades(ev['id_assesment'])
+		video_times = getTimeVideo(ev['id_assesment'],ev['start_date'],ev['end_date'])#se obtienen todos los tiempos en video de los alumnos.
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
 			set_points = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 			print 'id_nota: %d, nota: %2.f'%(g['id_grade'],grade)
-			set_points.execute("update public.bakhanapp_grade set performance_points =%d,grade =%.2f,evaluated = 'TRUE' where id_grade = %d "%(point,grade,g['id_grade']))
+			set_points.execute("update public.bakhanapp_grade set performance_points =%d,grade =%.2f,evaluated = 'TRUE' where id_grade = %d "%
+				(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
-			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],
+				spanish_skills,video_times.get(g['kaid_student_id'],None))
+			#send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
+				spanish_skills,video_times.get(g['kaid_student_id'],None))
+			#send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+
+def getTimeVideo(assesment,beginDate,endDate):
+	times = {}
+	video_time = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	video_time.execute("""SELECT 
+		  bakhanapp_grade.kaid_student_id, 
+		  sum(bakhanapp_video_playing.seconds_watched) as time
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_video_playing
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_video_playing.kaid_student_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_video_playing.date >= '%s' AND
+		  bakhanapp_video_playing.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id;
+"""%(assesment,beginDate,endDate))
+	for time in video_time:
+		times[time['kaid_student_id']]=time['time']
+	video_time.close()
+	return times
+
+
 
 def send_whatsapp(name_student,phone,msg,point,grade,skills):
 	os.system("""yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%d '%s,%s %d con una puntuacion de %d, las habilidades evaluadas fueron:\n %s'"""%(phone,name_student,msg,point,grade,skills))
@@ -165,7 +193,7 @@ def grades(id_assesment):
 	grades.close()
 	return grades_involved
 
-def send_mail(name,email,points,grade,typeMsg,evaluation,skills):
+def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -287,6 +315,9 @@ def send_mail(name,email,points,grade,typeMsg,evaluation,skills):
 																								</p>
 																								<p>
 																									<div>Nota Obtenida: """+str(grade)+"""</div>
+																								</p>
+																								<p>
+																									<div>Tiempo en videos: """+str(time_video)+"""</div>
 																								</p>
 																								
 																						</div>
