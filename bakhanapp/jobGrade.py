@@ -47,12 +47,12 @@ def begin():
 			conn.commit()
 			set_points.close()
 			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			send_whatsapp(g['name_student'],g['phone_student'],'Le informamos que ha finalizado una evaluacion para usted, por favor revise su correo electronico.')
+			send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			send_whatsapp(g['name_tutor'],g['phone_tutor'],'Le informamos que ha finalizado una evaluacion para su pupilo, por favor revise su correo electronico.')
+			send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
 
-def send_whatsapp(name_student,phone,msg):
-	os.system('yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569'+str(phone)+' '+name_student+' '+msg)
+def send_whatsapp(name_student,phone,msg,point,grade,skills):
+	os.system("""yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%d '%s,%s %d con una puntuacion de %d, las habilidades evaluadas fueron:\n %s'"""%(phone,name_student,msg,point,grade,skills))
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
@@ -128,7 +128,7 @@ def skills(id_assesment_config):
 		  bakhanapp_assesment_skill.id_assesment_config_id = %d'''%(id_assesment_config))
 	for s in skills:
 		skills_selected.append({'id_assesment_config_id':s['id_assesment_config_id'],'id_skill_name':s['id_skill_name_id'],'name':s['name']})
-		spanish_skills = spanish_skills +'<li>'+ s['name'] + '</li>'
+		spanish_skills = spanish_skills +'\n'+ s['name'] 
 	skills.close()
 	return skills_selected,spanish_skills
 
