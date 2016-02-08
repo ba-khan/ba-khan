@@ -40,6 +40,8 @@ def begin():
 		grades_involved = grades(ev['id_assesment'])
 		video_times = getTimeVideo(ev['id_assesment'],ev['start_date'],ev['end_date'])#se obtienen todos los tiempos en video de los alumnos.
 		excercice_times = getTimeExcercice(ev['id_assesment'],ev['start_date'],ev['end_date'])
+		total_corrects = getTotalCorrect(ev['id_assesment'],ev['start_date'],ev['end_date'])
+		total_incorrects = getTotalIncorrect(ev['id_assesment'],ev['start_date'],ev['end_date'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
@@ -51,11 +53,66 @@ def begin():
 			set_points.close()
 			#envia correos y whatsapp
 			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],
-				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None))
+				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None))
 			#send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
-				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None))
+				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None))
 			#send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+
+def getTotalIncorrect(assesment,beginDate,endDate):
+	incorrects = {}
+	total_incorrects = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	total_incorrects.execute("""SELECT  
+		  bakhanapp_grade.kaid_student_id, 
+		   count(CASE WHEN bakhanapp_skill_attempt.correct='f' THEN 1 ELSE null END) as incorrect
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_skill_attempt, 
+		  public.bakhanapp_assesment_skill, 
+		  public.bakhanapp_assesment
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+		  bakhanapp_skill_attempt.id_skill_name_id = bakhanapp_assesment_skill.id_skill_name_id AND
+		  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+		  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_attempt.date >= '%s' AND
+		  bakhanapp_skill_attempt.date <= '%s' AND
+		  bakhanapp_skill_attempt.skipped = 'f'
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id"""%(assesment,beginDate,endDate))
+	for total in total_incorrects:
+		incorrects[total['kaid_student_id']]=total['incorrect']
+	total_incorrects.close()
+	return incorrects
+
+def getTotalCorrect(assesment,beginDate,endDate):
+	corrects = {}
+	total_corrects = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	total_corrects.execute("""SELECT  
+		  bakhanapp_grade.kaid_student_id, 
+		  count(CASE WHEN bakhanapp_skill_attempt.correct THEN 1 ELSE null END) as correct
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_skill_attempt, 
+		  public.bakhanapp_assesment_skill, 
+		  public.bakhanapp_assesment
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+		  bakhanapp_skill_attempt.id_skill_name_id = bakhanapp_assesment_skill.id_skill_name_id AND
+		  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+		  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_attempt.date >= '%s' AND
+		  bakhanapp_skill_attempt.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id"""%(assesment,beginDate,endDate))
+	for total in total_corrects:
+		corrects[total['kaid_student_id']]=total['correct']
+	total_corrects.close()
+	return corrects
 
 def getTimeExcercice(assesment,beginDate,endDate):
 	times = {}
@@ -72,7 +129,7 @@ def getTimeExcercice(assesment,beginDate,endDate):
 		  bakhanapp_skill_attempt.date >= '%s' AND
 		  bakhanapp_skill_attempt.date <= '%s' 
 		GROUP BY 
-		  bakhanapp_grade.kaid_student_id;
+		  bakhanapp_grade.kaid_student_id
 """%(assesment,beginDate,endDate))
 	for time in excercice_time:
 		times[time['kaid_student_id']]=time['time']
@@ -217,7 +274,7 @@ def grades(id_assesment):
 	grades.close()
 	return grades_involved
 
-def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_excercice):
+def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_excercice,total_corrects,total_incorrects):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -345,6 +402,12 @@ def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_
 																								</p>
 																								<p>
 																									<div>Tiempo en Ejercicios: """+str(time_excercice)+"""</div>
+																								</p>
+																								<p>
+																									<div>Ejercicios correctos: """+str(total_corrects)+"""</div>
+																								</p>
+																								<p>
+																									<div>Ejercicios incorrectos: """+str(total_incorrects)+"""</div>
 																								</p>
 																								
 																						</div>
