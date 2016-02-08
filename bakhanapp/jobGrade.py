@@ -39,6 +39,7 @@ def begin():
 		skills_selected,spanish_skills = skills(ev['id_assesment_config'])
 		grades_involved = grades(ev['id_assesment'])
 		video_times = getTimeVideo(ev['id_assesment'],ev['start_date'],ev['end_date'])#se obtienen todos los tiempos en video de los alumnos.
+		excercice_times = getTimeExcercice(ev['id_assesment'],ev['start_date'],ev['end_date'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
@@ -48,12 +49,35 @@ def begin():
 				(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
+			#envia correos y whatsapp
 			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],
-				spanish_skills,video_times.get(g['kaid_student_id'],None))
+				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None))
 			#send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
 			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
-				spanish_skills,video_times.get(g['kaid_student_id'],None))
+				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None))
 			#send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills)
+
+def getTimeExcercice(assesment,beginDate,endDate):
+	times = {}
+	excercice_time = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	excercice_time.execute("""SELECT 
+		  bakhanapp_grade.kaid_student_id, 
+		  sum(bakhanapp_skill_attempt.time_taken) as time
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_skill_attempt
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_attempt.date >= '%s' AND
+		  bakhanapp_skill_attempt.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id;
+"""%(assesment,beginDate,endDate))
+	for time in excercice_time:
+		times[time['kaid_student_id']]=time['time']
+	excercice_time.close()
+	return times
 
 def getTimeVideo(assesment,beginDate,endDate):
 	times = {}
@@ -193,7 +217,7 @@ def grades(id_assesment):
 	grades.close()
 	return grades_involved
 
-def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video):
+def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_excercice):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -318,6 +342,9 @@ def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video):
 																								</p>
 																								<p>
 																									<div>Tiempo en videos: """+str(time_video)+"""</div>
+																								</p>
+																								<p>
+																									<div>Tiempo en Ejercicios: """+str(time_excercice)+"""</div>
 																								</p>
 																								
 																						</div>
