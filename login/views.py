@@ -205,7 +205,7 @@ def authenticate(request):
         print("Client(%d) said: %s" % (client['id'], message))
         if (message=="listoco"):
             server.send_message_to_all("url:"+authorize_url)
-            server.shutdown()
+            server.server_close()
     
     PORT=9001
     SERVERHOST="146.83.216.177"
@@ -223,12 +223,12 @@ def authenticate(request):
     session = service.get_auth_session(request_token, secret_request_token,
         params={'oauth_verifier': VERIFIER})
     
-    server.shutdown()
-    
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
+        server.server_close()
         return HttpResponseRedirect("/inicio")
     else:
+        server.server_close()
         return HttpResponseRedirect("/access/rejected/ %}")
     
 
