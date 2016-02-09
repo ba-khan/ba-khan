@@ -120,7 +120,7 @@ def create_callback_server():
         def log_request(self, code='-', size='-'):
             pass
 
-    server = SocketServer.TCPServer((CALLBACK_BASE, 53707), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
+    server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
 
