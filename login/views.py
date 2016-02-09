@@ -227,12 +227,7 @@ def authenticate(request):
         server.set_fn_message_received(message_received)
         server.run_forever()
     except:
-        server.shutdown()
-        server = WebsocketServer(PORT, SERVERHOST)
-        server.set_fn_new_client(new_client)
-        server.set_fn_client_left(client_left)
-        server.set_fn_message_received(message_received)
-        server.run_forever()
+        print "asdkajsndkajsdnkasjdnkasdj"
     
     callback_server.handle_request()
     callback_server.server_close()
