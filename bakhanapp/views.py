@@ -280,8 +280,11 @@ def getClassStudents(request, id_class):
         assesment_json["config_name"]= assesment.id_assesment_conf.name
         assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
         assesment_json["top_score"]= assesment.id_assesment_conf.top_score
-        assesment_json["max_grade"]=assesment.max_grade
-        assesment_json["min_grade"]=assesment.min_grade
+        assesment_json["max_grade"]= assesment.max_grade
+        assesment_json["min_grade"]= assesment.min_grade
+        assesment_json["id_config"]= assesment.id_assesment_conf.id_assesment_config
+        assesment_json["start_date"]= str(assesment.start_date)
+        assesment_json["end_date"]= str(assesment.end_date)
         assesment_json["assesment_student"]=[]
         for student in students:
             student_json={}
@@ -347,6 +350,7 @@ def getClassStudents(request, id_class):
         for assesment in assesment_array:
             student_assesment={}
             id_assesment = "assesment"+(str)(assesment["id"])
+            id_assesment_num = assesment["id"]
             random_grade=round(random.uniform(2,7),1)
             random_effort=round(random.uniform(1,100))
             student_assesment["grade"]=random_grade

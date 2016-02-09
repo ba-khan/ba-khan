@@ -248,3 +248,13 @@ def whatsapp(msg,num):
     numero = num
     os.system("yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%s '%s'"%(numero,mensaje))
     return HttpResponse()
+
+def gradeData(request):
+    if request.method == 'POST':
+        args = request.POST
+        id_assesment=args['assesment']
+        get_grade = Grade.objects.filter(id_assesment=id_assesment)
+        data = serializers.serialize('json', get_grade)
+        struct = json.loads(data)
+        grade_data = json.dumps(struct)      
+    return HttpResponse(grade_data)
