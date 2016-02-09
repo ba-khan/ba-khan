@@ -227,8 +227,10 @@ def authenticate(request):
     
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
+        server.shutdown()
         return HttpResponseRedirect("/inicio")
     else:
+        server.shutdown()
         return HttpResponseRedirect("/access/rejected/ %}")
     
 
