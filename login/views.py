@@ -63,11 +63,7 @@ import random
 
 import time
 
-
 from websocket_server import WebsocketServer
-
-
-
 
 def login(request):
     return render(request, 'login.html')
