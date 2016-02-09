@@ -63,7 +63,11 @@ import random
 
 import time
 
+
 from websocket_server import WebsocketServer
+
+
+
 
 def login(request):
     return render(request, 'login.html')
@@ -114,11 +118,13 @@ def create_callback_server():
                               </body>                           
                             </html>""")
             #webbrowser.open('http://www.google.cl')
+            print "buscando callback"
+            print self
 
         def log_request(self, code='-', size='-'):
             pass
 
-    server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
+    server = SocketServer.TCPServer((CALLBACK_BASE, 53707), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
 
@@ -203,7 +209,7 @@ def authenticate(request):
         print("Client(%d) said: %s" % (client['id'], message))
         if (message=="listoco"):
             server.send_message_to_all("url:"+authorize_url)
-            #server.server_close()
+            server.shutdown()
     
     PORT=9001
     SERVERHOST="146.83.216.177"
@@ -221,12 +227,12 @@ def authenticate(request):
     session = service.get_auth_session(request_token, secret_request_token,
         params={'oauth_verifier': VERIFIER})
     
+    server.shutdown()
+    
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
-        server.shutdown()
         return HttpResponseRedirect("/inicio")
     else:
-        server.shutdown()
         return HttpResponseRedirect("/access/rejected/ %}")
     
 
@@ -272,4 +278,3 @@ def run_tests():
     #while(True):
     #    get_api_resource(session)
     return session
-

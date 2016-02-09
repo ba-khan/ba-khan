@@ -62,7 +62,6 @@
   cursor:pointer;
   box-shadow:0 0 10px 0 #9DB63B;
 }
-
 #popup{
   position:absolute;
   width:600px;
@@ -78,7 +77,6 @@
   box-shadow:0 0 10px 0 #9DB63B;
     z-index: 11;
 }
-
 #hover{
   position:fixed;
   background:#000;
@@ -121,7 +119,6 @@
     var ws;
     var url;
     var connected=false;
-    var myWindow;
     function init() {
       // Connect to Web Socket
       ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor!
@@ -180,17 +177,12 @@
     function output(str) {
       console.log(str);
     }
-
-
     
 function openPopup(){
-
 	init();
 	
 }
-
-
-
+var myWindow;
 $(document).ready(function(){
 	  
 	  //chiusura al click sulla parte scura
@@ -211,5 +203,4 @@ $(document).ready(function(){
 </script>
 
 </html>
-
 
