@@ -61,6 +61,10 @@ from django.db import connection
 
 import random
 
+import time
+
+from websocket_server import WebsocketServer
+
 def login(request):
     return render(request, 'login.html')
 
@@ -73,7 +77,7 @@ def rejected(request):
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-CALLBACK_BASE = '127.0.0.1'
+CALLBACK_BASE = '146.83.216.177' #IP Servidor
 SERVER_URL = 'http://www.khanacademy.org'
 SERVER_URL2 = 'http://es.khanacademy.org'
     
@@ -97,44 +101,26 @@ def create_callback_server():
             self.end_headers()
             self.wfile.write("""<html lang="es">
                             <head>
-                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                                <meta name="description" content="">
-                                <meta name="keywords" content="">
-                                <meta name="author" content="">
-                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/shared-package-426ede.css'>
-                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/nav-package-642efd.css'>
-                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/react-package-9b6f9e.css'>
-                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/odometer-package-be2a23.css'><link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/dashboard-package-756fe7.css'>
-                                <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/mobile-package-0edccb.css'>
-                                <link href="/static/estilo.css" rel="stylesheet">                               
                                 <title>BA-Khan</title>                                                               
                                 <script>
-                                    function closeMe(){
-                                        var win = window.open("about:blank","_self");
-                                        win.close();
+                                    myWindow = window.open("", "_self", "myWindow", "width=200, height=100")
+                                    function closeWin() {
+                                        myWindow.close();
                                     }
                                 </script>                          
                             </head>
                               <body>                             
-                                <div class="container">
-                                     <div class="login-container">
-                                        <h2 class="regular-header login-button-header">
-                                            Ya puede cerrar esta pestana.
-                                        </h2>
-                                        <a role="button" aria-disabled="false" href="http://127.0.0.1:8000/inicio"  class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Listo</a>
-                                       </div>
-                                   </div>                           
+                                <script>closeWin()</script>                       
                               </body>                           
                             </html>""")
             #webbrowser.open('http://www.google.cl')
-            
-
+            print "buscando callback"
+            print self
 
         def log_request(self, code='-', size='-'):
             pass
 
-    server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler)
+    server = SocketServer.TCPServer((CALLBACK_BASE, 53707), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
 
@@ -197,7 +183,38 @@ def authenticate(request):
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
     #return HttpResponseRedirect(authorize_url)
-    webbrowser.open(authorize_url, new=0)
+    print authorize_url
+    #webbrowser.open(authorize_url, new=1)
+    
+    #server.send_message_to_all("WATZAAAAAAAAAA")
+    # Called for every client connecting (after handshake)
+    def new_client(client, server):
+        print("New client connected and was given id %d" % client['id'])
+        server.send_message_to_all("Hey all, a new client has joined us")
+    
+    
+    # Called for every client disconnecting
+    def client_left(client, server):
+        print("Client(%d) disconnected" % client['id'])
+    
+    
+    # Called when a client sends a message
+    def message_received(client, server, message):
+        if len(message) > 200:
+            message = message[:200]+'..'
+        print("Client(%d) said: %s" % (client['id'], message))
+        if (message=="listoco"):
+            server.send_message_to_all("url:"+authorize_url)
+            server.shutdown()
+    
+    PORT=9001
+    SERVERHOST="146.83.216.177"
+    server = WebsocketServer(PORT, SERVERHOST)
+    #server.shutdown()
+    server.set_fn_new_client(new_client)
+    server.set_fn_client_left(client_left)
+    server.set_fn_message_received(message_received)
+    server.run_forever()
     
     callback_server.handle_request()
     callback_server.server_close()
@@ -205,13 +222,16 @@ def authenticate(request):
     # 3. Get an access token.
     session = service.get_auth_session(request_token, secret_request_token,
         params={'oauth_verifier': VERIFIER})
-
+    
+    server.shutdown()
+    
     # Repeatedly prompt user for a resource and make authenticated API calls.
     if get_api_resource(session,request):
         return HttpResponseRedirect("/inicio")
     else:
         return HttpResponseRedirect("/access/rejected/ %}")
     
+
 def run_tests():
     global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
     
