@@ -81,7 +81,7 @@ def rejected(request):
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-CALLBACK_BASE = '146.83.216.177' #IP Servidor
+CALLBACK_BASE = '127.0.0.1' #IP Servidor
 SERVER_URL = 'http://www.khanacademy.org'
 SERVER_URL2 = 'http://es.khanacademy.org'
     
@@ -118,18 +118,11 @@ def create_callback_server():
                               </body>                           
                             </html>""")
             #webbrowser.open('http://www.google.cl')
-            print "buscando callback"
-            print self
 
         def log_request(self, code='-', size='-'):
             pass
-    PORT = 53707
-    try: 
-        server = SocketServer.TCPServer((CALLBACK_BASE, PORT), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
-    except:
-        PORT = PORT+1
-        server = SocketServer.TCPServer((CALLBACK_BASE, PORT), CallbackHandler)
-    
+
+    server = SocketServer.TCPServer((CALLBACK_BASE, 53707), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
 
@@ -217,17 +210,13 @@ def authenticate(request):
             server.shutdown()
     
     PORT=9001
-    SERVERHOST="146.83.216.177"
-    
-    try:
-        server = WebsocketServer(PORT, SERVERHOST)
-        #server.shutdown()
-        server.set_fn_new_client(new_client)
-        server.set_fn_client_left(client_left)
-        server.set_fn_message_received(message_received)
-        server.run_forever()
-    except:
-        print "asdkajsndkajsdnkasjdnkasdj"
+    SERVERHOST="127.0.0.1"
+    server = WebsocketServer(PORT, SERVERHOST)
+    #server.shutdown()
+    server.set_fn_new_client(new_client)
+    server.set_fn_client_left(client_left)
+    server.set_fn_message_received(message_received)
+    server.run_forever()
     
     callback_server.handle_request()
     callback_server.server_close()
