@@ -114,8 +114,6 @@ def create_callback_server():
                               </body>                           
                             </html>""")
             #webbrowser.open('http://www.google.cl')
-            print "buscando callback"
-            print self
 
         def log_request(self, code='-', size='-'):
             pass

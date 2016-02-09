@@ -121,6 +121,7 @@
     var ws;
     var url;
     var connected=false;
+    var myWindow;
     function init() {
       // Connect to Web Socket
       ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor!
@@ -141,7 +142,7 @@
         	console.log(url);
         	//window.open(url,"_blank")
         	myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
-        	ws.close();
+        	onCloseClick();
         }
       };
       
@@ -188,7 +189,7 @@ function openPopup(){
 	
 }
 
-var myWindow;
+
 
 $(document).ready(function(){
 	  
