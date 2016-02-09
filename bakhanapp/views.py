@@ -286,8 +286,10 @@ def getClassStudents(request, id_class):
         assesment_json["start_date"]= str(assesment.start_date)
         assesment_json["end_date"]= str(assesment.end_date)
         assesment_json["assesment_student"]=[]
+        i=0
         for student in students:
             student_json={}
+            student_json["id"]=i
             student_json["name"]=student.name
             completed_percentage=round(random.uniform(0,1),2)
             total_rec=round(random.uniform(0,1),2)
@@ -298,7 +300,11 @@ def getClassStudents(request, id_class):
             student_json["video_time"]=student.t_video
             student.correct= getExerciseCorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
             student.incorrect= getExerciseIncorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
-            student_json["corrects"]=[(student.correct),(student.incorrect)]
+            student_exercise={}
+            student_exercise["correct"]=student.correct
+            student_exercise["incorrect"]=student.incorrect
+            #student_json["corrects"]=[(student.correct),(student.incorrect)]
+            student_json["exercises"]=student_exercise
             skills_level={}
             #student.struggling = getLastSkillsLevel(student.kaid_student, 'struggling')
             #skills_level["struggling"]=(student.struggling)
@@ -317,13 +323,14 @@ def getClassStudents(request, id_class):
             skills_level["mastery3"]=round(random.uniform(0,20),0)
             student_json["skills_level"]=skills_level
             assesment_json["assesment_student"].append(student_json)
+            i+=1
         assesment_array.append(assesment_json)
         
     json_array=[]
     i=0
     for student in students:
-        i+=1
         student_json={}
+        student_json["id"]=i
         student_json["name"]=student.name
         student.t_exercise= getTotalExerciseTime(student.kaid_student)
         completed_percentage=round(random.uniform(0,1),2)
@@ -334,7 +341,11 @@ def getClassStudents(request, id_class):
         student_json["video_time"]=student.t_video
         student.correct= getTotalExerciseCorrect(student.kaid_student)
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
-        student_json["corrects"]=[(student.correct),(student.incorrect)]
+        student_exercise={}
+        student_exercise["correct"]=student.correct
+        student_exercise["incorrect"]=student.incorrect
+        #student_json["corrects"]=[(student.correct),(student.incorrect)]
+        student_json["exercises"]=student_exercise
         skills_level={}
         student.struggling = getLastSkillsLevel(student.kaid_student, 'struggling')
         skills_level["struggling"]=(student.struggling)
@@ -357,6 +368,7 @@ def getClassStudents(request, id_class):
             student_assesment["effort"]=random_effort
             student_assesment["grade_id"]=37
             student_json[id_assesment]= student_assesment
+        i+=1
         json_array.append(student_json)
     
     
@@ -481,4 +493,3 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
-
