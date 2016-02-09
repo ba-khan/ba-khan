@@ -210,13 +210,27 @@ td.videos_time{
     margin-top: 0px;
 }
 .resumen_grade{
+	align:left;
 	width:120px;
 	height:350px;
 	overflow: scroll;
 
 }
 
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
 
+.bar text {
+  fill: #fff;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
 
 .tipsy { font-size: 14px; position: absolute; padding: 5px; z-index: 100000; }
   .tipsy-inner { background-color: #fff; color: #000; max-width: 200px; padding: 5px 8px 4px 8px; text-align: center; }
