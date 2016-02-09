@@ -208,7 +208,7 @@ def authenticate(request):
             server.server_close()
     
     PORT=9001
-    SERVERHOST="146.83.216.177/websocket"
+    SERVERHOST="146.83.216.177"
     server = WebsocketServer(PORT, SERVERHOST)
     #server.shutdown()
     server.set_fn_new_client(new_client)
