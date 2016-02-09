@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Test Json
+	{% endblock %}
+ 
+{% block body %}
+<div id='baz'></div>
+	<script>
+    var jsonObject = JSON.parse('{{ json_data | escapejs }}');
+    $("#baz").html(jsonObject['150']);
+</script>
+
+
+{% endblock %}

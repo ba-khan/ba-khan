@@ -274,4 +274,3 @@ def run_tests():
     #while(True):
     #    get_api_resource(session)
     return session
-
