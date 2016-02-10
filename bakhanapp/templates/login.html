@@ -5,41 +5,41 @@
 
 <html lang="es">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
     
     <link rel='stylesheet' type='text/css' href="{% static 'css khan/checklist-package-88f605.css'%}">
-	<link rel='stylesheet' type='text/css' href="{% static 'css khan/coach-homepage-package-48d6a1.css'%}">
-	<link rel='stylesheet' type='text/css' href="{% static 'css khan/eduorg-picker-package-565b42.css'%}">
-	<link rel='stylesheet' type='text/css' href="{% static 'css khan/learn-storm-package-5ec30a.css'%}">
-	<link rel='stylesheet' type='text/css' href="{% static 'css khan/react-package-6e3499.css'%}">
-	<link rel='stylesheet' type='text/css' href="{% static 'css khan/shared-package-d75335.css'%}">
-	<link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
-	
-  	<!-- Agregados por Javier-->
-  		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-  		<script src="{% static 'DjangoAjax.js' %}"></script>
-	  	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	  	<script src="{% static 'd3-timeline.js'%}"></script>
-	  	
-	  	<!-- Agregados por Tomas-->
-		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  		
-  		<!-- Agregados por Jordan-->
-		<link rel="stylesheet" href="{% static 'dist/themes/default/style.css'%}" />
-		<script src="{% static 'dist/jstree.min.js'%}"></script>
-		<link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
-		<script src="{% static 'jquery.tipsy.js'%}"></script>
-		<script src="{% static 'tablesorter/tsort.js'%}"></script>
-		<link rel="stylesheet" href="{% static 'tablesorter/style.css'%}" type="text/css" />
-		
-		<!-- Para utilizar d3 -->
-	    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	    <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/coach-homepage-package-48d6a1.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/eduorg-picker-package-565b42.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/learn-storm-package-5ec30a.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/react-package-6e3499.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/shared-package-d75335.css'%}">
+  <link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
+  
+    <!-- Agregados por Javier-->
+      <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+      <script src="{% static 'DjangoAjax.js' %}"></script>
+      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="{% static 'd3-timeline.js'%}"></script>
+      
+      <!-- Agregados por Tomas-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+      <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+      
+      <!-- Agregados por Jordan-->
+    <link rel="stylesheet" href="{% static 'dist/themes/default/style.css'%}" />
+    <script src="{% static 'dist/jstree.min.js'%}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
+    <script src="{% static 'jquery.tipsy.js'%}"></script>
+    <script src="{% static 'tablesorter/tsort.js'%}"></script>
+    <link rel="stylesheet" href="{% static 'tablesorter/style.css'%}" type="text/css" />
+    
+    <!-- Para utilizar d3 -->
+      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
 
     <title>Ingresar</title>
     
@@ -95,18 +95,18 @@
 <div id="hover" style="display:none"></div>
   <body>
   
-	<div class="container">
-	 	<div class="login-container">
-			<h2 class="regular-header login-button-header">
-		        Inicia sesi&oacuten con tu cuenta Khan Academy
-		    </h2>
-		    <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
-   		</div>
-   	</div>
-   	
+  <div class="container">
+    <div class="login-container">
+      <h2 class="regular-header login-button-header">
+            Inicia sesi&oacuten con tu cuenta Khan Academy
+        </h2>
+        <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+      </div>
+    </div>
+    
 <div id="popup" style="display:none">
-	<div id="close">X</div>
-	<p>Que sucede</p>
+  <div id="close">X</div>
+  <p>Que sucede</p>
 </div>
 
    
@@ -121,25 +121,25 @@
     var connected=false;
     function init() {
       // Connect to Web Socket
-      ws = new WebSocket("ws://127.0.0.1:9001"); //IP del Servidor!
+      ws = new WebSocket("ws://192.168.1.134:9001"); //IP del Servidor!
       // Set event handlers.
       ws.onopen = function() {
         output("onopen");
         connected=true;
         if (connected==true){
-    		onSubmit("listoco");
-    	}
+        onSubmit("listoco");
+      }
       };
       
       ws.onmessage = function(e) {
         // e.data contains received string.
         output("onmessage: " + e.data);
         if ((e.data).substring(0,4)=="url:"){
-        	url = (e.data).substring(4);
-        	console.log(url);
-        	//window.open(url,"_blank")
-        	myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
-        	onCloseClick();
+          url = (e.data).substring(4);
+          console.log(url);
+          //window.open(url,"_blank")
+          myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+          onCloseClick();
         }
       };
       
@@ -179,27 +179,27 @@
     }
     
 function openPopup(){
-	init();
-	
+  init();
+  
 }
 var myWindow;
 $(document).ready(function(){
-	  
-	  //chiusura al click sulla parte scura
-	  $("#hover").click(function(){
-	        $(this).fadeOut();
-	    $("#popup").fadeOut();
-	    myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
-	    });
-	  
-	  //chiusura al click sul pulsante
-	  $("#close").click(function(){
-	        $("#hover").fadeOut();
-	    $("#popup").fadeOut();
-	    myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
-	    });
-	  
-	});
+    
+    //chiusura al click sulla parte scura
+    $("#hover").click(function(){
+          $(this).fadeOut();
+      $("#popup").fadeOut();
+      myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+      });
+    
+    //chiusura al click sul pulsante
+    $("#close").click(function(){
+          $("#hover").fadeOut();
+      $("#popup").fadeOut();
+      myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+      });
+    
+  });
 </script>
 
 </html>
