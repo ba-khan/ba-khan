@@ -196,10 +196,8 @@ def sendMail(kaids,contenido): #recibe los datos iniciales y envia un  mail a ca
         text_content = 'habilita el html de tu correo'
         html_content = contenido_html
         from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
-        #to = str(student.email)
-        #to2 = str(tutor.email)
-        to = 'alonsoparra@live.cl'
-        to2 = 'bakhanacademy@gmail.com'
+        to = str(student.email)
+        to2 = str(tutor.email)
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
@@ -226,16 +224,17 @@ def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     return str(text)
 
 def sendWhatsapp(kaid,nota_1,nota_2,fecha_1,fecha_2,id_asses_config):
-    student = Student.objects.get(pk=kaid)
-    mensaje = 'Hola '+student.name+' tienes una evaluacion que comienza el '+fecha_1+' y termina el '+fecha_2+' que incluira las habilidades: \n'
-    g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
-    n = Skill.objects.filter(id_skill_name__in=g)
-    for i in n :
-        skill = str(i)
-        skill = strip_accents(skill)
-        mensaje = mensaje+'-'+skill+'\n'
-    phone = str(student.phone)
-    whatsapp(mensaje,phone)
+    for kaid in kaids:
+        student = Student.objects.get(pk=kaid)
+        mensaje = 'Hola '+student.name+' tienes una evaluacion que comienza el '+fecha_1+' y termina el '+fecha_2+' que incluira las habilidades: \n'
+        g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
+        n = Skill.objects.filter(id_skill_name__in=g)
+        for i in n :
+            skill = str(i)
+            skill = strip_accents(skill)
+            mensaje = mensaje+'-'+skill+'\n'
+        phone = str(student.phone)
+        whatsapp(mensaje,phone)
     return ()
 
 def whatsapp(msg,num):
