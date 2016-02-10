@@ -90,10 +90,11 @@ WSGI_APPLICATION = 'bakhan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bakhanDB',
+        'NAME': 'bakhanDB2',
         'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': '146.83.216.177',
+        #'HOST': '146.83.216.177',
+        'HOST': '192.168.1.134',
         'PORT':'',
     }
 }
@@ -102,7 +103,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
