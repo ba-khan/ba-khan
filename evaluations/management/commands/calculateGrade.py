@@ -22,7 +22,7 @@ class Command(BaseCommand):
                         grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
                     if grade.grade == 0:
                         grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
-                    grade.evaluated = False#True#False
+                    grade.evaluated = True
                     grade.save()
 
 def getGrade(percentage,points,min_grade,max_grade):
