@@ -60,6 +60,7 @@ from django.core import serializers
 from django.db import connection
 
 import random
+from random import randint
 
 import time
 
@@ -70,7 +71,8 @@ from websocket_server import WebsocketServer
 
 
 def login(request):
-    return render(request, 'login.html')
+    wsPort = (randint(52000,55000))
+    return render_to_response('login.html', {'wsPort': wsPort}, context_instance=RequestContext(request))
 
 def rejected(request):
     return render(request, 'rejected.html')
@@ -156,7 +158,7 @@ def get_api_resource(session,request):
         user.save()
         return False
 
-def authenticate(request):
+def authenticate(request,wsPort):
     global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
     
     # Set consumer key, consumer secret, and server base URL from user input or
@@ -210,7 +212,7 @@ def authenticate(request):
             server.shutdown()
             server=""
     
-    PORT=9001
+    PORT=int(wsPort)
     SERVERHOST="146.83.216.177"
     server = WebsocketServer(PORT, SERVERHOST)
     #server.shutdown()

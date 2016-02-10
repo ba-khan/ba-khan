@@ -100,7 +100,7 @@
       <h2 class="regular-header login-button-header">
             Inicia sesi&oacuten con tu cuenta Khan Academy
         </h2>
-        <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+        <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate/{{ wsPort }}" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
       </div>
     </div>
     
@@ -121,7 +121,7 @@
     var connected=false;
     function init() {
       // Connect to Web Socket
-      ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor!
+      ws = new WebSocket("ws://192.168.1.134:{{ wsPort }}"); //IP del Servidor!
       // Set event handlers.
       ws.onopen = function() {
         output("onopen");
