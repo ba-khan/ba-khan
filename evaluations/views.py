@@ -168,7 +168,6 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         kaid = []
         for s in students:
             kaid.append(s['kaid_student'])
-            #sendWhatsapp(aux,nota1,nota2,fecha1,fecha2,id_config)
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
@@ -183,6 +182,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
 
         contenido = usarPlantilla(nota1,nota2,fecha1,fecha2,id_config)
         sendMail(kaid,contenido)
+        #sendWhatsapp(kaid,nota1,nota2,fecha1,fecha2,id_config)
     return HttpResponse()
 
 def sendMail(kaids,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
