@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'bakhan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bakhanDB',
+        'NAME': 'bakhanDB2',
         'USER': 'postgres',
         'PASSWORD': 'root',
-        'HOST': '146.83.216.177',
+        'HOST': '192.168.1.134',
         'PORT':'',
     }
 }
