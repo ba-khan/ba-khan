@@ -81,7 +81,7 @@ def rejected(request):
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-CALLBACK_BASE = '192.168.1.134' #IP Servidor
+CALLBACK_BASE = '146.83.216.177' #IP Servidor
 SERVER_URL = 'http://www.khanacademy.org'
 SERVER_URL2 = 'http://es.khanacademy.org'
     
@@ -210,7 +210,7 @@ def authenticate(request):
             server.shutdown()
     
     PORT=9001
-    SERVERHOST="192.168.1.134"
+    SERVERHOST="146.83.216.177"
     server = WebsocketServer(PORT, SERVERHOST)
     #server.shutdown()
     server.set_fn_new_client(new_client)
