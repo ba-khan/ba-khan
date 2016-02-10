@@ -1,48 +1,206 @@
 
 {% load static %}
-{% block title %}BA-Khan{% endblock %}
-
-{% load static %}
 
  <!DOCTYPE html>
 
 <html lang="es">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="">
     
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/shared-package-426ede.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/nav-package-642efd.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/react-package-9b6f9e.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/odometer-package-be2a23.css'><link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/dashboard-package-756fe7.css'>
-    <link rel='stylesheet' type='text/css' href='https://www.khanacademy.org/genfiles/stylesheets/en/mobile-package-0edccb.css'>
-	<link href="{% static 'estilo.css' %}" rel="stylesheet">
-	
-  <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-      <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-      <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link rel='stylesheet' type='text/css' href="{% static 'css khan/checklist-package-88f605.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/coach-homepage-package-48d6a1.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/eduorg-picker-package-565b42.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/learn-storm-package-5ec30a.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/react-package-6e3499.css'%}">
+  <link rel='stylesheet' type='text/css' href="{% static 'css khan/shared-package-d75335.css'%}">
+  <link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
+  
+    <!-- Agregados por Javier-->
+      <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+      <script src="{% static 'DjangoAjax.js' %}"></script>
+      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="{% static 'd3-timeline.js'%}"></script>
+      
+      <!-- Agregados por Tomas-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+      <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+      
+      <!-- Agregados por Jordan-->
+    <link rel="stylesheet" href="{% static 'dist/themes/default/style.css'%}" />
+    <script src="{% static 'dist/jstree.min.js'%}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'estilo.css'%}">
+    <script src="{% static 'jquery.tipsy.js'%}"></script>
+    <script src="{% static 'tablesorter/tsort.js'%}"></script>
+    <link rel="stylesheet" href="{% static 'tablesorter/style.css'%}" type="text/css" />
+    
+    <!-- Para utilizar d3 -->
+      <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+      <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
 
     <title>Ingresar</title>
+    
+<style>
+/* --------- POPUP ----------- */
+ #close{
+  position:absolute;
+  background:#9DB63B;
+  color:white;
+  right:-15px;
+  top:-15px;
+  border-radius:50%;
+  width:30px;
+  height:30px;
+  line-height:30px;
+  text-align:center;
+  font-size:8px;
+  font-weight:bold;
+  font-family:'Arial Black', Arial, sans-serif;
+  cursor:pointer;
+  box-shadow:0 0 10px 0 #9DB63B;
+}
+#popup{
+  position:absolute;
+  width:600px;
+  height:180px;
+  background:#fff;
+  left:50%;
+  top:50%;
+  border-radius:5px;
+  padding:60px 0;
+  margin-left:-320px; /* width/2 + padding-left */
+  margin-top:-150px; /* height/2 + padding-top */
+  text-align:center;
+  box-shadow:0 0 10px 0 #9DB63B;
+    z-index: 11;
+}
+#hover{
+  position:fixed;
+  background:#000;
+  width:100%;
+  height:100%;
+  opacity: .6;
+    z-index: 11;
+    margin-left: 0px;
+    margin-top: 0px;
+}
+ /* --------- FIN POPUP ----------- */
+</style>
+    
 </head>
+
+<div id="hover" style="display:none"></div>
   <body>
   
-	<div class="container">
-	 	<div class="login-container">
-			<h2 class="regular-header login-button-header">
-		        Inicia sesi&oacuten con tu cuenta Khan Academy
-		    </h2>
-		    <a role="button" aria-disabled="false" href="authenticate" onclick="closeMe()" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2">Ingresar</a>
-   		</div>
-   	</div>
+  <div class="container">
+    <div class="login-container">
+      <h2 class="regular-header login-button-header">
+            Inicia sesi&oacuten con tu cuenta Khan Academy
+        </h2>
+        <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+      </div>
+    </div>
+    
+<div id="popup" style="display:none">
+  <div id="close">X</div>
+  <p>Que sucede</p>
+</div>
 
    
 
 
   </body>
 
-</html>
 
+  <script type="text/javascript">
+    var ws;
+    var url;
+    var connected=false;
+    function init() {
+      // Connect to Web Socket
+      ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor!
+      // Set event handlers.
+      ws.onopen = function() {
+        output("onopen");
+        connected=true;
+        if (connected==true){
+        onSubmit("listoco");
+      }
+      };
+      
+      ws.onmessage = function(e) {
+        // e.data contains received string.
+        output("onmessage: " + e.data);
+        if ((e.data).substring(0,4)=="url:"){
+          url = (e.data).substring(4);
+          console.log(url);
+          //window.open(url,"_blank")
+          myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+          onCloseClick();
+        }
+      };
+      
+      ws.onclose = function() {
+        output("onclose");
+        setTimeout(function(){
+            if (!ws){// || (socket && socket.readyState==3)){
+                console.log("Reconectando websocket...");
+                init();
+            }else{
+                if (ws.readyState==3){
+                    console.log("Reconectando websocket...");
+                    onCloseClick();
+                    init();
+                }
+            }
+        }, 1000);
+      };
+      ws.onerror = function(e) {
+        output("onerror");
+        console.log(e)
+      };
+      
+    }
+    
+    function onSubmit(str) {
+      ws.send(str);
+      output("send: " + str);
+    }
+    
+    function onCloseClick() {
+      ws.close();
+    }
+    
+    function output(str) {
+      console.log(str);
+    }
+    
+function openPopup(){
+  init();
+  
+}
+var myWindow;
+$(document).ready(function(){
+    
+    //chiusura al click sulla parte scura
+    $("#hover").click(function(){
+          $(this).fadeOut();
+      $("#popup").fadeOut();
+      myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+      });
+    
+    //chiusura al click sul pulsante
+    $("#close").click(function(){
+          $("#hover").fadeOut();
+      $("#popup").fadeOut();
+      myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+      });
+    
+  });
+</script>
+
+</html>
 

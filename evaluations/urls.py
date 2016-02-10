@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^obtenerassesment1/$', views.getStudentAssesment, name='getStudentAssesment'),
     url(r'^(?P<id_class>[0-9]+)/habilidades/$', 'bakhanapp.views.getSkillAssesment', name='getSkillAssesment'), 
     url(r'^updateassesment/$', views.updateAssesment, name='updateAssesment'),
+    url(r'^gradeData/$', views.gradeData, name='gradeData'),
 ]
