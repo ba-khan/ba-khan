@@ -17,9 +17,13 @@ class Command(BaseCommand):
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
             #print grades_involved
             for grade in grades_involved:
-                grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
-                grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
-                grade.save()
+                if grade.evaluated == False:
+                    if grade.performance_points == 0:
+                        grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
+                    if grade.grade == 0:
+                        grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
+                    grade.evaluated = False#True#False
+                    grade.save()
 
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
