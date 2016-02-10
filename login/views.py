@@ -81,7 +81,7 @@ def rejected(request):
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-CALLBACK_BASE = '127.0.0.1' #IP Servidor
+CALLBACK_BASE = '146.83.216.177' #IP Servidor
 SERVER_URL = 'http://www.khanacademy.org'
 SERVER_URL2 = 'http://es.khanacademy.org'
     
@@ -122,7 +122,7 @@ def create_callback_server():
         def log_request(self, code='-', size='-'):
             pass
 
-    server = SocketServer.TCPServer((CALLBACK_BASE, 53707), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
+    server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
 
@@ -210,7 +210,7 @@ def authenticate(request):
             server.shutdown()
     
     PORT=9001
-    SERVERHOST="127.0.0.1"
+    SERVERHOST="146.83.216.177"
     server = WebsocketServer(PORT, SERVERHOST)
     #server.shutdown()
     server.set_fn_new_client(new_client)
@@ -220,6 +220,7 @@ def authenticate(request):
     
     callback_server.handle_request()
     callback_server.server_close()
+    callback_server=""
 
     # 3. Get an access token.
     session = service.get_auth_session(request_token, secret_request_token,
