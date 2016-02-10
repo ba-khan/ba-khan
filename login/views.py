@@ -208,6 +208,7 @@ def authenticate(request):
         if (message=="listoco"):
             server.send_message_to_all("url:"+authorize_url)
             server.shutdown()
+            server=""
     
     PORT=9001
     SERVERHOST="146.83.216.177"
