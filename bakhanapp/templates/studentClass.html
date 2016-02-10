@@ -160,8 +160,9 @@
   		
   	  	$("select.assesment").on('change', function() {
   	  		var sortingCriterion = $(this).val();
+  	  		console.log(sortingCriterion);
   	  		var assesmentName = $(this).attr("name");
-		    d3.selectAll("td."+assesmentName).attr("data-sortAs",function(d){return d.value[sortingCriterion];})
+		    d3.selectAll("td."+assesmentName).attr("data-sortAs",function(d){console.log(d);return d.value[sortingCriterion];})
 		});
   	  	
   	  	$("select.skills_level").on('change', function() {
@@ -175,7 +176,7 @@
   	  		}
 		});
   	  	
-  	  $("select.exercises").on('change', function() {
+  	  	$("select.exercises").on('change', function() {
   	  		var sortingCriterion = $(this).val();
   	  		if (sortingCriterion=="total"){
   	  			d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values["correct"]+d.values["incorrect"];})
@@ -211,9 +212,18 @@
     
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	//console.log(class_id);
     	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
+    	var index = i+1;
+    	console.log("antes");
+    	console.log(data[index]);
+    	for (var j=0;j<data[i+1].length;j++){
+    		var cumulativeStudent=students[j];
+    		var assesmentStudent=data[index][j];
+	    	data[index][j]=$.extend({},cumulativeStudent,assesmentStudent);
+	    }
+	    console.log("despues");
+	    console.log(data[index]);
     }
     
     var selectedAssesment=false;
@@ -437,7 +447,7 @@
                         .domain([0,Greatest(videos_time.keys())])
                         .range([0,120]);
     
-    var corrects = (d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);}));
+    var corrects = d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);});
     corrects= corrects.keys().map(function(d){
     	return parseInt(d);
     })
@@ -475,6 +485,7 @@
 		    		.duration(750)
 		    		.style("opacity",1);
     		}else{
+    			
     			backgroundJobs = data[dataIndex+1];
 		    	selectedAssesment=true;
 		    	//Selected assesment comes back to having opacity 1
@@ -497,7 +508,6 @@
     		//$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,1);
     	}
     	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
-	    console.log(skill_time);
 	    skillsTimeScaling = d3.scale.linear()
                             .domain([0,Greatest(skill_time.keys())])
                             .range([0,120]);
@@ -505,7 +515,7 @@
         escalarTiemposVideo = d3.scale.linear()
                             .domain([0,Greatest(videos_time.keys())])
                             .range([0,120]);
-        corrects = (d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);}));
+        corrects = d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);});
         corrects= corrects.keys().map(function(d){
         	return parseInt(d);
         })
@@ -606,6 +616,7 @@
     
 	function tick_update() {
     	
+    	console.log(backgroundJobs);
         var rows = tbody.selectAll("tr")
     	.data(backgroundJobs, function(d) {
     	    return d.name;
@@ -620,6 +631,8 @@
     		.data(function(row,i) {
     			return columns.map(function(c) {
 	                // compute cell values for this specific row
+	                /*console.log("c");
+	                console.log(c);*/
 	                var cell = {};
 	                d3.keys(c).forEach(function(k) {
 	                    cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];

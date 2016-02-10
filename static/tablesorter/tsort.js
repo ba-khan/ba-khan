@@ -42,7 +42,7 @@ Array - Specifc table
 			var th_index_selected; // The header index that was clicked on
 			var table = $(this); // The table element we are manipulating
 			var animating = false; // Keep track of animation
-			
+			var last_column_sorted;
 			/* PERFORM INITIALIZATION */
 			if (settings['rowspan'] == true) { // Fix table data cells with rowspans larger than 1
 				rowspan();
@@ -53,8 +53,6 @@ Array - Specifc table
 			
 			/* GET SORTING CRITERIA */
 			$(table).find('tr:first-child th').each(function(index) {
-				console.log("tr:first child th");
-				console.log($(this).attr('data-sort'));
 				// Check for user defined sorting criteria
 				if ( settings['sortBy'] != undefined ) {
 					switch ( settings['sortBy'][index] ) {
@@ -139,6 +137,7 @@ Array - Specifc table
 			$(table).css('position', 'relative');
 			
 			// Add divs for directional arrows
+			// Commented lines because we don't use this feature
 			/*$(table).find('tr:first-child th').each(function(index) {
 				if ( sorting_criteria[index] != 'nosort' ) {
 					$('<div class="sortArrow"><div class="sortArrowAscending"></div><div class="sortArrowDescending"></div></div>').appendTo($(this));
@@ -178,6 +177,7 @@ Array - Specifc table
 			});
 			
 			// Set th hover cursor to pointer
+			// Commented lines because we don't use this feature
 			/*$(table).find('tr th').each(function(index) {
 				if (sorting_criteria[index] != 'nosort') {
 					$(this).css('cursor', 'pointer');
@@ -186,324 +186,180 @@ Array - Specifc table
 			
 			
 			
-			/* FUNCTIONALITY */	
-			$(table).find('.ascSort').click(function() {
-				var column_name=$(this).attr("name");
-				var index = $(this).attr("column");
-				
-				if (animating) return; // Disables animation spamming
-				
-				if ( sorting_criteria[$(this).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
-					return;
-				}
-				
-				//Update the data to sort the rows, according to the option clicked by the user
-				/*switch(column_name) {
-					case "skills_time":
-						d3.selectAll("td."+column_name).attr("data-sortAs",function(d){return d.value;});
-						break;
-					case "videos_time":
-						d3.selectAll("td."+column_name).attr("data-sortAs",function(d){return d.value;});
-						break;
-					case "recommendations":
-						console.log("hola");
-						d3.selectAll("td."+column_name).attr("data-sortAs",function(d){return d.values.completed_perc;});
-						break;
-				}*/
-				
-				//th_index_selected = $(this).index();
-				th_index_selected = $(this).attr("column");
-				console.log(th_index_selected);
-				//table_data = new Array();
-				if (table_data.length == 0) { // Get the table data if we haven't already
-					getTableData();
-					console.log(table_data);
-				}else{
-					table_data = new Array();
-					getTableData();
-					console.log(table_data);
-					//updateTableData(th_index_selected);
-				}
-				
-				//sorted_table_data = new Array();
-				console.log("Columna ordenada");
-				console.log(sorted_table_data[th_index_selected]);
-				//if (!sorted_table_data[th_index_selected]) {	// If we haven't sorted this column yet
-						sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
-					if (sorting_criteria[th_index_selected] == 'numeric') {		// Sort numeric
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected] - b.td[th_index_selected];
-						});
-					} else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
-						});				
-					}
-				//}
-
-				// sorting_history keeps track of all the columns the user selected to sort, and their order
-				// To also be used later for priority sorting in case two values are equal
-				//if ( sorting_history.length == 0 ) {
-					sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } ); // If this is the first column clicked, add to sorting_history
-				/*} else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
-					if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
-						switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
-							case 'ascending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
-							
-								break;
-							}
-							
-							case 'descending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-							
-								break;
-							}
-						}
-					} else { // If this is not the same column clicked as before, set to ascending
-						sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-					}
-				}*/
-				
-				// Call the display_table function with the data array and direction requested
-				display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
-				//display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);
-			});
-			
+			/* FUNCTIONALITY */			
 			$(table).find('.arrow-up').click(function() {
 				var column_name=$(this).attr("name");
 				var index = $(this).attr("column");
-				console.log("sorting criteria: ");
-				console.log(sorting_criteria);
-				if (animating) return; // Disables animation spamming
-				
-				if ( sorting_criteria[$(this).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
-					return;
-				}
-				
-				//Update the data to sort the rows, according to the option clicked by the user
-				/*switch(column_name) {
-					case "skills_time":
-						d3.selectAll("td."+column_name).attr("data-sortAs",function(d){return d.value;});
-						break;
-					case "videos_time":
-						d3.selectAll("td."+column_name).attr("data-sortAs",function(d){return d.value;});
-						break;
-					case "recommendations":
-						console.log("hola");
-						d3.selectAll("td."+column_name).attr("data-sortAs",function(d){return d.values.completed_perc;});
-						break;
-				}*/
-				
-				//th_index_selected = $(this).index();
-				th_index_selected = $(this).attr("column");
-				console.log(th_index_selected);
-				//table_data = new Array();
-				if (table_data.length == 0) { // Get the table data if we haven't already
-					getTableData();
-					console.log(table_data);
-				}else{
-					table_data = new Array();
-					getTableData();
-					console.log(table_data);
-					//updateTableData(th_index_selected);
-				}
-				
-				//sorted_table_data = new Array();
-				
-				//if (!sorted_table_data[th_index_selected]) {	// If we haven't sorted this column yet
-						sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
-					if (sorting_criteria[th_index_selected] == 'numeric') {		// Sort numeric
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected] - b.td[th_index_selected];
-						});
-					} else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
-						});				
-					}
-				//}
-					console.log("Columna ordenada");
-					console.log(sorted_table_data[th_index_selected]);
-				// sorting_history keeps track of all the columns the user selected to sort, and their order
-				// To also be used later for priority sorting in case two values are equal
-				//if ( sorting_history.length == 0 ) {
-					sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } ); // If this is the first column clicked, add to sorting_history
-				/*} else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
-					if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
-						switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
-							case 'ascending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
-							
-								break;
-							}
-							
-							case 'descending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-							
-								break;
-							}
-						}
-					} else { // If this is not the same column clicked as before, set to ascending
-						sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-					}
-				}*/
-				
-				// Call the display_table function with the data array and direction requested
-				display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
-				//display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);
-			});
-			
-			
-			
-			$(table).find('.descSort').click(function() {
-				var columnName=$(this).attr("name");
-				console.log(columnName);
-				var index = $(this).attr("column");
-				var indexxx = $(this).index();
-				if (animating) return; // Disables animation spamming
-				
-				if ( sorting_criteria[$(this).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
-					return;
-				}
-				
-				//Update the data to sort the rows, according to the option clicked by the user
-				/*if (columnName=="skills_time"){
-					d3.selectAll("td."+columnName).attr("data-sortAs",function(d){return d.value;});
-				}*/
-				
-				//th_index_selected = $(this).index();
-				th_index_selected = $(this).attr("column");
-				console.log(th_index_selected);
-				//table_data = new Array();
-				if (table_data.length == 0) { // Get the table data if we haven't already
-					getTableData();
-					console.log(table_data);
-				}else{
-					table_data = new Array();
-					getTableData();
-					console.log(table_data);
-					//updateTableData(th_index_selected);
-				}
-				
-				//sorted_table_data = new Array();
-				console.log("Columna ordenada");
-				console.log(sorted_table_data[th_index_selected]);
-				//if (!sorted_table_data[th_index_selected]) {	// If we haven't sorted this column yet
-						sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
-					if (sorting_criteria[th_index_selected] == 'numeric') {		// Sort numeric
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected] - b.td[th_index_selected];
-						});
-					} else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
-						});				
-					}
-				//}
 
-				// sorting_history keeps track of all the columns the user selected to sort, and their order
-				// To also be used later for priority sorting in case two values are equal
-				//if ( sorting_history.length == 0 ) {
-					sorting_history.push( { column_id: th_index_selected, direction: 'descending' } ); // If this is the first column clicked, add to sorting_history
-				/*} else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
-					if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
-						switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
-							case 'ascending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
-							
-								break;
-							}
-							
-							case 'descending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-							
-								break;
+				if (animating) return; // Disables animation spamming
+				
+				if ( sorting_criteria[$(this).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
+					return;
+				}
+			
+				
+				//th_index_selected = $(this).index();
+				th_index_selected = $(this).attr("column");
+
+				/*if (table_data.length == 0) { // Get the table data if we haven't already
+					getTableData();
+				}else{*/
+				table_data = new Array();
+				getTableData();
+				//}
+				
+				//if (!sorted_table_data[th_index_selected]) {	// If we haven't sorted this column yet
+					sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
+					var sorted_data = sorted_table_data[th_index_selected];
+					equal_elements=0
+					if (sorted_data.length>0){
+						first_element=sorted_data[0]["td"][th_index_selected];
+						for(var i=0;i<sorted_data.length;i++){
+							console.log("td");
+							console.log(sorted_data[i]["td"][th_index_selected]);
+							if (sorted_data[i]["td"][th_index_selected]==first_element){
+								equal_elements=equal_elements+1;
 							}
 						}
-					} else { // If this is not the same column clicked as before, set to ascending
-						sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-					}
-				}*/
+						console.log("equal elements: "+equal_elements);
+						if (equal_elements!=sorted_data.length){
+							if (sorting_criteria[th_index_selected] == 'numeric') {		// Sort numeric
+								sorted_table_data[th_index_selected].sort(function(a,b) {
+									return a.td[th_index_selected] - b.td[th_index_selected];
+								});
+							} else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
+								sorted_table_data[th_index_selected].sort(function(a,b) {
+									return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
+								});				
+							}
+						//}
+
+						// sorting_history keeps track of all the columns the user selected to sort, and their order
+						// To also be used later for priority sorting in case two values are equal
+						//if ( sorting_history.length == 0 ) {
+							//sorting_history.push( { column_id: th_index_selected, direction: 'descending' } ); // If this is the first column clicked, add to sorting_history
+						/*} else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
+							if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
+								switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
+									case 'ascending': {
+										sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
+									
+										break;
+									}
+									
+									case 'descending': {
+										sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
+									
+										break;
+									}
+								}
+							} else { // If this is not the same column clicked as before, set to ascending
+								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
+							}
+						}*/
 				
-				// Call the display_table function with the data array and direction requested
-				display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
-				//display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);
+							//if (sorting_history.length==0 || last_column_sorted!=column_name || sorting_history[sorting_history.length -1]['direction']=='descending'){
+								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
+								// Call the display_table function with the data array and direction requested
+								display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
+								//display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);	
+								last_column_sorted = column_name;
+							//}
+						}else{
+								console.log("todos los elementos iguales");
+						}
+				}
+					
+					
 			});
 			
 			$(table).find('.arrow-down').click(function() {
-				var columnName=$(this).attr("name");
-				console.log(columnName);
+				var column_name=$(this).attr("name");
+
 				var index = $(this).attr("column");
-				var indexxx = $(this).index();
+
 				if (animating) return; // Disables animation spamming
 				
 				if ( sorting_criteria[$(this).index()] == 'nosort' ) { // Check if column is supposed to be sorted, otherwise exit function
 					return;
 				}
 				
-				//Update the data to sort the rows, according to the option clicked by the user
-				/*if (columnName=="skills_time"){
-					d3.selectAll("td."+columnName).attr("data-sortAs",function(d){return d.value;});
-				}*/
 				
 				//th_index_selected = $(this).index();
 				th_index_selected = $(this).attr("column");
-				console.log(th_index_selected);
-				//table_data = new Array();
-				if (table_data.length == 0) { // Get the table data if we haven't already
-					getTableData();
-					console.log(table_data);
-				}else{
-					table_data = new Array();
-					getTableData();
-					console.log(table_data);
-					//updateTableData(th_index_selected);
-				}
-				
-				//sorted_table_data = new Array();
-				console.log("Columna ordenada");
-				console.log(sorted_table_data[th_index_selected]);
-				//if (!sorted_table_data[th_index_selected]) {	// If we haven't sorted this column yet
-						sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
-					if (sorting_criteria[th_index_selected] == 'numeric') {		// Sort numeric
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected] - b.td[th_index_selected];
-						});
-					} else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
-						sorted_table_data[th_index_selected].sort(function(a,b) {
-							return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
-						});				
-					}
-				//}
 
-				// sorting_history keeps track of all the columns the user selected to sort, and their order
-				// To also be used later for priority sorting in case two values are equal
-				//if ( sorting_history.length == 0 ) {
-					sorting_history.push( { column_id: th_index_selected, direction: 'descending' } ); // If this is the first column clicked, add to sorting_history
-				/*} else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
-					if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
-						switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
-							case 'ascending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
-							
-								break;
-							}
-							
-							case 'descending': {
-								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
-							
-								break;
+				/*if (table_data.length == 0) { // Get the table data if we haven't already
+					getTableData();
+				}else{*/
+				table_data = new Array();
+				getTableData();
+					//updateTableData(th_index_selected);
+				//}
+				
+
+				//if (!sorted_table_data[th_index_selected]) {	// If we haven't sorted this column yet
+					sorted_table_data[th_index_selected] = table_data.concat(); // Make a copy of the original table data
+					var sorted_data = sorted_table_data[th_index_selected];
+					equal_elements=0
+					if (sorted_data.length>0){
+						first_element=sorted_data[0]["td"][th_index_selected];
+						for(var i=0;i<sorted_data.length;i++){
+							console.log("td");
+							console.log(sorted_data[i]["td"][th_index_selected]);
+							if (sorted_data[i]["td"][th_index_selected]==first_element){
+								equal_elements=equal_elements+1;
 							}
 						}
-					} else { // If this is not the same column clicked as before, set to ascending
-						sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
+						console.log("equal elements: "+equal_elements);
+						if (equal_elements!=sorted_data.length){
+							if (sorting_criteria[th_index_selected] == 'numeric') {		// Sort numeric
+								sorted_table_data[th_index_selected].sort(function(a,b) {
+									return a.td[th_index_selected] - b.td[th_index_selected];
+								});
+							} else if (sorting_criteria[th_index_selected] == 'text') { // Sort text
+								sorted_table_data[th_index_selected].sort(function(a,b) {
+									return a.td[th_index_selected].localeCompare(b.td[th_index_selected]);
+								});				
+							}
+						//}
+
+						// sorting_history keeps track of all the columns the user selected to sort, and their order
+						// To also be used later for priority sorting in case two values are equal
+						//if ( sorting_history.length == 0 ) {
+							//sorting_history.push( { column_id: th_index_selected, direction: 'descending' } ); // If this is the first column clicked, add to sorting_history
+						/*} else if ( sorting_history.length != 0 ) { // If this is not the first column clicked
+							if ( th_index_selected == sorting_history[sorting_history.length - 1]['column_id'] ) { // Check if it's the same column clicked as before to determine the asec/desc order
+								switch ( sorting_history[sorting_history.length - 1]['direction'] ) {
+									case 'ascending': {
+										sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
+									
+										break;
+									}
+									
+									case 'descending': {
+										sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
+									
+										break;
+									}
+								}
+							} else { // If this is not the same column clicked as before, set to ascending
+								sorting_history.push( { column_id: th_index_selected, direction: 'ascending' } );
+							}
+						}*/
+						
+							//if (sorting_history.length==0 || last_column_sorted!=column_name || sorting_history[sorting_history.length -1]['direction']=='ascending'){
+								sorting_history.push( { column_id: th_index_selected, direction: 'descending' } );
+								// Call the display_table function with the data array and direction requested
+								display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
+								//display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);
+								last_column_sorted=column_name;
+							//}							}
+						}else{
+							console.log("todos los elementos iguales");
+						}
 					}
-				}*/
-				
-				// Call the display_table function with the data array and direction requested
-				display_table(sorted_table_data[th_index_selected], sorting_history[sorting_history.length -1]['direction']);
-				//display_arrow(th_index_selected, sorting_history[sorting_history.length -1]['direction']);
+					
+					
 			});
 			
 			
