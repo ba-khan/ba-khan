@@ -7,8 +7,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         currentDate = time.strftime("%Y-%m-%d") #fecha actual.
+        print currentDate
         assesments = Assesment.objects.filter(end_date__lte=currentDate)
         for assesment in assesments:
+            print assesment.name
             approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
             skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
@@ -22,8 +24,17 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
     scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
     points = 0
     for skill in configured_skills:
-        id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill,kaid_student_id=kaid_student).values('id_student_skill')
-        last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skills,date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
+        try: 
+            id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill,kaid_student_id=kaid_student).values('id_student_skill')
+        except: 
+            print "no data"
+
+        try: 
+            last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skills,date__gte = '2015-01-01',date__lte = '2016-02-09').latest('date').values('to_level')
+        except: 
+            print 'no hay registros'
+            last_level = 'unstarted'
         points = points + scores[last_level]
     points = points / len(configured_skills)
+    print points
     return points
