@@ -18,7 +18,25 @@ class Command(BaseCommand):
             #print grades_involved
             for grade in grades_involved:
                 grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
+                grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
                 grade.save()
+
+def getGrade(percentage,points,min_grade,max_grade):
+    #calcula la nota
+    if points >= percentage:#si obtiene mas que nota cuatro.
+        x1 = percentage
+        x2 = 100.0
+        y1 = 4.0
+        y2 = max_grade
+        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
+    else:#si los puntos son menores al porcentaje de aprobacion
+        x1 = 0.0
+        x2 = percentage
+        y1 = min_grade
+        y2 = 4.0
+        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
+    #print grade
+    return grade
 
 def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
     #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
