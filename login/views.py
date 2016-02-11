@@ -64,14 +64,13 @@ from random import randint
 
 import time
 
-
 from websocket_server import WebsocketServer
 
 #FUNCIONA POR FAVOOOOOOOOOOOOOOOOOOR
 
 
 def login(request):
-    wsPort = 9001
+    wsPort = (randint(52000,55000))
     return render_to_response('login.html', {'wsPort': wsPort}, context_instance=RequestContext(request))
 
 def rejected(request):
