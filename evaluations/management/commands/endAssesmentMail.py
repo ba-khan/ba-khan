@@ -14,7 +14,7 @@ class Command(BaseCommand):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         lastDate = date.today() - timedelta(days=1)
         #cambiar end_date__lgt
-        assesments = Assesment.objects.filter(end_date__lte=lastDate).values('id_assesment_conf_id','id_assesment','name','start_date','end_date','grade__grade',
+        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment_conf_id','id_assesment','name','start_date','end_date','grade__grade',
             'grade__kaid_student_id','grade__performance_points')#inner join django 1-N desde 1 hacia N
         #assesments = Assesment.objects.filter(end_date=lastDate)
         conf = 0 
