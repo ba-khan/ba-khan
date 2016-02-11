@@ -38,17 +38,17 @@ def sendWhatsapp(kaid,grade,points,video_time,corrects,incorrects,
                 practiced,mastery1,mastery2,mastery3,struggling):
     student = Student.objects.get(pk=kaid)
     mensaje = 'Hola, ha finalizado una evaluacion para: '+student.name+'\n'
-    mensaje = mensaje + 'Nota obtenida: '+grade+'\n'
-    mensaje = mensaje + 'Puntos: '+point+'\n'
-    mensaje = mensaje + 'Tiempo en Videos: '+video_time+'minutos \n'
-    mensaje = mensaje + 'Correctas: '+corrects+'\n'
-    mensaje = mensaje + 'Incorrectas: '+incorrects+'\n'
+    mensaje = mensaje + 'Nota obtenida: '+str(grade)+'\n'
+    mensaje = mensaje + 'Puntos: '+str(point)+'\n'
+    mensaje = mensaje + 'Tiempo en Videos: '+str(video_time)+'minutos \n'
+    mensaje = mensaje + 'Correctas: '+str(corrects)+'\n'
+    mensaje = mensaje + 'Incorrectas: '+str(incorrects)+'\n'
     mensaje = mensaje + 'Nivel de dominio:\n'
-    mensaje = mensaje + 'Practicados - '+practiced+'\n'
-    mensaje = mensaje + 'Nivel 1 - '+mastery1+'\n'
-    mensaje = mensaje + 'Nivel 2 - '+mastery2+'\n'
-    mensaje = mensaje + 'Dominado - '+mastery3+'\n'
-    mensaje = mensaje + 'Dificultad - '+struggling+'\n'
+    mensaje = mensaje + 'Practicados - '+str(practiced)+'\n'
+    mensaje = mensaje + 'Nivel 1 - '+str(mastery1)+'\n'
+    mensaje = mensaje + 'Nivel 2 - '+str(mastery2)+'\n'
+    mensaje = mensaje + 'Dominado - '+str(mastery3)+'\n'
+    mensaje = mensaje + 'Dificultad - '+str(struggling)+'\n'
     phone = str(student.phone)
     whatsapp(mensaje,phone)
     return ()
