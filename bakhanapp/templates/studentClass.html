@@ -215,15 +215,11 @@
     	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
     	var index = i+1;
-    	console.log("antes");
-    	console.log(data[index]);
     	for (var j=0;j<data[i+1].length;j++){
     		var cumulativeStudent=students[j];
     		var assesmentStudent=data[index][j];
 	    	data[index][j]=$.extend({},cumulativeStudent,assesmentStudent);
 	    }
-	    console.log("despues");
-	    console.log(data[index]);
     }
     
     var selectedAssesment=false;
@@ -1129,17 +1125,12 @@
     	g_rec.each(function(d,i){
     		var completed_perc = d.values.completed_perc;
     		var id_needle = d3.select(this).attr("id_student");
-    		console.log("comp perc "+completed_perc+" id: "+id_needle);
     		d3_needles[id_needle].moveTo(completed_perc);
     		});
 		console.log(tbody.selectAll("td.recommendations"));
     	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
     }
-    
-    
-    
-    
-    
+
     function recalcPointerPos(len,radius,perc) {
           var centerX, centerY, leftX, leftY, rightX, rightY, thetaRad, topX, topY;
           thetaRad = percToRad(perc / 2);
@@ -1152,7 +1143,7 @@
           rightX = centerX - radius * Math.cos(thetaRad + Math.PI / 2);
           rightY = centerY - radius * Math.sin(thetaRad + Math.PI / 2);
           return "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
-    };
+    }
     
     var repaintGauge = function(perc,i) 
     {
@@ -1172,7 +1163,77 @@
 					.endAngle(arcEndRad);
 			d3.select("#chart-filled"+i).attr("d",arc1_array[i]);
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
-    }		
+    }
+
+    function testGraphic(){
+    	var test_values = d3.range(1000).map(d3.random.logNormal(Math.log(20),.5));
+    	console.log(test_values);
+    }
+
+    function makeGraphic(){
+			console.log("histogram");
+			// Generate a Bates distribution of 10 random variables.
+			// Generate a log-normal distribution with a median of 30 minutes.
+			var test_values = d3.range(1000).map(d3.random.logNormal(Math.log(20),.5));
+			//var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
+			console.log(test_values);
+			// Formatters for counts and times (converting numbers to Dates).
+			var formatCount = d3.format(",.0f"),
+			    formatTime = d3.time.format("%H:%M"),
+			    formatMinutes = function(d) { return formatTime(new Date(2012, 0, 1, 0, d)); };
+
+			var margin = {top: 10, right: 30, bottom: 30, left: 30},
+			    width = 960 - margin.left - margin.right,
+			    height = 500 - margin.top - margin.bottom;
+
+			var x = d3.scale.linear()
+			    .domain([0, 120])
+			    .range([0, width]);
+
+			// Generate a histogram using twenty uniformly-spaced bins.
+			var data = d3.layout.histogram()
+			    .bins(x.ticks(20))
+			    (values);
+
+			var y = d3.scale.linear()
+			    .domain([0, d3.max(data, function(d) { return d.y; })])
+			    .range([height, 0]);
+
+			var xAxis = d3.svg.axis()
+			    .scale(x)
+			    .orient("bottom")
+			    .tickFormat(formatMinutes);
+
+			var svg = d3.select("#resumen_graph").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			  .append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var bar = svg.selectAll(".bar")
+			    .data(data)
+			  .enter().append("g")
+			    .attr("class", "bar")
+			    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+			bar.append("rect")
+			    .attr("x", 1)
+			    .attr("width", x(data[0].dx) - 1)
+			    .attr("height", function(d) { return height - y(d.y); });
+
+			bar.append("text")
+			    .attr("dy", ".75em")
+			    .attr("y", 6)
+			    .attr("x", x(data[0].dx) / 2)
+			    .attr("text-anchor", "middle")
+			    .text(function(d) { return formatCount(d.y); });
+
+			svg.append("g")
+			    .attr("class", "x axis")
+			    .attr("transform", "translate(0," + height + ")")
+			    .call(xAxis);
+
+	}	
 		
 		function noEvaluarTodos(){
 			{% if students %}
@@ -1567,71 +1628,11 @@
 			$("#resumen_grade_count").append("<p>d7: "+d7+"</p>");
 			$("#resumen_grade_count").append("<p>d8: "+d8+"</p>");
 			$("#resumen_grade_count").append("<p>d9: "+d9+"</p>");
+			testGraphic();
 			makeGraphic();
 		}
 
-		function makeGraphic(){
-			// Generate a Bates distribution of 10 random variables.
-			// Generate a log-normal distribution with a median of 30 minutes.
-var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
-
-// Formatters for counts and times (converting numbers to Dates).
-var formatCount = d3.format(",.0f"),
-    formatTime = d3.time.format("%H:%M"),
-    formatMinutes = function(d) { return formatTime(new Date(2012, 0, 1, 0, d)); };
-
-var margin = {top: 10, right: 30, bottom: 30, left: 30},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-var x = d3.scale.linear()
-    .domain([0, 120])
-    .range([0, width]);
-
-// Generate a histogram using twenty uniformly-spaced bins.
-var data = d3.layout.histogram()
-    .bins(x.ticks(20))
-    (values);
-
-var y = d3.scale.linear()
-    .domain([0, d3.max(data, function(d) { return d.y; })])
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-    .tickFormat(formatMinutes);
-
-var svg = d3.select("#resumen_graph").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var bar = svg.selectAll(".bar")
-    .data(data)
-  .enter().append("g")
-    .attr("class", "bar")
-    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-
-bar.append("rect")
-    .attr("x", 1)
-    .attr("width", x(data[0].dx) - 1)
-    .attr("height", function(d) { return height - y(d.y); });
-
-bar.append("text")
-    .attr("dy", ".75em")
-    .attr("y", 6)
-    .attr("x", x(data[0].dx) / 2)
-    .attr("text-anchor", "middle")
-    .text(function(d) { return formatCount(d.y); });
-
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
-
-		}
+		
 
 	</script>
 
