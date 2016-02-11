@@ -44,6 +44,7 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Tutor
 
 import datetime
+import threading
 
 import unicodedata
 import os
@@ -181,12 +182,12 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             update_assesment_configs.save()
 
         print 'antes del os.system'
-        os.system("""python /var/www/html/bakhanproyecto/manage.py sendMail %s "%s" "%s" "%s" "%s" "%s" """%(kaid,str(nota1),str(nota2),str(fecha1),str(fecha2),str(id_config)))
-        #os.system("""python C:/Users/LACLO2013_A/Documents/GitHub/ba-khan/manage.py sendMail %s "%s" "%s" "%s" "%s" "%s" """%(kaid,str(nota1),str(nota2),str(fecha1),str(fecha2),str(id_config)))
-
+        threads = []
+        t = threading.Thread(target=treadSendMail,args=(kaid,nota1,nota2,fecha1,fecha2,id_config))
+        threads.append(t)
+        t.start()
+        print 'salio del thread'
     return HttpResponse()
-
-
 
 def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     try:
@@ -227,3 +228,61 @@ def gradeData(request):
         struct = json.loads(data)
         grade_data = json.dumps(struct)      
     return HttpResponse(grade_data)
+
+def treadSendMail(kaid,nota1,nota2,fecha1,fecha2,id_config):
+    """thread sendMail function"""
+    print 'Iniciando sendMail \n'
+    contenido = usarPlantilla(nota1,nota2,fecha1,fecha2,id_config)
+    sendMail(kaid,contenido)
+    print 'Terminando sendMail \n'
+    return
+
+def sendMail(kaidstr,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
+    kaids = kaidstr.split(',')
+    kaids.pop(0)
+    x = 0
+    for kaid in kaids:
+        x = x+1
+        if (x>6):
+            x=0
+            print "esperando 5 segundos"
+            time.sleep(5)
+
+        print kaid
+        student = Student.objects.get(pk=kaid)
+        tutor = Tutor.objects.get(kaid_student_child=kaid)
+        
+        contenido_html = contenido.replace("$$nombre_usuario$$",student.name) #usarPlantilla()
+
+        subject = 'Nueva Evaluacion'
+        text_content = 'habilita el html de tu correo'
+        html_content = contenido_html
+        from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
+        to = str(student.email)
+        to2 = str(tutor.email)
+        print to
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+    return ()
+
+def usarPlantilla(nota1,nota2,fecha1,fecha2,id_config):
+    skill_assesment = getSkillAssesment(id_config)
+    archivo=open("static/plantillas/mail_nueva_evaluacion.html")
+    contenido = archivo.read()
+    contenido = contenido.replace("$$fecha_inicio$$",str(fecha1))
+    contenido = contenido.replace("$$fecha_termino$$",str(fecha2))
+    contenido = contenido.replace("$$nota_minima$$",str(nota1))
+    contenido = contenido.replace("$$nota_maxima$$",str(nota2))
+    contenido = contenido.replace("$$ejercicios$$",str(skill_assesment))
+    return(contenido)
+
+def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
+    mnsj_skills = ''
+    g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
+    n = Skill.objects.filter(id_skill_name__in=g)
+    for i in n :
+        skill = str(i)
+        skill = strip_accents(skill)
+        mnsj_skills = mnsj_skills+'<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skill+'</p>'
+    return mnsj_skills

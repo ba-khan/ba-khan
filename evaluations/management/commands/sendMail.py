@@ -8,6 +8,7 @@ from bakhanapp.models import Skill
 from django.core.mail import EmailMultiAlternatives
 
 import unicodedata
+import time
 
 class Command(BaseCommand):
     help = 'help!'
@@ -43,7 +44,14 @@ class Command(BaseCommand):
 def sendMail(kaidstr,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     kaids = kaidstr.split(',')
     kaids.pop(0)
+    x = 0
     for kaid in kaids:
+        x = x+1
+        if (x>6):
+            x=0
+            print "esperando 5 segundos"
+            time.sleep(5)
+
         print kaid
         student = Student.objects.get(pk=kaid)
         tutor = Tutor.objects.get(kaid_student_child=kaid)
