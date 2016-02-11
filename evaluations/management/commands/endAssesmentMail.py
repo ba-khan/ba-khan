@@ -39,7 +39,7 @@ def sendWhatsapp(kaid,grade,points,video_time,corrects,incorrects,
     student = Student.objects.get(pk=kaid)
     mensaje = 'Hola, ha finalizado una evaluacion para: '+student.name+'\n'
     mensaje = mensaje + 'Nota obtenida: '+str(grade)+'\n'
-    mensaje = mensaje + 'Puntos: '+str(point)+'\n'
+    mensaje = mensaje + 'Puntos: '+str(points)+'\n'
     mensaje = mensaje + 'Tiempo en Videos: '+str(video_time)+'minutos \n'
     mensaje = mensaje + 'Correctas: '+str(corrects)+'\n'
     mensaje = mensaje + 'Incorrectas: '+str(incorrects)+'\n'
