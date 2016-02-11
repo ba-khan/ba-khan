@@ -180,10 +180,11 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             update_assesment_configs.applied = True
             update_assesment_configs.save()
 
-        contenido = usarPlantilla(nota1,nota2,fecha1,fecha2,id_config)
+        #contenido = usarPlantilla(nota1,nota2,fecha1,fecha2,id_config)
         #sendMail(kaid,contenido) ahora se hace por linea de comando
         print 'antes del os.system'
-        os.system('python C:/Users/LACLO2013_A/Documents/GitHub/ba-khan/manage.py sendMail "%s" "%s"'%(kaid,"contenido"))
+        contenido = "<div>contenido dentro de un div</div>"
+        os.system("""python C:/Users/LACLO2013_A/Documents/GitHub/ba-khan/manage.py sendMail %s "%s" "%s" "%s" "%s" "%s" """%(kaid,str(nota1),str(nota2),str(fecha1),str(fecha2),str(id_config)))
 
         #sendWhatsapp(kaid,nota1,nota2,fecha1,fecha2,id_config)
     return HttpResponse()
@@ -207,15 +208,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
 #    return ()
 
 
-def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
-    mnsj_skills = ''
-    g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
-    n = Skill.objects.filter(id_skill_name__in=g)
-    for i in n :
-        skill = str(i)
-        skill = strip_accents(skill)
-        mnsj_skills = mnsj_skills+'<p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skill+'</p>'
-    return mnsj_skills
+
 
 def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     try:
@@ -256,14 +249,3 @@ def gradeData(request):
         struct = json.loads(data)
         grade_data = json.dumps(struct)      
     return HttpResponse(grade_data)
-
-def usarPlantilla(nota1,nota2,fecha1,fecha2,id_config):
-    skill_assesment = getSkillAssesment(id_config)
-    archivo=open("static/plantillas/mail_nueva_evaluacion.html")
-    contenido = archivo.read()
-    contenido = contenido.replace("$$fecha_inicio$$",str(fecha1))
-    contenido = contenido.replace("$$fecha_termino$$",str(fecha2))
-    contenido = contenido.replace("$$nota_minima$$",str(nota1))
-    contenido = contenido.replace("$$nota_maxima$$",str(nota2))
-    contenido = contenido.replace("$$ejercicios$$",str(skill_assesment))
-    return(contenido)
