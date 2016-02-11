@@ -21,7 +21,18 @@ class Command(BaseCommand):
                 conf = assesment['id_assesment_conf_id']
             video_time = getVideoTimeBetween(assesment['grade__kaid_student_id'],assesment['start_date'],assesment['end_date'])
             total_corrects = getSkillAttemptCorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
-            print 'tiempo en videos: %d, total correctas: %d'%(video_time,total_corrects)
+            total_incorrects = getSkillAttemptIncorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
+            print 'tiempo en videos: %d, total correctas: %d total incorrectas: %d'%(video_time,total_corrects,total_incorrects)
+
+def getSkillAttemptIncorrect(id_assesment_config,kaid_student):
+    skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,skill_attempt__kaid_student_id=kaid_student,skill_attempt__correct=False,skill_attempt__skipped=False).values('name_spanish',
+        'skill_attempt__correct').annotate(incorrects = Count('skill_attempt__correct')).aggregate(Sum('incorrects'))
+    #print 'respuesta de una consulta'
+    if skills['incorrects__sum'] == None:
+        incorrects = 0
+    else:
+        incorrects = skills['incorrects__sum']
+    return incorrects
 
 def getSkillAttemptCorrect(id_assesment_config,kaid_student):
     skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,skill_attempt__kaid_student_id=kaid_student,skill_attempt__correct=True).values('name_spanish',
