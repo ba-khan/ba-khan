@@ -31,6 +31,34 @@ class Command(BaseCommand):
             content = htmlTemplate(assesment['grade__grade'],assesment['grade__performance_points'],video_time,total_corrects,total_incorrects,assesment['id_assesment_conf_id'],
                 practiced,mastery1,mastery2,mastery3,struggling)
             sendMail(assesment['grade__kaid_student_id'],content)
+            sendWhatsapp(assesment['grade__kaid_student_id'],assesment['grade__grade'],assesment['grade__performance_points'],video_time,total_corrects,total_incorrects,
+                practiced,mastery1,mastery2,mastery3,struggling)
+
+def sendWhatsapp(kaid,grade,points,video_time,corrects,incorrects,
+                practiced,mastery1,mastery2,mastery3,struggling):
+    student = Student.objects.get(pk=kaid)
+    mensaje = 'Hola, ha finalizado una evaluacion para: '+student.name+'\n'
+    mensaje = mensaje + 'Nota obtenida: '+grade+'\n'
+    mensaje = mensaje + 'Puntos: '+point+'\n'
+    mensaje = mensaje + 'Tiempo en Videos: '+video_time+'minutos \n'
+    mensaje = mensaje + 'Correctas: '+corrects+'\n'
+    mensaje = mensaje + 'Incorrectas: '+incorrects+'\n'
+    mensaje = mensaje + 'Nivel de dominio:\n'
+    mensaje = mensaje + 'Practicados - '+practiced+'\n'
+    mensaje = mensaje + 'Nivel 1 - '+mastery1+'\n'
+    mensaje = mensaje + 'Nivel 2 - '+mastery2+'\n'
+    mensaje = mensaje + 'Dominado - '+mastery3+'\n'
+    mensaje = mensaje + 'Dificultad - '+struggling+'\n'
+    phone = str(student.phone)
+    whatsapp(mensaje,phone)
+    return ()
+
+def whatsapp(msg,num):
+    mensaje = msg
+    numero = num
+    os.system("yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%s '%s'"%(numero,mensaje))
+    return ()
+
 
 def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     student = Student.objects.get(pk=kaid)
