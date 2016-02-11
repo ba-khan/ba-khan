@@ -6,7 +6,7 @@ from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,St
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 import unicodedata
-
+import os
 class Command(BaseCommand):
     help = 'Envia un mail con la nota y las variables de empegno y desempegno'
 
