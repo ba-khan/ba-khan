@@ -81,7 +81,7 @@ def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cad
 def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config,
                 practiced,mastery1,mastery2,mastery3,struggling):
     skill_assesment = getSkillAssesment(id_assesment_config)
-    archivo=open("static/plantillas/end_assesment_mail.html")
+    archivo=open("/var/www/html/bakhanproyecto/static/plantillas/end_assesment_mail.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$grade$$","{0:.1f}".format(grade))
     contenido = contenido.replace("$$points$$",str(points))
