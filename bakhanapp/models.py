@@ -253,6 +253,9 @@ class Skill_Progress(models.Model):
     from_level = models.CharField(max_length=50)
     date = models.DateTimeField()
     
+    class Meta:
+      ordering = ['-date']
+
 class Subtopic_Video(models.Model):
     id_subtopic_video = models.AutoField(primary_key=True)
     id_video_name = models.ForeignKey(Video)
