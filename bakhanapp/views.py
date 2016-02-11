@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.db.models import Count
+from django.db.models import Count,Sum
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -256,6 +256,19 @@ def getLastSkillsLevel(kaid_student,level):
     else:    
         total = Student_Skill.objects.filter(kaid_student=kaid_student,last_skill_progress=level,struggling=False).count()
     return total
+#$$best
+def getBestQuery(request):
+    id_class = 1
+    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(Count('kaid_student_id'))
+    correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(Count('kaid_student_id'))
+    time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))
+    time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))
+    #print incorrect
+    #print correct
+    print time_video
+    return render_to_response('studentClass.html',{'students': students},context_instance=RequestContext(request))
+
 
 @login_required()
 def getClassStudents(request, id_class):
