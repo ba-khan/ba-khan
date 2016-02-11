@@ -85,7 +85,9 @@
           url = (e.data).substring(4);
           console.log(url);
           //window.open(url,"_blank")
-          myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100")
+          myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
+          ws.close();
+          ws="";
         }
       };
       

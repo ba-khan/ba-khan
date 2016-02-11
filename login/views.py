@@ -71,7 +71,7 @@ from websocket_server import WebsocketServer
 
 
 def login(request):
-    wsPort = 9000
+    wsPort = 9001
     return render_to_response('login.html', {'wsPort': wsPort}, context_instance=RequestContext(request))
 
 def rejected(request):
