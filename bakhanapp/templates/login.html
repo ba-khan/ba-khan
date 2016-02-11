@@ -53,7 +53,7 @@
       <h2 class="regular-header login-button-header">
             Inicia sesi&oacuten con tu cuenta Khan Academy
         </h2>
-        <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate/{{ wsPort }}" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+        <a role="button" aria-disabled="false" onClick="openPopup()" href="javascript:void(0)" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top"><!--href="authenticate/{{ wsPort }}" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">-->Ingresar</a>
       </div>
     </div>
 
@@ -67,27 +67,32 @@
     var myWindow;
     function init() {
       // Connect to Web Socket
-      //FUNCIONAAAAAAAAAAAAAAAAAAA POR FAVOOOOOOOOOOOOOOOOOR
       ws = new WebSocket("ws://146.83.216.177:{{ wsPort }}"); //IP del Servidor!
       // Set event handlers.
       ws.onopen = function() {
         output("onopen");
         connected=true;
         if (connected==true){
-        onSubmit("listoco");
-      }
+          onSubmit("listoco");
+        }
       };
       
       ws.onmessage = function(e) {
         // e.data contains received string.
         output("onmessage: " + e.data);
+        if (e.data=="authorized"){
+          window.location = window.location.href+"/inicio";
+        }
+        if (e.data=="unauthorized"){
+          window.location = window.location.href+"/access/rejected/";
+        }
         if ((e.data).substring(0,4)=="url:"){
           url = (e.data).substring(4);
           console.log(url);
           //window.open(url,"_blank")
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
-          ws.close();
-          ws="";
+          //ws.close();
+          //ws="";
         }
       };
       
@@ -128,6 +133,7 @@
     
 function openPopup(){
   init();
+  onSubmit("login");
   
 }
 
