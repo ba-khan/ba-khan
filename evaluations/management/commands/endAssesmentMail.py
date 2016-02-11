@@ -22,7 +22,33 @@ class Command(BaseCommand):
             video_time = getVideoTimeBetween(assesment['grade__kaid_student_id'],assesment['start_date'],assesment['end_date'])
             total_corrects = getSkillAttemptCorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
             total_incorrects = getSkillAttemptIncorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
-            print 'tiempo en videos: %d, total correctas: %d total incorrectas: %d'%(video_time,total_corrects,total_incorrects)
+            practiced,mastery1,mastery2,mastery3,struggling = getDomainLevel(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
+            #print 'tiempo en videos: %d, total correctas: %d total incorrectas: %d'%(video_time,total_corrects,total_incorrects)
+            print practiced,mastery1,mastery2,mastery3,struggling
+
+def getDomainLevel(id_assesment_config,kaid_student):
+    practiced = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,student_skill__kaid_student_id=kaid_student,student_skill__last_skill_progress='practiced').values(
+        'student_skill__id_student_skill','student_skill__last_skill_progress').annotate(practiced=Count('student_skill__id_student_skill')).aggregate(Sum('practiced'))
+    mastery1 = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,student_skill__kaid_student_id=kaid_student,student_skill__last_skill_progress='mastery1').values(
+        'student_skill__id_student_skill','student_skill__last_skill_progress').annotate(mastery1=Count('student_skill__id_student_skill')).aggregate(Sum('mastery1'))
+    mastery2 = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,student_skill__kaid_student_id=kaid_student,student_skill__last_skill_progress='mastery2').values(
+        'student_skill__id_student_skill','student_skill__last_skill_progress').annotate(mastery2=Count('student_skill__id_student_skill')).aggregate(Sum('mastery2'))
+    mastery3 = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,student_skill__kaid_student_id=kaid_student,student_skill__last_skill_progress='mastery3').values(
+        'student_skill__id_student_skill','student_skill__last_skill_progress').annotate(mastery3=Count('student_skill__id_student_skill')).aggregate(Sum('mastery3'))
+    struggling = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,student_skill__kaid_student_id=kaid_student,student_skill__struggling=True).values(
+        'student_skill__id_student_skill','student_skill__last_skill_progress').annotate(struggling=Count('student_skill__id_student_skill')).aggregate(Sum('struggling'))
+    if practiced['practiced__sum'] == None:
+        practiced['practiced__sum'] = 0
+    if mastery1['mastery1__sum'] == None:
+        mastery1['mastery1__sum'] = 0
+    if mastery2['mastery2__sum'] == None:
+        mastery2['mastery2__sum'] = 0
+    if mastery3['mastery3__sum'] == None:
+        mastery3['mastery3__sum'] = 0
+    if struggling['struggling__sum'] == None:
+        struggling['struggling__sum'] = 0
+    return practiced['practiced__sum'], mastery1['mastery1__sum'], mastery2['mastery2__sum'], mastery3['mastery3__sum'], struggling['struggling__sum']
+
 
 def getSkillAttemptIncorrect(id_assesment_config,kaid_student):
     skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,skill_attempt__kaid_student_id=kaid_student,skill_attempt__correct=False,skill_attempt__skipped=False).values('name_spanish',
