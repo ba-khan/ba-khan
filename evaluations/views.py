@@ -180,33 +180,11 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             update_assesment_configs.applied = True
             update_assesment_configs.save()
 
-        #contenido = usarPlantilla(nota1,nota2,fecha1,fecha2,id_config)
-        #sendMail(kaid,contenido) ahora se hace por linea de comando
         print 'antes del os.system'
-        contenido = "<div>contenido dentro de un div</div>"
-        os.system("""python C:/Users/LACLO2013_A/Documents/GitHub/ba-khan/manage.py sendMail %s "%s" "%s" "%s" "%s" "%s" """%(kaid,str(nota1),str(nota2),str(fecha1),str(fecha2),str(id_config)))
+        os.system("""python /var/www/html/bakhanproyecto/manage.py sendMail %s "%s" "%s" "%s" "%s" "%s" """%(kaid,str(nota1),str(nota2),str(fecha1),str(fecha2),str(id_config)))
+        #os.system("""python C:/Users/LACLO2013_A/Documents/GitHub/ba-khan/manage.py sendMail %s "%s" "%s" "%s" "%s" "%s" """%(kaid,str(nota1),str(nota2),str(fecha1),str(fecha2),str(id_config)))
 
-        #sendWhatsapp(kaid,nota1,nota2,fecha1,fecha2,id_config)
     return HttpResponse()
-
-#def sendMail(kaids,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
-#    for kaid in kaids:
-#        student = Student.objects.get(pk=kaid)
-#        tutor = Tutor.objects.get(kaid_student_child=kaid)
-#        
-#        contenido_html = contenido.replace("$$nombre_usuario$$",student.name) #usarPlantilla()
-#
-#        subject = 'Nueva Evaluacion'
-#        text_content = 'habilita el html de tu correo'
-#        html_content = contenido_html
-#        from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
-#        to = str(student.email)
-#        to2 = str(tutor.email)
-#        msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
-#        msg.attach_alternative(html_content, "text/html")
-#        msg.send()
-#    return ()
-
 
 
 
