@@ -38,16 +38,171 @@ def begin():
 		per.close()
 		skills_selected,spanish_skills = skills(ev['id_assesment_config'])
 		grades_involved = grades(ev['id_assesment'])
+		video_times = getTimeVideo(ev['id_assesment'],ev['start_date'],ev['end_date'])#se obtienen todos los tiempos en video de los alumnos.
+		excercice_times = getTimeExcercice(ev['id_assesment'],ev['start_date'],ev['end_date'])
+		total_corrects = getTotalCorrect(ev['id_assesment'],ev['start_date'],ev['end_date'])
+		total_incorrects = getTotalIncorrect(ev['id_assesment'],ev['start_date'],ev['end_date'])
+		domainLevel = getDomainLevel(ev['id_assesment'],ev['start_date'],ev['end_date'])
 		for g in grades_involved:
 			point = getStudentPoints(g['kaid_student_id'],skills_selected,ev['start_date'],ev['end_date'])
 			grade = getGrade(approval_percentage,point,ev['min_grade'],ev['max_grade'])
 			set_points = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 			print 'id_nota: %d, nota: %2.f'%(g['id_grade'],grade)
-			set_points.execute("update public.bakhanapp_grade set performance_points =%d,grade =%.2f,evaluated = 'TRUE' where id_grade = %d "%(point,grade,g['id_grade']))
+			set_points.execute("update public.bakhanapp_grade set performance_points =%d,grade =%.2f,evaluated = 'TRUE' where id_grade = %d "%
+				(point,grade,g['id_grade']))
 			conn.commit()
 			set_points.close()
-			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],spanish_skills)
-			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],spanish_skills)
+			#envia correos y whatsapp
+			send_mail(g['name_student'],g['email_student'],point,grade,'Usted ha obtenido la siguiente calificación',ev['name'],
+				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))
+			send_whatsapp(g['name_student'],g['phone_student'],'le informamos que ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))
+			send_mail(g['name_tutor'],g['email_tutor'],point,grade,'Su pupilo ha obtenido la siguiente calificación',ev['name'],
+				spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))
+			send_whatsapp(g['name_tutor'],g['phone_tutor'],'le informamos que su pupilo ha obtenido la siguiente calificacion:',point,grade,spanish_skills,video_times.get(g['kaid_student_id'],None),excercice_times.get(g['kaid_student_id'],None),
+				total_corrects.get(g['kaid_student_id'],None),total_incorrects.get(g['kaid_student_id'],None),
+				domainLevel.get(g['kaid_student_id'],None))
+def getDomainLevel(assesment,beginDate,endDate):
+	domain = {}
+	domainLevel = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	domainLevel.execute("""SELECT 
+		  bakhanapp_grade.kaid_student_id, 
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery1' THEN 1 ELSE null END) as mastery1,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery2' THEN 1 ELSE null END) as mastery2,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery3' THEN 1 ELSE null END) as mastery3,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='practiced' THEN 1 ELSE null END) as practiced,
+		  count(CASE WHEN bakhanapp_skill_progress.to_level='struggling' THEN 1 ELSE null END) as struggling
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_assesment, 
+		  public.bakhanapp_assesment_skill, 
+		  public.bakhanapp_skill_progress, 
+		  public.bakhanapp_student_skill
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_student_skill.kaid_student_id AND
+		  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+		  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+		  bakhanapp_assesment_skill.id_skill_name_id = bakhanapp_student_skill.id_skill_name_id AND
+		  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_progress.date >= '%s' AND
+		  bakhanapp_skill_progress.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id"""%(assesment,beginDate,endDate))
+	for level in domainLevel:
+		domain[level['kaid_student_id']]={'struggling':level['struggling'],'practiced':level['practiced'],'mastery1':level['mastery1'],'mastery2':level['mastery2'],'mastery3':level['mastery3']}
+	domainLevel.close()
+	return domain
+
+def getTotalIncorrect(assesment,beginDate,endDate):
+	incorrects = {}
+	total_incorrects = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	total_incorrects.execute("""SELECT  
+		  bakhanapp_grade.kaid_student_id, 
+		   count(CASE WHEN bakhanapp_skill_attempt.correct='f' THEN 1 ELSE null END) as incorrect
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_skill_attempt, 
+		  public.bakhanapp_assesment_skill, 
+		  public.bakhanapp_assesment
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+		  bakhanapp_skill_attempt.id_skill_name_id = bakhanapp_assesment_skill.id_skill_name_id AND
+		  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+		  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_attempt.date >= '%s' AND
+		  bakhanapp_skill_attempt.date <= '%s' AND
+		  bakhanapp_skill_attempt.skipped = 'f'
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id"""%(assesment,beginDate,endDate))
+	for total in total_incorrects:
+		incorrects[total['kaid_student_id']]=total['incorrect']
+	total_incorrects.close()
+	return incorrects
+
+def getTotalCorrect(assesment,beginDate,endDate):
+	corrects = {}
+	total_corrects = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	total_corrects.execute("""SELECT  
+		  bakhanapp_grade.kaid_student_id, 
+		  count(CASE WHEN bakhanapp_skill_attempt.correct THEN 1 ELSE null END) as correct
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_skill_attempt, 
+		  public.bakhanapp_assesment_skill, 
+		  public.bakhanapp_assesment
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+		  bakhanapp_skill_attempt.id_skill_name_id = bakhanapp_assesment_skill.id_skill_name_id AND
+		  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+		  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_attempt.date >= '%s' AND
+		  bakhanapp_skill_attempt.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id"""%(assesment,beginDate,endDate))
+	for total in total_corrects:
+		corrects[total['kaid_student_id']]=total['correct']
+	total_corrects.close()
+	return corrects
+
+def getTimeExcercice(assesment,beginDate,endDate):
+	times = {}
+	excercice_time = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	excercice_time.execute("""SELECT 
+		  bakhanapp_grade.kaid_student_id, 
+		  sum(bakhanapp_skill_attempt.time_taken) as time
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_skill_attempt
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_skill_attempt.date >= '%s' AND
+		  bakhanapp_skill_attempt.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id
+"""%(assesment,beginDate,endDate))
+	for time in excercice_time:
+		times[time['kaid_student_id']]=time['time']
+	excercice_time.close()
+	return times
+
+def getTimeVideo(assesment,beginDate,endDate):
+	times = {}
+	video_time = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+	video_time.execute("""SELECT 
+		  bakhanapp_grade.kaid_student_id, 
+		  sum(bakhanapp_video_playing.seconds_watched) as time
+		FROM 
+		  public.bakhanapp_grade, 
+		  public.bakhanapp_video_playing
+		WHERE 
+		  bakhanapp_grade.kaid_student_id = bakhanapp_video_playing.kaid_student_id AND
+		  bakhanapp_grade.id_assesment_id = %d AND 
+		  bakhanapp_video_playing.date >= '%s' AND
+		  bakhanapp_video_playing.date <= '%s' 
+		GROUP BY 
+		  bakhanapp_grade.kaid_student_id;
+"""%(assesment,beginDate,endDate))
+	for time in video_time:
+		times[time['kaid_student_id']]=time['time']
+	video_time.close()
+	return times
+
+
+
+def send_whatsapp(name_student,phone,msg,point,grade,skills,time_video,time_excercice,total_corrects,total_incorrects,domain):
+	os.system("""yowsup-cli demos -l 56955144957:S23B/CdXejaVQPWehwWmqwhnoaI= -s 569%d '%s,%s %d con una puntuacion de %d, las habilidades evaluadas fueron:\n %s \n
+		tiempo en videos: %d \n tiempo en Ejercicios: %d \n Total Correctos: %d \n Total Incorrectos: %d \n 
+		Practicado: %d, Nivel 1: %d, Nivel 2: %d, Dominados: %d, En Dificultad: %d '"""%(phone,name_student,msg,point,grade,skills,time_video,time_excercice,
+			total_corrects,total_incorrects,domain['practiced'],domain['mastery1'],domain['mastery2'],domain['mastery3'],domain['struggling']))
 	
 def getGrade(percentage,points,min_grade,max_grade):
     #calcula la nota
@@ -123,7 +278,7 @@ def skills(id_assesment_config):
 		  bakhanapp_assesment_skill.id_assesment_config_id = %d'''%(id_assesment_config))
 	for s in skills:
 		skills_selected.append({'id_assesment_config_id':s['id_assesment_config_id'],'id_skill_name':s['id_skill_name_id'],'name':s['name']})
-		spanish_skills = spanish_skills +'<li>'+ s['name'] + '</li>'
+		spanish_skills = spanish_skills +'\n'+ s['name'] 
 	skills.close()
 	return skills_selected,spanish_skills
 
@@ -134,9 +289,11 @@ def grades(id_assesment):
 	#cur.execute("SELECT * FROM public.bakhanapp_assesment")#consulto por todas las evaluciones existentes en bakhanDB
 	grades.execute('''SELECT 
 		  bakhanapp_student.name AS name_student, 
-		  bakhanapp_student.email AS email_student, 
+		  bakhanapp_student.email AS email_student,
+		  bakhanapp_student.phone AS phone_student,  
 		  bakhanapp_tutor.name AS name_tutor, 
 		  bakhanapp_tutor.email AS email_tutor, 
+		  bakhanapp_tutor.phone AS phone_tutor,
 		  bakhanapp_grade.id_grade, 
 		  bakhanapp_grade.grade, 
 		  bakhanapp_grade.kaid_student_id,
@@ -152,12 +309,13 @@ def grades(id_assesment):
 		  bakhanapp_grade.id_assesment_id = %d'''%(id_assesment))
 	for g in grades:
 		grades_involved.append({'id_grade':g['id_grade'],'grade':g['grade'],'kaid_student_id':g['kaid_student_id'],
-			'name_student':g['name_student'],'email_student':g['email_student'],'name_tutor':g['name_tutor'],'email_tutor':g['email_tutor']})
+			'name_student':g['name_student'],'email_student':g['email_student'],'phone_student':g['phone_student'],
+			'name_tutor':g['name_tutor'],'email_tutor':g['email_tutor'],'phone_tutor':g['phone_tutor']})
 	#print grades_involved
 	grades.close()
 	return grades_involved
 
-def send_mail(name,email,points,grade,typeMsg,evaluation,skills):
+def send_mail(name,email,points,grade,typeMsg,evaluation,skills,time_video,time_excercice,total_corrects,total_incorrects,domain):
 	me = "bakhanacademy@gmail.com"
 	you = email
 
@@ -280,7 +438,33 @@ def send_mail(name,email,points,grade,typeMsg,evaluation,skills):
 																								<p>
 																									<div>Nota Obtenida: """+str(grade)+"""</div>
 																								</p>
-																								
+																								<p>
+																									<div>Tiempo en videos: """+str(time_video)+"""</div>
+																								</p>
+																								<p>
+																									<div>Tiempo en Ejercicios: """+str(time_excercice)+"""</div>
+																								</p>
+																								<p>
+																									<div>Ejercicios correctos: """+str(total_corrects)+"""</div>
+																								</p>
+																								<p>
+																									<div>Ejercicios incorrectos: """+str(total_incorrects)+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Practicadas: """+str(domain['practiced'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Nivel 1: """+str(domain['mastery1'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Nivel 2: """+str(domain['mastery2'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :Practicadas: """+str(domain['mastery3'])+"""</div>
+																								</p>
+																								<p>
+																									<div>Nivel de dominio :En dificultad: """+str(domain['struggling'])+"""</div>
+																								</p>
 																						</div>
 																					</td>
 																				</tr>

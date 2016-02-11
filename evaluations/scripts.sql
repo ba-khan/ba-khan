@@ -82,3 +82,65 @@ FROM
   public.bakhanapp_skill
 WHERE 
   bakhanapp_assesment_skill.id_skill_name_id = bakhanapp_skill.id_skill_name;
+
+##########################################################################
+SELECT 
+  bakhanapp_grade.kaid_student_id, 
+  sum(bakhanapp_video_playing.seconds_watched) 
+FROM 
+  public.bakhanapp_grade, 
+  public.bakhanapp_video_playing
+WHERE 
+  bakhanapp_grade.kaid_student_id = bakhanapp_video_playing.kaid_student_id AND
+  bakhanapp_grade.id_assesment_id = 181
+group by bakhanapp_grade.kaid_student_id;
+
+##############################################################################
+SELECT 
+  bakhanapp_grade.kaid_student_id, 
+  sum(bakhanapp_video_playing.seconds_watched) as time
+FROM 
+  public.bakhanapp_grade, 
+  public.bakhanapp_video_playing
+WHERE 
+  bakhanapp_grade.kaid_student_id = bakhanapp_video_playing.kaid_student_id AND
+  bakhanapp_grade.id_assesment_id = 181 AND 
+  bakhanapp_video_playing.date >= '2016-01-01' 
+GROUP BY 
+  bakhanapp_grade.kaid_student_id;
+
+
+#############################################################################
+#trae todos las cantidades correctas de ejercicios 
+SELECT  
+  bakhanapp_grade.kaid_student_id, 
+  count(CASE WHEN bakhanapp_skill_attempt.correct THEN 1 ELSE null END)
+FROM 
+  public.bakhanapp_grade, 
+  public.bakhanapp_skill_attempt
+WHERE 
+  bakhanapp_grade.kaid_student_id = bakhanapp_skill_attempt.kaid_student_id AND
+  bakhanapp_grade.id_assesment_id = 181
+GROUP BY bakhanapp_grade.kaid_student_id;
+
+###############################################################################
+SELECT 
+  bakhanapp_grade.kaid_student_id, 
+  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery1' THEN 1 ELSE null END) as mastery1,
+  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery2' THEN 1 ELSE null END) as mastery2,
+  count(CASE WHEN bakhanapp_skill_progress.to_level='mastery3' THEN 1 ELSE null END) as mastery3,
+  count(CASE WHEN bakhanapp_skill_progress.to_level='unpracticed' THEN 1 ELSE null END) as unpracticed
+FROM 
+  public.bakhanapp_grade, 
+  public.bakhanapp_assesment, 
+  public.bakhanapp_assesment_skill, 
+  public.bakhanapp_skill_progress, 
+  public.bakhanapp_student_skill
+WHERE 
+  bakhanapp_grade.kaid_student_id = bakhanapp_student_skill.kaid_student_id AND
+  bakhanapp_assesment.id_assesment = bakhanapp_grade.id_assesment_id AND
+  bakhanapp_assesment.id_assesment_conf_id = bakhanapp_assesment_skill.id_assesment_config_id AND
+  bakhanapp_assesment_skill.id_skill_name_id = bakhanapp_student_skill.id_skill_name_id AND
+  bakhanapp_student_skill.id_student_skill = bakhanapp_skill_progress.id_student_skill_id AND
+  bakhanapp_grade.id_assesment_id = 181
+GROUP BY bakhanapp_grade.kaid_student_id;
