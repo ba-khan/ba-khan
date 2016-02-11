@@ -84,7 +84,7 @@
 	margin-top: 10px;
 	float:left;
 }
-#input_nombre,#skill_search{
+.skill_search{
 	padding-left: 10px;
 	margin-left:5px;
 	width:171px;

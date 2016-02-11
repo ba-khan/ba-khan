@@ -51,19 +51,19 @@
 				</select>
 				<form action="" method="post" id='formJson'>{% csrf_token %}
 					<p class="label_input">Nombre Configuracion</p>
-					<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Nombre configuracion"/>
+					<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuracion"/>
 					<p class="label_input">Nota Minima</p>
-					<input name="nota_minima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota minima"/>
+					<input name="nota_minima" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota minima"/>
 					<p class="label_input">Nota Maxima</p>
-					<input name="nota_maxima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota maxima"/>
+					<input name="nota_maxima" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota maxima"/>
 					<p class="label_input">Fecha Inicio</p>
-					<input name="fecha_inicio" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha inicio"/>
+					<input name="fecha_inicio" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 					<p class="label_input">Fecha Termino</p>
-					<input name="fecha_termino" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha termino"/>
-					<input name="input_id_config" id="input_id_config" style="display:none;" "class="" value="" >
-					<input name="input_kaid" id="input_kaid" style="display:none;" "class="" value="" >
-					<input name="input_id_assesment" id="input_id_assesment" style="display:none;" "class="" value="" >
-					<input name="input_id_class" id="input_id_class" style="display:none;" "class="" value="" >
+					<input name="fecha_termino" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha termino"/>
+					<input name="input_id_config" id="input_id_config" style="display:none;">
+					<input name="input_kaid" id="input_kaid" style="display:none;">
+					<input name="input_id_assesment" id="input_id_assesment" style="display:none;">
+					<input name="input_id_class" id="input_id_class" style="display:none;">
 				</form>
 			</div>
 			<div class="parametros" id="parametros">Parametros</div>
@@ -1271,11 +1271,10 @@
 		}
 		
 		function realizarEvaluacion(){
-			alert("realizando evaluacion");
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
-			if (cuadritos.length>0){
+			if (validarRealizarEvaluacion()){
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1290,12 +1289,51 @@
 						$(".vaciar").empty();
 						location.reload();
 					}
-				});
-			
-			}else{
-				alert("no hay gente a evaluar");
+				});		
 			}
 		}
+
+		function validarRealizarEvaluacion(){
+			var openDiv = document.getElementById('Evaluados'); 
+			var cuadritos = openDiv.getElementsByClassName('cuadradito')
+			input_name = document.getElementById("input_nombre").value;
+			grade_min = document.getElementById("nota_minima").value;
+			grade_max = document.getElementById("nota_maxima").value;
+			date_start = document.getElementById("fecha_inicio").value;
+			date_end = document.getElementById("fecha_termino").value;
+			combo_box = document.getElementById("comboBox").selectedIndex;
+			
+			if (cuadritos.length==0){
+				alert('No hay estudiantes evaluados')
+				return false;
+			}
+			else if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
+				alert('Falta el nombre de la configuracion')
+				return false;
+			}
+			else if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
+				alert('nota minima no valida')
+				return false;
+			}
+			else if(grade_max == null || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
+				alert('nota maxima no valida')
+				return false;
+			}
+			else if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
+				alert('fecha de inicio no valida')
+				return false;
+			}
+			else if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
+				alert('fecha de termino no valida')
+				return false;
+			}
+			else if( combo_box == null || combo_box == 0 ) {
+				alert('seleccione una configuracion')
+				return false;
+			}
+			return true;
+		}
+
 		function modificarNota(){
 			alert('modificar nota');
 			var comentario = $('#textarea_coment').val()
@@ -1447,37 +1485,6 @@
 
 			}
 			deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
-
-			/*
-		    $.ajax({
-				url: "{% url 'evaluations:getAssesment' %}",
-				async:false,
-				type: "POST",
-				data: {assesment:id_assesment},
-				success: function(response){
-					json_assesment=JSON.parse(response);
-					$('#resumen_data').append("<p> Nombre: "+json_assesment[0]['fields']['name']+"</p>");
-					$('#resumen_data').append("<p> Inicio: "+json_assesment[0]['fields']['start_date']+"</p>");
-					$('#resumen_data').append("<p> Termino: "+json_assesment[0]['fields']['end_date']+"</p>");
-					$('#resumen_data').append("<p> Nota Maxima: "+json_assesment[0]['fields']['max_grade']+"</p>");
-					$('#resumen_data').append("<p> Nota Minima: "+json_assesment[0]['fields']['min_grade']+"</p>");
-					id_assesment_confi=json_assesment[0]['fields']['id_assesment_conf']
-				}
-			}); 
-			$.ajax({
-				url: "{% url 'evaluations:gradeData' %}",
-				async:false,
-				type: "POST",
-				data: {assesment:id_assesment},
-				success: function (response) {
-					grade_data = JSON.parse(response);
-					$("#resumen_data").append("<p>Alumnos Participantes: "+grade_data.length+"</p>");
-					for(var i=0;i<grade_data.length;i++){
-						//aqui hay que hacer algo con los datos del grade					
-					}
-				}
-			});
-			*/
 		}
 
 		function deciles(arg_grade,min,max){
