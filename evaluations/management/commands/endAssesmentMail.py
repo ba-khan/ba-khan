@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Sum
+from django.db.models import Sum,Count
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill,Video_Playing
 
 class Command(BaseCommand):
@@ -20,8 +20,18 @@ class Command(BaseCommand):
                 skills = getSelectedSkills(assesment['id_assesment_conf_id']) 
                 conf = assesment['id_assesment_conf_id']
             video_time = getVideoTimeBetween(assesment['grade__kaid_student_id'],assesment['start_date'],assesment['end_date'])
-            print video_time
+            total_corrects = getSkillAttemptCorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
+            print 'tiempo en videos: %d, total correctas: %d'%(video_time,total_corrects)
 
+def getSkillAttemptCorrect(id_assesment_config,kaid_student):
+    skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config,skill_attempt__kaid_student_id=kaid_student,skill_attempt__correct=True).values('name_spanish',
+        'skill_attempt__correct').annotate(corrects = Count('skill_attempt__correct')).aggregate(Sum('corrects'))
+    #print 'respuesta de una consulta'
+    if skills['corrects__sum'] == None:
+        corrects = 0
+    else:
+        corrects = skills['corrects__sum']
+    return corrects
 
 def getSelectedSkills(id_assesment_config):
     skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=id_assesment_config).values('name_spanish','assesment_skill__id_assesment_config_id')
