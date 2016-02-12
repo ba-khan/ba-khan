@@ -260,8 +260,8 @@ def getLastSkillsLevel(kaid_student,level):
 def getBestQuery(request):
     id_class = 1
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(Count('kaid_student_id'))
-    correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(Count('kaid_student_id'))
+    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+    correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
     time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))
     time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))
     practiced = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='practiced',struggling=False).values('kaid_student_id').annotate(practiced=Count('last_skill_progress'))
@@ -272,16 +272,60 @@ def getBestQuery(request):
     #print incorrect
     #print correct
     #print practiced,mastery1,mastery2,mastery3,struggling
-    #print time_excercice.get(kaid_student_id='kaid_618255035742572748513988')['time']#.values('time')
+    #print time_excercice#.get(kaid_student_id='kaid_618255035742572748513988')['time']#.values('time')
+
     json_array=[]
     i=0
     for student in students:
+        print 'nuevo estudiante'
         student_json = {}
         student_json["id"] = i
         student_json['kaid'] = student.kaid_student
         student_json["name"] = student.name
-        student_json["skills_time"] = time_excercice.get(kaid_student_id='kaid_618255035742572748513988')['time']
-        
+        print student.kaid_student
+        try:
+            student_json["skills_time"] = time_excercice.get(kaid_student_id=student.kaid_student)['time']
+        except:
+            student_json["skills_time"] = 0
+        try:
+            student_json["video_time"] = time_video.get(kaid_student_id=student.kaid_student)['time']
+        except:
+            student_json["video_time"] = 0
+        student_exercise={}
+        try:
+            student_exercise["correct"] = correct.get(kaid_student_id=student.kaid_student)['correct']
+        except:
+            student_exercise["correct"] = 0
+        try:
+            student_exercise["incorrect"] = correct.get(kaid_student_id=student.kaid_student)['incorrect']
+        except:
+            student_exercise["incorrect"] = 0
+        student_json["exercises"]=student_exercise 
+        skills_level={}
+        try:
+            skills_level["struggling"] = struggling.get(kaid_student_id=student.kaid_student)['struggling']
+        except:
+            skills_level["struggling"] = 0
+        try:
+            skills_level["practiced"] = practiced.get(kaid_student_id=student.kaid_student)['practiced']
+        except:
+            skills_level["practiced"] = 0
+        try:
+            skills_level["mastery1"] = mastery1.get(kaid_student_id=student.kaid_student)['mastery1']
+        except:
+            skills_level["mastery1"] = 0
+        try:
+            skills_level["mastery2"] = mastery2.get(kaid_student_id=student.kaid_student)['mastery2']
+        except:
+            skills_level["mastery2"] = 0
+        try:
+            skills_level["mastery3"] = mastery3.get(kaid_student_id=student.kaid_student)['mastery3']
+        except:
+            skills_level["mastery3"] = 0
+        try:
+            student_json["skills_level"] = skills_level
+        except:
+            student_json["skills_level"] = 0
         #print student_json
         i+=1
         json_array.append(student_json)
