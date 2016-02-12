@@ -114,7 +114,7 @@ def create_callback_server():
 
         def log_request(self, code='-', size='-'):
             pass
-    server = SocketServer.TCPServer((CALLBACK_BASE, 22), CallbackHandler)
+    server = SocketServer.TCPServer((CALLBACK_BASE, 5432), CallbackHandler)
     #server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
@@ -198,10 +198,10 @@ def message_received(client, server, message):
         session = service.get_auth_session(request_token, secret_request_token,
             params={'oauth_verifier': VERIFIER})
 
-        # 4. 
+        # 4. Get user data from the API Khan request
         login_data = get_api_resource(session)
 
-        # 5. 
+        # 5. Send Khan user data to the client
         server.send_message(client, login_data)
     
     
