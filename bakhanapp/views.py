@@ -282,6 +282,9 @@ def getBestQuery(request):
         student_json["id"] = i
         student_json['kaid'] = student.kaid_student
         student_json["name"] = student.name
+        completed_percentage=round(random.uniform(0,1),2)
+        total_rec=round(random.uniform(0,1),2)
+        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
         #print student.kaid_student
         try:
             student_json["skills_time"] = time_excercice.get(kaid_student_id=student.kaid_student)['time']
