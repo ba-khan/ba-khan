@@ -67,7 +67,8 @@
     var myWindow;
     function init() {
       // Connect to Web Socket
-      ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor
+      //ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor
+      ws = new WebSocket("ws://146.83.216.177:8080"); //IP del Servidor
       //ws = new WebSocket("ws://127.0.0.1:9001");
       //ws = new WebSocket("ws://192.168.1.139:9001");
       // Set event handlers.
@@ -88,9 +89,8 @@
         }
         if (server_data.login){
           var login_data = server_data.login;
-          console.log(login_data);
           $.ajax({
-            url: "{% url 'login:authenticateUser'%}",
+            url: "{% url 'login:authenticateUser' %}",
             type: "POST",
             data: {username: login_data.username, email: login_data.email },
             success: function (response) {

@@ -205,7 +205,8 @@ def message_received(client, server, message):
         server.send_message(client, login_data)
     
     
-PORT=9001
+#PORT=9001
+PORT=8080
 SERVERHOST="0.0.0.0"
 server = WebsocketServer(PORT, SERVERHOST)
 server.set_fn_new_client(new_client)
