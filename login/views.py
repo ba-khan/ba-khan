@@ -80,7 +80,7 @@ def authenticateUser(request):
         args = request.POST
         username = args["username"]
         email = args["email"]
-        print username+" "+email
+        #print username+" "+email
         user = auth.authenticate(username=email, password=email)
         if user:
             auth.login(request, user)
