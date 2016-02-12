@@ -282,7 +282,7 @@ def getBestQuery(request):
         student_json["id"] = i
         student_json['kaid'] = student.kaid_student
         student_json["name"] = student.name
-        print student.kaid_student
+        #print student.kaid_student
         try:
             student_json["skills_time"] = time_excercice.get(kaid_student_id=student.kaid_student)['time']
         except:
@@ -322,10 +322,7 @@ def getBestQuery(request):
             skills_level["mastery3"] = mastery3.get(kaid_student_id=student.kaid_student)['mastery3']
         except:
             skills_level["mastery3"] = 0
-        try:
-            student_json["skills_level"] = skills_level
-        except:
-            student_json["skills_level"] = 0
+        student_json["skills_level"] = skills_level
         #print student_json
         i+=1
         json_array.append(student_json)
