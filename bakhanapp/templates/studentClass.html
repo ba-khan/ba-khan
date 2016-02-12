@@ -5,7 +5,57 @@
 {% block title %}
 	Dashboard
 {% endblock %}
-{% block body2 %}		
+{% block body2 %}	
+
+<style>
+.ribbon {
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+  overflow: hidden;
+  width: 63px; height: 60px;
+  text-align: right;
+  pointer-events: none;
+  margin-left: -4px
+}
+.ribbon span {
+  font-size: 9px;
+  /*font-weight: bold;*/
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 15px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 97px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 13px; left: -25px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+</style>
+
+
 	
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
@@ -273,6 +323,7 @@
         .attr('id', d3.f('id'))
         .attr('title', d3.f('tooltip'))
         .attr('data-sortBy', d3.f('type'))
+        .style('height', '100px')
         .text(d3.f('head'));
     
     table.select('th.name').append('div')
@@ -369,14 +420,53 @@
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	var number_class_id=json["assesments"][i]["id"];
-    	table.select('th.'+class_id)
+    	var date = new Date();
+    	//console.log(date);
+    	//console.log("end_date: "+json["assesments"][i]["end_date"]);
+    	today = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+    	//console.log("hoy: "+today)
+    	todayDate = new Date(Date.parse(today))
+    	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
+    	
+
+    	if (todayDate<endDate){
+    		//console.log("NO MOSTRAR EDITAR");
+    		
+    		table.select('th.'+class_id)
     		.append('div')
-    		.attr("id",number_class_id).html('<button type="button" onClick="editarAssesment('+number_class_id+')">editar</button>');
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		
+    		/*table.select('th.'+class_id)
+    		.append('div')
+    		.attr("id",number_class_id).html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button>')
+    		
+	    	table.select('th.'+class_id)
+			.append('div')
+			.attr("id",number_class_id).html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>');*/
+
+    		
+    		
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr("class","counter")
+    		.attr("id","counter"+i).html("aqui va el reloj");
+    		
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr("class","ribbon")
+    		.attr("id","ribbon"+i).html("<span>En Curso</span>");
+    		
+    	}
+    	else{
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		
+    	}
     	
-    	table.select('th.'+class_id)
-		.append('div')
-		.attr("id",number_class_id).html('<button type="button" onClick="resumenAssesment('+number_class_id+')">resumen</button>');
-    	
+  	
     	table.select('th.'+class_id)
     		.append('button')
     		.attr("id",class_id)
@@ -1289,10 +1379,10 @@
 						$(".vaciar").empty();
 						location.reload();
 					}
-				});		
-			}
-		}
+				});
+			}	
 
+		}
 		function validarRealizarEvaluacion(){
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
@@ -1302,7 +1392,7 @@
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
-			
+
 			if (cuadritos.length==0){
 				alert('No hay estudiantes evaluados')
 				return false;
@@ -1485,6 +1575,7 @@
 
 			}
 			deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
+
 		}
 
 		function deciles(arg_grade,min,max){
@@ -1626,7 +1717,9 @@ svg.append("g")
     .call(xAxis);
 
 		}
-
+		
+		
 	</script>
+
 
 {% endblock %}
