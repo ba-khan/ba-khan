@@ -271,8 +271,24 @@ def getBestQuery(request):
     struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
     #print incorrect
     #print correct
-    print practiced,mastery1,mastery2,mastery3,struggling
-    return render_to_response('studentClass.html',{'students': students},context_instance=RequestContext(request))
+    #print practiced,mastery1,mastery2,mastery3,struggling
+    #print time_excercice.get(kaid_student_id='kaid_618255035742572748513988')['time']#.values('time')
+    json_array=[]
+    i=0
+    for student in students:
+        student_json = {}
+        student_json["id"] = i
+        student_json['kaid'] = student.kaid_student
+        student_json["name"] = student.name
+        student_json["skills_time"] = time_excercice.get(kaid_student_id='kaid_618255035742572748513988')['time']
+        
+        #print student_json
+        i+=1
+        json_array.append(student_json)
+    print json_array
+    json_dict={"students":json_array}#, "assesments":assesment_array}
+    json_data = json.dumps(json_dict)
+    return render_to_response('studentClass.html',{'students': students,'jason_data': json_data},context_instance=RequestContext(request))
 
 
 @login_required()
@@ -350,12 +366,16 @@ def getClassStudents(request, id_class):
         student_json={}
         student_json["id"]=i
         student_json["name"]=student.name
-        student.t_exercise= getTotalExerciseTime(student.kaid_student)
+        
         completed_percentage=round(random.uniform(0,1),2)
         total_rec=round(random.uniform(0,1),2)
+
+        student.t_exercise= getTotalExerciseTime(student.kaid_student)
         student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+        
         student_json["skills_time"]=student.t_exercise
         student.t_video= getTotalVideoTime(student.kaid_student)
+        
         student_json["video_time"]=student.t_video
         student.correct= getTotalExerciseCorrect(student.kaid_student)
         student.incorrect= getTotalExerciseIncorrect(student.kaid_student)
@@ -364,6 +384,7 @@ def getClassStudents(request, id_class):
         student_exercise["incorrect"]=student.incorrect
         #student_json["corrects"]=[(student.correct),(student.incorrect)]
         student_json["exercises"]=student_exercise
+        
         skills_level={}
         student.struggling = getLastSkillsLevel(student.kaid_student, 'struggling')
         skills_level["struggling"]=(student.struggling)
