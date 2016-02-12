@@ -91,7 +91,7 @@
           console.log(login_data);
           $.ajax({
             url: "{% url 'login:authenticateUser'%}",
-            type: "GET",
+            type: "POST",
             data: {username: login_data.username, email: login_data.email },
             success: function (response) {
               if (response=="True"){

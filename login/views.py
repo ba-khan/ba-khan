@@ -76,8 +76,8 @@ def rejected(request):
 
 def authenticateUser(request):
     authorized = False
-    if request.method == 'GET':
-        args = request.GET
+    if request.method == 'POST':
+        args = request.POST
         username = args["username"]
         email = args["email"]
         print username+" "+email
