@@ -53,7 +53,7 @@
       <h2 class="regular-header login-button-header">
             Inicia sesi&oacuten con tu cuenta Khan Academy
         </h2>
-        <a role="button" aria-disabled="false" onClick="openPopup()" href="authenticate/{{ wsPort }}" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+        <a role="button" aria-disabled="false" onClick="openPopup()" href="javascript:void(0)" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
       </div>
     </div>
 
@@ -67,27 +67,40 @@
     var myWindow;
     function init() {
       // Connect to Web Socket
-      //FUNCIONAAAAAAAAAAAAAAAAAAA POR FAVOOOOOOOOOOOOOOOOOR
-      ws = new WebSocket("ws://146.83.216.177:{{ wsPort }}"); //IP del Servidor!
+      ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor
+      //ws = new WebSocket("ws://127.0.0.1:9001");
+      //ws = new WebSocket("ws://192.168.1.139:9001");
       // Set event handlers.
       ws.onopen = function() {
         output("onopen");
         connected=true;
         if (connected==true){
-        onSubmit("listoco");
-      }
+          onSubmit("login");
+        }
       };
       
       ws.onmessage = function(e) {
         // e.data contains received string.
-        output("onmessage: " + e.data);
-        if ((e.data).substring(0,4)=="url:"){
-          url = (e.data).substring(4);
-          console.log(url);
-          //window.open(url,"_blank")
+        var server_data = JSON.parse(e.data)
+        if (server_data.url){
+          var url = server_data.url
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
-          ws.close();
-          ws="";
+        }
+        if (server_data.login){
+          var login_data = server_data.login;
+          console.log(login_data);
+          $.ajax({
+            url: "{% url 'login:authenticateUser'%}",
+            type: "GET",
+            data: {username: login_data.username, email: login_data.email },
+            success: function (response) {
+              if (response=="True"){
+                window.location = window.location.href+"inicio";
+              }else{
+                window.location = window.location.href+"access/rejected/";
+              }    
+            }
+          });
         }
       };
       
@@ -100,11 +113,11 @@
             }else{
                 if (ws.readyState==3){
                     console.log("Reconectando websocket...");
-                    onCloseClick();
+                    //onCloseClick();
                     init();
                 }
             }
-        }, 1000);
+        }, 10000);
       };
       ws.onerror = function(e) {
         output("onerror");
@@ -118,18 +131,15 @@
       output("send: " + str);
     }
     
-    function onCloseClick() {
-      ws.close();
-    }
-    
     function output(str) {
       console.log(str);
     }
     
 function openPopup(){
   init();
-  
 }
+
 </script>
 
 </html>
+
