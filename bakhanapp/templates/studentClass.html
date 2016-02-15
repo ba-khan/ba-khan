@@ -5,7 +5,57 @@
 {% block title %}
 	Dashboard
 {% endblock %}
-{% block body2 %}		
+{% block body2 %}	
+
+<style>
+.ribbon {
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+  overflow: hidden;
+  width: 63px; height: 60px;
+  text-align: right;
+  pointer-events: none;
+  margin-left: -4px
+}
+.ribbon span {
+  font-size: 9px;
+  /*font-weight: bold;*/
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 15px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 97px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 13px; left: -25px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+</style>
+
+
 	
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
@@ -41,7 +91,7 @@
     	</div>
     </div>
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluacion</button></div>
-	<div id="contenido_a_mostrar" style="display:none;">
+	<div id="contenido_a_mostrar"  style="display:none;margin-left:30px;margin-bottom:10px;">
 			<div id="inputs" align="left">
 				<select id="comboBox" style="margin:10px;" onChange="fillParameters(this.value)">
 					<OPTION VALUE=0>Seleccionar Pauta</OPTION>
@@ -51,19 +101,19 @@
 				</select>
 				<form action="" method="post" id='formJson'>{% csrf_token %}
 					<p class="label_input">Nombre Configuracion</p>
-					<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Nombre configuracion"/>
+					<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuracion"/>
 					<p class="label_input">Nota Minima</p>
-					<input name="nota_minima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota minima"/>
+					<input name="nota_minima" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota minima"/>
 					<p class="label_input">Nota Maxima</p>
-					<input name="nota_maxima" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="number" min="0" placeholder="Nota maxima"/>
+					<input name="nota_maxima" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota maxima"/>
 					<p class="label_input">Fecha Inicio</p>
-					<input name="fecha_inicio" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha inicio"/>
+					<input name="fecha_inicio" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 					<p class="label_input">Fecha Termino</p>
-					<input name="fecha_termino" id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="date" placeholder="Fecha termino"/>
-					<input name="input_id_config" id="input_id_config" style="display:none;" "class="" value="" >
-					<input name="input_kaid" id="input_kaid" style="display:none;" "class="" value="" >
-					<input name="input_id_assesment" id="input_id_assesment" style="display:none;" "class="" value="" >
-					<input name="input_id_class" id="input_id_class" style="display:none;" "class="" value="" >
+					<input name="fecha_termino" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha termino"/>
+					<input name="input_id_config" id="input_id_config" style="display:none;">
+					<input name="input_kaid" id="input_kaid" style="display:none;">
+					<input name="input_id_assesment" id="input_id_assesment" style="display:none;">
+					<input name="input_id_class" id="input_id_class" style="display:none;">
 				</form>
 			</div>
 			<div class="parametros" id="parametros">Parametros</div>
@@ -72,8 +122,8 @@
 		    <div class="flechas"><IMG SRC="http://1.bp.blogspot.com/_qgZA1ny_dAs/S0QKBZIBjwI/AAAAAAAADiE/ne7stP8FB60/s320/arrow3b.png" onClick="EvaluarTodos()"></div>
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 			<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
-			<div><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
-			<div><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
+			<div align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
+			<div align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
 	</div>
 			
 	
@@ -279,6 +329,7 @@
         .attr('id', d3.f('id'))
         .attr('title', d3.f('tooltip'))
         .attr('data-sortBy', d3.f('type'))
+        .style('height', '100px')
         .text(d3.f('head'));
     
     table.select('th.name').append('div')
@@ -375,14 +426,53 @@
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	var number_class_id=json["assesments"][i]["id"];
-    	table.select('th.'+class_id)
+    	var date = new Date();
+    	//console.log(date);
+    	//console.log("end_date: "+json["assesments"][i]["end_date"]);
+    	today = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+    	//console.log("hoy: "+today)
+    	todayDate = new Date(Date.parse(today))
+    	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
+    	
+
+    	if (todayDate<endDate){
+    		//console.log("NO MOSTRAR EDITAR");
+    		
+    		table.select('th.'+class_id)
     		.append('div')
-    		.attr("id",number_class_id).html('<button type="button" onClick="editarAssesment('+number_class_id+')">editar</button>');
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		
+    		/*table.select('th.'+class_id)
+    		.append('div')
+    		.attr("id",number_class_id).html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button>')
+    		
+	    	table.select('th.'+class_id)
+			.append('div')
+			.attr("id",number_class_id).html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>');*/
+
+    		
+    		
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr("class","counter")
+    		.attr("id","counter"+i).html("aqui va el reloj");
+    		
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr("class","ribbon")
+    		.attr("id","ribbon"+i).html("<span>En Curso</span>");
+    		
+    	}
+    	else{
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		
+    	}
     	
-    	table.select('th.'+class_id)
-		.append('div')
-		.attr("id",number_class_id).html('<button type="button" onClick="resumenAssesment('+number_class_id+')">resumen</button>');
-    	
+  	
     	table.select('th.'+class_id)
     		.append('button')
     		.attr("id",class_id)
@@ -1345,11 +1435,10 @@
 		}
 		
 		function realizarEvaluacion(){
-			alert("realizando evaluacion");
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
-			if (cuadritos.length>0){
+			if (validarRealizarEvaluacion()){
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1365,11 +1454,50 @@
 						location.reload();
 					}
 				});
-			
-			}else{
-				alert("no hay gente a evaluar");
-			}
+			}	
+
 		}
+		function validarRealizarEvaluacion(){
+			var openDiv = document.getElementById('Evaluados'); 
+			var cuadritos = openDiv.getElementsByClassName('cuadradito')
+			input_name = document.getElementById("input_nombre").value;
+			grade_min = document.getElementById("nota_minima").value;
+			grade_max = document.getElementById("nota_maxima").value;
+			date_start = document.getElementById("fecha_inicio").value;
+			date_end = document.getElementById("fecha_termino").value;
+			combo_box = document.getElementById("comboBox").selectedIndex;
+
+			if (cuadritos.length==0){
+				alert('No hay estudiantes evaluados')
+				return false;
+			}
+			else if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
+				alert('Falta el nombre de la configuracion')
+				return false;
+			}
+			else if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
+				alert('nota minima no valida')
+				return false;
+			}
+			else if(grade_max == null || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
+				alert('nota maxima no valida')
+				return false;
+			}
+			else if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
+				alert('fecha de inicio no valida')
+				return false;
+			}
+			else if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
+				alert('fecha de termino no valida')
+				return false;
+			}
+			else if( combo_box == null || combo_box == 0 ) {
+				alert('seleccione una configuracion')
+				return false;
+			}
+			return true;
+		}
+
 		function modificarNota(){
 			alert('modificar nota');
 			var comentario = $('#textarea_coment').val()
@@ -1522,36 +1650,6 @@
 			}
 			deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
 
-			/*
-		    $.ajax({
-				url: "{% url 'evaluations:getAssesment' %}",
-				async:false,
-				type: "POST",
-				data: {assesment:id_assesment},
-				success: function(response){
-					json_assesment=JSON.parse(response);
-					$('#resumen_data').append("<p> Nombre: "+json_assesment[0]['fields']['name']+"</p>");
-					$('#resumen_data').append("<p> Inicio: "+json_assesment[0]['fields']['start_date']+"</p>");
-					$('#resumen_data').append("<p> Termino: "+json_assesment[0]['fields']['end_date']+"</p>");
-					$('#resumen_data').append("<p> Nota Maxima: "+json_assesment[0]['fields']['max_grade']+"</p>");
-					$('#resumen_data').append("<p> Nota Minima: "+json_assesment[0]['fields']['min_grade']+"</p>");
-					id_assesment_confi=json_assesment[0]['fields']['id_assesment_conf']
-				}
-			}); 
-			$.ajax({
-				url: "{% url 'evaluations:gradeData' %}",
-				async:false,
-				type: "POST",
-				data: {assesment:id_assesment},
-				success: function (response) {
-					grade_data = JSON.parse(response);
-					$("#resumen_data").append("<p>Alumnos Participantes: "+grade_data.length+"</p>");
-					for(var i=0;i<grade_data.length;i++){
-						//aqui hay que hacer algo con los datos del grade					
-					}
-				}
-			});
-			*/
 		}
 
 		function deciles(arg_grade,min,max){
@@ -1632,8 +1730,71 @@
 			makeGraphic();
 		}
 
-		
+function makeGraphic(){
+			// Generate a Bates distribution of 10 random variables.
+			// Generate a log-normal distribution with a median of 30 minutes.
+var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
 
+// Formatters for counts and times (converting numbers to Dates).
+var formatCount = d3.format(",.0f"),
+    formatTime = d3.time.format("%H:%M"),
+    formatMinutes = function(d) { return formatTime(new Date(2012, 0, 1, 0, d)); };
+
+var margin = {top: 10, right: 30, bottom: 30, left: 30},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .domain([0, 120])
+    .range([0, width]);
+
+// Generate a histogram using twenty uniformly-spaced bins.
+var data = d3.layout.histogram()
+    .bins(x.ticks(20))
+    (values);
+
+var y = d3.scale.linear()
+    .domain([0, d3.max(data, function(d) { return d.y; })])
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickFormat(formatMinutes);
+
+var svg = d3.select("#resumen_graph").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var bar = svg.selectAll(".bar")
+    .data(data)
+  .enter().append("g")
+    .attr("class", "bar")
+    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+bar.append("rect")
+    .attr("x", 1)
+    .attr("width", x(data[0].dx) - 1)
+    .attr("height", function(d) { return height - y(d.y); });
+
+bar.append("text")
+    .attr("dy", ".75em")
+    .attr("y", 6)
+    .attr("x", x(data[0].dx) / 2)
+    .attr("text-anchor", "middle")
+    .text(function(d) { return formatCount(d.y); });
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+		}
+		
+		
 	</script>
+
 
 {% endblock %}

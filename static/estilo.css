@@ -37,6 +37,12 @@
 	border: 1px solid #D9D9D9;
 	border-radius: 5px;
 }
+#sinEvaluar{
+	background-image: url("img/estudiantesNoEvaluados.png");
+}
+#Evaluados{
+	background-image: url("img/estudiantesEvaluados.png");
+}
 
 .cuadradito {
 	float: left;
@@ -79,7 +85,7 @@
 	margin-top: 10px;
 	float:left;
 }
-#input_nombre,#skill_search{
+.skill_search{
 	padding-left: 10px;
 	margin-left:5px;
 	width:171px;
@@ -412,7 +418,37 @@ label.sort-filter{
   shape-rendering: crispEdges;
 }
 
+.editButton {
+    background:url(img/editButton.png);
+    background-size: 32px;
+    cursor:pointer;
+    width: 32px;
+    height: 32px;
+    border: none;
+    margin-left:-2%;
+}
+.summaryButton {
+    background:url(img/summaryButton.png);
+    background-size: 32px;
+    cursor:pointer;
+    width: 32px;
+    height: 32px;
+    border: none;
+    margin-right:10%;
+}
+.buttonsES{
+	position:absolute;
+	top:-35px;
+	width:98px;
+}
+
+.counter{
+	position:absolute;
+	top:-50px;
+}
+
 .tipsy { font-size: 14px; position: absolute; padding: 5px; z-index: 100000; }
+
   .tipsy-inner { background-color: #fff; color: #000; max-width: 200px; padding: 5px 8px 4px 8px; text-align: center; }
 
   /* Rounded corners */

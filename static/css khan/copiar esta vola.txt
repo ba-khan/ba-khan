@@ -1,6 +1,0 @@
-		<link rel='stylesheet' type='text/css' href="{% static 'css khan/checklist-package-88f605.css'%}">
-		<link rel='stylesheet' type='text/css' href="{% static 'css khan/coach-homepage-package-48d6a1.css'%}">
-		<link rel='stylesheet' type='text/css' href="{% static 'css khan/eduorg-picker-package-565b42.css'%}">
-		<link rel='stylesheet' type='text/css' href="{% static 'css khan/learn-storm-package-5ec30a.css'%}">
-		<link rel='stylesheet' type='text/css' href="{% static 'css khan/react-package-6e3499.css'%}">
-		<link rel='stylesheet' type='text/css' href="{% static 'css khan/shared-package-d75335.css'%}">

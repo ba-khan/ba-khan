@@ -66,18 +66,7 @@
     margin-top: 0px;
 }
  /* --------- FIN POPUP ----------- */
- table.testgrid th:last-child{
- 	border-right: 1px solid #f7f7f7;
- 	border-top: 1px solid #f7f7f7;
- 	border-bottom: 1px solid #f7f7f7;
- 	background: #f7f7f7;
- }
- table.testgrid td:last-child{
- 	border-right: 1px solid #f7f7f7;
- 	border-top: 1px solid #f7f7f7;
- 	border-bottom: 1px solid #f7f7f7;
- 	border-top: 1px solid #f7f7f7;
- }
+
  tr:hover {
 	background-color: #BFDAB3;
 }
