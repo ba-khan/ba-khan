@@ -297,43 +297,66 @@ def getBestQuery(request):
         query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
         query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
         time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-        #print time_video
-        #practiced = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False).values('id_student_skill')#.annotate(practiced=Count('last_skill_progress'))
-        #practiced_between = Skill_Progress.objects.filter(id_student_skill_id__in=practiced,date__range=(assesment.start_date,assesment.end_date),to_level='practiced')
-        practiced = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False
+        levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
             ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
             ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
-        print '*****************************************'
-        for p in practiced:
-            print p
-        #i=0
-        #for student in students:
-            #student_json={}
-            #student_json["id"]=i
-            #student_json["name"]=student.name
-            #completed_percentage=round(random.uniform(0,1),2)
-            #total_rec=round(random.uniform(0,1),2)
-            #student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
-            #student.t_exercise= getExerciseTimeBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
-            #student_json["skills_time"]=student.t_exercise
-            #student.t_video= getVideoTimeBetween(student.kaid_student,assesment.start_date,assesment.end_date)
-            #student_json["video_time"]=student.t_video
-            #student.correct= getExerciseCorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
-            #student.incorrect= getExerciseIncorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
-            #student_exercise={}
-            #student_exercise["correct"]=student.correct
-            #student_exercise["incorrect"]=student.incorrect
-            #student_json["exercises"]=student_exercise
-            #skills_level={}
-            #skills_level["struggling"]=round(random.uniform(1,20),0)
-            #skills_level["practiced"]=round(random.uniform(1,20),0)
-            #skills_level["mastery1"]=round(random.uniform(1,20),0)
-            #skills_level["mastery2"]=round(random.uniform(1,20),0)
-            #skills_level["mastery3"]=round(random.uniform(0,20),0)
-            #student_json["skills_level"]=skills_level
-            #assesment_json["assesment_student"].append(student_json)
-            #i+=1
-        #assesment_array.append(assesment_json)
+        struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
+            ).values('kaid_student','id_student_skill'
+            ).order_by('kaid_student','id_student_skill')
+        print '*****************************************assesment*********************'
+        #for p in struggling:
+        #    print p
+        i=0
+        for student in students:
+            student_json={}
+            student_json["id"]=i
+            student_json["name"]=student.name
+            completed_percentage=round(random.uniform(0,1),2)
+            total_rec=round(random.uniform(0,1),2)
+            student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+            try:
+                student_json["skills_time"] = time_excercice.get(kaid_student_id=student.kaid_student)['time']
+            except:
+                student_json["skills_time"] = 0
+            try:
+                student_json["video_time"] = time_video.get(kaid_student_id=student.kaid_student)['time']
+            except:
+                student_json["video_time"] = 0            
+            student_exercise={}
+            try:
+                student_exercise["correct"] = correct.get(kaid_student_id=student.kaid_student)['correct']
+            except:
+                student_exercise["correct"] = 0
+            try:
+                student_exercise["incorrect"] = correct.get(kaid_student_id=student.kaid_student)['incorrect']
+            except:
+                student_exercise["incorrect"] = 0
+            student_json["exercises"]=student_exercise
+            skills_level={}
+            try:
+                skills_level["struggling"] = struggling.filter(kaid_student_id=student.kaid_student).count()
+            except:
+                skills_level["struggling"] = 0
+            try:
+                skills_level["practiced"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='practiced').count()
+            except:
+                skills_level["practiced"] = 0
+            try:
+                skills_level["mastery1"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery1').count()
+            except:
+                skills_level["mastery1"] = 0
+            try:
+                skills_level["mastery2"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery2').count()
+            except:
+                skills_level["mastery2"] = 0
+            try:
+                skills_level["mastery3"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery3').count()
+            except:
+                skills_level["mastery3"] = 0
+            student_json["skills_level"]=skills_level
+            assesment_json["assesment_student"].append(student_json)
+            i+=1
+        assesment_array.append(assesment_json)
 
     json_array=[]
     i=0
