@@ -60,6 +60,7 @@ from django.core import serializers
 from django.db import connection
 
 import random
+import datetime
 
 
 
@@ -273,11 +274,70 @@ def getBestQuery(request):
     #print correct
     #print practiced,mastery1,mastery2,mastery3,struggling
     #print time_excercice#.get(kaid_student_id='kaid_618255035742572748513988')['time']#.values('time')
+    assesments = Assesment.objects.filter(id_class_id=id_class)
+    assesment_array=[]
+    
+    for assesment in assesments:
+        assesment_json={}
+        assesment_json["id"]=assesment.id_assesment
+        assesment_json["name"]=assesment.name
+        assesment_json["config_name"]= assesment.id_assesment_conf.name
+        assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
+        assesment_json["top_score"]= assesment.id_assesment_conf.top_score
+        assesment_json["max_grade"]= assesment.max_grade
+        assesment_json["min_grade"]= assesment.min_grade
+        assesment_json["id_config"]= assesment.id_assesment_conf.id_assesment_config
+        assesment_json["start_date"]= str(assesment.start_date)
+        assesment_json["end_date"]= str(assesment.end_date)
+        assesment_json["assesment_student"]=[]
+        skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
+        incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+        correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
+        time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
+        query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
+        query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
+        time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
+        #print time_video
+        #practiced = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False).values('id_student_skill')#.annotate(practiced=Count('last_skill_progress'))
+        #practiced_between = Skill_Progress.objects.filter(id_student_skill_id__in=practiced,date__range=(assesment.start_date,assesment.end_date),to_level='practiced')
+        practiced = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False
+            ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date').order_by('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+        print '*****************************************'
+        for p in practiced:
+            print p
+        #i=0
+        #for student in students:
+            #student_json={}
+            #student_json["id"]=i
+            #student_json["name"]=student.name
+            #completed_percentage=round(random.uniform(0,1),2)
+            #total_rec=round(random.uniform(0,1),2)
+            #student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+            #student.t_exercise= getExerciseTimeBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
+            #student_json["skills_time"]=student.t_exercise
+            #student.t_video= getVideoTimeBetween(student.kaid_student,assesment.start_date,assesment.end_date)
+            #student_json["video_time"]=student.t_video
+            #student.correct= getExerciseCorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
+            #student.incorrect= getExerciseIncorrectBetween(student.kaid_student,assesment.start_date,assesment.end_date,assesment.id_assesment_conf_id)
+            #student_exercise={}
+            #student_exercise["correct"]=student.correct
+            #student_exercise["incorrect"]=student.incorrect
+            #student_json["exercises"]=student_exercise
+            #skills_level={}
+            #skills_level["struggling"]=round(random.uniform(1,20),0)
+            #skills_level["practiced"]=round(random.uniform(1,20),0)
+            #skills_level["mastery1"]=round(random.uniform(1,20),0)
+            #skills_level["mastery2"]=round(random.uniform(1,20),0)
+            #skills_level["mastery3"]=round(random.uniform(0,20),0)
+            #student_json["skills_level"]=skills_level
+            #assesment_json["assesment_student"].append(student_json)
+            #i+=1
+        #assesment_array.append(assesment_json)
 
     json_array=[]
     i=0
     for student in students:
-        print 'nuevo estudiante'
+        #print 'nuevo estudiante'
         student_json = {}
         student_json["id"] = i
         student_json['kaid'] = student.kaid_student
@@ -329,7 +389,7 @@ def getBestQuery(request):
         #print student_json
         i+=1
         json_array.append(student_json)
-    print json_array
+    #print json_array
     json_dict={"students":json_array}#, "assesments":assesment_array}
     json_data = json.dumps(json_dict)
     return render_to_response('studentClass.html',{'students': students,'jason_data': json_data},context_instance=RequestContext(request))
