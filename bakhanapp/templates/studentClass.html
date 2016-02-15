@@ -216,9 +216,13 @@
         //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
     ];
     
+    var class_id="assesment"+json["assesments"][0]["id"];
+    columns.push({head: 'Promedio', column: 0, cl: 'average', value: d3.f(class_id), type:'numeric'})
+    data.push(assesments[0]["assesment_student"]);
+
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	//console.log(class_id);
+    	console.log(class_id);
     	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
     }
@@ -404,16 +408,6 @@
 endDate2 = (endDate.getMonth()+1)+"/"+(endDate.getDate())+"/"+(endDate.getFullYear())+" 00:00 AM";
 endDates.push(endDate2)
 console.log("HORA FINAL: "+endDate2);
-
-TargetDate = endDate2;
-BackColor = "white";
-ForeColor = "black";
-CountActive = true;
-CountStepper = -1;
-LeadingZero = true;
-DisplayFormat = "%%D%%d%%H%%h%%M%%m%%S%%s";
-FinishMessage = "";
-
     		   		
     		table.select('th.'+class_id)
     		.append('span')
@@ -1698,62 +1692,50 @@ svg.append("g")
 	</script>
 
 <script language="JavaScript" type="text/javascript">
-function calcage(secs, num1, num2) {
-  s = ((Math.floor(secs/num1))%num2).toString();
-  if (LeadingZero && s.length < 2)
-    s = "0" + s;
-  return "<b>" + s + "</b>";
-}
 
 cntdwns = document.getElementsByClassName("counter");
-console.log(cntdwns);
-
-
-function CountBack(secs,id) {
-  if (secs < 0) {
-    document.getElementById(id).innerHTML = FinishMessage;
-    return;
-  }
-  DisplayStr = DisplayFormat.replace(/%%D%%/g, calcage(secs,86400,100000));
-  DisplayStr = DisplayStr.replace(/%%H%%/g, calcage(secs,3600,24));
-  DisplayStr = DisplayStr.replace(/%%M%%/g, calcage(secs,60,60));
-  DisplayStr = DisplayStr.replace(/%%S%%/g, calcage(secs,1,60));
-
-  document.getElementById(id).innerHTML = DisplayStr;
-  if (CountActive)
-    setTimeout("CountBack(" + (secs+CountStepper) + ")", SetTimeOutPeriod);
+for (var i = cntdwns.length - 1; i >= 0; i--) {
+	StartCountDown(cntdwns[i].id,endDates[i])
 }
+  
+  function StartCountDown(myDiv,myTargetDate)
+  {
+    var dthen   = new Date(myTargetDate);
+    var dnow    = new Date();
+    ddiff       = new Date(dthen-dnow);
+    gsecs       = Math.floor(ddiff.valueOf()/1000);
+    CountBack(myDiv,gsecs);
+  }
+  
+  function Calcage(secs, num1, num2)
+  {
+    s = ((Math.floor(secs/num1))%num2).toString();
+    if (s.length < 2) 
+    {   
+      s = "0" + s;
+    }
+    return (s);
+  }
+  
+  function CountBack(myDiv, secs)
+  {
+    var DisplayStr;
+    var DisplayFormat = "%%D%%d%%H%%h%%M%%m%%S%%s";
+    DisplayStr = DisplayFormat.replace(/%%D%%/g,    Calcage(secs,86400,100000));
+    DisplayStr = DisplayStr.replace(/%%H%%/g,       Calcage(secs,3600,24));
+    DisplayStr = DisplayStr.replace(/%%M%%/g,       Calcage(secs,60,60));
+    DisplayStr = DisplayStr.replace(/%%S%%/g,       Calcage(secs,1,60));
+    if(secs > 0)
+    {   
+      document.getElementById(myDiv).innerHTML = DisplayStr;
+      setTimeout("CountBack('" + myDiv + "'," + (secs-1) + ");", 990);
+    }
+    else
+    {
+      document.getElementById(myDiv).innerHTML = "Evaluacion Lista";
+    }
+  }
 
-if (typeof(BackColor)=="undefined")
-  BackColor = "white";
-if (typeof(ForeColor)=="undefined")
-  ForeColor= "black";
-if (typeof(TargetDate)=="undefined")
-  TargetDate = "12/31/2020 5:00 AM";
-if (typeof(DisplayFormat)=="undefined")
-  DisplayFormat = "%%D%% Days, %%H%% Hours, %%M%% Minutes, %%S%% Seconds.";
-if (typeof(CountActive)=="undefined")
-  CountActive = true;
-if (typeof(FinishMessage)=="undefined")
-  FinishMessage = "";
-if (typeof(CountStepper)!="number")
-  CountStepper = -1;
-if (typeof(LeadingZero)=="undefined")
-  LeadingZero = true;
-
-CountStepper = Math.ceil(CountStepper); 
-if (CountStepper == 0)
-  CountActive = false;
-var SetTimeOutPeriod = (Math.abs(CountStepper)-1)*1000 + 990;
-
-var dthen = new Date(TargetDate);
-var dnow = new Date();
-if(CountStepper>0)
-  ddiff = new Date(dnow-dthen);
-else
-  ddiff = new Date(dthen-dnow);
-gsecs = Math.floor(ddiff.valueOf()/1000);
-CountBack(gsecs,"cntdwn1");
 
 for (var i = endDates.length - 1; i >= 0; i--) {
 	console.log(endDates[i])
