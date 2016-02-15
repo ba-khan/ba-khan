@@ -61,6 +61,8 @@ from django.db import connection
 
 import random
 import datetime
+import threading
+import Queue
 
 
 
@@ -284,101 +286,19 @@ def getBestQuery(request):
     #print time_excercice#.get(kaid_student_id='kaid_618255035742572748513988')['time']#.values('time')
     assesments = Assesment.objects.filter(id_class_id=id_class)
     assesment_array=[]
+    
+    threads = []
+    queue = Queue.Queue()
+    
     inicio = time.time()
     for assesment in assesments:
-        assesment_json={}
-        assesment_json["id"]=assesment.id_assesment
-        assesment_json["name"]=assesment.name
-        assesment_json["config_name"]= assesment.id_assesment_conf.name
-        assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
-        assesment_json["top_score"]= assesment.id_assesment_conf.top_score
-        assesment_json["max_grade"]= assesment.max_grade
-        assesment_json["min_grade"]= assesment.min_grade
-        assesment_json["id_config"]= assesment.id_assesment_conf.id_assesment_config
-        assesment_json["start_date"]= str(assesment.start_date)
-        assesment_json["end_date"]= str(assesment.end_date)
-        assesment_json["assesment_student"]=[]
-        skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
-        incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
-        dictIncorrect = {}
-        for inc in incorrect:
-            dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
-        correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
-        dictCorrect = {}
-        for cor in correct:
-            dictCorrect[cor['kaid_student_id']] = cor['correct']
-        time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-        dictTimeExcercice = {}
-        for te in time_excercice:
-            dictTimeExcercice[te['kaid_student_id']] = te['time']
-        query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
-        query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
-        time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-        dictTimeVideo = {}
-        for vid in time_video:
-            dictTimeVideo[vid['kaid_student_id']] = vid['time']
-        levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
-            ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
-            ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
-        struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
-            ).values('kaid_student','id_student_skill'
-            ).order_by('kaid_student','id_student_skill')
-        #print '*****************************************assesment*********************'
-        #for p in struggling:
-        #    print p
-        i=0
-        for student in students:
-            student_json={}
-            student_json["id"]=i
-            student_json["name"]=student.name
-            completed_percentage=round(random.uniform(0,1),2)
-            total_rec=round(random.uniform(0,1),2)
-            student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
-            try:
-                student_json["skills_time"] = dictTimeExcercice[student.kaid_student]
-            except:
-                student_json["skills_time"] = 0
-            try:
-                student_json["video_time"] = dictTimeVideo[student.kaid_student]
-            except:
-                student_json["video_time"] = 0            
-            student_exercise={}
-            try:
-                student_exercise["correct"] = dictCorrect[student.kaid_student]
-            except:
-                student_exercise["correct"] = 0
-            try:
-                student_exercise["incorrect"] = dictIncorrect[student.kaid_student] #incorrect.get(kaid_student_id=student.kaid_student)['incorrect']
-            except:
-                student_exercise["incorrect"] = 0
-            student_json["exercises"]=student_exercise
-            skills_level={}
-            try:
-                skills_level["struggling"] = struggling.filter(kaid_student_id=student.kaid_student).count()
-            except:
-                skills_level["struggling"] = 0
-            try:
-                skills_level["practiced"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='practiced').count()
-            except:
-                skills_level["practiced"] = 0
-            try:
-                skills_level["mastery1"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery1').count()
-            except:
-                skills_level["mastery1"] = 0
-            try:
-                skills_level["mastery2"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery2').count()
-            except:
-                skills_level["mastery2"] = 0
-            try:
-                skills_level["mastery3"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery3').count()
-            except:
-                skills_level["mastery3"] = 0
-            student_json["skills_level"]=skills_level
-            assesment_json["assesment_student"].append(student_json)
-            i+=1
-        assesment_array.append(assesment_json)
-    fin1=time.time()
-
+        t = threading.Thread(target=metodoAux,args=(assesment,students,queue))
+        threads.append(t)
+        t.start()
+    
+    for assesment in assesments:
+        response = queue.get()
+        assesment_array.append(response)
 
     dictTotalTimeExcercice = {}
     dictTotalIncorrect = {}
@@ -480,14 +400,111 @@ def getBestQuery(request):
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
     #print json_data
-    
-    print fin1-inicio,fin2-fin1
-
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
                                 context_instance=RequestContext(request)
                             )
+
+def metodoAux(assesment,students,queue):
+    #print '****************inicio el thread*********************'
+    inicio = time.time()
+    assesment_json={}
+    assesment_json["id"]=assesment.id_assesment
+    assesment_json["name"]=assesment.name
+    assesment_json["config_name"]= assesment.id_assesment_conf.name
+    assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
+    assesment_json["top_score"]= assesment.id_assesment_conf.top_score
+    assesment_json["max_grade"]= assesment.max_grade
+    assesment_json["min_grade"]= assesment.min_grade
+    assesment_json["id_config"]= assesment.id_assesment_conf.id_assesment_config
+    assesment_json["start_date"]= str(assesment.start_date)
+    assesment_json["end_date"]= str(assesment.end_date)
+    assesment_json["assesment_student"]=[]
+    skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
+    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+    dictIncorrect = {}
+    for inc in incorrect:
+        dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
+    correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
+    dictCorrect = {}
+    for cor in correct:
+        dictCorrect[cor['kaid_student_id']] = cor['correct']
+    time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
+    dictTimeExcercice = {}
+    for te in time_excercice:
+        dictTimeExcercice[te['kaid_student_id']] = te['time']
+    query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
+    query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
+    time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
+    dictTimeVideo = {}
+    for vid in time_video:
+        dictTimeVideo[vid['kaid_student_id']] = vid['time']
+    levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
+        ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
+        ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+    struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
+        ).values('kaid_student','id_student_skill'
+        ).order_by('kaid_student','id_student_skill')
+    #print '*****************************************assesment*********************'
+    #for p in struggling:
+    #    print p
+    i=0
+    for student in students:
+        student_json={}
+        student_json["id"]=i
+        student_json["name"]=student.name
+        completed_percentage=round(random.uniform(0,1),2)
+        total_rec=round(random.uniform(0,1),2)
+        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+        try:
+            student_json["skills_time"] = dictTimeExcercice[student.kaid_student]
+        except:
+            student_json["skills_time"] = 0
+        try:
+            student_json["video_time"] = dictTimeVideo[student.kaid_student]
+        except:
+            student_json["video_time"] = 0            
+        student_exercise={}
+        try:
+            student_exercise["correct"] = dictCorrect[student.kaid_student]
+        except:
+            student_exercise["correct"] = 0
+        try:
+            student_exercise["incorrect"] = dictIncorrect[student.kaid_student] #incorrect.get(kaid_student_id=student.kaid_student)['incorrect']
+        except:
+            student_exercise["incorrect"] = 0
+        student_json["exercises"]=student_exercise
+        skills_level={}
+        try:
+            skills_level["struggling"] = struggling.filter(kaid_student_id=student.kaid_student).count()
+        except:
+            skills_level["struggling"] = 0
+        try:
+            skills_level["practiced"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='practiced').count()
+        except:
+            skills_level["practiced"] = 0
+        try:
+            skills_level["mastery1"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery1').count()
+        except:
+            skills_level["mastery1"] = 0
+        try:
+            skills_level["mastery2"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery2').count()
+        except:
+            skills_level["mastery2"] = 0
+        try:
+            skills_level["mastery3"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery3').count()
+        except:
+            skills_level["mastery3"] = 0
+        student_json["skills_level"]=skills_level
+        assesment_json["assesment_student"].append(student_json)
+        i+=1
+    #assesment_array.append(assesment_json)
+    #print '**************************************************************************************************'
+    #print assesment_json
+    queue.put(assesment_json)
+
+    return queue
 
 @login_required()
 def getClassStudents(request, id_class):
