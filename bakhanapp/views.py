@@ -268,11 +268,11 @@ def getBestQuery(request):
         classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
     correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
-    time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))
-    time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))
-    practiced = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='practiced',struggling=False).values('kaid_student_id').annotate(practiced=Count('last_skill_progress'))
+    time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))    
+    time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))   
+    practiced = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='practiced',struggling=False).values('kaid_student_id').annotate(practiced=Count('last_skill_progress')) 
     mastery1 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery1',struggling=False).values('kaid_student_id').annotate(mastery1=Count('last_skill_progress'))
     mastery2 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery2',struggling=False).values('kaid_student_id').annotate(mastery2=Count('last_skill_progress'))
     mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
@@ -378,6 +378,35 @@ def getBestQuery(request):
             i+=1
         assesment_array.append(assesment_json)
     fin1=time.time()
+
+
+    dictTotalTimeExcercice = {}
+    dictTotalIncorrect = {}
+    dictTotalCorrect = {}
+    dictTotalTimeVideo = {}
+    dictPracticed = {}
+    dictMastery1 ={}
+    dictMastery2 ={}
+    dictMastery3 ={}
+    dictStruggling ={}
+    for vid in time_video:
+        dictTotalTimeVideo[vid['kaid_student_id']] = vid['time']
+    for te in time_excercice:
+        dictTotalTimeExcercice[te['kaid_student_id']] = te['time']
+    for cor in correct:
+        dictTotalCorrect[cor['kaid_student_id']] = cor['correct']
+    for inc in incorrect:
+        dictTotalIncorrect[inc['kaid_student_id']]=inc['incorrect'] 
+    for pract in practiced:
+        dictPracticed[pract['kaid_student_id']]=pract['practiced']
+    for mas in mastery1:
+        dictMastery1[mas['kaid_student_id']] = mas['mastery1'] 
+    for mas in mastery2:
+        dictMastery2[mas['kaid_student_id']] = mas['mastery2'] 
+    for mas in mastery3:
+        dictMastery3[mas['kaid_student_id']] = mas['mastery3']
+    for mas in struggling:
+        dictStruggling[mas['kaid_student_id']] = mas['struggling']
     json_array=[]
     i=0
     for student in students:
@@ -391,42 +420,42 @@ def getBestQuery(request):
         student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
         #print student.kaid_student
         try:
-            student_json["skills_time"] = time_excercice.get(kaid_student_id=student.kaid_student)['time']
+            student_json["skills_time"] = dictTotalTimeExcercice[student.kaid_student]
         except:
             student_json["skills_time"] = 0
         try:
-            student_json["video_time"] = time_video.get(kaid_student_id=student.kaid_student)['time']
+            student_json["video_time"] = dictTotalTimeVideo[student.kaid_student]
         except:
             student_json["video_time"] = 0
         student_exercise={}
         try:
-            student_exercise["correct"] = correct.get(kaid_student_id=student.kaid_student)['correct']
+            student_exercise["correct"] = dictTotalCorrect[student.kaid_student]
         except:
             student_exercise["correct"] = 0
         try:
-            student_exercise["incorrect"] = correct.get(kaid_student_id=student.kaid_student)['incorrect']
+            student_exercise["incorrect"] = dictTotalIncorrect[student.kaid_student]
         except:
             student_exercise["incorrect"] = 0
         student_json["exercises"]=student_exercise 
         skills_level={}
         try:
-            skills_level["struggling"] = struggling.get(kaid_student_id=student.kaid_student)['struggling']
+            skills_level["struggling"] = dictStruggling[student.kaid_student]
         except:
             skills_level["struggling"] = 0
         try:
-            skills_level["practiced"] = practiced.get(kaid_student_id=student.kaid_student)['practiced']
+            skills_level["practiced"] = dictPracticed[student.kaid_student]
         except:
             skills_level["practiced"] = 0
         try:
-            skills_level["mastery1"] = mastery1.get(kaid_student_id=student.kaid_student)['mastery1']
+            skills_level["mastery1"] = dictMastery1[student.kaid_student]
         except:
             skills_level["mastery1"] = 0
         try:
-            skills_level["mastery2"] = mastery2.get(kaid_student_id=student.kaid_student)['mastery2']
+            skills_level["mastery2"] = dictMastery2[student.kaid_student]
         except:
             skills_level["mastery2"] = 0
         try:
-            skills_level["mastery3"] = mastery3.get(kaid_student_id=student.kaid_student)['mastery3']
+            skills_level["mastery3"] = dictMastery3[student.kaid_student]
         except:
             skills_level["mastery3"] = 0
         student_json["skills_level"] = skills_level
