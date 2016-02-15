@@ -301,7 +301,8 @@ def getBestQuery(request):
         #practiced = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False).values('id_student_skill')#.annotate(practiced=Count('last_skill_progress'))
         #practiced_between = Skill_Progress.objects.filter(id_student_skill_id__in=practiced,date__range=(assesment.start_date,assesment.end_date),to_level='practiced')
         practiced = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False
-            ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date').order_by('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+            ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
+            ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
         print '*****************************************'
         for p in practiced:
             print p
