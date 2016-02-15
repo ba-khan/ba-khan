@@ -110,11 +110,10 @@ def create_callback_server():
                                 <script>closeWin()</script>                       
                               </body>                           
                             </html>""")
-            #webbrowser.open('http://www.google.cl')
 
         def log_request(self, code='-', size='-'):
             pass
-    server = SocketServer.TCPServer((CALLBACK_BASE, 22), CallbackHandler)
+    server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler)
     #server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
@@ -159,8 +158,8 @@ def client_left(client, server):
 
 # Called when a client sends a message
 def message_received(client, server, message):
-    if len(message) > 200:
-        message = message[:200]+'..'
+    #if len(message) > 200:
+    #    message = message[:200]+'..'
     print("Client(%d) said: %s" % (client['id'], message))
     if (message=="login"):
 
@@ -175,7 +174,8 @@ def message_received(client, server, message):
                base_url=SERVER_URL + '/api/auth2')
 
         callback_server = create_callback_server()
-        print callback_server.server_address[1]
+        #print callback_server.server_address[1]
+        
         # 1. Get a request token.
         request_token, secret_request_token = service.get_request_token(
             params={'oauth_callback': 'http://%s:%d/' %
