@@ -374,6 +374,13 @@
     
     //table.selectAll('.assesment').append('button').attr('onclick',function(d) { return 'changeData('+d.number+')' }).text(d3.f('head_assesment'));
     //table.selectAll('.assesment').append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
+
+
+
+
+
+
+    var endDates = [];
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	var number_class_id=json["assesments"][i]["id"];
@@ -393,7 +400,9 @@
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+
 endDate2 = (endDate.getMonth()+1)+"/"+(endDate.getDate())+"/"+(endDate.getFullYear())+" 00:00 AM";
+endDates.push(endDate2)
 console.log("HORA FINAL: "+endDate2);
 
 TargetDate = endDate2;
@@ -409,7 +418,7 @@ FinishMessage = "";
     		table.select('th.'+class_id)
     		.append('span')
     		.attr("class","counter")
-    		.attr("id","cntdwn");
+    		.attr("id","cntdwn"+i);
 
     		table.select('th.'+class_id)
     		.append('div')
@@ -426,6 +435,13 @@ FinishMessage = "";
     		
     	}
     	
+
+
+
+
+
+
+
   	
     	table.select('th.'+class_id)
     		.append('button')
@@ -1689,9 +1705,13 @@ function calcage(secs, num1, num2) {
   return "<b>" + s + "</b>";
 }
 
-function CountBack(secs) {
+cntdwns = document.getElementsByClassName("counter");
+console.log(cntdwns);
+
+
+function CountBack(secs,id) {
   if (secs < 0) {
-    document.getElementById("cntdwn").innerHTML = FinishMessage;
+    document.getElementById(id).innerHTML = FinishMessage;
     return;
   }
   DisplayStr = DisplayFormat.replace(/%%D%%/g, calcage(secs,86400,100000));
@@ -1699,7 +1719,7 @@ function CountBack(secs) {
   DisplayStr = DisplayStr.replace(/%%M%%/g, calcage(secs,60,60));
   DisplayStr = DisplayStr.replace(/%%S%%/g, calcage(secs,1,60));
 
-  document.getElementById("cntdwn").innerHTML = DisplayStr;
+  document.getElementById(id).innerHTML = DisplayStr;
   if (CountActive)
     setTimeout("CountBack(" + (secs+CountStepper) + ")", SetTimeOutPeriod);
 }
@@ -1733,7 +1753,11 @@ if(CountStepper>0)
 else
   ddiff = new Date(dthen-dnow);
 gsecs = Math.floor(ddiff.valueOf()/1000);
-CountBack(gsecs);
+CountBack(gsecs,"cntdwn1");
+
+for (var i = endDates.length - 1; i >= 0; i--) {
+	console.log(endDates[i])
+};
 
 </script>
 
