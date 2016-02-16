@@ -372,7 +372,7 @@ label.sort-filter{
 #popup_resumen{
 	position:absolute;
 	width:600px;
-	height:1200px;
+	/*height:1200px;*/
 	background:#fff;
 	left:50%;
 	top:50%;

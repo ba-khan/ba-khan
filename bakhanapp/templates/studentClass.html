@@ -85,8 +85,8 @@
 	    	<div id="resumen_data"></div>
 	    	<p>Skills:</p>
 	    	<div id="resumen_skill"></div>
-	    	<div id="resumen_grade" class="resumen_grade"></div>
-	    	<div id="resumen_grade_count" class="resumen_grade"></div>
+	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
+	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
 	    	<div id="resumen_graph" class="resumen_graph"></div>
     	</div>
     </div>
@@ -1234,6 +1234,10 @@
           rightY = centerY - radius * Math.sin(thetaRad + Math.PI / 2);
           return "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
     }
+
+    function testGraphic(){
+    	console.log(d3.max([3,4,5]));
+    }
     
     var repaintGauge = function(perc,i) 
     {
@@ -1255,75 +1259,68 @@
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
     }
 
-    function testGraphic(){
-    	var test_values = d3.range(1000).map(d3.random.logNormal(Math.log(20),.5));
-    	console.log(test_values);
-    }
+    
 
-    function makeGraphic(){
-			console.log("histogram");
-			// Generate a Bates distribution of 10 random variables.
-			// Generate a log-normal distribution with a median of 30 minutes.
-			var test_values = d3.range(1000).map(d3.random.logNormal(Math.log(20),.5));
-			//var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
-			console.log(test_values);
+
+    function drawHistogram(min_grade, max_grade, grades, bins){
+			
+			var values = grades;
+			
 			// Formatters for counts and times (converting numbers to Dates).
-			var formatCount = d3.format(",.0f"),
-			    formatTime = d3.time.format("%H:%M"),
-			    formatMinutes = function(d) { return formatTime(new Date(2012, 0, 1, 0, d)); };
+			var formatCount = d3.format(",.0f");
 
-			var margin = {top: 10, right: 30, bottom: 30, left: 30},
-			    width = 960 - margin.left - margin.right,
-			    height = 500 - margin.top - margin.bottom;
+			var margin = {top: 10, right: 10, bottom: 25, left: 10},
+			    widthg = 480 - margin.left - margin.right,
+			    heightg = 200 - margin.top - margin.bottom;
 
 			var x = d3.scale.linear()
-			    .domain([0, 120])
-			    .range([0, width]);
+			    .domain([1,7])
+			    .range([0, widthg]);
 
-			// Generate a histogram using twenty uniformly-spaced bins.
-			var data = d3.layout.histogram()
-			    .bins(x.ticks(20))
+			// Generate a histogram using user-specified uniformly-spaced bins.
+			var dataHistogram = d3.layout.histogram()
+			    .bins(x.ticks(bins))
 			    (values);
-
+			console.log(values.length);
 			var y = d3.scale.linear()
-			    .domain([0, d3.max(data, function(d) { return d.y; })])
-			    .range([height, 0]);
+			    .domain([0, d3.max(dataHistogram, function(d) { return d.y; })])
+			    .range([heightg,0]);
 
 			var xAxis = d3.svg.axis()
 			    .scale(x)
-			    .orient("bottom")
-			    .tickFormat(formatMinutes);
+			    .orient("bottom");
+			    //.tickFormat(formatMinutes);
 
 			var svg = d3.select("#resumen_graph").append("svg")
-			    .attr("width", width + margin.left + margin.right)
-			    .attr("height", height + margin.top + margin.bottom)
+			    .attr("width", widthg + margin.left + margin.right)
+			    .attr("height", heightg + margin.top + margin.bottom)
 			  .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			var bar = svg.selectAll(".bar")
-			    .data(data)
+			    .data(dataHistogram)
 			  .enter().append("g")
 			    .attr("class", "bar")
 			    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
 			bar.append("rect")
 			    .attr("x", 1)
-			    .attr("width", x(data[0].dx) - 1)
-			    .attr("height", function(d) { return height - y(d.y); });
+			    .attr("width", widthg/bins - 10)//x(dataHistogram[0].dx) - 1)
+			    .attr("height", function(d) { console.log(y(d.y));return heightg - y(d.y); });
 
 			bar.append("text")
 			    .attr("dy", ".75em")
 			    .attr("y", 6)
-			    .attr("x", x(data[0].dx) / 2)
+			    .attr("x", (widthg/bins - 10)/2 )//x(dataHistogram[0].dx) / 2)
 			    .attr("text-anchor", "middle")
 			    .text(function(d) { return formatCount(d.y); });
 
 			svg.append("g")
 			    .attr("class", "x axis")
-			    .attr("transform", "translate(0," + height + ")")
+			    .attr("transform", "translate(0," + heightg + ")")
 			    .call(xAxis);
 
-	}	
+	}
 		
 		function noEvaluarTodos(){
 			{% if students %}
@@ -1609,8 +1606,9 @@
 		    $("#popup_resumen").fadeIn().css('display', '');
 		    $("#resumen_data").empty();
 		    $("#resumen_skill").empty();
-		    $("#resumen_grade").empty();
-		    $("#resumen_grade_count").empty();
+		    //$("#resumen_grade").empty();
+		    //$("#resumen_grade_count").empty();
+		    $("#resumen_graph").empty();
 		    id_assesment_confi=''
 		    aux=-1
 		    
@@ -1648,7 +1646,9 @@
 				grade_order.push(students[k]['assesment'+id_assesment]['grade'])
 
 			}
-			deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
+			//console.log(grade_order);
+			drawHistogram(assesments[aux]['max_grade'],assesments[aux]['min_grade'],grade_order,10);
+			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
 
 		}
 
@@ -1672,7 +1672,8 @@
 					c++
 				}
 			}
-			step = (max-min)/10
+			
+			step = (max-min)/10;
 			d0 = 0
 			d1 = 0
 			d2 = 0
@@ -1683,7 +1684,8 @@
 			d7 = 0
 			d8 = 0
 			d9 = 0
-			alert('step: '+step+'\n min: '+min+'\n max: '+max)
+			//alert('step: '+step+'\n min: '+min+'\n max: '+max)
+			//console.log(d3.max([3,4,5,199]));
 			for (var b=0;b<arg_grade.length;b++){
 				if (arg_grade[b]<=(min + 1*step)){
 					d0++
@@ -1716,7 +1718,7 @@
 					d9++
 				}
 			}
-			$("#resumen_grade_count").append("<p>d0: "+d0+"</p>");
+			/*$("#resumen_grade_count").append("<p>d0: "+d0+"</p>");
 			$("#resumen_grade_count").append("<p>d1: "+d1+"</p>");
 			$("#resumen_grade_count").append("<p>d2: "+d2+"</p>");
 			$("#resumen_grade_count").append("<p>d3: "+d3+"</p>");
@@ -1725,12 +1727,13 @@
 			$("#resumen_grade_count").append("<p>d6: "+d6+"</p>");
 			$("#resumen_grade_count").append("<p>d7: "+d7+"</p>");
 			$("#resumen_grade_count").append("<p>d8: "+d8+"</p>");
-			$("#resumen_grade_count").append("<p>d9: "+d9+"</p>");
-			testGraphic();
-			makeGraphic();
+			$("#resumen_grade_count").append("<p>d9: "+d9+"</p>");*/
+			
+			//testGraphic();
+			//makeGraphic();
 		}
 
-function makeGraphic(){
+/*function makeGraphic(){
 			// Generate a Bates distribution of 10 random variables.
 			// Generate a log-normal distribution with a median of 30 minutes.
 var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
@@ -1791,7 +1794,7 @@ svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
-		}
+		}*/
 		
 		
 	</script>
