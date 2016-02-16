@@ -271,10 +271,24 @@ function saveGroups(){
 </script>
 </head>
    <style>
+   .main-content {
+    padding: 15px 20px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+h1{
+  text-align: center;
+  margin-bottom: 0%;
+}
+   #content{
+        width: 1200px;
+        height: 450px;
+      }
 #SinGrupo, #Avanzados, #Intermedios, #Reforzamiento, #skills {
   float: left;
   width: 15.4%;
-  height: 400px;
+  height: 90%;
   padding: 10px;
   margin: 10px;
   text-align: center;
@@ -330,12 +344,16 @@ color: #000000
 #topictree{
 overflow-y: scroll;
 height: 371px;
+width:19%;
 padding: 10px;
 margin: 10px;
+float:left;
+text-align: left;
 }
 #topictree_div{
-text-align: left;
-height: 371px;
+/*text-align: left;
+height: 371px;*/
+text-align: center;
 padding: 10px;
 margin: 10px;
 }
@@ -346,12 +364,11 @@ margin: 10px;
 }
 #timeline3{
 overflow-x: scroll;
-float: left;
-width: 70%;
-height: 60px;
+width: 100%%;
+height: 250px;
 }
 #more_contain{
-  width: 30%;
+  /*width: 30%;*/
   display:none;
   float:right;
 }
@@ -363,15 +380,21 @@ img:hover{
   clear:both;
   width: 100%;
 }
-#save{
+#buttons{
+  width: 100%;
+  height: 50px;
+  position: relative;
+}
+#saveButton{
   float:right;
 }
-#make{
+#makeButton{
   float:right;
+  margin-right: 5px;
 }
 #name{
   float:right;
-  width: 10%;
+  width: 11%;
 }
     </style>
     <style type="text/css">
@@ -406,8 +429,22 @@ img:hover{
 	    .svg{
 	    	border = 1px solid black;
 	    }
+      #hoverRes{
+        width: 100%;
+        height: 40px;
+        margin-left: -1%;
+      }
+      circle{
+        cursor: pointer;
+      }
+      
 	  </style>
-    <section id='content'>
+
+<br>
+<div class='main-content'>
+  <h1>Grupos</h1>
+  <br>
+    <div id='content'>
    
        <div id="SinGrupo" name="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
  
@@ -432,38 +469,47 @@ img:hover{
 </SELECT>
 <button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub'>nuevo sub-grupo</button>
        </div>
-<div class="input-wrapper" id="topictree_div" align="center">
+<div class="input-wrapper" id="topictree_div">
 <input id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Busca temas y habilidades">
 <i class="icon-search"></i>
-<div id="topictree" align="left"></div>
+<div id="topictree"></div>
 </div>
 <div id="skills"></div>
-    </section>
-<div align="left">
-  <div id='containerTimeLine'>
-    <div id="timeline3" ></div>
-    <div id='more_contain'>
-      <img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
     </div>
-    <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='save'>
-    <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='make'>
-  </div>
 
 
-<form action="" method="post" id='formJson'>{% csrf_token %}
+<div id="buttons">
+  <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
+  <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='makeButton'>
+</div>
+
+<br>
+<h1>Linea de Tiempo</h1>
+  <div id='containerTimeLine'>
+    <form action="" method="post" id='formJson'>{% csrf_token %}
        <input name="skills" type="hidden" value="[]">
        <input name="student_groups" type="hidden" value=''>
        <input name="tutors" type="hidden" value=''>
        <input name="subGroups" type="hidden" value=''>
        
-   </form>
-       <div id="hoverRes">
-      <div class="coloredDiv"></div>
+  </form>
+    <div id="hoverRes">
+      <div id='more_contain'>
+        <img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
+      </div>
+      <!--<div class="coloredDiv"></div>-->
       <div id="name"></div>
-      <div id="scrolled_date"></div>
+      <div id="scrolled_date" style="cursor:pointer"></div>
+      
     </div>
-</div>
 
+    <div id="timeline3" ></div>
+
+    <br>
+  </div>
+  <br>
+
+</div>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -553,6 +599,13 @@ window.onload = function() {
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.
     var chart = d3.timeline()
+      .tickFormat({
+        format: d3.time.format("%x"),
+        tickTime: d3.time.hours,
+        tickInterval: 1,
+        tickSize: 6
+      })
+      .stack()
       .width(width*1)
       .margin({left:30, right:80, top:0, bottom:0})
       .hover(function (d, i, datum) {
@@ -562,7 +615,7 @@ window.onload = function() {
         var div = $('#hoverRes');
         var colors = chart.colors();
         div.find('.coloredDiv').css('background-color', colors(i))
-        div.find('#name').text(datum.label);
+        div.find('#name').text("Fecha: "+datum.label);
       })
       .click(function (d, i, datum) {
       	//Funcion que carga todos los datos del grupo datum.id
@@ -632,8 +685,8 @@ window.onload = function() {
          }
         });
         $('#topictree_div').remove();
-        $('#save').remove();
-        $('#make').remove();
+        $('#saveButton').remove();
+        $('#makeButton').remove();
         $.ajax({ // solicita las habilidades de cada grupo
          url: "{% url 'groups:getSkillGroup' id_class %}",
          type: "POST",
