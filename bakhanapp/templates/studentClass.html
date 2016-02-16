@@ -85,8 +85,8 @@
 	    	<div id="resumen_data"></div>
 	    	<p>Skills:</p>
 	    	<div id="resumen_skill"></div>
-	    	<div id="resumen_grade" class="resumen_grade"></div>
-	    	<div id="resumen_grade_count" class="resumen_grade"></div>
+	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
+	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
 	    	<div id="resumen_graph" class="resumen_graph"></div>
     	</div>
     </div>
@@ -210,8 +210,9 @@
   		
   	  	$("select.assesment").on('change', function() {
   	  		var sortingCriterion = $(this).val();
+  	  		console.log(sortingCriterion);
   	  		var assesmentName = $(this).attr("name");
-		    d3.selectAll("td."+assesmentName).attr("data-sortAs",function(d){return d.value[sortingCriterion];})
+		    d3.selectAll("td."+assesmentName).attr("data-sortAs",function(d){console.log(d);return d.value[sortingCriterion];})
 		});
   	  	
   	  	$("select.skills_level").on('change', function() {
@@ -225,7 +226,7 @@
   	  		}
 		});
   	  	
-  	  $("select.exercises").on('change', function() {
+  	  	$("select.exercises").on('change', function() {
   	  		var sortingCriterion = $(this).val();
   	  		if (sortingCriterion=="total"){
   	  			d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values["correct"]+d.values["incorrect"];})
@@ -261,9 +262,14 @@
     
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	//console.log(class_id);
     	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
+    	var index = i+1;
+    	for (var j=0;j<data[i+1].length;j++){
+    		var cumulativeStudent=students[j];
+    		var assesmentStudent=data[index][j];
+	    	data[index][j]=$.extend({},cumulativeStudent,assesmentStudent);
+	    }
     }
     
     var selectedAssesment=false;
@@ -389,7 +395,7 @@
     $(".arrow-up.exercises").attr("column",function(){
 		return $("th.exercises").index();
 	});
-    $(".arrow-down.skills_level").attr("column",function(){
+    $(".arrow-down.exercises").attr("column",function(){
     	return $("th.exercises").index();
 	});
     
@@ -527,7 +533,7 @@
                         .domain([0,Greatest(videos_time.keys())])
                         .range([0,120]);
     
-    var corrects = (d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);}));
+    var corrects = d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);});
     corrects= corrects.keys().map(function(d){
     	return parseInt(d);
     })
@@ -565,6 +571,7 @@
 		    		.duration(750)
 		    		.style("opacity",1);
     		}else{
+    			
     			backgroundJobs = data[dataIndex+1];
 		    	selectedAssesment=true;
 		    	//Selected assesment comes back to having opacity 1
@@ -587,7 +594,6 @@
     		//$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,1);
     	}
     	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
-	    console.log(skill_time);
 	    skillsTimeScaling = d3.scale.linear()
                             .domain([0,Greatest(skill_time.keys())])
                             .range([0,120]);
@@ -595,7 +601,7 @@
         escalarTiemposVideo = d3.scale.linear()
                             .domain([0,Greatest(videos_time.keys())])
                             .range([0,120]);
-        corrects = (d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);}));
+        corrects = d3.map(backgroundJobs, function(d) { return d3.max([d.exercises["correct"],d.exercises["incorrect"]]);});
         corrects= corrects.keys().map(function(d){
         	return parseInt(d);
         })
@@ -696,6 +702,7 @@
     
 	function tick_update() {
     	
+    	console.log(backgroundJobs);
         var rows = tbody.selectAll("tr")
     	.data(backgroundJobs, function(d) {
     	    return d.name;
@@ -710,6 +717,8 @@
     		.data(function(row,i) {
     			return columns.map(function(c) {
 	                // compute cell values for this specific row
+	                /*console.log("c");
+	                console.log(c);*/
 	                var cell = {};
 	                d3.keys(c).forEach(function(k) {
 	                    cell[k] = typeof c[k] == 'function' ? c[k](row,i) : c[k];
@@ -1206,17 +1215,12 @@
     	g_rec.each(function(d,i){
     		var completed_perc = d.values.completed_perc;
     		var id_needle = d3.select(this).attr("id_student");
-    		console.log("comp perc "+completed_perc+" id: "+id_needle);
     		d3_needles[id_needle].moveTo(completed_perc);
     		});
 		console.log(tbody.selectAll("td.recommendations"));
     	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
     }
-    
-    
-    
-    
-    
+
     function recalcPointerPos(len,radius,perc) {
           var centerX, centerY, leftX, leftY, rightX, rightY, thetaRad, topX, topY;
           thetaRad = percToRad(perc / 2);
@@ -1229,7 +1233,11 @@
           rightX = centerX - radius * Math.cos(thetaRad + Math.PI / 2);
           rightY = centerY - radius * Math.sin(thetaRad + Math.PI / 2);
           return "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
-    };
+    }
+
+    function testGraphic(){
+    	console.log(d3.max([3,4,5]));
+    }
     
     var repaintGauge = function(perc,i) 
     {
@@ -1249,7 +1257,70 @@
 					.endAngle(arcEndRad);
 			d3.select("#chart-filled"+i).attr("d",arc1_array[i]);
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
-    }		
+    }
+
+    
+
+
+    function drawHistogram(min_grade, max_grade, grades, bins){
+			
+			var values = grades;
+			
+			// Formatters for counts and times (converting numbers to Dates).
+			var formatCount = d3.format(",.0f");
+
+			var margin = {top: 10, right: 10, bottom: 25, left: 10},
+			    widthg = 480 - margin.left - margin.right,
+			    heightg = 200 - margin.top - margin.bottom;
+
+			var x = d3.scale.linear()
+			    .domain([1,7])
+			    .range([0, widthg]);
+
+			// Generate a histogram using user-specified uniformly-spaced bins.
+			var dataHistogram = d3.layout.histogram()
+			    .bins(x.ticks(bins))
+			    (values);
+			console.log(values.length);
+			var y = d3.scale.linear()
+			    .domain([0, d3.max(dataHistogram, function(d) { return d.y; })])
+			    .range([heightg,0]);
+
+			var xAxis = d3.svg.axis()
+			    .scale(x)
+			    .orient("bottom");
+			    //.tickFormat(formatMinutes);
+
+			var svg = d3.select("#resumen_graph").append("svg")
+			    .attr("width", widthg + margin.left + margin.right)
+			    .attr("height", heightg + margin.top + margin.bottom)
+			  .append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var bar = svg.selectAll(".bar")
+			    .data(dataHistogram)
+			  .enter().append("g")
+			    .attr("class", "bar")
+			    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+			bar.append("rect")
+			    .attr("x", 1)
+			    .attr("width", widthg/bins - 10)//x(dataHistogram[0].dx) - 1)
+			    .attr("height", function(d) { console.log(y(d.y));return heightg - y(d.y); });
+
+			bar.append("text")
+			    .attr("dy", ".75em")
+			    .attr("y", 6)
+			    .attr("x", (widthg/bins - 10)/2 )//x(dataHistogram[0].dx) / 2)
+			    .attr("text-anchor", "middle")
+			    .text(function(d) { return formatCount(d.y); });
+
+			svg.append("g")
+			    .attr("class", "x axis")
+			    .attr("transform", "translate(0," + heightg + ")")
+			    .call(xAxis);
+
+	}
 		
 		function noEvaluarTodos(){
 			{% if students %}
@@ -1535,8 +1606,9 @@
 		    $("#popup_resumen").fadeIn().css('display', '');
 		    $("#resumen_data").empty();
 		    $("#resumen_skill").empty();
-		    $("#resumen_grade").empty();
-		    $("#resumen_grade_count").empty();
+		    //$("#resumen_grade").empty();
+		    //$("#resumen_grade_count").empty();
+		    $("#resumen_graph").empty();
 		    id_assesment_confi=''
 		    aux=-1
 		    
@@ -1574,7 +1646,9 @@
 				grade_order.push(students[k]['assesment'+id_assesment]['grade'])
 
 			}
-			deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
+			//console.log(grade_order);
+			drawHistogram(assesments[aux]['max_grade'],assesments[aux]['min_grade'],grade_order,10);
+			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
 
 		}
 
@@ -1598,7 +1672,8 @@
 					c++
 				}
 			}
-			step = (max-min)/10
+			
+			step = (max-min)/10;
 			d0 = 0
 			d1 = 0
 			d2 = 0
@@ -1609,7 +1684,8 @@
 			d7 = 0
 			d8 = 0
 			d9 = 0
-			alert('step: '+step+'\n min: '+min+'\n max: '+max)
+			//alert('step: '+step+'\n min: '+min+'\n max: '+max)
+			//console.log(d3.max([3,4,5,199]));
 			for (var b=0;b<arg_grade.length;b++){
 				if (arg_grade[b]<=(min + 1*step)){
 					d0++
@@ -1642,7 +1718,7 @@
 					d9++
 				}
 			}
-			$("#resumen_grade_count").append("<p>d0: "+d0+"</p>");
+			/*$("#resumen_grade_count").append("<p>d0: "+d0+"</p>");
 			$("#resumen_grade_count").append("<p>d1: "+d1+"</p>");
 			$("#resumen_grade_count").append("<p>d2: "+d2+"</p>");
 			$("#resumen_grade_count").append("<p>d3: "+d3+"</p>");
@@ -1651,11 +1727,13 @@
 			$("#resumen_grade_count").append("<p>d6: "+d6+"</p>");
 			$("#resumen_grade_count").append("<p>d7: "+d7+"</p>");
 			$("#resumen_grade_count").append("<p>d8: "+d8+"</p>");
-			$("#resumen_grade_count").append("<p>d9: "+d9+"</p>");
-			makeGraphic();
+			$("#resumen_grade_count").append("<p>d9: "+d9+"</p>");*/
+			
+			//testGraphic();
+			//makeGraphic();
 		}
 
-		function makeGraphic(){
+/*function makeGraphic(){
 			// Generate a Bates distribution of 10 random variables.
 			// Generate a log-normal distribution with a median of 30 minutes.
 var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
@@ -1716,7 +1794,7 @@ svg.append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
 
-		}
+		}*/
 		
 		
 	</script>
