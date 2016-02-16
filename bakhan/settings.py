@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'AssesmentConfigs',
     'Contacts',
     'ManagementTeam',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES = (
