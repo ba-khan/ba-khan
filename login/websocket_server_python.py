@@ -72,8 +72,8 @@ from websocket_server import WebsocketServer
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-#CALLBACK_BASE = '146.83.216.177' #IP Servidor
-CALLBACK_BASE = "127.0.0.1"
+CALLBACK_BASE = '146.83.216.177' #IP Servidor
+#CALLBACK_BASE = "127.0.0.1"
 #CALLBACK_BASE = "192.168.1.139"
 SERVER_URL = 'http://www.khanacademy.org'
 SERVER_URL2 = 'http://es.khanacademy.org'
