@@ -18,8 +18,57 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
 
 <style>
-
+input{
+	z-index: 1000;
+	width: 100%;
+	height: 100%;
+}
+.ribbon {
+  position: relative;
+  left: 0px; top: -53px;
+  z-index: 1;
+  overflow: hidden;
+  width: 63px; height: 54px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 9px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 15px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 97px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 13px; left: -25px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
 </style>
+
+
 
 <script>
 	window.onload = function () {
@@ -27,7 +76,7 @@
 
 		// we build and load the metadata in Javascript
 		administratorGrid.load({ metadata: [
-			{ name: "admin_name", datatype: "string", editable: true },
+			{ name: "admin_name", datatype: "html", editable: true },
 			{ name: "admin_email", datatype: "email", editable: true },
 			{ name: "admin_phone", datatype: "integer", editable: true },
 			{ name: "action", datatype: "html", editable: false }
@@ -51,9 +100,17 @@
 	
 </script>
 
+
+
 <br>
 <div class="container">
 <div class="main-content">
+
+
+
+
+
+
 
 <br>
 <h1 style="text-align:center;">Equipo de Gestion</h1>
@@ -85,7 +142,9 @@
 			<a onclick="javascript:saveData(0)" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 		</td>
 	</tr>
+	
 </table>
+<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>
 </div>
 <br>
 </div>

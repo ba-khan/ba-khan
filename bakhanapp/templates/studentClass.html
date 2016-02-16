@@ -5,7 +5,14 @@
 {% block title %}
 	Dashboard
 {% endblock %}
-{% block body2 %}		
+
+{% block head %}
+{% endblock %}
+
+{% block body2 %}	
+
+
+
 	
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
@@ -209,9 +216,13 @@
         //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
     ];
     
+    var class_id="assesment"+json["assesments"][0]["id"];
+    columns.push({head: 'Promedio', column: 0, cl: 'average', value: d3.f(class_id), type:'numeric'})
+    data.push(assesments[0]["assesment_student"]);
+
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	//console.log(class_id);
+    	console.log(class_id);
     	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
     }
@@ -273,6 +284,7 @@
         .attr('id', d3.f('id'))
         .attr('title', d3.f('tooltip'))
         .attr('data-sortBy', d3.f('type'))
+        .style('height', '100px')
         .text(d3.f('head'));
     
     table.select('th.name').append('div')
@@ -366,17 +378,65 @@
     
     //table.selectAll('.assesment').append('button').attr('onclick',function(d) { return 'changeData('+d.number+')' }).text(d3.f('head_assesment'));
     //table.selectAll('.assesment').append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
+
+
+
+
+
+
+    var endDates = [];
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	var number_class_id=json["assesments"][i]["id"];
-    	table.select('th.'+class_id)
+    	var date = new Date();
+    	//console.log(date);
+    	//console.log("end_date: "+json["assesments"][i]["end_date"]);
+    	today = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+    	//console.log("hoy: "+today)
+    	todayDate = new Date(Date.parse(today))
+    	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
+    	
+
+    	if (todayDate<endDate){
+    		//console.log("NO MOSTRAR EDITAR");
+    		
+    		table.select('th.'+class_id)
     		.append('div')
-    		.attr("id",number_class_id).html('<button type="button" onClick="editarAssesment('+number_class_id+')">editar</button>');
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+
+endDate2 = (endDate.getMonth()+1)+"/"+(endDate.getDate())+"/"+(endDate.getFullYear())+" 00:00 AM";
+endDates.push(endDate2)
+console.log("HORA FINAL: "+endDate2);
+    		   		
+    		table.select('th.'+class_id)
+    		.append('span')
+    		.attr("class","counter")
+    		.attr("id","cntdwn"+i);
+
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr("class","ribbon")
+    		.attr("id","ribbon"+i).html("<span>En Curso</span>");
+
+    		
+    	}
+    	else{
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		
+    	}
     	
-    	table.select('th.'+class_id)
-		.append('div')
-		.attr("id",number_class_id).html('<button type="button" onClick="resumenAssesment('+number_class_id+')">resumen</button>');
-    	
+
+
+
+
+
+
+
+  	
     	table.select('th.'+class_id)
     		.append('button')
     		.attr("id",class_id)
@@ -1289,10 +1349,10 @@
 						$(".vaciar").empty();
 						location.reload();
 					}
-				});		
-			}
-		}
+				});
+			}	
 
+		}
 		function validarRealizarEvaluacion(){
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
@@ -1302,7 +1362,7 @@
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
-			
+
 			if (cuadritos.length==0){
 				alert('No hay estudiantes evaluados')
 				return false;
@@ -1485,6 +1545,7 @@
 
 			}
 			deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
+
 		}
 
 		function deciles(arg_grade,min,max){
@@ -1626,7 +1687,60 @@ svg.append("g")
     .call(xAxis);
 
 		}
-
+		
+		
 	</script>
+
+<script language="JavaScript" type="text/javascript">
+
+cntdwns = document.getElementsByClassName("counter");
+for (var i = cntdwns.length - 1; i >= 0; i--) {
+	StartCountDown(cntdwns[i].id,endDates[i])
+}
+  
+  function StartCountDown(myDiv,myTargetDate)
+  {
+    var dthen   = new Date(myTargetDate);
+    var dnow    = new Date();
+    ddiff       = new Date(dthen-dnow);
+    gsecs       = Math.floor(ddiff.valueOf()/1000);
+    CountBack(myDiv,gsecs);
+  }
+  
+  function Calcage(secs, num1, num2)
+  {
+    s = ((Math.floor(secs/num1))%num2).toString();
+    if (s.length < 2) 
+    {   
+      s = "0" + s;
+    }
+    return (s);
+  }
+  
+  function CountBack(myDiv, secs)
+  {
+    var DisplayStr;
+    var DisplayFormat = "%%D%%d%%H%%h%%M%%m%%S%%s";
+    DisplayStr = DisplayFormat.replace(/%%D%%/g,    Calcage(secs,86400,100000));
+    DisplayStr = DisplayStr.replace(/%%H%%/g,       Calcage(secs,3600,24));
+    DisplayStr = DisplayStr.replace(/%%M%%/g,       Calcage(secs,60,60));
+    DisplayStr = DisplayStr.replace(/%%S%%/g,       Calcage(secs,1,60));
+    if(secs > 0)
+    {   
+      document.getElementById(myDiv).innerHTML = DisplayStr;
+      setTimeout("CountBack('" + myDiv + "'," + (secs-1) + ");", 990);
+    }
+    else
+    {
+      document.getElementById(myDiv).innerHTML = "Evaluacion Lista";
+    }
+  }
+
+
+for (var i = endDates.length - 1; i >= 0; i--) {
+	console.log(endDates[i])
+};
+
+</script>
 
 {% endblock %}

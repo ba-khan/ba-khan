@@ -72,7 +72,9 @@ from websocket_server import WebsocketServer
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-CALLBACK_BASE = '192.168.1.107' #IP Servidor
+
+CALLBACK_BASE = '127.0.0.1' #IP Servidor
+
 #CALLBACK_BASE = "127.0.0.1"
 #CALLBACK_BASE = "192.168.1.139"
 SERVER_URL = 'http://www.khanacademy.org'
@@ -207,7 +209,11 @@ def message_received(client, server, message):
     
 #PORT=9001
 PORT=8080
+<<<<<<< HEAD
 SERVERHOST="192.168.1.107"
+=======
+SERVERHOST="192.168.1.134"
+>>>>>>> 2008173328b87e36058064f2d87ecdfada9054a2
 server = WebsocketServer(PORT, SERVERHOST)
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
