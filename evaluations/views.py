@@ -129,8 +129,6 @@ def updateAssesment(request): #modifica una evaluacion
                                kaid_student_id=s['kaid_student']
                                )
             new_grade.save()
-        usarPlantilla()
-
     return HttpResponse()
 
 def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion
