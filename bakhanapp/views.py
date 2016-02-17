@@ -441,17 +441,10 @@ def getClassStudents(request, id_class):
             student_assesment = {}
             id_assesment = "assesment"+(str)(assesment["id"])
             id_assesment_num = assesment["id"]
-            #getGrade()
-            #random_grade=round(random.uniform(2,7),1)
             random_effort = round(random.uniform(1,100))
             try:
-                if dictGrades[(assesment['id'],student.kaid_student)][0] == 0:
-                    student_assesment["grade"] = simulateGrade(assesment['id_config'],student.kaid_student,assesment['start_date'],assesment['end_date'],assesment['min_grade'],assesment['max_grade'])
-                else:
-                    student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
-                
+                student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
                 student_assesment["grade_id"] = dictGrades[(assesment['id'],student.kaid_student)][1]
-                
                 student_assesment["effort"] = random_effort
             except:
                 student_assesment["grade"] = None
@@ -470,7 +463,8 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-    #lanza un proceso paralelo que actualiza las notas simuladas
+    #lanza un proceso paralelo que actualiza las notas simuladas 
+    #os.system('python manage.py update_simulate')
     #fin = time.time()
     #print fin-inicio
     return render_to_response('studentClass.html',
