@@ -88,105 +88,6 @@ def home(request):
 def teacher(request):
     return render_to_response('teacher.html',)
 
-def getGradeStudent(id_assesment,kaid_student):
-    #Funcion que entrega la nota de un estudiante en una evaluacion.
-    grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student).values('grade')
-    return grade
-
-def getTotalExerciseIncorrect(kaid_s):
-    #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
-    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False).count()
-    return incorrect
-
-#def getExerciseIncorrectBetween(kaid_s,t_begin,t_end):
-    #Esta funcion entrega el total de ejercicios incorrectos de un estudiante en un tiempo determinado.
-#    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False,date__gte = t_begin,date__lte = t_end).count()
-#    return incorrect
-
-def getExerciseIncorrectBetween(kaid_s,t_begin,t_end,id_assesment_conf):
-    assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_conf)
-    skills = []
-    for a in assesment_skills:
-        skills.append(a.id_skill_name)
-    #Esta funcion entrega el total de ejercicios incorrectos de un estudiante en un tiempo determinado.
-    incorrect = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=False,skipped=False,date__gte = t_begin,date__lte = t_end, id_skill_name_id__in = skills).count()
-    return incorrect
-
-def getTotalExerciseCorrect(kaid_s):
-    #Esta funcion entrega el total de ejercicios correctos de un estudiante.
-    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True).count()
-    return correct
-
-#def getExerciseCorrectBetween(kaid_s,t_begin,t_end):
-    #Esta funcion entrega el total de ejercicios correctos de un estudiante en un tiempo determinado.
-#    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True,date__gte = t_begin,date__lte = t_end).count()
-#    return correct
-
-def getExerciseCorrectBetween(kaid_s,t_begin,t_end,id_assesment_conf):
-    assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_conf)
-    skills = []
-    for a in assesment_skills:
-        skills.append(a.id_skill_name)
-    #Esta funcion entrega el total de ejercicios correctos de un estudiante en un tiempo determinado.
-    correct = Skill_Attempt.objects.filter(kaid_student=kaid_s,correct=True,date__gte = t_begin,date__lte = t_end, id_skill_name_id__in = skills).count()
-    return correct
-
-def getTotalExerciseTime(kaid_s):
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en toda su historia.
-    query = Skill_Attempt.objects.filter(kaid_student=kaid_s)
-    time = 0
-    for register in query:
-        time = time + register.time_taken
-    return time
-
-#def getExerciseTimeBetween(kaid_s,t_begin,t_end):
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
-#    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
-#    time = 0
-#    for register in query_set:
-#        time = time + register.time_taken
-#    return time
-
-def getExerciseTimeBetween(kaid_s,t_begin,t_end,id_assesment_conf):
-    assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_conf)
-    skills = []
-    for a in assesment_skills:
-        skills.append(a.id_skill_name)
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en ejercicios en un rango de fechas.
-    query_set = Skill_Attempt.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end, id_skill_name_id__in = skills)
-    time = 0
-    for register in query_set:
-        time = time + register.time_taken
-    return time
-
-def getTotalVideoTime(kaid_s):
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en toda su historia.
-    query = Video_Playing.objects.filter(kaid_student=kaid_s)
-    time = 0
-    for register in query:
-        time = time + register.seconds_watched
-    return time
-
-#def getVideoTimeBetween(kaid_s,t_begin,t_end):
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
-#    query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
-    #query_set = query_set.filter(date__gte = t_begin)
-    #query_set = query_set.filter(date__lte = t_begin)
-#    time = 0
-#    for register in query_set:
-#        time = time + register.total_seconds_watched
-#    return time
-
-def getVideoTimeBetween(kaid_s,t_begin,t_end):
-    #Esta funcion entrega el tiempo que un estudiante ha utilizado en videos en un rango de fechas.
-    query_set = Video_Playing.objects.filter(kaid_student=kaid_s,date__gte = t_begin,date__lte = t_end)
-    #query_set = query_set.filter(date__gte = t_begin)
-    #query_set = query_set.filter(date__lte = t_begin)
-    time = 0
-    for register in query_set:
-        time = time + register.seconds_watched
-    return time
-
 @login_required()
 def getTeacherClasses(request):
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
@@ -196,11 +97,6 @@ def getTeacherClasses(request):
         classes[i].level = N[int(classes[i].level)] 
     return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
     
-def getClassGrades(request,id_class):
-    #Funcion que entrega todas las notas de los estudiantes de un curso.
-    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    #grades = Assesment.objects.filter(id_class=id_class).values('name', 'grade__kaid_student','grade__grade') #inner join Django
-    #return grades
 
 def getClassSkills(request,id_class):
     #Funcion que entrega un arreglo con la cantidad de habilidades en cada nivel de dominio
@@ -208,21 +104,6 @@ def getClassSkills(request,id_class):
     students_skills = Student_Skill.objects.filter(kaid_student__in=students).values('last_skill_progress','kaid_student').annotate(scount=Count('kaid_student'))
     #print students_skills
     return students_skills
-
-def getTotalNivel(kaid_student,nivel):
-    total = Student_Skill.objects.filter(kaid_student=kaid_student,last_skill_progress=nivel).count()
-    return total
-
-def getClassAssesments(id_class):
-    assesments = Assesment.objects.filter(id_class_id=id_class)
-    return assesments
-
-def getLastSkillsLevel(kaid_student,level):
-    if level == 'struggling':
-        total = Student_Skill.objects.filter(kaid_student=kaid_student, struggling=True).count()
-    else:    
-        total = Student_Skill.objects.filter(kaid_student=kaid_student,last_skill_progress=level,struggling=False).count()
-    return total
 
 
 def paralellAssesment(assesment,students,queue):
@@ -240,35 +121,12 @@ def paralellAssesment(assesment,students,queue):
     assesment_json["start_date"]= str(assesment.start_date)
     assesment_json["end_date"]= str(assesment.end_date)
     assesment_json["assesment_student"]=[]
-    skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
-    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
-    correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
-    time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-    query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
-    query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
-    time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-    levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
-        ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
-        ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
-    struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
-        ).values('kaid_student','id_student_skill'
-        ).order_by('kaid_student','id_student_skill')
-    dictIncorrect = {}
-    dictCorrect = {}
-    dictTimeExcercice = {}
-    dictTimeVideo = {}
-    for inc in incorrect:
-        dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
-    for cor in correct:
-        dictCorrect[cor['kaid_student_id']] = cor['correct']
-    for te in time_excercice:
-        dictTimeExcercice[te['kaid_student_id']] = te['time']
-    for vid in time_video:
-        dictTimeVideo[vid['kaid_student_id']] = vid['time']
-    
-    #print '*****************************************assesment*********************'
-    #for p in struggling:
-    #    print p
+    grades = Grade.objects.filter(id_assesment_id=assesment.id_assesment).values('kaid_student_id','correct','incorrect','video_time','excercice_time',
+        'struggling','practiced','mastery1','mastery2','mastery3')
+    dictGrades = {}
+    for g in grades:
+        dictGrades[g['kaid_student_id']] = (g['correct'],g['incorrect'],g['video_time'],g['excercice_time'],g['struggling'],g['practiced'],g['mastery1'],
+            'mastery2','mastery3')
     i=0
     for student in students:
         student_json={}
@@ -278,50 +136,47 @@ def paralellAssesment(assesment,students,queue):
         total_rec=round(random.uniform(0,1),2)
         student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
         try:
-            student_json["skills_time"] = dictTimeExcercice[student.kaid_student]
+            student_json["skills_time"] = dictGrades[student.kaid_student][3]
         except:
             student_json["skills_time"] = 0
         try:
-            student_json["video_time"] = dictTimeVideo[student.kaid_student]
+            student_json["video_time"] = dictGrades[student.kaid_student][2]
         except:
             student_json["video_time"] = 0            
         student_exercise={}
         try:
-            student_exercise["correct"] = dictCorrect[student.kaid_student]
+            student_exercise["correct"] = dictGrades[student.kaid_student][0]
         except:
             student_exercise["correct"] = 0
         try:
-            student_exercise["incorrect"] = dictIncorrect[student.kaid_student] #incorrect.get(kaid_student_id=student.kaid_student)['incorrect']
+            student_exercise["incorrect"] = dictGrades[student.kaid_student][1]
         except:
             student_exercise["incorrect"] = 0
         student_json["exercises"]=student_exercise
         skills_level={}
         try:
-            skills_level["struggling"] = struggling.filter(kaid_student_id=student.kaid_student).count()
+            skills_level["struggling"] = dictGrades[student.kaid_student][4]
         except:
             skills_level["struggling"] = 0
         try:
-            skills_level["practiced"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='practiced').count()
+            skills_level["practiced"] = dictGrades[student.kaid_student][5]
         except:
             skills_level["practiced"] = 0
         try:
-            skills_level["mastery1"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery1').count()
+            skills_level["mastery1"] = dictGrades[student.kaid_student][6]
         except:
             skills_level["mastery1"] = 0
         try:
-            skills_level["mastery2"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery2').count()
+            skills_level["mastery2"] = dictGrades[student.kaid_student][7]
         except:
             skills_level["mastery2"] = 0
         try:
-            skills_level["mastery3"] = levels.filter(kaid_student_id=student.kaid_student,skill_progress__to_level='mastery3').count()
+            skills_level["mastery3"] = dictGrades[student.kaid_student][8]
         except:
             skills_level["mastery3"] = 0
         student_json["skills_level"]=skills_level
         assesment_json["assesment_student"].append(student_json)
         i+=1
-    #assesment_array.append(assesment_json)
-    #print '**************************************************************************************************'
-    #print assesment_json
     queue.put(assesment_json)
 
     return queue
@@ -329,7 +184,6 @@ def paralellAssesment(assesment,students,queue):
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado y carga el dashboard
-    inicio = time.time()
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
@@ -471,51 +325,8 @@ def getClassStudents(request, id_class):
                                 context_instance=RequestContext(request)
                             )
 
-def simulateGrade(id_config,kaid_student,start_date,end_date,min_grade,max_grade):
-    approval_percentage = Assesment_Config.objects.get(pk=id_config).approval_percentage
-    skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_config).values('id_skill_name_id')
-    performance_points = getSkillPoints(kaid_student,skills,start_date,end_date)
-    grade = getGrade(approval_percentage,performance_points,min_grade,max_grade)
-    return grade
 
-def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
-    #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
-    #y un rango de fechas.
-    scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
-    points = 0
-    for skill in configured_skills:
-        #print 'id_skill_name_id %s'%(skill['id_skill_name_id'])
-        try: 
-            #print skill['id_skill_name_id']
-            id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_name_id'],kaid_student_id=kaid_student)#.values('id_student_skill')
-            for id_student_skill in id_student_skills:
-                id_student_skill = id_student_skill.id_student_skill
-        except: 
-            print "no data id_student_skills"
-        try: 
-            last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
-            points = points + scores[last_level['to_level']]
-        except: 
-            print 'no hay registros'
-    points = points / len(configured_skills)
-    return points
-        
-def getGrade(percentage,points,min_grade,max_grade):
-    #calcula la nota
-    if points >= percentage:#si obtiene mas que nota cuatro.
-        x1 = percentage
-        x2 = 100.0
-        y1 = 4.0
-        y2 = max_grade
-        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
-    else:#si los puntos son menores al porcentaje de aprobacion
-        x1 = 0.0
-        x2 = percentage
-        y1 = min_grade
-        y2 = 4.0
-        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
-    #print grade
-    return round(grade,1)
+
 
 def getTopictree(subject):
     topictree_json={}
