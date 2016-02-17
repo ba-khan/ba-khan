@@ -399,19 +399,19 @@
     	//console.log("hoy: "+today)
     	todayDate = new Date(Date.parse(today))
     	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
-    	
-
+    	endDate = endDate.getTime() + 97200000
+    	endDate = new Date(endDate)
+		
     	if (todayDate<endDate){
     		//console.log("NO MOSTRAR EDITAR");
-    		
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
 
-endDate2 = (endDate.getMonth()+1)+"/"+(endDate.getDate())+"/"+(endDate.getFullYear())+" 00:00 AM";
-endDates.push(endDate2)
-//console.log("HORA FINAL: "+endDate2);
+			//endDate2 = (endDate.getMonth()+1)+"/"+(endDate.getDate())+"/"+(endDate.getFullYear())+" 00:00 AM";
+			endDates.push(endDate)
+			//console.log("HORA FINAL: "+endDate2);
     		   		
     		table.select('th.'+class_id)
     		.append('span')
@@ -430,16 +430,8 @@ endDates.push(endDate2)
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
-    		
+	
     	}
-    	
-
-
-
-
-
-
-
   	
     	table.select('th.'+class_id)
     		.append('button')
@@ -457,11 +449,7 @@ endDates.push(endDate2)
  						<option value="grade">Nota</option>
 						<option value="effort">Esfuerzo</option>
 				  	</select>
-				 	`});   	
-
-    	
-    		
-    	
+				 	`});   	   	
     }	 
     
     $(".arrow-up.assesment").attr("column",function(){
