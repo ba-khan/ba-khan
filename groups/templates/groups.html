@@ -140,15 +140,18 @@ function crearSubGrupoAvanzados() {
 
    $("#Avanzados").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Avanzados<a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivAvanzados(this)'>[x]</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
+   fillComboBox();
 };
 function crearSubGrupoIntermedios() {
    $("#Intermedios").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Intermedios<a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivIntermedios(this)'>[x]</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
+   fillComboBox();
 };
 function crearSubGrupoReforzamiento() {
 
    $("#Reforzamiento").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'>SubGrupo Reforzamiento<a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivReforzamiento(this)'>[x]</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
+   fillComboBox();
 };
 function closeThisDivAvanzados(div) { 
 var openDiv = document.getElementsByName(div.name); 
@@ -281,6 +284,23 @@ h1{
   text-align: center;
   margin-bottom: 0%;
 }
+h2{
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+h3{
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+h4{
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+hr{
+  margin-bottom: 10px;
+  margin-top: -20px;
+  opacity: 0;
+}
    #content{
         width: 1200px;
         height: 450px;
@@ -367,11 +387,6 @@ overflow-x: scroll;
 width: 100%%;
 height: 80px;
 }
-#more_contain{
-  /*width: 30%;*/
-  display:none;
-  float:right;
-}
 img:hover{
   border: 1px solid green;
 }
@@ -391,6 +406,10 @@ img:hover{
 #makeButton{
   float:right;
   margin-right: 5px;
+}
+#newButton{
+  display:none;
+  float:right;
 }
 #name{
   float:right;
@@ -438,11 +457,6 @@ img:hover{
       }
       circle{
         cursor: pointer;
-        opacity: 1;
-        z-index: 1000;
-      }
-      circle[Attributes Style] {
-        z-index:1000;
       }
       
 	  </style>
@@ -453,23 +467,23 @@ img:hover{
   <br>
     <div id='content'>
    
-       <div id="SinGrupo" name="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
+       <div id="SinGrupo" name="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul><h2>No agrupados</h2></ul></div>
  
-        <div id="Avanzados" name="Avanzados" ondragover="return over(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
+        <div id="Avanzados" name="Avanzados" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>Avanzados</h3></ul>
         <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
 <OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub'>nuevo sub-grupo</button>
         </div>
  
-       <div id="Intermedios" name="Intermedios" ondragover="return over(event)" ondrop="return drop(event)">Intermedios
+       <div id="Intermedios" name="Intermedios" ondragover="return over(event)" ondrop="return drop(event)"><h3>Intermedios</h3>
        
 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub'>nuevo sub-grupo</button>
        </div>
-       <div id="Reforzamiento" name="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)">Reforzamiento
+       <div id="Reforzamiento" name="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)"><h3>Reforzamiento</h3>
        
 <SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
@@ -488,6 +502,7 @@ img:hover{
 <div id="buttons">
   <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
   <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='makeButton'>
+  <input type='button' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" value='Nueva Agrupacion' id='newButton'>
 </div>
 
 <br>
@@ -501,10 +516,6 @@ img:hover{
        
   </form>
     <div id="hoverRes">
-      <div id='more_contain'>
-        <img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
-      </div>
-      <!--<div class="coloredDiv"></div>-->
       <div id="name"></div>
       <div id="scrolled_date" style="cursor:pointer"></div>
       
@@ -670,28 +681,28 @@ window.onload = function() {
             type = "#"+groups[i]['fields']['type'];//type grupo
             tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
             if (type == '#Avanzados'){
-              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' >"+
-                $(tutor).attr('title')+"</div>");
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Avanzados<h3><h4>Tutor: "+
+                $(tutor).attr('title')+"</h4></div>");
             }
             if (type == '#Intermedios'){
-              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' >"
-                +$(tutor).attr('title')+"</div>");
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Intermedios<h3><h4>Tutor: "
+                +$(tutor).attr('title')+"</h4></div>");
             }
             if (type == '#Reforzamiento'){
-              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' >"
-                +$(tutor).attr('title')+"</div>");
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Reforzamiento<h3><h4>Tutor: "
+                +$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,22) == 'SubGrupoReforzamiento'){
-              $("#Reforzamiento").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"'>"+$(tutor).attr('title')+"</div>");
+              $("#Reforzamiento").append("<br><hr><div class='"+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,20) == 'SubGrupoIntermedios'){
-              $("#Intermedios").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' >"+$(tutor).attr('title')+"</div>");
+              $("#Intermedios").append("<br><hr><div class='"+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              $("#Avanzados").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' >"+$(tutor).attr('title')+"</div>");
+              $("#Avanzados").append("<br><hr><div class='"+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
 					}
 			   }
@@ -720,20 +731,22 @@ window.onload = function() {
          data: {id_master_group : datum.id},
          success: function (response) {
             skills = JSON.parse(response);
+            console.log(skills);
             $('#skills').empty();
             $('#skills').css('display','inline');
-            for(var i=0;i<skills.length;i++){
-              $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
-          }
+            if(skills.length==0){
+              $('#skills').append("<li>No hay Habilidades asociadas</li>");
+            }
+            else{
+              for(var i=0;i<skills.length;i++){
+                $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
+              }
+            }
          }
         });
         $(".cuadradito").removeAttr("draggable");
         $('.nuevo_sub').remove()
-        $('#more_contain').css('display', 'inline');
-        $('#more_contain').on("click","a,img", function (e) {
-            e.preventDefault();
-            location.reload();
-        });
+        $('#newButton').show();
       })
       .scroll(function (x, scale) {
       })
@@ -748,5 +761,9 @@ window.onload = function() {
     this.parentNode.appendChild(this);
   });
 }
+
+function newGroups() {
+    location.reload();
+};
 </script>
 {% endblock %}
