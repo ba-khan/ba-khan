@@ -2,7 +2,10 @@ import time
 from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt
+from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing
+from django.db.models import Count,Sum
+
 class Command(BaseCommand):
     help = 'Calcula notas al pasar la fecha de la evaluacion'
 
@@ -18,10 +21,74 @@ class Command(BaseCommand):
             skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
             #print grades_involved
+            students = grades_involved.values('kaid_student_id')
+            #print students
+            #skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
+            incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+            correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
+            time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
+            query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
+            query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
+            time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
+            levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
+                ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
+                ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+            struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
+                ).values('kaid_student','id_student_skill'
+                ).order_by('kaid_student','id_student_skill')
+            dictIncorrect = {}
+            dictCorrect = {}
+            dictTimeExcercice = {}
+            dictTimeVideo = {}
+            for inc in incorrect:
+                dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
+            for cor in correct:
+                dictCorrect[cor['kaid_student_id']] = cor['correct']
+            for te in time_excercice:
+                dictTimeExcercice[te['kaid_student_id']] = te['time']
+            for vid in time_video:
+                dictTimeVideo[vid['kaid_student_id']] = vid['time']
             for grade in grades_involved:
                 if grade.evaluated == False:
                     grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
                     grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
+                    try:
+                        grade.excercice_time = dictTimeExcercice[grade.kaid_student_id]
+                    except:
+                        grade.excercice_time = 0
+                    try:
+                        grade.video_time = dictTimeVideo[grade.kaid_student_id]
+                    except:
+                        grade.video_time = 0
+                    try:
+                        grade.correct = dictCorrect[grade.kaid_student_id]
+                    except:
+                        grade.correct = 0
+                    try:
+                        grade.incorrect = dictIncorrect[grade.kaid_student_id]
+                    except:
+                        grade.incorrect = 0
+                    try:
+                        grade.struggling = struggling.filter(kaid_student_id=grade.kaid_student_id).count()
+                    except:
+                        grade.struggling = 0
+                    try:
+                        grade.practiced = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='practiced').count()
+                    except:
+                        grade.practiced = 0
+                    try:
+                        grade.mastery1 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery1').count()
+                    except:
+                        grade.mastery1 = 0
+                    try:
+                        grade.mastery2 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery2').count()
+                    except:
+                        grade.mastery2 = 0
+                    try:
+                        grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
+                    except:
+                        grade.mastery3 = 0
+
                     if assesment.end_date == lastDate:
                         grade.evaluated = True
                     grade.save()

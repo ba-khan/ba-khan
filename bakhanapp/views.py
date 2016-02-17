@@ -40,6 +40,7 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress
 
 import datetime
 
@@ -241,29 +242,30 @@ def paralellAssesment(assesment,students,queue):
     assesment_json["assesment_student"]=[]
     skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
     incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
-    dictIncorrect = {}
-    for inc in incorrect:
-        dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
     correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
-    dictCorrect = {}
-    for cor in correct:
-        dictCorrect[cor['kaid_student_id']] = cor['correct']
     time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-    dictTimeExcercice = {}
-    for te in time_excercice:
-        dictTimeExcercice[te['kaid_student_id']] = te['time']
     query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
     query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
     time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-    dictTimeVideo = {}
-    for vid in time_video:
-        dictTimeVideo[vid['kaid_student_id']] = vid['time']
     levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
         ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
         ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
     struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
         ).values('kaid_student','id_student_skill'
         ).order_by('kaid_student','id_student_skill')
+    dictIncorrect = {}
+    dictCorrect = {}
+    dictTimeExcercice = {}
+    dictTimeVideo = {}
+    for inc in incorrect:
+        dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
+    for cor in correct:
+        dictCorrect[cor['kaid_student_id']] = cor['correct']
+    for te in time_excercice:
+        dictTimeExcercice[te['kaid_student_id']] = te['time']
+    for vid in time_video:
+        dictTimeVideo[vid['kaid_student_id']] = vid['time']
+    
     #print '*****************************************assesment*********************'
     #for p in struggling:
     #    print p
@@ -333,7 +335,7 @@ def getClassStudents(request, id_class):
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+    #students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
     incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
     correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
     time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))    
@@ -463,10 +465,6 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-    #lanza un proceso paralelo que actualiza las notas simuladas 
-    #os.system('python manage.py update_simulate')
-    #fin = time.time()
-    #print fin-inicio
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
