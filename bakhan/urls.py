@@ -30,4 +30,3 @@ urlpatterns = [
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]
-
