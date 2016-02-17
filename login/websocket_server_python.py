@@ -186,6 +186,7 @@ def message_received(client, server, message):
         #server.send_message_to_all("url:"+authorize_url)
         #print authorize_url
         
+        # 3. Send Authorize url
         url_data={"url":authorize_url}
         json_data = json.dumps(url_data)
         server.send_message(client,json_data)
@@ -194,14 +195,14 @@ def message_received(client, server, message):
         callback_server.server_close()
         #callback_server=""
 
-        # 3. Get an access token.
+        # 4. Get an access token.
         session = service.get_auth_session(request_token, secret_request_token,
             params={'oauth_verifier': VERIFIER})
 
-        # 4. Get user data from the API Khan request
+        # 5. Get user data from the API Khan request
         login_data = get_api_resource(session)
 
-        # 5. Send Khan user data to the client
+        # 6. Send Khan user data to the client
         server.send_message(client, login_data)
     
     
