@@ -381,6 +381,11 @@ def getClassStudents(request, id_class):
     mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
     struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
     assesments = Assesment.objects.filter(id_class_id=id_class)
+    grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade').order_by('id_assesment')
+    dictGrades = {}
+    for g in grades:
+        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'])
+    #print dictGrades[(67,'kaid_962822484535083405338400')][1]
     assesment_array=[]
     threads = []
     queue = Queue.Queue()
@@ -469,15 +474,24 @@ def getClassStudents(request, id_class):
             skills_level["mastery3"] = 0
         student_json["skills_level"] = skills_level
         for assesment in assesment_array:
-            student_assesment={}
+            #print dictAssesment[(67,'kaid_962822484535083405338400')]
+            student_assesment = {}
             id_assesment = "assesment"+(str)(assesment["id"])
             id_assesment_num = assesment["id"]
-            random_grade=round(random.uniform(2,7),1)
-            random_effort=round(random.uniform(1,100))
-            student_assesment["grade"]=random_grade
-            student_assesment["effort"]=random_effort
-            student_assesment["grade_id"]=37
-            student_json[id_assesment]= student_assesment
+            #getGrade()
+            #random_grade=round(random.uniform(2,7),1)
+            random_effort = round(random.uniform(1,100))
+            try:
+                student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
+                student_assesment["effort"] = random_effort
+            except:
+                student_assesment["grade"] = None
+                student_assesment["effort"] = 0.1
+            try:
+                student_assesment["grade_id"] = dictGrades[(assesment['id'],student.kaid_student)][1]
+            except:
+                student_assesment["grade_id"] = 0
+            student_json[id_assesment] = student_assesment
         i+=1
         json_array.append(student_json)
     json_dict={"students":json_array, "assesments":assesment_array}
