@@ -177,7 +177,7 @@ class Grade(models.Model):
     grade = models.FloatField()
     teacher_grade = models.IntegerField(null=True)
     performance_points = models.IntegerField()
-    effort_points = models.IntegerField()
+    effort_points = models.FloatField()
     recomended_complete = models.IntegerField(null=True)
     excercice_time = models.IntegerField(null=True)
     video_time = models.IntegerField(null=True)

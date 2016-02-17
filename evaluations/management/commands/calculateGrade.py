@@ -4,7 +4,7 @@ import json
 from django.core.management.base import BaseCommand, CommandError
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt
 from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing
-from django.db.models import Count,Sum
+from django.db.models import Count,Sum,Max
 
 class Command(BaseCommand):
     help = 'Calcula notas al pasar la fecha de la evaluacion'
@@ -13,23 +13,21 @@ class Command(BaseCommand):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #currentDate = time.strftime("%Y-%m-%d") #fecha actual.
         #print currentDate
-        lastDate = date.today() - timedelta(days=1)
+        today = date.today() #- timedelta(days=1)
+        #print lastDate
         assesments = Assesment.objects.all()#filter(end_date__lte=currentDate)
         for assesment in assesments:
-            #print assesment.name
             approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
             skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
-            #print grades_involved
             students = grades_involved.values('kaid_student_id')
-            #print students
-            #skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf.id_assesment_config).values('id_skill_name_id')
             incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
             correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
             time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
             query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
             query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
-            time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
+            time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
+                date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
             levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
                 ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
                 ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
@@ -88,9 +86,23 @@ class Command(BaseCommand):
                         grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
                     except:
                         grade.mastery3 = 0
-
-                    if assesment.end_date == lastDate:
+                    #try:
+                    #    grade.effort_points = 
+                    if assesment.end_date < today:
                         grade.evaluated = True
+                    grade.save()
+            #Aqui comienza el calculo de la bonificacion de empegno.        
+            grades = Grade.objects.filter(id_assesment_id=assesment.pk)
+            bestVideoTime = grades.aggregate(Max('video_time'))
+            bestExcerciceTime = grades.aggregate(Max('excercice_time'))
+            for grade in grades:
+                if grade.evaluated == False:
+                    try:
+                        video = grade.video_time / float(bestVideoTime['video_time__max'])
+                        excercice = grade.excercice_time / float(bestExcerciceTime['excercice_time__max'])
+                        grade.effort_points = video * 0.5 + excercice * 0.5
+                    except:
+                        grade.effort_points = 0.1
                     grade.save()
 
 def getGrade(percentage,points,min_grade,max_grade):

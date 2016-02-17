@@ -124,7 +124,7 @@ def updateAssesment(request): #modifica una evaluacion
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
-                               effort_points=0,
+                               effort_points=0.1,
                                id_assesment_id=id_assesment,
                                kaid_student_id=s['kaid_student']
                                )
@@ -170,7 +170,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
-                               effort_points=0,
+                               effort_points=0.1,
                                id_assesment_id=id_new_assesment,
                                kaid_student_id=s['kaid_student']
                                )
