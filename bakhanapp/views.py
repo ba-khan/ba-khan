@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count,Sum
 
+
 from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
@@ -90,44 +91,6 @@ def getGradeStudent(id_assesment,kaid_student):
     #Funcion que entrega la nota de un estudiante en una evaluacion.
     grade = Grade.objects.filter(id_assesment=id_assesment,kaid_student=kaid_student).values('grade')
     return grade
-
-def getSkillPoints(kaid_student,id_assesment_conf,t_begin,t_end):
-    #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
-    #y un rango de fechas.
-    scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
-    configured_skills = Assesment_Skill.objects.filter(id_assesment_config=id_assesment_conf).values('id_skill_name')#skills en la configuracion actual
-    points = 0
-    for skill in configured_skills:
-        id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_name'],kaid_student_id=kaid_student).values('id_student_skill')
-        last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skills[0]['id_student_skill'],date__gte = t_begin,date__lte = t_end).latest('date').values('to_level')
-        points = points + scores[last_level]
-    points = points / len(configured_skills)
-    return points
-        
-def setGrades(id_assesment,id_assesment_config,id_class):
-    #Funcion que guarda las notas obtenidas por los estudiantes de un curso segun una configuracion de evaluacion.
-    assesment = Assesment.objects.filter(id_assesment=id_assesment).values('id_assesment','start_date','end_date','max_grade','min_grade')#obtengo assesment
-    #print assesment[0]['id_assesment']
-    assesment_config = Assesment_Config.objects.filter(id_assesment_config=id_assesment_config)#consulta los datos de la assesment_config involucrada
-    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
-    for student in students:
-        grade = Grade()#crea un nuevo registro grade
-        grade.kaid_student_id = student.kaid_student#asigna el identificador del estudiante 
-        grade.performance_points = getSkillPoints(student.kaid_student,id_assesment_config,assesment[0]['start_date'],assesment[0]['end_date'])#asigna los puntos obtenidos por desempenio
-        #calcular la nota
-        if grade.performance_points >= (assesment_config.aproval_percentage*100):#si obtiene mas que nota cuatro.
-            x1 = assesment_config.aproval_percentage*100
-            x2 = 100
-            y1 = 4
-            y2 = assesment[0]['max_grade']
-            grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
-        else:#si los puntos son menores al porcentaje de aprobacion
-            x1 = 0
-            x2 = assesment_config.aproval_percentage*100
-            y1 = assesment[0]['min_grade']
-            y2 = 4
-            grade.grade = (((grade.performance_points-x1)/(x2-x1))*(y2-y1))+y1
-        grade.save()
 
 def getTotalExerciseIncorrect(kaid_s):
     #Esta funcion entrega el total de ejercicios incorrectos de un estudiante.
@@ -482,15 +445,23 @@ def getClassStudents(request, id_class):
             #random_grade=round(random.uniform(2,7),1)
             random_effort = round(random.uniform(1,100))
             try:
-                student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
+                if dictGrades[(assesment['id'],student.kaid_student)][0] == 0:
+                    student_assesment["grade"] = simulateGrade(assesment['id_config'],student.kaid_student,assesment['start_date'],assesment['end_date'],assesment['min_grade'],assesment['max_grade'])
+                else:
+                    student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
+                
                 student_assesment["grade_id"] = dictGrades[(assesment['id'],student.kaid_student)][1]
-                student_assesment['performance_points'] = dictGrades[(assesment['id'],student.kaid_student)][2]
+                
                 student_assesment["effort"] = random_effort
             except:
                 student_assesment["grade"] = None
-                student_assesment['performance_points'] = None
                 student_assesment["effort"] = 0.1
                 student_assesment["grade_id"] = 0
+            try:
+                student_assesment['performance_points'] = dictGrades[(assesment['id_config'],student.kaid_student)][2]
+            except:
+                student_assesment['performance_points'] = None
+                
             student_json[id_assesment] = student_assesment
         i+=1
         json_array.append(student_json)
@@ -499,15 +470,59 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-    fin = time.time()
-    print fin-inicio
+    #fin = time.time()
+    #print fin-inicio
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
                                 context_instance=RequestContext(request)
                             )
 
+def simulateGrade(id_config,kaid_student,start_date,end_date,min_grade,max_grade):
+    approval_percentage = Assesment_Config.objects.get(pk=id_config).approval_percentage
+    skills = Assesment_Skill.objects.filter(id_assesment_config_id=id_config).values('id_skill_name_id')
+    performance_points = getSkillPoints(kaid_student,skills,start_date,end_date)
+    grade = getGrade(approval_percentage,performance_points,min_grade,max_grade)
+    return grade
 
+def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
+    #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
+    #y un rango de fechas.
+    scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
+    points = 0
+    for skill in configured_skills:
+        #print 'id_skill_name_id %s'%(skill['id_skill_name_id'])
+        try: 
+            #print skill['id_skill_name_id']
+            id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_name_id'],kaid_student_id=kaid_student)#.values('id_student_skill')
+            for id_student_skill in id_student_skills:
+                id_student_skill = id_student_skill.id_student_skill
+        except: 
+            print "no data id_student_skills"
+        try: 
+            last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
+            points = points + scores[last_level['to_level']]
+        except: 
+            print 'no hay registros'
+    points = points / len(configured_skills)
+    return points
+        
+def getGrade(percentage,points,min_grade,max_grade):
+    #calcula la nota
+    if points >= percentage:#si obtiene mas que nota cuatro.
+        x1 = percentage
+        x2 = 100.0
+        y1 = 4.0
+        y2 = max_grade
+        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
+    else:#si los puntos son menores al porcentaje de aprobacion
+        x1 = 0.0
+        x2 = percentage
+        y1 = min_grade
+        y2 = 4.0
+        grade = (((points-x1)/(x2-x1))*(y2-y1))+y1
+    #print grade
+    return round(grade,1)
 
 def getTopictree(subject):
     topictree_json={}
