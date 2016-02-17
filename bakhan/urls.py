@@ -9,7 +9,11 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^',  include('login.urls', namespace="login")),#aplicacion login.
-    url(r'^inicio/$', 'bakhanapp.views.home', name='home'),#aplicacion bakhanapp se encarga del home.
+    
+    #url(r'^inicio/$', 'bakhanapp.views.home', name='home'), #aplicacion bakhanapp se encarga del home.
+    #esto era antes, ahora ya no hay home, pasa directo a "cursos"
+    url(r'^inicio/$','bakhanapp.views.getTeacherClasses', name='cursos'),
+
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/grupos/', include('groups.urls', namespace="groups")),#aplicacion groups.
     url(r'^home/poblarbd/', include('populate.urls', namespace="populate")),#aplicacion para poblar la base de datos
     url(r'^inicio/curso/evaluacion/', include('evaluations.urls', namespace="evaluations")),#aplicacion para las evaluaciones
@@ -26,4 +30,3 @@ urlpatterns = [
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]
-

@@ -1,4 +1,5 @@
 import time
+from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress
@@ -7,22 +8,22 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
-        currentDate = time.strftime("%Y-%m-%d") #fecha actual.
-        print currentDate
-        assesments = Assesment.objects.filter(end_date__lte=currentDate)
+        #currentDate = time.strftime("%Y-%m-%d") #fecha actual.
+        #print currentDate
+        lastDate = date.today() - timedelta(days=1)
+        assesments = Assesment.objects.all()#filter(end_date__lte=currentDate)
         for assesment in assesments:
-            print assesment.name
+            #print assesment.name
             approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
             skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
             #print grades_involved
             for grade in grades_involved:
                 if grade.evaluated == False:
-                    if grade.performance_points == 0:
-                        grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
-                    if grade.grade == 0:
-                        grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
-                    grade.evaluated = True
+                    grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
+                    grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade)
+                    if assesment.end_date == lastDate:
+                        grade.evaluated = True
                     grade.save()
 
 def getGrade(percentage,points,min_grade,max_grade):

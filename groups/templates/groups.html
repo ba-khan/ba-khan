@@ -365,7 +365,7 @@ margin: 10px;
 #timeline3{
 overflow-x: scroll;
 width: 100%%;
-height: 250px;
+height: 80px;
 }
 #more_contain{
   /*width: 30%;*/
@@ -403,6 +403,7 @@ img:hover{
 	      fill: none;
 	      stroke: black;
 	      shape-rendering: crispEdges;
+        z-index:-1;
 	    }
 
 	    .axis text {
@@ -413,6 +414,7 @@ img:hover{
 	    .timeline-label {
 	      font-family: sans-serif;
 	      font-size: 12px;
+        display: none;
 	    }
 
 	    #timeline2 .axis {
@@ -436,6 +438,11 @@ img:hover{
       }
       circle{
         cursor: pointer;
+        opacity: 1;
+        z-index: 1000;
+      }
+      circle[Attributes Style] {
+        z-index:1000;
       }
       
 	  </style>
@@ -576,23 +583,43 @@ $('input[name="skills"]').val(JSON.stringify(selected_skills_id));
   });;
 </script>
 <script type="text/javascript">
-window.onload = function() {
-	
-		var testData = [
-		     ];
 
+
+
+window.onload = function() {
+		var testData = [];
+    var dates = [];
+    var separate = 2*3600000;
+    var cont = 1;
 		var master_groups = JSON.parse('{{ groups | escapejs }}');
 		for (i=0;i<master_groups.length;i++){
-			times ={};
-			var arr=[];
-			dic = {};
-			dic.starting_time = master_groups[i]['fields']['date_int'];
-			dic.ending_time = master_groups[i]['fields']['date_int']+20;
-			arr.push(dic);
+      date = new Date(master_groups[i]['fields']['date']);
+      times ={};
+      var arr=[];
+      dic = {};
+
+      if (dates.indexOf(master_groups[i]['fields']['date']) == -1){
+        dates.push(master_groups[i]['fields']['date']);
+        dic.starting_time = date.getTime() + 10800000;
+        dic.ending_time = dic.starting_time+20;
+        arr.push(dic);
+        cont=1;
+      }
+      else{
+        dic.starting_time = date.getTime() + 10800000 + (separate*cont);
+        dic.ending_time = dic.starting_time+20;
+        arr.push(dic);
+        cont=cont+1;
+      }
+
 			times.times = arr;
 			times.label = master_groups[i]['fields']['date'];
 			times.id = master_groups[i]['pk'];
 			testData.push(times);
+      console.log(testData[i].times[0].starting_time);
+      //date = new Date(testData[i].times[0].starting_time);
+      date = new Date(testData[i].label);
+      console.log(date);
 		};
 		var width = testData.length*100;
 
@@ -601,11 +628,14 @@ window.onload = function() {
     var chart = d3.timeline()
       .tickFormat({
         format: d3.time.format("%x"),
-        tickTime: d3.time.hours,
+        tickTime: d3.time.days,
         tickInterval: 1,
-        tickSize: 6
+        tickSize: 20
       })
-      .stack()
+      //.stack()
+      .beginning(testData[0].times[0].starting_time - 86400000)
+      .ending(testData[testData.length-1].times[0].ending_time + 86400000 -7200000)
+      .rotateTicks()
       .width(width*1)
       .margin({left:30, right:80, top:0, bottom:0})
       .hover(function (d, i, datum) {
@@ -635,14 +665,10 @@ window.onload = function() {
           $('#Avanzados').empty();
           $('#Intermedios').empty();
           $('#Reforzamiento').empty();
-					for(var i=0;i<groups.length;i++){
-            //en este for se crean todos los div segun la agrupacion seleccionada.
-            //alert(groups[i]['fields']['type'])
+					for(var i=0;i<groups.length;i++){//en este for se crean todos los div segun la agrupacion seleccionada.
             //Agrega cada subgrupo en el div que le corresponde.
             type = "#"+groups[i]['fields']['type'];//type grupo
-            //alert(groups[i]['fields']['kaid_student_tutor']);
             tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
-            //alert($(tutor).attr('title'));
             if (type == '#Avanzados'){
               $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' >"+
                 $(tutor).attr('title')+"</div>");
@@ -697,18 +723,12 @@ window.onload = function() {
             $('#skills').empty();
             $('#skills').css('display','inline');
             for(var i=0;i<skills.length;i++){
-              //alert(skills[i]['fields']['name_spanish'])
               $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
-              //var g = "." + (students[i]['fields']['id_group']).toString();
-              //var s = "#" + (students[i]['fields']['kaid_student']).toString();
-              //$(s).appendTo(g);
           }
          }
         });
         $(".cuadradito").removeAttr("draggable");
         $('.nuevo_sub').remove()
-        //alert(datum.id);
-        //<img src="smiley.gif" alt="Smiley face" height="42" width="42">
         $('#more_contain').css('display', 'inline');
         $('#more_contain').on("click","a,img", function (e) {
             e.preventDefault();
@@ -716,15 +736,17 @@ window.onload = function() {
         });
       })
       .scroll(function (x, scale) {
-        //$("#scrolled_date").text(scale.invert(x) + " to " + scale.invert(x+width));
       })
       .display("circle")
-      .itemMargin(0);
+      .itemMargin(-10);
     var svg = d3.select("#timeline3").append("svg").attr("width", width)
       .datum(testData).call(chart);
   }
   timelineHover();
   $("#timeline3").scrollLeft(width);//lleva el scrollbar al final
+  d3.selectAll("circle").each(function(d){
+    this.parentNode.appendChild(this);
+  });
 }
 </script>
 {% endblock %}

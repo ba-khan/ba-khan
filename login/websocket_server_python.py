@@ -72,7 +72,7 @@ from websocket_server import WebsocketServer
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
 CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
     
-CALLBACK_BASE = '127.0.0.1' #IP Servidor
+CALLBACK_BASE = '146.83.216.177' #IP Servidor
 #CALLBACK_BASE = "127.0.0.1"
 #CALLBACK_BASE = "192.168.1.139"
 SERVER_URL = 'http://www.khanacademy.org'
@@ -186,6 +186,7 @@ def message_received(client, server, message):
         #server.send_message_to_all("url:"+authorize_url)
         #print authorize_url
         
+        # 3. Send Authorize url
         url_data={"url":authorize_url}
         json_data = json.dumps(url_data)
         server.send_message(client,json_data)
@@ -194,20 +195,20 @@ def message_received(client, server, message):
         callback_server.server_close()
         #callback_server=""
 
-        # 3. Get an access token.
+        # 4. Get an access token.
         session = service.get_auth_session(request_token, secret_request_token,
             params={'oauth_verifier': VERIFIER})
 
-        # 4. Get user data from the API Khan request
+        # 5. Get user data from the API Khan request
         login_data = get_api_resource(session)
 
-        # 5. Send Khan user data to the client
+        # 6. Send Khan user data to the client
         server.send_message(client, login_data)
     
     
 #PORT=9001
 PORT=8080
-SERVERHOST="192.168.1.134"
+SERVERHOST= "0.0.0.0"
 server = WebsocketServer(PORT, SERVERHOST)
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)

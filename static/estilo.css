@@ -104,6 +104,8 @@ body{
 	border-radius:5px;
 	height: 450px;
 	width:1050px;
+	margin-bottom: 55px;
+	margin-left: 30px;
 }
 .label_input{
 	margin:5px;
@@ -372,7 +374,7 @@ label.sort-filter{
 #popup_resumen{
 	position:absolute;
 	width:600px;
-	height:1200px;
+	/*height:1200px;*/
 	background:#fff;
 	left:50%;
 	top:50%;

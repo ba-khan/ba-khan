@@ -12,19 +12,14 @@
 	</div>
 	
 	<!-- Inicio barra de arriba (class="selected")-->
-	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"><span>Tus estudiantes</span></h3></span>
-	<a class="" href="{% url 'home' %}"><span>Inicio</span></a>
-	<a class="" href="{% url 'cursos' %}"><span>Cursos</span></a>
+	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"></h3></span>
+	<a class="" href="{% url 'cursos' %}"><span>Inicio</span></a>
 	<a class="" href="/inicio/pautas"><span>Pautas</span></a>
 	<a class="" href="/inicio/administradores"><span>Administradores</span></a>
 	<a class="" href="/salir"><span>Logout</span></a>
 	</span></nav>
 	<!-- Fin barra de arriba -->
 	
-
-
-
-
 	<div class="contained-and-centered">
 		<div class="checklist-section">
 			<div class="progress-header">
@@ -32,16 +27,13 @@
 					<img class="checklist-badge" src="https://es.khanacademy.org/images/badges/moon/productive-40x40.png">
 					<span class="header-text">Hola Profesor {{ request.user.username }}</span>
 				</div>
-				<div><div class="toggle-component header-text"><span>Ver Pautas</span></div>
+				<div>
 			</div>
 		</div>
 	</div>
-
-
 
 	{% block body2 %}
 		
 	{% endblock %}
 
 {% endblock %}	
-
