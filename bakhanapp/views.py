@@ -470,6 +470,7 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
+    #lanza un proceso paralelo que actualiza las notas simuladas
     #fin = time.time()
     #print fin-inicio
     return render_to_response('studentClass.html',
