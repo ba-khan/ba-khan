@@ -185,9 +185,9 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         t.start()
         
         #enviar whatsapp a todos los evaluados
-        #w = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
-        #threads.append(w)
-        #w.start()
+        t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
+        threads.append(t)
+        t.start()
 
     return HttpResponse()
 
