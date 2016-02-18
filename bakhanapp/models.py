@@ -22,6 +22,11 @@ class Administrator(models.Model):
     phone = models.IntegerField(null=True)
     id_institution = models.ForeignKey(Institution)
     
+    class Meta:
+        permissions = ( 
+            ( "isAdmin", "Is Admin" ),
+        )
+
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
     
@@ -177,7 +182,20 @@ class Grade(models.Model):
     grade = models.FloatField()
     teacher_grade = models.IntegerField(null=True)
     performance_points = models.IntegerField()
-    effort_points = models.IntegerField()
+    effort_points = models.FloatField()
+    recomended_complete = models.IntegerField(null=True)
+    excercice_time = models.IntegerField(null=True)
+    video_time = models.IntegerField(null=True)
+    correct = models.IntegerField(null=True)
+    incorrect = models.IntegerField(null=True)
+    hints = models.IntegerField(null=True)
+    videos = models.IntegerField(null=True)
+    nothing = models.IntegerField(null=True)
+    struggling = models.IntegerField(null=True)
+    practiced = models.IntegerField(null=True)
+    mastery1 = models.IntegerField(null=True)
+    mastery2 = models.IntegerField(null=True)
+    mastery3 = models.IntegerField(null=True)
     comment = models.CharField(max_length=300,null=True)
     evaluated = models.BooleanField(default=False)
     
@@ -232,6 +250,7 @@ class Skill_Attempt(models.Model):
     points_earned = models.IntegerField()
     date = models.DateField()
     correct = models.BooleanField()
+    video = models.BooleanField(default=False)
     
     class Meta:
         unique_together = ('id_skill_name', 'kaid_student', 'problem_number')
