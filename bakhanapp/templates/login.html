@@ -82,6 +82,7 @@
       
       ws.onmessage = function(e) {
         // e.data contains received string.
+        console.log(e.data);
         var server_data = JSON.parse(e.data)
         if (server_data.url){
           var url = server_data.url
@@ -89,10 +90,13 @@
         }
         if (server_data.login){
           var login_data = server_data.login;
+          console.log(login_data);
           $.ajax({
             url: "{% url 'login:authenticateUser' %}",
             type: "POST",
-            data: {username: login_data.username, email: login_data.email },
+            data: {username: login_data.username, 
+                   email: login_data.email,
+                   csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (response) {
               if (response=="True"){
                 window.location = window.location.href+"inicio";
