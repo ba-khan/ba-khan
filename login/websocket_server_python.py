@@ -67,7 +67,7 @@ import time
 from websocket_server import WebsocketServer
 
 
-import thread
+import threading
 
 
 CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
@@ -261,14 +261,17 @@ def message_received(client, server, message):
         # 6. Send Khan user data to the client
         #server.send_message(client, login_data)
     
-
 def MyThread1():
+    global server
     server.run_forever()
 def MyThread2():
+    global callback_server
     callback_server.serve_forever()
 
 
-  
+
+
+
 #PORT=9001
 PORT=8080
 SERVERHOST= "0.0.0.0"
@@ -279,6 +282,8 @@ server.set_fn_message_received(message_received)
 #server.run_forever()
 #callback_server.serve_forever()
 #callback_server.serve_forever()
-thread.start_new_thread(MyThread1, ())
-thread.start_new_thread(MyThread2, ())
+t1 = threading.Thread(target=MyThread1, args=[])
+t2 = threading.Thread(target=MyThread2, args=[])
+t1.start()
+t2.start()
 
