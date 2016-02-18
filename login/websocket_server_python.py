@@ -97,7 +97,7 @@ def create_callback_server():
             global VERIFIERS_ARRAY
             global SERVICES_ARRAY
             global server
-
+            print self.path
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
             id_client = params["id_client"][0]
