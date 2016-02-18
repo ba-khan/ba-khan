@@ -9,6 +9,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count
+from django.contrib.auth.models import User, Group, Permission
+from django.contrib.contenttypes.models import ContentType
+
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -20,34 +23,37 @@ register = template.Library()
 import json
 
 # Create your views here.
-@permission_required('bakhan.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def getAdministrators(request):
-    print "###############################################################################"
-    print request.user.email
+    #print "###############################################################################"
+    #print request.user.email
     teacher = Teacher.objects.get(email=request.user.email)
     administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
-    print administrators
+    #print administrators
     return render_to_response('administrators.html', {'administrators': administrators}, context_instance=RequestContext(request))
 
-@permission_required('bakhan.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def saveAdministrator(request):
-    print "##################################  GUARDANDO  ##########################################"
+    #print "##################################  GUARDANDO  ##########################################"
     user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
-            print "##################################  json_str  ##########################################"
-            print json_str
+            #print "##################################  json_str  ##########################################"
+            #print json_str
 
             try:
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
-                print "existe admin"
+                #print "existe admin"
                 if (json_str["adminPhone"]):
                     admin.phone=json_str["adminPhone"]
                 else:
                     admin.phone=None
                 if (json_str["adminEmail"]):
                     admin.email=json_str["adminEmail"]
+                    user = User.objects.get(email=admin.email)
+                    group = Group.objects.get(name='administrators')
+                    user.groups.add(group)
                 else:
                     admin.email=""
                 admin.id_institution_id = user.id_institution_id
@@ -62,6 +68,9 @@ def saveAdministrator(request):
                         admin.phone=None
                     if (json_str["adminEmail"]):
                         admin.email=json_str["adminEmail"]
+                        user = User.objects.get(email=admin.email)
+                        group = Group.objects.get(name='administrators')
+                        user.groups.add(group)
                     else:
                         admin.email=""
                     admin.id_institution_id = user.id_institution_id
@@ -74,7 +83,7 @@ def saveAdministrator(request):
 
     return HttpResponse("Error")
 
-@permission_required('bakhan.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def deleteAdministrator(request):
     if request.is_ajax():
         if request.method == 'POST':

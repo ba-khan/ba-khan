@@ -15,7 +15,7 @@
 	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"></h3></span>
 	<a class="" href="{% url 'cursos' %}"><span>Inicio</span></a>
 	<a class="" href="/inicio/pautas"><span>Pautas</span></a>
-	{% if perms.bakhan.isAdmin %} 
+	{% if perms.bakhanapp.isAdmin %} 
 	<a class="" href="/inicio/administradores"><span>Administradores</span></a>
 	{% endif %}
 	<a id="logout" class="" href=""><span>Finalizar Sesión</span></a>
