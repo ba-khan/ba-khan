@@ -459,6 +459,9 @@ def getClassStudents(request, id_class):
         i+=1
         json_array.append(student_json)
     json_dict={"students":json_array, "assesments":assesment_array}
+    
+    #json_dict = json.dumps(json_dict, sort_keys=True)
+
     json_data = json.dumps(json_dict)
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
@@ -467,6 +470,10 @@ def getClassStudents(request, id_class):
     #os.system('python manage.py update_simulate')
     #fin = time.time()
     #print fin-inicio
+
+    #lines = sorted(lines, key=lambda k: k['page'].get('update_time', 0), reverse=True)
+
+
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
