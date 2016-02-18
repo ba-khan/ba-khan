@@ -22,6 +22,8 @@ class Command(BaseCommand):
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
             students = grades_involved.values('kaid_student_id')
             incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+            hints = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,
+                date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(hints=Sum('count_hints'))
             correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
             time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
             query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
@@ -38,6 +40,9 @@ class Command(BaseCommand):
             dictCorrect = {}
             dictTimeExcercice = {}
             dictTimeVideo = {}
+            dictHints = {}
+            for hin in hints:
+                dictHints[hin['kaid_student_id']] = hin['hints']
             for inc in incorrect:
                 dictIncorrect[inc['kaid_student_id']]=inc['incorrect']
             for cor in correct:
@@ -66,6 +71,10 @@ class Command(BaseCommand):
                         grade.incorrect = dictIncorrect[grade.kaid_student_id]
                     except:
                         grade.incorrect = 0
+                    try:
+                        grade.hints = dictHints[grade.kaid_student_id]
+                    except:
+                        grade.hints = 0
                     try:
                         grade.struggling = struggling.filter(kaid_student_id=grade.kaid_student_id).count()
                     except:
