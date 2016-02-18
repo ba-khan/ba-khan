@@ -94,7 +94,9 @@
           $.ajax({
             url: "{% url 'login:authenticateUser' %}",
             type: "POST",
-            data: {username: login_data.username, email: login_data.email },
+            data: {username: login_data.username, 
+                   email: login_data.email,
+                   csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (response) {
               if (response=="True"){
                 window.location = window.location.href+"inicio";
