@@ -152,7 +152,7 @@ def create_callback_server():
 
         def log_request(self, code='-', size='-'):
             pass
-    server = SocketServer.TCPServer((CALLBACK_BASE, 5432), CallbackHandler)
+    server = SocketServer.TCPServer((CALLBACK_BASE, 9002), CallbackHandler)
     #server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
@@ -268,7 +268,7 @@ server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_received)
 server.run_forever()
-callback_server.serve_forever()
+#callback_server.serve_forever()
 #callback_server.serve_forever()
 
 
