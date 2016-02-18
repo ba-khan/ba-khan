@@ -241,7 +241,7 @@ def message_received(client, server, message):
         json_data = json.dumps(url_data)
         server.send_message(client,json_data)
         
-        callback_server.handle_request()
+        #callback_server.handle_request()
         #callback_server.server_close()
         #callback_server=""
         #callback_server.serve_forever()
