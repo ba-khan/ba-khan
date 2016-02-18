@@ -20,7 +20,7 @@ register = template.Library()
 import json
 
 # Create your views here.
-@login_required()
+@permission_required('bakhan.isAdmin', login_url="/inicio")
 def getAdministrators(request):
     print "###############################################################################"
     print request.user.email
@@ -29,7 +29,7 @@ def getAdministrators(request):
     print administrators
     return render_to_response('administrators.html', {'administrators': administrators}, context_instance=RequestContext(request))
 
-@login_required()
+@permission_required('bakhan.isAdmin', login_url="/inicio")
 def saveAdministrator(request):
     print "##################################  GUARDANDO  ##########################################"
     user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
@@ -74,7 +74,7 @@ def saveAdministrator(request):
 
     return HttpResponse("Error")
 
-@login_required()
+@permission_required('bakhan.isAdmin', login_url="/inicio")
 def deleteAdministrator(request):
     if request.is_ajax():
         if request.method == 'POST':
