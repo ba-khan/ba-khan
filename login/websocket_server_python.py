@@ -82,6 +82,9 @@ DEFAULT_API_RESOURCE = '/api/v1/playlists'
 #VERIFIER = None
 
 VERIFIERS_ARRAY = {}
+SERVICES_ARRAY = {}
+REQUEST_TOKENS_ARRAY = {}
+SECRET_REQUEST_TOKEN_ARRAY = {}
     
 
 # Create the callback server that's used to set the oauth verifier after the
@@ -91,6 +94,8 @@ def create_callback_server():
         def do_GET(self):
             #global VERIFIER
             global VERIFIERS_ARRAY
+            global SERVICES_ARRAY
+            global server
 
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
@@ -102,6 +107,29 @@ def create_callback_server():
             #VERIFIER = params['oauth_verifier'][0]
             VERIFIERS_ARRAY[id_client] = params['oauth_verifier'][0]
             print VERIFIERS_ARRAY[id_client]
+            print "clients"
+            print server.clients
+            
+            
+            for client in server.clients:
+                print "cliente"
+                if client['id'] == int(id_client):
+                    # 4. Get an access token.
+                    service = SERVICES_ARRAY[id_client]
+                    request_token = REQUEST_TOKENS_ARRAY[id_client]
+                    secret_request_token = SECRET_REQUEST_TOKEN_ARRAY[id_client]
+                    session = service.get_auth_session(request_token, secret_request_token,
+                        params={'oauth_verifier': VERIFIERS_ARRAY[id_client]})
+
+                    
+                    # 5. Get user data from the API Khan request
+                    login_data = get_api_resource(session)
+
+                    # 6. Send Khan user data to the client
+                    server.send_message(client, login_data)
+                    break
+
+
             self.send_response(200)
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
@@ -120,9 +148,11 @@ def create_callback_server():
                               </body>                           
                             </html>""")
 
+            
+
         def log_request(self, code='-', size='-'):
             pass
-    server = SocketServer.TCPServer((CALLBACK_BASE, 9002), CallbackHandler)
+    server = SocketServer.TCPServer((CALLBACK_BASE, 5432), CallbackHandler)
     #server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
     return server
 
@@ -178,7 +208,7 @@ def message_received(client, server, message):
     if (message=="login"):
         id_client=str(client['id'])
         # Create an OAuth1Service using rauth.
-        service = rauth.OAuth1Service(
+        SERVICES_ARRAY[id_client] = rauth.OAuth1Service(
                name=id_client,
                consumer_key=CONSUMER_KEY,
                consumer_secret=CONSUMER_SECRET,
@@ -195,12 +225,13 @@ def message_received(client, server, message):
         #    params={'oauth_callback': 'http://%s:%d/' %
         #        (CALLBACK_BASE, callback_server.server_address[1])})
 
-        request_token, secret_request_token = service.get_request_token(
+        request_token, secret_request_token = SERVICES_ARRAY[id_client].get_request_token(
             params={'oauth_callback': 'http://%s:%d?id_client=%s' %
                 (CALLBACK_BASE, callback_server.server_address[1],id_client)})
-
+        REQUEST_TOKENS_ARRAY[id_client]=request_token
+        SECRET_REQUEST_TOKEN_ARRAY[id_client]=secret_request_token
         # 2. Authorize your request token.
-        authorize_url = service.get_authorize_url(request_token)
+        authorize_url = SERVICES_ARRAY[id_client].get_authorize_url(request_token)
         #server.send_message_to_all("url:"+authorize_url)
         #print authorize_url
         
@@ -216,20 +247,17 @@ def message_received(client, server, message):
         #while (VERIFIERS_ARRAY.has_key(id_client) == False):
         #    print "hola"
 
-        print "VERIFIERS_ARRAY"
-        print id_client
-        print type(id_client)
-        print VERIFIERS_ARRAY[id_client]
+        
         # 4. Get an access token.
-        session = service.get_auth_session(request_token, secret_request_token,
-            params={'oauth_verifier': VERIFIERS_ARRAY[id_client]})
+        #session = service.get_auth_session(request_token, secret_request_token,
+        #    params={'oauth_verifier': VERIFIERS_ARRAY[id_client]})
 
         
         # 5. Get user data from the API Khan request
-        login_data = get_api_resource(session)
+        #login_data = get_api_resource(session)
 
         # 6. Send Khan user data to the client
-        server.send_message(client, login_data)
+        #server.send_message(client, login_data)
     
     
 #PORT=9001
@@ -240,7 +268,7 @@ server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_received)
 server.run_forever()
-#callback_server.serve_forever()
+callback_server.serve_forever()
 #callback_server.serve_forever()
 
 

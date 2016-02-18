@@ -82,6 +82,7 @@
       
       ws.onmessage = function(e) {
         // e.data contains received string.
+        console.log(e.data);
         var server_data = JSON.parse(e.data)
         if (server_data.url){
           var url = server_data.url
