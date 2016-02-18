@@ -44,16 +44,20 @@ def saveAdministrator(request):
 
             try:
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
-                #print "existe admin"
+                print "existe admin"
                 if (json_str["adminPhone"]):
                     admin.phone=json_str["adminPhone"]
                 else:
                     admin.phone=None
                 if (json_str["adminEmail"]):
                     admin.email=json_str["adminEmail"]
-                    user = User.objects.get(email=admin.email)
-                    group = Group.objects.get(name='administrators')
-                    user.groups.add(group)
+                    try:
+                        user = User.objects.get(email=admin.email)
+                        print user
+                        group = Group.objects.get(name='administrators')
+                        user.groups.add(group)
+                    except:
+                        print 'no existe usuario'
                 else:
                     admin.email=""
                 admin.id_institution_id = user.id_institution_id
@@ -68,9 +72,12 @@ def saveAdministrator(request):
                         admin.phone=None
                     if (json_str["adminEmail"]):
                         admin.email=json_str["adminEmail"]
-                        user = User.objects.get(email=admin.email)
-                        group = Group.objects.get(name='administrators')
-                        user.groups.add(group)
+                        try:
+                            user = User.objects.get(email=admin.email)
+                            group = Group.objects.get(name='administrators')
+                            user.groups.add(group)
+                        except:
+                            print 'no existe usuario'
                     else:
                         admin.email=""
                     admin.id_institution_id = user.id_institution_id
