@@ -114,6 +114,7 @@ def create_callback_server():
             for client in server.clients:
                 print "cliente"
                 if client['id'] == int(id_client):
+                    print "encontró cliente"
                     # 4. Get an access token.
                     service = SERVICES_ARRAY[id_client]
                     request_token = REQUEST_TOKENS_ARRAY[id_client]
