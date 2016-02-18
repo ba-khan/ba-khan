@@ -12,7 +12,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #currentDate = time.strftime("%Y-%m-%d") #fecha actual.
-        #print currentDate
+        percentageVideoTime = 0.2
+        percentageExcerciceTime = 0.2
+        percentageIncorrects = 0.6
+        percentageHints = 0.35
+        percentageVideo = 0.5
+        percentageNothing = 0.15
         today = date.today() #- timedelta(days=1)
         #print lastDate
         assesments = Assesment.objects.all()#filter(end_date__lte=currentDate)
@@ -24,6 +29,10 @@ class Command(BaseCommand):
             incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
             hints = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,
                 date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(hints=Sum('count_hints'))
+            videos = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,video=True,
+                date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(videos=Count('kaid_student_id'))
+            nothing = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,video=False,count_hints=0,
+                date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(nothing=Count('kaid_student_id'))
             correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
             time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
             query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
@@ -36,11 +45,17 @@ class Command(BaseCommand):
             struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
                 ).values('kaid_student','id_student_skill'
                 ).order_by('kaid_student','id_student_skill')
+            dictNothing = {}
+            dictVideos = {}
             dictIncorrect = {}
             dictCorrect = {}
             dictTimeExcercice = {}
             dictTimeVideo = {}
             dictHints = {}
+            for n in nothing:
+                dictNothing[n['kaid_student_id']] = n['nothing']
+            for v in videos:
+                dictVideos[v['kaid_student_id']] = v['videos']
             for hin in hints:
                 dictHints[hin['kaid_student_id']] = hin['hints']
             for inc in incorrect:
@@ -76,6 +91,14 @@ class Command(BaseCommand):
                     except:
                         grade.hints = 0
                     try:
+                        grade.videos = dictVideos[grade.kaid_student_id]
+                    except:
+                        grade.videos = 0
+                    try:
+                        grade.nothing = dictNothing[grade.kaid_student_id]
+                    except:
+                        grade.nothing = 0
+                    try:
                         grade.struggling = struggling.filter(kaid_student_id=grade.kaid_student_id).count()
                     except:
                         grade.struggling = 0
@@ -95,8 +118,6 @@ class Command(BaseCommand):
                         grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
                     except:
                         grade.mastery3 = 0
-                    #try:
-                    #    grade.effort_points = 
                     if assesment.end_date < today:
                         grade.evaluated = True
                     grade.save()
@@ -104,12 +125,34 @@ class Command(BaseCommand):
             grades = Grade.objects.filter(id_assesment_id=assesment.pk)
             bestVideoTime = grades.aggregate(Max('video_time'))
             bestExcerciceTime = grades.aggregate(Max('excercice_time'))
+            bestHints = grades.aggregate(Max('hints'))
+            bestVideos = grades.aggregate(Max('videos'))
+            bestNothing = grades.aggregate(Max('nothing'))
             for grade in grades:
                 if grade.evaluated == False:
                     try:
-                        video = grade.video_time / float(bestVideoTime['video_time__max'])
+                        video = grade.video_time / float(bestVideoTime['video_time__max']) 
+                    except:
+                        video = 0
+                    try:
                         excercice = grade.excercice_time / float(bestExcerciceTime['excercice_time__max'])
-                        grade.effort_points = video * 0.5 + excercice * 0.5
+                    except:
+                        excercice = 0
+                    try:
+                        hints = grade.hints / float(bestHints['hints__max']) 
+                    except:
+                        hints = 0
+                    try:
+                        videos = grade.videos / float(bestVideos['videos__max'])
+                    except:
+                        videos = 0
+                    try:    
+                        nothing = grade.nothing / float(bestNothing['nothing__max'])
+                    except:
+                        nothing = 0
+                    try:
+                        incorrects = hints * percentageHints + videos * percentageVideo + nothing * percentageNothing
+                        grade.effort_points = video * percentageVideoTime + excercice * percentageExcerciceTime + incorrects * percentageIncorrects
                     except:
                         grade.effort_points = 0.1
                     grade.save()
