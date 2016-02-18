@@ -97,6 +97,7 @@ def create_callback_server():
             global VERIFIERS_ARRAY
             global SERVICES_ARRAY
             global server
+            print "self.path"
             print self.path
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
@@ -228,7 +229,7 @@ def message_received(client, server, message):
         #        (CALLBACK_BASE, callback_server.server_address[1])})
 
         request_token, secret_request_token = SERVICES_ARRAY[id_client].get_request_token(
-            params={'oauth_callback': 'http://%s:%d?id_client=%s' %
+            params={'oauth_callback': 'http://%s:%d?id_client=%s/' %
                 (CALLBACK_BASE, callback_server.server_address[1],id_client)})
         REQUEST_TOKENS_ARRAY[id_client]=request_token
         SECRET_REQUEST_TOKEN_ARRAY[id_client]=secret_request_token
