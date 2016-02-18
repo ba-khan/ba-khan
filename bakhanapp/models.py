@@ -183,6 +183,9 @@ class Grade(models.Model):
     video_time = models.IntegerField(null=True)
     correct = models.IntegerField(null=True)
     incorrect = models.IntegerField(null=True)
+    hints = models.IntegerField(null=True)
+    videos = models.IntegerField(null=True)
+    nothing = models.IntegerField(null=True)
     struggling = models.IntegerField(null=True)
     practiced = models.IntegerField(null=True)
     mastery1 = models.IntegerField(null=True)
@@ -242,6 +245,7 @@ class Skill_Attempt(models.Model):
     points_earned = models.IntegerField()
     date = models.DateField()
     correct = models.BooleanField()
+    video = models.BooleanField(default=False)
     
     class Meta:
         unique_together = ('id_skill_name', 'kaid_student', 'problem_number')
