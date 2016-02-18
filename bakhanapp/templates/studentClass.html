@@ -977,7 +977,11 @@
     		.attr("cx", function (d,i) { return effort_scalings[d.cl](students[i][assesment_id].effort); })
             .attr("cy", function (d,i) { return effort_scalings[d.cl](students[i][assesment_id].effort); })
     		.attr("r",function(d,i){
-    			return effort_scalings[d.cl](students[i][assesment_id].effort);
+    			if (students[i][assesment_id].grade==null){
+    				return 0;
+    			}else{
+    				return effort_scalings[d.cl](students[i][assesment_id].effort);
+    			}
     		})
     		.attr("id_json",function(d,i){
     			return i;
