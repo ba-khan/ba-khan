@@ -103,7 +103,7 @@
 	<div id="contenido_a_mostrar"  style="display:none;">
 		<div id="inputs" align="left">
 			<p class="label_input"><strong>Pauta</strong></p>
-			<select id="comboBox" style="margin:10px;" class="skill_search" onChange="fillParameters(this.value)">
+			<select id="comboBox" class="skill_search" onChange="fillParameters(this.value)">
 				<OPTION VALUE=0>Seleccionar Pauta</OPTION>
 				{% for config in assesment_configs %}
 					<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>
@@ -1471,31 +1471,56 @@
 			combo_box = document.getElementById("comboBox").selectedIndex;
 			if (cuadritos.length==0){
 				alert('No hay estudiantes evaluados')
+				$('#Evaluados').css("border", "1px solid red");
 				return false;
 			}
-			else if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
-				alert('Falta el nombre de la configuracion')
-				return false;
-			}
-			else if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
-				alert('nota minima no valida')
-				return false;
-			}
-			else if(grade_max == null || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
-				alert('nota maxima no valida')
-				return false;
-			}
-			else if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
-				alert('fecha de inicio no valida')
-				return false;
-			}
-			else if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
-				alert('fecha de termino no valida')
-				return false;
-			}
-			else if( combo_box == null || combo_box == 0 ) {
-				alert('seleccione una configuracion')
-				return false;
+			else{
+				$('#Evaluados').css("border", "1px solid #D9D9D9");
+				if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
+					alert('Falta el nombre de la configuracion')
+					$('#input_nombre').css("border", "1px solid red");
+					return false;
+				}
+				else{
+					$('#input_nombre').css("border", "1px solid #C6D1AD");
+					if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
+						alert('nota minima no valida')
+						$('#nota_minima').css("border", "1px solid red");
+						return false;
+					}
+					else{
+						$('#nota_minima').css("border", "1px solid #C6D1AD");
+						if(grade_max == null || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
+							alert('nota maxima no valida')
+							$('#nota_maxima').css("border", "1px solid red");
+							return false;
+						}
+						else{
+							$('#nota_maxima').css("border", "1px solid #C6D1AD");
+							if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
+							alert('fecha de inicio no valida')
+							$('#fecha_inicio').css("border", "1px solid red");
+							return false;
+							}
+							else{
+								$('#fecha_inicio').css("border", "1px solid #C6D1AD");
+								if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
+									alert('fecha de termino no valida')
+									$('#fecha_termino').css("border", "1px solid red");
+									return false;
+								}
+								else{
+									$('#fecha_termino').css("border", "1px solid #C6D1AD");
+									if( combo_box == null || combo_box == 0 ) {
+										alert('seleccione una configuracion')
+										$('#comboBox').css("border", "1px solid red");
+										return false;
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 			return true;
 		}

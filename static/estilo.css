@@ -107,6 +107,11 @@
 body{
 	background: #EEEEEE;
 }
+#comboBox{
+  border: 1px solid #C6D1AD;
+  border-radius:5px;
+  margin-left:17px;
+}
 #contenido_a_mostrar{
 	border: 1px solid #C6D1AD;
 	border-radius:5px;
