@@ -68,8 +68,16 @@
 	overflow: hidden;
 	overflow: scroll;
 	overflow: auto;
-	background: #FFFFFF;
+	background: #F6F7F7;
 	float:left;
+	cursor: default;
+	-moz-user-select':-moz-none;
+    -moz-user-select:none;
+    -o-user-select:none;
+    -khtml-user-select:none; 
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
 }
 
 .textoInput{
@@ -87,14 +95,14 @@
 }
 .skill_search{
 	padding-left: 10px;
-	margin-left:5px;
-	width:171px;
+	margin-left:15px;
+	width:150px;
 	margin-bottom: 10px;
 }
 #inputs{
 	width:200px;
 	float:left;
-	height: 270px;
+	height: 400px;
 }
 body{
 	background: #EEEEEE;
@@ -102,13 +110,15 @@ body{
 #contenido_a_mostrar{
 	border: 1px solid #C6D1AD;
 	border-radius:5px;
-	height: 450px;
+	height: 470px;
 	width:1050px;
 	margin-bottom: 55px;
 	margin-left: 30px;
+	background: #FFFFFF;
 }
 .label_input{
 	margin:5px;
+	margin-left:20px;
 }
 #studentsDashboard{
 	table-layout:auto;
@@ -357,7 +367,7 @@ label.sort-filter{
   box-shadow:0 0 10px 0 #9DB63B;
 }
 
-#popup{
+#popup,#popup_evaluacion{
   position:absolute;
   width:600px;
   height:180px;
@@ -368,6 +378,23 @@ label.sort-filter{
   padding:60px 0;
   margin-left:-320px; /* width/2 + padding-left */
   margin-top:-150px; /* height/2 + padding-top */
+  text-align:center;
+  box-shadow:0 0 10px 0 #9DB63B;
+  z-index: 11;
+}
+
+#profile-throbber{
+  padding-top:85px;
+  position:absolute;
+  width:600px;
+  height:180px;
+  background:#fff;
+  left:50%;
+  top:50%;
+  border-radius:5px;
+  /*padding:60px 0;
+  margin-left:-320px; /* width/2 + padding-left */
+  /*margin-top:-150px; /* height/2 + padding-top */
   text-align:center;
   box-shadow:0 0 10px 0 #9DB63B;
   z-index: 11;

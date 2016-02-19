@@ -154,7 +154,7 @@ class Command(BaseCommand):
                         incorrects = hints * percentageHints + videos * percentageVideo + nothing * percentageNothing
                         grade.effort_points = video * percentageVideoTime + excercice * percentageExcerciceTime + incorrects * percentageIncorrects
                     except:
-                        grade.effort_points = 0.1
+                        grade.effort_points = 0
                     grade.save()
 
 def getGrade(percentage,points,min_grade,max_grade):
