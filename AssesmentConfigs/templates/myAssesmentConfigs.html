@@ -43,6 +43,7 @@ function getTopicTree(id){
 
 var json_configs = JSON.parse('{{ json_data | escapejs }}');
 var configs = json_configs.assesmentConfigs;
+console.log(configs)
 
 function slidear(id){
 	if (id==0){
@@ -108,7 +109,7 @@ function onSlide(ui,id) {
 <div class="container">
 	<div id="sidebar">
     	<ul>
-    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select">Nueva Configuracion</a></li>
+    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="icon-plus-sign"></i> Nueva Configuracion</a></li>
         	{% for config in assesment_configs %}  
 			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
 			{% endfor %}
@@ -125,18 +126,18 @@ function onSlide(ui,id) {
 				<h2>Nueva Pauta</h2>
 				<div id="form00" class="form">
 					<form action="" method="post" id="form0">{% csrf_token %}
+						<h3>Datos de la Pauta:</h3>
 						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="" ><br>
 						<br>
-						<br><h3>Parametros de la Pauta:</h3>
 						<label for='approval_percentage'>Porcentaje de Aprobacion: </label><input type="number" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 						<br>
-						<input name="importance_skill_level0" type="hidden">
-				    	<input name="importance_completed_rec0" type="hidden">
+						<input name="importance_skill_level0" value="50" type="hidden">
+				    	<input name="importance_completed_rec0" value="50" type="hidden">
 				    	<input name="id" type="hidden" value="0">
 				        <input name="skills0" type="hidden" value="[]">
 						<br>
 						<h4 style="text-align:center">% de Importancia para la Evaluacion</h4>
-						<div id="skill_level_div0" style="float:left">
+						<div id="skill_level_div0" class="percentage">
 							<span id="importance_skill_level0">50</span>%</br>
 							<!-- Nivel de Dominio logrado -->
 						</div>
@@ -146,7 +147,7 @@ function onSlide(ui,id) {
 								</div>
 							</div>
 						</div>
-						<div id="completed_rec_div0" style="float:left">
+						<div id="completed_rec_div0" class="percentage">
 							<span id="importance_completed_rec0">50</span>%</br>
 							<!-- Recomendaciones Completadas -->
 						</div><br>
@@ -173,9 +174,9 @@ function onSlide(ui,id) {
 	<h2>{{ config.name }}</h2>
 	<div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
 		<form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
+			<h3>Datos de la Pauta:</h3>
 			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="{{ config.name }}" disabled><br>
 			<br>
-			<br><h3>Parametros de la Pauta:</h3>
 			<label for='approval_percentage'>Porcentaje de Aprobacion: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled><br>
 			<br>
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
@@ -184,7 +185,7 @@ function onSlide(ui,id) {
 	        
 			<br>
 			<h4 style="text-align:center">% de Importancia para la Evaluacion</h4>
-			<div id="skill_level_div{{ forloop.counter }}" style="float:left">
+			<div id="skill_level_div{{ forloop.counter }}" class="percentage">
 				<span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
 
 			</div>
@@ -196,7 +197,7 @@ function onSlide(ui,id) {
 				</div>
 			</div>
 			
-			<div id="completed_rec_div{{ forloop.counter }}" style="float:left">
+			<div id="completed_rec_div{{ forloop.counter }}" class="percentage">
 				<span id="importance_completed_rec{{ forloop.counter }}">50</span>%</br>
 
 			</div><br>
@@ -212,20 +213,39 @@ function onSlide(ui,id) {
 			</div>
 		</form>
 		{% if config.applied %}
+
 			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
-		{% endif %} 
 	</div>
 	
+	<div id="skills">
+		<h3>Habilidades</h3>
+		<div id="topictree{{ forloop.counter }}" class="scroll topictree"></div>
+		<script>
+	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+	        	console.log(skills)
+	        	for (i=0;i<skills.length;i++){ 
+	        		console.log(skills[i].name_spanish)
+	        		$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+	        	}
+	        </script>
+	</div>
+
+		{% else %}
+
+	</div>
 	<div id="skills">
 		<h3>Habilidades</h3>
 		<div id="search">
 		<label for='skill_search{{ forloop.counter }}'>Buscar: </label><input id="skill_search{{ forloop.counter }}" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled>
 		</div>
-		<div id="topictree{{ forloop.counter }}" class="topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
+		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
 	        </script>
 	</div>
+
+		{% endif %} 
+
 </div> 
 {% endfor %}
 
@@ -460,5 +480,11 @@ $(document).ready(function(){
   
 });
 
+</script>
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript"> 
+    $(document).ready(function () {
+    $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
+    });
 </script>
 {% endblock %}
