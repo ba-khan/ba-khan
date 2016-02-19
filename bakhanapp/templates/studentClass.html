@@ -1469,60 +1469,68 @@
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
+			flag = true;
 			if (cuadritos.length==0){
-				alert('No hay estudiantes evaluados')
 				$('#Evaluados').css("border", "1px solid red");
-				return false;
-			}
-			else{
+				flag = false;
+			}else{
 				$('#Evaluados').css("border", "1px solid #D9D9D9");
-				if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
-					alert('Falta el nombre de la configuracion')
-					$('#input_nombre').css("border", "1px solid red");
-					return false;
-				}
-				else{
-					$('#input_nombre').css("border", "1px solid #C6D1AD");
-					if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
-						alert('nota minima no valida')
-						$('#nota_minima').css("border", "1px solid red");
-						return false;
-					}
-					else{
-						$('#nota_minima').css("border", "1px solid #C6D1AD");
-						if(grade_max == null || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
-							alert('nota maxima no valida')
-							$('#nota_maxima').css("border", "1px solid red");
-							return false;
-						}
-						else{
-							$('#nota_maxima').css("border", "1px solid #C6D1AD");
-							if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
-							alert('fecha de inicio no valida')
-							$('#fecha_inicio').css("border", "1px solid red");
-							return false;
-							}
-							else{
-								$('#fecha_inicio').css("border", "1px solid #C6D1AD");
-								if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
-									alert('fecha de termino no valida')
-									$('#fecha_termino').css("border", "1px solid red");
-									return false;
-								}
-								else{
-									$('#fecha_termino').css("border", "1px solid #C6D1AD");
-									if( combo_box == null || combo_box == 0 ) {
-										alert('seleccione una configuracion')
-										$('#comboBox').css("border", "1px solid red");
-										return false;
-									}
-								}
-							}
-						}
-					}
-				}
 			}
-			return true;
+			if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
+				$('#input_nombre').css("border", "1px solid red");
+				//$('#input_nombre').css("box-shadow","0 0 5px 1px red");
+				$('#input_nombre').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
+			    $('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
+				flag = false;
+			}else{
+				$('#input_nombre').css("border", "1px solid #C6D1AD");
+				$('#input_nombre').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
+			    $('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
+			}
+			if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
+				$('#nota_minima').css("border", "1px solid red");
+				$('#nota_minima').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
+			    $('#nota_minima').focusout(function(){$(this).css("box-shadow","none");});
+				flag = false;
+			}else{
+				$('#nota_minima').css("border", "1px solid #C6D1AD");
+				$('#nota_minima').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
+			    $('#nota_minima').focusout(function(){$(this).css("box-shadow","none");});
+			}
+			if(grade_max == null || grade_min>grade_max || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
+				$('#nota_maxima').css("border", "1px solid red");
+				$('#nota_maxima').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
+			    $('#nota_maxima').focusout(function(){$(this).css("box-shadow","none");});
+				flag = false;
+			}else{
+				$('#nota_maxima').css("border", "1px solid #C6D1AD");
+				$('#nota_maxima').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
+			    $('#nota_maxima').focusout(function(){$(this).css("box-shadow","none");});
+			}if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
+				$('#fecha_inicio').css("border", "1px solid red");
+				$('#fecha_inicio').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
+			    $('#fecha_inicio').focusout(function(){$(this).css("box-shadow","none");});
+				flag = false;
+			}else{
+				$('#fecha_inicio').css("border", "1px solid #C6D1AD");
+				$('#fecha_inicio').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
+			    $('#fecha_inicio').focusout(function(){$(this).css("box-shadow","none");});
+			}if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
+				$('#fecha_termino').css("border", "1px solid red");
+				$('#fecha_termino').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
+			    $('#fecha_termino').focusout(function(){$(this).css("box-shadow","none");});
+				flag = false;
+			}else{
+				$('#fecha_termino').css("border", "1px solid #C6D1AD");
+				$('#fecha_termino').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
+			    $('#fecha_termino').focusout(function(){$(this).css("box-shadow","none");});
+			}if( combo_box == null || combo_box == 0 ) {
+				$('#comboBox').css("border", "1px solid red");
+				flag = false;
+			}else{
+				$('#comboBox').css("border", "1px solid #C6D1AD");
+			}
+			return flag;
 		}
 
 		function modificarNota(){
