@@ -301,10 +301,10 @@ def getClassStudents(request, id_class):
             try:
                 student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
                 student_assesment["grade_id"] = dictGrades[(assesment['id'],student.kaid_student)][1]
-                student_assesment["effort"] = dictGrades[(assesment['id'],student.kaid_student)][3]+0.1
+                student_assesment["effort"] = dictGrades[(assesment['id'],student.kaid_student)][3]+0.001
             except:
                 student_assesment["grade"] = None
-                student_assesment["effort"] = 0.1
+                student_assesment["effort"] = 0.001
                 student_assesment["grade_id"] = 0
             try:
                 student_assesment['performance_points'] = dictGrades[(assesment['id_config'],student.kaid_student)][2]
