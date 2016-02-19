@@ -567,7 +567,7 @@ keygen, select, select[size="0"], select[size="1"] {
 
     <br>
   </div>
-  
+
   <h1>Grupos</h1>
   <br>
     <div id='content'>
@@ -714,7 +714,12 @@ window.onload = function() {
       //date = new Date(testData[i].times[0].starting_time);
       date = new Date(testData[i].label);
 		};
+
 		var width = testData.length*100;
+    if (width<1158){
+      width=1158;
+    }
+
 
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.
