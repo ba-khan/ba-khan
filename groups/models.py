@@ -4,7 +4,7 @@ from bakhanapp.models import Group,Skill,Student
 
 class Master_Group(models.Model):
 	name = models.CharField(max_length=50)
-	date = models.DateField()
+	date = models.DateTimeField(auto_now_add=True)
 	date_int = models.IntegerField()
 	kaid_teacher = models.CharField(max_length=40)
 	id_class = models.IntegerField()
