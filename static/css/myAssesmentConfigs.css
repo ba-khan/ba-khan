@@ -63,8 +63,8 @@
 	z-index: 1;
 }
 .topictree{
-	overflow: scroll;
-	overflow: auto;
+	overflow: hidden;
+  overflow-y:scroll;
 	height: 400px;
 	width: 340px;
 	padding: 10px;
@@ -119,6 +119,11 @@ h2{
 float:left;
 margin-left:10px;
 margin-right:10px
+}
+.percentage{
+  width:25px;
+  float:left;
+  margin-top: -3px;
 }
 
  /* --------- POPUP ----------- */
@@ -176,4 +181,17 @@ margin-right:10px
 }
 #cancelEdit{
 	margin-left:50px
+}
+#box2000 > div
+{
+    -webkit-transition: width 0.2s ease; 
+    -moz-transition: width 0.2s ease; 
+    -o-transition: width 0.2s ease; 
+    -ms-transition: width 0.2s ease;     
+    transition: width 0.2s ease; 
+}
+#box2000 > div:hover
+{
+    width:120%!important;
+    cursor:pointer;
 }
