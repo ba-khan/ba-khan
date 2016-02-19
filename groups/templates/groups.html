@@ -188,7 +188,7 @@ parentDiv.removeChild(openDiv[0]);
 };
 
        
-       function makeGroups() {
+function makeGroups() {
   $.ajax({
    url: "{% url 'groups:getGroups' id_class %}",
    type: "POST",
@@ -545,6 +545,29 @@ keygen, select, select[size="0"], select[size="1"] {
 
 <br>
 <div class='main-content'>
+
+  <br>
+
+<h1>Agrupaciones anteriores</h1>
+  <div id='containerTimeLine'>
+    <form action="" method="post" id='formJson'>{% csrf_token %}
+       <input name="skills" type="hidden" value="[]">
+       <input name="student_groups" type="hidden" value=''>
+       <input name="tutors" type="hidden" value=''>
+       <input name="subGroups" type="hidden" value=''>
+       
+  </form>
+    <div id="hoverRes">
+      <div id="name"></div>
+      <div id="scrolled_date" style="cursor:pointer"></div>
+      
+    </div>
+
+    <div id="timeline3" ></div>
+
+    <br>
+  </div>
+
   <h1>Grupos</h1>
   <br>
     <div id='content'>
@@ -586,27 +609,7 @@ keygen, select, select[size="0"], select[size="1"] {
   <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupacion</button>
 </div>
 
-<br>
-<h1>Linea de Tiempo</h1>
-  <div id='containerTimeLine'>
-    <form action="" method="post" id='formJson'>{% csrf_token %}
-       <input name="skills" type="hidden" value="[]">
-       <input name="student_groups" type="hidden" value=''>
-       <input name="tutors" type="hidden" value=''>
-       <input name="subGroups" type="hidden" value=''>
-       
-  </form>
-    <div id="hoverRes">
-      <div id="name"></div>
-      <div id="scrolled_date" style="cursor:pointer"></div>
-      
-    </div>
 
-    <div id="timeline3" ></div>
-
-    <br>
-  </div>
-  <br>
 
 </div>
 
@@ -711,7 +714,12 @@ window.onload = function() {
       //date = new Date(testData[i].times[0].starting_time);
       date = new Date(testData[i].label);
 		};
+
 		var width = testData.length*100;
+    if (width<1158){
+      width=1158;
+    }
+
 
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.

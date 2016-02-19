@@ -102,7 +102,8 @@
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluación</button></div>
 	<div id="contenido_a_mostrar"  style="display:none;">
 		<div id="inputs" align="left">
-			<select id="comboBox" style="margin:10px;" onChange="fillParameters(this.value)">
+			<p class="label_input"><strong>Pauta</strong></p>
+			<select id="comboBox" style="margin:10px;" class="skill_search" onChange="fillParameters(this.value)">
 				<OPTION VALUE=0>Seleccionar Pauta</OPTION>
 				{% for config in assesment_configs %}
 					<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>
@@ -1468,7 +1469,6 @@
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
-
 			if (cuadritos.length==0){
 				alert('No hay estudiantes evaluados')
 				return false;
@@ -1578,7 +1578,7 @@
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
-			if (cuadritos.length>0){
+			if (validarRealizarEvaluacion()){
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1594,8 +1594,6 @@
 					}
 				});
 
-			}else{
-				alert("no hay gente a evaluar");
 			}
 
 		}
