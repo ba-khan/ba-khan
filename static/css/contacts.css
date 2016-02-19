@@ -91,3 +91,6 @@ table.testgrid th {
     padding: 5px;
     text-align:center;
 }
+table.testgrid td {
+  text-align: left;
+}

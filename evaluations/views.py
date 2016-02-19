@@ -124,7 +124,7 @@ def updateAssesment(request): #modifica una evaluacion
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
-                               effort_points=0,
+                               effort_points=0.1,
                                id_assesment_id=id_assesment,
                                kaid_student_id=s['kaid_student']
                                )
@@ -170,7 +170,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             new_grade = Grade(grade=0,
                                teacher_grade=0,
                                performance_points=0,
-                               effort_points=0,
+                               effort_points=0.1,
                                id_assesment_id=id_new_assesment,
                                kaid_student_id=s['kaid_student']
                                )
@@ -180,14 +180,15 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             update_assesment_configs.save()
 
         threads = []
+        #envial mail a los evaluados
         t = threading.Thread(target=treadSendMail,args=(kaid,nota1,nota2,fecha1,fecha2,id_config))
         threads.append(t)
         t.start()
         
         #enviar whatsapp a todos los evaluados
-        #w = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
-        #threads.append(w)
-        #w.start()
+        #t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
+        #threads.append(t)
+        #t.start()
 
     return HttpResponse()
 

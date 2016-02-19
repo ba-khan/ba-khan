@@ -11,6 +11,32 @@
 
 {% block body2 %}	
 
+
+<!--
+	<div style="display: none;" id="profile-throbber" class="profile-throbber popup">
+		<div class="throbber-grid">   
+		    <!--[if lte IE 9]>
+		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+		    <![endif]-->
+<!--		    <div class="throbber-row clearfix">
+		         <div class="block-0 throbber-block"></div>
+		         <div class="block-1 throbber-block"></div>
+		         <div class="block-2 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-7 throbber-block"></div>
+		         <div class="block-8 throbber-block"></div>
+		         <div class="block-3 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-6 throbber-block"></div>
+		         <div class="block-5 throbber-block"></div>
+		         <div class="block-4 throbber-block"></div>
+		    </div>
+		</div>
+	</div>
+	para usar el loading $("#profile-throbber").show();$("#hover").show(); -->
+
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
     	<div style="align:left;">
@@ -44,6 +70,35 @@
 	    	<div id="resumen_graph" class="resumen_graph"></div>
     	</div>
     </div>
+    
+    <div id="popup_evaluacion" class="popup" style="display:none">
+    	<div style="align:left;">
+	    	<p>Guardando los cambios, espere un momento</p>
+	    	<div style="display: none;" id="profile-throbber2" class="profile-throbber">
+				<div class="throbber-grid">   
+				    <!--[if lte IE 9]>
+				    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+				    <![endif]-->
+				    <div class="throbber-row clearfix">
+				         <div class="block-0 throbber-block"></div>
+				         <div class="block-1 throbber-block"></div>
+				         <div class="block-2 throbber-block"></div>
+				    </div>
+				    <div class="throbber-row clearfix">
+				         <div class="block-7 throbber-block"></div>
+				         <div class="block-8 throbber-block"></div>
+				         <div class="block-3 throbber-block"></div>
+				    </div>
+				    <div class="throbber-row clearfix">
+				         <div class="block-6 throbber-block"></div>
+				         <div class="block-5 throbber-block"></div>
+				         <div class="block-4 throbber-block"></div>
+				    </div>
+				</div>
+			</div>
+    	</div>
+    </div>
+
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluacion</button></div>
 	<div id="contenido_a_mostrar"  style="display:none;">
 		<div id="inputs" align="left">
@@ -54,15 +109,15 @@
 				{% endfor %}
 			</select>
 			<form action="" method="post" id='formJson'>{% csrf_token %}
-				<p class="label_input">Nombre Configuracion</p>
+				<p class="label_input"><strong>Nombre Configuracion</strong></p>
 				<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuracion"/>
-				<p class="label_input">Nota Minima</p>
+				<p class="label_input"><strong>Nota Minima</strong></p>
 				<input name="nota_minima" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota minima"/>
-				<p class="label_input">Nota Maxima</p>
+				<p class="label_input"><strong>Nota Maxima</strong></p>
 				<input name="nota_maxima" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota maxima"/>
-				<p class="label_input">Fecha Inicio</p>
+				<p class="label_input"><strong>Fecha Inicio</strong></p>
 				<input name="fecha_inicio" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
-				<p class="label_input">Fecha Termino</p>
+				<p class="label_input"><strong>Fecha Termino</strong></p>
 				<input name="fecha_termino" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha termino"/>
 				<input name="input_id_config" id="input_id_config" style="display:none;">
 				<input name="input_kaid" id="input_kaid" style="display:none;">
@@ -70,12 +125,18 @@
 				<input name="input_id_class" id="input_id_class" style="display:none;">
 			</form>
 		</div>
-		<div class="parametros" id="parametros">Parametros</div>
-		<div class="skills" id="skills" align="left">Skills</div>
-		<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
-	    <div class="flechas"><IMG SRC="http://1.bp.blogspot.com/_qgZA1ny_dAs/S0QKBZIBjwI/AAAAAAAADiE/ne7stP8FB60/s320/arrow3b.png" onClick="EvaluarTodos()"></div>
-		<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
-		<div class="flechas"><IMG SRC="http://2.bp.blogspot.com/_qgZA1ny_dAs/S0QFh598GZI/AAAAAAAADhE/ct32e3-IK9I/s200/arrow3a.png" onClick="noEvaluarTodos()"></div>
+		<div class="parametros" id="parametros"><strong>Parametros</strong></div>
+		<div class="skills" id="skills" align="left"><strong>Skills</strong></div>
+		<div>
+			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Evaluados</strong></div>	
+			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
+		</div>
+	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow4b.png'%}" onClick="EvaluarTodos()"></div>
+	    <div>
+			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes Evaluados</strong></div>	
+			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
+		</div>
+		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow4a.png'%}" onClick="noEvaluarTodos()"></div>
 		<div align="center" style="padding-left:400px">
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
@@ -148,15 +209,18 @@
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
-  		noEvaluarTodos()
+  		noEvaluarTodos();
   		$("#hover").click(function(){
   	        $(this).fadeOut();
   	    	$("#popup").fadeOut();
   	    	$("#popup_resumen").fadeOut();
+  	    	$("#popup_evaluacion").fadeOut();
+
   	    });
   	  	$("#close").click(function(){
   	        $("#hover").fadeOut();
   	    	$("#popup").fadeOut();
+  	    	$("#popup_resumen").fadeOut();
   	    });
   		
   	  	//This code was for using a pop up menu to choose the row sorting criterion
@@ -379,14 +443,6 @@
     $(".arrow-down.skills_level").attr("column",function(){
     	return $("th.skills_level").index();
 	});
-    
-    //table.selectAll('.assesment').append('button').attr('onclick',function(d) { return 'changeData('+d.number+')' }).text(d3.f('head_assesment'));
-    //table.selectAll('.assesment').append('div').attr("class","sort-div").html('<button type="button">Up</button><button type="button">Down</button>');
-
-
-
-
-
 
     var endDates = [];
     for (i=0; i<json["assesments"].length; i++){
@@ -399,19 +455,17 @@
     	//console.log("hoy: "+today)
     	todayDate = new Date(Date.parse(today))
     	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
-    	
-
+    	endDate = endDate.getTime() + 97200000
+    	endDate = new Date(endDate)
+		
     	if (todayDate<endDate){
     		//console.log("NO MOSTRAR EDITAR");
-    		
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
 
-endDate2 = (endDate.getMonth()+1)+"/"+(endDate.getDate())+"/"+(endDate.getFullYear())+" 00:00 AM";
-endDates.push(endDate2)
-//console.log("HORA FINAL: "+endDate2);
+			endDates.push(endDate)
     		   		
     		table.select('th.'+class_id)
     		.append('span')
@@ -430,16 +484,8 @@ endDates.push(endDate2)
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
-    		
+	
     	}
-    	
-
-
-
-
-
-
-
   	
     	table.select('th.'+class_id)
     		.append('button')
@@ -457,11 +503,7 @@ endDates.push(endDate2)
  						<option value="grade">Nota</option>
 						<option value="effort">Esfuerzo</option>
 				  	</select>
-				 	`});   	
-
-    	
-    		
-    	
+				 	`});   	   	
     }	 
     
     $(".arrow-up.assesment").attr("column",function(){
@@ -989,7 +1031,11 @@ endDates.push(endDate2)
     		.attr("cx", function (d,i) { return effort_scalings[d.cl](students[i][assesment_id].effort); })
             .attr("cy", function (d,i) { return effort_scalings[d.cl](students[i][assesment_id].effort); })
     		.attr("r",function(d,i){
-    			return effort_scalings[d.cl](students[i][assesment_id].effort);
+    			if (students[i][assesment_id].grade==null){
+    				return 0;
+    			}else{
+    				return effort_scalings[d.cl](students[i][assesment_id].effort);
+    			}
     		})
     		.attr("id_json",function(d,i){
     			return i;
@@ -1366,12 +1412,12 @@ endDates.push(endDate2)
 		
 		function fillParameters(id) {
 			$("#parametros").empty();
-			$("#parametros").append("<div>Parametros:</div>");
+			$("#parametros").append("<div><strong>Parametros</strong></div>");
 			{% for config in assesment_configs %}
 				if ({{config.id_assesment_config}}== id){
-					$("#parametros").append("<div>Porcentaje de aprovacion: {{ config.approval_percentage }}</div>");
-					$("#parametros").append("<div>Importancia de Skill: {{ config.importance_skill_level }}</div>");	
-					$("#parametros").append("<div>Importancia de Recomendaciones: {{ config.importance_completed_rec }}</div>");
+					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprovacion: {{ config.approval_percentage }}</div>");
+					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Skill: {{ config.importance_skill_level }}</div>");	
+					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Recomendaciones: {{ config.importance_completed_rec }}</div>");
 					document.getElementById("input_id_config").value = "{{config.id_assesment_config}}";
 				}
 			{% endfor %}
@@ -1389,9 +1435,9 @@ endDates.push(endDate2)
 				success: function (response) {
 					skills = JSON.parse(response);
 					$("#skills").empty();
-					$("#skills").append("<div>Skills:</div>");
+					$("#skills").append("<div><strong>Skills</strong></div>");
 					for(var i=0;i<skills.length;i++){
-						$("#skills").append("<div>"+skills[i]['fields']['name_spanish']+"</div>");					
+						$("#skills").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.png'%}'>"+skills[i]['fields']['name_spanish']+"</div>");					
 					}
 				}
 			});
@@ -1413,8 +1459,7 @@ endDates.push(endDate2)
 					type: "POST",
 					data: $("#formJson").serialize(),
 					success: function(response){
-						$(".vaciar").empty();
-						location.reload();
+						Loading();
 					}
 				});
 			}	
@@ -1551,8 +1596,7 @@ endDates.push(endDate2)
 					type: "POST",
 					data: $("#formJson").serialize(),
 					success: function(response){
-						$(".vaciar").empty();
-						location.reload();
+						Loading();
 					}
 				});
 
@@ -1560,6 +1604,13 @@ endDates.push(endDate2)
 				alert("no hay gente a evaluar");
 			}
 
+		}
+		function Loading(){
+			$("#popup_evaluacion").fadeIn();
+  			$("#hover").fadeIn();
+  			$("#profile-throbber2").show();
+			$(".vaciar").empty();
+			location.reload();
 		}
 		function resumenAssesment(id_assesment){
 			$("#hover").fadeIn().css('display', '');

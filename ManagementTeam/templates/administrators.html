@@ -206,17 +206,19 @@ function confirmSave(answer,id){
 					$("#cancelDelete").remove();
 					$('.response').remove();
 					$('.question').remove();
+					
+					$("#popup").append("<p class='response'>"+response+"</p>");
 					$("#hover").fadeIn().css('display', '');
 					$("#popup").fadeIn().css('display', '');
-					$("#popup").append("<p class='response'>"+response+"</p>");
+					
 					auxResponse = response;
 					if (auxResponse == "Nuevo Administrador guardado correctamente"){
-						window.setTimeout(function(){location.reload()},1000);
+						window.setTimeout(function(){location.reload()},2000);
 					}
 				}
 		});
-		$("#hover").fadeOut().css('display', 'none');
-		$("#popup").fadeOut().css('display', 'none');
+		//$("#hover").fadeOut().css('display', 'none');
+		//$("#popup").fadeOut().css('display', 'none');
 	}
 	if (answer==0){
 		$("#hover").fadeOut(1000).css('display', 'none');
@@ -276,16 +278,17 @@ function confirmDelete(answer,id){
 					$('.response').remove();
 					$('.question').remove();
 					$("#hover").fadeIn().css('display', '');
-					$("#popup").fadeIn().css('display', '');
 					$("#popup").append("<p class='response'>"+response+"</p>");
+					$("#popup").fadeIn().css('display', '');
+					
 					auxResponse = response;
 					if (auxResponse == "Administrador eliminado correctamente"){
 						window.setTimeout(function(){location.reload()},1000);
 					}
 				}
 		});
-		$("#hover").fadeOut().css('display', 'none');
-		$("#popup").fadeOut().css('display', 'none');
+		//$("#hover").fadeOut().css('display', 'none');
+		//$("#popup").fadeOut().css('display', 'none');
 	}
 	if (answer==0){
 		$("#hover").fadeOut(1000).css('display', 'none');
