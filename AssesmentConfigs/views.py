@@ -71,7 +71,7 @@ def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
         args = request.POST
         print args
-    return HttpResponse("editado jeje")
+    return HttpResponse("Pauta editada correctamente")
 
 
 def deleteAssesmentConfig(request,id_assesment_config):
