@@ -97,26 +97,22 @@ def create_callback_server():
             global VERIFIERS_ARRAY
             global SERVICES_ARRAY
             global server
-            print "self.path"
-            print self.path
+            
+            #print self.path
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
             id_client = params["id_client"][0]
 
-            print "id_client"
-            print id_client
-            print type(id_client)
-            #VERIFIER = params['oauth_verifier'][0]
+            
             VERIFIERS_ARRAY[id_client] = params['oauth_verifier'][0]
-            print VERIFIERS_ARRAY[id_client]
-            print "clients"
-            print server.clients
+            #print id_client
+            #print VERIFIERS_ARRAY[id_client]
+            
             
             
             for client in server.clients:
                 print "cliente"
                 if client['id'] == int(id_client):
-                    print "encontró cliente"
                     # 4. Get an access token.
                     service = SERVICES_ARRAY[id_client]
                     request_token = REQUEST_TOKENS_ARRAY[id_client]
@@ -156,7 +152,7 @@ def create_callback_server():
         def log_request(self, code='-', size='-'):
             pass
     server = SocketServer.TCPServer((CALLBACK_BASE, 5432), CallbackHandler)
-    #server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 (en vez de 53707) para puerto random
+    #server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler) #Ocupar puerto 0 para puerto random (fallo de seguridad)
     return server
 
 callback_server = create_callback_server()
@@ -183,9 +179,8 @@ def get_api_resource(session):#,request):
     response = session.get(url, params=params)
     #end = time.time()
     json_response = response.json()
-    print json_response
-    email = json_response['email']
-    #username = json_response['username']   
+    #print json_response
+    email = json_response['email']  
     username = json_response['nickname']
     login_data={"login":{"username":username,"email":email}}
     json_data = json.dumps(login_data)
@@ -221,7 +216,6 @@ def message_received(client, server, message):
                base_url=SERVER_URL + '/api/auth2')
 
         #callback_server = create_callback_server()
-        #print callback_server.server_address[1]
         
         # 1. Get a request token.
         #request_token, secret_request_token = service.get_request_token(
@@ -229,7 +223,7 @@ def message_received(client, server, message):
         #        (CALLBACK_BASE, callback_server.server_address[1])})
 
         request_token, secret_request_token = SERVICES_ARRAY[id_client].get_request_token(
-            params={'oauth_callback': 'http://%s:%d?id_client=%s/' %
+            params={'oauth_callback': 'http://%s:%d?id_client=%s' %
                 (CALLBACK_BASE, callback_server.server_address[1],id_client)})
         REQUEST_TOKENS_ARRAY[id_client]=request_token
         SECRET_REQUEST_TOKEN_ARRAY[id_client]=secret_request_token
@@ -245,12 +239,7 @@ def message_received(client, server, message):
         
         #callback_server.handle_request()
         #callback_server.server_close()
-        #callback_server=""
-        #callback_server.serve_forever()
-        #while (VERIFIERS_ARRAY.has_key(id_client) == False):
-        #    print "hola"
 
-        
         # 4. Get an access token.
         #session = service.get_auth_session(request_token, secret_request_token,
         #    params={'oauth_verifier': VERIFIERS_ARRAY[id_client]})
@@ -262,10 +251,10 @@ def message_received(client, server, message):
         # 6. Send Khan user data to the client
         #server.send_message(client, login_data)
     
-def MyThread1():
+def runWebsocketServer():
     global server
     server.run_forever()
-def MyThread2():
+def runAuthServer():
     global callback_server
     callback_server.serve_forever()
 
@@ -280,11 +269,12 @@ server = WebsocketServer(PORT, SERVERHOST)
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_received)
+
 #server.run_forever()
 #callback_server.serve_forever()
-#callback_server.serve_forever()
-t1 = threading.Thread(target=MyThread1, args=[])
-t2 = threading.Thread(target=MyThread2, args=[])
+
+t1 = threading.Thread(target=runWebsocketServer, args=[])
+t2 = threading.Thread(target=runAuthServer, args=[])
 t1.start()
 t2.start()
 
