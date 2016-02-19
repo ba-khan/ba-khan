@@ -52,10 +52,10 @@ def saveAdministrator(request):
                 if (json_str["adminEmail"]):
                     admin.email=json_str["adminEmail"]
                     try:
-                        user = User.objects.get(email=admin.email)
+                        userApp = User.objects.get(email=admin.email)
                         print user
                         group = Group.objects.get(name='administrators')
-                        user.groups.add(group)
+                        group.user_set.add(userApp)
                     except:
                         print 'no existe usuario'
                 else:
@@ -73,9 +73,9 @@ def saveAdministrator(request):
                     if (json_str["adminEmail"]):
                         admin.email=json_str["adminEmail"]
                         try:
-                            user = User.objects.get(email=admin.email)
+                            userApp = User.objects.get(email=admin.email)
                             group = Group.objects.get(name='administrators')
-                            user.groups.add(group)
+                            group.user_set.add(userApp)
                         except:
                             print 'no existe usuario'
                     else:
