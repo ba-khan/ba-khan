@@ -536,6 +536,11 @@ keygen, select, select[size="0"], select[size="1"] {
     cursor:pointer;
 }
 
+@-moz-document url-prefix(){
+  div.subGrupo select{
+    margin-top:20px;
+  }
+}
 	  </style>
 
 <br>
@@ -543,7 +548,6 @@ keygen, select, select[size="0"], select[size="1"] {
   <h1>Grupos</h1>
   <br>
     <div id='content'>
-   
        <div id="SinGrupo" name="SinGrupo" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>No agrupados</h3></ul></div>
  
         <div id="Avanzados" name="Avanzados" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>Avanzados</h3></ul>
@@ -579,7 +583,7 @@ keygen, select, select[size="0"], select[size="1"] {
 <div id="buttons">
   <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
   <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Agrupacion Automatica' id='makeButton'>
-  <input type='button' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" value='Nueva Agrupacion' id='newButton'>
+  <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupacion</button>
 </div>
 
 <br>
