@@ -188,39 +188,44 @@ parentDiv.removeChild(openDiv[0]);
 };
 
        
-       function makeGroups() {
-  $.ajax({
-   url: "{% url 'groups:getGroups' id_class %}",
-   type: "POST",
-   data: $("#formJson").serialize(),
-   success: function (response) {
-   
-$('.cuadradito').remove();
-      var student = JSON.parse(response);
-      for(var i=0;i<student.length;i++){
-      
-if(student[i]['type']=='Reforzamiento'){
-      
-$("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-}
-      
-if(student[i]['type']=='Intermedios'){
-      
-$("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-}
-      
-if(student[i]['type']=='Avanzados'){
-      
-$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-} 
-      }
-      fillComboBox()
-      alert('Agrupacion realizada correctamente.');
-   }
-});
+function makeGroups() {
+  if($("input[name='skills']").val().length==2){
+    alert('No hay habilidades seleccionadas.')
+  }else{
+    $.ajax({
+       url: "{% url 'groups:getGroups' id_class %}",
+       type: "POST",
+       data: $("#formJson").serialize(),
+       success: function (response) {
+       
+            $('.cuadradito').remove();
+                  var student = JSON.parse(response);
+                  for(var i=0;i<student.length;i++){
+                  
+            if(student[i]['type']=='Reforzamiento'){
+                  
+            $("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            }
+                  
+            if(student[i]['type']=='Intermedios'){
+                  
+            $("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            }
+                  
+            if(student[i]['type']=='Avanzados'){
+                  
+            $("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            } 
+          }
+          fillComboBox()
+          alert('Agrupacion realizada correctamente.');
+       }
+    });
+  }
+  
 };
 function saveGroups(){
   //Funcion que guarda las agrupaciones.
@@ -545,6 +550,29 @@ keygen, select, select[size="0"], select[size="1"] {
 
 <br>
 <div class='main-content'>
+
+  <br>
+
+<h1>Agrupaciones anteriores</h1>
+  <div id='containerTimeLine'>
+    <form action="" method="post" id='formJson'>{% csrf_token %}
+       <input name="skills" type="hidden" value="[]">
+       <input name="student_groups" type="hidden" value=''>
+       <input name="tutors" type="hidden" value=''>
+       <input name="subGroups" type="hidden" value=''>
+       
+  </form>
+    <div id="hoverRes">
+      <div id="name"></div>
+      <div id="scrolled_date" style="cursor:pointer"></div>
+      
+    </div>
+
+    <div id="timeline3" ></div>
+
+    <br>
+  </div>
+
   <h1>Grupos</h1>
   <br>
     <div id='content'>
@@ -582,31 +610,11 @@ keygen, select, select[size="0"], select[size="1"] {
 
 <div id="buttons">
   <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
-  <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Agrupacion Automatica' id='makeButton'>
-  <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupacion</button>
+  <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Agrupación Automatica' id='makeButton'>
+  <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupación</button>
 </div>
 
-<br>
-<h1>Linea de Tiempo</h1>
-  <div id='containerTimeLine'>
-    <form action="" method="post" id='formJson'>{% csrf_token %}
-       <input name="skills" type="hidden" value="[]">
-       <input name="student_groups" type="hidden" value=''>
-       <input name="tutors" type="hidden" value=''>
-       <input name="subGroups" type="hidden" value=''>
-       
-  </form>
-    <div id="hoverRes">
-      <div id="name"></div>
-      <div id="scrolled_date" style="cursor:pointer"></div>
-      
-    </div>
 
-    <div id="timeline3" ></div>
-
-    <br>
-  </div>
-  <br>
 
 </div>
 
@@ -711,7 +719,12 @@ window.onload = function() {
       //date = new Date(testData[i].times[0].starting_time);
       date = new Date(testData[i].label);
 		};
+
 		var width = testData.length*100;
+    if (width<1158){
+      width=1158;
+    }
+
 
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.

@@ -43,7 +43,6 @@ function getTopicTree(id){
 
 var json_configs = JSON.parse('{{ json_data | escapejs }}');
 var configs = json_configs.assesmentConfigs;
-console.log(configs)
 
 function slidear(id){
 	if (id==0){
@@ -129,14 +128,14 @@ function onSlide(ui,id) {
 						<h3>Datos de la Pauta:</h3>
 						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="" ><br>
 						<br>
-						<label for='approval_percentage'>Porcentaje de Aprobacion: </label><input type="number" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 						<br>
 						<input name="importance_skill_level0" value="50" type="hidden">
 				    	<input name="importance_completed_rec0" value="50" type="hidden">
 				    	<input name="id" type="hidden" value="0">
 				        <input name="skills0" type="hidden" value="[]">
 						<br>
-						<h4 style="text-align:center">% de Importancia para la Evaluacion</h4>
+						<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
 						<div id="skill_level_div0" class="percentage">
 							<span id="importance_skill_level0">50</span>%</br>
 							<!-- Nivel de Dominio logrado -->
@@ -203,15 +202,7 @@ function onSlide(ui,id) {
 			</div><br>
 			<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
 			<script>slidear({{ forloop.counter }});</script>
-			<div style="float:left;margin-left:50px">
-				<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Editar Pauta</a>
-				<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Eliminar Pauta</a>
-			</div>
-			<div style="float:left;margin-left:50px">
-				<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
-				<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
-			</div>
-		</form>
+			
 		{% if config.applied %}
 
 			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
@@ -222,15 +213,22 @@ function onSlide(ui,id) {
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"></div>
 		<script>
 	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
-	        	console.log(skills)
 	        	for (i=0;i<skills.length;i++){ 
-	        		console.log(skills[i].name_spanish)
 	        		$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
 	        	}
 	        </script>
 	</div>
 
 		{% else %}
+		<div style="float:left;margin-left:50px">
+				<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="editConfigButton{{ forloop.counter }}">Editar Pauta</a>
+				<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="deleteConfigButton{{ forloop.counter }}">Eliminar Pauta</a>
+			</div>
+			<div style="float:left;margin-left:50px">
+				<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
+				<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
+			</div>
+		</form>
 
 	</div>
 	<div id="skills">
@@ -241,6 +239,7 @@ function onSlide(ui,id) {
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
+	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]))
 	        </script>
 	</div>
 
@@ -342,7 +341,7 @@ function saveConfig(id){
 }
 
 function openEditConfig(id){
-	if (configs[id-1]["applied"]==false){
+	//if (configs[id-1]["applied"]==false){
 		cpestana = document.getElementById('cpestana'+id);
 		inputs = cpestana.getElementsByTagName('input');
 		for (i=0;i<inputs.length;i++){
@@ -351,13 +350,16 @@ function openEditConfig(id){
 		$( "#slider"+id ).slider( "enable" );
 		$(document.getElementById('cancelEditConfigButton'+id)).css('display', '');
 		$(document.getElementById('saveConfigButton'+id)).css('display', '');
-	}
-	else{
+		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
+		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
+
+	//}
+	/*else{
 		$('.response').remove();
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 		$("#popup").append("<p class='response'>Pauta aplicada, no se puede modificar</p>");
-	}
+	}*/
 }
 
 function cancelEditConfig(id){
@@ -370,6 +372,8 @@ function cancelEditConfig(id){
 	$( "#slider"+id ).slider( "disable" );
 	$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
 	$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
+	$(document.getElementById('editConfigButton'+id)).css('display', '');
+	$(document.getElementById('deleteConfigButton'+id)).css('display', '');
 	slidear(id);
 	
 	inputs[1].removeAttribute("value");
