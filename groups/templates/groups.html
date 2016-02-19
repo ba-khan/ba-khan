@@ -189,38 +189,43 @@ parentDiv.removeChild(openDiv[0]);
 
        
 function makeGroups() {
-  $.ajax({
-   url: "{% url 'groups:getGroups' id_class %}",
-   type: "POST",
-   data: $("#formJson").serialize(),
-   success: function (response) {
-   
-$('.cuadradito').remove();
-      var student = JSON.parse(response);
-      for(var i=0;i<student.length;i++){
-      
-if(student[i]['type']=='Reforzamiento'){
-      
-$("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-}
-      
-if(student[i]['type']=='Intermedios'){
-      
-$("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-}
-      
-if(student[i]['type']=='Avanzados'){
-      
-$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-} 
-      }
-      fillComboBox()
-      alert('Agrupacion realizada correctamente.');
-   }
-});
+  if($("input[name='skills']").val().length==2){
+    alert('No hay habilidades seleccionadas.')
+  }else{
+    $.ajax({
+       url: "{% url 'groups:getGroups' id_class %}",
+       type: "POST",
+       data: $("#formJson").serialize(),
+       success: function (response) {
+       
+            $('.cuadradito').remove();
+                  var student = JSON.parse(response);
+                  for(var i=0;i<student.length;i++){
+                  
+            if(student[i]['type']=='Reforzamiento'){
+                  
+            $("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            }
+                  
+            if(student[i]['type']=='Intermedios'){
+                  
+            $("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            }
+                  
+            if(student[i]['type']=='Avanzados'){
+                  
+            $("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            } 
+          }
+          fillComboBox()
+          alert('Agrupacion realizada correctamente.');
+       }
+    });
+  }
+  
 };
 function saveGroups(){
   //Funcion que guarda las agrupaciones.
