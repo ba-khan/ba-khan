@@ -118,8 +118,6 @@ class Command(BaseCommand):
                         grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
                     except:
                         grade.mastery3 = 0
-                    if assesment.end_date < today:
-                        grade.evaluated = True
                     grade.save()
             #Aqui comienza el calculo de la bonificacion de empegno.        
             grades = Grade.objects.filter(id_assesment_id=assesment.pk)
@@ -155,6 +153,8 @@ class Command(BaseCommand):
                         grade.effort_points = video * percentageVideoTime + excercice * percentageExcerciceTime + incorrects * percentageIncorrects
                     except:
                         grade.effort_points = 0
+                    if assesment.end_date < today:
+                        grade.evaluated = True
                     grade.save()
 
 def getGrade(percentage,points,min_grade,max_grade):
