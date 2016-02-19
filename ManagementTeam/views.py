@@ -44,7 +44,9 @@ def saveAdministrator(request):
 
             try:
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
-                print "existe admin"
+                userApp = User.objects.get(email=admin.email)
+                group = Group.objects.get(name='administrators')
+                group.user_set.remove(userApp)
                 if (json_str["adminPhone"]):
                     admin.phone=json_str["adminPhone"]
                 else:
@@ -53,7 +55,6 @@ def saveAdministrator(request):
                     admin.email=json_str["adminEmail"]
                     try:
                         userApp = User.objects.get(email=admin.email)
-                        print user
                         group = Group.objects.get(name='administrators')
                         group.user_set.add(userApp)
                     except:
@@ -100,6 +101,9 @@ def deleteAdministrator(request):
 
             try:
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
+                userApp = User.objects.get(email=admin.email)
+                group = Group.objects.get(name='administrators')
+                group.user_set.remove(userApp)
                 admin.delete()
                 return HttpResponse("Administrador eliminado correctamente")
             except:
