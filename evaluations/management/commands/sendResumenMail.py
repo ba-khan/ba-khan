@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #lastDate = date.today() - timedelta(days=1)
-        lastDate = date.today() - timedelta(days=3)
+        lastDate = date.today() - timedelta(days=16)
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name','max_grade','min_grade')
         for assesment in assesments:
             skills = getSkillAssesment(assesment['id_assesment_conf_id'])
@@ -26,13 +26,17 @@ class Command(BaseCommand):
             approvalPercentage = assesmentConfig.approval_percentage
             importanceSkillLevel = assesmentConfig.importance_skill_level
             importanceRecomended = assesmentConfig.importance_completed_rec
-
+            idAssesment = assesment['id_assesment']
             grades = Grade.objects.filter(id_assesment_id=assesment['id_assesment'])
             totalStudents = len(grades) 
             avgVideoTime = grades.aggregate(Avg('video_time'))
             avgExcerciceTime = grades.aggregate(Avg('excercice_time'))
+
+            
+
+
             content = htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
-                avgExcerciceTime['excercice_time__avg'],avgVideoTime['video_time__avg'],totalStudents)
+                avgExcerciceTime['excercice_time__avg'],avgVideoTime['video_time__avg'],totalStudents,idAssesment)
             sendMail('javierperezferrada@gmail.com',content)
 
 
@@ -51,7 +55,7 @@ def sendMail(email,contenido): #recibe los datos iniciales y envia un  mail a ca
     return ()
 
 def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,avgExcerciceTime,
-    avgVideoTime,totalStudents):
+    avgVideoTime,totalStudents,idAssesment):
     archivo=open("C:/Users/LACLO2013_B/Desktop/ba-khan/static/plantillas/resumen_assesment_mail.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$grade$$","{0:.1f}".format(2.45))
@@ -67,6 +71,23 @@ def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercent
     contenido = contenido.replace("$$avgExcerciceTime$$",str(avgExcerciceTime))
     contenido = contenido.replace("$$avgVideoTime$$",str(avgVideoTime))
     contenido = contenido.replace("$$ejercicios$$",str(skills))
+
+    hUnit = 300/totalStudents #unidad basica para la altura del histograma
+    print hUnit
+    rUnit = maxGrade/float(10)
+    #print rUnit,maxGrade
+    aux = 0
+    grades = Grade
+    for i in range(10):
+        varR = "$$r"+str(i)+"$$"
+        varD = "$$d"+str(i)+"$$"
+        varH = "$$h"+str(i)+"$$"
+        contenido = contenido.replace(varR,str(aux))
+        qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gt=aux,grade__lt=aux+rUnit).count()#.values('grade').aggregate(q=Count('grade'))
+        contenido = contenido.replace(varD,str(qStudents))
+        print qStudents*hUnit
+        contenido = contenido.replace(varH,str(qStudents*hUnit))
+        aux += rUnit
     return(contenido)
 
 def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
