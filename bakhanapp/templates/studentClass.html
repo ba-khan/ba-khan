@@ -1585,6 +1585,7 @@ var bajada = new Howl({
 			input_name = document.getElementById("input_nombre").value;
 			grade_min = document.getElementById("nota_minima").value;
 			grade_max = document.getElementById("nota_maxima").value;
+			approval_percentage = document.getElementById("nota_aprovacion").value;
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
@@ -1620,6 +1621,13 @@ var bajada = new Howl({
 				flag = false;
 			}else{
 				$('#nota_maxima').css('color', '#000000');
+			}
+			if(approval_percentage == null || grade_min>approval_percentage || approval_percentage>grade_max || approval_percentage.length == 0 || /^\s+$/.test(approval_percentage)) {
+				$('#nota_aprovacion').css('color', '#C30202');
+			    //$('#nota_maxima').tipsy({gravity: 'w', fallback: "La nota maxima debe ser mayor que la nota minima", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#nota_aprovacion').css('color', '#000000');
 			}
 			if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
 				$('#fecha_inicio').css('color', '#C30202');
