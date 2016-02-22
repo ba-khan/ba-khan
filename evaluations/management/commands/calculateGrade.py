@@ -69,7 +69,7 @@ class Command(BaseCommand):
             for grade in grades_involved:
                 if grade.evaluated == False:
                     grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
-                    grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade,4)
+                    grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade,assesment.approval_grade)
                     try:
                         grade.excercice_time = dictTimeExcercice[grade.kaid_student_id]
                     except:
