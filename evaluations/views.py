@@ -184,7 +184,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
             update_assesment_configs = Assesment_Config.objects.get(pk=id_config)
             update_assesment_configs.applied = True
             update_assesment_configs.save()
-
+        os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
         threads = []
         #envial mail a los evaluados
         t = threading.Thread(target=treadSendMail,args=(kaid,nota1,nota2,fecha1,fecha2,id_config))
@@ -195,7 +195,6 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         #t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
         #threads.append(t)
         #t.start()
-        os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
 def strip_accents(text): #reemplaza las letras con acento por letras sin acento
