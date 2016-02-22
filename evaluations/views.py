@@ -132,6 +132,7 @@ def updateAssesment(request): #modifica una evaluacion
                                kaid_student_id=s['kaid_student']
                                )
             new_grade.save()
+        os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
 def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion
@@ -194,7 +195,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         #t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
         #threads.append(t)
         #t.start()
-
+        os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
 def strip_accents(text): #reemplaza las letras con acento por letras sin acento
