@@ -778,8 +778,8 @@
 	    var tiempos_skill = tbody.selectAll('.skills_time')
 	    	.append("svg")
 	    	.attr("class","skills_time")
-	    	.style("width","120")
-	    	.style("height","30");
+	    	.attr("width","120")
+	    	.attr("height","30");
 	    tiempos_skill
 	    	.append("rect")
 	    	.attr("class","skills_time")
@@ -814,8 +814,8 @@
 	    var tiempos_video = tbody.selectAll(".videos_time")
 	    	.append("svg")
 	    	.attr("class","videos_time")
-	    	.style("width","120")
-	    	.style("height","30")
+	    	.attr("width","120")
+	    	.attr("height","30")
 	    tiempos_video
 	    	.append("rect")
 	    	.attr("class","videos_time")
@@ -850,8 +850,8 @@
 	    var correct_incorrect = tbody.selectAll(".exercises")
 	    	.append("svg")
 	    	.attr("class","exercises")
-	    	.style("width","120")
-	    	.style("height","30");
+	    	.attr("width","120")
+	    	.attr("height","30");
 	    
 	    var incorrectos = correct_incorrect.append("rect")
 	    	  .attr("class","incorrect")
@@ -937,8 +937,8 @@
 	    var skill_levels = tbody.selectAll(".skills_level")
     	.append("svg")
     	.attr("class","skills_level")
-    	.style("width","120px")
-    	.style("height","15px")
+    	.attr("width","120px")
+    	.attr("height","15px")
 		skill_levels.selectAll('rect')
 		      .data(function(d,i){
 		    	  var skills_array=[];
@@ -1024,8 +1024,8 @@
     	var assesments = tbody.selectAll("td.assesment"+json["assesments"][i]["id"]).attr("class","assesment assesment"+json["assesments"][i]["id"])
 	    	.append("svg")
 	    	.attr("class","assesment assesment"+json["assesments"][i]["id"])
-	    	.style("width",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);})
-    		.style("height",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);});
+	    	.attr("width",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);})
+    		.attr("height",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);});
 		
     	assesments.append("circle")
     		.attr("class","assesment assesment"+json["assesments"][i]["id"])
@@ -1143,8 +1143,8 @@
     	var recommendations = tbody.selectAll('.recommendations')
     							.append("svg")
     							.attr("class","recommendations")
-    							.style("width","80")
-    							.style("height",height);
+    							.attr("width","80")
+    							.attr("height",height);
     	var g_rec = recommendations.append('g').attr("class","recommendations")
     		.attr('transform', "translate(" + 40 + ", " + (height-5) + ")")
     		.attr("id_student",function(d,i){
