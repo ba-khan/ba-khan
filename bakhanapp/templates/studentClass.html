@@ -131,7 +131,7 @@ var bajada = new Howl({
 				<p class="label_input"><strong>Nota Máxima</strong></p>
 				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
 				<p class="label_input"><strong>Nota Aprovacion</strong></p>
-				<input name="nota_aprovacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprovacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
+				<input name="nota_aprovacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprovacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprovacion"/>
 				<p class="label_input"><strong>Fecha Inicio</strong></p>
 				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 				<p class="label_input"><strong>Fecha Término</strong></p>
@@ -1539,7 +1539,7 @@ var bajada = new Howl({
 			combo_box = document.getElementById("comboBox").selectedIndex;
 			var startDate = new Date(date_start);
 			var endDate = new Date(date_end);
-			todayDate = new Date(Date.parse(today));
+			todayDate = new Date();
 			flag = true;
 			if (cuadritos.length==0){
 				$('#Evaluados').css("border", "1px solid #C30202");
@@ -1620,6 +1620,7 @@ var bajada = new Howl({
 			$("input[name='fecha_termino']").val("");
 			$("input[name='nota_maxima']").val("");
 			$("input[name='nota_minima']").val("");
+			$("input[name='nota_aprovacion']").val("");
 			noEvaluarTodos();
 		}
 		function editarAssesment(id_assesment){
