@@ -11,10 +11,9 @@
 <script>
 function getTopicTree(id){
 	var topictree = JSON.parse('{{ topictree | escapejs }}');
+	console.log(topictree);
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
-		    selected_skills=$('#topictree'+id)
-		    			.jstree()
-		    			.get_bottom_selected(true);
+		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
@@ -108,7 +107,7 @@ function onSlide(ui,id) {
 <div class="container">
 	<div id="sidebar">
     	<ul>
-    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select">Nueva Configuracion</a></li>
+    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="icon-plus-sign"></i> Nueva Configuracion</a></li>
         	{% for config in assesment_configs %}  
 			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
 			{% endfor %}
@@ -125,18 +124,18 @@ function onSlide(ui,id) {
 				<h2>Nueva Pauta</h2>
 				<div id="form00" class="form">
 					<form action="" method="post" id="form0">{% csrf_token %}
-						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="" ><br>
+						<h3>Datos de la Pauta:</h3>
+						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" ><br>
 						<br>
-						<br><h3>Parametros de la Pauta:</h3>
-						<label for='approval_percentage'>Porcentaje de Aprobacion: </label><input type="number" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" ><br>
 						<br>
-						<input name="importance_skill_level0" type="hidden">
-				    	<input name="importance_completed_rec0" type="hidden">
+						<input name="importance_skill_level0" value="50" type="hidden">
+				    	<input name="importance_completed_rec0" value="50" type="hidden">
 				    	<input name="id" type="hidden" value="0">
 				        <input name="skills0" type="hidden" value="[]">
 						<br>
-						<h4 style="text-align:center">% de Importancia para la Evaluacion</h4>
-						<div id="skill_level_div0" style="float:left">
+						<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
+						<div id="skill_level_div0" class="percentage">
 							<span id="importance_skill_level0">50</span>%</br>
 							<!-- Nivel de Dominio logrado -->
 						</div>
@@ -146,7 +145,7 @@ function onSlide(ui,id) {
 								</div>
 							</div>
 						</div>
-						<div id="completed_rec_div0" style="float:left">
+						<div id="completed_rec_div0" class="percentage">
 							<span id="importance_completed_rec0">50</span>%</br>
 							<!-- Recomendaciones Completadas -->
 						</div><br>
@@ -173,18 +172,19 @@ function onSlide(ui,id) {
 	<h2>{{ config.name }}</h2>
 	<div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
 		<form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
-			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="{{ config.name }}" disabled><br>
+			<h3>Datos de la Pauta:</h3>
+			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="{{ config.name }}" disabled><br>
 			<br>
-			<br><h3>Parametros de la Pauta:</h3>
-			<label for='approval_percentage'>Porcentaje de Aprobacion: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled><br>
+			<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100"  onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" disabled><br>
 			<br>
+			<input name="forloop" value="{{ forloop.counter }}" type="hidden">
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
 	        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
 	        
 			<br>
-			<h4 style="text-align:center">% de Importancia para la Evaluacion</h4>
-			<div id="skill_level_div{{ forloop.counter }}" style="float:left">
+			<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
+			<div id="skill_level_div{{ forloop.counter }}" class="percentage">
 				<span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
 
 			</div>
@@ -196,36 +196,70 @@ function onSlide(ui,id) {
 				</div>
 			</div>
 			
-			<div id="completed_rec_div{{ forloop.counter }}" style="float:left">
+			<div id="completed_rec_div{{ forloop.counter }}" class="percentage">
 				<span id="importance_completed_rec{{ forloop.counter }}">50</span>%</br>
 
 			</div><br>
 			<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
 			<script>slidear({{ forloop.counter }});</script>
-			<div style="float:left;margin-left:50px">
-				<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Editar Pauta</a>
-				<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" >Eliminar Pauta</a>
+			
+		{% if config.applied %}
+
+			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
+			</form>
+	</div>
+	
+	<div id="skills">
+		<h3>Habilidades</h3>
+		<div id="topictree{{ forloop.counter }}" class="scroll topictree"></div>
+		<script>
+	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+	        	for (i=0;i<skills.length;i++){ 
+	        		$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+	        	}
+	        </script>
+	</div>
+
+		{% else %}
+		<div style="float:left;margin-left:50px">
+				<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="editConfigButton{{ forloop.counter }}">Editar Pauta</a>
+				<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="deleteConfigButton{{ forloop.counter }}">Eliminar Pauta</a>
 			</div>
 			<div style="float:left;margin-left:50px">
 				<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
 				<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
 			</div>
 		</form>
-		{% if config.applied %}
-			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
-		{% endif %} 
+
 	</div>
-	
 	<div id="skills">
 		<h3>Habilidades</h3>
 		<div id="search">
 		<label for='skill_search{{ forloop.counter }}'>Buscar: </label><input id="skill_search{{ forloop.counter }}" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled>
 		</div>
-		<div id="topictree{{ forloop.counter }}" class="topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
+		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
+	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
+	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
+	        	$('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
+	        	$('#topictree{{ forloop.counter }}').jstree(true).show_dots();
+	        	$('#topictree{{ forloop.counter }}').jstree(true).disable_node($('math'));
+	        	var nodes = $('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
+	        	console.log(nodes);
+	        	
+
+
+
+
+	        	//$('#topictree{{ forloop.counter }}').jstree().change_state('math', false);
+	        	/*$('#topictree{{ forloop.counter }}').jstree().select_node($('math'));
+	        	$('#topictree{{ forloop.counter }}').jstree().disable_node($('math'));*/
 	        </script>
 	</div>
+
+		{% endif %} 
+
 </div> 
 {% endfor %}
 
@@ -322,7 +356,7 @@ function saveConfig(id){
 }
 
 function openEditConfig(id){
-	if (configs[id-1]["applied"]==false){
+	//if (configs[id-1]["applied"]==false){
 		cpestana = document.getElementById('cpestana'+id);
 		inputs = cpestana.getElementsByTagName('input');
 		for (i=0;i<inputs.length;i++){
@@ -331,13 +365,16 @@ function openEditConfig(id){
 		$( "#slider"+id ).slider( "enable" );
 		$(document.getElementById('cancelEditConfigButton'+id)).css('display', '');
 		$(document.getElementById('saveConfigButton'+id)).css('display', '');
-	}
-	else{
+		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
+		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
+
+	//}
+	/*else{
 		$('.response').remove();
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 		$("#popup").append("<p class='response'>Pauta aplicada, no se puede modificar</p>");
-	}
+	}*/
 }
 
 function cancelEditConfig(id){
@@ -350,6 +387,8 @@ function cancelEditConfig(id){
 	$( "#slider"+id ).slider( "disable" );
 	$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
 	$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
+	$(document.getElementById('editConfigButton'+id)).css('display', '');
+	$(document.getElementById('deleteConfigButton'+id)).css('display', '');
 	slidear(id);
 	
 	inputs[1].removeAttribute("value");
@@ -380,7 +419,7 @@ function confirmEdit(answer,id){
 		$.ajax({
 			url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
 			type: "POST",
-			data: $("#form".concat(id)).serialize(),
+			data: $("#form"+id).serialize(),
 				success: function(response){
 					$('.response').remove()
 					$("#hover").fadeIn().css('display', '');
@@ -444,6 +483,23 @@ function confirmDelete(answer,id){
 	}
 }
 
+function validar(){
+	flag = true
+	approval_percentage = document.getElementsByClassName("approvalPercentage");
+	//alert(approval_percentage)
+	for (var a=0;a<approval_percentage.length;a++){
+		//alert(approval_percentage[a].value)
+		if(approval_percentage[a].value == null || approval_percentage[a].value<0 || approval_percentage[a].value>100 || approval_percentage[a].value.length == 0 || /^\s+$/.test(approval_percentage[a].value)) {
+
+			$(approval_percentage[a]).css('color', '#C30202');
+			flag = false
+		}else{
+			$(approval_percentage[a]).css('color', '#000000');
+		}
+	}
+	return flag
+}
+
 $(document).ready(function(){
   
   //chiusura al click sulla parte scura
@@ -460,5 +516,11 @@ $(document).ready(function(){
   
 });
 
+</script>
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript"> 
+    $(document).ready(function () {
+    $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
+    });
 </script>
 {% endblock %}

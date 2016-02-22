@@ -65,10 +65,10 @@
 	<tr>
 		<th>Estudiante</th>
 		<th>E-Mail</th>
-		<th>Telefono</th>
+		<th>Teléfono</th>
 		<th>Apoderado</th>
 		<th>E-Mail</th>
-		<th>Telefono</th>
+		<th>Teléfono</th>
 		<th>Acciones</th>
 	</tr>
 	{% for data in datas %}
@@ -107,7 +107,7 @@ function saveData(id){
 	tr = document.getElementById("R"+id);
 	invalids = tr.getElementsByClassName("invalid").length;
 	if (invalids>0){
-		response = "Campos invalidos";
+		response = "Campos inválidos";
 		$("#popup").append("<p class='response'>"+response+"</p>");
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
@@ -115,7 +115,7 @@ function saveData(id){
 	else{
 		$('.response').remove();
 		$('.question').remove();
-		$("#popup").append("<p class='question'>Desea guardar cambios de contacto?</p>");
+		$("#popup").append("<p class='question'>¿Desea guardar cambios de contacto?</p>");
 		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Guardar</a>");
 		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
 		$("#hover").fadeIn().css('display', '');
@@ -129,12 +129,12 @@ function confirmSave(answer,id){
 		tr = $(document.getElementById("R"+id));
 		var tdJson = new Object();
 
-				tdJson.studentName= tr["context"]["children"][0].innerText;
-				tdJson.studentEmail= tr["context"]["children"][1].innerText;
-				tdJson.studentPhone= tr["context"]["children"][2].innerText;
-				tdJson.tutorName= tr["context"]["children"][3].innerText;
-				tdJson.tutorEmail= tr["context"]["children"][4].innerText;
-				tdJson.tutorPhone= tr["context"]["children"][5].innerText;
+				tdJson.studentName= tr["context"]["children"][0].textContent;
+				tdJson.studentEmail= tr["context"]["children"][1].textContent;
+				tdJson.studentPhone= tr["context"]["children"][2].textContent;
+				tdJson.tutorName= tr["context"]["children"][3].textContent;
+				tdJson.tutorEmail= tr["context"]["children"][4].textContent;
+				tdJson.tutorPhone= tr["context"]["children"][5].textContent;
 		
 		$.ajax({
 			url: "{% url 'Contacts:guardar_contactos' id_class %}",

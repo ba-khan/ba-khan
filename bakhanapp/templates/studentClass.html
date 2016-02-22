@@ -10,7 +10,15 @@
 {% endblock %}
 
 {% block body2 %}	
-
+<script src="{% static 'js/howler.min.js'%}"></script>
+<script >
+var subida = new Howl({
+			  urls: ["{% static 'subida.mp3'%}"]
+			});
+var bajada = new Howl({
+			  urls: ["{% static 'bajada.mp3'%}"]
+			});
+</script>
 
 <!--
 	<div style="display: none;" id="profile-throbber" class="profile-throbber popup">
@@ -36,6 +44,12 @@
 		</div>
 	</div>
 	para usar el loading $("#profile-throbber").show();$("#hover").show(); -->
+
+<style>
+	.tipsy{
+		width:250px;
+	}
+</style>
 
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
@@ -99,48 +113,51 @@
     	</div>
     </div>
 
-	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluacion</button></div>
+	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()">Nueva Evaluación</button></div>
 	<div id="contenido_a_mostrar"  style="display:none;">
 		<div id="inputs" align="left">
-			<select id="comboBox" style="margin:10px;" onChange="fillParameters(this.value)">
+			<p class="label_input"><strong>Pauta</strong></p>
+			<select id="comboBox" class="skill_search" onChange="fillParameters(this.value)">
 				<OPTION VALUE=0>Seleccionar Pauta</OPTION>
 				{% for config in assesment_configs %}
 					<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>
 				{% endfor %}
 			</select>
 			<form action="" method="post" id='formJson'>{% csrf_token %}
-				<p class="label_input"><strong>Nombre Configuracion</strong></p>
-				<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuracion"/>
-				<p class="label_input"><strong>Nota Minima</strong></p>
-				<input name="nota_minima" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota minima"/>
-				<p class="label_input"><strong>Nota Maxima</strong></p>
-				<input name="nota_maxima" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota maxima"/>
+				<p class="label_input"><strong>Nombre Configuración</strong></p>
+				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuración"/>
+				<p class="label_input"><strong>Nota Mínima</strong></p>
+				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
+				<p class="label_input"><strong>Nota Máxima</strong></p>
+				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
+				<p class="label_input"><strong>Nota Aprovacion</strong></p>
+				<input name="nota_aprovacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprovacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprovacion"/>
 				<p class="label_input"><strong>Fecha Inicio</strong></p>
-				<input name="fecha_inicio" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
-				<p class="label_input"><strong>Fecha Termino</strong></p>
-				<input name="fecha_termino" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha termino"/>
+				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
+				<p class="label_input"><strong>Fecha Término</strong></p>
+				<input name="fecha_termino" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
 				<input name="input_id_config" id="input_id_config" style="display:none;">
 				<input name="input_kaid" id="input_kaid" style="display:none;">
 				<input name="input_id_assesment" id="input_id_assesment" style="display:none;">
 				<input name="input_id_class" id="input_id_class" style="display:none;">
 			</form>
 		</div>
-		<div class="parametros" id="parametros"><strong>Parametros</strong></div>
+		<div class="parametros" id="parametros"><strong>Parámetros</strong></div>
 		<div class="skills" id="skills" align="left"><strong>Skills</strong></div>
 		<div>
 			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Evaluados</strong></div>	
 			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
 		</div>
-	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow4b.png'%}" onClick="EvaluarTodos()"></div>
+	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
 	    <div>
 			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes Evaluados</strong></div>	
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 		</div>
-		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow4a.png'%}" onClick="noEvaluarTodos()"></div>
+		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div align="center" style="padding-left:400px">
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluacion"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="muestra_oculta('contenido_a_mostrar')" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="$('#contenido_a_mostrar').toggle('blind',1000);bajada.play()" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
 
@@ -291,7 +308,7 @@
 
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
+    	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobación: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje máximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota máxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota mínima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
     	var index = i+1;
     	for (var j=0;j<data[i+1].length;j++){
@@ -347,7 +364,7 @@
         .attr('id','studentsDashboard')
         .style('width', '99%');
         
-    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluacion{% endfor %}')
+    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluación{% endfor %}')
 
     // create table header
     table.append('thead').append('tr')
@@ -454,18 +471,12 @@
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	var number_class_id=json["assesments"][i]["id"];
-    	var date = new Date();
-    	//console.log(date);
-    	//console.log("end_date: "+json["assesments"][i]["end_date"]);
-    	today = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-    	//console.log("hoy: "+today)
-    	todayDate = new Date(Date.parse(today))
+    	var todayDate = new Date();
     	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
     	endDate = endDate.getTime() + 97200000
     	endDate = new Date(endDate)
 		
     	if (todayDate<endDate){
-    		//console.log("NO MOSTRAR EDITAR");
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
@@ -818,8 +829,8 @@
 	    var tiempos_skill = tbody.selectAll('.skills_time')
 	    	.append("svg")
 	    	.attr("class","skills_time")
-	    	.style("width","120")
-	    	.style("height","30");
+	    	.attr("width","120")
+	    	.attr("height","30");
 	    tiempos_skill
 	    	.append("rect")
 	    	.attr("class","skills_time")
@@ -854,8 +865,8 @@
 	    var tiempos_video = tbody.selectAll(".videos_time")
 	    	.append("svg")
 	    	.attr("class","videos_time")
-	    	.style("width","120")
-	    	.style("height","30")
+	    	.attr("width","120")
+	    	.attr("height","30")
 	    tiempos_video
 	    	.append("rect")
 	    	.attr("class","videos_time")
@@ -890,8 +901,8 @@
 	    var correct_incorrect = tbody.selectAll(".exercises")
 	    	.append("svg")
 	    	.attr("class","exercises")
-	    	.style("width","120")
-	    	.style("height","30");
+	    	.attr("width","120")
+	    	.attr("height","30");
 	    
 	    var incorrectos = correct_incorrect.append("rect")
 	    	  .attr("class","incorrect")
@@ -977,8 +988,8 @@
 	    var skill_levels = tbody.selectAll(".skills_level")
     	.append("svg")
     	.attr("class","skills_level")
-    	.style("width","120px")
-    	.style("height","15px")
+    	.attr("width","120px")
+    	.attr("height","15px")
 		skill_levels.selectAll('rect')
 		      .data(function(d,i){
 		    	  var skills_array=[];
@@ -1079,8 +1090,8 @@
     	var assesments_svg = tbody.selectAll("td.assesment"+json["assesments"][i]["id"]).attr("class","assesment assesment"+json["assesments"][i]["id"])
 	    	.append("svg")
 	    	.attr("class","assesment assesment"+json["assesments"][i]["id"])
-	    	.style("width",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);})
-    		.style("height",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);});
+	    	.attr("width",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);})
+    		.attr("height",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);});
 		
     	assesments_svg.append("circle")
     		.attr("class","assesment assesment"+json["assesments"][i]["id"])
@@ -1211,8 +1222,8 @@
     	var recommendations = tbody.selectAll('.recommendations')
     							.append("svg")
     							.attr("class","recommendations")
-    							.style("width","80")
-    							.style("height",height);
+    							.attr("width","80")
+    							.attr("height",height);
     	var g_rec = recommendations.append('g').attr("class","recommendations")
     		.attr('transform', "translate(" + 40 + ", " + (height-5) + ")")
     		.attr("id_student",function(d,i){
@@ -1498,16 +1509,10 @@
 	        posYCont = $('#'+e.target.id).position().top;
 
 	    }
-	    function muestra_oculta(id){
-			if (document.getElementById){ //se obtiene el id
-				var el = document.getElementById(id); //se define la variable "el" igual a nuestro div
-				el.style.display = (el.style.display == 'none') ? 'block' : 'none'; //damos un atributo display:none que oculta el div
-		}
-		}
 		
 		function fillParameters(id) {
 			$("#parametros").empty();
-			$("#parametros").append("<div><strong>Parametros</strong></div>");
+			$("#parametros").append("<div><strong>Parámetros</strong></div>");
 			{% for config in assesment_configs %}
 				if ({{config.id_assesment_config}}== id){
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprovacion: {{ config.approval_percentage }}</div>");
@@ -1557,8 +1562,7 @@
 						Loading();
 					}
 				});
-			}	
-
+			}
 		}
 		function validarRealizarEvaluacion(){
 			var openDiv = document.getElementById('Evaluados'); 
@@ -1569,38 +1573,62 @@
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
-
+			var startDate = new Date(date_start);
+			var endDate = new Date(date_end);
+			todayDate = new Date();
+			flag = true;
 			if (cuadritos.length==0){
-				alert('No hay estudiantes evaluados')
-				return false;
+				$('#Evaluados').css("border", "1px solid #C30202");
+				//$('#Evaluados').tipsy({gravity: 'w', fallback: "Arrastre aqui a los estudiantes que desee evaluar", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#Evaluados').css("border", "1px solid #D9D9D9");
 			}
-			else if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
-				alert('Falta el nombre de la configuracion')
-				return false;
+			if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
+				$('#input_nombre').css('color', '#C30202');
+			    //$('#input_nombre').tipsy({gravity: 'w', fallback: "El nombre debe contener letras", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#input_nombre').css('color', '#000000');
+			    //$('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
 			}
-			else if(grade_min == null || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
-				alert('nota minima no valida')
-				return false;
+			if(grade_min == null || grade_min<0 || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
+				$('#nota_minima').css('color', '#C30202');
+			    //$('#nota_minima').tipsy({gravity: 'w', fallback: "La nota minima debe ser un numero positivo", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#nota_minima').css('color', '#000000');
 			}
-			else if(grade_max == null || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
-				alert('nota maxima no valida')
-				return false;
+			if(grade_max == null || grade_min>grade_max || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
+				$('#nota_maxima').css('color', '#C30202');
+			    //$('#nota_maxima').tipsy({gravity: 'w', fallback: "La nota maxima debe ser mayor que la nota minima", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#nota_maxima').css('color', '#000000');
 			}
-			else if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
-				alert('fecha de inicio no valida')
-				return false;
+			if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
+				$('#fecha_inicio').css('color', '#C30202');
+			    //$('#fecha_inicio').tipsy({gravity: 'w', fallback: "Debe haber una fecha de inicio", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#fecha_inicio').css('color', '#000000');
 			}
-			else if(date_end == null || date_end.length == 0 || /^\s+$/.test(date_end)) {
-				alert('fecha de termino no valida')
-				return false;
+			if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
+				$('#fecha_termino').css('color', '#C30202');
+			    //$('#fecha_termino').tipsy({gravity: 'w',fallback: "La fecha de termino debe ser mayor que la de inicio y mayor a el dia de hoy", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#fecha_termino').css('color', '#000000');
 			}
-			else if( combo_box == null || combo_box == 0 ) {
-				alert('seleccione una configuracion')
-				return false;
+			if( combo_box == null || combo_box == 0 ) {
+				$('#comboBox').css('color', '#C30202');
+				//$('#comboBox').tipsy({gravity: 'w', fallback: "debe seleccionar una pauta", opacity: 0.8});
+				flag = false;
+			}else{
+				$('#comboBox').css('color', '#000000');
 			}
-			return true;
+			return flag;
 		}
-
 		function modificarNota(){
 			var comentario = $('#textarea_coment').val()
 			$("input[name='input_comment']").val(comentario)
@@ -1616,7 +1644,9 @@
 			$('#popup').fadeOut();
 		}
 		function nuevaEvaluacion(){
-			muestra_oculta('contenido_a_mostrar')
+			
+			subida.play();
+			$("#contenido_a_mostrar").toggle("blind",1000);
 			$('#button_realizar').show()
 			$('#button_editar').hide()
 			$('#comboBox').prop('disabled', false);
@@ -1626,10 +1656,11 @@
 			$("input[name='fecha_termino']").val("");
 			$("input[name='nota_maxima']").val("");
 			$("input[name='nota_minima']").val("");
+			$("input[name='nota_aprovacion']").val("");
 			noEvaluarTodos();
 		}
 		function editarAssesment(id_assesment){
-			$('#contenido_a_mostrar').show();		
+			$("#contenido_a_mostrar").toggle("blind",1000);		
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
@@ -1642,6 +1673,7 @@
 					$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
 					$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
 					$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
+					$("input[name='nota_aprovacion']").val(json_assesment[0]['fields']['approval_grade']);
 					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 					$('#comboBox').prop('disabled', true);
 				}
@@ -1679,7 +1711,7 @@
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
-			if (cuadritos.length>0){
+			if (validarRealizarEvaluacion()){
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1695,8 +1727,6 @@
 					}
 				});
 
-			}else{
-				alert("no hay gente a evaluar");
 			}
 
 		}
@@ -1728,9 +1758,9 @@
 			student=assesments[aux]['assesment_student']
 			$('#resumen_data').append("<p> Nombre: "+assesments[aux]['name']+"</p>");
 			$('#resumen_data').append("<p> Inicio: "+assesments[aux]['start_date']+"</p>");
-			$('#resumen_data').append("<p> Termino: "+assesments[aux]['end_date']+"</p>");
-			$('#resumen_data').append("<p> Nota Maxima: "+assesments[aux]['max_grade']+"</p>");
-			$('#resumen_data').append("<p> Nota Minima: "+assesments[aux]['min_grade']+"</p>");
+			$('#resumen_data').append("<p> Término: "+assesments[aux]['end_date']+"</p>");
+			$('#resumen_data').append("<p> Nota Máxima: "+assesments[aux]['max_grade']+"</p>");
+			$('#resumen_data').append("<p> Nota Mínima: "+assesments[aux]['min_grade']+"</p>");
 			$("#resumen_data").append("<p>Alumnos Participantes: "+student.length+"</p>");
 						
 			$.ajax({
@@ -1944,7 +1974,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     }
     else
     {
-      document.getElementById(myDiv).innerHTML = "Evaluacion Lista";
+      document.getElementById(myDiv).innerHTML = "Evaluación Lista";
     }
   }
 

@@ -138,17 +138,23 @@ document.getElementById(elementoArrastrado).style.top = y + "px";
 };       
 function crearSubGrupoAvanzados() {
 
-   $("#Avanzados").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Avanzados<a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivAvanzados(this)'>[x]</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#Avanzados").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivAvanzados(this)'>x</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
+   fillComboBox();
+   $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
 };
 function crearSubGrupoIntermedios() {
-   $("#Intermedios").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' >SubGrupo Intermedios<a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivIntermedios(this)'>[x]</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#Intermedios").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
+   fillComboBox();
+   $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
 };
 function crearSubGrupoReforzamiento() {
 
-   $("#Reforzamiento").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'>SubGrupo Reforzamiento<a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar' onclick='javascript:closeThisDivReforzamiento(this)'>[x]</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#Reforzamiento").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
+   fillComboBox();
+   $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
 };
 function closeThisDivAvanzados(div) { 
 var openDiv = document.getElementsByName(div.name); 
@@ -182,39 +188,44 @@ parentDiv.removeChild(openDiv[0]);
 };
 
        
-       function makeGroups() {
-  $.ajax({
-   url: "{% url 'groups:getGroups' id_class %}",
-   type: "POST",
-   data: $("#formJson").serialize(),
-   success: function (response) {
-   
-$('.cuadradito').remove();
-      var student = JSON.parse(response);
-      for(var i=0;i<student.length;i++){
-      
-if(student[i]['type']=='Reforzamiento'){
-      
-$("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-}
-      
-if(student[i]['type']=='Intermedios'){
-      
-$("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-}
-      
-if(student[i]['type']=='Avanzados'){
-      
-$("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
-      
-} 
-      }
-      fillComboBox()
-      alert('Agrupacion realizada correctamente.');
-   }
-});
+function makeGroups() {
+  if($("input[name='skills']").val().length==2){
+    alert('No hay habilidades seleccionadas.')
+  }else{
+    $.ajax({
+       url: "{% url 'groups:getGroups' id_class %}",
+       type: "POST",
+       data: $("#formJson").serialize(),
+       success: function (response) {
+       
+            $('.cuadradito').remove();
+                  var student = JSON.parse(response);
+                  for(var i=0;i<student.length;i++){
+                  
+            if(student[i]['type']=='Reforzamiento'){
+                  
+            $("#Reforzamiento").append("<div title="+student[i]['name']+" class='cuadradito' name='Reforzamiento' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            }
+                  
+            if(student[i]['type']=='Intermedios'){
+                  
+            $("#Intermedios").append("<div title="+student[i]['name']+" class='cuadradito' name='Intermedios' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            }
+                  
+            if(student[i]['type']=='Avanzados'){
+                  
+            $("#Avanzados").append("<div title="+student[i]['name']+" class='cuadradito' name='Avanzados' id="+student[i]['kaid_student']+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+student[i]['name']+"</div>");
+                  
+            } 
+          }
+          fillComboBox()
+          alert('Agrupacion realizada correctamente.');
+       }
+    });
+  }
+  
 };
 function saveGroups(){
   //Funcion que guarda las agrupaciones.
@@ -281,6 +292,24 @@ h1{
   text-align: center;
   margin-bottom: 0%;
 }
+h2{
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+h3{
+  font-size: 17px;
+  margin-bottom: 0px;
+}
+h4{
+  font-size: 15px;
+  margin-bottom: 5px;
+  opacity: 0.8;
+}
+hr{
+  margin-bottom: 10px;
+  margin-top: -20px;
+  opacity: 0;
+}
    #content{
         width: 1200px;
         height: 450px;
@@ -327,28 +356,33 @@ color: #000000
   overflow: hidden;
 }
 .subGrupo {
-   background: #FFFFFF;
-   border: 1px solid #000000;
    border-radius: 3px;
    width: 170px;
    height: 140px;
-   padding: 0 0px 15px;
-   margin: 0px;
+   padding: 0 6px 15px;
+   margin-top: 10px;
    word-wrap: break-word;
    overflow: hidden;
    overflow-y: scroll;
    overflow-y: auto;
-   background: rgba(255, 255, 255, 0.2);
+   background: rgba(255, 255, 255, 0.6);
 }
-
+.nuevo_sub{
+  height: 30px;
+  line-height: 10px;
+  margin: 5px 0;
+  padding: 10px 24px;
+}
 #topictree{
 overflow-y: scroll;
-height: 371px;
+height: 363px;
 width:19%;
 padding: 10px;
 margin: 10px;
 float:left;
 text-align: left;
+border: 1px solid #D9D9D9;
+  border-radius: 5px;
 }
 #topictree_div{
 /*text-align: left;
@@ -356,6 +390,7 @@ height: 371px;*/
 text-align: center;
 padding: 10px;
 margin: 10px;
+
 }
 #skills{
   text-align: left;
@@ -366,11 +401,6 @@ margin: 10px;
 overflow-x: scroll;
 width: 100%%;
 height: 80px;
-}
-#more_contain{
-  /*width: 30%;*/
-  display:none;
-  float:right;
 }
 img:hover{
   border: 1px solid green;
@@ -391,6 +421,10 @@ img:hover{
 #makeButton{
   float:right;
   margin-right: 5px;
+}
+#newButton{
+  display:none;
+  float:right;
 }
 #name{
   float:right;
@@ -438,60 +472,88 @@ img:hover{
       }
       circle{
         cursor: pointer;
-        opacity: 1;
-        z-index: 1000;
-      }
-      circle[Attributes Style] {
-        z-index:1000;
       }
       
+select {
+      cursor: pointer;
+      width: 90%;
+    font-family: 'Proxima Nova Semibold','Helvetica','Corbel',sans-serif;
+    font-size: 13px;
+    position: relative;
+    -webkit-appearance: menulist;
+    box-sizing: border-box;
+    align-items: center;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    white-space: pre;
+    -webkit-rtl-ordering: logical;
+    color: black;
+    background-color: white;
+    cursor: default;
+    border: 1px solid;
+}
+select:not(:-internal-list-box) {
+    overflow: visible !important;
+}
+keygen, select, select[size="0"], select[size="1"] {
+    border-radius: 0px;
+    border-color: rgb(169, 169, 169);
+        background-color: rgba(255, 255, 255, 0.5);
+}
+
+.close{
+  position: relative;
+  opacity: 0.8;
+    z-index: 999999;
+    background: #9DB63B;
+    color: white;
+    right: 0px;
+    top: 1px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+    text-align: center;
+    font-size: 15px;
+    /* font-weight: bold; */
+    /* font-family: 'Arial Black', Arial, sans-serif; */
+    cursor: pointer;
+    box-shadow: 0 0 10px 0 #9DB63B;
+}
+.close:hover{
+  opacity: 1;
+}
+
+#box2000 > div
+{
+    -webkit-transition: width 0.2s ease; 
+    -moz-transition: width 0.2s ease; 
+    -o-transition: width 0.2s ease; 
+    -ms-transition: width 0.2s ease;     
+    transition: width 0.2s ease; 
+}
+#box2000 > div:hover
+{
+    width:120%!important;
+    cursor:pointer;
+}
+
+@-moz-document url-prefix(){
+  div.subGrupo select{
+    margin-top:20px;
+  }
+}
 	  </style>
 
 <br>
 <div class='main-content'>
-  <h1>Grupos</h1>
+
   <br>
-    <div id='content'>
-   
-       <div id="SinGrupo" name="SinGrupo" ondragover="return over(event)" ondrop="return drop(event)" ><ul>No agrupados</ul></div>
- 
-        <div id="Avanzados" name="Avanzados" ondragover="return over(event)" ondrop="return drop(event)"><ul>Avanzados</ul>
-        <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
-<OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
-</SELECT>
-<button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub'>nuevo sub-grupo</button>
-        </div>
- 
-       <div id="Intermedios" name="Intermedios" ondragover="return over(event)" ondrop="return drop(event)">Intermedios
-       
-<SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
-<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
-</SELECT>
-<button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub'>nuevo sub-grupo</button>
-       </div>
-       <div id="Reforzamiento" name="Reforzamiento" ondragover="return over(event)" ondrop="return drop(event)">Reforzamiento
-       
-<SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
-<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
-</SELECT>
-<button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub'>nuevo sub-grupo</button>
-       </div>
-<div class="input-wrapper" id="topictree_div">
-<input id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Busca temas y habilidades">
-<i class="icon-search"></i>
-<div id="topictree"></div>
-</div>
-<div id="skills"></div>
-    </div>
 
-
-<div id="buttons">
-  <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
-  <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Realizar Agrupacion' id='makeButton'>
-</div>
-
-<br>
-<h1>Linea de Tiempo</h1>
+<h1>Agrupaciones anteriores</h1>
   <div id='containerTimeLine'>
     <form action="" method="post" id='formJson'>{% csrf_token %}
        <input name="skills" type="hidden" value="[]">
@@ -501,10 +563,6 @@ img:hover{
        
   </form>
     <div id="hoverRes">
-      <div id='more_contain'>
-        <img src="{% static 'img/mas.png' %}" id='more' alt="Agregar agrupacion" height="20" width="20">
-      </div>
-      <!--<div class="coloredDiv"></div>-->
       <div id="name"></div>
       <div id="scrolled_date" style="cursor:pointer"></div>
       
@@ -514,7 +572,49 @@ img:hover{
 
     <br>
   </div>
+
+  <h1>Grupos</h1>
   <br>
+    <div id='content'>
+       <div id="SinGrupo" name="SinGrupo" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>No agrupados</h3></ul></div>
+ 
+        <div id="Avanzados" name="Avanzados" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>Avanzados</h3></ul>
+        <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
+<OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
+</SELECT>
+<button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+        </div>
+ 
+       <div id="Intermedios" name="Intermedios" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><h3>Intermedios</h3>
+       
+<SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
+<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
+</SELECT>
+<button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+       </div>
+       <div id="Reforzamiento" name="Reforzamiento" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><h3>Reforzamiento</h3>
+       
+<SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
+<OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
+</SELECT>
+<button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+       </div>
+<div class="input-wrapper" id="topictree_div">
+  <input id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Busca temas y habilidades">
+  <i class="icon-search"></i>
+  <div id="topictree" class="scroll"></div>
+</div>
+<div id="skills" class="scroll"></div>
+</div>
+
+
+<div id="buttons">
+  <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
+  <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Agrupación Automatica' id='makeButton'>
+  <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupación</button>
+</div>
+
+
 
 </div>
 
@@ -616,12 +716,15 @@ window.onload = function() {
 			times.label = master_groups[i]['fields']['date'];
 			times.id = master_groups[i]['pk'];
 			testData.push(times);
-      console.log(testData[i].times[0].starting_time);
       //date = new Date(testData[i].times[0].starting_time);
       date = new Date(testData[i].label);
-      console.log(date);
 		};
+
 		var width = testData.length*100;
+    if (width<1158){
+      width=1158;
+    }
+
 
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.
@@ -670,28 +773,28 @@ window.onload = function() {
             type = "#"+groups[i]['fields']['type'];//type grupo
             tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
             if (type == '#Avanzados'){
-              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' >"+
-                $(tutor).attr('title')+"</div>");
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Avanzados<h3><h4>Tutor: "+
+                $(tutor).attr('title')+"</h4></div>");
             }
             if (type == '#Intermedios'){
-              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' >"
-                +$(tutor).attr('title')+"</div>");
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Intermedios<h3><h4>Tutor: "
+                +$(tutor).attr('title')+"</h4></div>");
             }
             if (type == '#Reforzamiento'){
-              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' >"
-                +$(tutor).attr('title')+"</div>");
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Reforzamiento<h3><h4>Tutor: "
+                +$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,22) == 'SubGrupoReforzamiento'){
-              $("#Reforzamiento").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"'>"+$(tutor).attr('title')+"</div>");
+              $("#Reforzamiento").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,20) == 'SubGrupoIntermedios'){
-              $("#Intermedios").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' >"+$(tutor).attr('title')+"</div>");
+              $("#Intermedios").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              $("#Avanzados").append("<br><br><div class='"+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' >"+$(tutor).attr('title')+"</div>");
+              $("#Avanzados").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
 					}
 			   }
@@ -722,18 +825,21 @@ window.onload = function() {
             skills = JSON.parse(response);
             $('#skills').empty();
             $('#skills').css('display','inline');
-            for(var i=0;i<skills.length;i++){
-              $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
-          }
+            if(skills.length==0){
+              $('#skills').append("<li>No hay Habilidades asociadas</li>");
+            }
+            else{
+              for(var i=0;i<skills.length;i++){
+                $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
+              }
+            }
          }
         });
         $(".cuadradito").removeAttr("draggable");
         $('.nuevo_sub').remove()
-        $('#more_contain').css('display', 'inline');
-        $('#more_contain').on("click","a,img", function (e) {
-            e.preventDefault();
-            location.reload();
-        });
+        $('#ascrail2004').remove()
+        $('#ascrail2004-hr').remove()
+        $('#newButton').show();
       })
       .scroll(function (x, scale) {
       })
@@ -747,6 +853,18 @@ window.onload = function() {
   d3.selectAll("circle").each(function(d){
     this.parentNode.appendChild(this);
   });
+  $("#timeline3").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9' });
 }
+
+function newGroups() {
+    location.reload();
+};
+</script>
+
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript"> 
+    $(document).ready(function () {
+    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' })
+    });
 </script>
 {% endblock %}

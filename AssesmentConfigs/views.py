@@ -36,8 +36,11 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
 
     json_array=[]
     for assesment_config in assesment_configs:
-        print assesment_config.id_assesment_config
-        assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config)
+        #print assesment_config.id_assesment_config
+        assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
+       #print assesment_skills
+        skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
+        #print skills
         config_json={}
         config_json["id_assesment_config"]=assesment_config.id_assesment_config
         config_json["approval_percentage"]=assesment_config.approval_percentage
@@ -49,8 +52,10 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["importance_completed_rec"]=assesment_config.importance_completed_rec
         config_json["applied"]=assesment_config.applied
         config_json["assesment_skills"]=[]
-        for assesment_skill in assesment_skills:
-            config_json["assesment_skills"].append(assesment_skill.id_skill_name_id)
+        config_json["assesment_skills_spanish"]=[]
+        for i in range(len(assesment_skills)):
+            config_json["assesment_skills"].append(assesment_skills[i])
+            config_json["assesment_skills_spanish"].append(skills[i])
         #print config_json["assesment_skills"]
         json_array.append(config_json)
     
@@ -63,10 +68,25 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
 def editAssesmentConfig(request,id_assesment_config):
     print "id__config:"
     print id_assesment_config
+    
     if request.method == 'POST':
         args = request.POST
-        print args
-    return HttpResponse("editado jeje")
+        aux= args['forloop']
+
+        assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
+
+        assesment_config.name=args['name']
+        assesment_config.approval_percentage=args['approval_percentage']
+        assesment_config.importance_skill_level=args['importance_skill_level'+aux]
+        assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
+
+        assesment_config.kaid_teacher_id=2
+        assesment_config.top_score=0
+        assesment_config.id_subject_name_id='math'
+        assesment_config.applied=False
+
+        assesment_config.save()
+    return HttpResponse("Pauta editada correctamente")
 
 
 def deleteAssesmentConfig(request,id_assesment_config):
@@ -79,6 +99,10 @@ def newAssesmentConfig(request):
     if request.method == 'POST':
         args = request.POST
         id = args['id']
+        if not (args['importance_skill_level'+id]):
+            print "wena shoro"
+        else:
+            print "ahora si shoroooo"
         if (args['name'] and args['approval_percentage'] and args['importance_skill_level'+id] and args['importance_completed_rec'+id] and eval(args['skills'+id])):
             skills_selected = eval(args['skills'+id])
             teacher=2

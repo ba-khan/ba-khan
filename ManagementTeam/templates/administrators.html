@@ -76,7 +76,7 @@ input{
 
 		// we build and load the metadata in Javascript
 		administratorGrid.load({ metadata: [
-			{ name: "admin_name", datatype: "html", editable: true },
+			{ name: "admin_name", datatype: "string", editable: true },
 			{ name: "admin_email", datatype: "email", editable: true },
 			{ name: "admin_phone", datatype: "integer", editable: true },
 			{ name: "action", datatype: "html", editable: false }
@@ -106,21 +106,15 @@ input{
 <div class="container">
 <div class="main-content">
 
-
-
-
-
-
-
 <br>
-<h1 style="text-align:center;">Equipo de Gestion</h1>
+<h1 style="text-align:center;">Equipo de Gestión</h1>
 <label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
 <br><br>
 <table id="adminGrid" class="testgrid">
 	<tr>
 		<th>Nombre</th>
 		<th>E-Mail</th>
-		<th>Telefono</th>
+		<th>Teléfono</th>
 		<th>Acciones</th>
 	</tr>
 	{% for admin in administrators %}
@@ -168,7 +162,7 @@ function saveData(id){
 	tr = document.getElementById("R"+id);
 	invalids = tr.getElementsByClassName("invalid").length;
 	if (invalids>0){
-		response = "Campos invalidos";
+		response = "Campos inválidos";
 		$("#popup").append("<p class='response'>"+response+"</p>");
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
@@ -176,7 +170,7 @@ function saveData(id){
 	else{
 		$('.response').remove();
 		$('.question').remove();
-		$("#popup").append("<p class='question'>Desea guardar cambios de Administrador?</p>");
+		$("#popup").append("<p class='question'>¿Desea guardar cambios de Administrador?</p>");
 		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Guardar</a>");
 		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
 		$("#hover").fadeIn().css('display', '');
@@ -190,14 +184,14 @@ function confirmSave(answer,id){
 		tr = $(document.getElementById("R"+id));
 		var tdJson = new Object();
 
-				tdJson.adminName= tr["context"]["children"][0].innerText;
-				tdJson.adminEmail= tr["context"]["children"][1].innerText;
-				tdJson.adminPhone= tr["context"]["children"][2].innerText;
+				tdJson.adminName= tr["context"]["children"][0].textContent;
+				tdJson.adminEmail= tr["context"]["children"][1].textContent;
+				tdJson.adminPhone= tr["context"]["children"][2].textContent;
 		
 		$.ajax({
 			url: "{% url 'ManagementTeam:guardar_administrador' %}",
 			type: "POST",
-			contentType: 'application/json; charset=utf-8',
+			//contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify(tdJson),
 				success: function(response){
 					$("#acceptSave").remove();
@@ -238,7 +232,7 @@ function deleteData(id){
 	tr = document.getElementById("R"+id);
 	invalids = tr.getElementsByClassName("invalid").length;
 	if (invalids>0){
-		response = "Campos invalidos";
+		response = "Campos inválidos";
 		$("#popup").append("<p class='response'>"+response+"</p>");
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
@@ -246,7 +240,7 @@ function deleteData(id){
 	else{
 		$('.response').remove();
 		$('.question').remove();
-		$("#popup").append("<p class='question'>Desea eliminar Administrador?</p>");
+		$("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
 		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Eliminar</a>");
 		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
 		$("#hover").fadeIn().css('display', '');
@@ -261,9 +255,9 @@ function confirmDelete(answer,id){
 		tr = $(document.getElementById("R"+id));
 		var tdJson = new Object();
 
-				tdJson.adminName= tr["context"]["children"][0].innerText;
-				tdJson.adminEmail= tr["context"]["children"][1].innerText;
-				tdJson.adminPhone= tr["context"]["children"][2].innerText;
+				tdJson.adminName= tr["context"]["children"][0].textContent;
+				tdJson.adminEmail= tr["context"]["children"][1].textContent;
+				tdJson.adminPhone= tr["context"]["children"][2].textContent;
 		
 		$.ajax({
 			url: "{% url 'ManagementTeam:eliminar_administrador' %}",

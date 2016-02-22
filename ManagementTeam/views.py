@@ -34,26 +34,30 @@ def getAdministrators(request):
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def saveAdministrator(request):
-    #print "##################################  GUARDANDO  ##########################################"
     user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
-            #print "##################################  json_str  ##########################################"
-            #print json_str
-
             try:
+
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
-                #print "existe admin"
+                print "mozilla que sucede"
+                userApp = User.objects.get(email=admin.email)
+                group = Group.objects.get(name='administrators')
+                group.user_set.remove(userApp)
+
                 if (json_str["adminPhone"]):
                     admin.phone=json_str["adminPhone"]
                 else:
                     admin.phone=None
                 if (json_str["adminEmail"]):
                     admin.email=json_str["adminEmail"]
-                    user = User.objects.get(email=admin.email)
-                    group = Group.objects.get(name='administrators')
-                    user.groups.add(group)
+                    try:
+                        userApp = User.objects.get(email=admin.email)
+                        group = Group.objects.get(name='administrators')
+                        group.user_set.add(userApp)
+                    except:
+                        print 'no existe usuario'
                 else:
                     admin.email=""
                 admin.id_institution_id = user.id_institution_id
@@ -68,9 +72,12 @@ def saveAdministrator(request):
                         admin.phone=None
                     if (json_str["adminEmail"]):
                         admin.email=json_str["adminEmail"]
-                        user = User.objects.get(email=admin.email)
-                        group = Group.objects.get(name='administrators')
-                        user.groups.add(group)
+                        try:
+                            userApp = User.objects.get(email=admin.email)
+                            group = Group.objects.get(name='administrators')
+                            group.user_set.add(userApp)
+                        except:
+                            print 'no existe usuario'
                     else:
                         admin.email=""
                     admin.id_institution_id = user.id_institution_id
@@ -93,6 +100,9 @@ def deleteAdministrator(request):
 
             try:
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
+                userApp = User.objects.get(email=admin.email)
+                group = Group.objects.get(name='administrators')
+                group.user_set.remove(userApp)
                 admin.delete()
                 return HttpResponse("Administrador eliminado correctamente")
             except:
