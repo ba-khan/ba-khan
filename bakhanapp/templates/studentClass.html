@@ -122,6 +122,8 @@
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
 				<p class="label_input"><strong>Nota Máxima</strong></p>
 				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
+				<p class="label_input"><strong>Nota Aprovacion</strong></p>
+				<input name="nota_aprovacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprovacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
 				<p class="label_input"><strong>Fecha Inicio</strong></p>
 				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 				<p class="label_input"><strong>Fecha Término</strong></p>
@@ -1624,6 +1626,7 @@
 					$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
 					$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
 					$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
+					$("input[name='nota_aprovacion']").val(json_assesment[0]['fields']['approval_grade']);
 					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 					$('#comboBox').prop('disabled', true);
 				}

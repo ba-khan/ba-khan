@@ -90,6 +90,7 @@ def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
         get_assesment = Assesment.objects.filter(id_assesment=id_assesment)
         data = serializers.serialize('json', get_assesment)
         struct = json.loads(data)
+        print struct
         assesment_data = json.dumps(struct)
         
     return HttpResponse(assesment_data)
@@ -102,6 +103,7 @@ def updateAssesment(request): #modifica una evaluacion
         fecha2=args['fecha_termino']
         nota1=eval(args['nota_minima'])
         nota2=eval(args['nota_maxima'])
+        nota3=eval(args['nota_aprovacion'])
         id_config=(args['input_id_config'])
         nombre_config=args['input_nombre']
         students=eval(args['input_kaid'])
@@ -113,6 +115,7 @@ def updateAssesment(request): #modifica una evaluacion
         update_Assesment.id_assesment_conf_id=id_config
         update_Assesment.min_grade=nota1
         update_Assesment.max_grade=nota2
+        update_Assesment.approval_grade=nota3
         update_Assesment.name=nombre_config
         update_Assesment.id_class_id=id_class
         update_Assesment.save()
@@ -148,6 +151,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         fecha2=args['fecha_termino']
         nota1=eval(args['nota_minima'])
         nota2=eval(args['nota_maxima'])
+        nota3=eval(args['nota_aprovacion'])
         id_config=(args['input_id_config'])
         nombre_config=args['input_nombre']
         students=eval(args['input_kaid'])
@@ -158,6 +162,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
                                id_assesment_conf_id=id_config,
                                min_grade=nota1,
                                max_grade=nota2,
+                               approval_grade=nota3,
                                name=nombre_config,
                                id_class_id=id_class
                                )
