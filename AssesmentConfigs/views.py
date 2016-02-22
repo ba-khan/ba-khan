@@ -68,9 +68,24 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
 def editAssesmentConfig(request,id_assesment_config):
     print "id__config:"
     print id_assesment_config
+    
     if request.method == 'POST':
         args = request.POST
-        print args
+        aux= args['forloop']
+
+        assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
+
+        assesment_config.name=args['name']
+        assesment_config.approval_percentage=args['approval_percentage']
+        assesment_config.importance_skill_level=args['importance_skill_level'+aux]
+        assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
+
+        assesment_config.kaid_teacher_id=2
+        assesment_config.top_score=0
+        assesment_config.id_subject_name_id='math'
+        assesment_config.applied=False
+
+        assesment_config.save()
     return HttpResponse("Pauta editada correctamente")
 
 

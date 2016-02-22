@@ -177,6 +177,7 @@ function onSlide(ui,id) {
 			<br>
 			<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100"  onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" disabled><br>
 			<br>
+			<input name="forloop" value="{{ forloop.counter }}" type="hidden">
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
 	        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
@@ -205,6 +206,7 @@ function onSlide(ui,id) {
 		{% if config.applied %}
 
 			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
+			</form>
 	</div>
 	
 	<div id="skills">
@@ -417,7 +419,7 @@ function confirmEdit(answer,id){
 		$.ajax({
 			url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
 			type: "POST",
-			data: $("#form".concat(id)).serialize(),
+			data: $("#form"+id).serialize(),
 				success: function(response){
 					$('.response').remove()
 					$("#hover").fadeIn().css('display', '');
