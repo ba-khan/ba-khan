@@ -37,6 +37,12 @@
 	</div>
 	para usar el loading $("#profile-throbber").show();$("#hover").show(); -->
 
+<style>
+	.tipsy{
+		width:250px;
+	}
+</style>
+
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
     	<div style="align:left;">
@@ -449,18 +455,12 @@
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	var number_class_id=json["assesments"][i]["id"];
-    	var date = new Date();
-    	//console.log(date);
-    	//console.log("end_date: "+json["assesments"][i]["end_date"]);
-    	today = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-    	//console.log("hoy: "+today)
-    	todayDate = new Date(Date.parse(today))
+    	var todayDate = new Date();
     	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
     	endDate = endDate.getTime() + 97200000
     	endDate = new Date(endDate)
 		
     	if (todayDate<endDate){
-    		//console.log("NO MOSTRAR EDITAR");
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
