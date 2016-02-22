@@ -2,7 +2,8 @@ from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Sum,Count,Avg
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill,Video_Playing,Student,Tutor
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill
+from bakhanapp.models import Video_Playing,Student,Tutor,Administrator,Institution,Class
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 import unicodedata
@@ -14,7 +15,8 @@ class Command(BaseCommand):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #lastDate = date.today() - timedelta(days=1)
         lastDate = date.today() - timedelta(days=16)
-        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name','max_grade','min_grade')
+        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name',
+            'max_grade','min_grade','id_class_id')
         for assesment in assesments:
             skills = getSkillAssesment(assesment['id_assesment_conf_id'])
             assesmentConfig = Assesment_Config.objects.get(id_assesment_config=assesment['id_assesment_conf_id'])#.values('approval_percentage','top_score','importance_skill_level','importance_completed_rec')
@@ -31,16 +33,18 @@ class Command(BaseCommand):
             totalStudents = len(grades) 
             avgVideoTime = grades.aggregate(Avg('video_time'))
             avgExcerciceTime = grades.aggregate(Avg('excercice_time'))
-
-            
-
-
             content = htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
                 avgExcerciceTime['excercice_time__avg'],avgVideoTime['video_time__avg'],totalStudents,idAssesment)
-            sendMail('javierperezferrada@gmail.com',content)
-
-
-
+            administrators = Administrator.objects.filter(id_institution_id=1)
+            id_institution = Class.objects.get(id_class=assesment['id_class_id'])
+            #id_institution = Institution.objects.get(id_institution=id_class['id_institution_id']).values('id_institution')
+            print id_institution.id_institution_id
+            administrators = Administrator.objects.filter(id_institution_id=id_institution.id_institution_id)
+            print administrators
+            for admin in administrators:
+                content = content.replace("$$nameAdmin$$",str(admin.name))
+                #sendMail('javierperezferrada@gmail.com',content)
+                sendMail(admin.email,content)
 
 def sendMail(email,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     subject = 'Ha finalizado una Evaluacion'
@@ -71,11 +75,7 @@ def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercent
     contenido = contenido.replace("$$avgExcerciceTime$$",str(avgExcerciceTime))
     contenido = contenido.replace("$$avgVideoTime$$",str(avgVideoTime))
     contenido = contenido.replace("$$ejercicios$$",str(skills))
-
-    
-
     rUnit = maxGrade/float(10)
-    #print rUnit,maxGrade
     aux = 0
     qMax = 0
     grades = Grade
