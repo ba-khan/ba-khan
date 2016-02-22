@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Sum,Count
+from django.db.models import Sum,Count,Avg
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill,Video_Playing,Student,Tutor
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
@@ -12,14 +12,29 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
-        lastDate = date.today() - timedelta(days=1)
-        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id')
+        #lastDate = date.today() - timedelta(days=1)
+        lastDate = date.today() - timedelta(days=3)
+        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name','max_grade','min_grade')
         for assesment in assesments:
             skills = getSkillAssesment(assesment['id_assesment_conf_id'])
-            conf = assesment['id_assesment_conf_id']
-            
-            content = htmlTemplate(skills)
+            assesmentConfig = Assesment_Config.objects.get(id_assesment_config=assesment['id_assesment_conf_id'])#.values('approval_percentage','top_score','importance_skill_level','importance_completed_rec')
+            startDate = assesment['start_date']
+            endDate = assesment['end_date']
+            name = assesment['name']
+            minGrade = assesment['min_grade']
+            maxGrade = assesment['max_grade']
+            approvalPercentage = assesmentConfig.approval_percentage
+            importanceSkillLevel = assesmentConfig.importance_skill_level
+            importanceRecomended = assesmentConfig.importance_completed_rec
+
+            grades = Grade.objects.filter(id_assesment_id=assesment['id_assesment'])
+            totalStudents = len(grades) 
+            avgVideoTime = grades.aggregate(Avg('video_time'))
+            avgExcerciceTime = grades.aggregate(Avg('excercice_time'))
+            content = htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
+                avgExcerciceTime['excercice_time__avg'],avgVideoTime['video_time__avg'],totalStudents)
             sendMail('javierperezferrada@gmail.com',content)
+
 
 
 
@@ -35,19 +50,22 @@ def sendMail(email,contenido): #recibe los datos iniciales y envia un  mail a ca
     msg.send()
     return ()
 
-def htmlTemplate(skills):
+def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,avgExcerciceTime,
+    avgVideoTime,totalStudents):
     archivo=open("C:/Users/LACLO2013_B/Desktop/ba-khan/static/plantillas/resumen_assesment_mail.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$grade$$","{0:.1f}".format(2.45))
-    #contenido = contenido.replace("$$skills$$",str(points))
-    #contenido = contenido.replace("$$video_time$$",str(video_time))
-    #contenido = contenido.replace("$$corrects$$",str(corrects))
-    #contenido = contenido.replace("$$incorrects$$",str(incorrects))
-    #contenido = contenido.replace("$$practiced$$",str(practiced))
-    #contenido = contenido.replace("$$mastery1$$",str(mastery1))
-    #contenido = contenido.replace("$$mastery2$$",str(mastery2))
-    #contenido = contenido.replace("$$mastery3$$",str(mastery3))
-    #contenido = contenido.replace("$$struggling$$",str(struggling))
+    contenido = contenido.replace("$$name$$",str(name))
+    contenido = contenido.replace("$$startDate$$",str(startDate.strftime('%d/%m/%Y')))
+    contenido = contenido.replace("$$endDate$$",str(endDate.strftime('%d/%m/%Y')))
+    contenido = contenido.replace("$$minGrade$$",str(minGrade))
+    contenido = contenido.replace("$$maxGrade$$",str(maxGrade))
+    contenido = contenido.replace("$$totalStudents$$",str(totalStudents))
+    contenido = contenido.replace("$$approvalPercentage$$",str(approvalPercentage))
+    contenido = contenido.replace("$$importanceSkillLevel$$",str(importanceSkillLevel))
+    contenido = contenido.replace("$$importanceRecomended$$",str(importanceRecomended))
+    contenido = contenido.replace("$$avgExcerciceTime$$",str(avgExcerciceTime))
+    contenido = contenido.replace("$$avgVideoTime$$",str(avgVideoTime))
     contenido = contenido.replace("$$ejercicios$$",str(skills))
     return(contenido)
 
