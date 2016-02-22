@@ -41,7 +41,6 @@ def saveAdministrator(request):
             try:
 
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
-                print "mozilla que sucede"
                 userApp = User.objects.get(email=admin.email)
                 group = Group.objects.get(name='administrators')
                 group.user_set.remove(userApp)
@@ -64,28 +63,7 @@ def saveAdministrator(request):
                 admin.save()
                 return HttpResponse("Cambios guardados correctamente")
             except:
-                if (json_str["adminName"]):
-                    admin = Administrator(name=json_str["adminName"])
-                    if (json_str["adminPhone"]):
-                        admin.phone=json_str["adminPhone"]
-                    else:
-                        admin.phone=None
-                    if (json_str["adminEmail"]):
-                        admin.email=json_str["adminEmail"]
-                        try:
-                            userApp = User.objects.get(email=admin.email)
-                            group = Group.objects.get(name='administrators')
-                            group.user_set.add(userApp)
-                        except:
-                            print 'no existe usuario'
-                    else:
-                        admin.email=""
-                    admin.id_institution_id = user.id_institution_id
-                    admin.kaid_administrator = json_str["adminName"]
-                    admin.save()
-                    return HttpResponse("Nuevo Administrador guardado correctamente")
-                else:
-                    return HttpResponse("Error al guardar")
+                return HttpResponse("Error al guardar")
 
 
     return HttpResponse("Error")
@@ -107,4 +85,17 @@ def deleteAdministrator(request):
                 return HttpResponse("Administrador eliminado correctamente")
             except:
                 return HttpResponse("Error")
+    return HttpResponse("Error")
+
+@permission_required('bakhanapp.isAdmin', login_url="/inicio")
+def newAdministrator(request):
+    user = Teacher.objects.get(email=request.user.email)
+    if request.method == 'POST':
+        args = request.POST
+        administrator = Administrator.objects.create(kaid_administrator=args['name'],
+            name=args['name'],
+            email=args['email'],
+            id_institution_id=user.id_institution_id,
+            phone=args['phone'])
+        return HttpResponse("ADMINISTRADOR guardado correctamente")
     return HttpResponse("Error")
