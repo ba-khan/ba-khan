@@ -117,15 +117,15 @@
 			</select>
 			<form action="" method="post" id='formJson'>{% csrf_token %}
 				<p class="label_input"><strong>Nombre Configuración</strong></p>
-				<input name="input_nombre" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuración"/>
+				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuración"/>
 				<p class="label_input"><strong>Nota Mínima</strong></p>
-				<input name="nota_minima" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
+				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
 				<p class="label_input"><strong>Nota Máxima</strong></p>
-				<input name="nota_maxima" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
+				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
 				<p class="label_input"><strong>Fecha Inicio</strong></p>
-				<input name="fecha_inicio" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
+				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 				<p class="label_input"><strong>Fecha Término</strong></p>
-				<input name="fecha_termino" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
+				<input name="fecha_termino" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
 				<input name="input_id_config" id="input_id_config" style="display:none;">
 				<input name="input_kaid" id="input_kaid" style="display:none;">
 				<input name="input_id_assesment" id="input_id_assesment" style="display:none;">
@@ -1457,8 +1457,7 @@
 						Loading();
 					}
 				});
-			}	
-
+			}
 		}
 		function validarRealizarEvaluacion(){
 			var openDiv = document.getElementById('Evaluados'); 
@@ -1474,70 +1473,57 @@
 			todayDate = new Date(Date.parse(today));
 			flag = true;
 			if (cuadritos.length==0){
-				$('#Evaluados').css("border", "1px solid red");
+				$('#Evaluados').css("border", "1px solid #C30202");
+				//$('#Evaluados').tipsy({gravity: 'w', fallback: "Arrastre aqui a los estudiantes que desee evaluar", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#Evaluados').css("border", "1px solid #D9D9D9");
 			}
 			if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
-				$('#input_nombre').css("border", "1px solid red");
-				$('#input_nombre').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
-			    $('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
+				$('#input_nombre').css('color', '#C30202');
+			    //$('#input_nombre').tipsy({gravity: 'w', fallback: "El nombre debe contener letras", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#input_nombre').css("border", "1px solid #C6D1AD");
-				$('#input_nombre').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
-			    $('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
+				$('#input_nombre').css('color', '#000000');
+			    //$('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
 			}
 			if(grade_min == null || grade_min<0 || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
-				$('#nota_minima').css("border", "1px solid red");
-				$('#nota_minima').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
-			    $('#nota_minima').focusout(function(){$(this).css("box-shadow","none");});
+				$('#nota_minima').css('color', '#C30202');
+			    //$('#nota_minima').tipsy({gravity: 'w', fallback: "La nota minima debe ser un numero positivo", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#nota_minima').css("border", "1px solid #C6D1AD");
-				$('#nota_minima').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
-			    $('#nota_minima').focusout(function(){$(this).css("box-shadow","none");});
+				$('#nota_minima').css('color', '#000000');
 			}
 			if(grade_max == null || grade_min>grade_max || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
-				$('#nota_maxima').css("border", "1px solid red");
-				$('#nota_maxima').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
-			    $('#nota_maxima').focusout(function(){$(this).css("box-shadow","none");});
+				$('#nota_maxima').css('color', '#C30202');
+			    //$('#nota_maxima').tipsy({gravity: 'w', fallback: "La nota maxima debe ser mayor que la nota minima", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#nota_maxima').css("border", "1px solid #C6D1AD");
-				$('#nota_maxima').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
-			    $('#nota_maxima').focusout(function(){$(this).css("box-shadow","none");});
+				$('#nota_maxima').css('color', '#000000');
 			}
 			if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
-				$('#fecha_inicio').css("border", "1px solid red");
-				$('#fecha_inicio').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
-			    $('#fecha_inicio').focusout(function(){$(this).css("box-shadow","none");});
+				$('#fecha_inicio').css('color', '#C30202');
+			    //$('#fecha_inicio').tipsy({gravity: 'w', fallback: "Debe haber una fecha de inicio", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#fecha_inicio').css("border", "1px solid #C6D1AD");
-				$('#fecha_inicio').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
-			    $('#fecha_inicio').focusout(function(){$(this).css("box-shadow","none");});
+				$('#fecha_inicio').css('color', '#000000');
 			}
 			if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
-				$('#fecha_termino').css("border", "1px solid red");
-				$('#fecha_termino').focus(function(){$(this).css("box-shadow","0 0 5px 1px red");});
-			    $('#fecha_termino').focusout(function(){$(this).css("box-shadow","none");});
+				$('#fecha_termino').css('color', '#C30202');
+			    //$('#fecha_termino').tipsy({gravity: 'w',fallback: "La fecha de termino debe ser mayor que la de inicio y mayor a el dia de hoy", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#fecha_termino').css("border", "1px solid #C6D1AD");
-				$('#fecha_termino').focus(function(){$(this).css("box-shadow","0 0 5px 1px #C6D1AD");});
-			    $('#fecha_termino').focusout(function(){$(this).css("box-shadow","none");});
+				$('#fecha_termino').css('color', '#000000');
 			}
 			if( combo_box == null || combo_box == 0 ) {
-				$('#comboBox').css("border", "1px solid red");
+				$('#comboBox').css('color', '#C30202');
+				//$('#comboBox').tipsy({gravity: 'w', fallback: "debe seleccionar una pauta", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#comboBox').css("border", "1px solid #C6D1AD");
+				$('#comboBox').css('color', '#000000');
 			}
 			return flag;
 		}
-
 		function modificarNota(){
 			var comentario = $('#textarea_coment').val()
 			$("input[name='input_comment']").val(comentario)
