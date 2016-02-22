@@ -125,9 +125,9 @@ function onSlide(ui,id) {
 				<div id="form00" class="form">
 					<form action="" method="post" id="form0">{% csrf_token %}
 						<h3>Datos de la Pauta:</h3>
-						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="" ><br>
+						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" id="name" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="" ><br>
 						<br>
-						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" id="approvalPercentage" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 						<br>
 						<input name="importance_skill_level0" value="50" type="hidden">
 				    	<input name="importance_completed_rec0" value="50" type="hidden">
@@ -333,24 +333,31 @@ var auxResponse;
 
 function saveConfig(id){
 	//alert("intentando guardar");
-	$.ajax({
-		url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
-		type: "POST",
-		data: $("#form0").serialize(),
-			success: function(response){
-				//alert(response);
-				$('#deleteConfig').css('display', 'none');
-				$('#editConfig').css('display', 'none');
-				$('.response').remove();
-				$("#hover").fadeIn().css('display', '');
-				$("#popup").fadeIn().css('display', '');
-				$("#popup").append("<p class='response'>"+response+"</p>");
-				auxResponse = response;
-				if (auxResponse == "Pauta guardada correctamente"){
-					reloadLocation();
+	if (validar()){
+		$.ajax({
+			url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
+			type: "POST",
+			data: $("#form0").serialize(),
+				success: function(response){
+					//alert(response);
+					$('#deleteConfig').css('display', 'none');
+					$('#editConfig').css('display', 'none');
+					$('.response').remove();
+					$("#hover").fadeIn().css('display', '');
+					$("#popup").fadeIn().css('display', '');
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					auxResponse = response;
+					if (auxResponse == "Pauta guardada correctamente"){
+						reloadLocation();
+					}
 				}
-			}
-	});
+		});
+	}else{
+		$('.response').remove();
+		$("#popup").append("<p class='response'>Faltan datos. Pauta no ingresada</p>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
 }
 
 function openEditConfig(id){
@@ -479,6 +486,25 @@ function confirmDelete(answer,id){
 		$("#popup").fadeOut().css('display', 'none');
 		$("#deleteConfig").fadeOut().css('display','none');
 	}
+}
+
+function validar(){
+	flag = true
+	approval_percentage = document.getElementById("approvalPercentage").value;
+	name = document.getElementById("name").value;
+	if(approval_percentage == null || approval_percentage<0 || approval_percentage>100 || approval_percentage.length == 0 || /^\s+$/.test(approval_percentage)) {
+		$('#approvalPercentage').css('color', '#C30202');
+		flag = false
+	}else{
+		$('#approvalPercentage').css('color', '#000000');
+	}
+	if( name == null || name.length == 0 || /^\s+$/.test(name) ) {
+		$('#name').css('color', '#C30202');
+		flag = false;
+	}else{
+		$('#name').css('color', '#000000');
+	}
+	return flag
 }
 
 $(document).ready(function(){
