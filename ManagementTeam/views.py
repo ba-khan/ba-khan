@@ -34,19 +34,18 @@ def getAdministrators(request):
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def saveAdministrator(request):
-    #print "##################################  GUARDANDO  ##########################################"
     user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
-            #print "##################################  json_str  ##########################################"
-            #print json_str
-
             try:
+
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
+                print "mozilla que sucede"
                 userApp = User.objects.get(email=admin.email)
                 group = Group.objects.get(name='administrators')
                 group.user_set.remove(userApp)
+
                 if (json_str["adminPhone"]):
                     admin.phone=json_str["adminPhone"]
                 else:

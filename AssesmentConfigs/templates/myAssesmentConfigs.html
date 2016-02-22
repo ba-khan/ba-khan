@@ -11,10 +11,9 @@
 <script>
 function getTopicTree(id){
 	var topictree = JSON.parse('{{ topictree | escapejs }}');
+	console.log(topictree);
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
-		    selected_skills=$('#topictree'+id)
-		    			.jstree()
-		    			.get_bottom_selected(true);
+		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
@@ -176,14 +175,14 @@ function onSlide(ui,id) {
 			<h3>Datos de la Pauta:</h3>
 			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="{{ config.name }}" disabled><br>
 			<br>
-			<label for='approval_percentage'>Porcentaje de Aprobacion: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled><br>
+			<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled><br>
 			<br>
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
 	        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
 	        
 			<br>
-			<h4 style="text-align:center">% de Importancia para la Evaluacion</h4>
+			<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
 			<div id="skill_level_div{{ forloop.counter }}" class="percentage">
 				<span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
 
@@ -239,7 +238,21 @@ function onSlide(ui,id) {
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
-	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]))
+	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
+	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
+	        	$('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
+	        	$('#topictree{{ forloop.counter }}').jstree(true).show_dots();
+	        	$('#topictree{{ forloop.counter }}').jstree(true).disable_node($('math'));
+	        	var nodes = $('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
+	        	console.log(nodes);
+	        	
+
+
+
+
+	        	//$('#topictree{{ forloop.counter }}').jstree().change_state('math', false);
+	        	/*$('#topictree{{ forloop.counter }}').jstree().select_node($('math'));
+	        	$('#topictree{{ forloop.counter }}').jstree().disable_node($('math'));*/
 	        </script>
 	</div>
 

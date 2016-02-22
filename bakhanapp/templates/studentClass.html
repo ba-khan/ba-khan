@@ -286,7 +286,7 @@
 
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobacion: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje maximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota maxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota minima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
+    	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobación: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje máximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota máxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota mínima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
     	var index = i+1;
     	for (var j=0;j<data[i+1].length;j++){
@@ -342,7 +342,7 @@
         .attr('id','studentsDashboard')
         .style('width', '99%');
         
-    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluacion{% endfor %}')
+    table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluación{% endfor %}')
 
     // create table header
     table.append('thead').append('tr')
@@ -1663,9 +1663,9 @@
 			student=assesments[aux]['assesment_student']
 			$('#resumen_data').append("<p> Nombre: "+assesments[aux]['name']+"</p>");
 			$('#resumen_data').append("<p> Inicio: "+assesments[aux]['start_date']+"</p>");
-			$('#resumen_data').append("<p> Termino: "+assesments[aux]['end_date']+"</p>");
-			$('#resumen_data').append("<p> Nota Maxima: "+assesments[aux]['max_grade']+"</p>");
-			$('#resumen_data').append("<p> Nota Minima: "+assesments[aux]['min_grade']+"</p>");
+			$('#resumen_data').append("<p> Término: "+assesments[aux]['end_date']+"</p>");
+			$('#resumen_data').append("<p> Nota Máxima: "+assesments[aux]['max_grade']+"</p>");
+			$('#resumen_data').append("<p> Nota Mínima: "+assesments[aux]['min_grade']+"</p>");
 			$("#resumen_data").append("<p>Alumnos Participantes: "+student.length+"</p>");
 						
 			$.ajax({
@@ -1879,7 +1879,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     }
     else
     {
-      document.getElementById(myDiv).innerHTML = "Evaluacion Lista";
+      document.getElementById(myDiv).innerHTML = "Evaluación Lista";
     }
   }
 
