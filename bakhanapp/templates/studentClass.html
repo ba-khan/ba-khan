@@ -567,6 +567,18 @@
 	    		.transition()
 	    		.duration(750)
 	    		.style("opacity",0.15);
+	    	tbody.selectAll("text:not(."+assesment+")")
+	    		.filter(".assesment")
+	    		.transition()
+	    		.duration(750)
+	    		.style("opacity",function(d){
+	    			var color = d3.rgb(d3.select(this).style("fill")).toString();
+	    			if (color=="#ffffff"){
+	    				return 1;
+	    			}else{
+	    				return 0.15;
+	    			}
+	    		});
 	    	//Disable other assesment buttons
 	    	//$("button.assesment").filter(":not(#"+assesment+")").prop("disabled",true);
 	    	//$("button.assesment").filter(":not(#"+assesment+")").css("pointer-events","none");
@@ -581,6 +593,11 @@
 		    		.transition()
 		    		.duration(750)
 		    		.style("opacity",1);
+		    	tbody.selectAll("text:not(."+assesment+")")
+		    		.filter(".assesment")
+		    		.transition()
+		    		.duration(750)
+		    		.style("opacity",1);
     		}else{
     			
     			backgroundJobs = data[dataIndex+1];
@@ -590,12 +607,28 @@
 		    		.transition()
 		    		.duration(750)
 		    		.style("opacity",1);
+		    	tbody.selectAll("text."+assesment)
+		    		.transition()
+		    		.duration(750)
+		    		.style("opacity",1);
 		    	//Filters every circle that is not from the clicked assesment and show them almost transparent
 		    	tbody.selectAll("circle:not(."+assesment+")")
 		    		.filter(".assesment")
 		    		.transition()
 		    		.duration(750)
 		    		.style("opacity",0.15);
+		    	tbody.selectAll("text:not(."+assesment+")")
+		    		.filter(".assesment")
+		    		.transition()
+		    		.duration(750)
+		    		.style("opacity",function(d){
+	    			var color = d3.rgb(d3.select(this).style("fill")).toString();
+		    		if (color=="#ffffff"){
+		    			return 1;
+		    		}else{
+		    			return 0.15;
+		    		}
+		    	});
 		    	lastIdSelectedAssesment=idSelectedAssesment;
 		    	lastClassSelectedAssesment=assesment;
     		}
@@ -652,15 +685,15 @@
 	skills_level_colors = ["#C30202","#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
 	
 	
-	var reprobate_colors = ["#C30202", "#FB6060"];
-    //var approve_colors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
-   	var approve_colors = ["#9CDCEB", "#1C758A"];
-    var reprobateColour = d3.scale.linear()
-	  .domain([2, 3.9])//, 1.9 / (reprobate_colors.length - 1)))
-	  .range(reprobate_colors);
-		var approveColour = d3.scale.linear()
-	  .domain([4.0,7.0])//d3.range(4,7, 3.0 / (approve_colors.length - 1)))
-	  .range(approve_colors);
+	var reprobateColors = ["#C30202", "#FB6060"];
+    //var approveColors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
+   	var approveColors = ["#9CDCEB", "#1C758A"];
+    var reprobateColor = d3.scale.linear()
+	  .domain([2, 3.9])//, 1.9 / (reprobateColors.length - 1)))
+	  .range(reprobateColors);
+		var approveColor = d3.scale.linear()
+	  .domain([4.0,7.0])//d3.range(4,7, 3.0 / (approveColors.length - 1)))
+	  .range(approveColors);
 
     
 	/////////////// parte principal para dibujar la tabla //////////////////////////////  
@@ -784,11 +817,11 @@
 	    	.append("rect")
 	    	.attr("class","skills_time")
 	    	.attr("y",12)
-	    	.style("fill","#FC8A3B")
+	    	.style("fill","#1C758A")
+	    	//.style("fill","#FC8A3B")
 	    	.attr("width","0").transition().duration(750)
 	    	.attr("width",function(d){return skillsTimeScaling(d.value)})
-	    	.attr("height","15")
-	    	.style("fill","#FC8A3B");
+	    	.attr("height","15");
 	    
 	    tiempos_skill
 	    	.append("text")
@@ -820,7 +853,7 @@
 	    	.append("rect")
 	    	.attr("class","videos_time")
 	    	.attr("y",12)
-	    	.style("fill","#FC8A3B")
+	    	.style("fill","#1C758A")
 	    	.attr("height","15")
 	    	.attr("width","0").transition().duration(750)
 	    	.attr("width",function(d){return escalarTiemposVideo(d.value)});
@@ -862,7 +895,7 @@
 	    	  //.attr("x", function(d) { console.log(d);return 60-escalarCorrectIncorrect(d.values["incorrect"]); })
 		      .attr("x", function(d) { return 60-escalarCorrectIncorrect(d.values["incorrect"]); })
 		      .attr("width", function(d){return escalarCorrectIncorrect(d.values["incorrect"]); })
-	    	  .style("fill","red");
+	    	  .style("fill","#C30202");
 
 	    correct_incorrect
 	    	.append("text")
@@ -884,11 +917,11 @@
 	    	.attr("class","correct")
 	    	.attr("x",60)
 	    	.attr("y",12)
-	    	.style("fill","green")
+	    	.style("fill","#1C758A")
 	    	.attr("width","0").transition().duration(750)
 	    	.attr("width",function(d){return escalarCorrectIncorrect(d.values["correct"])})
-	    	.attr("height","15")
-	    	.style("fill","#9DB63B");
+	    	.attr("height","15");
+	    	//.style("fill","#9DB63B");
 	    
 	    correct_incorrect
 	    	.append("text")
@@ -1044,9 +1077,9 @@
     		.style("fill",
     				function(d,i){ 
     					if (students[i][assesment_id].grade<4.0){
-    						return reprobateColour(students[i][assesment_id].grade);
+    						return reprobateColor(students[i][assesment_id].grade);
     					}else{
-    						return approveColour(students[i][assesment_id].grade);
+    						return approveColor(students[i][assesment_id].grade);
     					}
     			  })
     		.on("click",function(d){
@@ -1062,8 +1095,21 @@
     		.attr("class","assesment assesment"+json["assesments"][i]["id"])
 	        .attr("dx", function(d,i){return effort_scalings[d.cl](students[i][assesment_id].effort);})
 	        .attr("dy", function(d,i){return 6 + effort_scalings[d.cl](students[i][assesment_id].effort);})
-	        .text(function(d,i){return students[i][assesment_id].grade})
-	        .style("fill","white");
+	        .text(function(d,i){
+	        	if (students[i][assesment_id].grade!=null){
+	        		return students[i][assesment_id].grade;
+	        	}else{
+	        		return "S.E.";
+	        	}
+	        })
+	        .style("fill",function(d,i){
+	        	if (students[i][assesment_id].grade!=null){
+	        		return "white";
+	        	}else{
+	        		return "black";
+	        	}
+	        })
+	        .style("pointer-events","none");
 	    	
     	
     	assesments.selectAll("text")
@@ -1176,12 +1222,12 @@
     	
     	//var g_rec_array = g_rec
     	g_rec.each(function(d,i){
-    		//console.log("i: "+i+" reco:"+d.values.completed_perc);
-    		var completed_perc = d.values.completed_perc;
-    		var next_start = totalPercent;
-		    arcStartRad = percToRad(next_start);
-		    arcEndRad = arcStartRad + percToRad(completed_perc / 2);
-		    next_start += completed_perc / 2;
+	    		//console.log("i: "+i+" reco:"+d.values.completed_perc);
+	    		var completed_perc = d.values.completed_perc;
+	    		var next_start = totalPercent;
+			    arcStartRad = percToRad(next_start);
+			    arcEndRad = arcStartRad + percToRad(completed_perc / 2);
+			    next_start += completed_perc / 2;
     			//arc1_array.push(d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth)
     			arc1_array.push(d3.svg.arc().outerRadius(35).innerRadius(20)
     				.startAngle(arcStartRad)
@@ -1193,6 +1239,19 @@
     					.endAngle(arcEndRad));
     			d3.select("#chart-filled"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc1_array[i]);
     			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);
+    			d3.select(this).append("text")
+    				.html(Math.round(completed_perc*100)+"%")
+    				.attr("transform",function(d){
+    					var textWidth = d3.select(this).node().getBBox().width;
+    					return "translate("+(-(textWidth/2))+",-22)";
+    				})
+    				.attr("fill",function(d){
+    					if (completed_perc>0.4){
+    						return "white"; 
+    					}else{
+    						return "black";
+    					}
+    				});
     			var d3_needle = new Needle(d3.select(this),i);
     			d3_needle.render();
     			d3_needle.moveTo(completed_perc);
