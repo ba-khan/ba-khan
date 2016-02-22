@@ -10,7 +10,15 @@
 {% endblock %}
 
 {% block body2 %}	
-
+<script src="{% static 'js/howler.min.js'%}"></script>
+<script >
+var subida = new Howl({
+			  urls: ["{% static 'subida.mp3'%}"]
+			});
+var bajada = new Howl({
+			  urls: ["{% static 'bajada.mp3'%}"]
+			});
+</script>
 
 <!--
 	<div style="display: none;" id="profile-throbber" class="profile-throbber popup">
@@ -149,7 +157,7 @@
 		<div align="center" style="padding-left:400px">
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="$('#contenido_a_mostrar').toggle('blind',1000);" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="$('#contenido_a_mostrar').toggle('blind',1000);bajada.play()" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
 
@@ -1600,6 +1608,8 @@
 			$('#popup').fadeOut();
 		}
 		function nuevaEvaluacion(){
+			
+			subida.play();
 			$("#contenido_a_mostrar").toggle("blind",1000);
 			$('#button_realizar').show()
 			$('#button_editar').hide()
