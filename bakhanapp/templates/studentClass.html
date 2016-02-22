@@ -265,6 +265,12 @@
 	var json = JSON.parse('{{ jason_data | escapejs }}');
 	var students = json.students;
 	var assesments=json.assesments;
+	
+	//Sort assesments array by their creation date
+	assesments.sort(function(a, b) {
+    	return parseInt(b.id) - parseInt(a.id);
+	});
+
 	var data = [];
 	data.push(students);
     // column definitions
@@ -1290,7 +1296,20 @@
     		var completed_perc = d.values.completed_perc;
     		var id_needle = d3.select(this).attr("id_student");
     		d3_needles[id_needle].moveTo(completed_perc);
-    		});
+    		d3.select(this).select("text")
+				.html(Math.round(completed_perc*100)+"%")
+				.attr("transform",function(d){
+					var textWidth = d3.select(this).node().getBBox().width;
+					return "translate("+(-(textWidth/2))+",-22)";
+				})
+				.attr("fill",function(d){
+					if (completed_perc>0.4){
+						return "white"; 
+					}else{
+						return "black";
+					}
+				});
+    	});
 		//console.log(tbody.selectAll("td.recommendations"));
     	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
     }
