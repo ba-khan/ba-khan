@@ -38,9 +38,9 @@ class Command(BaseCommand):
             administrators = Administrator.objects.filter(id_institution_id=1)
             id_institution = Class.objects.get(id_class=assesment['id_class_id'])
             #id_institution = Institution.objects.get(id_institution=id_class['id_institution_id']).values('id_institution')
-            print id_institution.id_institution_id
+            #print id_institution.id_institution_id
             administrators = Administrator.objects.filter(id_institution_id=id_institution.id_institution_id)
-            print administrators
+            #print administrators
             for admin in administrators:
                 content = content.replace("$$nameAdmin$$",str(admin.name))
                 #sendMail('javierperezferrada@gmail.com',content)
