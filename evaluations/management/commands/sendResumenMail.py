@@ -72,21 +72,35 @@ def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercent
     contenido = contenido.replace("$$avgVideoTime$$",str(avgVideoTime))
     contenido = contenido.replace("$$ejercicios$$",str(skills))
 
-    hUnit = 300/totalStudents #unidad basica para la altura del histograma
-    print hUnit
+    
+
     rUnit = maxGrade/float(10)
     #print rUnit,maxGrade
     aux = 0
+    qMax = 0
     grades = Grade
-    for i in range(10):
+    for x in range(11):
+        qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gt=aux,grade__lt=aux+rUnit).count()
+        if qMax <= qStudents:
+            qMax = qStudents
+        aux += rUnit
+    hUnit = 300/qMax #unidad basica para la altura del histograma
+    aux = 0
+    for i in range(11):
         varR = "$$r"+str(i)+"$$"
         varD = "$$d"+str(i)+"$$"
         varH = "$$h"+str(i)+"$$"
         contenido = contenido.replace(varR,str(aux))
         qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gt=aux,grade__lt=aux+rUnit).count()#.values('grade').aggregate(q=Count('grade'))
-        contenido = contenido.replace(varD,str(qStudents))
+        if qStudents == 0:
+            contenido = contenido.replace(varD,str(''))
+            contenido = contenido.replace(varH,str(1))
+        else:
+            contenido = contenido.replace(varD,str(qStudents))
+            contenido = contenido.replace(varH,str(qStudents*hUnit))
+        
         print qStudents*hUnit
-        contenido = contenido.replace(varH,str(qStudents*hUnit))
+        
         aux += rUnit
     return(contenido)
 
