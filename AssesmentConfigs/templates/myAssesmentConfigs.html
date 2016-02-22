@@ -125,9 +125,9 @@ function onSlide(ui,id) {
 				<div id="form00" class="form">
 					<form action="" method="post" id="form0">{% csrf_token %}
 						<h3>Datos de la Pauta:</h3>
-						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" id="name" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="" ><br>
+						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" ><br>
 						<br>
-						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" id="approvalPercentage" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" ><br>
 						<br>
 						<input name="importance_skill_level0" value="50" type="hidden">
 				    	<input name="importance_completed_rec0" value="50" type="hidden">
@@ -173,9 +173,9 @@ function onSlide(ui,id) {
 	<div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
 		<form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
 			<h3>Datos de la Pauta:</h3>
-			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" value="{{ config.name }}" disabled><br>
+			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="{{ config.name }}" disabled><br>
 			<br>
-			<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled><br>
+			<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100"  onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" disabled><br>
 			<br>
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
@@ -333,31 +333,24 @@ var auxResponse;
 
 function saveConfig(id){
 	//alert("intentando guardar");
-	if (validar()){
-		$.ajax({
-			url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
-			type: "POST",
-			data: $("#form0").serialize(),
-				success: function(response){
-					//alert(response);
-					$('#deleteConfig').css('display', 'none');
-					$('#editConfig').css('display', 'none');
-					$('.response').remove();
-					$("#hover").fadeIn().css('display', '');
-					$("#popup").fadeIn().css('display', '');
-					$("#popup").append("<p class='response'>"+response+"</p>");
-					auxResponse = response;
-					if (auxResponse == "Pauta guardada correctamente"){
-						reloadLocation();
-					}
+	$.ajax({
+		url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
+		type: "POST",
+		data: $("#form0").serialize(),
+			success: function(response){
+				//alert(response);
+				$('#deleteConfig').css('display', 'none');
+				$('#editConfig').css('display', 'none');
+				$('.response').remove();
+				$("#hover").fadeIn().css('display', '');
+				$("#popup").fadeIn().css('display', '');
+				$("#popup").append("<p class='response'>"+response+"</p>");
+				auxResponse = response;
+				if (auxResponse == "Pauta guardada correctamente"){
+					reloadLocation();
 				}
-		});
-	}else{
-		$('.response').remove();
-		$("#popup").append("<p class='response'>Faltan datos. Pauta no ingresada</p>");
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
-	}
+			}
+	});
 }
 
 function openEditConfig(id){
@@ -490,19 +483,17 @@ function confirmDelete(answer,id){
 
 function validar(){
 	flag = true
-	approval_percentage = document.getElementById("approvalPercentage").value;
-	name = document.getElementById("name").value;
-	if(approval_percentage == null || approval_percentage<0 || approval_percentage>100 || approval_percentage.length == 0 || /^\s+$/.test(approval_percentage)) {
-		$('#approvalPercentage').css('color', '#C30202');
-		flag = false
-	}else{
-		$('#approvalPercentage').css('color', '#000000');
-	}
-	if( name == null || name.length == 0 || /^\s+$/.test(name) ) {
-		$('#name').css('color', '#C30202');
-		flag = false;
-	}else{
-		$('#name').css('color', '#000000');
+	approval_percentage = document.getElementsByClassName("approvalPercentage");
+	//alert(approval_percentage)
+	for (var a=0;a<approval_percentage.length;a++){
+		//alert(approval_percentage[a].value)
+		if(approval_percentage[a].value == null || approval_percentage[a].value<0 || approval_percentage[a].value>100 || approval_percentage[a].value.length == 0 || /^\s+$/.test(approval_percentage[a].value)) {
+
+			$(approval_percentage[a]).css('color', '#C30202');
+			flag = false
+		}else{
+			$(approval_percentage[a]).css('color', '#000000');
+		}
 	}
 	return flag
 }
