@@ -282,6 +282,12 @@ var bajada = new Howl({
 	var json = JSON.parse('{{ jason_data | escapejs }}');
 	var students = json.students;
 	var assesments=json.assesments;
+
+	//Sort assesments array by their creation date
+	assesments.sort(function(a, b) {
+    	return parseInt(b.id) - parseInt(a.id);
+	});
+
 	var data = [];
 	data.push(students);
     // column definitions
@@ -698,12 +704,14 @@ var bajada = new Howl({
 	var reprobateColors = ["#C30202", "#FB6060"];
     //var approveColors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
    	var approveColors = ["#9CDCEB", "#1C758A"];
-    var reprobateColor = d3.scale.linear()
+   	var reprobateColor = [];
+   	var approveColor =[];
+    /*var reprobateColor = d3.scale.linear()
 	  .domain([2, 3.9])//, 1.9 / (reprobateColors.length - 1)))
 	  .range(reprobateColors);
 		var approveColor = d3.scale.linear()
 	  .domain([4.0,7.0])//d3.range(4,7, 3.0 / (approveColors.length - 1)))
-	  .range(approveColors);
+	  .range(approveColors);*/
 
     
 	/////////////// parte principal para dibujar la tabla //////////////////////////////  
@@ -1057,20 +1065,35 @@ var bajada = new Howl({
 	}
 	
 	function drawAssesments(){
+	console.log(assesments);
 	var effort_scalings = [];
-    for (i=0; i<json["assesments"].length; i++){
-    	assesment_id="assesment"+json["assesments"][i]["id"]
+    for (i=0; i<assesments.length; i++){
+    	var assesment_num_id=i;
+    	var assesment_id="assesment"+json["assesments"][i]["id"]
     	effort_scalings[assesment_id] = d3.scale.log()
     									.domain([d3.min(students,function(d){return d[assesment_id].effort;}),//d3.filter(students,function(d){return d[assesment_id].effort;})),
     										d3.max(students,function(d){return d[assesment_id].effort;})])//d3.filter(students,function(d){return d[assesment_id].effort;}))])
-    									.range([10,22.5]);											
-    	var assesments = tbody.selectAll("td.assesment"+json["assesments"][i]["id"]).attr("class","assesment assesment"+json["assesments"][i]["id"])
+    									.range([10,22.5]);
+    	
+    	var approval_percentage=assesments[assesment_num_id].approval_percentage;
+    	var min_grade=assesments[assesment_num_id].min_grade;
+    	var max_grade=assesments[assesment_num_id].max_grade;
+    	//var approval_grade=assesments[assesment_num_id].approval_grade;
+    	var approval_grade = (max_grade-min_grade)*(approval_percentage/100) + min_grade;
+    	reprobateColor[assesment_num_id] = d3.scale.linear()
+		  .domain([min_grade, approval_grade])//, 1.9 / (reprobateColors.length - 1)))
+		  .range(reprobateColors);
+		approveColor[assesment_num_id] = d3.scale.linear()
+		  .domain([approval_grade,max_grade])//d3.range(4,7, 3.0 / (approveColors.length - 1)))
+		  .range(approveColors);
+
+    	var assesments_svg = tbody.selectAll("td.assesment"+json["assesments"][i]["id"]).attr("class","assesment assesment"+json["assesments"][i]["id"])
 	    	.append("svg")
 	    	.attr("class","assesment assesment"+json["assesments"][i]["id"])
 	    	.attr("width",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);})
     		.attr("height",function(d,i){return 2*effort_scalings[d.cl](students[i][assesment_id].effort);});
 		
-    	assesments.append("circle")
+    	assesments_svg.append("circle")
     		.attr("class","assesment assesment"+json["assesments"][i]["id"])
     		.attr("cx", function (d,i) { return effort_scalings[d.cl](students[i][assesment_id].effort); })
             .attr("cy", function (d,i) { return effort_scalings[d.cl](students[i][assesment_id].effort); })
@@ -1086,10 +1109,10 @@ var bajada = new Howl({
     		})
     		.style("fill",
     				function(d,i){ 
-    					if (students[i][assesment_id].grade<4.0){
-    						return reprobateColor(students[i][assesment_id].grade);
+    					if (students[i][assesment_id].grade<approval_grade){
+    						return reprobateColor[assesment_num_id](students[i][assesment_id].grade);
     					}else{
-    						return approveColor(students[i][assesment_id].grade);
+    						return approveColor[assesment_num_id](students[i][assesment_id].grade);
     					}
     			  })
     		.on("click",function(d){
@@ -1101,7 +1124,7 @@ var bajada = new Howl({
     	
     	
     	
-    	assesments.append("text")
+    	assesments_svg.append("text")
     		.attr("class","assesment assesment"+json["assesments"][i]["id"])
 	        .attr("dx", function(d,i){return effort_scalings[d.cl](students[i][assesment_id].effort);})
 	        .attr("dy", function(d,i){return 6 + effort_scalings[d.cl](students[i][assesment_id].effort);})
@@ -1122,7 +1145,7 @@ var bajada = new Howl({
 	        .style("pointer-events","none");
 	    	
     	
-    	assesments.selectAll("text")
+    	assesments_svg.selectAll("text")
     		.attr("transform",function(d){
     			var textWidth = d3.select(this).node().getBBox().width;
 				return "translate("+(-(textWidth/2))+",0)";
@@ -1301,7 +1324,20 @@ var bajada = new Howl({
     		var completed_perc = d.values.completed_perc;
     		var id_needle = d3.select(this).attr("id_student");
     		d3_needles[id_needle].moveTo(completed_perc);
-    		});
+    		d3.select(this).select("text")
+				.html(Math.round(completed_perc*100)+"%")
+				.attr("transform",function(d){
+					var textWidth = d3.select(this).node().getBBox().width;
+					return "translate("+(-(textWidth/2))+",-22)";
+				})
+				.attr("fill",function(d){
+					if (completed_perc>0.4){
+						return "white"; 
+					}else{
+						return "black";
+					}
+				});
+    	});
 		//console.log(tbody.selectAll("td.recommendations"));
     	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
     }
