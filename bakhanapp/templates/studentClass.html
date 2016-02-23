@@ -94,7 +94,7 @@ var bajada = new Howl({
     	<div id="close" onClick="$('#popup_error').fadeOut();$('#hover').fadeOut();">X</div>
     	<div style="align:left;">
 	    	<div>
-	    		<p>Datos mal ingresados o incompletos, revise los campos en <strong>rojo</strong></p>
+	    		<p>Datos mal ingresados o incompletos, revise los campos en <strong><font color="#C30202">rojo</font></strong></p>
 	    	</div>
     	</div>
     </div>
@@ -1773,6 +1773,10 @@ var bajada = new Howl({
 					}
 				});
 
+			}
+			else{
+				$("#hover").fadeIn().css('display', '');
+    			$("#popup_error").fadeIn().css('display', '');
 			}
 
 		}
