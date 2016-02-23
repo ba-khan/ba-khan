@@ -73,18 +73,16 @@ def deleteAdministrator(request):
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
-            print "##################################  json_str  ##########################################"
-            print json_str
 
             try:
                 admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
                 userApp = User.objects.get(email=admin.email)
                 group = Group.objects.get(name='administrators')
                 group.user_set.remove(userApp)
-                admin.delete()
-                return HttpResponse("Administrador eliminado correctamente")
             except:
-                return HttpResponse("Error")
+                print 'no existe User admin'
+            admin.delete()
+            return HttpResponse("Administrador eliminado correctamente")
     return HttpResponse("Error")
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
