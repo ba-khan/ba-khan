@@ -150,9 +150,9 @@ input{
 	<div id="newAdmin">
 		<form action="" method="post" id="form0">{% csrf_token %}
 			<h3>Nuevo Administrador</h3>
-			<label for='name'>Nombre: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-			<label for='email'>E-Mail: </label><input type="mail" name="email" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-			<label for='phone'>Teléfono: </label><input type="number" name="phone" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='name'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='email'>E-Mail: </label><input id="newMail" onchange="validar()" onkeyup="validar()" type="mail" name="email" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='phone'>Teléfono: </label><input id="newNumber" onchange="validar()" onkeyup="validar()" type="number" name="phone" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 
 			<button type="input" onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Administrador</button>
 		</form>
@@ -170,21 +170,28 @@ input{
 
 <script>
 function saveNewAdmin(){
-	$.ajax({
-	url: "{% url 'ManagementTeam:nuevo_administrador' %}",
-	type: "POST",
-	data: $("#form0").serialize(),
-		success: function(response){
-			$('.response').remove();
-			$("#popup").append("<p class='response'>"+response+"</p>");
-			$("#hover").fadeIn().css('display', '');
-			$("#popup").fadeIn().css('display', '');
-			auxResponse = response;
-			if (auxResponse == "Administrador guardado correctamente"){
-				window.setTimeout(function(){location.reload()},2000);
+	if(validar()){
+		$.ajax({
+		url: "{% url 'ManagementTeam:nuevo_administrador' %}",
+		type: "POST",
+		data: $("#form0").serialize(),
+			success: function(response){
+				$('.response').remove();
+				$("#hover").fadeIn().css('display', '');
+				$("#popup").fadeIn().css('display', '');
+				$("#popup").append("<p class='response'>"+response+"</p>");
+				auxResponse = response;
+				if (auxResponse == "Administrador guardado correctamente"){
+					console.log(response);
+					window.setTimeout(function(){location.reload()},2000);
+				}
 			}
-		}
-	});
+		});
+	}else{
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+	}
 }
 
 
@@ -325,6 +332,33 @@ function confirmDelete(answer,id){
 		$("#hover").fadeOut(1000).css('display', 'none');
 		$("#popup").fadeOut(1000).css('display', 'none');
 	}
+}
+
+function validar(){
+	flag = true
+	nName = document.getElementById("newName").value;
+	nMail = document.getElementById("newMail").value;
+	nNumber = document.getElementById("newNumber").value;
+
+	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+		$("#newName").css('color', '#C30202');
+		flag = false
+	}else{
+		$("#newName").css('color', '#000000');
+	}
+	if(nNumber.length != 9) {
+		$("#newNumber").css('color', '#C30202');
+		flag = false
+	}else{
+		$("#newNumber").css('color', '#000000');
+	}
+	if(/[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/.test(nMail)) {
+		$("#newMail").css('color', '#000000');
+	}else{
+		$("#newMail").css('color', '#C30202');
+		flag = false
+	}
+	return flag
 }
 
 $(document).ready(function(){

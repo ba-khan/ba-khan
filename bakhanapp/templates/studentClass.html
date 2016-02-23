@@ -49,9 +49,11 @@ var bajada = new Howl({
 	.tipsy{
 		width:250px;
 	}
+
 	tr:hover {
 		background-color: #BFDAB3; /* resaltar filas */
 	}
+
 </style>
 
 	<div id="popup" class="popup" style="display:none">
@@ -656,8 +658,6 @@ var bajada = new Howl({
     		//$("button.assesment").filter(":not(#"+assesment+")").css("pointer-events","initial");
     		//$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,1);
     	}
-    	console.log("backgroundJobs");
-    	console.log(backgroundJobs);
     	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
 	    skillsTimeScaling = d3.scale.linear()
                             .domain([0,Greatest(skill_time.keys())])
@@ -673,16 +673,6 @@ var bajada = new Howl({
         escalarCorrectIncorrect = d3.scale.linear()
                             .domain([0,d3.max(corrects)])
                             .range([0,60]);
-        console.log("max skills");
-        console.log(d3.max(backgroundJobs,function(d){
-				var total_skills=0;
-					total_skills=total_skills+d.skills_level.struggling;
-					total_skills=total_skills+d.skills_level.practiced;
-					total_skills=total_skills+d.skills_level.mastery1;
-					total_skills=total_skills+d.skills_level.mastery2;
-					total_skills=total_skills+d.skills_level.mastery3;
-					return total_skills;
-				}));
         skill_levels_scaling=d3.scale.linear()
 			.domain([0,d3.max(backgroundJobs,function(d){
 				var total_skills=0;
@@ -1079,12 +1069,12 @@ var bajada = new Howl({
 		      .attr('x',function(d, i){
 		          return skill_levels_scaling(d.prev_value);});
 
-		var skill_levels = tbody.selectAll(".skills_level")
+		var skill_levels = tbody.selectAll("svg.skills_level")
 			.select("text")
 	    	.transition().duration(750)
 		    .text(function(d) {
 		    	var new_data = new_data=this.parentNode.__data__;
-		    	return new_data.skills_level["mastery3"]+new_data.skills_level["mastery2"]+new_data.skills_level["mastery1"]+new_data.skills_level["practiced"]+new_data.skills_level["struggling"]});
+		    	return new_data.values["mastery3"]+new_data.values["mastery2"]+new_data.values["mastery1"]+new_data.values["practiced"]+new_data.values["struggling"]});
 		
 	    var sortingCriterion = $("select.skills_level").val();
 	  		if (sortingCriterion =="total"){
@@ -1092,7 +1082,7 @@ var bajada = new Howl({
 	  				return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
 	  			});
 	  		}else{
-	    		d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});
+	    	d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});
 	  		}
 	
 	}
@@ -1743,6 +1733,7 @@ var bajada = new Howl({
 				}
 				{% endfor %}
 			{% endif %}
+			validarRealizarEvaluacion()
 			$("input[name='input_id_assesment']").val(id_assesment)
 			$('#button_realizar').hide()
 			$('#button_editar').show()
@@ -1797,7 +1788,6 @@ var bajada = new Howl({
 			}
 
 			student=assesments[aux]['assesment_student']
-			console.log(assesments[aux]);
 			$('#resumen_data').append("<p> Nombre: "+assesments[aux]['name']+"</p>");
 			$('#resumen_data').append("<p> Inicio: "+assesments[aux]['start_date']+"</p>");
 			$('#resumen_data').append("<p> Término: "+assesments[aux]['end_date']+"</p>");
