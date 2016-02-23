@@ -1725,6 +1725,7 @@ var bajada = new Howl({
 				}
 				{% endfor %}
 			{% endif %}
+			validarRealizarEvaluacion()
 			$("input[name='input_id_assesment']").val(id_assesment)
 			$('#button_realizar').hide()
 			$('#button_editar').show()
