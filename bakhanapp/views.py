@@ -126,7 +126,7 @@ def paralellAssesment(assesment,students,queue):
     dictGrades = {}
     for g in grades:
         dictGrades[g['kaid_student_id']] = (g['correct'],g['incorrect'],g['video_time'],g['excercice_time'],g['struggling'],g['practiced'],g['mastery1'],
-            'mastery2','mastery3')
+            g['mastery2'],g['mastery3'])
     i=0
     for student in students:
         student_json={}
