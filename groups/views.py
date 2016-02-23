@@ -83,7 +83,7 @@ def getStudentGroup(request,id_class):
     return HttpResponse(students_groups)
 
 def getMakedGroup(request,id_class):
-    #funcion que devuelve un json con los datos de grupos y alumnos
+    #funcion que devuelve un json con los datos de grupos y alumnos ya realizaados cuando se selecciona una agrupacion.
     if request.method == 'POST':
         args = request.POST
         id_master_group = args['id_master_group']
@@ -161,9 +161,12 @@ def getGroups(request, id_class):
                 'Reforzamiento' : new_Reforzamiento.id_group
             }
 
-            print dicSub
+            #print dicSub
             for sub in subGroups:
-                new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
+                if "kaid_" not in sub['tutor']: 
+                    new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id='kaid_1097501097555535353578558')#tambien se debe cambiar este kaid por user.kaid
+                else:
+                    new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
                 new_group.save()
                 dicSub[sub['name']] = new_group.id_group
 
@@ -207,7 +210,6 @@ def getTypeStudent(kaid_student,args):
     #Funcion que entrega en que nivel grupo debe ser organizado un estudiante
     #de acuerdo a su nivel en las skills seleccionadas por el profesor.
     #skills = Group_Skill.objects.filter(id_group_id=id_group)
-    #aqui llegan bien las habilidades seleccionadas
     Reforzamiento = 0
     Intermedios = 0
     Avanzados = 0
@@ -234,14 +236,3 @@ def getTypeStudent(kaid_student,args):
     else:
         return 'Reforzamiento'
             
-
-def save_groups(request,id_class):
-    #Funcion de prueba que crea un nuevo grupo con datos de prueba
-    g = Group()
-    g.name = 'test'
-    g.type = 'avanzado'
-    g.start_date = timezone.now()
-    g.end_date = timezone.now()
-    g.kaid_student_tutor_id = 'kaid_1097501097555535353578558'
-    g.save()
-    return render (request,'groups.html')

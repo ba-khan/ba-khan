@@ -95,5 +95,5 @@ def newAdministrator(request):
             email=args['email'],
             id_institution_id=user.id_institution_id,
             phone=args['phone'])
-        return HttpResponse("Administrador guardado correctamente")
+        return HttpResponse("ADMINISTRADOR guardado correctamente")
     return HttpResponse("Error")
