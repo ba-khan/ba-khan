@@ -307,7 +307,7 @@ def getClassStudents(request, id_class):
                 student_assesment["effort"] = 0.1
                 student_assesment["grade_id"] = 0
             try:
-                student_assesment['performance_points'] = dictGrades[(assesment['id_config'],student.kaid_student)][2]
+                student_assesment['performance_points'] = dictGrades[(assesment['id'],student.kaid_student)][2]
             except:
                 student_assesment['performance_points'] = None
                 

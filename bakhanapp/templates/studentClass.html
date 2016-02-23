@@ -49,6 +49,9 @@ var bajada = new Howl({
 	.tipsy{
 		width:250px;
 	}
+	tr:hover {
+		background-color: #BFDAB3;
+	}
 </style>
 
 	<div id="popup" class="popup" style="display:none">
@@ -1794,6 +1797,7 @@ var bajada = new Howl({
 			}
 
 			student=assesments[aux]['assesment_student']
+			console.log(assesments[aux]);
 			$('#resumen_data').append("<p> Nombre: "+assesments[aux]['name']+"</p>");
 			$('#resumen_data').append("<p> Inicio: "+assesments[aux]['start_date']+"</p>");
 			$('#resumen_data').append("<p> Término: "+assesments[aux]['end_date']+"</p>");
