@@ -988,8 +988,9 @@ var bajada = new Howl({
 	    var skill_levels = tbody.selectAll(".skills_level")
     	.append("svg")
     	.attr("class","skills_level")
-    	.attr("width","120px")
-    	.attr("height","15px")
+    	.attr("width","120")
+    	.attr("height","30");
+		
 		skill_levels.selectAll('rect')
 		      .data(function(d,i){
 		    	  var skills_array=[];
@@ -1015,13 +1016,23 @@ var bajada = new Howl({
 		          return skill_levels_scaling(d.value);})
 		      .attr('x',function(d, i){
 		          return skill_levels_scaling(d.prev_value);})
-		      .attr('y',0)
+		      .attr('y',12)
 		      .attr('height', "20px")
 		      .style('fill', function(d, i){ return skills_level_colors[i]; });
 	    
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
   			return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
   		});
+
+  		//d3.selectAll("svg.skills_level")
+	    skill_levels
+	    	.append("text")
+	    	.attr("class","skills_level")
+		    .attr("x", 0 )//function(d) { return escalarTiemposVideo(d.value)+5; })
+		    .attr("y", 5)
+		    .attr("dy", ".35em")
+			.attr("fill", "black")
+		    .text(function(d) { return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"]});
 	}
 	
 	function drawSkillLevelsUpdate() {
@@ -1052,6 +1063,10 @@ var bajada = new Howl({
 		          return skill_levels_scaling(d.value);})
 		      .attr('x',function(d, i){
 		          return skill_levels_scaling(d.prev_value);});
+
+		tbody.selectAll("text.skills_level")
+	    	.transition().duration(750)
+		    .text(function(d) { return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"]});
 		
 	    var sortingCriterion = $("select.skills_level").val();
 	  		if (sortingCriterion =="total"){
