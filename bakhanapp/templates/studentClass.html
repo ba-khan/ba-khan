@@ -653,6 +653,8 @@ var bajada = new Howl({
     		//$("button.assesment").filter(":not(#"+assesment+")").css("pointer-events","initial");
     		//$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,1);
     	}
+    	console.log("backgroundJobs");
+    	console.log(backgroundJobs);
     	skill_time = d3.map(backgroundJobs, function(d){return d.skills_time;}); //d3.f("skills_time"));
 	    skillsTimeScaling = d3.scale.linear()
                             .domain([0,Greatest(skill_time.keys())])
@@ -668,8 +670,18 @@ var bajada = new Howl({
         escalarCorrectIncorrect = d3.scale.linear()
                             .domain([0,d3.max(corrects)])
                             .range([0,60]);
+        console.log("max skills");
+        console.log(d3.max(backgroundJobs,function(d){
+				var total_skills=0;
+					total_skills=total_skills+d.skills_level.struggling;
+					total_skills=total_skills+d.skills_level.practiced;
+					total_skills=total_skills+d.skills_level.mastery1;
+					total_skills=total_skills+d.skills_level.mastery2;
+					total_skills=total_skills+d.skills_level.mastery3;
+					return total_skills;
+				}));
         skill_levels_scaling=d3.scale.linear()
-			.domain([0,d3.max(students,function(d){
+			.domain([0,d3.max(backgroundJobs,function(d){
 				var total_skills=0;
 					total_skills=total_skills+d.skills_level.struggling;
 					total_skills=total_skills+d.skills_level.practiced;
