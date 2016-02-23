@@ -1076,9 +1076,12 @@ var bajada = new Howl({
 		      .attr('x',function(d, i){
 		          return skill_levels_scaling(d.prev_value);});
 
-		tbody.selectAll("text.skills_level")
+		var skill_levels = tbody.selectAll(".skills_level")
+			.select("text")
 	    	.transition().duration(750)
-		    .text(function(d) { return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"]});
+		    .text(function(d) {
+		    	var new_data = new_data=this.parentNode.__data__;
+		    	return new_data.skills_level["mastery3"]+new_data.skills_level["mastery2"]+new_data.skills_level["mastery1"]+new_data.skills_level["practiced"]+new_data.skills_level["struggling"]});
 		
 	    var sortingCriterion = $("select.skills_level").val();
 	  		if (sortingCriterion =="total"){
@@ -1086,7 +1089,7 @@ var bajada = new Howl({
 	  				return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
 	  			});
 	  		}else{
-	    	d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});
+	    		d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});
 	  		}
 	
 	}
