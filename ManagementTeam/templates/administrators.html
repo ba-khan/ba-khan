@@ -160,11 +160,12 @@ input{
 </div>
 <br>
 </div>
+
 <div id="popup" style="display:none">
 	<div id="close">X</div>
-	
 </div>
 <br>
+
 </div> <!-- cerrar div principal del home  -->
 
 <script>
@@ -175,12 +176,11 @@ function saveNewAdmin(){
 	data: $("#form0").serialize(),
 		success: function(response){
 			$('.response').remove();
+			$("#popup").append("<p class='response'>"+response+"</p>");
 			$("#hover").fadeIn().css('display', '');
 			$("#popup").fadeIn().css('display', '');
-			$("#popup").append("<p class='response'>"+response+"</p>");
 			auxResponse = response;
-			if (auxResponse == "Pauta guardada correctamente"){
-				console.log(response);
+			if (auxResponse == "Administrador guardado correctamente"){
 				window.setTimeout(function(){location.reload()},2000);
 			}
 		}
