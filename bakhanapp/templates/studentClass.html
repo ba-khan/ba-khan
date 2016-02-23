@@ -89,6 +89,15 @@ var bajada = new Howl({
 	    	<div id="resumen_graph" class="resumen_graph"></div>
     	</div>
     </div>
+
+    <div id="popup_error" class="popup" style="display:none">
+    	<div id="close" onClick="$('#popup_error').fadeOut();$('#hover').fadeOut();">X</div>
+    	<div style="align:left;">
+	    	<div>
+	    		<p>Datos mal ingresados o incompletos, revise los campos en <strong>rojo</strong></p>
+	    	</div>
+    	</div>
+    </div>
     
     <div id="popup_evaluacion" class="popup" style="display:none">
     	<div style="align:left;">
@@ -237,6 +246,7 @@ var bajada = new Howl({
   	    	$("#popup").fadeOut();
   	    	$("#popup_resumen").fadeOut();
   	    	$("#popup_evaluacion").fadeOut();
+  	    	$("#popup_error").fadeOut();
 
   	    });
   	  	$("#close").click(function(){
@@ -1585,6 +1595,10 @@ var bajada = new Howl({
 						Loading();
 					}
 				});
+			}
+			else{
+				$("#hover").fadeIn().css('display', '');
+    			$("#popup_error").fadeIn().css('display', '');
 			}
 		}
 		function validarRealizarEvaluacion(){
