@@ -669,7 +669,7 @@ var bajada = new Howl({
                             .domain([0,d3.max(corrects)])
                             .range([0,60]);
         skill_levels_scaling=d3.scale.linear()
-			.domain([0,d3.max(students,function(d){
+			.domain([0,d3.max(backgroundJobs,function(d){
 				var total_skills=0;
 					total_skills=total_skills+d.skills_level.struggling;
 					total_skills=total_skills+d.skills_level.practiced;
@@ -1063,7 +1063,7 @@ var bajada = new Howl({
 		          return skill_levels_scaling(d.value);})
 		      .attr('x',function(d, i){
 		          return skill_levels_scaling(d.prev_value);});
-		      
+
 		var skill_levels = tbody.selectAll("svg.skills_level")
 			.select("text")
 	    	.transition().duration(750)
