@@ -239,6 +239,13 @@ function onSlide(ui,id) {
 		</div>
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
+
+				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
+	        	for (i=0;i<id_skills.length;i++){ 
+	        		alert(id_skills[i].id_skill_name_id)
+	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+	        	}
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
 	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
 	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
