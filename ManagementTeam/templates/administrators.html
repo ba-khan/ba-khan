@@ -160,11 +160,12 @@ input{
 </div>
 <br>
 </div>
+
 <div id="popup" style="display:none">
 	<div id="close">X</div>
-	
 </div>
 <br>
+
 </div> <!-- cerrar div principal del home  -->
 
 <script>
@@ -180,7 +181,7 @@ function saveNewAdmin(){
 				$("#popup").fadeIn().css('display', '');
 				$("#popup").append("<p class='response'>"+response+"</p>");
 				auxResponse = response;
-				if (auxResponse == "Pauta guardada correctamente"){
+				if (auxResponse == "Administrador guardado correctamente"){
 					console.log(response);
 					window.setTimeout(function(){location.reload()},2000);
 				}
