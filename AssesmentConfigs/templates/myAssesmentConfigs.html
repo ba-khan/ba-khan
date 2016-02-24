@@ -242,18 +242,34 @@ function onSlide(ui,id) {
 
 				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
-	        	for (i=0;i<id_skills.length;i++){ 
-	        		alert(id_skills[i].id_skill_name_id)
+	        	//for (i=0;i<id_skills.length;i++){ 
+	        	//alert(id_skills[0].id_skill_name_id)
+	        	//alert('hola')
 	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
-	        	}
+	        	//}
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
-	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
-	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).show_dots();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).disable_node($('math'));
-	        	var nodes = $('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
-	        	console.log(nodes);
+	        	//console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
+	        	//$('#topictree{{ forloop.counter }}').jstree("check_all")
+	        	//$('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
+	        	//$('#topictree{{ forloop.counter }}').jstree(true).show_dots();
+	        	//$('#topictree{{ forloop.counter }}').jstree(true).disable_node($('math'));
+	        	//var nodes = $('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
+	        	//console.log(nodes);
+	        	//alert('marcar jstree')
+	        	//$('#skill98').each(function () {
+				//    	alert(this)
+				//    	$(".jstree").jstree('select_node', this)
+				//});
+				//$("#topictree0 li[role=treeitem]").each(function () {
+				//    	alert(this)
+				//    	$(".jstree").jstree('select_node', this)
+				//});
+	        	//alert(skill)
+	        	//$('#topictree{{ forloop.counter }}').jstree('select_node',skill);
+	        	//$('#topictree{{ forloop.counter }}' + " li[id='skill98']").click();
+	        	//$('a', '#math_anchor').click()
+	        	//$('#topictree{{ forloop.counter }} > li').attr('selected','true');
+	        	//alert('jstree marcado')
 	        	
 
 
@@ -290,6 +306,7 @@ function onSlide(ui,id) {
 </div> <!-- cerrar div principal del home  -->
 
 <script>
+
 	function setMainContentHeight(){
 		sidebar = document.getElementById('sidebar');
 		var lis = sidebar.getElementsByTagName('li');
@@ -520,7 +537,16 @@ $(document).ready(function(){
         $("#hover").fadeOut();
     $("#popup").fadeOut();
     });
-  
+
+	//alert('documento cargado completamemnte')
+    // select the whole jstree control
+    //$('#topictree1').jstree('select_node', this);
+    window.setTimeout(nothing, 500);
+
+    
+    // select a whole branch:
+    //$('#tree_control').jstree("check_node", "#top_level_node_id");
+
 });
 
 </script>
@@ -529,5 +555,13 @@ $(document).ready(function(){
     $(document).ready(function () {
     $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
     });
+
+ function nothing(){
+ 	//alert('wait')
+ 	$("#topictree0 li[role=treeitem]").each(function () {
+    	//alert(this)
+    	$("#topictree0").jstree('select_node', this)
+	});
+ }
 </script>
 {% endblock %}
