@@ -541,7 +541,7 @@ $(document).ready(function(){
 	//alert('documento cargado completamemnte')
     // select the whole jstree control
     //$('#topictree1').jstree('select_node', this);
-    window.setTimeout(nothing, 500);
+    window.setTimeout(selectTree, 500);
 
     
     // select a whole branch:
@@ -556,12 +556,12 @@ $(document).ready(function(){
     $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
     });
 
- function nothing(){
+ function selectTree(){
  	//alert('wait')
- 	$("#topictree0 li[role=treeitem]").each(function () {
+ 	//$("#topictree1 li[role=treeitem]").each(function () {
     	//alert(this)
-    	$("#topictree0").jstree('select_node', this)
-	});
+    	$("#topictree1").jstree('select_node', '#skill98')
+	//});
  }
 </script>
 {% endblock %}
