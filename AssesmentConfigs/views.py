@@ -63,7 +63,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_data = json.dumps(json_dict)
     #print (json_data)
     topictree= getTopictree('math')
-    print topictree
+    #print topictree
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):

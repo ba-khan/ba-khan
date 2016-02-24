@@ -392,7 +392,7 @@ def getTopictree(subject):
     subtopic_skill=Subtopic_Skill.objects.select_related('id_skill_name')
     id=0
     for skill in subtopic_skill:
-        skill_id="skill"+str(id)
+        skill_id=skill.id_skill_name.id_skill_name
         skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false"}
         topictree.append(skill_obj)
         id=id+1
