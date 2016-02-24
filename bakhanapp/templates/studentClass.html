@@ -1690,7 +1690,7 @@ var bajada = new Howl({
 					$('#hover').fadeOut();
 					$("#popup_error").fadeOut();
 					editAssesment(id_assesment);
-					
+					return true					
 				});
 				$("#evCancelar").on("click",function(){
 					$('#hover').fadeOut();
@@ -1698,6 +1698,7 @@ var bajada = new Howl({
 					return false
 				});
 			}else{
+				showDiv();
 				editAssesment(id_assesment);
 			}
 		}
@@ -1712,16 +1713,19 @@ var bajada = new Howl({
 					$('#hover').fadeOut();
 					$("#popup_error").fadeOut();
 					hideDiv();
+					return true
 					
 				});
 				$("#evCancelar").on("click",function(){
 					$('#hover').fadeOut();
 					$("#popup_error").fadeOut();
 				});
+			}else{
+				hideDiv()
+				return false
 			}
 		}
-		function editAssesment(id_assesment){
-			showDiv();	
+		function editAssesment(id_assesment){	
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
