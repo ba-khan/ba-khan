@@ -338,41 +338,6 @@ def getTopictree(subject):
     topictree_json['plugins']=['checkbox','search']
     topictree=[]
     start_time=time.time()
-    #string_query ='''select c.name_spanish as chapter_name, t.name_spanish as topic_name, st.name_spanish as subtopic_name, s.id_skill_name as skill_id, s.name_spanish as skill_name
-    #             from bakhanapp_chapter c, bakhanapp_skill s, bakhanapp_topic t, bakhanapp_subtopic st, bakhanapp_subtopic_skill ss
-    #             where c.id_chapter_name=t.id_chapter_name_id and t.id_topic_name=st.id_topic_name_id and st.id_subtopic_name=ss.id_subtopic_name_id and ss.id_skill_name_id=s.id_skill_name
-    #             order by c.name_spanish, t.name_spanish, st.name_spanish'''
-    #cursor=connection.cursor()
-    #cursor.execute(string_query)
-    #query_result = dictfetchall(cursor)
-    #last_chapter=''
-    #last_topic=''
-    #last_subtopic=''
-    #last_skill=''
-    #chapters=[]
-    #for query_tuple in query_result:
-    #    current_chapter=query_tuple['chapter_name']
-    #    current_topic=query_tuple['topic_name']
-    #    current_subtopic=query_tuple['subtopic_name']
-    #    current_skill=query_tuple['skill_name']
-    #    current_skill_id=query_tuple['skill_id']
-    #    
-    #    if last_chapter=="" or last_chapter!=current_chapter:
-    #        chapter={"text":current_chapter, "data":{}, "children":[]}
-    #        chapters.append(chapter)
-    #        last_chapter=current_chapter
-
-    #    if last_topic=="" or last_topic!=current_topic:
-    #        topic={"text":current_topic, "data":{}, "children":[]}
-    #        chapter["children"].append(topic)
-    #        last_topic=current_topic    
-        
-    #    if last_subtopic=="" or last_subtopic!=current_subtopic:
-    #        subtopic={"text":current_subtopic, "data":{}, "children":[]}
-    #        topic["children"].append(subtopic)
-    #        last_subtopic=current_subtopic 
-    #    skill={"text":current_skill, "data":{"skill_id": current_skill_id}, "children":[]}
-    #    subtopic["children"].append(skill)
     subjects=Subject.objects.all()
     for subject in subjects:
         subject_obj={"id": subject.id_subject_name, "parent":"#", "text": subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
@@ -392,43 +357,13 @@ def getTopictree(subject):
     subtopic_skill=Subtopic_Skill.objects.select_related('id_skill_name')
     id=0
     for skill in subtopic_skill:
-        skill_id=skill.id_skill_name.id_skill_name
+        #skill_id="skill"+str(id)
+        #skill_id = skill.id_skill_name.id_skill_name
+        skill_id = skill.id_subtopic_skill
         skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false"}
         topictree.append(skill_obj)
         id=id+1
-    #print("--- %s seconds ---" % (time.time() - start_time))
-    #print topictree
-    #temp=[]
-    #chapters=Chapter.objects.filter(id_subject_name_id=subject)
-    #for chapter in chapters:
-    #    chapter_obj={'text':chapter.name_spanish,'children':[]}
-    #    topics=Topic.objects.filter(id_chapter_name_id=chapter.id_chapter_name)
-        #print(chapter)
-    #    for topic in topics:
-    #        topic_obj={'text':topic.name_spanish,'children':[]}
-    #        subtopics=Subtopic.objects.filter(id_topic_name_id=topic.id_topic_name)
-            #print(topic)
-    #        for subtopic in subtopics:
-    #            subtopic_obj={'text':subtopic.name_spanish,'children':[]}
-    #            subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopic.id_subtopic_name)
-    #            for subtopic_skill in subtopic_skills:
-    #                skills=Skill.objects.filter(id_skill_name=subtopic_skill.id_skill_name_id)
-    #                for skill in skills:
-    #                    skill_obj={'text': skill.name_spanish, 'children':[]}
-    #                    subtopic_obj['children'].append(skill_obj)
-                        #temp.append(chapter)
-                        #temp.append(topic)
-                        #temp.append(subtopic)
-                        #temp.append(skill)
-                        #print(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
-                        #topictree.append(temp)
-    #                    temp=[]
-    #            topic_obj['children'].append(subtopic_obj)
-    #        chapter_obj['children'].append(topic_obj)
-    #    topictree.append(chapter_obj)
-    #topictree_json['core']={'data':chapters}
     topictree_json['core']={'data':topictree}
-    #topictree_data=serialize('json',topictree_json)
     topictree_json_string=json.dumps(topictree_json)
     return topictree_json_string
 

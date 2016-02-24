@@ -11,7 +11,7 @@ from django.contrib import auth
 from django.db.models import Count
 
 from django import template
-from bakhanapp.models import Assesment_Skill
+from bakhanapp.models import Assesment_Skill,Subtopic_Skill,Config_Skill
 
 register = template.Library()
 
@@ -37,9 +37,10 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_array=[]
     for assesment_config in assesment_configs:
         #print assesment_config.id_assesment_config
-        assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
+        #assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
+        config_skills = Config_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_subtopic_skill')
        #print assesment_skills
-        skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
+        #skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
         #print skills
         config_json={}
         config_json["id_assesment_config"]=assesment_config.id_assesment_config
@@ -52,10 +53,10 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["importance_completed_rec"]=assesment_config.importance_completed_rec
         config_json["applied"]=assesment_config.applied
         config_json["assesment_skills"]=[]
-        config_json["assesment_skills_spanish"]=[]
-        for i in range(len(assesment_skills)):
-            config_json["assesment_skills"].append(assesment_skills[i])
-            config_json["assesment_skills_spanish"].append(skills[i])
+        #config_json["assesment_skills_spanish"]=[]
+        for i in range(len(config_skills)):
+            config_json["assesment_skills"].append(config_skills[i])
+            #config_json["assesment_skills_spanish"].append(skills[i])
         #print config_json["assesment_skills"]
         json_array.append(config_json)
     
@@ -100,10 +101,6 @@ def newAssesmentConfig(request):
     if request.method == 'POST':
         args = request.POST
         id = args['id']
-        if not (args['importance_skill_level'+id]):
-            print "wena shoro"
-        else:
-            print "ahora si shoroooo"
         if (args['name'] and args['approval_percentage'] and args['importance_skill_level'+id] and args['importance_completed_rec'+id] and eval(args['skills'+id])):
             skills_selected = eval(args['skills'+id])
             teacher=2
@@ -119,9 +116,12 @@ def newAssesmentConfig(request):
                                    )
 
             for skill in skills_selected:
-                skill_tuple=Skill.objects.get(pk=skill)
-                new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                    id_skill_name=skill_tuple)
+                print skill
+                #skill_tuple=Skill.objects.get(pk=skill)
+                #id_skill_name_id = Subtopic_Skill.objects.get(id_subtopic_skill=skill)
+                #print id_skill_name_id.id_skill_name_id
+                new_config_skill=Config_Skill(id_assesment_config=new_assesment_config,id_subtopic_skill_id=skill).save()
+
                 
             return HttpResponse("Pauta guardada correctamente")
         else:

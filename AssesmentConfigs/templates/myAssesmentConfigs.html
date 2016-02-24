@@ -18,7 +18,8 @@ function getTopicTree(id){
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
 		    	if (selected_skills[i].data){
-		    		selected_skills_id.push(selected_skills[i].data["skill_id"]);
+		    		//selected_skills_id.push(selected_skills[i].data["skill_id"]);
+		    		selected_skills_id.push(selected_skills[i].id);
 		    	}
 		    }
 		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
@@ -245,7 +246,7 @@ function onSlide(ui,id) {
 				var skills{{ forloop.counter }} = []
 	        	for (i=0;i<id_skills.length;i++){ 
 	        		//alert(id_skills[i].id_skill_name_id);
-	        		skills{{ forloop.counter }}.push(id_skills[i].id_skill_name_id)
+	        		skills{{ forloop.counter }}.push(id_skills[i])
 	        		//$("#topictree1").jstree('select_node', '#skill98')
 	        	//alert('hola')
 	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
@@ -574,7 +575,8 @@ $(document).ready(function(){
     //	}
     	
     for(i=0;i<skills1.length;i++){
-    	skill = '#'+skills1[i]
+    	alert(skills1[i].id_subtopic_skill)
+    	skill = '#'+skills1[i].id_subtopic_skill
     	$("#topictree1").jstree('select_node', skill)
     }
     	

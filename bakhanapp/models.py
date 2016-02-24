@@ -292,3 +292,10 @@ class Subtopic_Skill(models.Model):
     class Meta:
         unique_together = ('id_skill_name', 'id_subtopic_name')
         
+class Config_Skill(models.Model):
+    id_config_skill = models.AutoField(primary_key=True)
+    id_assesment_config = models.ForeignKey(Assesment_Config)
+    id_subtopic_skill = models.ForeignKey(Subtopic_Skill)
+
+    class Meta:
+        unique_together = ('id_assesment_config', 'id_subtopic_skill')
