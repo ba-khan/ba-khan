@@ -105,11 +105,11 @@ var bajada = new Howl({
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
 				<p class="label_input"><strong>Nota Máxima</strong></p>
 				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
-				<p class="label_input"><strong>Nota Aprobacion</strong></p>
+				<p class="label_input"><strong>Nota de Aprobacion</strong></p>
 				<input name="nota_aprobacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprobacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprobacion"/>
-				<p class="label_input"><strong>Fecha Inicio</strong></p>
+				<p class="label_input"><strong>Fecha de Inicio</strong></p>
 				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
-				<p class="label_input"><strong>Fecha Término</strong></p>
+				<p class="label_input"><strong>Fecha de Término</strong></p>
 				<input name="fecha_termino" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
 				<input name="input_id_config" id="input_id_config" style="display:none;">
 				<input name="input_kaid" id="input_kaid" style="display:none;">
@@ -125,7 +125,7 @@ var bajada = new Howl({
 		</div>
 	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
 	    <div>
-			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes Evaluados</strong></div>	
+			<div id="estudiantesEvaluados" style="padding-left:220px;margin-bottom:-10px"></div>	
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 		</div>
 		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
@@ -1642,8 +1642,10 @@ var bajada = new Howl({
 		}
 		function nuevaEvaluacion(){
 			showDiv();
-			$('#button_realizar').show()
-			$('#button_editar').hide()
+			$('#estudiantesEvaluados').empty();
+			$('#estudiantesEvaluados').append('<strong>Estudiantes a Evaluar</strong>');
+			$('#button_realizar').show();
+			$('#button_editar').hide();
 			$('#comboBox').prop('disabled', false);
 			$("#comboBox option[value=0]").prop('selected', 'selected').change();
 			$("input[name='input_nombre']").val("");
@@ -1671,6 +1673,8 @@ var bajada = new Howl({
 					$("input[name='nota_aprobacion']").val(json_assesment[0]['fields']['approval_grade']);
 					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 					$('#comboBox').prop('disabled', true);
+					$('#estudiantesEvaluados').empty();
+					$('#estudiantesEvaluados').append('<strong>Estudiantes Evaluados</strong>');
 				}
 			});
 			M_student = [];
