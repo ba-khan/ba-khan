@@ -18,7 +18,7 @@ register = template.Library()
 
 from bakhanapp.models import Skill
 
-from bakhanapp.models import Assesment_Config
+from bakhanapp.models import Assesment_Config,Subtopic_Skill
 
 
 from bakhanapp.views import getTopictree
@@ -105,6 +105,8 @@ def newAssesmentConfig(request):
             print "ahora si shoroooo"
         if (args['name'] and args['approval_percentage'] and args['importance_skill_level'+id] and args['importance_completed_rec'+id] and eval(args['skills'+id])):
             skills_selected = eval(args['skills'+id])
+            
+            #subtopic_skills = eval(args['subtopic_skill'+id])
             teacher=2
             subject="math"
             new_assesment_config = Assesment_Config.objects.create(name=args['name'],
@@ -118,9 +120,10 @@ def newAssesmentConfig(request):
                                    )
 
             for skill in skills_selected:
-                skill_tuple=Skill.objects.get(pk=skill)
+                print skill['skill_id']
+                #skill_tuple=Skill.objects.get(pk=skill)
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                    id_skill_name=skill_tuple)
+                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
                 
             return HttpResponse("Pauta guardada correctamente")
         else:

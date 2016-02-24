@@ -15,10 +15,12 @@ function getTopicTree(id){
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
 		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
+		    //selected_subtopic_skill=new Array();
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
 		    	if (selected_skills[i].data){
-		    		selected_skills_id.push(selected_skills[i].data["skill_id"]);
+		    		selected_skills_id.push({'skill_id':selected_skills[i].data["skill_id"],id:selected_skills[i].id});
+		    		//selected_subtopic_skill.push(selected_skills[i].id);
 		    	}
 		    }
 		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
@@ -27,6 +29,7 @@ function getTopicTree(id){
 										return inputArray.indexOf(item) == index;
 									});
 			$('input[name="skills'+id+'"]').val(JSON.stringify(selected_skills_id));
+			//$('input[name="subtopic_skill'+id+'"]').val(JSON.stringify(selected_subtopic_skill));
 	    }).jstree(topictree);
 		
 		var to=false;
@@ -181,6 +184,7 @@ function onSlide(ui,id) {
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
 	        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
+	        <!--<input name="subtopic_skill{{ forloop.counter }}" id="subtopic_skillInput{{ forloop.counter }}" type="hidden" value="[]">-->
 	        
 			<br>
 			<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
