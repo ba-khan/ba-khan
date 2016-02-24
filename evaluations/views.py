@@ -103,7 +103,7 @@ def updateAssesment(request): #modifica una evaluacion
         fecha2=args['fecha_termino']
         nota1=eval(args['nota_minima'])
         nota2=eval(args['nota_maxima'])
-        nota3=eval(args['nota_aprovacion'])
+        nota3=eval(args['nota_aprobacion'])
         id_config=(args['input_id_config'])
         nombre_config=args['input_nombre']
         students=eval(args['input_kaid'])

@@ -88,18 +88,18 @@ var bajada = new Howl({
     	</div>
     </div>
 
-	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="icon-plus-sign"></i> Nueva Evaluación</button></div>
-	<div id="contenido_a_mostrar"  style="display:none;">
+	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="icon-plus-sign"></i> Nueva Evaluación</button></div> 
+	<div id="contenido_a_mostrar" style="display:none;">
 		<div id="inputs" align="left">
-			<p class="label_input"><strong>Pauta</strong></p>
-			<select id="comboBox" class="skill_search" onChange="fillParameters(this.value)">
+			<p class="label_input"><strong>Pauta de Evaluación</strong></p>
+			<select id="comboBox" class="skill_search" onClick="validarRealizarEvaluacion();" onChange="fillParameters(this.value);">
 				<OPTION VALUE=0>Seleccionar Pauta</OPTION>
 				{% for config in assesment_configs %}
 					<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>
 				{% endfor %}
 			</select>
 			<form action="" method="post" id='formJson'>{% csrf_token %}
-				<p class="label_input"><strong>Nombre Configuración</strong></p>
+				<p class="label_input"><strong>Nombre de la Evaluación</strong></p>
 				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuración"/>
 				<p class="label_input"><strong>Nota Mínima</strong></p>
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
@@ -132,7 +132,7 @@ var bajada = new Howl({
 		<div align="center" style="padding-left:460px">
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="$('#contenido_a_mostrar').toggle('blind',1000);bajada.play()" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="hideDiv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
 
@@ -1578,57 +1578,48 @@ var bajada = new Howl({
 			flag = true;
 			if (cuadritos.length==0){
 				$('#Evaluados').css("border", "1px solid #C30202");
-				//$('#Evaluados').tipsy({gravity: 'w', fallback: "Arrastre aqui a los estudiantes que desee evaluar", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#Evaluados').css("border", "1px solid #D9D9D9");
 			}
 			if( input_name == null || input_name.length == 0 || /^\s+$/.test(input_name) ) {
 				$('#input_nombre').css('color', '#C30202');
-			    //$('#input_nombre').tipsy({gravity: 'w', fallback: "El nombre debe contener letras", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#input_nombre').css('color', '#000000');
-			    //$('#input_nombre').focusout(function(){$(this).css("box-shadow","none");});
 			}
 			if(grade_min == null || grade_min<0 || grade_min.length == 0 || /^\s+$/.test(grade_min)) {
 				$('#nota_minima').css('color', '#C30202');
-			    //$('#nota_minima').tipsy({gravity: 'w', fallback: "La nota minima debe ser un numero positivo", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#nota_minima').css('color', '#000000');
 			}
 			if(grade_max == null || grade_min>grade_max || grade_max.length == 0 || /^\s+$/.test(grade_max)) {
 				$('#nota_maxima').css('color', '#C30202');
-			    //$('#nota_maxima').tipsy({gravity: 'w', fallback: "La nota maxima debe ser mayor que la nota minima", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#nota_maxima').css('color', '#000000');
 			}
 			if(approval_percentage == null || grade_min>approval_percentage || approval_percentage>grade_max || approval_percentage.length == 0 || /^\s+$/.test(approval_percentage)) {
 				$('#nota_aprobacion').css('color', '#C30202');
-			    //$('#nota_maxima').tipsy({gravity: 'w', fallback: "La nota maxima debe ser mayor que la nota minima", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#nota_aprobacion').css('color', '#000000');
 			}
 			if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
 				$('#fecha_inicio').css('color', '#C30202');
-			    //$('#fecha_inicio').tipsy({gravity: 'w', fallback: "Debe haber una fecha de inicio", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#fecha_inicio').css('color', '#000000');
 			}
 			if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
 				$('#fecha_termino').css('color', '#C30202');
-			    //$('#fecha_termino').tipsy({gravity: 'w',fallback: "La fecha de termino debe ser mayor que la de inicio y mayor a el dia de hoy", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#fecha_termino').css('color', '#000000');
 			}
 			if( combo_box == null || combo_box == 0 ) {
 				$('#comboBox').css('color', '#C30202');
-				//$('#comboBox').tipsy({gravity: 'w', fallback: "debe seleccionar una pauta", opacity: 0.8});
 				flag = false;
 			}else{
 				$('#comboBox').css('color', '#000000');
@@ -1650,9 +1641,7 @@ var bajada = new Howl({
 			$('#popup').fadeOut();
 		}
 		function nuevaEvaluacion(){
-			
-			subida.play();
-			$("#contenido_a_mostrar").toggle("blind",1000);
+			showDiv();
 			$('#button_realizar').show()
 			$('#button_editar').hide()
 			$('#comboBox').prop('disabled', false);
@@ -1666,7 +1655,7 @@ var bajada = new Howl({
 			noEvaluarTodos();
 		}
 		function editarAssesment(id_assesment){
-			$("#contenido_a_mostrar").toggle("blind",1000);		
+			showDiv();		
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
@@ -1987,6 +1976,18 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     {
       document.getElementById(myDiv).innerHTML = "Evaluación Lista";
     }
+  }
+  function showDiv(){
+  	if( !($('#contenido_a_mostrar').is(":visible")) ){
+    	subida.play();
+    	$('#contenido_a_mostrar').toggle('blind',1000)
+	}
+  }
+  function hideDiv(){
+  	if( $('#contenido_a_mostrar').is(":visible") ){
+    	$('#contenido_a_mostrar').toggle('blind',1000)
+    	bajada.play();
+	}
   }
 
 
