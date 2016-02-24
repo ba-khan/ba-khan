@@ -8,8 +8,9 @@
 
 {% block body2 %}		
 		
+
 	{% if classes %}
-		<div class="span9" style="width:96%;" data-reactid=".2.0.1.1">
+		<div class="span9" style="width:96%;">
 		{% for class in classes %}
 			{% ifchanged class.level.0 %}
 				{% for klass in classes %}
@@ -26,15 +27,15 @@
 										</div>
 										<!-- columna 2 -->
 										<div class="student-list-column" style="width:25%;">
-											<font size="2"><a role="button" aria-disabled="false" href="{% url 'getClassStudents' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Curso</a></font>
+											<font size="2"><a role="button" onClick="loading()" aria-disabled="false" href="{% url 'getClassStudents' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Curso</a></font>
 										</div>
 										<!-- columna 3 -->
 										<div class="student-list-column" style="width:25%;">
-											<font size="2"><a role="button" aria-disabled="false" href="{% url 'groups:getGroups' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Grupos</a></font>
+											<font size="2"><a role="button" aria-disabled="false" href="{% url 'groups:getGroups' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()" style="width:100%;">Ver Grupos</a></font>
 										</div>
 										<!-- columna 4 -->
 										<div class="student-list-column" style="width:25%;">
-											<font size="2"><a role="button" aria-disabled="false" href="{% url 'Contacts:getContacts' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Contactos</a></font>
+											<font size="2"><a role="button" aria-disabled="false" onClick="loading()" href="{% url 'Contacts:getContacts' klass.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Contactos</a></font>
 										</div>
 									</ul></div>
 								</div>
@@ -48,5 +49,4 @@
 	<div id="end-of-page-spacer">
 		&nbsp;
 	</div>
-	
 {% endblock %}

@@ -3,6 +3,36 @@
 {% block title %}Inicio{% endblock %}
  
 {% block body %}
+	
+	<div id="popup_evaluacion" class="popup" style="display:none">
+    	<div style="align:left;">
+	    	<p>Cargando los datos, por favor espere un momento</p>
+	    	<div style="display: none;" id="profile-throbber2" class="profile-throbber">
+				<div class="throbber-grid">   
+				    <!--[if lte IE 9]>
+				    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+				    <![endif]-->
+				    <div class="throbber-row clearfix">
+				         <div class="block-0 throbber-block"></div>
+				         <div class="block-1 throbber-block"></div>
+				         <div class="block-2 throbber-block"></div>
+				    </div>
+				    <div class="throbber-row clearfix">
+				         <div class="block-7 throbber-block"></div>
+				         <div class="block-8 throbber-block"></div>
+				         <div class="block-3 throbber-block"></div>
+				    </div>
+				    <div class="throbber-row clearfix">
+				         <div class="block-6 throbber-block"></div>
+				         <div class="block-5 throbber-block"></div>
+				         <div class="block-4 throbber-block"></div>
+				    </div>
+				</div>
+			</div>
+    	</div>
+    </div>
+
+
 	<div class="pure-hidden-xs pure-hidden-sm">
 		<div class="wide-learn-menu-background-container" style="display: none;">
 			<div class="contained-and-centered">
@@ -14,7 +44,7 @@
 	<!-- Inicio barra de arriba (class="selected")-->
 	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"></h3></span>
 	<a class="" href="{% url 'cursos' %}"><span>Inicio</span></a>
-	<a class="" href="/inicio/pautas"><span>Pautas</span></a>
+	<a class="" href="/inicio/pautas" onClick="loading()"><span>Pautas</span></a>
 	{% if perms.bakhanapp.isAdmin %} 
 	<a class="" href="/inicio/administradores"><span>Administradores</span></a>
 	{% endif %}
@@ -33,6 +63,13 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		function loading(){
+			$('#popup_evaluacion').fadeIn();
+			$('#hover').fadeIn();
+			$('#profile-throbber2').fadeIn();
+		}
+	</script>
 
 	{% block body2 %}
 		
