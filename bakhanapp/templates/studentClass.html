@@ -1742,6 +1742,7 @@ var bajada = new Howl({
 				$("#evCancelar").on("click",function(){
 					$('#hover').fadeOut();
 					$("#popup_error").fadeOut();
+					return false
 				});
 			}else{
 				hideDiv()
@@ -2086,12 +2087,14 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
       document.getElementById(myDiv).innerHTML = "Evaluación Lista";
     }
   }
+
   function showDiv(){
   	if( !($('#contenido_a_mostrar').is(":visible")) ){
     	subida.play();
     	$('#contenido_a_mostrar').toggle('blind',1000)
 	}
   }
+  
   function hideDiv(){
   	if( $('#contenido_a_mostrar').is(":visible") ){
     	$('#contenido_a_mostrar').toggle('blind',1000)
