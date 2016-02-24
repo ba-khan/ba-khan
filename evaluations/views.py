@@ -84,13 +84,10 @@ def updateGrade(request):
 def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
     if request.method == 'POST':
         args = request.POST
-        print args
         id_assesment=args['assesment']
-        print id_assesment
         get_assesment = Assesment.objects.filter(id_assesment=id_assesment)
         data = serializers.serialize('json', get_assesment)
         struct = json.loads(data)
-        print struct
         assesment_data = json.dumps(struct)
         
     return HttpResponse(assesment_data)
