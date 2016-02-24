@@ -82,14 +82,16 @@ var bajada = new Howl({
     <div id="popup_error" class="popup" style="display:none">
     	<div id="close" onClick="$('#popup_error').fadeOut();$('#hover').fadeOut();">X</div>
     	<div style="align:left;">
-	    	<div>
-	    		<p>Datos mal ingresados o incompletos, revise los campos en <strong><font color="#C30202">rojo</font></strong></p>
-	    	</div>
+	    	<div id="popupEvaluacion"></div>
+	    	<div id="botonesEvaluacion">
+	    		<a class='kui-button kui-button-plain kui-button-primary' id="evAceptar">Aceptar</a>
+	    		<a class='kui-button kui-button-plain kui-button-primary' id="evCancelar">Cancelar</a>
+    		</div>
     	</div>
     </div>
 
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="icon-plus-sign"></i> Nueva Evaluación</button></div> 
-	<div id="contenido_a_mostrar" style="display:none;">
+	<div id="contenido_a_mostrar" style="display:none;" value=>
 		<div id="inputs" align="left">
 			<p class="label_input"><strong>Pauta de Evaluación</strong></p>
 			<select id="comboBox" class="skill_search" onClick="validarRealizarEvaluacion();" onChange="fillParameters(this.value);">
@@ -200,6 +202,7 @@ var bajada = new Howl({
 	</script>
 	
 	<script type="text/javascript">
+	var evReady = 0;
 	$(document).ready(function(){
   		noEvaluarTodos();
   		$("#hover").click(function(){
@@ -456,7 +459,7 @@ var bajada = new Howl({
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
-    		.html('<button type="button" class="editButton" title="Editar" onClick="editarAssesment('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		.html('<button type="button" class="editButton" title="Editar" onClick="isEvaluation('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
 
 			endDates.push(endDate)
     		   		
@@ -1559,6 +1562,8 @@ var bajada = new Howl({
 			}
 			else{
 				$("#hover").fadeIn().css('display', '');
+    			$("#popupEvaluacion").empty();
+    			$("#popupEvaluacion").append("<p>Datos mal ingresados o incompletos, revise los campos incompletos o en color <strong><font color='#C30202'>rojo</font></strong></p>");
     			$("#popup_error").fadeIn().css('display', '');
 			}
 		}
@@ -1642,6 +1647,7 @@ var bajada = new Howl({
 		}
 		function nuevaEvaluacion(){
 			showDiv();
+			evReady = 1;
 			$('#estudiantesEvaluados').empty();
 			$('#estudiantesEvaluados').append('<strong>Estudiantes a Evaluar</strong>');
 			$('#button_realizar').show();
@@ -1656,8 +1662,47 @@ var bajada = new Howl({
 			$("input[name='nota_aprobacion']").val("");
 			noEvaluarTodos();
 		}
-		function editarAssesment(id_assesment){
-			showDiv();		
+		function evaluationReady(){
+			$('#hover').fadeIn();
+			$("#popupEvaluacion").empty();
+    		$("#popupEvaluacion").append("<p>Datos mal ingresados o incompletos, revise los campos incompletos o en color <strong><font color='#C30202'>rojo</font></strong></p>");
+    		$("#popup_error").fadeIn().css('display', '');
+			$("#evAceptar").on("click",function(){
+				evReady=0;
+				$('#hover').fadeOut();
+				$("#popup_error").fadeOut();
+				return true
+			});
+			$("#evCancelar").on("click",function(){
+				$('#hover').fadeOut();
+				$("#popup_error").fadeOut();
+				return false
+			});
+		}
+		function isEvaluation(id_assesment){
+			if(evReady==1){
+				$('#hover').fadeIn();
+				$("#popupEvaluacion").empty();
+	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
+	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").on("click",function(){
+					evReady=0;
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					editAssesment(id_assesment);
+					
+				});
+				$("#evCancelar").on("click",function(){
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					return false
+				});
+			}else{
+				editAssesment(id_assesment);
+			}
+		}
+		function editAssesment(id_assesment){
+			showDiv();	
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
@@ -1730,6 +1775,8 @@ var bajada = new Howl({
 			}
 			else{
 				$("#hover").fadeIn().css('display', '');
+    			$("#popupEvaluacion").empty();
+    			$("#popupEvaluacion").append("<p>Datos mal ingresados o incompletos, revise los campos incompletos o en color <strong><font color='#C30202'>rojo</font></strong></p>");
     			$("#popup_error").fadeIn().css('display', '');
 			}
 
