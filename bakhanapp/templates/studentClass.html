@@ -479,7 +479,7 @@ var bajada = new Howl({
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
-    		.html('<button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		.html('<button type="button" class="showButton" title="Ver Evaluacion" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
 	
     	}
   	
@@ -1679,6 +1679,29 @@ var bajada = new Howl({
 				return false
 			});
 		}
+		function showEvaluation(id_assesment){
+			if(evReady==1){
+				$('#hover').fadeIn();
+				$("#popupEvaluacion").empty();
+	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
+	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").on("click",function(){
+					evReady=0;
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					showAssesment(id_assesment);
+					return true					
+				});
+				$("#evCancelar").on("click",function(){
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					return false
+				});
+			}else{
+				showDiv();
+				showAssesment(id_assesment);
+			}
+		}
 		function isEvaluation(id_assesment){
 			if(evReady==1){
 				$('#hover').fadeIn();
@@ -1724,6 +1747,18 @@ var bajada = new Howl({
 				hideDiv()
 				return false
 			}
+		}
+		function showAssesment(id_assesment){	
+			editAssesment(id_assesment);
+			$("input[name='input_nombre']").prop('disabled', true);
+			$("input[name='fecha_inicio']").prop('disabled', true);
+			$("input[name='fecha_termino']").prop('disabled', true);
+			$("input[name='nota_maxima']").prop('disabled', true);
+			$("input[name='nota_minima']").prop('disabled', true);
+			$("input[name='nota_aprobacion']").prop('disabled', true);
+			$('#comboBox').prop('disabled', true);
+			$('#button_editar').hide()
+
 		}
 		function editAssesment(id_assesment){	
 			$.ajax({

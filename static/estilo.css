@@ -464,6 +464,16 @@ label.sort-filter{
     border: none;
     margin-left:-2%;
 }
+.showButton {
+    background:url(img/ver.png);
+    background-size: 25px;
+    cursor:pointer;
+    width: 25px;
+    height: 25px;
+    border: none;
+    margin-left:-2%;
+    margin-bottom: 5px;
+}
 .summaryButton {
     background:url(img/summaryButton.png);
     background-size: 32px;
