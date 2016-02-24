@@ -372,7 +372,8 @@ label.sort-filter{
   box-shadow:0 0 10px 0 #9DB63B;
 }
 
-#popup,#popup_evaluacion{
+
+#popup,#popup_evaluacion,#popup_error{
   position:fixed;
   width:600px;
   height:180px;
