@@ -134,7 +134,7 @@ var bajada = new Howl({
 		<div align="center" style="padding-left:460px">
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="hideDiv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="cancelNewEv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
 
@@ -1699,6 +1699,25 @@ var bajada = new Howl({
 				});
 			}else{
 				editAssesment(id_assesment);
+			}
+		}
+		function cancelNewEv(){
+			if(evReady==1){
+				$('#hover').fadeIn();
+				$("#popupEvaluacion").empty();
+	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
+	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").on("click",function(){
+					evReady=0;
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					hideDiv();
+					
+				});
+				$("#evCancelar").on("click",function(){
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+				});
 			}
 		}
 		function editAssesment(id_assesment){
