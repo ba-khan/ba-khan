@@ -428,7 +428,7 @@ img:hover{
 }
 #name{
   float:right;
-  width: 11%;
+  width: 17%;
 }
     </style>
     <style type="text/css">
@@ -684,7 +684,24 @@ $('input[name="skills"]').val(JSON.stringify(selected_skills_id));
 </script>
 <script type="text/javascript">
 
-
+function formatDate(dd,mm,yyyy,h,m,s){
+  if(dd<10){
+    dd='0'+dd
+  } 
+  if(mm<10){
+    mm='0'+mm
+  } 
+  if(h<10){
+    h='0'+h
+  } 
+  if(m<10){
+    m='0'+m
+  }
+  if(s<10){
+    s='0'+s
+  }
+  return dd+"/"+mm+"/"+yyyy+" "+h+":"+m+":"+s;
+}
 
 window.onload = function() {
 		var testData = [];
@@ -694,26 +711,29 @@ window.onload = function() {
 		var master_groups = JSON.parse('{{ groups | escapejs }}');
 		for (i=0;i<master_groups.length;i++){
       date = new Date(master_groups[i]['fields']['date']);
+      console.log(date)
       times ={};
       var arr=[];
       dic = {};
 
       if (dates.indexOf(master_groups[i]['fields']['date']) == -1){
         dates.push(master_groups[i]['fields']['date']);
-        dic.starting_time = date.getTime() + 10800000;
+        dic.starting_time = date.getTime();
         dic.ending_time = dic.starting_time+20;
         arr.push(dic);
         cont=1;
       }
       else{
-        dic.starting_time = date.getTime() + 10800000 + (separate*cont);
+        dic.starting_time = date.getTime()  + (separate*cont);
         dic.ending_time = dic.starting_time+20;
         arr.push(dic);
         cont=cont+1;
       }
 
 			times.times = arr;
-			times.label = master_groups[i]['fields']['date'];
+			times.label = formatDate(date.getDate(),(date.getMonth()+1),date.getFullYear(),date.getHours(),date.getMinutes(),date.getSeconds());
+      console.log(times.label);
+
 			times.id = master_groups[i]['pk'];
 			testData.push(times);
       //date = new Date(testData[i].times[0].starting_time);
@@ -866,5 +886,8 @@ function newGroups() {
     $(document).ready(function () {
     $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' })
     });
+
+    test = Date(1456321979.64*1000);
+    console.log(test);
 </script>
 {% endblock %}

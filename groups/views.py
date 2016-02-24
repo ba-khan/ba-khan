@@ -33,8 +33,6 @@ from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
 from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill,Group_Student
 from groups.models import Group_Skill,Master_Group
 
-import datetime
-
 import cgi
 import rauth
 import SimpleHTTPServer
@@ -55,6 +53,7 @@ from bakhanapp.models import Group,Group_Student
 from django.utils import timezone
 from bakhanapp.views import getTopictree
 import time
+import datetime
 
 
 # Create your views here.
@@ -119,14 +118,20 @@ def getGroups(request, id_class):
             tutors[0]['kaid_tutor_avanzados'] = 'kaid_1097501097555535353578558' 
             master = Master_Group()
             master.name = 'test'
-            master.date = timezone.now()
-            fecha = timezone.now()
-            hoy= fecha.strftime("%Y-%m-%d %H:%M:%S")
-            t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
-            master.date_int = int(t)
+            #master.date = timezone.now()
+            #print master.date
+            fecha = time.time()
+            print fecha
+            hoy= datetime.datetime.fromtimestamp(fecha).strftime('%Y-%m-%d %H:%M:%S')
+            print hoy
+            #t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
+            master.date_int = int(fecha)
             master.kaid_teacher = '2'
             master.id_class = id_class
+            master.date = hoy
+
             master.save()
+            print master.date_int
             new_Avanzados = Group()
             new_Avanzados.type = 'Avanzados'
             new_Avanzados.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
