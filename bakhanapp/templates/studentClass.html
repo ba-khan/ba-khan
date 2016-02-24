@@ -54,6 +54,19 @@ var bajada = new Howl({
 		background-color: #BFDAB3; /* resaltar filas */
 	}
 
+#box2000 > div
+{
+    -webkit-transition: width 0.2s ease; 
+    -moz-transition: width 0.2s ease; 
+    -o-transition: width 0.2s ease; 
+    -ms-transition: width 0.2s ease;     
+    transition: width 0.2s ease; 
+}
+#box2000 > div:hover
+{
+    width:120%!important;
+    cursor:pointer;
+}
 </style>
 
 	<div id="popup" class="popup" style="display:none">
@@ -79,6 +92,7 @@ var bajada = new Howl({
     </div>
 
     <div id="popup_resumen" class="popup" style="display:none">
+    	<div id="close" style="top:0px;right:0px;" onClick="$('#popup_resumen').fadeOut();$('#hover').fadeOut();">X</div>
     	<div style="align:left;">
 	    	<p style="text-align:center;">RESUMEN</p>
 	    	<div id="resumen_data"></div>
@@ -89,7 +103,7 @@ var bajada = new Howl({
 	    	<div id="resumen_graph" class="resumen_graph"></div>
     	</div>
     </div>
-    
+
     <div id="popup_evaluacion" class="popup" style="display:none">
     	<div style="align:left;">
 	    	<p>Guardando los cambios, espere un momento</p>
@@ -135,8 +149,8 @@ var bajada = new Howl({
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
 				<p class="label_input"><strong>Nota Máxima</strong></p>
 				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
-				<p class="label_input"><strong>Nota Aprovacion</strong></p>
-				<input name="nota_aprovacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprovacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprovacion"/>
+				<p class="label_input"><strong>Nota Aprobacion</strong></p>
+				<input name="nota_aprobacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprobacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprobacion"/>
 				<p class="label_input"><strong>Fecha Inicio</strong></p>
 				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 				<p class="label_input"><strong>Fecha Término</strong></p>
@@ -1538,7 +1552,7 @@ var bajada = new Howl({
 			$("#parametros").append("<div><strong>Parámetros</strong></div>");
 			{% for config in assesment_configs %}
 				if ({{config.id_assesment_config}}== id){
-					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprovacion: {{ config.approval_percentage }}</div>");
+					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprobacion: {{ config.approval_percentage }}</div>");
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Skill: {{ config.importance_skill_level }}</div>");	
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Recomendaciones: {{ config.importance_completed_rec }}</div>");
 					document.getElementById("input_id_config").value = "{{config.id_assesment_config}}";
@@ -1593,7 +1607,7 @@ var bajada = new Howl({
 			input_name = document.getElementById("input_nombre").value;
 			grade_min = document.getElementById("nota_minima").value;
 			grade_max = document.getElementById("nota_maxima").value;
-			approval_percentage = document.getElementById("nota_aprovacion").value;
+			approval_percentage = document.getElementById("nota_aprobacion").value;
 			date_start = document.getElementById("fecha_inicio").value;
 			date_end = document.getElementById("fecha_termino").value;
 			combo_box = document.getElementById("comboBox").selectedIndex;
@@ -1631,11 +1645,11 @@ var bajada = new Howl({
 				$('#nota_maxima').css('color', '#000000');
 			}
 			if(approval_percentage == null || grade_min>approval_percentage || approval_percentage>grade_max || approval_percentage.length == 0 || /^\s+$/.test(approval_percentage)) {
-				$('#nota_aprovacion').css('color', '#C30202');
+				$('#nota_aprobacion').css('color', '#C30202');
 			    //$('#nota_maxima').tipsy({gravity: 'w', fallback: "La nota maxima debe ser mayor que la nota minima", opacity: 0.8});
 				flag = false;
 			}else{
-				$('#nota_aprovacion').css('color', '#000000');
+				$('#nota_aprobacion').css('color', '#000000');
 			}
 			if(date_start == null || date_start.length == 0 || /^\s+$/.test(date_start)) {
 				$('#fecha_inicio').css('color', '#C30202');
@@ -1687,7 +1701,7 @@ var bajada = new Howl({
 			$("input[name='fecha_termino']").val("");
 			$("input[name='nota_maxima']").val("");
 			$("input[name='nota_minima']").val("");
-			$("input[name='nota_aprovacion']").val("");
+			$("input[name='nota_aprobacion']").val("");
 			noEvaluarTodos();
 		}
 		function editarAssesment(id_assesment){
@@ -1704,7 +1718,7 @@ var bajada = new Howl({
 					$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
 					$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
 					$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
-					$("input[name='nota_aprovacion']").val(json_assesment[0]['fields']['approval_grade']);
+					$("input[name='nota_aprobacion']").val(json_assesment[0]['fields']['approval_grade']);
 					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 					$('#comboBox').prop('disabled', true);
 				}
@@ -2011,6 +2025,13 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   }
 
 
+</script>
+
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript"> 
+    $(document).ready(function () {
+    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000', railoffset: {top:-150,left:-320}})
+    });
 </script>
 
 {% endblock %}

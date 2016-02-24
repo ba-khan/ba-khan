@@ -40,7 +40,7 @@
 }
 
 #popup{
-  position:absolute;
+  position:fixed;
   width:600px;
   height:180px;
   background:#fff;
