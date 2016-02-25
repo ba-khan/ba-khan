@@ -531,19 +531,19 @@ $(document).ready(function(){
 
     function selectTree(){
 
-    alert(totalTree)
+    //alert(totalTree)
     for(j=1;j<=totalTree;j++){
     //alert(skills1.length);
     	skillsId = eval('skills'+j);
     	//alert(skillsId)
     	topictreeId = '#topictree'+j;
-    	alert(topictreeId);
+    	//alert(topictreeId);
 	    for(k=0;k<skillsId.length;k++){
 	    	//alert(k);
 	    	//alert(skills1[k].id_subtopic_skill_id);
-	    	alert(skillsId)
+	    	//alert(skillsId)
 	    	skill = '#'+skillsId[k].id_subtopic_skill_id;
-	    	alert(skill)
+	    	//alert(skill)
 	    	$(topictreeId).jstree('select_node', skill);
 	    	//alert(k);
 
