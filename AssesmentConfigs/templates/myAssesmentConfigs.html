@@ -45,6 +45,7 @@ function getTopicTree(id){
 
 var json_configs = JSON.parse('{{ json_data | escapejs }}');
 var configs = json_configs.assesmentConfigs;
+var totalTree = 0
 
 function slidear(id){
 	if (id==0){
@@ -243,7 +244,7 @@ function onSlide(ui,id) {
 		</div>
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
-
+				totalTree+=1;
 				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
 				config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
@@ -529,28 +530,25 @@ $(document).ready(function(){
     });
 
     function selectTree(){
- 	//alert('wait')
- 	alert(skills1);
- 	//$("#topictree1 li[role=treeitem]").each(function () {
-    	//alert(this)
-    	//alert(this.data)
-    //	for(i=0;i<skills1.length;i++){
-    //		if((this.id).localeCompare(skills1[i])){
-    //			alert('si')
-    //			$("#topictree1").jstree('select_node', this)
-    //		}
-    //	}
-    	
-    alert(skills1.length);
-    for(k=0;k<skills1.length;k++){
-    	alert(k);
-    	alert(skills1[k].id_subtopic_skill_id);
-    	skill = '#'+skills1[k].id_subtopic_skill_id;
-    	alert(skill)
-    	$("#topictree1").jstree('select_node', skill);
-    	alert(k);
 
-    }
+    alert(totalTree)
+    for(j=1;j<=totalTree;j++){
+    //alert(skills1.length);
+    	skillsId = eval('skills'+j);
+    	//alert(skillsId)
+    	topictreeId = '#topictree'+j;
+    	alert(topictreeId);
+	    for(k=0;k<skillsId.length;k++){
+	    	//alert(k);
+	    	//alert(skills1[k].id_subtopic_skill_id);
+	    	alert(skillsId)
+	    	skill = '#'+skillsId[k].id_subtopic_skill_id;
+	    	alert(skill)
+	    	$(topictreeId).jstree('select_node', skill);
+	    	//alert(k);
+
+	    }
+	}
 }
 </script>
 {% endblock %}
