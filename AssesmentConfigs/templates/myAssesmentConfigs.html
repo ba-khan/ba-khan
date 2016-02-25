@@ -243,6 +243,19 @@ function onSlide(ui,id) {
 		</div>
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
+
+				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
+				config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
+				var skills{{ forloop.counter }} = []
+	        	for (i=0;i<id_skills.length;i++){ 
+	        		//alert(id_skills[i].id_skill_name_id);
+	        		skills{{ forloop.counter }}.push(config_skills[i])
+	        		//$("#topictree1").jstree('select_node', '#skill98')
+	        	//alert('hola')
+	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+	        	}
+
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
 	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
 	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
@@ -517,6 +530,7 @@ $(document).ready(function(){
         $("#hover").fadeOut();
     $("#popup").fadeOut();
     });
+  window.setTimeout(selectTree, 500);
   
 });
 
@@ -525,6 +539,27 @@ $(document).ready(function(){
 <script type="text/javascript"> 
     $(document).ready(function () {
     $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
+    
     });
+
+    function selectTree(){
+ 	//alert('wait')
+ 	alert(skills1)
+ 	//$("#topictree1 li[role=treeitem]").each(function () {
+    	//alert(this)
+    	//alert(this.data)
+    //	for(i=0;i<skills1.length;i++){
+    //		if((this.id).localeCompare(skills1[i])){
+    //			alert('si')
+    //			$("#topictree1").jstree('select_node', this)
+    //		}
+    //	}
+    	
+    for(i=0;i<skills1.length;i++){
+    	alert(skills1[i].id_subtopic_skill_id)
+    	skill = '#'+skills1[i].id_subtopic_skill_id
+    	$("#topictree1").jstree('select_node', skill)
+    }
+}
 </script>
 {% endblock %}
