@@ -18,7 +18,7 @@ register = template.Library()
 
 from bakhanapp.models import Skill
 
-from bakhanapp.models import Assesment_Config
+from bakhanapp.models import Assesment_Config,Subtopic_Skill
 
 
 from bakhanapp.views import getTopictree
@@ -38,6 +38,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     for assesment_config in assesment_configs:
         #print assesment_config.id_assesment_config
         assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
+        config_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_subtopic_skill_id')
        #print assesment_skills
         skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
         #print skills
@@ -53,9 +54,11 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["applied"]=assesment_config.applied
         config_json["assesment_skills"]=[]
         config_json["assesment_skills_spanish"]=[]
+        config_json["config_skills"]=[]
         for i in range(len(assesment_skills)):
             config_json["assesment_skills"].append(assesment_skills[i])
             config_json["assesment_skills_spanish"].append(skills[i])
+            config_json["config_skills"].append(config_skills[i])
         #print config_json["assesment_skills"]
         json_array.append(config_json)
     
@@ -74,7 +77,7 @@ def editAssesmentConfig(request,id_assesment_config):
         aux= args['forloop']
 
         assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
-
+        skills_selected = eval(args['skills'+aux])
         assesment_config.name=args['name']
         assesment_config.approval_percentage=args['approval_percentage']
         assesment_config.importance_skill_level=args['importance_skill_level'+aux]
@@ -86,6 +89,13 @@ def editAssesmentConfig(request,id_assesment_config):
         assesment_config.applied=False
 
         assesment_config.save()
+        Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
+
+        for skill in skills_selected:
+                print skill['skill_id']
+                #skill_tuple=Skill.objects.get(pk=skill)
+                new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
+                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
 
@@ -105,6 +115,8 @@ def newAssesmentConfig(request):
             print "ahora si shoroooo"
         if (args['name'] and args['approval_percentage'] and args['importance_skill_level'+id] and args['importance_completed_rec'+id] and eval(args['skills'+id])):
             skills_selected = eval(args['skills'+id])
+            
+            #subtopic_skills = eval(args['subtopic_skill'+id])
             teacher=2
             subject="math"
             new_assesment_config = Assesment_Config.objects.create(name=args['name'],
@@ -118,9 +130,10 @@ def newAssesmentConfig(request):
                                    )
 
             for skill in skills_selected:
-                skill_tuple=Skill.objects.get(pk=skill)
+                print skill['skill_id']
+                #skill_tuple=Skill.objects.get(pk=skill)
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                    id_skill_name=skill_tuple)
+                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
                 
             return HttpResponse("Pauta guardada correctamente")
         else:

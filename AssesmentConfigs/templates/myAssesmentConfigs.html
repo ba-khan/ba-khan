@@ -15,10 +15,12 @@ function getTopicTree(id){
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
 		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
+		    //selected_subtopic_skill=new Array();
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
 		    	if (selected_skills[i].data){
-		    		selected_skills_id.push(selected_skills[i].data["skill_id"]);
+		    		selected_skills_id.push({'skill_id':selected_skills[i].data["skill_id"],id:selected_skills[i].id});
+		    		//selected_subtopic_skill.push(selected_skills[i].id);
 		    	}
 		    }
 		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
@@ -27,6 +29,7 @@ function getTopicTree(id){
 										return inputArray.indexOf(item) == index;
 									});
 			$('input[name="skills'+id+'"]').val(JSON.stringify(selected_skills_id));
+			//$('input[name="subtopic_skill'+id+'"]').val(JSON.stringify(selected_subtopic_skill));
 	    }).jstree(topictree);
 		
 		var to=false;
@@ -42,6 +45,7 @@ function getTopicTree(id){
 
 var json_configs = JSON.parse('{{ json_data | escapejs }}');
 var configs = json_configs.assesmentConfigs;
+var totalTree = 0
 
 function slidear(id){
 	if (id==0){
@@ -51,6 +55,8 @@ function slidear(id){
 	else{
 		var selected_value=configs[id-1]["importance_skill_level"];
 		starting_values=[configs[id-1]["importance_skill_level"]];
+		$("input[name='importance_skill_level"+id+"']").val(starting_values);
+		$("input[name='importance_completed_rec"+id+"']").val(100-starting_values);
 	}
 	$( "#slider"+id ).slider({
 		min: 0,
@@ -181,6 +187,7 @@ function onSlide(ui,id) {
 			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
 	        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
+	        <!--<input name="subtopic_skill{{ forloop.counter }}" id="subtopic_skillInput{{ forloop.counter }}" type="hidden" value="[]">-->
 	        
 			<br>
 			<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
@@ -239,22 +246,21 @@ function onSlide(ui,id) {
 		</div>
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
+				totalTree+=1;
+				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
+				config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
+				var skills{{ forloop.counter }} = []
+	        	for (i=0;i<config_skills.length;i++){ 
+	        		//alert(id_skills[i].id_skill_name_id);
+	        		skills{{ forloop.counter }}.push(config_skills[i])
+	        		//$("#topictree1").jstree('select_node', '#skill98')
+	        	//alert('hola')
+	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+	        	}
+
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
-	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
-	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).show_dots();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).disable_node($('math'));
-	        	var nodes = $('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
-	        	console.log(nodes);
 	        	
-
-
-
-
-	        	//$('#topictree{{ forloop.counter }}').jstree().change_state('math', false);
-	        	/*$('#topictree{{ forloop.counter }}').jstree().select_node($('math'));
-	        	$('#topictree{{ forloop.counter }}').jstree().disable_node($('math'));*/
 	        </script>
 	</div>
 
@@ -513,6 +519,7 @@ $(document).ready(function(){
         $("#hover").fadeOut();
     $("#popup").fadeOut();
     });
+  window.setTimeout(selectTree, 500);
   
 });
 
@@ -521,6 +528,29 @@ $(document).ready(function(){
 <script type="text/javascript"> 
     $(document).ready(function () {
     $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
+    
     });
+
+    function selectTree(){
+
+    //alert(totalTree)
+    for(j=1;j<=totalTree;j++){
+    //alert(skills1.length);
+    	skillsId = eval('skills'+j);
+    	//alert(skillsId)
+    	topictreeId = '#topictree'+j;
+    	//alert(topictreeId);
+	    for(k=0;k<skillsId.length;k++){
+	    	//alert(k);
+	    	//alert(skills1[k].id_subtopic_skill_id);
+	    	//alert(skillsId)
+	    	skill = '#'+skillsId[k].id_subtopic_skill_id;
+	    	//alert(skill)
+	    	$(topictreeId).jstree('select_node', skill);
+	    	//alert(k);
+
+	    }
+	}
+}
 </script>
 {% endblock %}

@@ -154,13 +154,7 @@ class Assesment_Config(models.Model):
     importance_completed_rec=models.IntegerField()
     applied=models.BooleanField()
     
-class Assesment_Skill(models.Model):
-    id_assesment_skill = models.AutoField(primary_key=True)
-    id_assesment_config = models.ForeignKey(Assesment_Config)
-    id_skill_name = models.ForeignKey(Skill)
-    
-    class Meta:
-        unique_together = ('id_assesment_config', 'id_skill_name')
+
     
 class Assesment(models.Model):
     id_assesment = models.AutoField(primary_key=True)
@@ -292,3 +286,11 @@ class Subtopic_Skill(models.Model):
     class Meta:
         unique_together = ('id_skill_name', 'id_subtopic_name')
         
+class Assesment_Skill(models.Model):
+    id_assesment_skill = models.AutoField(primary_key=True)
+    id_assesment_config = models.ForeignKey(Assesment_Config)
+    id_skill_name = models.ForeignKey(Skill)
+    id_subtopic_skill = models.ForeignKey(Subtopic_Skill)
+    
+    class Meta:
+        unique_together = ('id_assesment_config', 'id_skill_name')
