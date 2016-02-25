@@ -77,7 +77,7 @@ def editAssesmentConfig(request,id_assesment_config):
         aux= args['forloop']
 
         assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
-
+        skills_selected = eval(args['skills'+aux])
         assesment_config.name=args['name']
         assesment_config.approval_percentage=args['approval_percentage']
         assesment_config.importance_skill_level=args['importance_skill_level'+aux]
@@ -89,6 +89,13 @@ def editAssesmentConfig(request,id_assesment_config):
         assesment_config.applied=False
 
         assesment_config.save()
+        Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
+
+        for skill in skills_selected:
+                print skill['skill_id']
+                #skill_tuple=Skill.objects.get(pk=skill)
+                new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
+                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
 
