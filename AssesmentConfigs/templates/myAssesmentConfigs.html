@@ -373,6 +373,8 @@ function openEditConfig(id){
 		$(document.getElementById('saveConfigButton'+id)).css('display', '');
 		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
 		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
+		topictreeId='#topictree'+id
+		$(topictreeId).css('pointer-events', '');
 
 	//}
 	/*else{
@@ -550,6 +552,7 @@ $(document).ready(function(){
 	    	//alert(k);
 
 	    }
+	    $(topictreeId).css('pointer-events', 'none');
 	}
 }
 </script>
