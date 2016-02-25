@@ -71,7 +71,7 @@ var bajada = new Howl({
     	<div style="align:left;">
 	    	<p style="text-align:center;">RESUMEN</p>
 	    	<div id="resumen_data"></div>
-	    	<p>Skills:</p>
+	    	<p>Habilidades:</p>
 	    	<div id="resumen_skill"></div>
 	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
 	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
@@ -107,7 +107,7 @@ var bajada = new Howl({
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
 				<p class="label_input"><strong>Nota Máxima</strong></p>
 				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
-				<p class="label_input"><strong>Nota de Aprobacion</strong></p>
+				<p class="label_input"><strong>Nota de Aprobación</strong></p>
 				<input name="nota_aprobacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprobacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprobacion"/>
 				<p class="label_input"><strong>Fecha de Inicio</strong></p>
 				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
@@ -120,7 +120,7 @@ var bajada = new Howl({
 			</form>
 		</div>
 		<div class="parametros" id="parametros"><strong>Parámetros</strong></div>
-		<div class="skills" id="skills" align="left"><strong>Skills</strong></div>
+		<div class="skills" id="skills" align="left"><strong>Habilidades</strong></div>
 		<div>
 			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Evaluados</strong></div>	
 			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
@@ -133,7 +133,7 @@ var bajada = new Howl({
 		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div align="center" style="padding-left:460px">
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluacion" style="display:none"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluación" style="display:none"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="cancelNewEv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
@@ -479,7 +479,7 @@ var bajada = new Howl({
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
-    		.html('<button type="button" class="showButton" title="Ver Evaluacion" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
 	
     	}
   	
@@ -1512,7 +1512,7 @@ var bajada = new Howl({
 			$("#parametros").append("<div><strong>Parámetros</strong></div>");
 			{% for config in assesment_configs %}
 				if ({{config.id_assesment_config}}== id){
-					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprobacion: {{ config.approval_percentage }}</div>");
+					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprobación: {{ config.approval_percentage }}</div>");
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Skill: {{ config.importance_skill_level }}</div>");	
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Recomendaciones: {{ config.importance_completed_rec }}</div>");
 					document.getElementById("input_id_config").value = "{{config.id_assesment_config}}";
@@ -1532,7 +1532,7 @@ var bajada = new Howl({
 				success: function (response) {
 					skills = JSON.parse(response);
 					$("#skills").empty();
-					$("#skills").append("<div><strong>Skills</strong></div>");
+					$("#skills").append("<div><strong>Habilidades</strong></div>");
 					for(var i=0;i<skills.length;i++){
 						$("#skills").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.png'%}'>"+skills[i]['fields']['name_spanish']+"</div>");					
 					}
@@ -1888,7 +1888,7 @@ var bajada = new Howl({
 				data: {id_asses_config: id_assesment_confi},
 				success: function (response) {
 					skills = JSON.parse(response);
-					$("#resumen_skills").append("<p>Skills:</p>");
+					$("#resumen_skills").append("<p>Habilidades:</p>");
 					for(var i=0;i<skills.length;i++){
 						$("#resumen_skill").append("<p>"+skills[i]['fields']['name_spanish']+"</p>");					
 					}
