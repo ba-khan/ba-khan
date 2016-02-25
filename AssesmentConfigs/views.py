@@ -131,9 +131,11 @@ def newAssesmentConfig(request):
 
             for skill in skills_selected:
                 print skill['skill_id']
-                #skill_tuple=Skill.objects.get(pk=skill)
-                new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                try:
+                    new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
+                                                        id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                except:
+                    continue
                 
             return HttpResponse("Pauta guardada correctamente")
         else:
