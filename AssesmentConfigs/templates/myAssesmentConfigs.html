@@ -55,6 +55,8 @@ function slidear(id){
 	else{
 		var selected_value=configs[id-1]["importance_skill_level"];
 		starting_values=[configs[id-1]["importance_skill_level"]];
+		$("input[name='importance_skill_level"+id+"']").val(starting_values);
+		$("input[name='importance_completed_rec"+id+"']").val(100-starting_values);
 	}
 	$( "#slider"+id ).slider({
 		min: 0,
