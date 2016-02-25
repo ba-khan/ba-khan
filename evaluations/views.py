@@ -189,7 +189,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
         threads = []
         #envial mail a los evaluados
-        t = threading.Thread(target=treadSendMail,args=(kaid,mastery,recommendations,fecha1,fecha2,id_config))
+        t = threading.Thread(target=treadSendMail,args=(kaid,mastery,recommendations,fecha1,fecha2,id_config,id_class))
         threads.append(t)
         t.start()
         
@@ -239,10 +239,10 @@ def gradeData(request):
         grade_data = json.dumps(struct)      
     return HttpResponse(grade_data)
 
-def treadSendMail(kaid,mastery,recommendations,fecha1,fecha2,id_config):
+def treadSendMail(kaid,mastery,recommendations,fecha1,fecha2,id_config,id_class):
     """thread sendMail function"""
     print 'Iniciando sendMail \n'
-    contenido = usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config)
+    contenido = usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config,id_class)
     sendMail(kaid,contenido)
     print 'Terminando sendMail \n'
     return
@@ -276,8 +276,9 @@ def sendMail(kaidstr,contenido): #recibe los datos iniciales y envia un  mail a 
         msg.send()
     return ()
 
-def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config):
+def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config,id_class):
     skill_assesment = getSkillAssesment(id_config)
+    curso = getCurso(id_class)
     archivo=open("static/plantillas/mail_nueva_evaluacion.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$fecha_inicio$$",str(fecha1))
@@ -285,7 +286,18 @@ def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config):
     contenido = contenido.replace("$$mastery$$",str(mastery))
     contenido = contenido.replace("$$recommendations$$",str(recommendations))
     contenido = contenido.replace("$$ejercicios$$",str(skill_assesment))
+    contenido = contenido.replace("$$curso$$",str(curso))
     return(contenido)
+
+def getCurso(id_class):
+    N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+    curso = Class.objects.filter(pk=id_class).values('level')
+    letra = Class.objects.filter(pk=id_class).values('letter')
+    curso = curso[0]['level']
+    letra = letra[0]['letter']
+    cursoStr = N[int(curso)]
+    respuesta = cursoStr+" "+letra
+    return(respuesta)
 
 def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
     mnsj_skills = ''
