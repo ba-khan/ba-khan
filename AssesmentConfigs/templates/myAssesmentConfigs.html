@@ -248,7 +248,7 @@ function onSlide(ui,id) {
 				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
 				config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
 				var skills{{ forloop.counter }} = []
-	        	for (i=0;i<id_skills.length;i++){ 
+	        	for (i=0;i<config_skills.length;i++){ 
 	        		//alert(id_skills[i].id_skill_name_id);
 	        		skills{{ forloop.counter }}.push(config_skills[i])
 	        		//$("#topictree1").jstree('select_node', '#skill98')
@@ -257,21 +257,7 @@ function onSlide(ui,id) {
 	        	}
 
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
-	        	console.log(JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]));
-	        	$('#topictree{{ forloop.counter }}').jstree(true).select_all();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).show_dots();
-	        	$('#topictree{{ forloop.counter }}').jstree(true).disable_node($('math'));
-	        	var nodes = $('#topictree{{ forloop.counter }}').jstree(true).show_stripes();
-	        	console.log(nodes);
 	        	
-
-
-
-
-	        	//$('#topictree{{ forloop.counter }}').jstree().change_state('math', false);
-	        	/*$('#topictree{{ forloop.counter }}').jstree().select_node($('math'));
-	        	$('#topictree{{ forloop.counter }}').jstree().disable_node($('math'));*/
 	        </script>
 	</div>
 
@@ -544,7 +530,7 @@ $(document).ready(function(){
 
     function selectTree(){
  	//alert('wait')
- 	alert(skills1)
+ 	alert(skills1);
  	//$("#topictree1 li[role=treeitem]").each(function () {
     	//alert(this)
     	//alert(this.data)
@@ -555,10 +541,15 @@ $(document).ready(function(){
     //		}
     //	}
     	
-    for(i=0;i<skills1.length;i++){
-    	alert(skills1[i].id_subtopic_skill_id)
-    	skill = '#'+skills1[i].id_subtopic_skill_id
-    	$("#topictree1").jstree('select_node', skill)
+    alert(skills1.length);
+    for(k=0;k<skills1.length;k++){
+    	alert(k);
+    	alert(skills1[k].id_subtopic_skill_id);
+    	skill = '#'+skills1[k].id_subtopic_skill_id;
+    	alert(skill)
+    	$("#topictree1").jstree('select_node', skill);
+    	alert(k);
+
     }
 }
 </script>
