@@ -40,7 +40,7 @@
 }
 
 #popup{
-  position:absolute;
+  position:fixed;
   width:600px;
   height:180px;
   background:#fff;
@@ -93,4 +93,7 @@ table.testgrid th {
 }
 table.testgrid td {
   text-align: left;
+}
+#cancelSave {
+    margin-left: 50px;
 }

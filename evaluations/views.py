@@ -84,13 +84,10 @@ def updateGrade(request):
 def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
     if request.method == 'POST':
         args = request.POST
-        print args
         id_assesment=args['assesment']
-        print id_assesment
         get_assesment = Assesment.objects.filter(id_assesment=id_assesment)
         data = serializers.serialize('json', get_assesment)
         struct = json.loads(data)
-        print struct
         assesment_data = json.dumps(struct)
         
     return HttpResponse(assesment_data)
@@ -103,7 +100,7 @@ def updateAssesment(request): #modifica una evaluacion
         fecha2=args['fecha_termino']
         nota1=eval(args['nota_minima'])
         nota2=eval(args['nota_maxima'])
-        nota3=eval(args['nota_aprovacion'])
+        nota3=eval(args['nota_aprobacion'])
         id_config=(args['input_id_config'])
         nombre_config=args['input_nombre']
         students=eval(args['input_kaid'])
@@ -152,12 +149,17 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         fecha2=args['fecha_termino']
         nota1=eval(args['nota_minima'])
         nota2=eval(args['nota_maxima'])
-        nota3=eval(args['nota_aprovacion'])
+        nota3=eval(args['nota_aprobacion'])
         id_config=(args['input_id_config'])
         nombre_config=args['input_nombre']
         students=eval(args['input_kaid'])
         id_class=eval(args['input_id_class'])
-
+        recommendations = Assesment_Config.objects.filter(pk=id_config).values('importance_completed_rec')
+        mastery = Assesment_Config.objects.filter(pk=id_config).values('importance_skill_level')
+        recommendations = recommendations[0]['importance_completed_rec']
+        mastery = mastery[0]['importance_skill_level']
+        #recommendations = "recommendations"
+        #mastery = "mastery"
         new_assesment = Assesment(start_date=fecha1,
                                end_date=fecha2,
                                id_assesment_conf_id=id_config,
@@ -187,7 +189,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
         threads = []
         #envial mail a los evaluados
-        t = threading.Thread(target=treadSendMail,args=(kaid,nota1,nota2,fecha1,fecha2,id_config))
+        t = threading.Thread(target=treadSendMail,args=(kaid,mastery,recommendations,fecha1,fecha2,id_config))
         threads.append(t)
         t.start()
         
@@ -237,10 +239,10 @@ def gradeData(request):
         grade_data = json.dumps(struct)      
     return HttpResponse(grade_data)
 
-def treadSendMail(kaid,nota1,nota2,fecha1,fecha2,id_config):
+def treadSendMail(kaid,mastery,recommendations,fecha1,fecha2,id_config):
     """thread sendMail function"""
     print 'Iniciando sendMail \n'
-    contenido = usarPlantilla(nota1,nota2,fecha1,fecha2,id_config)
+    contenido = usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config)
     sendMail(kaid,contenido)
     print 'Terminando sendMail \n'
     return
@@ -274,14 +276,14 @@ def sendMail(kaidstr,contenido): #recibe los datos iniciales y envia un  mail a 
         msg.send()
     return ()
 
-def usarPlantilla(nota1,nota2,fecha1,fecha2,id_config):
+def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config):
     skill_assesment = getSkillAssesment(id_config)
     archivo=open("static/plantillas/mail_nueva_evaluacion.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$fecha_inicio$$",str(fecha1))
     contenido = contenido.replace("$$fecha_termino$$",str(fecha2))
-    contenido = contenido.replace("$$nota_minima$$",str(nota1))
-    contenido = contenido.replace("$$nota_maxima$$",str(nota2))
+    contenido = contenido.replace("$$mastery$$",str(mastery))
+    contenido = contenido.replace("$$recommendations$$",str(recommendations))
     contenido = contenido.replace("$$ejercicios$$",str(skill_assesment))
     return(contenido)
 
