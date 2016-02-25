@@ -89,7 +89,7 @@ $(".comboBoxReforzamiento").each(function() {
        };
 function drop(e){
 
-
+$('#cleanButton').show();
        
 var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
           
@@ -138,27 +138,30 @@ document.getElementById(elementoArrastrado).style.top = y + "px";
 };       
 function crearSubGrupoAvanzados() {
 
-   $("#Avanzados").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivAvanzados(this)'>x</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#fakeDiv1").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivAvanzados(this)'>x</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
    fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
+   $("#cleanButton").show();
 };
 function crearSubGrupoIntermedios() {
-   $("#Intermedios").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#fakeDiv2").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
    fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
+   $("#cleanButton").show();
 };
 function crearSubGrupoReforzamiento() {
 
-   $("#Reforzamiento").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   $("#fakeDiv3").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
    fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
+   $("#cleanButton").show();
 };
 function closeThisDivAvanzados(div) { 
 var openDiv = document.getElementsByName(div.name); 
-var parentDiv = document.getElementById('Avanzados');
+var parentDiv = document.getElementById('fakeDiv1');
 var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
 for(var i=0; i<cuadritos.length; i++)
                {
@@ -168,7 +171,7 @@ parentDiv.removeChild(openDiv[0]);
 };
 function closeThisDivIntermedios(div) {
 var openDiv = document.getElementsByName(div.name); 
-var parentDiv = document.getElementById('Intermedios');
+var parentDiv = document.getElementById('fakeDiv2');
 var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
 for(var i=0; i<cuadritos.length; i++)
                {
@@ -178,7 +181,7 @@ parentDiv.removeChild(openDiv[0]);
 };
 function closeThisDivReforzamiento(div) { 
 var openDiv = document.getElementsByName(div.name);  
-var parentDiv = document.getElementById('Reforzamiento');
+var parentDiv = document.getElementById('fakeDiv3');
 var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
 for(var i=0; i<cuadritos.length; i++)
                {
@@ -225,6 +228,7 @@ function makeGroups() {
        }
     });
   }
+  $('#cleanButton').show();
   
 };
 function saveGroups(){
@@ -287,6 +291,7 @@ function saveGroups(){
     background: #f7f7f7;
     border: 1px solid #ddd;
     z-index: 1;
+    width:1220px;
 }
 h1{
   text-align: center;
@@ -299,6 +304,7 @@ h2{
 h3{
   font-size: 17px;
   margin-bottom: 0px;
+  text-align: center;
 }
 h4{
   font-size: 15px;
@@ -311,12 +317,12 @@ hr{
   opacity: 0;
 }
    #content{
-        width: 1200px;
+        width: 1250px;
         height: 450px;
       }
 #SinGrupo, #Avanzados, #Intermedios, #Reforzamiento, #skills {
   float: left;
-  width: 15.4%;
+  width: 14.4%;
   height: 90%;
   padding: 10px;
   margin: 10px;
@@ -325,7 +331,9 @@ hr{
   border: 1px solid #D9D9D9;
   border-radius: 5px;
 }
-
+#skills{
+  width: 23.4%;
+}
 #SinGrupo{
   background: #FFFFFF;
 }
@@ -376,13 +384,14 @@ color: #000000
 #topictree{
 overflow-y: scroll;
 height: 363px;
-width:19%;
-padding: 10px;
+width:25%;
+padding: 5px 10px 10px 0px;
 margin: 10px;
 float:left;
 text-align: left;
+font-size: 12px;
 border: 1px solid #D9D9D9;
-  border-radius: 5px;
+border-radius: 5px;
 }
 #topictree_div{
 /*text-align: left;
@@ -424,7 +433,13 @@ img:hover{
 }
 #newButton{
   display:none;
-  float:right;
+  top:-40px;
+  right: -80%;
+}
+#cleanButton{
+  display:none;
+  top:-40px;
+  right: -80%;
 }
 #name{
   float:right;
@@ -469,9 +484,6 @@ img:hover{
         width: 100%;
         height: 40px;
         margin-left: -1%;
-      }
-      circle{
-        cursor: pointer;
       }
       
 select {
@@ -546,6 +558,11 @@ keygen, select, select[size="0"], select[size="1"] {
     margin-top:20px;
   }
 }
+
+circle{
+  cursor: pointer;
+  stroke: #FFFFFF;
+}
 	  </style>
 
 <br>
@@ -573,8 +590,11 @@ keygen, select, select[size="0"], select[size="1"] {
     <br>
   </div>
 
+<div style="height:54px; margin:10px;">
   <h1>Grupos</h1>
-  <br>
+  <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupación</button>
+  <button type='input' onclick='cleanGroups()' class="kui-button kui-button-plain kui-button-primary" id='cleanButton'><i class="icon-plus-sign"></i> Limpiar agrupación</button>
+</div>
     <div id='content'>
        <div id="SinGrupo" name="SinGrupo" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>No agrupados</h3></ul></div>
  
@@ -583,6 +603,7 @@ keygen, select, select[size="0"], select[size="1"] {
 <OPTION VALUE="tutores">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+<div id="fakeDiv1"></div>
         </div>
  
        <div id="Intermedios" name="Intermedios" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><h3>Intermedios</h3>
@@ -591,6 +612,7 @@ keygen, select, select[size="0"], select[size="1"] {
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+<div id="fakeDiv2"></div>
        </div>
        <div id="Reforzamiento" name="Reforzamiento" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><h3>Reforzamiento</h3>
        
@@ -598,6 +620,7 @@ keygen, select, select[size="0"], select[size="1"] {
 <OPTION VALUE="link pagina 1">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+<div id="fakeDiv3"></div>
        </div>
 <div class="input-wrapper" id="topictree_div">
   <input id="skill_search" class="ui-corner-all placeholder simple-input search-input blur-on-esc" type="text" placeholder="Busca temas y habilidades">
@@ -611,7 +634,6 @@ keygen, select, select[size="0"], select[size="1"] {
 <div id="buttons">
   <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
   <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Agrupación Automatica' id='makeButton'>
-  <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="icon-plus-sign"></i> Nueva agrupación</button>
 </div>
 
 
@@ -619,7 +641,7 @@ keygen, select, select[size="0"], select[size="1"] {
 </div>
 
 <script type="text/javascript">
-$(document).ready(function(){
+function initGroups(){
  
 {% if students %}
 {% for student in students %}
@@ -637,7 +659,8 @@ $("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' name=
 {% endif%}
 {% endfor %}
 {% endif %}
-});
+};
+initGroups();
 </script>
 <script>
 var topictree = JSON.parse('{{ topictree | escapejs }}');
@@ -703,6 +726,9 @@ function formatDate(dd,mm,yyyy,h,m,s){
   return dd+"/"+mm+"/"+yyyy+" "+h+":"+m+":"+s;
 }
 
+  var colorScale = d3.scale.ordinal().range(['#1c758a'])
+    .domain(['KhanBlue']);
+
 window.onload = function() {
 		var testData = [];
     var dates = [];
@@ -711,7 +737,6 @@ window.onload = function() {
 		var master_groups = JSON.parse('{{ groups | escapejs }}');
 		for (i=0;i<master_groups.length;i++){
       date = new Date(master_groups[i]['fields']['date']);
-      console.log(date)
       times ={};
       var arr=[];
       dic = {};
@@ -730,9 +755,9 @@ window.onload = function() {
         cont=cont+1;
       }
 
+      times.color = 'KhanBlue';
 			times.times = arr;
 			times.label = formatDate(date.getDate(),(date.getMonth()+1),date.getFullYear(),date.getHours(),date.getMinutes(),date.getSeconds());
-      console.log(times.label);
 
 			times.id = master_groups[i]['pk'];
 			testData.push(times);
@@ -750,24 +775,26 @@ window.onload = function() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.
     var chart = d3.timeline()
       .tickFormat({
-        format: d3.time.format("%x"),
+        format: d3.time.format("%d/%m/%Y"),
         tickTime: d3.time.days,
         tickInterval: 1,
         tickSize: 20
       })
+      .colors( colorScale )
+      .colorProperty('color')
       //.stack()
       .beginning(testData[0].times[0].starting_time - 86400000)
       .ending(testData[testData.length-1].times[0].ending_time + 86400000 -7200000)
       .rotateTicks()
       .width(width*1)
-      .margin({left:30, right:80, top:0, bottom:0})
+      .margin({left:30, right:80, top:10, bottom:0})
       .hover(function (d, i, datum) {
       // d is the current rendering object
       // i is the index during d3 rendering
       // datum is the id object
         var div = $('#hoverRes');
         var colors = chart.colors();
-        div.find('.coloredDiv').css('background-color', colors(i))
+        div.find('.coloredDiv').css('background-color', '#1C758A')
         div.find('#name').text("Fecha: "+datum.label);
       })
       .click(function (d, i, datum) {
@@ -795,25 +822,28 @@ window.onload = function() {
             if (type == '#Avanzados'){
               $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Avanzados<h3><h4>Tutor: "+
                 $(tutor).attr('title')+"</h4></div>");
+              $('#Avanzados').append("<div id='fakeDiv1'></div>");
             }
             if (type == '#Intermedios'){
               $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Intermedios<h3><h4>Tutor: "
                 +$(tutor).attr('title')+"</h4></div>");
+              $('#Intermedios').append("<div id='fakeDiv2'></div>");
             }
             if (type == '#Reforzamiento'){
               $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Reforzamiento<h3><h4>Tutor: "
                 +$(tutor).attr('title')+"</h4></div>");
+              $('#Reforzamiento').append("<div id='fakeDiv3'></div>");
             }
             if (type.substring(1,22) == 'SubGrupoReforzamiento'){
-              $("#Reforzamiento").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+              $("#fakeDiv3").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
                 +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,20) == 'SubGrupoIntermedios'){
-              $("#Intermedios").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+              $("#fakeDiv2").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
                 +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              $("#Avanzados").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+              $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
                 +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
 					}
@@ -828,7 +858,9 @@ window.onload = function() {
             students = JSON.parse(response);
             for(var i=0;i<students.length;i++){
               var g = "." + (students[i]['fields']['id_group']).toString();
+              console.log(g);
               var s = "#" + (students[i]['fields']['kaid_student']).toString();
+              console.log(s);
               $(s).appendTo(g);//agrega cada estudiante a su correspondiente agrupacion.
           }
          }
@@ -845,6 +877,7 @@ window.onload = function() {
             skills = JSON.parse(response);
             $('#skills').empty();
             $('#skills').css('display','inline');
+            $('#skills').append("<h3>Habilidades</h3>");
             if(skills.length==0){
               $('#skills').append("<li>No hay Habilidades asociadas</li>");
             }
@@ -859,6 +892,7 @@ window.onload = function() {
         $('.nuevo_sub').remove()
         $('#ascrail2004').remove()
         $('#ascrail2004-hr').remove()
+        $('#cleanButton').remove();
         $('#newButton').show();
       })
       .scroll(function (x, scale) {
@@ -873,11 +907,28 @@ window.onload = function() {
   d3.selectAll("circle").each(function(d){
     this.parentNode.appendChild(this);
   });
+  d3.selectAll("circle").on("mouseover", 
+    function(d) {
+      $(this).css('cy','15px');
+    });
+
+  d3.selectAll("circle").on("mouseout", 
+    function(d) {
+      $(this).css('cy','20px');
+    });
+
   $("#timeline3").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9' });
 }
 
 function newGroups() {
-    location.reload();
+  loading();
+  location.reload();
+};
+function cleanGroups() {
+  $('.cuadradito').remove();
+  $('.subGrupo').remove();
+  $('#cleanButton').hide();
+  initGroups();
 };
 </script>
 
@@ -887,7 +938,10 @@ function newGroups() {
     $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' })
     });
 
-    test = Date(1456321979.64*1000);
-    console.log(test);
 </script>
+
+<script>
+    //$( ".jstree-themeicon" ).remove();
+    $('#topictree').jstree(true).hide_icons();
+  </script>
 {% endblock %}
