@@ -1568,6 +1568,7 @@ var bajada = new Howl({
 			}
 		}
 		function validarRealizarEvaluacion(){
+			$("#botonesEvaluacion").hide();
 			var openDiv = document.getElementById('Evaluados'); 
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			input_name = document.getElementById("input_nombre").value;
@@ -1680,6 +1681,7 @@ var bajada = new Howl({
 			});
 		}
 		function showEvaluation(id_assesment){
+			$("#botonesEvaluacion").show();
 			if(evReady==1){
 				$('#hover').fadeIn();
 				$("#popupEvaluacion").empty();
@@ -1689,6 +1691,7 @@ var bajada = new Howl({
 					evReady=0;
 					$('#hover').fadeOut();
 					$("#popup_error").fadeOut();
+					showDiv();	
 					showAssesment(id_assesment);
 					return true					
 				});
@@ -1700,9 +1703,11 @@ var bajada = new Howl({
 			}else{
 				showDiv();
 				showAssesment(id_assesment);
+				return false
 			}
 		}
 		function isEvaluation(id_assesment){
+			$("#botonesEvaluacion").show();
 			if(evReady==1){
 				$('#hover').fadeIn();
 				$("#popupEvaluacion").empty();
@@ -1712,6 +1717,7 @@ var bajada = new Howl({
 					evReady=0;
 					$('#hover').fadeOut();
 					$("#popup_error").fadeOut();
+					showDiv();
 					editAssesment(id_assesment);
 					return true					
 				});
@@ -1723,9 +1729,11 @@ var bajada = new Howl({
 			}else{
 				showDiv();
 				editAssesment(id_assesment);
+				return false
 			}
 		}
 		function cancelNewEv(){
+			$("#botonesEvaluacion").show();
 			if(evReady==1){
 				$('#hover').fadeIn();
 				$("#popupEvaluacion").empty();
@@ -1746,7 +1754,7 @@ var bajada = new Howl({
 				});
 			}else{
 				hideDiv()
-				return false
+				return true
 			}
 		}
 		function showAssesment(id_assesment){	
