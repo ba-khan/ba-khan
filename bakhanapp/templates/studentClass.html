@@ -10,16 +10,6 @@
 {% endblock %}
 
 {% block body2 %}	
-<script src="{% static 'js/howler.min.js'%}"></script>
-<script >
-var subida = new Howl({
-			  urls: ["{% static 'subida.mp3'%}"]
-			});
-var bajada = new Howl({
-			  urls: ["{% static 'bajada.mp3'%}"]
-			});
-</script>
-
 <style>
 	.tipsy{
 		width:250px;
@@ -68,14 +58,15 @@ var bajada = new Howl({
     </div>
 
     <div id="popup_resumen" class="popup" style="display:none">
-    	<div id="close" style="top:8%;right:28%;z-index:20;position:fixed" onClick="$('#popup_resumen').fadeOut();$('#hover').fadeOut();">X</div>
+    	<div id="close" style="top:-15px;right:-15px;z-index:20;position:absolute;" onClick="$('#popup_resumen').fadeOut();$('#hover').fadeOut();">X</div>
     	<div style="align:left;">
-	    	<p style="text-align:center;">RESUMEN</p>
+	    	<h2 style="text-align:center;">Resumen</h2>
 	    	<div id="resumen_data"></div>
-	    	<p>Habilidades:</p>
+	    	<h4>Habilidades:</h4>
 	    	<div id="resumen_skill"></div>
 	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
 	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
+	    	<hr><h4>Histograma de notas:</h4>
 	    	<div id="resumen_graph" class="resumen_graph"></div>
     	</div>
     </div>
@@ -1399,7 +1390,7 @@ var bajada = new Howl({
 			    heightg = 200 - margin.top - margin.bottom;
 
 			var x = d3.scale.linear()
-			    .domain([1,7])
+			    .domain([min_grade,max_grade])
 			    .range([0, widthg]);
 
 			// Generate a histogram using user-specified uniformly-spaced bins.
@@ -1429,8 +1420,8 @@ var bajada = new Howl({
 			    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
 			bar.append("rect")
-			    .attr("x", 1)
-			    .attr("width", widthg/bins - 10)//x(dataHistogram[0].dx) - 1)
+			    .attr("x", (widthg + margin.left + margin.right)/100)
+			    .attr("width", (widthg + margin.left + margin.right)/bins - 15)//x(dataHistogram[0].dx) - 1)
 			    //.attr("height", function(d) { console.log(y(d.y));return heightg - y(d.y); });
 			    .attr("height", function(d) { return heightg - y(d.y); });
 
@@ -1898,12 +1889,12 @@ var bajada = new Howl({
 			}
 
 			student=assesments[aux]['assesment_student']
-			$('#resumen_data').append("<p> Nombre: "+assesments[aux]['name']+"</p>");
-			$('#resumen_data').append("<p> Inicio: "+assesments[aux]['start_date']+"</p>");
-			$('#resumen_data').append("<p> Término: "+assesments[aux]['end_date']+"</p>");
-			$('#resumen_data').append("<p> Nota Máxima: "+assesments[aux]['max_grade']+"</p>");
-			$('#resumen_data').append("<p> Nota Mínima: "+assesments[aux]['min_grade']+"</p>");
-			$("#resumen_data").append("<p>Alumnos Participantes: "+student.length+"</p>");
+			$('#resumen_data').append("<p><strong> Nombre:</strong> "+assesments[aux]['name']+" </p>");
+			$('#resumen_data').append("<p><strong> Inicio:</strong> "+assesments[aux]['start_date']+" </p>");
+			$('#resumen_data').append("<p><strong> Término:</strong> "+assesments[aux]['end_date']+" </p><br>");
+			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+assesments[aux]['max_grade']+" </p>");
+			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+assesments[aux]['min_grade']+" </p><br>");
+			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+student.length+"</p><br><hr>");
 						
 			$.ajax({
 				url: "{% url 'evaluations:getSkillAssesment' 1 %}",
@@ -1912,9 +1903,9 @@ var bajada = new Howl({
 				data: {id_asses_config: id_assesment_confi},
 				success: function (response) {
 					skills = JSON.parse(response);
-					$("#resumen_skills").append("<p>Habilidades:</p>");
+					$("#resumen_skills").append("<h4>Habilidades:</p>");
 					for(var i=0;i<skills.length;i++){
-						$("#resumen_skill").append("<p>"+skills[i]['fields']['name_spanish']+"</p>");					
+						$("#resumen_skill").append("<li>"+skills[i]['fields']['name_spanish']+"</li>");					
 					}
 				}
 			});
@@ -1924,7 +1915,7 @@ var bajada = new Howl({
 
 			}
 			//console.log(grade_order);
-			drawHistogram(assesments[aux]['max_grade'],assesments[aux]['min_grade'],grade_order,10);
+			drawHistogram(assesments[aux]['min_grade'],assesments[aux]['max_grade'],grade_order,10);
 			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
 
 		}
@@ -2122,7 +2113,6 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 
   function showDiv(){
   	if( !($('#contenido_a_mostrar').is(":visible")) ){
-    	subida.play();
     	$('#contenido_a_mostrar').toggle('blind',1000)
 	}
   }
@@ -2130,7 +2120,6 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   function hideDiv(){
   	if( $('#contenido_a_mostrar').is(":visible") ){
     	$('#contenido_a_mostrar').toggle('blind',1000)
-    	bajada.play();
 	}
   }
 
@@ -2140,7 +2129,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 <script type="text/javascript"> 
     $(document).ready(function () {
-    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top:-150,left:-320}})
+    $("#resumen_skill").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16'})
     });
 </script>
 
