@@ -40,7 +40,6 @@ function getTopicTree(id){
 		      $('#topictree'+id).jstree(true).search(v);
 		    }, 250);
 	});
-	$('#topictree'+id).jstree(true).hide_icons();
 
 }
 
@@ -223,7 +222,7 @@ function onSlide(ui,id) {
 		<script>
 	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 	        	for (i=0;i<skills.length;i++){ 
-	        		$("#topictree{{ forloop.counter }}").append("<li class='liSkill'>"+(skills[i].name_spanish)+"</li>")
+	        		$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
 	        	}
 	        </script>
 	</div>
@@ -307,8 +306,6 @@ function onSlide(ui,id) {
 	setMainContentHeight();
 
 function cambiarPestanna(pestanna) {
-	id = (pestanna.id).substring(7);
-	console.log(id);
 	 pestanna = document.getElementById(pestanna.id);
 	 cpestanna = document.getElementById('c' + pestanna.id);
 	 cpestannas = document.getElementsByClassName('cpestanna');
@@ -323,10 +320,6 @@ function cambiarPestanna(pestanna) {
 	     $(cpestanna).css('display', '');
 	     $(pestanna.getElementsByTagName('a')).addClass("select");
 	 });
-
-	 $(".topictree").getNiceScroll().hide();
-	 $("#topictree"+id).getNiceScroll().show();
-	 $("#topictree"+id).getNiceScroll().resize();
 }
 
 function reloadLocation(){
@@ -381,8 +374,7 @@ function openEditConfig(id){
 		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
 		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
 		topictreeId='#topictree'+id
-		$(topictreeId+(" ul")).css('pointer-events', '');
-		$(topictreeId).css('opacity', '1');
+		$(topictreeId).css('pointer-events', '');
 
 	//}
 	/*else{
@@ -406,9 +398,6 @@ function cancelEditConfig(id){
 	$(document.getElementById('editConfigButton'+id)).css('display', '');
 	$(document.getElementById('deleteConfigButton'+id)).css('display', '');
 	slidear(id);
-	topictreeId='#topictree'+id
-	$(topictreeId+(" ul")).css('pointer-events', 'none');
-	$(topictreeId).css('opacity', '0.8');
 	
 	inputs[1].removeAttribute("value");
 	var name = document.createAttribute("value");
@@ -445,12 +434,8 @@ function confirmEdit(answer,id){
 					$("#popup").fadeIn().css('display', '');
 					$("#popup").append("<p class='response'>"+response+"</p>");
 					topictreeId='#topictree'+id
-					$(topictreeId+(" ul")).css('pointer-events', 'none');
-					$(topictreeId).css('opacity', '0.8');
-					$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
-					$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
-					$(document.getElementById('editConfigButton'+id)).css('display', '');
-					$(document.getElementById('deleteConfigButton'+id)).css('display', '');
+					$(topictreeId).css('pointer-events', 'none');
+					$("#saveConfigButton"+id).remove()
 				}
 		});
 		$("#hover").fadeOut().css('display', 'none');
@@ -462,16 +447,6 @@ function confirmEdit(answer,id){
 		$("#popup").fadeOut().css('display', 'none');
 		$("#editConfig").fadeOut().css('display','none');
 	}
-
-	cpestana = document.getElementById('cpestana'+id);
-	inputs = cpestana.getElementsByTagName('input');
-	for (i=0;i<inputs.length;i++){
-		inputs[i].setAttribute("disabled","");
-	}
-	$( "#slider"+id ).slider( "disable" );
-	topictreeId='#topictree'+id;
-	$(topictreeId+(" ul")).css('pointer-events', 'none');
-	$(topictreeId).css('opacity', '0.8');
 }
 
 
@@ -530,13 +505,8 @@ function validar(){
 			$(approval_percentage[a]).css('color', '#C30202');
 			flag = false
 		}else{
-			$(approval_percentage[a]).css('color', '#898989');
+			$(approval_percentage[a]).css('color', '#000000');
 		}
-		
-		/*isDisabled = $(approval_percentage[a]).is(':disabled');
-		if (isDisabled){
-			$(approval_percentage[a]).css('color', '#999');
-		}*/
 	}
 	return flag
 }
@@ -563,6 +533,7 @@ $(document).ready(function(){
 <script type="text/javascript"> 
     $(document).ready(function () {
     $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
+    
     });
 
     function selectTree(){
@@ -584,9 +555,7 @@ $(document).ready(function(){
 	    	//alert(k);
 
 	    }
-	    $(topictreeId).css('opacity', '0.8');
-	    $(topictreeId+(" ul")).css('pointer-events', 'none');
-	    $(topictreeId+(" li")).css('pointer-events', '');
+	    $(topictreeId).css('pointer-events', 'none');
 	}
 }
 </script>

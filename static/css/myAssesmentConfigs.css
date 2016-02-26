@@ -62,18 +62,13 @@
 	border: 1px solid #ddd;
 	z-index: 1;
 }
-.liSkill{
-  font-size: 14px;
-  margin-left: 10px;
-}
 .topictree{
 	overflow: hidden;
   overflow-y:scroll;
 	height: 400px;
-	width: 375px;
-  font-size: 12px;
-	padding: 5px 10px 10px 0px;
-  text-align: left;
+	width: 340px;
+	padding: 10px;
+	padding-left: 2px;
 	margin: 10px;
 	border: 1px solid #ddd;
 }
