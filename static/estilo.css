@@ -543,7 +543,7 @@ label.sort-filter{
   width: 97px;
   display: block;
   background: #79A70A;
-  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  background: linear-gradient(#9DB63B 0%, #9DB63B 100%);
   box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
   position: absolute;
   top: 13px; left: -25px;
