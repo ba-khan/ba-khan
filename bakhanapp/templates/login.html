@@ -98,6 +98,7 @@
                    email: login_data.email,
                    csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (response) {
+              console.log(response)
               if (response=="True"){
                 window.location = window.location.href+"inicio";
               }else{
