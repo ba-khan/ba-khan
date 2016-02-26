@@ -105,7 +105,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'CLT'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
