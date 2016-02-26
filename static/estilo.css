@@ -84,7 +84,6 @@
 	width: 23%;
 	margin: 10px;
 }
-
 .flechas{
 	top: 50%;
 	height: 90px;
@@ -99,6 +98,10 @@
 	width:150px;
 	margin-bottom: 10px;
 }
+.fechas{
+  float: left;
+}
+
 #inputs{
 	width:200px;
 	float:left;
