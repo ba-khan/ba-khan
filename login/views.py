@@ -84,7 +84,7 @@ def authenticateUser(request):
         user = auth.authenticate(username=username, password=email)
         if user:
             auth.login(request, user)
-            authorized = True
+            authorized = False
             return HttpResponse(authorized)
         else:
             authorized=True
