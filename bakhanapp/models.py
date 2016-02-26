@@ -294,3 +294,14 @@ class Assesment_Skill(models.Model):
     
     class Meta:
         unique_together = ('id_assesment_config', 'id_skill_name')
+
+
+class Skill_Log(models.Model):
+    id_skill_log = models.AutoField(primary_key=True)
+    correct = models.IntegerField(null=True)
+    incorrect =  models.IntegerField(null=True)
+
+class Skill_Grade(models.Model):
+    id_skill_grade = models.AutoField(primary_key=True)
+    id_grade = models.ForeignKey(Grade)
+    id_skill_log = models.ForeignKey(Skill_Log)
