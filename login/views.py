@@ -85,15 +85,15 @@ def authenticateUser(request):
         if user:
             #auth.login(request, user)
             authorized = False
-            return HttpResponse(authorized)
+            #return HttpResponse(authorized)
         else:
-            authorized=False
-            return HttpResponse(authorized)
-            user = User.objects.create_user(username=username,email=email,password=email)
+            #authorized=False
+            #return HttpResponse(authorized)
+            #user = User.objects.create_user(username=username,email=email,password=email)
             #user.save()
             #user2 = auth.authenticate(username=username, password=email)
             #if user2:
             #auth.login(request, user)
             authorized = False
-            return HttpResponse(authorized)
+            #return HttpResponse(authorized)
     return HttpResponse(authorized)
