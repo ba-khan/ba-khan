@@ -1803,6 +1803,7 @@ var bajada = new Howl({
 					$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
 					$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
 					$("input[name='nota_aprobacion']").val(json_assesment[0]['fields']['approval_grade']);
+					$("input[name='bono_esfuerzo']").val(json_assesment[0]['fields']['max_effort_bonus']);
 					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 					$('#comboBox').prop('disabled', true);
 					$('#estudiantesEvaluados').empty();
