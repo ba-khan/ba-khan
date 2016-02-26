@@ -133,9 +133,9 @@ var bajada = new Howl({
 		</div>
 		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div align="center" style="padding-left:460px">
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion()" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion();" class="kui-button kui-button-plain kui-button-primary" value="Realizar Evaluación"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluación" style="display:none"></div>
-			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="cancelNewEv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
+			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_cancelar" onClick="cancelNewEv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
 
@@ -219,7 +219,7 @@ var bajada = new Howl({
   	    	$("#popup").fadeOut();
   	    	$("#popup_resumen").fadeOut();
   	    });
-  		
+
   	  	//This code was for using a pop up menu to choose the row sorting criterion
   	  	//$('body').append('<div id="sortMenu" class="sortMenu-content"><ul><li class="sortMenu-header">Ordenar por...</li><li class="sortMenu-option">Nota</li><li class="sortMenu-option">Esfuerzo</li></ul></div>');
   		
@@ -1546,6 +1546,8 @@ var bajada = new Howl({
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
 			if (validarRealizarEvaluacion()){
+				$('#button_realizar').hide();
+				$('#button_cancelar').hide();
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
