@@ -433,6 +433,9 @@ function confirmEdit(answer,id){
 					$("#hover").fadeIn().css('display', '');
 					$("#popup").fadeIn().css('display', '');
 					$("#popup").append("<p class='response'>"+response+"</p>");
+					topictreeId='#topictree'+id
+					$(topictreeId).css('pointer-events', 'none');
+					$("#saveConfigButton"+id).remove()
 				}
 		});
 		$("#hover").fadeOut().css('display', 'none');
