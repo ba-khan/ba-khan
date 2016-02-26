@@ -75,6 +75,7 @@ def rejected(request):
 
 
 def authenticateUser(request):
+    #funcion que realiza la autentificacion para cualquier usuario khan academy
     authorized = False
     if request.method == 'POST':
         args = request.POST
@@ -88,4 +89,6 @@ def authenticateUser(request):
         else:
             user = User.objects.create_user(username=username,email=email,password=email)
             user.save()
+            auth.login(request, user)
+            authorized = True
     return HttpResponse(authorized)
