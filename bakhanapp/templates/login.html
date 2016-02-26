@@ -100,7 +100,8 @@
             success: function (response) {
               console.log(response)
               if (response=="True"){
-                window.location = window.href+"inicio";
+                //window.location = window.href+"inicio";
+                window.open('inicio','_blank')
               }else{
                 window.location = window.location.href+"access/rejected/";
               }    
