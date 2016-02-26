@@ -102,8 +102,8 @@ var bajada = new Howl({
 				{% endfor %}
 			</select>
 			<form action="" method="post" id='formJson'>{% csrf_token %}
-				<p class="label_input"><strong>Nombre de la Evaluación</strong></p>
-				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre configuración"/>
+				<p class="label_input"><strong>Nombre de la Calificación</strong></p>
+				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre de la Calificación"/>
 				<p class="label_input"><strong>Nota Mínima</strong></p>
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
 				<p class="label_input"><strong>Nota Máxima</strong></p>
@@ -121,7 +121,7 @@ var bajada = new Howl({
 		<div class="parametros" id="parametros"><strong>Parámetros</strong></div>
 		<div class="skills" id="skills" align="left"><strong>Habilidades</strong></div>
 		<div>
-			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Evaluados</strong></div>	
+			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Calificados</strong></div>	
 			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
 		</div>
 	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
@@ -141,7 +141,7 @@ var bajada = new Howl({
 			</div>
 		</div>
 
-		<div align="right" style="padding-left: 500px;margin-left: 260px;margin-top: 145px;">
+		<div align="right" style="padding-left: 500px;margin-left: 165px;margin-top: 145px;">
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_realizar" onClick="realizarEvaluacion();" class="kui-button kui-button-plain kui-button-primary" value="Iniciar Calificación"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_editar" name="" onClick="updateAssesment()" class="kui-button kui-button-plain kui-button-primary" value="Editar Evaluación" style="display:none"></div>
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_cancelar" onClick="cancelNewEv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
@@ -1669,7 +1669,7 @@ var bajada = new Howl({
 			showDiv();
 			evReady = 1;
 			$('#estudiantesEvaluados').empty();
-			$('#estudiantesEvaluados').append('<strong>Estudiantes a Evaluar</strong>');
+			$('#estudiantesEvaluados').append('<strong>Estudiantes a Calificar</strong>');
 			$('#button_realizar').show();
 			$('#button_editar').hide();
 			$('#comboBox').prop('disabled', false);
@@ -1804,7 +1804,7 @@ var bajada = new Howl({
 					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
 					$('#comboBox').prop('disabled', true);
 					$('#estudiantesEvaluados').empty();
-					$('#estudiantesEvaluados').append('<strong>Estudiantes Evaluados</strong>');
+					$('#estudiantesEvaluados').append('<strong>Estudiantes Calificados</strong>');
 				}
 			});
 			M_student = [];

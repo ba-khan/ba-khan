@@ -38,10 +38,10 @@
 	border-radius: 5px;
 }
 #sinEvaluar{
-	background-image: url("img/NoEvaluados.png");
+	background-image: url("img/NoCalificados.png");
 }
 #Evaluados{
-	background-image: url("img/Evaluados.png");
+	background-image: url("img/Calificados.png");
 }
 
 .cuadradito {
@@ -103,6 +103,7 @@
 }
 
 #inputs{
+  margin-top: 15px;
 	width:200px;
 	float:left;
 	height: 400px;
