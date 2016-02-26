@@ -467,7 +467,7 @@ label.sort-filter{
     width: 32px;
     height: 32px;
     border: none;
-    margin-left:-2%;
+    margin-left:0%;
 }
 .showButton {
     background:url(img/ver.png);
@@ -476,7 +476,7 @@ label.sort-filter{
     width: 25px;
     height: 25px;
     border: none;
-    margin-left:-2%;
+    margin-left:0%;
     margin-bottom: 5px;
 }
 .summaryButton {
@@ -487,6 +487,7 @@ label.sort-filter{
     height: 32px;
     border: none;
     margin-right:10%;
+    margin-left:10%;
 }
 .buttonsES{
 	position:absolute;
