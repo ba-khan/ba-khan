@@ -89,6 +89,7 @@ def authenticateUser(request):
             user = User.objects.create_user(username=username,email=email,password=email)
             user.save()
             user2 = auth.authenticate(username=username, password=email)
-            auth.login(request, user2)
-            authorized = True
+            if user2:
+                auth.login(request, user2)
+                authorized = True
     return HttpResponse(authorized)
