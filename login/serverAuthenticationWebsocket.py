@@ -182,7 +182,8 @@ def get_api_resource(session):#,request):
     #print json_response
     email = json_response['email']  
     username = json_response['nickname']
-    login_data={"login":{"username":username,"email":email}}
+    kaid = json_response['kaid']
+    login_data={"login":{"username":username,"email":email,"kaid":kaid}}
     json_data = json.dumps(login_data)
     return json_data
 

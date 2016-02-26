@@ -96,6 +96,7 @@
             type: "POST",
             data: {username: login_data.username, 
                    email: login_data.email,
+                   kaid: login_data.kaid,
                    csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (response) {
               console.log(response)
