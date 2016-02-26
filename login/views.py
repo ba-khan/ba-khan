@@ -83,7 +83,7 @@ def authenticateUser(request):
         #print username+" "+email
         user = auth.authenticate(username=username, password=email)
         if user:
-            auth.login(request, user)
+            #auth.login(request, user)
             authorized = False
             return HttpResponse(authorized)
         else:
