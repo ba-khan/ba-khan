@@ -92,6 +92,7 @@ var bajada = new Howl({
     </div>
 
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="icon-plus-sign"></i> Nueva Calificación</button></div> 
+	<form action="" method="post" id='formJson'>{% csrf_token %}
 	<div id="contenido_a_mostrar" style="display:none;" value=>
 		<div id="inputs" align="left">
 			<p class="label_input"><strong>Pauta de Evaluación</strong></p>
@@ -101,7 +102,6 @@ var bajada = new Howl({
 					<OPTION VALUE="{{config.id_assesment_config}}">{{config.name}}</OPTION>
 				{% endfor %}
 			</select>
-			<form action="" method="post" id='formJson'>{% csrf_token %}
 				<p class="label_input"><strong>Nombre de la Calificación</strong></p>
 				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre de la Calificación"/>
 				<p class="label_input"><strong>Nota Mínima</strong></p>
@@ -131,14 +131,14 @@ var bajada = new Howl({
 		</div>
 		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div class="cntFechas" style="margin-left:200px;margin-right: 100px;">
-			<div style="height:50px;width:200px;" class="fechas">
-				<p class="label_input"><strong>Fecha de Inicio</strong></p>
-				<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
-			</div>
-			<div style="height:50px;width:200px;" class="fechas">
-				<p class="label_input"><strong>Fecha de Término</strong></p>
-				<input name="fecha_termino" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
-			</div>
+				<div style="height:50px;width:200px;" class="fechas">
+					<p class="label_input"><strong>Fecha de Inicio</strong></p>
+					<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
+				</div>
+				<div style="height:50px;width:200px;" class="fechas">
+					<p class="label_input"><strong>Fecha de Término</strong></p>
+					<input name="fecha_termino" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
+				</div>
 		</div>
 
 		<div align="right" style="padding-left: 500px;margin-left: 165px;margin-top: 145px;">
@@ -147,6 +147,7 @@ var bajada = new Howl({
 			<div style="float:left;margin:2px;" align="center"><input type="button" id="button_cancelar" onClick="cancelNewEv();" class="kui-button kui-button-plain kui-button-primary" value="Cancelar"></div>
 		</div>
 	</div>
+	</form>
 
 	<script type="text/javascript">	
 		var Needle = (function() {
@@ -1184,6 +1185,7 @@ var bajada = new Howl({
 	          		<li>Hab. nivel 1: `+student_data.skills_level.mastery1+`</li>
 	          		<li>Hab. practicadas: `+student_data.skills_level.practiced+`</li>
 	          		<li>Hab. en dificultad: `+student_data.skills_level.struggling+`</li>
+	          		<li>Hola: `+student_data.bonus_grade+`</li>
 	          		</ul>`;
 	        }
 	      });
