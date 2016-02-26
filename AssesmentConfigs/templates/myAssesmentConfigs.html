@@ -11,7 +11,6 @@
 <script>
 function getTopicTree(id){
 	var topictree = JSON.parse('{{ topictree | escapejs }}');
-	console.log(topictree);
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
 		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
@@ -308,7 +307,6 @@ function onSlide(ui,id) {
 
 function cambiarPestanna(pestanna) {
 	id = (pestanna.id).substring(7);
-	console.log(id);
 	 pestanna = document.getElementById(pestanna.id);
 	 cpestanna = document.getElementById('c' + pestanna.id);
 	 cpestannas = document.getElementsByClassName('cpestanna');
