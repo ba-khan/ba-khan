@@ -14,7 +14,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
-from bakhanapp.models import Class
+from bakhanapp.models import Class,User_Profile
 from bakhanapp.models import Skill
 from bakhanapp.models import Skill_Progress
 from bakhanapp.models import Student
