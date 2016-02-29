@@ -39,14 +39,14 @@
     	<div id="close">X</div>
     	<div style="align:left;">
 	    	<form action="" method="post" id='formGrade'>{% csrf_token %}
+				<div id="popup_nombre"><p style="margin-top:0px;"><strong>NOMBRE ESTUDIANTE</strong></p></div>
 				<p style="margin:0px;">
-					Nombre Estudiante
-					<input name="input_grade_nombre" id="input_grade_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;"/>
-					<input name="input_grade_id" id="input_id_grade" class="vaciar" type="text" style="display:none;"/>
 					Nota:
-					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
 					Nota Profesor
 					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+					Bonificaicon por Esfuerzo
+					<input name="input_bonificacion" id="input_bonificacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
 				</p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:550px;height:50px;padding-top:5px"></textarea>
@@ -1065,7 +1065,7 @@
 	}
 	
 	function drawAssesments(){
-	console.log(assesments);
+	//console.log(assesments);
 	var effort_scalings = [];
     for (i=0; i<assesments.length; i++){
     	var assesment_num_id=i;
@@ -1116,8 +1116,14 @@
     					}
     			  })
     		.on("click",function(d){
-    			$("input[name='input_grade_id']").val(d.value.grade_id)
-    			$("input[name='input_grade']").val(d.value.grade)
+    			console.log(d)
+    			$('#popup_nombre').empty();
+    			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.head_assesment+"</strong></p>");
+    			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.value.name+"</strong></p>");
+    			//$('#popup_nombre').append("<p style='margin-top:0px;'><strong>Nota: </strong>"+d.value.grade+"<strong>    Bonificacion: </strong>"+d.value.bonus_grade+"</p>");
+    			$("input[name='input_grade_id']").val(d.value.grade_id);
+    			$("input[name='input_grade']").val(d.value.grade);
+    			$("input[name='input_bonificacion']").val(d.value.bonus_grade);
     			$("#hover").fadeIn().css('display', '');
     			$("#popup").fadeIn().css('display', '');
     		});
@@ -1130,7 +1136,8 @@
 	        .attr("dy", function(d,i){return 6 + effort_scalings[d.cl](students[i][assesment_id].effort);})
 	        .text(function(d,i){
 	        	if (students[i][assesment_id].grade!=null){
-	        		return students[i][assesment_id].grade;
+	        		nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade;
+	        		return nota;
 	        	}else{
 	        		return "S.E.";
 	        	}
