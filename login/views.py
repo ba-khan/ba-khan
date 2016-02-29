@@ -39,6 +39,7 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
+from bakhanapp.models import User_Profile
 
 import datetime
 
@@ -89,8 +90,9 @@ def authenticateUser(request):
             authorized = True
             return HttpResponse(authorized)
         else:
-            user = User.objects.create_user(username=username,email=email,password=email,first_name=kaid)
+            user = User.objects.create_user(username=username,email=email,password=email)#,first_name=kaid)
             user.save()
+            User_Profile.objects.create(kaid=kaid,user=user)
             user2 = auth.authenticate(username=username, password=email)
             if user2:
                 auth.login(request, user2)

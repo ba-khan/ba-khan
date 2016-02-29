@@ -32,7 +32,8 @@ import json
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.first_name).order_by('-id_assesment_config')
+    kaid = User_Profile.objects.get(user=request.user.id)
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=kaid.kaid).order_by('-id_assesment_config')
 
     json_array=[]
     for assesment_config in assesment_configs:
@@ -105,7 +106,7 @@ def deleteAssesmentConfig(request,id_assesment_config):
 
 def newAssesmentConfig(request):
     
-    '''assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')'''
+    kaid = User_Profile.objects.get(user=request.user.id)
     if request.method == 'POST':
         args = request.POST
         id = args['id']
@@ -119,7 +120,7 @@ def newAssesmentConfig(request):
                                    approval_percentage=args['approval_percentage'],
                                    importance_skill_level=args['importance_skill_level'+id],
                                    importance_completed_rec=args['importance_completed_rec'+id],
-                                   kaid_teacher_id=request.user.first_name,
+                                   kaid_teacher_id=kaid.kaid,
                                    top_score=0,
                                    id_subject_name_id='math',
                                    applied=False
