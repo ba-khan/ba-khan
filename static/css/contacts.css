@@ -94,6 +94,6 @@ table.testgrid th {
 table.testgrid td {
   text-align: left;
 }
-#cancelSave {
+#cancelSave, #cancelDelete {
     margin-left: 50px;
 }

@@ -90,6 +90,7 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
+    #request.session.set_expiry(30)
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -175,6 +176,7 @@ def paralellAssesment(assesment,students,queue):
         except:
             skills_level["mastery3"] = 0
         student_json["skills_level"]=skills_level
+
         assesment_json["assesment_student"].append(student_json)
         i+=1
     queue.put(assesment_json)
@@ -200,10 +202,10 @@ def getClassStudents(request, id_class):
     mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
     struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
     assesments = Assesment.objects.filter(id_class_id=id_class)
-    grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points').order_by('id_assesment')
+    grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade').order_by('id_assesment')
     dictGrades = {}
     for g in grades:
-        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'])
+        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'])
     #print dictGrades[(67,'kaid_962822484535083405338400')][1]
     assesment_array=[]
     threads = []
@@ -310,7 +312,10 @@ def getClassStudents(request, id_class):
                 student_assesment['performance_points'] = dictGrades[(assesment['id'],student.kaid_student)][2]
             except:
                 student_assesment['performance_points'] = None
-                
+            try:
+                student_assesment['bonus_grade'] = dictGrades[(assesment['id'],student.kaid_student)][4]
+            except:
+                student_assesment['bonus_grade'] = 0
             student_json[id_assesment] = student_assesment
         i+=1
         json_array.append(student_json)
@@ -322,7 +327,6 @@ def getClassStudents(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
-
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,

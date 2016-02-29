@@ -784,6 +784,7 @@ window.onload = function() {
       width=1158;
     }
 
+var className;
 
   function timelineHover() {
     //funcion que controla la linea de tiempo. y la visualizacion de las agrupaciones.
@@ -812,6 +813,13 @@ window.onload = function() {
         div.find('#name').text("Fecha: "+datum.label);
       })
       .click(function (d, i, datum) {
+        $("circle").css('cy','20px');
+        $("#timelineItem_"+datum.id).css('cy','15px');
+        className = $("#timelineItem_"+datum.id).attr('class');
+        /*console.log(className);
+        $("#timelineItem_"+datum.id).attr('class') = "selected";
+        $("#timelineItem_"+datum.id).addClass(className+" selected");
+        $("circle").removeClass("selected");*/
       	//Funcion que carga todos los datos del grupo datum.id
       	var groups
         var students
@@ -872,9 +880,7 @@ window.onload = function() {
             students = JSON.parse(response);
             for(var i=0;i<students.length;i++){
               var g = "." + (students[i]['fields']['id_group']).toString();
-              console.log(g);
               var s = "#" + (students[i]['fields']['kaid_student']).toString();
-              console.log(s);
               $(s).appendTo(g);//agrega cada estudiante a su correspondiente agrupacion.
           }
          }
@@ -891,7 +897,7 @@ window.onload = function() {
             skills = JSON.parse(response);
             $('#skills').empty();
             $('#skills').css('display','inline');
-            $('#skills').append("<h3>Habilidades</h3>");
+            $('#skills').append("<h3>Habilidades</h3><br>");
             if(skills.length==0){
               $('#skills').append("<li>No hay Habilidades asociadas</li>");
             }
@@ -921,15 +927,28 @@ window.onload = function() {
   d3.selectAll("circle").each(function(d){
     this.parentNode.appendChild(this);
   });
+
   d3.selectAll("circle").on("mouseover", 
     function(d) {
+      //$("circle").css('cy','20px');
       $(this).css('cy','15px');
     });
 
   d3.selectAll("circle").on("mouseout", 
     function(d) {
-      $(this).css('cy','20px');
+      if ($(this).attr("class")==className){
+        $(this).css('cy','15px');
+      }
+      else{
+        $(this).css('cy','20px');
+      }
     });
+
+  /*d3.selectAll("circle").on("click", 
+    function(d) {
+      $("circle").css('cy','20px');
+      $(this).css('cy','15px');
+    });*/
 
   $("#timeline3").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9' });
 }

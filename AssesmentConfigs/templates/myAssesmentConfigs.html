@@ -11,7 +11,6 @@
 <script>
 function getTopicTree(id){
 	var topictree = JSON.parse('{{ topictree | escapejs }}');
-	console.log(topictree);
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
 		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
@@ -40,13 +39,11 @@ function getTopicTree(id){
 		      $('#topictree'+id).jstree(true).search(v);
 		    }, 250);
 	});
-
+	$('#topictree'+id).jstree(true).hide_icons();
 }
-
 var json_configs = JSON.parse('{{ json_data | escapejs }}');
 var configs = json_configs.assesmentConfigs;
 var totalTree = 0
-
 function slidear(id){
 	if (id==0){
 		var selected_value=50;
@@ -76,7 +73,6 @@ function slidear(id){
 	}
 	refreshSlider(id);
 }
-
 function refreshSlider(id){
 	var total_width = $("#slider"+id).width();
 	if (id==0){
@@ -93,7 +89,6 @@ function refreshSlider(id){
     $('input[name="importance_completed_rec"]').val(importance_completed_rec);
     $("#left-color"+id).width(selected_value / 100 * total_width);
 }
-
 function onSlide(ui,id) {
     var total_width = $("#slider"+id).width();
     selected_value = ui.values[0];
@@ -222,7 +217,7 @@ function onSlide(ui,id) {
 		<script>
 	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 	        	for (i=0;i<skills.length;i++){ 
-	        		$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+	        		$("#topictree{{ forloop.counter }}").append("<li class='liSkill'>"+(skills[i].name_spanish)+"</li>")
 	        	}
 	        </script>
 	</div>
@@ -247,6 +242,8 @@ function onSlide(ui,id) {
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
 		<script>
 				totalTree+=1;
+				trees = [];
+				trees.push("{{ forloop.counter }}");
 				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
 				config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
@@ -258,7 +255,6 @@ function onSlide(ui,id) {
 	        	//alert('hola')
 	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
 	        	}
-
 	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
 	        	
 	        </script>
@@ -304,8 +300,8 @@ function onSlide(ui,id) {
 		mainContent[0].style.height = height2+"px";
 	}
 	setMainContentHeight();
-
 function cambiarPestanna(pestanna) {
+	id = (pestanna.id).substring(7);
 	 pestanna = document.getElementById(pestanna.id);
 	 cpestanna = document.getElementById('c' + pestanna.id);
 	 cpestannas = document.getElementsByClassName('cpestanna');
@@ -320,8 +316,10 @@ function cambiarPestanna(pestanna) {
 	     $(cpestanna).css('display', '');
 	     $(pestanna.getElementsByTagName('a')).addClass("select");
 	 });
+	 $(".topictree").getNiceScroll().hide();
+	 $("#topictree"+id).getNiceScroll().show();
+	 $("#topictree"+id).getNiceScroll().resize();
 }
-
 function reloadLocation(){
 	//chiusura al click sulla parte scura
 	  $("#hover").click(function(){
@@ -336,9 +334,7 @@ function reloadLocation(){
 	    location.reload();
 	    });
 }
-
 var auxResponse;
-
 function saveConfig(id){
 	//alert("intentando guardar");
 	$.ajax({
@@ -360,7 +356,6 @@ function saveConfig(id){
 			}
 	});
 }
-
 function openEditConfig(id){
 	//if (configs[id-1]["applied"]==false){
 		cpestana = document.getElementById('cpestana'+id);
@@ -374,8 +369,8 @@ function openEditConfig(id){
 		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
 		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
 		topictreeId='#topictree'+id
-		$(topictreeId).css('pointer-events', '');
-
+		$(topictreeId+(" ul")).css('pointer-events', '');
+		$(topictreeId).css('opacity', '1');
 	//}
 	/*else{
 		$('.response').remove();
@@ -384,7 +379,6 @@ function openEditConfig(id){
 		$("#popup").append("<p class='response'>Pauta aplicada, no se puede modificar</p>");
 	}*/
 }
-
 function cancelEditConfig(id){
 	cpestana = document.getElementById('cpestana'+id);
 	inputs = cpestana.getElementsByTagName('input');
@@ -398,13 +392,15 @@ function cancelEditConfig(id){
 	$(document.getElementById('editConfigButton'+id)).css('display', '');
 	$(document.getElementById('deleteConfigButton'+id)).css('display', '');
 	slidear(id);
+	topictreeId='#topictree'+id
+	$(topictreeId+(" ul")).css('pointer-events', 'none');
+	$(topictreeId).css('opacity', '0.8');
 	
 	inputs[1].removeAttribute("value");
 	var name = document.createAttribute("value");
 	name.value = configs[id-1]["name"];
 	inputs[1].setAttributeNode(name);
 }
-
 function editConfig(id){
 	if (configs[id-1]["applied"]==false){
 		$("#hover").fadeIn().css('display', '');
@@ -421,7 +417,6 @@ function editConfig(id){
 		alert("no se puede borrar");
 	}
 }
-
 function confirmEdit(answer,id){
 	if (answer==1){
 		$.ajax({
@@ -434,8 +429,12 @@ function confirmEdit(answer,id){
 					$("#popup").fadeIn().css('display', '');
 					$("#popup").append("<p class='response'>"+response+"</p>");
 					topictreeId='#topictree'+id
-					$(topictreeId).css('pointer-events', 'none');
-					$("#saveConfigButton"+id).remove()
+					$(topictreeId+(" ul")).css('pointer-events', 'none');
+					$(topictreeId).css('opacity', '0.8');
+					$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
+					$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
+					$(document.getElementById('editConfigButton'+id)).css('display', '');
+					$(document.getElementById('deleteConfigButton'+id)).css('display', '');
 				}
 		});
 		$("#hover").fadeOut().css('display', 'none');
@@ -447,9 +446,16 @@ function confirmEdit(answer,id){
 		$("#popup").fadeOut().css('display', 'none');
 		$("#editConfig").fadeOut().css('display','none');
 	}
+	cpestana = document.getElementById('cpestana'+id);
+	inputs = cpestana.getElementsByTagName('input');
+	for (i=0;i<inputs.length;i++){
+		inputs[i].setAttribute("disabled","");
+	}
+	$( "#slider"+id ).slider( "disable" );
+	topictreeId='#topictree'+id;
+	$(topictreeId+(" ul")).css('pointer-events', 'none');
+	$(topictreeId).css('opacity', '0.8');
 }
-
-
 function deleteConfig(id){
 	if (configs[id-1]["applied"]==false){
 		$("#hover").fadeIn().css('display', '');
@@ -469,7 +475,6 @@ function deleteConfig(id){
 		$("#popup").append("<p class='response'>Pauta aplicada, no se puede eliminar</p>");
 	}
 }
-
 function confirmDelete(answer,id){
 	if (answer==1){
 		$.ajax({
@@ -493,7 +498,6 @@ function confirmDelete(answer,id){
 		$("#deleteConfig").fadeOut().css('display','none');
 	}
 }
-
 function validar(){
 	flag = true
 	approval_percentage = document.getElementsByClassName("approvalPercentage");
@@ -501,16 +505,19 @@ function validar(){
 	for (var a=0;a<approval_percentage.length;a++){
 		//alert(approval_percentage[a].value)
 		if(approval_percentage[a].value == null || approval_percentage[a].value<0 || approval_percentage[a].value>100 || approval_percentage[a].value.length == 0 || /^\s+$/.test(approval_percentage[a].value)) {
-
 			$(approval_percentage[a]).css('color', '#C30202');
 			flag = false
 		}else{
-			$(approval_percentage[a]).css('color', '#000000');
+			$(approval_percentage[a]).css('color', '#898989');
 		}
+		
+		/*isDisabled = $(approval_percentage[a]).is(':disabled');
+		if (isDisabled){
+			$(approval_percentage[a]).css('color', '#999');
+		}*/
 	}
 	return flag
 }
-
 $(document).ready(function(){
   
   //chiusura al click sulla parte scura
@@ -527,23 +534,19 @@ $(document).ready(function(){
   window.setTimeout(selectTree, 500);
   
 });
-
 </script>
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 <script type="text/javascript"> 
     $(document).ready(function () {
     $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
-    
     });
-
     function selectTree(){
-
     //alert(totalTree)
-    for(j=1;j<=totalTree;j++){
+    for(j=0;j<trees.length;j++){
     //alert(skills1.length);
-    	skillsId = eval('skills'+j);
+    	skillsId = eval('skills'+trees[j]);
     	//alert(skillsId)
-    	topictreeId = '#topictree'+j;
+    	topictreeId = '#topictree'+trees[j];
     	//alert(topictreeId);
 	    for(k=0;k<skillsId.length;k++){
 	    	//alert(k);
@@ -553,9 +556,10 @@ $(document).ready(function(){
 	    	//alert(skill)
 	    	$(topictreeId).jstree('select_node', skill);
 	    	//alert(k);
-
 	    }
-	    $(topictreeId).css('pointer-events', 'none');
+	    $(topictreeId).css('opacity', '0.8');
+	    $(topictreeId+(" ul")).css('pointer-events', 'none');
+	    $(topictreeId+(" li")).css('pointer-events', '');
 	}
 }
 </script>

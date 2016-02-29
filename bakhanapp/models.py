@@ -166,6 +166,7 @@ class Assesment(models.Model):
     max_grade = models.IntegerField()
     min_grade = models.IntegerField()
     approval_grade = models.IntegerField()
+    max_effort_bonus = models.IntegerField()
 
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
@@ -193,6 +194,7 @@ class Grade(models.Model):
     mastery3 = models.IntegerField(null=True)
     comment = models.CharField(max_length=300,null=True)
     evaluated = models.BooleanField(default=False)
+    bonus_grade = models.FloatField(null=True)
     
     class Meta:
         unique_together = ('kaid_student', 'id_assesment')
@@ -294,3 +296,14 @@ class Assesment_Skill(models.Model):
     
     class Meta:
         unique_together = ('id_assesment_config', 'id_skill_name')
+
+
+class Skill_Log(models.Model):
+    id_skill_log = models.AutoField(primary_key=True)
+    correct = models.IntegerField(null=True)
+    incorrect =  models.IntegerField(null=True)
+
+class Skill_Grade(models.Model):
+    id_skill_grade = models.AutoField(primary_key=True)
+    id_grade = models.ForeignKey(Grade)
+    id_skill_log = models.ForeignKey(Skill_Log)

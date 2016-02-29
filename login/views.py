@@ -81,14 +81,19 @@ def authenticateUser(request):
         args = request.POST
         username = args["username"]
         email = args["email"]
+        kaid = args['kaid']
         #print username+" "+email
         user = auth.authenticate(username=username, password=email)
         if user:
             auth.login(request, user)
             authorized = True
+            return HttpResponse(authorized)
         else:
-            user = User.objects.create_user(username=username,email=email,password=email)
+            user = User.objects.create_user(username=username,email=email,password=email,first_name=kaid)
             user.save()
-            auth.login(request, user)
-            authorized = True
+            user2 = auth.authenticate(username=username, password=email)
+            if user2:
+                auth.login(request, user2)
+                authorized = True
+                return HttpResponse(authorized)
     return HttpResponse(authorized)

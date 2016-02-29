@@ -154,6 +154,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
         nombre_config=args['input_nombre']
         students=eval(args['input_kaid'])
         id_class=eval(args['input_id_class'])
+        bono = eval(args['bono_esfuerzo'])
         recommendations = Assesment_Config.objects.filter(pk=id_config).values('importance_completed_rec')
         mastery = Assesment_Config.objects.filter(pk=id_config).values('importance_skill_level')
         recommendations = recommendations[0]['importance_completed_rec']
@@ -167,7 +168,8 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
                                max_grade=nota2,
                                approval_grade=nota3,
                                name=nombre_config,
-                               id_class_id=id_class
+                               id_class_id=id_class,
+                               max_effort_bonus=bono
                                )
         new_assesment.save()
         id_new_assesment=new_assesment.pk

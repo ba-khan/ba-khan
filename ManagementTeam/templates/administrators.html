@@ -92,7 +92,7 @@ input{
 
 		// we build and load the metadata in Javascript
 		administratorGrid.load({ metadata: [
-			{ name: "admin_name", datatype: "string", editable: true },
+			{ name: "admin_name", datatype: "string", editable: false },
 			{ name: "admin_email", datatype: "email", editable: true },
 			{ name: "admin_phone", datatype: "integer", editable: true },
 			{ name: "action", datatype: "html", editable: false }
@@ -101,7 +101,7 @@ input{
 		// then we attach to the HTML table and render it
 		administratorGrid.attachToHTMLTable('adminGrid');
 
-		administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 40000000 && parseInt(value) < 99999999); } }));
+		administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 100000000 && parseInt(value) < 999999999); } }));
 		
 		var searchField = document.getElementById('searchField');
 		searchField.addEventListener(
@@ -154,7 +154,7 @@ input{
 			<label for='email'>E-Mail: </label><input id="newMail" onchange="validar()" onkeyup="validar()" type="mail" name="email" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 			<label for='phone'>Teléfono: </label><input id="newNumber" onchange="validar()" onkeyup="validar()" type="number" name="phone" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 
-			<button type="input" onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Administrador</button>
+			<a onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Administrador</a>
 		</form>
 	</div>
 </div>
@@ -170,13 +170,18 @@ input{
 
 <script>
 function saveNewAdmin(){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
 	if(validar()){
 		$.ajax({
 		url: "{% url 'ManagementTeam:nuevo_administrador' %}",
 		type: "POST",
 		data: $("#form0").serialize(),
 			success: function(response){
-				$('.response').remove();
 				$("#hover").fadeIn().css('display', '');
 				$("#popup").fadeIn().css('display', '');
 				$("#popup").append("<p class='response'>"+response+"</p>");
@@ -215,7 +220,7 @@ function saveData(id){
 		$('.response').remove();
 		$('.question').remove();
 		$("#popup").append("<p class='question'>¿Desea guardar cambios de Administrador?</p>");
-		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Guardar</a>");
+		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
 		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
@@ -285,7 +290,7 @@ function deleteData(id){
 		$('.response').remove();
 		$('.question').remove();
 		$("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
-		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Eliminar</a>");
+		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
 		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
@@ -335,20 +340,20 @@ function confirmDelete(answer,id){
 }
 
 function validar(){
-	flag = true
+	flag = true;
 	nName = document.getElementById("newName").value;
 	nMail = document.getElementById("newMail").value;
 	nNumber = document.getElementById("newNumber").value;
 
 	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
 		$("#newName").css('color', '#C30202');
-		flag = false
+		flag = false;
 	}else{
 		$("#newName").css('color', '#000000');
 	}
 	if(nNumber.length != 9) {
 		$("#newNumber").css('color', '#C30202');
-		flag = false
+		flag = false;
 	}else{
 		$("#newNumber").css('color', '#000000');
 	}
@@ -356,9 +361,9 @@ function validar(){
 		$("#newMail").css('color', '#000000');
 	}else{
 		$("#newMail").css('color', '#C30202');
-		flag = false
+		flag = false;
 	}
-	return flag
+	return flag;
 }
 
 $(document).ready(function(){

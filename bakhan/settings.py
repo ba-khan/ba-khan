@@ -105,7 +105,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'CLT'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -133,3 +133,6 @@ STATICFILES_DIRS = (
 LOGIN_REDIRECT_URL = "/"
 # Redirect when login is not correct.
 LOGIN_URL = '/'
+#cierra sesion al cerrar el navegador
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
+

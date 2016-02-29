@@ -96,12 +96,15 @@
             type: "POST",
             data: {username: login_data.username, 
                    email: login_data.email,
+                   kaid: login_data.kaid,
                    csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (response) {
+              console.log(response)
               if (response=="True"){
-                window.location = window.location.href+"inicio";
+                //window.location = window.href+"inicio";
+                window.open('/inicio','_self')
               }else{
-                window.location = window.location.href+"access/rejected/";
+                window.open('/access/rejected','_self')
               }    
             }
           });
