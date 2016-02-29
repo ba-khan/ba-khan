@@ -70,9 +70,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
-    print "id__config:"
-    print id_assesment_config
-    
+    kaid = User_Profile.objects.get(user=request.user.id)
     if request.method == 'POST':
         args = request.POST
         aux= args['forloop']
@@ -84,7 +82,7 @@ def editAssesmentConfig(request,id_assesment_config):
         assesment_config.importance_skill_level=args['importance_skill_level'+aux]
         assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
 
-        assesment_config.kaid_teacher_id=2
+        assesment_config.kaid_teacher_id=kaid.kaid
         assesment_config.top_score=0
         assesment_config.id_subject_name_id='math'
         assesment_config.applied=False
@@ -93,8 +91,6 @@ def editAssesmentConfig(request,id_assesment_config):
         Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
 
         for skill in skills_selected:
-                print skill['skill_id']
-                #skill_tuple=Skill.objects.get(pk=skill)
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
                                                     id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
