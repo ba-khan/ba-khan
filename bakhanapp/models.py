@@ -6,7 +6,12 @@ from django.db.models.fields.related import ForeignKey
 
 class User_Profile(models.Model):
     kaid = models.CharField(max_length=40)
-    user = models.ForeignKey(User, unique=True)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+
 
 # Create your models here.
 class Institution(models.Model):
