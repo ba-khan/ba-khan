@@ -559,7 +559,7 @@ label.sort-filter{
   border-bottom: 3px solid transparent;
   border-top: 3px solid #79A70A;*/
 }
-@media (min-width: 720px){
+@media (max-height: 720px){
   #popup_resumen{
     position: fixed;
     width: 530px;
@@ -597,7 +597,7 @@ label.sort-filter{
 }
 
 
-@media (min-width: 1080px){
+@media (min-height: 720px){
   #popup_resumen{
     position: fixed;
     width: 530px;
