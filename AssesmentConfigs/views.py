@@ -32,7 +32,7 @@ import json
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2').order_by('-id_assesment_config')
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.first_name).order_by('-id_assesment_config')
 
     json_array=[]
     for assesment_config in assesment_configs:
@@ -109,21 +109,17 @@ def newAssesmentConfig(request):
     if request.method == 'POST':
         args = request.POST
         id = args['id']
-        if not (args['importance_skill_level'+id]):
-            print "wena shoro"
-        else:
-            print "ahora si shoroooo"
+
         if (args['name'] and args['approval_percentage'] and args['importance_skill_level'+id] and args['importance_completed_rec'+id] and eval(args['skills'+id])):
             skills_selected = eval(args['skills'+id])
             
             #subtopic_skills = eval(args['subtopic_skill'+id])
-            teacher=2
             subject="math"
             new_assesment_config = Assesment_Config.objects.create(name=args['name'],
                                    approval_percentage=args['approval_percentage'],
                                    importance_skill_level=args['importance_skill_level'+id],
                                    importance_completed_rec=args['importance_completed_rec'+id],
-                                   kaid_teacher_id=2,
+                                   kaid_teacher_id=request.user.first_name,
                                    top_score=0,
                                    id_subject_name_id='math',
                                    applied=False
