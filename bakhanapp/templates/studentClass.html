@@ -1173,7 +1173,11 @@
 	          var video_time = student_data.video_time;
 	          var mins_video_time = ~~(video_time / 60);
 	          var secs_video_time = video_time % 60;
+	          var bonus_grade = d.value.bonus_grade;
+	          var grade = d.value.grade;
 	          return `<ul>
+	          		<li>Nota por Empeño:`+grade+`</li>
+	          		<li>Bonificacion por Esfuerzo:`+bonus_grade+`</li>
 	          		<li>% de recomend. completadas: `+Math.round((student_data.recommendations.completed_perc)*100)+`</li>
 	          		<li>Ejercicios incorrectos:`+student_data.exercises.incorrect+`</li>
 	          		<li>Ejercicios correctos: `+student_data.exercises.correct+`</li>
