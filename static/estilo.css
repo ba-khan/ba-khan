@@ -410,21 +410,7 @@ label.sort-filter{
   box-shadow:0 0 10px 0 #9DB63B;
   z-index: 11;
 }
-#popup_resumen{
-  position: fixed;
-  width: 530px;
-  height: 700px;
-  background: #fff;
-  left: 50%;
-  top: 25%;
-  border-radius: 5px;
-  padding: 30px 30px;
-  margin-left: -320px;
-  margin-top: -150px;
-  text-align: left;
-  box-shadow: 0 0 10px 0 #9DB63B;
-  z-index: 11;
-}
+
 
 #hover{
   position:fixed;
@@ -527,7 +513,7 @@ label.sort-filter{
     .tipsy-se .tipsy-arrow { bottom: 0; right: 10px; border-top-style: solid; border-bottom: none; border-left-color: transparent; border-right-color: transparent; }
   .tipsy-e .tipsy-arrow { right: 0; top: 50%; margin-top: -5px; border-left-style: solid; border-right: none; border-top-color: transparent; border-bottom-color: transparent; }
   .tipsy-w .tipsy-arrow { left: 0; top: 50%; margin-top: -5px; border-right-style: solid; border-left: none; border-top-color: transparent; border-bottom-color: transparent; }
-
+.tipsy .tipsy-n { border-radius: 100px solid #999; }
   .ribbon {
   position: absolute;
   top: 0px;
@@ -573,15 +559,75 @@ label.sort-filter{
   border-bottom: 3px solid transparent;
   border-top: 3px solid #79A70A;*/
 }
-#resumen_data p{
-  float:left;
-  margin: 0px 0px 0px 20px;
+@media (min-width: 720px){
+  #popup_resumen{
+    position: fixed;
+    width: 530px;
+    height: 500px;
+    background: #fff;
+    left: 50%;
+    top: 25%;
+    border-radius: 5px;
+    padding: 30px 30px;
+    margin-left: -320px;
+    margin-top: -150px;
+    text-align: left;
+    box-shadow: 0 0 10px 0 #9DB63B;
+    z-index: 11;
+  }
+  #resumen_data p{
+    float:left;
+    margin: 0px 0px 0px 20px;
+  }
+  hr{
+    margin: 18px 0px 18px 0px;
+  }
+  #resumen_skill{
+    overflow: auto;
+    width:530px;
+    height:100px;
+    position: relative;
+  }
+  #resumen_graph{
+    height:130px;
+    overflow: auto;
+    width:530px;
+    position: relative;
+  }
 }
-hr{
-  margin: 18px 0px 18px 0px;
-}
-#resumen_skill{
-  overflow: auto;
-  width:530px;
-  height:230px;
+
+
+@media (min-width: 1080px){
+  #popup_resumen{
+    position: fixed;
+    width: 530px;
+    height: 700px;
+    background: #fff;
+    left: 50%;
+    top: 25%;
+    border-radius: 5px;
+    padding: 30px 30px;
+    margin-left: -320px;
+    margin-top: -150px;
+    text-align: left;
+    box-shadow: 0 0 10px 0 #9DB63B;
+    z-index: 11;
+  }
+  #resumen_data p{
+    float:left;
+    margin: 0px 0px 0px 20px;
+  }
+  hr{
+    margin: 18px 0px 18px 0px;
+  }
+  #resumen_skill{
+    overflow: auto;
+    width:530px;
+    height:230px;
+    position: relative;
+  }
+  #resumen_graph{
+    overflow: auto;
+    height: 205px;
+  }
 }
