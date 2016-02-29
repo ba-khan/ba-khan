@@ -410,21 +410,7 @@ label.sort-filter{
   box-shadow:0 0 10px 0 #9DB63B;
   z-index: 11;
 }
-#popup_resumen{
-  position: fixed;
-  width: 530px;
-  height: 700px;
-  background: #fff;
-  left: 50%;
-  top: 25%;
-  border-radius: 5px;
-  padding: 30px 30px;
-  margin-left: -320px;
-  margin-top: -150px;
-  text-align: left;
-  box-shadow: 0 0 10px 0 #9DB63B;
-  z-index: 11;
-}
+
 
 #hover{
   position:fixed;
@@ -506,12 +492,18 @@ label.sort-filter{
   .tipsy-inner { background-color: #fff; color: #000; max-width: 300px; padding: 5px 8px 4px 8px; text-align: center; }
 
   /* Rounded corners */
-  .tipsy-inner { border-radius: 3px solid #999; -moz-border-radius: 3px solid #999; -webkit-border-radius: 3px solid #999; }
+  /*.tipsy-inner { border-radius: 3px solid #999; -moz-border-radius: 3px solid #999; -webkit-border-radius: 3px solid #999; }*/
+  .tipsy-inner {
+  border-radius: 5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.35);
+}
   
   /* Uncomment for shadow */
   /*.tipsy-inner { box-shadow: 0 0 5px #000000; -webkit-box-shadow: 0 0 5px #000000; -moz-box-shadow: 0 0 5px #000000; }*/
   
-  .tipsy-arrow { position: absolute; width: 0; height: 0; line-height: 0; border: 5px dashed #999; }
+  .tipsy-arrow { position: absolute; width: 0; height: 0; line-height: 0; border: 5px dashed #999;  z-index:100001;}
   
   /* Rules to colour arrows */
   .tipsy-arrow-n { border-bottom-color: #fff; }
@@ -524,10 +516,11 @@ label.sort-filter{
     .tipsy-ne .tipsy-arrow { top: 0; right: 10px; border-bottom-style: solid; border-top: none;  border-left-color: transparent; border-right-color: transparent;}
   .tipsy-s .tipsy-arrow { bottom: 0; left: 50%; margin-left: -5px; border-top-style: solid; border-bottom: none;  border-left-color: transparent; border-right-color: transparent; }
     .tipsy-sw .tipsy-arrow { bottom: 0; left: 10px; border-top-style: solid; border-bottom: none;  border-left-color: transparent; border-right-color: transparent; }
-    .tipsy-se .tipsy-arrow { bottom: 0; right: 10px; border-top-style: solid; border-bottom: none; border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-se .tipsy-arrow { bottom: 1px; right: 10px; border-top-style: solid; border-bottom: none; border-left-color: transparent; border-right-color: transparent; }
   .tipsy-e .tipsy-arrow { right: 0; top: 50%; margin-top: -5px; border-left-style: solid; border-right: none; border-top-color: transparent; border-bottom-color: transparent; }
   .tipsy-w .tipsy-arrow { left: 0; top: 50%; margin-top: -5px; border-right-style: solid; border-left: none; border-top-color: transparent; border-bottom-color: transparent; }
-
+.tipsy .tipsy-n { border-radius: 100px solid #999; }
+  
   .ribbon {
   position: absolute;
   top: 0px;
@@ -573,15 +566,81 @@ label.sort-filter{
   border-bottom: 3px solid transparent;
   border-top: 3px solid #79A70A;*/
 }
-#resumen_data p{
-  float:left;
-  margin: 0px 0px 0px 20px;
+
+#popup_resumen h4{
+  margin-bottom: 0px;
 }
-hr{
-  margin: 18px 0px 18px 0px;
+
+@media (max-height: 720px){
+  #popup_resumen{
+    position: fixed;
+    width: 530px;
+    height: 500px;
+    background: #fff;
+    left: 50%;
+    top: 25%;
+    border-radius: 5px;
+    padding: 30px 30px;
+    margin-left: -320px;
+    margin-top: -150px;
+    text-align: left;
+    box-shadow: 0 0 10px 0 #9DB63B;
+    z-index: 11;
+  }
+  #resumen_data p{
+    float:left;
+    margin: 0px 0px 0px 20px;
+  }
+  hr{
+    margin: 10px 0px 10px 0px;
+  }
+  #resumen_skill{
+    overflow: auto;
+    width:530px;
+    height:110px;
+    position: relative;
+  }
+   #resumen_skill li:first-child{
+    margin-top: 5px;
+  }
+  #resumen_graph{
+    height:200px;
+    width:530px;
+    position: relative;
+  }
 }
-#resumen_skill{
-  overflow: auto;
-  width:530px;
-  height:230px;
+
+
+@media (min-height: 720px){
+  #popup_resumen{
+    position: fixed;
+    width: 530px;
+    height: 700px;
+    background: #fff;
+    left: 50%;
+    top: 25%;
+    border-radius: 5px;
+    padding: 30px 30px;
+    margin-left: -320px;
+    margin-top: -150px;
+    text-align: left;
+    box-shadow: 0 0 10px 0 #9DB63B;
+    z-index: 11;
+  }
+  #resumen_data p{
+    float:left;
+    margin: 0px 0px 0px 20px;
+  }
+  hr{
+    margin: 18px 0px 18px 0px;
+  }
+  #resumen_skill{
+    overflow: auto;
+    width:530px;
+    height:230px;
+    position: relative;
+  }
+  #resumen_graph{
+    height: 205px;
+  }
 }

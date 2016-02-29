@@ -208,7 +208,9 @@ def getClassStudents(request, id_class):
     grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade').order_by('id_assesment')
     dictGrades = {}
     for g in grades:
-        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'])
+        name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
+        name = name[0]['name']
+        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name)
     #print dictGrades[(67,'kaid_962822484535083405338400')][1]
     assesment_array=[]
     threads = []
@@ -319,6 +321,10 @@ def getClassStudents(request, id_class):
                 student_assesment['bonus_grade'] = dictGrades[(assesment['id'],student.kaid_student)][4]
             except:
                 student_assesment['bonus_grade'] = 0
+            try:
+                student_assesment['name'] = dictGrades[(assesment['id'],student.kaid_student)][5]
+            except:
+                student_assesment['name'] = "s/n"
             student_json[id_assesment] = student_assesment
         i+=1
         json_array.append(student_json)

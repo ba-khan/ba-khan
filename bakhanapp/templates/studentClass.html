@@ -39,14 +39,14 @@
     	<div id="close">X</div>
     	<div style="align:left;">
 	    	<form action="" method="post" id='formGrade'>{% csrf_token %}
+				<div id="popup_nombre"><p style="margin-top:0px;"><strong>NOMBRE ESTUDIANTE</strong></p></div>
 				<p style="margin:0px;">
-					Nombre Estudiante
-					<input name="input_grade_nombre" id="input_grade_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;"/>
-					<input name="input_grade_id" id="input_id_grade" class="vaciar" type="text" style="display:none;"/>
 					Nota:
-					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
 					Nota Profesor
 					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+					Bonificaicon por Esfuerzo
+					<input name="input_bonificacion" id="input_bonificacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
 				</p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:550px;height:50px;padding-top:5px"></textarea>
@@ -59,15 +59,16 @@
 
     <div id="popup_resumen" class="popup" style="display:none">
     	<div id="close" style="top:-15px;right:-15px;z-index:20;position:absolute;" onClick="$('#popup_resumen').fadeOut();$('#hover').fadeOut();">X</div>
-    	<div style="align:left;">
+    	<div id="inside_resumen" style="align:left; height:100%; width:100%">
 	    	<h2 style="text-align:center;">Resumen</h2>
 	    	<div id="resumen_data"></div>
-	    	<h4>Habilidades:</h4>
+	    	<h4>Histograma de notas:</h4>
+	    	<div id="resumen_graph" class="resumen_graph"></div>
+	    	<hr><h4>Habilidades:</h4>
 	    	<div id="resumen_skill"></div>
 	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
 	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
-	    	<hr><h4>Histograma de notas:</h4>
-	    	<div id="resumen_graph" class="resumen_graph"></div>
+	    	
     	</div>
     </div>
 
@@ -1064,7 +1065,7 @@
 	}
 	
 	function drawAssesments(){
-	console.log(assesments);
+	//console.log(assesments);
 	var effort_scalings = [];
     for (i=0; i<assesments.length; i++){
     	var assesment_num_id=i;
@@ -1115,8 +1116,14 @@
     					}
     			  })
     		.on("click",function(d){
-    			$("input[name='input_grade_id']").val(d.value.grade_id)
-    			$("input[name='input_grade']").val(d.value.grade)
+    			console.log(d)
+    			$('#popup_nombre').empty();
+    			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.head_assesment+"</strong></p>");
+    			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.value.name+"</strong></p>");
+    			//$('#popup_nombre').append("<p style='margin-top:0px;'><strong>Nota: </strong>"+d.value.grade+"<strong>    Bonificacion: </strong>"+d.value.bonus_grade+"</p>");
+    			$("input[name='input_grade_id']").val(d.value.grade_id);
+    			$("input[name='input_grade']").val(d.value.grade);
+    			$("input[name='input_bonificacion']").val(d.value.bonus_grade);
     			$("#hover").fadeIn().css('display', '');
     			$("#popup").fadeIn().css('display', '');
     		});
@@ -1129,7 +1136,8 @@
 	        .attr("dy", function(d,i){return 6 + effort_scalings[d.cl](students[i][assesment_id].effort);})
 	        .text(function(d,i){
 	        	if (students[i][assesment_id].grade!=null){
-	        		return students[i][assesment_id].grade;
+	        		nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade;
+	        		return nota;
 	        	}else{
 	        		return "S.E.";
 	        	}
@@ -1151,7 +1159,7 @@
     	});
 	    	
 	    $("circle."+assesment_id).tipsy({ 
-	        gravity: 'n',
+	        gravity: 'se',
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
@@ -1165,7 +1173,11 @@
 	          var video_time = student_data.video_time;
 	          var mins_video_time = ~~(video_time / 60);
 	          var secs_video_time = video_time % 60;
+	          var bonus_grade = d.value.bonus_grade;
+	          var grade = d.value.grade;
 	          return `<ul>
+	          		<li>Nota por Empeño:`+grade+`</li>
+	          		<li>Bonificacion por Esfuerzo:`+bonus_grade+`</li>
 	          		<li>% de recomend. completadas: `+Math.round((student_data.recommendations.completed_perc)*100)+`</li>
 	          		<li>Ejercicios incorrectos:`+student_data.exercises.incorrect+`</li>
 	          		<li>Ejercicios correctos: `+student_data.exercises.correct+`</li>
@@ -2130,6 +2142,8 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 <script type="text/javascript"> 
     $(document).ready(function () {
     $("#resumen_skill").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16'})
+    //$("#inside_resumen").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'19', railoffset: {top:0,left:30}})
+    //$("#resumen_graph").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'19'})
     });
 </script>
 

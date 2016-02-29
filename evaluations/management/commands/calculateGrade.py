@@ -118,6 +118,10 @@ class Command(BaseCommand):
                         grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
                     except:
                         grade.mastery3 = 0
+                    try:
+                        grade.bonus_grade = (grade.performance_points * assesment.max_effort_bonus)/100
+                    except:
+                        grade.bonus_grade = 0
                     grade.save()
             #Aqui comienza el calculo de la bonificacion de empegno.        
             grades = Grade.objects.filter(id_assesment_id=assesment.pk)
