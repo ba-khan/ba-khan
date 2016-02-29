@@ -33,7 +33,7 @@ import json
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
     request.session.set_expiry(300)#5 minutos de inactividad
-    kaid = User_Profile.objects.get(user=request.user.id)
+    kaid = User_Profile.objects.get(user_id=request.user.id)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=kaid.kaid).order_by('-id_assesment_config')
 
     json_array=[]
@@ -71,7 +71,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
-    kaid = User_Profile.objects.get(user=request.user.id)
+    kaid = User_Profile.objects.get(user_id=request.user.id)
     if request.method == 'POST':
         args = request.POST
         aux= args['forloop']
@@ -103,7 +103,7 @@ def deleteAssesmentConfig(request,id_assesment_config):
 
 def newAssesmentConfig(request):
     
-    kaid = User_Profile.objects.get(user=request.user.id)
+    kaid = User_Profile.objects.get(user_id=request.user.id)
     if request.method == 'POST':
         args = request.POST
         id = args['id']
