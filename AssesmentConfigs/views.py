@@ -18,7 +18,7 @@ register = template.Library()
 
 from bakhanapp.models import Skill
 
-from bakhanapp.models import Assesment_Config,Subtopic_Skill
+from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile
 
 
 from bakhanapp.views import getTopictree
@@ -32,7 +32,9 @@ import json
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2').order_by('-id_assesment_config')
+    request.session.set_expiry(300)#5 minutos de inactividad
+    kaid = User_Profile.objects.get(user=request.user.id)
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=kaid.kaid).order_by('-id_assesment_config')
 
     json_array=[]
     for assesment_config in assesment_configs:
@@ -69,9 +71,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
-    print "id__config:"
-    print id_assesment_config
-    
+    kaid = User_Profile.objects.get(user=request.user.id)
     if request.method == 'POST':
         args = request.POST
         aux= args['forloop']
@@ -83,7 +83,7 @@ def editAssesmentConfig(request,id_assesment_config):
         assesment_config.importance_skill_level=args['importance_skill_level'+aux]
         assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
 
-        assesment_config.kaid_teacher_id=2
+        assesment_config.kaid_teacher_id=kaid.kaid
         assesment_config.top_score=0
         assesment_config.id_subject_name_id='math'
         assesment_config.applied=False
@@ -92,8 +92,6 @@ def editAssesmentConfig(request,id_assesment_config):
         Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
 
         for skill in skills_selected:
-                print skill['skill_id']
-                #skill_tuple=Skill.objects.get(pk=skill)
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
                                                     id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
@@ -105,25 +103,21 @@ def deleteAssesmentConfig(request,id_assesment_config):
 
 def newAssesmentConfig(request):
     
-    '''assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')'''
+    kaid = User_Profile.objects.get(user=request.user.id)
     if request.method == 'POST':
         args = request.POST
         id = args['id']
-        if not (args['importance_skill_level'+id]):
-            print "wena shoro"
-        else:
-            print "ahora si shoroooo"
+
         if (args['name'] and args['approval_percentage'] and args['importance_skill_level'+id] and args['importance_completed_rec'+id] and eval(args['skills'+id])):
             skills_selected = eval(args['skills'+id])
             
             #subtopic_skills = eval(args['subtopic_skill'+id])
-            teacher=2
             subject="math"
             new_assesment_config = Assesment_Config.objects.create(name=args['name'],
                                    approval_percentage=args['approval_percentage'],
                                    importance_skill_level=args['importance_skill_level'+id],
                                    importance_completed_rec=args['importance_completed_rec'+id],
-                                   kaid_teacher_id=2,
+                                   kaid_teacher_id=kaid.kaid,
                                    top_score=0,
                                    id_subject_name_id='math',
                                    applied=False

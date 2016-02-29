@@ -27,7 +27,10 @@ import json
 def getAdministrators(request):
     #print "###############################################################################"
     #print request.user.email
-    teacher = Teacher.objects.get(email=request.user.email)
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except:
+        return render_to_response('administrators.html', context_instance=RequestContext(request))
     administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
     #print administrators
     return render_to_response('administrators.html', {'administrators': administrators}, context_instance=RequestContext(request))

@@ -21,7 +21,7 @@ import json
 
 @login_required()
 def getContacts(request, id_class):
-    #request.session.set_expiry(300)
+    request.session.set_expiry(300)
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student')).order_by('name')
     tutors=Tutor.objects.filter(kaid_student_child__in=students)
     datas = []
@@ -39,7 +39,6 @@ def getContacts(request, id_class):
 
 @login_required()
 def saveContact(request, id_class):
-    #request.session.set_expiry(300)
     if request.is_ajax():
         if request.method == 'POST':
             

@@ -16,7 +16,7 @@ from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
 from bakhanapp.models import Class
-from bakhanapp.models import Teacher
+from bakhanapp.models import Teacher,User_Profile
 from bakhanapp.models import Skill
 from bakhanapp.models import Skill_Progress
 from bakhanapp.models import Student
@@ -90,9 +90,10 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
-    #request.session.set_expiry(30)
+    request.session.set_expiry(300)
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
-    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
+    kaid = User_Profile.objects.get(user=request.user.id)
+    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=kaid.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
@@ -186,7 +187,9 @@ def paralellAssesment(assesment,students,queue):
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado y carga el dashboard
-    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher='2').values('id_class'))
+    request.session.set_expiry(600)#10 minutos
+    kaid = User_Profile.objects.get(user=request.user.id)
+    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=kaid.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
@@ -326,7 +329,7 @@ def getClassStudents(request, id_class):
     json_data = json.dumps(json_dict)
     classroom = Class.objects.filter(id_class=id_class)
     s_skills = getClassSkills(request,id_class)
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher='2')
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=kaid.kaid)
     return render_to_response('studentClass.html',
                                 {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                 's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,

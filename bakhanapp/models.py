@@ -1,8 +1,12 @@
 
 from django.db import models
+from django.contrib.auth.models import User
 
 from django.db.models.fields.related import ForeignKey
 
+class User_Profile(models.Model):
+    kaid = models.CharField(max_length=40)
+    user = models.ForeignKey(User, unique=True)
 
 # Create your models here.
 class Institution(models.Model):
