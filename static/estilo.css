@@ -559,6 +559,11 @@ label.sort-filter{
   border-bottom: 3px solid transparent;
   border-top: 3px solid #79A70A;*/
 }
+
+#popup_resumen h4{
+  margin-bottom: 0px;
+}
+
 @media (max-height: 720px){
   #popup_resumen{
     position: fixed;
@@ -580,17 +585,19 @@ label.sort-filter{
     margin: 0px 0px 0px 20px;
   }
   hr{
-    margin: 18px 0px 18px 0px;
+    margin: 10px 0px 10px 0px;
   }
   #resumen_skill{
     overflow: auto;
     width:530px;
-    height:100px;
+    height:110px;
     position: relative;
   }
+   #resumen_skill li:first-child{
+    margin-top: 5px;
+  }
   #resumen_graph{
-    height:130px;
-    overflow: auto;
+    height:200px;
     width:530px;
     position: relative;
   }

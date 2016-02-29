@@ -62,12 +62,13 @@
     	<div id="inside_resumen" style="align:left; height:100%; width:100%">
 	    	<h2 style="text-align:center;">Resumen</h2>
 	    	<div id="resumen_data"></div>
-	    	<h4>Habilidades:</h4>
+	    	<h4>Histograma de notas:</h4>
+	    	<div id="resumen_graph" class="resumen_graph"></div>
+	    	<hr><h4>Habilidades:</h4>
 	    	<div id="resumen_skill"></div>
 	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
 	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
-	    	<hr><h4>Histograma de notas:</h4>
-	    	<div id="resumen_graph" class="resumen_graph"></div>
+	    	
     	</div>
     </div>
 
@@ -2131,7 +2132,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     $(document).ready(function () {
     $("#resumen_skill").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16'})
     //$("#inside_resumen").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'19', railoffset: {top:0,left:30}})
-    $("#resumen_graph").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'19'})
+    //$("#resumen_graph").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'19'})
     });
 </script>
 
