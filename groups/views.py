@@ -100,6 +100,7 @@ def getMakedGroup(request,id_class):
 
 @login_required()
 def getGroups(request, id_class):
+    request.session.set_expiry(300)
     kaid = User_Profile.objects.get(user=request.user.id)
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
     g = Master_Group.objects.filter(id_class=id_class)

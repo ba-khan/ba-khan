@@ -18,7 +18,7 @@ register = template.Library()
 
 from bakhanapp.models import Skill
 
-from bakhanapp.models import Assesment_Config,Subtopic_Skill
+from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile
 
 
 from bakhanapp.views import getTopictree
@@ -32,6 +32,7 @@ import json
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
+    request.session.set_expiry(300)#5 minutos de inactividad
     kaid = User_Profile.objects.get(user=request.user.id)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=kaid.kaid).order_by('-id_assesment_config')
 
