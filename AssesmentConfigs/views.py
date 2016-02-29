@@ -33,8 +33,7 @@ import json
 def getTeacherAssesmentConfigs(request):#url configuraciones
     #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
     request.session.set_expiry(300)#5 minutos de inactividad
-    kaid = User_Profile.objects.get(user_id=request.user.id)
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=kaid.kaid).order_by('-id_assesment_config')
+    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid).order_by('-id_assesment_config')
 
     json_array=[]
     for assesment_config in assesment_configs:
