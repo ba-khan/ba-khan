@@ -2142,9 +2142,29 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 <script type="text/javascript"> 
     $(document).ready(function () {
     $("#resumen_skill").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16'})
-    //$("#inside_resumen").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'19', railoffset: {top:0,left:30}})
-    //$("#resumen_graph").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'19'})
     });
+    
+    var texts = document.getElementsByTagName("text");
+    var n = texts.length;
+    for(i=0;i<n;i++){
+    	if(texts[i].innerHTML=="S.E."){
+    		texts[i].classList.add("SE");
+    		$(texts[i]).css('pointer-events','');
+    		$(texts[i]).css('cursor','context-menu');
+    	}
+    }
+
+    $(".SE").tipsy({ 
+	        gravity: 'se',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return `<ul>
+	          		<li>Estudiante sin evaluar</li>
+	          		</ul>`;
+	        }
+	      });
+   
 </script>
 
 {% endblock %}
