@@ -43,6 +43,7 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress
 
 import datetime
+from configs import timeSleep
 
 import cgi
 import rauth
@@ -90,7 +91,7 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
-    request.session.set_expiry(300)
+    request.session.set_expiry(timeSleep)
     print request.user.user_profile.kaid
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))

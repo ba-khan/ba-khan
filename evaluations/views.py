@@ -46,6 +46,8 @@ from bakhanapp.models import Tutor
 import datetime
 import threading
 
+from configs import timeSleep
+
 import unicodedata
 import os
 import cgi

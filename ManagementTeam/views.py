@@ -19,6 +19,7 @@ from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher
 
 register = template.Library()
+from configs import timeSleep
 
 import json
 

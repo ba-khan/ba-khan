@@ -33,6 +33,8 @@ from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
 from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill,Group_Student
 from groups.models import Group_Skill,Master_Group
 
+from configs import timeSleep
+
 import cgi
 import rauth
 import SimpleHTTPServer
@@ -100,7 +102,7 @@ def getMakedGroup(request,id_class):
 
 @login_required()
 def getGroups(request, id_class):
-    request.session.set_expiry(300)
+    request.session.set_expiry(timeSleep)
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
     g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
