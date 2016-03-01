@@ -53,11 +53,44 @@ class Command(BaseCommand):
             #print id_institution.id_institution_id
             administrators = Administrator.objects.filter(id_institution_id=id_institution.id_institution_id)
             #print administrators
+            
+            students = Grade.objects.filter(id_assesment_id=assesment['id_assesment']).values('kaid_student_id')
+            configSkills = Assesment_Skill.objects.filter(id_assesment_config=assesment['id_assesment_conf_id']).values('id_skill_name_id')
+            dictSkillDomain = {}
+            for skill in configSkills:
+                practiced,mastery1,mastery2,mastery3,struggling = getSkillStudentDomain(skill['id_skill_name_id'],startDate,endDate,students)
+                dictSkillDomain[skill['id_skill_name_id']] = [practiced,mastery1,mastery2,mastery3,struggling]
+            print dictSkillDomain
             for admin in administrators:
                 content = content.replace("$$nameAdmin$$",str(admin.name))
                 #sendMail('javierperezferrada@gmail.com',content)
-                sendMail(admin.email,content)
+                #sendMail(admin.email,content)
                 content = content.replace(str(admin.name),"$$nameAdmin$$")
+
+def getSkillStudentDomain(skill,startDate,endDate,students):
+    #funcion que calcula cuantos estudiantes quedaron en cada nivel de dominio segun la skill recibida
+    #print 'total students: %d'%(len(students))
+    levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name=skill,struggling=False,skill_progress__date__range=(startDate,endDate)
+                ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
+                ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')
+    struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name=skill,struggling=True,skill_progress__date__range=(startDate,endDate)
+                ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
+                ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill').count()
+    practiced = 0
+    mastery1 = 0
+    mastery2 = 0
+    mastery3 = 0
+    for level in levels:
+        if str(level['skill_progress__to_level']) == 'practiced':
+            practiced += 1
+        if str(level['skill_progress__to_level']) == 'mastery1':
+            mastery1 += 1
+        if str(level['skill_progress__to_level']) == 'mastery2':
+            mastery2 += 1
+        if str(level['skill_progress__to_level']) == 'mastery3':
+            mastery3 += 1
+    #print 'niveles'
+    return practiced,mastery1,mastery2,mastery3,struggling
 
 def sendMail(email,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     subject = 'Ha finalizado una Evaluacion'
