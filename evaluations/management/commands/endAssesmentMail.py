@@ -14,25 +14,20 @@ class Command(BaseCommand):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         lastDate = date.today() - timedelta(days=1)
         #cambiar end_date__lgt
-        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment_conf_id','id_assesment','name','start_date','end_date','grade__grade',
-            'grade__kaid_student_id','grade__performance_points')#inner join django 1-N desde 1 hacia N
+        assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment_conf_id','id_assesment','name','start_date','end_date')#,'grade__grade',
+            #'grade__kaid_student_id','grade__performance_points','grade__recomended_compete','grade__excercice_time','grade__video_time','grade__correct',
+            #'grade__incorrect','grade__struggling','grade__mastery1','grade__mastery2','grade__mastery3','grade__practiced')#inner join django 1-N desde 1 hacia N
         #assesments = Assesment.objects.filter(end_date=lastDate)
         conf = 0 
         for assesment in assesments: #en assesment se encuantral las assesments y grades con kaid students
-            if conf != assesment['id_assesment_conf_id']: #consulta las habilidaes cuando cambia assesment_config
-                skills = getSelectedSkills(assesment['id_assesment_conf_id']) 
-                conf = assesment['id_assesment_conf_id']
-            video_time = getVideoTimeBetween(assesment['grade__kaid_student_id'],assesment['start_date'],assesment['end_date'])
-            total_corrects = getSkillAttemptCorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
-            total_incorrects = getSkillAttemptIncorrect(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
-            practiced,mastery1,mastery2,mastery3,struggling = getDomainLevel(assesment['id_assesment_conf_id'],assesment['grade__kaid_student_id'])
-            #print 'tiempo en videos: %d, total correctas: %d total incorrectas: %d'%(video_time,total_corrects,total_incorrects)
-            print practiced,mastery1,mastery2,mastery3,struggling
-            content = htmlTemplate(assesment['grade__grade'],assesment['grade__performance_points'],video_time,total_corrects,total_incorrects,assesment['id_assesment_conf_id'],
-                practiced,mastery1,mastery2,mastery3,struggling)
-            sendMail(assesment['grade__kaid_student_id'],content)
-            sendWhatsapp(assesment['grade__kaid_student_id'],assesment['grade__grade'],assesment['grade__performance_points'],video_time,total_corrects,total_incorrects,
-                practiced,mastery1,mastery2,mastery3,struggling)
+            grades = Grade.objects.filter(id_assesment_id=assesment['id_assesment']).values('grade','kaid_student_id','performance_points','recomended_complete','excercice_time',
+                'video_time','correct','incorrect','struggling','mastery1','mastery2','mastery3','practiced')
+            for grade in grades:
+                content = htmlTemplate(grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],assesment['id_assesment_conf_id'],
+                    grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'],assesment['name'])
+                sendMail(grade['kaid_student_id'],content)
+                sendWhatsapp(grade['kaid_student_id'],grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],
+                    grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'])
 
 def sendWhatsapp(kaid,grade,points,video_time,corrects,incorrects,
                 practiced,mastery1,mastery2,mastery3,struggling):
@@ -64,7 +59,7 @@ def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cad
     student = Student.objects.get(pk=kaid)
     tutor = Tutor.objects.get(kaid_student_child=kaid)
     
-    contenido_html = contenido.replace("$$nombre_usuario$$",student.name) #usarPlantilla()
+    contenido_html = contenido.replace("$$nombre_usuario$$",str(student.name)) #usarPlantilla()
 
     subject = 'Ha finalizado una Evaluacion'
     text_content = 'habilita el html de tu correo'
@@ -79,9 +74,10 @@ def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cad
     return ()
 
 def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config,
-                practiced,mastery1,mastery2,mastery3,struggling):
+                practiced,mastery1,mastery2,mastery3,struggling,name):
     skill_assesment = getSkillAssesment(id_assesment_config)
-    archivo=open("/var/www/html/bakhanproyecto/static/plantillas/end_assesment_mail.html")
+    #archivo=open("/var/www/html/bakhanproyecto/static/plantillas/end_assesment_mail.html")
+    archivo=open("static/plantillas/end_assesment_mail.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$grade$$","{0:.1f}".format(grade))
     contenido = contenido.replace("$$points$$",str(points))
@@ -93,6 +89,7 @@ def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config
     contenido = contenido.replace("$$mastery2$$",str(mastery2))
     contenido = contenido.replace("$$mastery3$$",str(mastery3))
     contenido = contenido.replace("$$struggling$$",str(struggling))
+    contenido = contenido.replace("$$assesmentName$$",str(name))
     contenido = contenido.replace("$$ejercicios$$",str(skill_assesment))
     return(contenido)
 
