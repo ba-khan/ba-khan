@@ -264,6 +264,22 @@
 	var json = JSON.parse('{{ jason_data | escapejs }}');
 	var students = json.students;
 	var assesments=json.assesments;
+	var averages=[]
+	for (i=0;i<students.length;i++){
+		cont=0;
+		average=0;
+		for(k=0;k<assesments.length;k++){
+			aux=students[i]["assesment"+assesments[k]['id']].grade;
+			if(aux=!null){
+				average=average+students[i]["assesment"+assesments[k]['id']].grade;
+				cont=cont+1;
+			}
+		}
+		average=Math.round((average/cont)*10)/10;
+		averages.push(average);
+		students[i]['average']=(average);
+		console.log(students[i]);
+	}
 
 	//Sort assesments array by their creation date
 	assesments.sort(function(a, b) {
@@ -283,9 +299,8 @@
         { head: 'Habilidades dominadas', cl: 'skills_level', values: d3.f('skills_level'), type:'numeric'},
         //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
     ];
-    
-    var class_id="assesment"+json["assesments"][0]["id"];
-    //columns.push({head: 'Promedio', column: 0, cl: 'average', value: d3.f(class_id), type:'numeric'})
+
+    columns.push({head: 'Promedio', cl: 'averages', value: d3.f('averages'), html: d3.f('average'), type:'numeric'})
     //data.push(assesments[0]["assesment_student"]);
 
     for (i=0; i<json["assesments"].length; i++){
@@ -515,6 +530,19 @@
 		return $("th."+assesment_name).index();
 	});
     
+    table.select('th.averages').append('div')
+    		.attr("class","sort-div")
+    		.html(function (d){ return `<div class="arrow-up averages" averages="`+d.cl+`"></div>
+	  		   <div class="arrow-down averages" averages="`+d.cl+`"></div>`});
+    	
+    $(".arrow-up.averages").attr("column",function(){
+        return $("th.averages").index();
+    });
+    $(".arrow-down.averages").attr("column",function(){
+        return $("th.averages").index();
+    });
+
+
     var dataIndex = 0;
     var backgroundJobs = data[dataIndex];
     
@@ -2151,6 +2179,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     		texts[i].classList.add("SE");
     		$(texts[i]).css('pointer-events','');
     		$(texts[i]).css('cursor','context-menu');
+    		$(texts[i]).attr('dx','12');
     	}
     }
 
