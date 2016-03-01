@@ -7,7 +7,11 @@ from bakhanapp.models import Video_Playing,Student,Tutor,Administrator,Instituti
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 import unicodedata
+from lib2to3.fixer_util import String
 import os
+import sys
+from django import template
+register = template.Library()
 class Command(BaseCommand):
     help = 'Envia un mail con el resumen de las nota y las variables de empegno/desempegno a los administradores'
 
@@ -43,10 +47,7 @@ class Command(BaseCommand):
                 excerciceTimeUnit = ' minuto'
             if int(avgVideoTime['video_time__avg']) == 1:
                 videoTimeUnit = 'minuto'
-            content = htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
-                str(int(avgExcerciceTime['excercice_time__avg']/60))+excerciceTimeUnit,str(int(avgVideoTime['video_time__avg']/60))+videoTimeUnit,
-                totalStudents,idAssesment,int(avgCorrectExcercice['correct__avg']),
-                str(avgRecomendedComplete['recomended_complete__avg'])+'%')
+            
             #administrators = Administrator.objects.filter(id_institution_id=1)
             id_institution = Class.objects.get(id_class=assesment['id_class_id'])
             #id_institution = Institution.objects.get(id_institution=id_class['id_institution_id']).values('id_institution')
@@ -55,15 +56,23 @@ class Command(BaseCommand):
             #print administrators
             
             students = Grade.objects.filter(id_assesment_id=assesment['id_assesment']).values('kaid_student_id')
-            configSkills = Assesment_Skill.objects.filter(id_assesment_config=assesment['id_assesment_conf_id']).values('id_skill_name_id')
+            configSkills = Skill.objects.filter(assesment_skill__id_assesment_config=assesment['id_assesment_conf_id']).values('assesment_skill__id_skill_name_id','name_spanish')
+            #print configSkills
             dictSkillDomain = {}
             for skill in configSkills:
-                practiced,mastery1,mastery2,mastery3,struggling = getSkillStudentDomain(skill['id_skill_name_id'],startDate,endDate,students)
-                dictSkillDomain[skill['id_skill_name_id']] = [practiced,mastery1,mastery2,mastery3,struggling]
+                practiced,mastery1,mastery2,mastery3,struggling = getSkillStudentDomain(skill['assesment_skill__id_skill_name_id'],startDate,endDate,students)
+                skillName = Skill.objects.get(pk=skill['assesment_skill__id_skill_name_id'])
+                s = str(skillName)
+                skillWithoutAccent = strip_accents(s)
+                dictSkillDomain[skillWithoutAccent] = [practiced,mastery1,mastery2,mastery3,struggling]
             print dictSkillDomain
+            content = htmlTemplate(dictSkillDomain,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
+                str(int(avgExcerciceTime['excercice_time__avg']/60))+excerciceTimeUnit,str(int(avgVideoTime['video_time__avg']/60))+videoTimeUnit,
+                totalStudents,idAssesment,int(avgCorrectExcercice['correct__avg']),
+                str(avgRecomendedComplete['recomended_complete__avg'])+'%')
             for admin in administrators:
                 content = content.replace("$$nameAdmin$$",str(admin.name))
-                #sendMail('javierperezferrada@gmail.com',content)
+                sendMail('javierperezferrada@gmail.com',content)
                 #sendMail(admin.email,content)
                 content = content.replace(str(admin.name),"$$nameAdmin$$")
 
@@ -170,4 +179,5 @@ def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     text = unicodedata.normalize('NFD', text)
     text = text.encode('ascii', 'ignore')
     text = text.decode("utf-8")
+    print text
     return str(text)
