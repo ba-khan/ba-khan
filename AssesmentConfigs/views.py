@@ -70,7 +70,6 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
-    kaid = User_Profile.objects.get(user_id=request.user.id)
     if request.method == 'POST':
         args = request.POST
         aux= args['forloop']
@@ -82,7 +81,7 @@ def editAssesmentConfig(request,id_assesment_config):
         assesment_config.importance_skill_level=args['importance_skill_level'+aux]
         assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
 
-        assesment_config.kaid_teacher_id=kaid.kaid
+        assesment_config.kaid_teacher_id=request.user.user_profile.kaid
         assesment_config.top_score=0
         assesment_config.id_subject_name_id='math'
         assesment_config.applied=False
@@ -102,7 +101,6 @@ def deleteAssesmentConfig(request,id_assesment_config):
 
 def newAssesmentConfig(request):
     
-    kaid = User_Profile.objects.get(user_id=request.user.id)
     if request.method == 'POST':
         args = request.POST
         id = args['id']
@@ -116,7 +114,7 @@ def newAssesmentConfig(request):
                                    approval_percentage=args['approval_percentage'],
                                    importance_skill_level=args['importance_skill_level'+id],
                                    importance_completed_rec=args['importance_completed_rec'+id],
-                                   kaid_teacher_id=kaid.kaid,
+                                   kaid_teacher_id=request.user.user_profile.kaid,
                                    top_score=0,
                                    id_subject_name_id='math',
                                    applied=False

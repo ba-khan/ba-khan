@@ -101,7 +101,6 @@ def getMakedGroup(request,id_class):
 @login_required()
 def getGroups(request, id_class):
     request.session.set_expiry(300)
-    kaid = User_Profile.objects.get(user_id=request.user.id)
     topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
     g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
@@ -114,10 +113,10 @@ def getGroups(request, id_class):
             tutors = eval(args['tutors'])
             #provisorio: si no ha escogido un alumno tutor, se asigna uno arbitrario. finalmente se debe asignar el kaid profesor
             if tutors[0]['kaid_tutor_reforzamiento'] == '3':
-                tutors[0]['kaid_tutor_reforzamiento'] = kaid.kaid
+                tutors[0]['kaid_tutor_reforzamiento'] = request.user.user_profile.kaid
             if tutors[0]['kaid_tutor_intermedios'] =='2':
-                tutors[0]['kaid_tutor_intermedios'] = kaid.kaid
-            tutors[0]['kaid_tutor_avanzados'] = kaid.kaid 
+                tutors[0]['kaid_tutor_intermedios'] = request.user.user_profile.kaid
+            tutors[0]['kaid_tutor_avanzados'] = request.user.user_profile.kaid 
             master = Master_Group()
             master.name = 'test'
             #master.date = timezone.now()
@@ -128,7 +127,7 @@ def getGroups(request, id_class):
             print hoy
             #t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
             master.date_int = int(fecha)
-            master.kaid_teacher = kaid.kaid
+            master.kaid_teacher = request.user.user_profile.kaid
             master.id_class = id_class
             master.date = hoy
 
@@ -171,7 +170,7 @@ def getGroups(request, id_class):
             #print dicSub
             for sub in subGroups:
                 if "kaid_" not in sub['tutor']: 
-                    new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=kaid.kaid)
+                    new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=request.user.user_profile.kaid)
                 else:
                     new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
                 new_group.save()
