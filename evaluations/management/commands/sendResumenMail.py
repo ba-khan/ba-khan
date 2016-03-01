@@ -14,7 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #lastDate = date.today() - timedelta(days=1)
-        lastDate = date.today() - timedelta(days=16)
+        lastDate = date.today() - timedelta(days=1)
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name',
             'max_grade','min_grade','id_class_id')
         for assesment in assesments:
@@ -33,9 +33,21 @@ class Command(BaseCommand):
             totalStudents = len(grades) 
             avgVideoTime = grades.aggregate(Avg('video_time'))
             avgExcerciceTime = grades.aggregate(Avg('excercice_time'))
+            avgCorrectExcercice = grades.aggregate(Avg('correct'))
+            avgRecomendedComplete = grades.aggregate(Avg('recomended_complete'))
+            if avgRecomendedComplete['recomended_complete__avg'] is  None:
+                avgRecomendedComplete['recomended_complete__avg'] = 0
+            excerciceTimeUnit = ' minutos'
+            videoTimeUnit = ' minutos'
+            if int(avgExcerciceTime['excercice_time__avg']) == 1:
+                excerciceTimeUnit = ' minuto'
+            if int(avgVideoTime['video_time__avg']) == 1:
+                videoTimeUnit = 'minuto'
             content = htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
-                avgExcerciceTime['excercice_time__avg'],avgVideoTime['video_time__avg'],totalStudents,idAssesment)
-            administrators = Administrator.objects.filter(id_institution_id=1)
+                str(int(avgExcerciceTime['excercice_time__avg']/60))+excerciceTimeUnit,str(int(avgVideoTime['video_time__avg']/60))+videoTimeUnit,
+                totalStudents,idAssesment,int(avgCorrectExcercice['correct__avg']),
+                str(avgRecomendedComplete['recomended_complete__avg'])+'%')
+            #administrators = Administrator.objects.filter(id_institution_id=1)
             id_institution = Class.objects.get(id_class=assesment['id_class_id'])
             #id_institution = Institution.objects.get(id_institution=id_class['id_institution_id']).values('id_institution')
             #print id_institution.id_institution_id
@@ -45,6 +57,7 @@ class Command(BaseCommand):
                 content = content.replace("$$nameAdmin$$",str(admin.name))
                 #sendMail('javierperezferrada@gmail.com',content)
                 sendMail(admin.email,content)
+                content = content.replace(str(admin.name),"$$nameAdmin$$")
 
 def sendMail(email,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
     subject = 'Ha finalizado una Evaluacion'
@@ -59,7 +72,7 @@ def sendMail(email,contenido): #recibe los datos iniciales y envia un  mail a ca
     return ()
 
 def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,avgExcerciceTime,
-    avgVideoTime,totalStudents,idAssesment):
+    avgVideoTime,totalStudents,idAssesment,avgCorrectExcercice,avgRecomendedComplete):
     archivo=open("C:/Users/LACLO2013_B/Desktop/ba-khan/static/plantillas/resumen_assesment_mail.html")
     contenido = archivo.read()
     contenido = contenido.replace("$$grade$$","{0:.1f}".format(2.45))
@@ -74,6 +87,8 @@ def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercent
     contenido = contenido.replace("$$importanceRecomended$$",str(importanceRecomended))
     contenido = contenido.replace("$$avgExcerciceTime$$",str(avgExcerciceTime))
     contenido = contenido.replace("$$avgVideoTime$$",str(avgVideoTime))
+    contenido = contenido.replace("$$avgCorrectExcercice$$",str(avgCorrectExcercice))
+    contenido = contenido.replace("$$avgRecomendedComplete$$",str(avgRecomendedComplete))
     contenido = contenido.replace("$$ejercicios$$",str(skills))
     rUnit = maxGrade/float(10)
     aux = 0
@@ -99,7 +114,7 @@ def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercent
             contenido = contenido.replace(varD,str(qStudents))
             contenido = contenido.replace(varH,str(qStudents*hUnit))
         
-        print qStudents*hUnit
+        #print qStudents*hUnit
         
         aux += rUnit
     return(contenido)
