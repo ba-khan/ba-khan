@@ -278,7 +278,6 @@
 		average=Math.round((average/cont)*10)/10;
 		averages.push(average);
 		students[i]['average']=(average);
-		console.log(students[i]);
 	}
 
 	//Sort assesments array by their creation date
@@ -1144,7 +1143,7 @@
     					}
     			  })
     		.on("click",function(d){
-    			console.log(d)
+    			//console.log(d)
     			$('#popup_nombre').empty();
     			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.head_assesment+"</strong></p>");
     			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.value.name+"</strong></p>");
@@ -2196,21 +2195,27 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 
 
 
-    for (i=0; i<json["assesments"].length; i++){
-    	aux="assesment"+json["assesments"][i]["id"];
-    	name=json["assesments"][i]["config_name"];
-    	percentage=json["assesments"][i]["approval_percentage"];
-    	top_score=json["assesments"][i]["top_score"];
-    	min=json["assesments"][i]["max_grade"];
-    	max=json["assesments"][i]["min_grade"];
-    	console.log(aux);
+    for (i=0; i<assesments.length; i++){
+    	aux="assesment"+assesments[i]["id"];
+    	name=assesments[i]["config_name"];
+    	percentage=assesments[i]["approval_percentage"];
+    	top_score=assesments[i]["top_score"];
+    	min=assesments[i]["max_grade"];
+    	max=assesments[i]["min_grade"];
+    	
     	var th = $("th."+aux);
-    	console.log(th);
     	th.tipsy({
     		gravity: 'ne',
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
+	        	var d = this.__data__;
+	            var id_json_assesment = d.column;
+	            name=assesments[id_json_assesment]["config_name"];
+    			percentage=assesments[id_json_assesment]["approval_percentage"];
+    			top_score=assesments[id_json_assesment]["top_score"];
+    			min=assesments[id_json_assesment]["max_grade"];
+    			max=assesments[id_json_assesment]["min_grade"];
 	          return `<ul>
 	          		<li>Nombre: `+name+`</li>
 	          		<li>% aprobación: `+percentage+`</li>
