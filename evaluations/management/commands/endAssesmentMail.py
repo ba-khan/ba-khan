@@ -21,8 +21,10 @@ class Command(BaseCommand):
             totalStudents = grades.count()
             order = 1
             for grade in grades:
+                if grade['recomended_complete'] is None:
+                    grade['recomended_complete'] = 0
                 content = htmlTemplate(grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],assesment['id_assesment_conf_id'],
-                    grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'],assesment['name'],order,totalStudents)
+                    grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'],assesment['name'],order,totalStudents,str(grade['recomended_complete'])+'%')
                 sendMail(grade['kaid_student_id'],content)
                 sendWhatsapp(grade['kaid_student_id'],grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],
                     grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'])
@@ -73,7 +75,7 @@ def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cad
     return ()
 
 def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config,
-                practiced,mastery1,mastery2,mastery3,struggling,name,order,totalStudents):
+                practiced,mastery1,mastery2,mastery3,struggling,name,order,totalStudents,recomendedComplete):
     skill_assesment = getSkillAssesment(id_assesment_config)
     #archivo=open("/var/www/html/bakhanproyecto/static/plantillas/end_assesment_mail.html")
     archivo=open("static/plantillas/end_assesment_mail.html")
@@ -91,6 +93,7 @@ def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config
     contenido = contenido.replace("$$assesmentName$$",str(name))
     contenido = contenido.replace("$$order$$",str(order))
     contenido = contenido.replace("$$totalStudents$$",str(totalStudents))
+    contenido = contenido.replace("$$recomendedComplete$$",str(recomendedComplete))
     contenido = contenido.replace("$$ejercicios$$",str(skill_assesment))
     return(contenido)
 
