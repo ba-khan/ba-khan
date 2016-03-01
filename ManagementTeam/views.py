@@ -26,6 +26,7 @@ import json
 # Create your views here.
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def getAdministrators(request):
+    request.session.set_expiry(timeSleep)
     #print "###############################################################################"
     #print request.user.email
     try:
