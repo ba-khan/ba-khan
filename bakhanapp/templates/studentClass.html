@@ -305,7 +305,7 @@
 
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
-    	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>% aprobación: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>Puntaje máximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>Nota máxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>Nota mínima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
+    	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
     	data.push(assesments[i]["assesment_student"]);
     	var index = i+1;
     	for (var j=0;j<data[i+1].length;j++){
@@ -2193,7 +2193,43 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 	          		</ul>`;
 	        }
 	      });
+
+
+
+    for (i=0; i<json["assesments"].length; i++){
+    	aux="assesment"+json["assesments"][i]["id"];
+    	name=json["assesments"][i]["config_name"];
+    	percentage=json["assesments"][i]["approval_percentage"];
+    	top_score=json["assesments"][i]["top_score"];
+    	min=json["assesments"][i]["max_grade"];
+    	max=json["assesments"][i]["min_grade"];
+    	console.log(aux);
+    	var th = $("th."+aux);
+    	console.log(th);
+    	th.tipsy({
+    		gravity: 'ne',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return `<ul>
+	          		<li>Nombre: `+name+`</li>
+	          		<li>% aprobación: `+percentage+`</li>
+	          		<li>Puntaje máximo: `+top_score+`</li>
+	          		<li>Nota máxima: `+min+`</li>
+	          		<li>Nota mínima: `+max+`</li>
+	          		</ul>`;
+	        }
+    	});
+    	/*columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>
+    	% aprobación: "+json["assesments"][i]["approval_percentage"]+"<hr style=margin: 0>
+    	Puntaje máximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>
+    	Nota máxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>
+    	Nota mínima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})*/
+
+    }
    
+
+
 </script>
 
 {% endblock %}
