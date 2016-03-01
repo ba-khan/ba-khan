@@ -2,7 +2,7 @@ import time
 from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt,Skill_Log,Skill
 from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing
 from django.db.models import Count,Sum,Max
 
@@ -160,6 +160,41 @@ class Command(BaseCommand):
                     if assesment.end_date < today:
                         grade.evaluated = True
                     grade.save()
+                    #aqui va el calculo del skill_log
+                    skills_log = Skill_Log.objects.filter(id_grade = grade)
+                    for sk_lg in skills_log:
+                        incorrect = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student,id_skill_name_id=sk_lg.id_skill_name,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+                        correct = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student,id_skill_name_id=sk_lg.id_skill_name,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
+                        print correct
+                        print incorrect
+                        for inc in incorrect:
+                            inc_aux = inc['incorrect']
+                        for cor in correct:
+                            cor_aux = cor['correct']
+                        try:
+                            inc_aux = inc_aux + 0
+                        except:
+                            inc_aux = 0
+                        try:
+                            cor_aux = cor_aux + 0
+                        except:
+                            cor_aux = 0
+                        
+                        print '*************************************************************'
+                        print cor_aux
+                        print inc_aux
+                        print sk_lg.id_skill_log
+                        print sk_lg.id_skill_name
+                        print sk_lg.id_grade.id_grade
+                        update_skill_log = Skill_Log(id_skill_log = sk_lg.id_skill_log,
+                                id_skill_name_id = sk_lg.id_skill_name,
+                                correct = cor_aux,
+                                incorrect =  inc_aux,
+                                id_grade_id = sk_lg.id_grade.id_grade)
+                        update_skill_log.save()
+                        cor_aux = 0
+                        inc_aux = 0
+
 
 def getGrade(percentage,points,min_grade,max_grade,approval_grade):
     #calcula la nota

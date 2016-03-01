@@ -42,6 +42,7 @@ from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Tutor
+from bakhanapp.models import Skill_Log
 
 import datetime
 import threading
@@ -120,8 +121,12 @@ def updateAssesment(request): #modifica una evaluacion
         update_Assesment.save()
 
         delete_grades = Grade.objects.filter(id_assesment=id_assesment)
-        delete_grades.delete()
+        delete_skill_log = Skill_Log.objects.filter(id_grade__in = delete_grades)
 
+        delete_skill_log.delete()
+        delete_grades.delete()
+        
+        skills = Assesment_Skill.objects.filter(id_assesment_config=id_config).values('id_skill_name_id')
         for s in students:
             new_grade = Grade(grade=0,
                                teacher_grade=0,
@@ -131,6 +136,12 @@ def updateAssesment(request): #modifica una evaluacion
                                kaid_student_id=s['kaid_student']
                                )
             new_grade.save()
+            for skill in skills:
+                new_skill_log = Skill_Log(id_skill_name_id = skill['id_skill_name_id'],
+                        correct = 0,
+                        incorrect =  0,
+                        id_grade_id = new_grade.pk)
+                new_skill_log.save()
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
@@ -175,7 +186,7 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
                                )
         new_assesment.save()
         id_new_assesment=new_assesment.pk
-        
+        skills = Assesment_Skill.objects.filter(id_assesment_config=id_config).values('id_skill_name_id')
         kaid = ''
         for s in students:
             kaid= kaid + ',' +str(s['kaid_student'])
@@ -187,9 +198,16 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
                                kaid_student_id=s['kaid_student']
                                )
             new_grade.save()
+            for skill in skills:
+                new_skill_log = Skill_Log(id_skill_name_id = skill['id_skill_name_id'],
+                        correct = 0,
+                        incorrect =  0,
+                        id_grade_id = new_grade.pk)
+                new_skill_log.save()
             update_assesment_configs = Assesment_Config.objects.get(pk=id_config)
             update_assesment_configs.applied = True
             update_assesment_configs.save()
+
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
         threads = []
         #envial mail a los evaluados
