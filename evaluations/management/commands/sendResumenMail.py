@@ -17,8 +17,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
-        #lastDate = date.today() - timedelta(days=1)
-        lastDate = date.today() - timedelta(days=2)
+        lastDate = date.today() - timedelta(days=1)
+        #lastDate = date.today() - timedelta(days=2)
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name',
             'max_grade','min_grade','id_class_id')
         for assesment in assesments:
