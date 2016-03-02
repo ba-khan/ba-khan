@@ -18,7 +18,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #lastDate = date.today() - timedelta(days=1)
-        lastDate = date.today() - timedelta(days=1)
+        lastDate = date.today() - timedelta(days=2)
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name',
             'max_grade','min_grade','id_class_id')
         for assesment in assesments:
@@ -52,7 +52,7 @@ class Command(BaseCommand):
             id_institution = Class.objects.get(id_class=assesment['id_class_id'])
             #id_institution = Institution.objects.get(id_institution=id_class['id_institution_id']).values('id_institution')
             #print id_institution.id_institution_id
-            administrators = Administrator.objects.filter(id_institution_id=id_institution.id_institution_id)
+            administrators = Administrator.objects.filter(id_institution_id=id_institution.id_institution_id,email='javierperezferrada@gmail.com')
             #print administrators
             
             students = Grade.objects.filter(id_assesment_id=assesment['id_assesment']).values('kaid_student_id')
@@ -82,8 +82,8 @@ class Command(BaseCommand):
                 str(avgRecomendedComplete['recomended_complete__avg'])+'%')
             for admin in administrators:
                 content = content.replace("$$nameAdmin$$",str(admin.name))
-                #sendMail('javierperezferrada@gmail.com',content)
-                sendMail(admin.email,content)
+                sendMail('javierperezferrada@gmail.com',content)
+                #sendMail(admin.email,content)
                 content = content.replace(str(admin.name),"$$nameAdmin$$")
 
 def getSkillStudentDomain(skill,startDate,endDate,students):
@@ -142,23 +142,25 @@ def htmlTemplate(skills,name,startDate,endDate,minGrade,maxGrade,approvalPercent
     contenido = contenido.replace("$$avgCorrectExcercice$$",str(avgCorrectExcercice))
     contenido = contenido.replace("$$avgRecomendedComplete$$",str(avgRecomendedComplete))
     contenido = contenido.replace("$$ejercicios$$",str(skills))
-    rUnit = maxGrade/float(10)
-    aux = 0
+    rUnit = (maxGrade-minGrade)/float(10)
+    aux = float(minGrade)
     qMax = 0
-    grades = Grade
-    for x in range(11):
-        qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gt=aux,grade__lt=aux+rUnit).count()
+    for x in range(10):
+        qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gte=aux,grade__lte=aux+rUnit).count()
         if qMax <= qStudents:
             qMax = qStudents
         aux += rUnit
-    hUnit = 300/qMax #unidad basica para la altura del histograma
-    aux = 0
+    try:
+        hUnit = 300/qMax #unidad basica para la altura del histograma
+    except:
+        hUnit = 0
+    aux = float(minGrade)
     for i in range(11):
         varR = "$$r"+str(i)+"$$"
         varD = "$$d"+str(i)+"$$"
         varH = "$$h"+str(i)+"$$"
         contenido = contenido.replace(varR,str(aux))
-        qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gt=aux,grade__lt=aux+rUnit).count()#.values('grade').aggregate(q=Count('grade'))
+        qStudents = Grade.objects.filter(id_assesment_id=idAssesment,grade__gte=aux,grade__lte=aux+rUnit).count()#.values('grade').aggregate(q=Count('grade'))
         if qStudents == 0:
             contenido = contenido.replace(varD,str(''))
             contenido = contenido.replace(varH,str(1))
