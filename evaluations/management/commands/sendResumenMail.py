@@ -18,7 +18,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
         #lastDate = date.today() - timedelta(days=1)
-        lastDate = date.today() - timedelta(days=1)
+        lastDate = date.today() - timedelta(days=2)
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment','id_assesment_conf_id','start_date','end_date','name',
             'max_grade','min_grade','id_class_id')
         for assesment in assesments:
@@ -59,14 +59,23 @@ class Command(BaseCommand):
             configSkills = Skill.objects.filter(assesment_skill__id_assesment_config=assesment['id_assesment_conf_id']).values('assesment_skill__id_skill_name_id','name_spanish')
             #print configSkills
             dictSkillDomain = {}
+            skillsDomain = '<table>'
             for skill in configSkills:
+                skillsDomain = skillsDomain+'<tr>'
                 practiced,mastery1,mastery2,mastery3,struggling = getSkillStudentDomain(skill['assesment_skill__id_skill_name_id'],startDate,endDate,students)
                 skillName = Skill.objects.get(pk=skill['assesment_skill__id_skill_name_id'])
                 s = str(skillName)
                 skillWithoutAccent = strip_accents(s)
+                unit = 8
+                skillsDomain = skillsDomain+'<td><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skillWithoutAccent+'</p></td>'
+                skillsDomain = skillsDomain+"<td style='display:inline;width:100px'><div style='text-align:center;background-color:#C30202;height:10px;width:"+str(unit*struggling)+"px;display:inline-block'>"+str(struggling)+"</div><div style='text-align:center;background-color:#9CDCEB;display:inline-block;height:10px;width:"+str(unit*practiced)+"px'>"+str(practiced)+"</div><div style='text-align:center;background-color:#58C4DD;display:inline-block;height:10px;width:"+str(unit*mastery1)+"px'>"+str(mastery1)+"</div><div style='text-align:center;background-color:#29ABCA;display:inline-block;height:10px;width:"+str(unit*mastery2)+"px'>"+str(mastery2)+"</div><div style='text-align:center;background-color:#1C758A;display:inline-block;height:10px;width:"+str(unit*mastery3)+"px'>"+str(mastery3)+'</div></td></tr>'
                 dictSkillDomain[skillWithoutAccent] = [practiced,mastery1,mastery2,mastery3,struggling]
-            print dictSkillDomain
-            content = htmlTemplate(dictSkillDomain,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
+            skillsDomain = skillsDomain+'</table>'
+            print 'skills'
+            print skillsDomain
+            
+            
+            content = htmlTemplate(skillsDomain,name,startDate,endDate,minGrade,maxGrade,approvalPercentage,importanceSkillLevel,importanceRecomended,
                 str(int(avgExcerciceTime['excercice_time__avg']/60))+excerciceTimeUnit,str(int(avgVideoTime['video_time__avg']/60))+videoTimeUnit,
                 totalStudents,idAssesment,int(avgCorrectExcercice['correct__avg']),
                 str(avgRecomendedComplete['recomended_complete__avg'])+'%')
@@ -179,5 +188,4 @@ def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     text = unicodedata.normalize('NFD', text)
     text = text.encode('ascii', 'ignore')
     text = text.decode("utf-8")
-    print text
     return str(text)
