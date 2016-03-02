@@ -59,16 +59,17 @@ class Command(BaseCommand):
             configSkills = Skill.objects.filter(assesment_skill__id_assesment_config=assesment['id_assesment_conf_id']).values('assesment_skill__id_skill_name_id','name_spanish')
             #print configSkills
             dictSkillDomain = {}
-            skillsDomain = '<table>'
+            skillsDomain = "<table >"
             for skill in configSkills:
                 skillsDomain = skillsDomain+'<tr>'
                 practiced,mastery1,mastery2,mastery3,struggling = getSkillStudentDomain(skill['assesment_skill__id_skill_name_id'],startDate,endDate,students)
                 skillName = Skill.objects.get(pk=skill['assesment_skill__id_skill_name_id'])
                 s = str(skillName)
                 skillWithoutAccent = strip_accents(s)
-                unit = 8
-                skillsDomain = skillsDomain+'<td><p style="font-family:"Helvetica Neue",Calibri,Helvetica,Arial,sans-serif; font-size:16px; line-height:24px; color:#666; margin:0 0 10px; font-size:14px; color:#333">'+skillWithoutAccent+'</p></td>'
-                skillsDomain = skillsDomain+"<td style='display:inline;width:100px'><div style='text-align:center;background-color:#C30202;height:10px;width:"+str(unit*struggling)+"px;display:inline-block'>"+str(struggling)+"</div><div style='text-align:center;background-color:#9CDCEB;display:inline-block;height:10px;width:"+str(unit*practiced)+"px'>"+str(practiced)+"</div><div style='text-align:center;background-color:#58C4DD;display:inline-block;height:10px;width:"+str(unit*mastery1)+"px'>"+str(mastery1)+"</div><div style='text-align:center;background-color:#29ABCA;display:inline-block;height:10px;width:"+str(unit*mastery2)+"px'>"+str(mastery2)+"</div><div style='text-align:center;background-color:#1C758A;display:inline-block;height:10px;width:"+str(unit*mastery3)+"px'>"+str(mastery3)+'</div></td></tr>'
+                unit = 150/int(totalStudents)
+                unstarted = totalStudents-practiced-mastery1-mastery2-mastery3-struggling
+                skillsDomain = skillsDomain+"<td style='height:20px'><p style='font-family:'Helvetica Neue',Calibri,Helvetica,Arial,sans-serif; font-size:16px;  color:#666; font-size:14px; color:#333'>"+skillWithoutAccent+"</p></td>"
+                skillsDomain = skillsDomain+"<td  style='display:inline;width:150px;height:20px;align-items: center;'><div style='margin:10px 0 0 0;text-align:center;background-color:#C30202;align-items: center;width:"+str(unit*struggling)+"px;display:inline-block;height:20px'>"+str(struggling)+"</div><div style='align-items: center;text-align:center;background-color:#9CDCEB;display:inline-block;width:"+str(unit*practiced)+"px;height:20px'>"+str(practiced)+"</div><div style='align-items: center;text-align:center;background-color:#58C4DD;display:inline-block;width:"+str(unit*mastery1)+"px;height:20px'>"+str(mastery1)+"</div><div style='align-items: center;text-align:center;background-color:#29ABCA;display:inline-block;width:"+str(unit*mastery2)+"px;height:20px'>"+str(mastery2)+"</div><div style='align-items: center;text-align:center;background-color:#1C758A;display:inline-block;width:"+str(unit*mastery3)+"px;height:20px'>"+str(mastery3)+"</div><div style='align-items: center;text-align:center;background-color:#DDDDDD;display:inline-block;width:"+str(unit*unstarted)+"px;height:20px'>"+str(unstarted)+"</div></td></tr>"
                 dictSkillDomain[skillWithoutAccent] = [practiced,mastery1,mastery2,mastery3,struggling]
             skillsDomain = skillsDomain+'</table>'
             print 'skills'
