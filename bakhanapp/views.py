@@ -40,7 +40,7 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Log
 
 import datetime
 from configs import timeSleep
@@ -184,6 +184,16 @@ def paralellAssesment(assesment,students,queue):
     queue.put(assesment_json)
 
     return queue
+def getSkillsCorrect(grade_id):
+    #skls = Skill_Log.objects.filter(id_grade_id=grade_id)
+    skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct')
+    aux = []
+    for s in skls:
+        #name = Skill.objects.get(pk=s.id_skill_name_id).name_spanish
+        #aux2 = [s.id_grade_id,s.id_skill_name_id,s.incorrect,s.correct,name]
+        aux2 = [s['name_spanish'],s['skill_log__id_grade_id'],s['skill_log__id_skill_name_id'],s['skill_log__incorrect'],s['skill_log__correct']]
+        aux.append(aux2)
+    return aux
 
 @login_required()
 def getClassStudents(request, id_class):
@@ -210,7 +220,8 @@ def getClassStudents(request, id_class):
     for g in grades:
         name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
         name = name[0]['name']
-        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name)
+        skls = getSkillsCorrect(g['grade__id_grade'])
+        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls)
     #print dictGrades[(67,'kaid_962822484535083405338400')][1]
     assesment_array=[]
     threads = []
@@ -321,6 +332,10 @@ def getClassStudents(request, id_class):
                 student_assesment['bonus_grade'] = dictGrades[(assesment['id'],student.kaid_student)][4]
             except:
                 student_assesment['bonus_grade'] = 0
+            try:
+                student_assesment['skills'] = dictGrades[(assesment['id'],student.kaid_student)][6]
+            except:
+                student_assesment['skills'] = []
             try:
                 student_assesment['name'] = dictGrades[(assesment['id'],student.kaid_student)][5]
             except:

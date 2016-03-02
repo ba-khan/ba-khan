@@ -1202,32 +1202,35 @@
 	          var secs_video_time = video_time % 60;
 	          var bonus_grade = d.value.bonus_grade;
 	          var grade = d.value.grade;
-	          return `<ul>
+	          var skl = `<li><strong>Habilidades: </strong></li>`
+	          for (i=0;i<(d.value.skills).length;i++){
+	          	//alert(d.value.skills[i][1]);
+	          	skl = skl + `<li><strong>`+d.value.skills[i][0]+`</strong></li>` 
+	          	skl = skl + `<li>Correctos: `+d.value.skills[i][4]+`</li>`
+	          	skl = skl + `<li>Incorrectos: `+d.value.skills[i][3]+`</li>`  
+	          };
+	          var algo = `<li>Nota ficticia: `+5+`</li>`
+	          tooltp =(`<ul>
 	          		<li>Nota por Empeño:`+grade+`</li>
 	          		<li>Bonificacion por Esfuerzo:`+bonus_grade+`</li>
-	          		<li>% de recomend. completadas: `+Math.round((student_data.recommendations.completed_perc)*100)+`</li>
-	          		<li>Ejercicios incorrectos:`+student_data.exercises.incorrect+`</li>
-	          		<li>Ejercicios correctos: `+student_data.exercises.correct+`</li>
-	          		<li>Tiempo en ejercicios: `+mins_skills_time+`:`+secs_skills_time+` minutos</li>
-	          		<li>Tiempo en videos: `+mins_video_time+`:`+secs_video_time+` minutos</li>
-	          		<li>Hab. dominadas: `+student_data.skills_level.mastery3+`</li>
-	          		<li>Hab. nivel 2: `+student_data.skills_level.mastery2+`</li>
-	          		<li>Hab. nivel 1: `+student_data.skills_level.mastery1+`</li>
-	          		<li>Hab. practicadas: `+student_data.skills_level.practiced+`</li>
-	          		<li>Hab. en dificultad: `+student_data.skills_level.struggling+`</li>
-	          		</ul>`;
+	          		`+skl+`
+	          		</ul>`);
+	          return tooltp
 	        }
 	      });
-	    /*$("text."+assesment_id).tipsy({ 
-	        gravity: 'n',
-	        opacity: 0.9,
-	        html: true, 
-	        title: function() {
-	          var d = this.__data__;
-	          d = d.value;
-	          return '<ul><li>Nota '+d.grade+'</li><li>Esfuerzo '+d.effort+'</li></ul>' ; 
-	        }
-	      });*/
+	    /*
+		   lo que habia antes en el tipsy
+		   <li>% de recomend. completadas: `+Math.round((student_data.recommendations.completed_perc)*100)+`</li>
+	       <li>Ejercicios incorrectos:`+student_data.exercises.incorrect+`</li>
+	       <li>Ejercicios correctos: `+student_data.exercises.correct+`</li>
+	       <li>Tiempo en ejercicios: `+mins_skills_time+`:`+secs_skills_time+` minutos</li>
+	       <li>Tiempo en videos: `+mins_video_time+`:`+secs_video_time+` minutos</li>
+	       <li>Hab. dominadas: `+student_data.skills_level.mastery3+`</li>
+	       <li>Hab. nivel 2: `+student_data.skills_level.mastery2+`</li>
+	       <li>Hab. nivel 1: `+student_data.skills_level.mastery1+`</li>
+	       <li>Hab. practicadas: `+student_data.skills_level.practiced+`</li>
+	       <li>Hab. en dificultad: `+student_data.skills_level.struggling+`</li>
+	    */
 	        
     }
 	}

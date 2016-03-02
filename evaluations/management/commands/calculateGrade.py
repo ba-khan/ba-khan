@@ -165,8 +165,7 @@ class Command(BaseCommand):
                     for sk_lg in skills_log:
                         incorrect = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student,id_skill_name_id=sk_lg.id_skill_name,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
                         correct = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student,id_skill_name_id=sk_lg.id_skill_name,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
-                        print correct
-                        print incorrect
+
                         for inc in incorrect:
                             inc_aux = inc['incorrect']
                         for cor in correct:
@@ -179,13 +178,7 @@ class Command(BaseCommand):
                             cor_aux = cor_aux + 0
                         except:
                             cor_aux = 0
-                        
-                        print '*************************************************************'
-                        print cor_aux
-                        print inc_aux
-                        print sk_lg.id_skill_log
-                        print sk_lg.id_skill_name
-                        print sk_lg.id_grade.id_grade
+
                         update_skill_log = Skill_Log(id_skill_log = sk_lg.id_skill_log,
                                 id_skill_name_id = sk_lg.id_skill_name,
                                 correct = cor_aux,
