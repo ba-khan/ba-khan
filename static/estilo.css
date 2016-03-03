@@ -393,6 +393,9 @@ label.sort-filter{
   box-shadow:0 0 10px 0 #9DB63B;
   z-index: 11;
 }
+#popup{
+  height:380px;
+}
 
 #profile-throbber{
   padding-top:85px;

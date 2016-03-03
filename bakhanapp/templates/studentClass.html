@@ -43,10 +43,14 @@
 				<p style="margin:0px;">
 					Nota:
 					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
-					Nota Profesor
-					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+				</p>
+				<p>
 					Bonificaicon por Esfuerzo
 					<input name="input_bonificacion" id="input_bonificacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
+				</p>
+				<p>	
+					Bonificacion Profesor
+					<input name="input_grade_teacher" id="input_grade_comment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
 				</p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:550px;height:50px;padding-top:5px"></textarea>
@@ -1206,8 +1210,7 @@
 	          for (i=0;i<(d.value.skills).length;i++){
 	          	//alert(d.value.skills[i][1]);
 	          	skl = skl + `<li><strong>`+d.value.skills[i][0]+`</strong></li>` 
-	          	skl = skl + `<li>Correctos: `+d.value.skills[i][4]+`</li>`
-	          	skl = skl + `<li>Incorrectos: `+d.value.skills[i][3]+`</li>`  
+	          	skl = skl + `<li>Correctos: `+d.value.skills[i][4]+` Incorrectos: `+d.value.skills[i][3]+`</li>`  
 	          };
 	          var algo = `<li>Nota ficticia: `+5+`</li>`
 	          tooltp =(`<ul>
