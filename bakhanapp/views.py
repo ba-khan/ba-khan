@@ -201,161 +201,168 @@ def getClassStudents(request, id_class):
     request.session.set_expiry(600)#10 minutos
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
-    for i in range(len(classes)):
-        classes[i].level = N[int(classes[i].level)] 
-    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    #students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-    incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
-    correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
-    time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))    
-    time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))   
-    practiced = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='practiced',struggling=False).values('kaid_student_id').annotate(practiced=Count('last_skill_progress')) 
-    mastery1 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery1',struggling=False).values('kaid_student_id').annotate(mastery1=Count('last_skill_progress'))
-    mastery2 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery2',struggling=False).values('kaid_student_id').annotate(mastery2=Count('last_skill_progress'))
-    mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
-    struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
-    assesments = Assesment.objects.filter(id_class_id=id_class)
-    grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade').order_by('id_assesment')
-    dictGrades = {}
-    for g in grades:
-        name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
-        name = name[0]['name']
-        skls = getSkillsCorrect(g['grade__id_grade'])
-        dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls)
-    #print dictGrades[(67,'kaid_962822484535083405338400')][1]
-    assesment_array=[]
-    threads = []
-    queue = Queue.Queue()
-    for assesment in assesments:
-        t = threading.Thread(target=paralellAssesment,args=(assesment,students,queue))
-        threads.append(t)
-        t.start()
-    for assesment in assesments:
-        response = queue.get()
-        assesment_array.append(response)
-    dictTotalTimeExcercice = {}
-    dictTotalIncorrect = {}
-    dictTotalCorrect = {}
-    dictTotalTimeVideo = {}
-    dictPracticed = {}
-    dictMastery1 ={}
-    dictMastery2 ={}
-    dictMastery3 ={}
-    dictStruggling ={}
-    for vid in time_video:
-        dictTotalTimeVideo[vid['kaid_student_id']] = vid['time']
-    for te in time_excercice:
-        dictTotalTimeExcercice[te['kaid_student_id']] = te['time']
-    for cor in correct:
-        dictTotalCorrect[cor['kaid_student_id']] = cor['correct']
-    for inc in incorrect:
-        dictTotalIncorrect[inc['kaid_student_id']]=inc['incorrect'] 
-    for pract in practiced:
-        dictPracticed[pract['kaid_student_id']]=pract['practiced']
-    for mas in mastery1:
-        dictMastery1[mas['kaid_student_id']] = mas['mastery1'] 
-    for mas in mastery2:
-        dictMastery2[mas['kaid_student_id']] = mas['mastery2'] 
-    for mas in mastery3:
-        dictMastery3[mas['kaid_student_id']] = mas['mastery3']
-    for mas in struggling:
-        dictStruggling[mas['kaid_student_id']] = mas['struggling']
-    json_array=[]
-    i=0
-    for student in students:
-        student_json = {}
-        student_json["id"] = i
-        student_json['kaid'] = student.kaid_student
-        student_json["name"] = student.name
-        completed_percentage=round(random.uniform(0,1),2)
-        total_rec=round(random.uniform(0,1),2)
-        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
-        try:
-            student_json["skills_time"] = dictTotalTimeExcercice[student.kaid_student]
-        except:
-            student_json["skills_time"] = 0
-        try:
-            student_json["video_time"] = dictTotalTimeVideo[student.kaid_student]
-        except:
-            student_json["video_time"] = 0
-        student_exercise={}
-        try:
-            student_exercise["correct"] = dictTotalCorrect[student.kaid_student]
-        except:
-            student_exercise["correct"] = 0
-        try:
-            student_exercise["incorrect"] = dictTotalIncorrect[student.kaid_student]
-        except:
-            student_exercise["incorrect"] = 0
-        student_json["exercises"]=student_exercise 
-        skills_level={}
-        try:
-            skills_level["struggling"] = dictStruggling[student.kaid_student]
-        except:
-            skills_level["struggling"] = 0
-        try:
-            skills_level["practiced"] = dictPracticed[student.kaid_student]
-        except:
-            skills_level["practiced"] = 0
-        try:
-            skills_level["mastery1"] = dictMastery1[student.kaid_student]
-        except:
-            skills_level["mastery1"] = 0
-        try:
-            skills_level["mastery2"] = dictMastery2[student.kaid_student]
-        except:
-            skills_level["mastery2"] = 0
-        try:
-            skills_level["mastery3"] = dictMastery3[student.kaid_student]
-        except:
-            skills_level["mastery3"] = 0
-        student_json["skills_level"] = skills_level
-        for assesment in assesment_array:
-            #print dictAssesment[(67,'kaid_962822484535083405338400')]
-            student_assesment = {}
-            id_assesment = "assesment"+(str)(assesment["id"])
-            id_assesment_num = assesment["id"]
-            random_effort = round(random.uniform(1,100))
-            try:
-                student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
-                student_assesment["grade_id"] = dictGrades[(assesment['id'],student.kaid_student)][1]
-                student_assesment["effort"] = dictGrades[(assesment['id'],student.kaid_student)][3]+0.1
-            except:
-                student_assesment["grade"] = None
-                student_assesment["effort"] = 0.1
-                student_assesment["grade_id"] = 0
-            try:
-                student_assesment['performance_points'] = dictGrades[(assesment['id'],student.kaid_student)][2]
-            except:
-                student_assesment['performance_points'] = None
-            try:
-                student_assesment['bonus_grade'] = dictGrades[(assesment['id'],student.kaid_student)][4]
-            except:
-                student_assesment['bonus_grade'] = 0
-            try:
-                student_assesment['skills'] = dictGrades[(assesment['id'],student.kaid_student)][6]
-            except:
-                student_assesment['skills'] = []
-            try:
-                student_assesment['name'] = dictGrades[(assesment['id'],student.kaid_student)][5]
-            except:
-                student_assesment['name'] = "s/n"
-            student_json[id_assesment] = student_assesment
-        i+=1
-        json_array.append(student_json)
-    json_dict={"students":json_array, "assesments":assesment_array}
-    
-    #json_dict = json.dumps(json_dict, sort_keys=True)
+    try:
+        clas = Class.objects.get(id_class=id_class)
+        if (clas) and (id_class in classes):
+            for i in range(len(classes)):
+                classes[i].level = N[int(classes[i].level)] 
+            students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+            #students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+            incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
+            correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
+            time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))    
+            time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))   
+            practiced = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='practiced',struggling=False).values('kaid_student_id').annotate(practiced=Count('last_skill_progress')) 
+            mastery1 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery1',struggling=False).values('kaid_student_id').annotate(mastery1=Count('last_skill_progress'))
+            mastery2 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery2',struggling=False).values('kaid_student_id').annotate(mastery2=Count('last_skill_progress'))
+            mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
+            struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
+            assesments = Assesment.objects.filter(id_class_id=id_class)
+            grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade').order_by('id_assesment')
+            dictGrades = {}
+            for g in grades:
+                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
+                name = name[0]['name']
+                skls = getSkillsCorrect(g['grade__id_grade'])
+                dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls)
+            #print dictGrades[(67,'kaid_962822484535083405338400')][1]
+            assesment_array=[]
+            threads = []
+            queue = Queue.Queue()
+            for assesment in assesments:
+                t = threading.Thread(target=paralellAssesment,args=(assesment,students,queue))
+                threads.append(t)
+                t.start()
+            for assesment in assesments:
+                response = queue.get()
+                assesment_array.append(response)
+            dictTotalTimeExcercice = {}
+            dictTotalIncorrect = {}
+            dictTotalCorrect = {}
+            dictTotalTimeVideo = {}
+            dictPracticed = {}
+            dictMastery1 ={}
+            dictMastery2 ={}
+            dictMastery3 ={}
+            dictStruggling ={}
+            for vid in time_video:
+                dictTotalTimeVideo[vid['kaid_student_id']] = vid['time']
+            for te in time_excercice:
+                dictTotalTimeExcercice[te['kaid_student_id']] = te['time']
+            for cor in correct:
+                dictTotalCorrect[cor['kaid_student_id']] = cor['correct']
+            for inc in incorrect:
+                dictTotalIncorrect[inc['kaid_student_id']]=inc['incorrect'] 
+            for pract in practiced:
+                dictPracticed[pract['kaid_student_id']]=pract['practiced']
+            for mas in mastery1:
+                dictMastery1[mas['kaid_student_id']] = mas['mastery1'] 
+            for mas in mastery2:
+                dictMastery2[mas['kaid_student_id']] = mas['mastery2'] 
+            for mas in mastery3:
+                dictMastery3[mas['kaid_student_id']] = mas['mastery3']
+            for mas in struggling:
+                dictStruggling[mas['kaid_student_id']] = mas['struggling']
+            json_array=[]
+            i=0
+            for student in students:
+                student_json = {}
+                student_json["id"] = i
+                student_json['kaid'] = student.kaid_student
+                student_json["name"] = student.name
+                completed_percentage=round(random.uniform(0,1),2)
+                total_rec=round(random.uniform(0,1),2)
+                student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+                try:
+                    student_json["skills_time"] = dictTotalTimeExcercice[student.kaid_student]
+                except:
+                    student_json["skills_time"] = 0
+                try:
+                    student_json["video_time"] = dictTotalTimeVideo[student.kaid_student]
+                except:
+                    student_json["video_time"] = 0
+                student_exercise={}
+                try:
+                    student_exercise["correct"] = dictTotalCorrect[student.kaid_student]
+                except:
+                    student_exercise["correct"] = 0
+                try:
+                    student_exercise["incorrect"] = dictTotalIncorrect[student.kaid_student]
+                except:
+                    student_exercise["incorrect"] = 0
+                student_json["exercises"]=student_exercise 
+                skills_level={}
+                try:
+                    skills_level["struggling"] = dictStruggling[student.kaid_student]
+                except:
+                    skills_level["struggling"] = 0
+                try:
+                    skills_level["practiced"] = dictPracticed[student.kaid_student]
+                except:
+                    skills_level["practiced"] = 0
+                try:
+                    skills_level["mastery1"] = dictMastery1[student.kaid_student]
+                except:
+                    skills_level["mastery1"] = 0
+                try:
+                    skills_level["mastery2"] = dictMastery2[student.kaid_student]
+                except:
+                    skills_level["mastery2"] = 0
+                try:
+                    skills_level["mastery3"] = dictMastery3[student.kaid_student]
+                except:
+                    skills_level["mastery3"] = 0
+                student_json["skills_level"] = skills_level
+                for assesment in assesment_array:
+                    #print dictAssesment[(67,'kaid_962822484535083405338400')]
+                    student_assesment = {}
+                    id_assesment = "assesment"+(str)(assesment["id"])
+                    id_assesment_num = assesment["id"]
+                    random_effort = round(random.uniform(1,100))
+                    try:
+                        student_assesment["grade"] = round(dictGrades[(assesment['id'],student.kaid_student)][0],1)
+                        student_assesment["grade_id"] = dictGrades[(assesment['id'],student.kaid_student)][1]
+                        student_assesment["effort"] = dictGrades[(assesment['id'],student.kaid_student)][3]+0.1
+                    except:
+                        student_assesment["grade"] = None
+                        student_assesment["effort"] = 0.1
+                        student_assesment["grade_id"] = 0
+                    try:
+                        student_assesment['performance_points'] = dictGrades[(assesment['id'],student.kaid_student)][2]
+                    except:
+                        student_assesment['performance_points'] = None
+                    try:
+                        student_assesment['bonus_grade'] = dictGrades[(assesment['id'],student.kaid_student)][4]
+                    except:
+                        student_assesment['bonus_grade'] = 0
+                    try:
+                        student_assesment['skills'] = dictGrades[(assesment['id'],student.kaid_student)][6]
+                    except:
+                        student_assesment['skills'] = []
+                    try:
+                        student_assesment['name'] = dictGrades[(assesment['id'],student.kaid_student)][5]
+                    except:
+                        student_assesment['name'] = "s/n"
+                    student_json[id_assesment] = student_assesment
+                i+=1
+                json_array.append(student_json)
+            json_dict={"students":json_array, "assesments":assesment_array}
+            
+            #json_dict = json.dumps(json_dict, sort_keys=True)
 
-    json_data = json.dumps(json_dict)
-    classroom = Class.objects.filter(id_class=id_class)
-    s_skills = getClassSkills(request,id_class)
-    assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
-    return render_to_response('studentClass.html',
-                                {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
-                                's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
-                                context_instance=RequestContext(request)
-                            )
+            json_data = json.dumps(json_dict)
+            classroom = Class.objects.filter(id_class=id_class)
+            s_skills = getClassSkills(request,id_class)
+            assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
+            return render_to_response('studentClass.html',
+                                        {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
+                                        's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
+                                        context_instance=RequestContext(request)
+                                    )
+        else:
+            return HttpResponseRedirect("/inicio")
+    except:
+        return HttpResponseRedirect("/inicio")
 
 
 

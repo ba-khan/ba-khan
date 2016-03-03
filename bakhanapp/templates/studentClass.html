@@ -507,7 +507,7 @@
     	table.select('th.'+class_id)
     		.append('button')
     		.attr("id",class_id)
-    		.attr("class","assesment kui-button-plain kui-button kui-button-primary")
+    		.attr("class","assesment kui-button-plain kui-button kui-button-primary assesmentButton")
     		.attr('onclick',function(d) { return 'changeData('+d.column+',"'+d.cl+'")' }).text(d3.f('head_assesment'));
     	
     	table.select('th.'+class_id).append('div')
@@ -584,8 +584,14 @@
     
     
     var changeData = function (dataIndex , assesment) {
+
  		var idSelectedAssesment=dataIndex+1;
-    	if (!selectedAssesment){
+    	if (!selectedAssesment){ // Seleccionando una evaluación
+    		$(".assesment kui-button-plain kui-button kui-button-primary assesmentButton").css("background-color","");
+    		$("#"+assesment).addClass("selected");
+    		$(".selected").css("background-color","rgba(86,134,31,0.15)");
+    		$("#"+assesment).removeClass("selected");
+    		$("#"+assesment).blur();
 	    	backgroundJobs = data[dataIndex+1];
 	    	selectedAssesment=true;
 	    	lastIdSelectedAssesment=idSelectedAssesment;
@@ -613,7 +619,10 @@
 	    	//$("button.assesment").filter(":not(#"+assesment+")").css("pointer-events","none");
 	    	//$("button.assesment").filter(":not(#"+assesment+")").fadeTo(750,0.1);
     	}else{
-    		if (idSelectedAssesment==lastIdSelectedAssesment){
+    		
+    		if (idSelectedAssesment==lastIdSelectedAssesment){ // Deseleccionando todas las evaluaciones
+    			$(".assesment kui-button-plain kui-button kui-button-primary assesmentButton").css("background-color","");
+    			$("#"+assesment).blur();
     			backgroundJobs = data[0];
         		selectedAssesment=false;
         		lastIdSelectedAssesment=0;
@@ -627,8 +636,13 @@
 		    		.transition()
 		    		.duration(750)
 		    		.style("opacity",1);
-    		}else{
-    			
+		    	$("button").css("background-color","");
+    		}else{ // Cambiando la evaluación seleccionada por otra
+    			$("#"+lastClassSelectedAssesment).css("background-color","");
+    			$("#"+assesment).blur();
+    			$("#"+assesment).addClass("selected");
+	    		$(".selected").css("background-color","rgba(86,134,31,0.15)");
+	    		$("#"+assesment).removeClass("selected");
     			backgroundJobs = data[dataIndex+1];
 		    	selectedAssesment=true;
 		    	//Selected assesment comes back to having opacity 1
