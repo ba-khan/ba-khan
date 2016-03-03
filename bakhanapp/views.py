@@ -203,7 +203,7 @@ def getClassStudents(request, id_class):
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     try:
         clas = Class.objects.get(id_class=id_class)
-        if (clas) and (id_class in classes):
+        if (clas) and (classes.filter(id_class=id_class)):
             for i in range(len(classes)):
                 classes[i].level = N[int(classes[i].level)] 
             students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
