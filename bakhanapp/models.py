@@ -12,8 +12,6 @@ class User_Profile(models.Model):
         primary_key=True,
     )
 
-
-# Create your models here.
 class Institution(models.Model):
     id_institution = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
@@ -204,6 +202,7 @@ class Grade(models.Model):
     comment = models.CharField(max_length=300,null=True)
     evaluated = models.BooleanField(default=False)
     bonus_grade = models.FloatField(null=True)
+    unstarted = models.IntegerField(null=True)
     
     class Meta:
         unique_together = ('kaid_student', 'id_assesment')
