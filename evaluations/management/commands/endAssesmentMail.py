@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = 'Envia un mail con la nota y las variables de empegno y desempegno'
 
     def handle(self, *args, **options):
-        lastDate = date.today() - timedelta(days=1)
+        lastDate = date.today() - timedelta(days=11)
         #cambiar end_date__lgt
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment_conf_id','id_assesment','name','start_date','end_date')
         conf = 0 
@@ -23,7 +23,7 @@ class Command(BaseCommand):
             for grade in grades:
                 if grade['recomended_complete'] is None:
                     grade['recomended_complete'] = 0
-                content = htmlTemplate(grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],assesment['id_assesment_conf_id'],grade['unstarted']
+                content = htmlTemplate(grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],assesment['id_assesment_conf_id'],grade['unstarted'],
                     grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'],assesment['name'],order,totalStudents,str(grade['recomended_complete'])+'%')
                 sendMail(grade['kaid_student_id'],content)
                 sendWhatsapp(grade['kaid_student_id'],grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],
@@ -78,7 +78,7 @@ def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config
                 practiced,mastery1,mastery2,mastery3,struggling,name,order,totalStudents,recomendedComplete):
     unit = 95.4 / (unstarted+practiced+mastery1+mastery2+mastery3+struggling)
     relativeUnstarted = unstarted * unit
-    relaitivePracticed = practiced * unit
+    relativePracticed = practiced * unit
     relativeMastery1 = mastery1 * unit
     relativeMastery2 = mastery2 * unit
     relativeMastery3 = mastery3 * unit
