@@ -11,7 +11,7 @@ class Command(BaseCommand):
     help = 'Envia un mail con la nota y las variables de empegno y desempegno'
 
     def handle(self, *args, **options):
-        lastDate = date.today() - timedelta(days=11)
+        lastDate = date.today() - timedelta(days=1)
         #cambiar end_date__lgt
         assesments = Assesment.objects.filter(end_date=lastDate).values('id_assesment_conf_id','id_assesment','name','start_date','end_date')
         conf = 0 
@@ -76,8 +76,11 @@ def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cad
 
 def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config,unstarted,
                 practiced,mastery1,mastery2,mastery3,struggling,name,order,totalStudents,recomendedComplete):
-    unit = 95.4 / (unstarted+practiced+mastery1+mastery2+mastery3+struggling)
-    relativeUnstarted = unstarted * unit
+    try:
+        unit = 95 / float(practiced+mastery1+mastery2+mastery3+struggling)#unstarted con problemas, no cuadra nuemro de skills seleccionadas, con levels
+    except:
+        unit = 0
+    #relativeUnstarted = unstarted * unit
     relativePracticed = practiced * unit
     relativeMastery1 = mastery1 * unit
     relativeMastery2 = mastery2 * unit
@@ -93,13 +96,13 @@ def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config
     contenido = contenido.replace("$$corrects$$",str(corrects))
     contenido = contenido.replace("$$incorrects$$",str(incorrects))
     contenido = contenido.replace("$$unit$$",str(unit))
-    contenido = contenido.replace("$$relativeUnstarted$$",str(relativeUnstarted))
+    #contenido = contenido.replace("$$relativeUnstarted$$",str(relativeUnstarted))
     contenido = contenido.replace("$$relativePracticed$$",str(relativePracticed))
     contenido = contenido.replace("$$relativeMastery1$$",str(relativeMastery1))
     contenido = contenido.replace("$$relativeMastery2$$",str(relativeMastery2))
     contenido = contenido.replace("$$relativeMastery3$$",str(relativeMastery3))
     contenido = contenido.replace("$$relativeStruggling$$",str(relativeStruggling))
-    contenido = contenido.replace("$$unstarted$$",str(unstarted))
+    #contenido = contenido.replace("$$unstarted$$",str(unstarted))
     contenido = contenido.replace("$$practiced$$",str(practiced))
     contenido = contenido.replace("$$mastery1$$",str(mastery1))
     contenido = contenido.replace("$$mastery2$$",str(mastery2))
