@@ -17,13 +17,13 @@ class Command(BaseCommand):
         conf = 0 
         for assesment in assesments: #en assesment se encuantral las assesments y grades con kaid students
             grades = Grade.objects.filter(id_assesment_id=assesment['id_assesment']).values('grade','kaid_student_id','performance_points','recomended_complete','excercice_time',
-                'video_time','correct','incorrect','struggling','mastery1','mastery2','mastery3','practiced').order_by('-performance_points')
+                'video_time','correct','incorrect','struggling','mastery1','mastery2','mastery3','practiced','unstarted').order_by('-performance_points')
             totalStudents = grades.count()
             order = 1
             for grade in grades:
                 if grade['recomended_complete'] is None:
                     grade['recomended_complete'] = 0
-                content = htmlTemplate(grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],assesment['id_assesment_conf_id'],
+                content = htmlTemplate(grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],assesment['id_assesment_conf_id'],grade['unstarted'],
                     grade['practiced'],grade['mastery1'],grade['mastery2'],grade['mastery3'],grade['struggling'],assesment['name'],order,totalStudents,str(grade['recomended_complete'])+'%')
                 sendMail(grade['kaid_student_id'],content)
                 sendWhatsapp(grade['kaid_student_id'],grade['grade'],grade['performance_points'],grade['video_time'],grade['correct'],grade['incorrect'],
@@ -74,8 +74,18 @@ def sendMail(kaid,contenido): #recibe los datos iniciales y envia un  mail a cad
     msg.send()
     return ()
 
-def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config,
+def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config,unstarted,
                 practiced,mastery1,mastery2,mastery3,struggling,name,order,totalStudents,recomendedComplete):
+    try:
+        unit = 95 / float(practiced+mastery1+mastery2+mastery3+struggling)#unstarted con problemas, no cuadra nuemro de skills seleccionadas, con levels
+    except:
+        unit = 0
+    #relativeUnstarted = unstarted * unit
+    relativePracticed = practiced * unit
+    relativeMastery1 = mastery1 * unit
+    relativeMastery2 = mastery2 * unit
+    relativeMastery3 = mastery3 * unit
+    relativeStruggling = struggling * unit
     skill_assesment = getSkillAssesment(id_assesment_config)
     #archivo=open("/var/www/html/bakhanproyecto/static/plantillas/end_assesment_mail.html")
     archivo=open("static/plantillas/end_assesment_mail.html")
@@ -85,6 +95,14 @@ def htmlTemplate(grade,points,video_time,corrects,incorrects,id_assesment_config
     contenido = contenido.replace("$$video_time$$",str(video_time))
     contenido = contenido.replace("$$corrects$$",str(corrects))
     contenido = contenido.replace("$$incorrects$$",str(incorrects))
+    contenido = contenido.replace("$$unit$$",str(unit))
+    #contenido = contenido.replace("$$relativeUnstarted$$",str(relativeUnstarted))
+    contenido = contenido.replace("$$relativePracticed$$",str(relativePracticed))
+    contenido = contenido.replace("$$relativeMastery1$$",str(relativeMastery1))
+    contenido = contenido.replace("$$relativeMastery2$$",str(relativeMastery2))
+    contenido = contenido.replace("$$relativeMastery3$$",str(relativeMastery3))
+    contenido = contenido.replace("$$relativeStruggling$$",str(relativeStruggling))
+    #contenido = contenido.replace("$$unstarted$$",str(unstarted))
     contenido = contenido.replace("$$practiced$$",str(practiced))
     contenido = contenido.replace("$$mastery1$$",str(mastery1))
     contenido = contenido.replace("$$mastery2$$",str(mastery2))
