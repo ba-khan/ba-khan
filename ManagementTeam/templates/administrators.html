@@ -145,7 +145,7 @@ input{
 		</tr>
 		{% endfor %}
 	</table>
-	<div style="width:100%; height:55px;"> <button type='input' onclick="javascript:$('#newAdmin').toggle('blind',1000);" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="icon-plus-sign"></i> Nuevo Administrador</button> </div>
+	<div style="width:100%; height:55px;"> <button type='input' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="icon-plus-sign"></i> Nuevo Administrador</button> </div>
 	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
 	<div id="newAdmin">
 		<form action="" method="post" id="form0">{% csrf_token %}
@@ -153,7 +153,7 @@ input{
 			<label for='name'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 			<label for='email'>E-Mail: </label><input id="newMail" onchange="validar()" onkeyup="validar()" type="mail" name="email" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 			<label for='phone'>Teléfono: </label><input id="newNumber" onchange="validar()" onkeyup="validar()" type="number" name="phone" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-
+			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
 			<a onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Administrador</a>
 		</form>
 	</div>
@@ -169,6 +169,15 @@ input{
 </div> <!-- cerrar div principal del home  -->
 
 <script>
+function showNewAdmin(){
+	$('#newAdmin').toggle('blind',1000);
+	setTimeout(toBottom, 1000);
+	}
+function toBottom(){
+	$('html,body').animate({scrollTop: document.body.scrollHeight},"fast");
+
+}
+
 function saveNewAdmin(){
 	$("#acceptSave").remove();
 	$("#cancelSave").remove();
