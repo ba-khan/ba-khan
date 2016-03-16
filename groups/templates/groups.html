@@ -658,22 +658,24 @@ circle{
 <script type="text/javascript">
 function initGroups(){
  
-{% if students %}
-{% for student in students %}
-{% if student.type == 'SinGrupo' %}
-$("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' name='SinGrupo' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
-{% endif%}
-{% if student.type == 'Reforzamiento' %}
-$("#Reforzamiento").append("<div title='{{ student.name }}' class='cuadradito' name='Reforzamiento' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
-{% endif%}
-{% if student.type == 'Intermedios' %}
-$("#Intermedios").append("<div title='{{ student.name }}' class='cuadradito' name='Intermedios' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
-{% endif%}
-{% if student.type == 'Avanzados' %}
-$("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' name='Avanzados' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
-{% endif%}
-{% endfor %}
-{% endif %}
+  {% if students %}
+  {% for student in students %}
+  {% if student.type == 'SinGrupo' %}
+  $("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' name='SinGrupo' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+  {% endif%}
+  {% if student.type == 'Reforzamiento' %}
+  $("#Reforzamiento").append("<div title='{{ student.name }}' class='cuadradito' name='Reforzamiento' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+  {% endif%}
+  {% if student.type == 'Intermedios' %}
+  $("#Intermedios").append("<div title='{{ student.name }}' class='cuadradito' name='Intermedios' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+  {% endif%}
+  {% if student.type == 'Avanzados' %}
+  $("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' name='Avanzados' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+  {% endif%}
+  {% endfor %}
+  {% endif %}
+  $("#SinGrupo").append("<div title='{{ user.username }}'  class='cuadradito' name='SinGrupo' id='{{ user.user_profile.kaid }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ user.username }}</div>");
+
 };
 initGroups();
 </script>
@@ -866,9 +868,6 @@ var className;
                 +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              if($(tutor).attr('title')=='undefined'){
-                alert('tutor indefinido')
-              }
               $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
                 +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
