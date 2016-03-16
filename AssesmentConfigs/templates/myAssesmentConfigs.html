@@ -216,12 +216,14 @@ function onSlide(ui,id) {
 	<div id="skills">
 		<h3>Habilidades</h3>
 		<div id="topictree{{ forloop.counter }}" class="scroll topictree"></div>
+		<ul class='ulSkill'>
 		<script>
 	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 	        	for (i=0;i<skills.length;i++){ 
 	        		$("#topictree{{ forloop.counter }}").append("<li class='liSkill'>"+(skills[i].name_spanish)+"</li>")
 	        	}
 	        </script>
+	    </ul>
 	</div>
 
 		{% else %}

@@ -65,6 +65,8 @@
 .liSkill{
   font-size: 14px;
   margin-left: 10px;
+}
+.ulSkill{
   list-style-image: url("/var/www/html/bakhanproyecto/static/img/check.png"); 
 }
 .topictree{
