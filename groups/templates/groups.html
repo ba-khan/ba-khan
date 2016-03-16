@@ -674,7 +674,7 @@ function initGroups(){
   {% endif%}
   {% endfor %}
   {% endif %}
-  $("#SinGrupo").append("<div title='{{ user.username }}'  class='cuadradito' name='SinGrupo' id='{{ user.user_profile.kaid }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ user.username }}</div>");
+  $("#SinGrupo").append("<div title='Sin Tutor' id='{{ user.user_profile.kaid }}' style='visibility: hidden;'></div>");
 
 };
 initGroups();
