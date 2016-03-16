@@ -192,6 +192,7 @@ parentDiv.removeChild(openDiv[0]);
 
        
 function makeGroups() {
+  //funcion que realiza el agrupamiento automatico.
   if($("input[name='skills']").val().length==2){
     $(".response").remove();
     $("#popup").append("<p class='response'>No hay habilidades seleccionadas.</p>");
@@ -984,7 +985,10 @@ $(document).ready(function(){
           $("#hover").fadeOut();
       $("#popup").fadeOut();
       });
-    
+    $("body *").html(function(buscayreemplaza, reemplaza) {
+        return reemplaza.replace('undefined', 'Sin Tutor');
+    });
+
   });
 
 </script>
