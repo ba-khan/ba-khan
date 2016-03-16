@@ -866,6 +866,9 @@ var className;
                 +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
             if (type.substring(1,18) == 'SubGrupoAvanzados'){
+              if($(tutor).attr('title')=='undefined'){
+                alert('tutor indefinido')
+              }
               $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
                 +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
@@ -985,10 +988,6 @@ $(document).ready(function(){
           $("#hover").fadeOut();
       $("#popup").fadeOut();
       });
-    $("body *").html(function(buscayreemplaza, reemplaza) {
-        return reemplaza.replace('undefined', 'Sin Tutor');
-    });
-
   });
 
 </script>
