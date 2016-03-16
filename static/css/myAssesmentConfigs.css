@@ -65,6 +65,7 @@
 .liSkill{
   font-size: 14px;
   margin-left: 10px;
+  list-style-image: url("/var/www/html/bakhanproyecto/static/img/check.png"); 
 }
 .topictree{
   overflow: hidden;
@@ -199,7 +200,4 @@ margin-right:10px
 {
     width:120%!important;
     cursor:pointer;
-}
-.liskill{
-  list-style-image: url("/var/www/html/bakhanproyecto/static/img/check.png"); 
 }
