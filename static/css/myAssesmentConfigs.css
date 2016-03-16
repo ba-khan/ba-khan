@@ -200,3 +200,6 @@ margin-right:10px
     width:120%!important;
     cursor:pointer;
 }
+.liskill{
+  list-style-image: url("/var/www/html/bakhanproyecto/static/img/check.png"); 
+}
