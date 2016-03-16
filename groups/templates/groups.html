@@ -844,6 +844,18 @@ var className;
             //Agrega cada subgrupo en el div que le corresponde.
             type = "#"+groups[i]['fields']['type'];//type grupo
             tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
+            if (type.substring(1,22) == 'SubGrupoReforzamiento'){
+              $("#fakeDiv3").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
+            }
+            if (type.substring(1,20) == 'SubGrupoIntermedios'){
+              $("#fakeDiv2").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
+            }
+            if (type.substring(1,18) == 'SubGrupoAvanzados'){
+              $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
+            }
             if (type == '#Avanzados'){
               $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Avanzados<h3><h4>Tutor: "+
                 $(tutor).attr('title')+"</h4></div>");
@@ -858,18 +870,6 @@ var className;
               $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Reforzamiento<h3><h4>Tutor: "
                 +$(tutor).attr('title')+"</h4></div>");
               $('#Reforzamiento').append("<div id='fakeDiv3'></div>");
-            }
-            if (type.substring(1,22) == 'SubGrupoReforzamiento'){
-              $("#fakeDiv3").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
-            }
-            if (type.substring(1,20) == 'SubGrupoIntermedios'){
-              $("#fakeDiv2").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
-            }
-            if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
             }
 					}
 			   }
