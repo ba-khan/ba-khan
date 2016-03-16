@@ -145,7 +145,7 @@ input{
 		</tr>
 		{% endfor %}
 	</table>
-	<div style="width:100%; height:55px;"> <button type='input' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="icon-plus-sign"></i> Nuevo Administrador</button> </div>
+	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewAdmin' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="icon-plus-sign"></i> Nuevo Administrador</button> </div>
 	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
 	<div id="newAdmin">
 		<form action="" method="post" id="form0">{% csrf_token %}
@@ -171,6 +171,7 @@ input{
 <script>
 function showNewAdmin(){
 	$('#newAdmin').toggle('blind',1000);
+	$('#buttonNewAdmin').hide();
 	setTimeout(toBottom, 1000);
 	}
 function toBottom(){
