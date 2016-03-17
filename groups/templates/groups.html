@@ -845,21 +845,21 @@ var className;
             type = "#"+groups[i]['fields']['type'];//type grupo
             tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
             if (type == '#Avanzados'){
+              $('#Avanzados').append("<h3>Avanzados<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
               $('#Avanzados').append("<div id='fakeDiv1'></div>");
-              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Avanzados<h3><h4>Tutor: "+
-                $(tutor).attr('title')+"</h4></div>");
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
               
             }
             if (type == '#Intermedios'){
+              $("#Intermedios").append("<h3>Intermedios<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
               $('#Intermedios').append("<div id='fakeDiv2'></div>");
-              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Intermedios<h3><h4>Tutor: "
-                +$(tutor).attr('title')+"</h4></div>");
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
               
             }
             if (type == '#Reforzamiento'){
+              $("#Reforzamiento").append("<h3>Reforzamiento<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
               $('#Reforzamiento').append("<div id='fakeDiv3'></div>");
-              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ><h3>Reforzamiento<h3><h4>Tutor: "
-                +$(tutor).attr('title')+"</h4></div>");
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
               
             }
             if (type.substring(1,22) == 'SubGrupoReforzamiento'){
