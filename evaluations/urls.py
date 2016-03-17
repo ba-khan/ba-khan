@@ -5,10 +5,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.newAssesment3, name='newAssesment3'),
-    #url(r'^authenticate/', views.authenticate, name='authenticate'),
-    #url(r'^access/rejected/', views.rejected, name='rejected'),
-    #url(r'^salir$', logout, {'template_name': 'login.html', }, name="salir"),
-    #url(r'^historial/$', views.getMakedGroup, name='getMakedGroup'),
     url(r'^updategrade/$', views.updateGrade, name='updateGrade'),
     url(r'^obtenerassesment/$', views.getAssesment, name='getAssesment'),
     url(r'^obtenerassesment1/$', views.getStudentAssesment, name='getStudentAssesment'),

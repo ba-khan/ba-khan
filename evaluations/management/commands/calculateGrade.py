@@ -24,6 +24,7 @@ class Command(BaseCommand):
         for assesment in assesments:
             approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
             skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
+            totalSkills = skills.count()
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
             students = grades_involved.values('kaid_student_id')
             incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
@@ -118,6 +119,10 @@ class Command(BaseCommand):
                         grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
                     except:
                         grade.mastery3 = 0
+                    try:
+                        grade.unstarted = totalSkills - grade.practiced - grade.mastery1 - grade.mastery2 - grade.mastery3 - grade.struggling
+                    except:
+                        grade.unstarted = 0
                     try:
                         grade.bonus_grade = (grade.performance_points * assesment.max_effort_bonus)/100
                     except:

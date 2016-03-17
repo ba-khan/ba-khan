@@ -58,7 +58,7 @@ import time
 import datetime
 
 
-# Create your views here.
+
 def getSkillGroup(request,id_class):
     #funcion que devuelve un json con los skills de un grupo
     if request.method == 'POST':
@@ -75,6 +75,7 @@ def getStudentGroup(request,id_class):
     #funcion que devuelve un json con los datos de grupos y alumnos
     if request.method == 'POST':
         args = request.POST
+        kaid_teacher = request.user.user_profile.kaid
         id_master_group = args['id_master_group']
         g = Group.objects.filter(master=id_master_group).values('id_group')
         g_e = Group_Student.objects.filter(id_group__in=g)
@@ -103,7 +104,7 @@ def getMakedGroup(request,id_class):
 @login_required()
 def getGroups(request, id_class):
     request.session.set_expiry(timeSleep)
-    topictree=getTopictree('math') #Modificar para que busque el topic tree completo (desde su root)
+    topictree=getTopictree('math')
     g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
     struct = json.loads(data)

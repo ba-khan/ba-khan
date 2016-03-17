@@ -64,7 +64,10 @@
 }
 .liSkill{
   font-size: 14px;
-  margin-left: 10px;
+  margin-left: 25px;
+}
+.ulSkill{
+  list-style-image: url("/static/img/check.png"); 
 }
 .topictree{
   overflow: hidden;
