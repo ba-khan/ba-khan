@@ -282,6 +282,30 @@ function onSlide(ui,id) {
     		<p>¿Desea guardar los cambios de la pauta?</p>
     	</div>
     </div>
+
+    <div style="display: none;" id="profile-throbber2" class="profile-throbber">
+		<div class="throbber-grid">   
+		    <!--[if lte IE 9]>
+		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+		    <![endif]-->
+		    
+		    <div class="throbber-row clearfix">
+		         <div class="block-0 throbber-block"></div>
+		         <div class="block-1 throbber-block"></div>
+		         <div class="block-2 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-7 throbber-block"></div>
+		         <div class="block-8 throbber-block"></div>
+		         <div class="block-3 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-6 throbber-block"></div>
+		         <div class="block-5 throbber-block"></div>
+		         <div class="block-4 throbber-block"></div>
+		    </div>
+		</div>
+	</div>
     
 </div>
 
@@ -349,16 +373,33 @@ function saveConfig(id){
 				$('#deleteConfig').css('display', 'none');
 				$('#editConfig').css('display', 'none');
 				$('.response').remove();
-				$("#hover").fadeIn().css('display', '');
-				$("#popup").fadeIn().css('display', '');
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
 				$("#popup").append("<p class='response'>"+response+"</p>");
 				auxResponse = response;
 				if (auxResponse == "Pauta guardada correctamente"){
-					reloadLocation();
+					$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					$("a").css('pointer-events','none');
+					reloadPage();
+					
 				}
 			}
 	});
 }
+
+function reloadPage(){
+	setTimeout(function(){
+		$('.response').fadeOut();
+		$("#popup").append($('#profile-throbber2').css('display','none'));
+		$('#profile-throbber2').fadeIn();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		document.location.reload(true);
+	}, 750); 
+	
+}
+
 function openEditConfig(id){
 	//if (configs[id-1]["applied"]==false){
 		cpestana = document.getElementById('cpestana'+id);
@@ -422,32 +463,36 @@ function editConfig(id){
 }
 function confirmEdit(answer,id){
 	if (answer==1){
+		$("#popup").append($('#profile-throbber2').css('display',''));
+		$("#editConfig").css('display','none');
 		$.ajax({
 			url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
 			type: "POST",
 			data: $("#form"+id).serialize(),
 				success: function(response){
-					$('.response').remove()
-					$("#hover").fadeIn().css('display', '');
-					$("#popup").fadeIn().css('display', '');
-					$("#popup").append("<p class='response'>"+response+"</p>");
-					topictreeId='#topictree'+id
-					$(topictreeId+(" ul")).css('pointer-events', 'none');
-					$(topictreeId).css('opacity', '0.8');
-					$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
-					$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
-					$(document.getElementById('editConfigButton'+id)).css('display', '');
-					$(document.getElementById('deleteConfigButton'+id)).css('display', '');
+					$('#profile-throbber2').fadeOut(750);
+					$('.response').remove();
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
+					setTimeout(function(){
+  						$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+						$('.response').fadeIn();
+						topictreeId='#topictree'+id
+						$(topictreeId+(" ul")).css('pointer-events', 'none');
+						$(topictreeId).css('opacity', '0.8');
+						$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
+						$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
+						$(document.getElementById('editConfigButton'+id)).css('display', '');
+						$(document.getElementById('deleteConfigButton'+id)).css('display', '');
+					}, 750); 
+					
 				}
 		});
-		$("#hover").fadeOut().css('display', 'none');
-		$("#popup").fadeOut().css('display', 'none');
-		$("#editConfig").fadeOut().css('display','none');
 	}
 	else{
-		$("#hover").fadeOut().css('display', 'none');
-		$("#popup").fadeOut().css('display', 'none');
-		$("#editConfig").fadeOut().css('display','none');
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+		$("#editConfig").fadeOut();
 	}
 	cpestana = document.getElementById('cpestana'+id);
 	inputs = cpestana.getElementsByTagName('input');
@@ -485,15 +530,16 @@ function confirmDelete(answer,id){
 			type: "POST",
 				success: function(response){
 					$('.response').remove();
-					$("#hover").fadeIn().css('display', '');
-					$("#popup").fadeIn().css('display', '');
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
 					$("#popup").append("<p class='response'>"+response+"</p>");
 				}
 		});
-		$("#hover").fadeOut().css('display', 'none');
-		$("#popup").fadeOut().css('display', 'none');
-		$("#deleteConfig").fadeOut().css('display','none');
-		reloadLocation()
+		$("#deleteConfig").fadeOut();
+		$("#hover").css('pointer-events','none');
+		$("#close").css('pointer-events','none');
+		$("a").css('pointer-events','none');
+		reloadPage();
 	}
 	else{
 		$("#hover").fadeOut().css('display', 'none');
@@ -569,3 +615,36 @@ $(document).ready(function(){
 }
 </script>
 {% endblock %}
+
+
+<!--
+	<div id="popup_evaluacion" class="popup" style="display:none">
+    	<div style="align:left;">
+	    	<p>Cargando los datos, por favor espere un momento</p>
+	    	<div style="display: none;" id="profile-throbber2" class="profile-throbber">
+				<div class="throbber-grid">   
+				    <!--[if lte IE 9]>
+				    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+				    <![endif]-->
+
+				    <!--
+				    <div class="throbber-row clearfix">
+				         <div class="block-0 throbber-block"></div>
+				         <div class="block-1 throbber-block"></div>
+				         <div class="block-2 throbber-block"></div>
+				    </div>
+				    <div class="throbber-row clearfix">
+				         <div class="block-7 throbber-block"></div>
+				         <div class="block-8 throbber-block"></div>
+				         <div class="block-3 throbber-block"></div>
+				    </div>
+				    <div class="throbber-row clearfix">
+				         <div class="block-6 throbber-block"></div>
+				         <div class="block-5 throbber-block"></div>
+				         <div class="block-4 throbber-block"></div>
+				    </div>
+				</div>
+			</div>
+    	</div>
+    </div>
+-->
