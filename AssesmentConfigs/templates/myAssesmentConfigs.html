@@ -76,11 +76,7 @@ function slidear(id){
 }
 function refreshSlider(id){
 	var total_width = $("#slider"+id).width();
-	if (id==0){
-		//selected_value = ui.values[0];
-		console.log("wasaaaa");
-	}
-	else{
+	if (id!=0){
 	    selected_value = configs[id-1]["importance_skill_level"];
 	}
     importance_skill_level = selected_value;
@@ -247,7 +243,6 @@ function onSlide(ui,id) {
 		<script>
 				totalTree+=1;
 				aux = {{ forloop.counter }}
-				console.log(aux);
 				trees.push(aux);
 				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
 				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
@@ -595,7 +590,6 @@ $(document).ready(function(){
     //alert(totalTree)
     for(j=0;j<trees.length;j++){
     //alert(skills1.length);
-    	console.log("topictree: "+trees[j])
     	skillsId = eval('skills'+trees[j]);
     	//alert(skillsId)
     	topictreeId = '#topictree'+trees[j];
@@ -605,7 +599,6 @@ $(document).ready(function(){
 	    	//alert(skills1[k].id_subtopic_skill_id);
 	    	//alert(skillsId)
 	    	skill = '#'+skillsId[k].id_subtopic_skill_id;
-	    	console.log(skill);
 	    	//alert(skill)
 	    	$(topictreeId).jstree('select_node', skill);
 	    	//alert(k);

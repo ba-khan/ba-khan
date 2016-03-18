@@ -197,8 +197,9 @@ function saveNewAdmin(){
 				$("#popup").append("<p class='response'>"+response+"</p>");
 				auxResponse = response;
 				if (auxResponse == "Administrador guardado correctamente"){
-					console.log(response);
-					window.setTimeout(function(){location.reload()},2000);
+					$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
 				}
 			}
 		});
@@ -336,6 +337,8 @@ function confirmDelete(answer,id){
 					
 					auxResponse = response;
 					if (auxResponse == "Administrador eliminado correctamente"){
+						$("#hover").css('pointer-events','none');
+						$("#close").css('pointer-events','none');
 						window.setTimeout(function(){location.reload()},1000);
 					}
 				}
