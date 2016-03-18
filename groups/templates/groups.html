@@ -91,8 +91,19 @@ function fillComboBoxIntermedios(cont){
     var id1 = divs[i].getAttribute('id');
     var id2 = divs[i].getAttribute('title');
     var id3 = divs[i].getAttribute('name');
-    if(id3=="Avanzados" || id3.substring(0,17) =="SubGrupoAvanzados"){       
+    if(id3=="Avanzados"){       
       $("#comboBoxIntermedios"+cont).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
+    }
+  }
+};
+function fillComboBoxReforzamiento(cont){
+  var divs = document.querySelectorAll('.cuadradito');
+  for (var i = 0; i < divs.length; i++) {
+    var id1 = divs[i].getAttribute('id');
+    var id2 = divs[i].getAttribute('title');
+    var id3 = divs[i].getAttribute('name');
+    if(id3=="Avanzados" || id3=="Intermedios"){       
+      $("#comboBoxReforzamiento"+cont).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
     }
   }
 };
@@ -129,17 +140,21 @@ function drop(e){
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
-  else if($('#'+elementoArrastrado).attr('name')=='Avanzados'){
+  else if($('#'+elementoArrastrado).attr('name')=='Avanzados' || $('#'+elementoArrastrado).attr('name').substring(0,17) =="SubGrupoAvanzados"){
     removeComboBoxIntermedios(elementoArrastrado);
     removeComboBoxReforzamiento(elementoArrastrado);
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    if(e.target.id=='Avanzados'){
+      addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
+    }
     if(e.target.id=='Intermedios'){
       //alert(e.target.id)
       //addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
-  else if($('#'+elementoArrastrado).attr('name')=='Intermedios'){
+  else if($('#'+elementoArrastrado).attr('name')=='Intermedios' || $('#'+elementoArrastrado).attr('name').substring(0,19)=="SubGrupoIntermedios"){
     //removeComboBoxIntermedios(elementoArrastrado);
     removeComboBoxReforzamiento(elementoArrastrado);
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
@@ -148,8 +163,13 @@ function drop(e){
       addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
+    if(e.target.id=='Intermedios'){
+      //alert(e.target.id)
+      //addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
+    }
   }
-  else if($('#'+elementoArrastrado).attr('name')=='Reforzamiento'){
+  else if($('#'+elementoArrastrado).attr('name')=='Reforzamiento' || $('#'+elementoArrastrado).attr('name').substring(0,21)=="SubGrupoReforzamiento" ){
     //removeComboBoxIntermedios(elementoArrastrado);
     //removeComboBoxReforzamiento(elementoArrastrado);
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
@@ -218,6 +238,7 @@ function crearSubGrupoIntermedios() {
 function crearSubGrupoReforzamiento() {
 
    $("#fakeDiv3").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   fillComboBoxReforzamiento(cont);
    cont+=1;
    //fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
