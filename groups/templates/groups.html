@@ -277,13 +277,26 @@ parentDiv.removeChild(openDiv[0]);
 
        
 function makeGroups() {
+  
   //funcion que realiza el agrupamiento automatico.
   if($("input[name='skills']").val().length==2){
     $(".response").remove();
     $("#popup").append("<p class='response'>No hay habilidades seleccionadas.</p>");
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
   }else{
+    $(".response").remove();
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
+    $("#hover").css('pointer-events','none');
+    $("#close").css('pointer-events','none');
+    $("a").css('pointer-events','none');
+    $("input").css('pointer-events','none');
+    $("circle").css('pointer-events','none');
+    $("button").css('pointer-events','none');
+    $("#popup").append($('#profile-throbber2').css('display','none'));
+    $('#profile-throbber2').fadeIn();
+    $("#popup").append("<p class='response'>Cargando...</p>");
     $('#cleanButton').show();
     $.ajax({
        url: "{% url 'groups:getGroups' id_class %}",
@@ -314,16 +327,23 @@ function makeGroups() {
             } 
           }
           fillComboBox()
+          $('#profile-throbber2').fadeOut();
           $(".response").remove();
-          $("#popup").append("<p class='response'>Agrupacion realizada correctamente.</p>");
-          $("#hover").fadeIn().css('display', '');
-          $("#popup").fadeIn().css('display', '');
+          $("#popup").append("<p class='response' style='display:none'>Agrupacion realizada correctamente.</p>");
+          $(".response").fadeIn();
+          $("#hover").css('pointer-events','');
+          $("#close").css('pointer-events','');
+          $("a").css('pointer-events','');
+          $("input").css('pointer-events','');
+          $("circle").css('pointer-events','');
+          $("button").css('pointer-events','');
        }
     });
   }
   
 };
 function saveGroups(){
+  
   //Funcion que guarda las agrupaciones.
   var divs = document.querySelectorAll('.cuadradito');
   var jsonArr = [];
@@ -359,17 +379,35 @@ function saveGroups(){
   $("input[name='subGroups']").val(JSON.stringify(arrSubGroups)); 
   $("input[name='tutors']").val(JSON.stringify(tutorsArr));  
   $("input[name='student_groups']").val(JSON.stringify(jsonArr));  
-  if(aux){  
+  if(aux){
+  $(".response").remove();
+  $("#hover").fadeIn();
+  $("#popup").fadeIn();
+  $("#hover").css('pointer-events','none');
+  $("#close").css('pointer-events','none');
+  $("a").css('pointer-events','none');
+  $("input").css('pointer-events','none');
+  $("circle").css('pointer-events','none');
+  $("button").css('pointer-events','none');
+  $("#popup").append($('#profile-throbber2').css('display','none'));
+  $('#profile-throbber2').fadeIn();
+  $("#popup").append("<p class='response'>Guardando...</p>");
   $.ajax({
      url: "{% url 'groups:getGroups' id_class %}",
      type: "POST",
      data: $("#formJson").serialize(),
      success: function (response) {
         //lo que haces si es exitoso
-        $(".response").remove();
-        $("#popup").append("<p class='response'>Grupos guardados correctamente.</p>");
-        $("#hover").fadeIn().css('display', '');
-        $("#popup").fadeIn().css('display', '');
+        $('#profile-throbber2').fadeOut();
+          $(".response").remove();
+          $("#popup").append("<p class='response' style='display:none'>Agrupacion guardada correctamente.</p>");
+          $(".response").fadeIn();
+          $("#hover").css('pointer-events','');
+          $("#close").css('pointer-events','');
+          $("a").css('pointer-events','');
+          $("input").css('pointer-events','');
+          $("circle").css('pointer-events','');
+          $("button").css('pointer-events','');
         location.reload();
      }
   });  
@@ -1046,6 +1084,7 @@ var className;
 
 function newGroups() {
   loading();
+  $('#profile-throbber2').fadeIn();
   location.reload();
 };
 function cleanGroups() {
