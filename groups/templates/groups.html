@@ -85,6 +85,17 @@ $(".comboBoxReforzamiento").each(function() {
 }
    }
        };
+function fillComboBoxIntermedios(cont){
+  var divs = document.querySelectorAll('.cuadradito');
+  for (var i = 0; i < divs.length; i++) {
+    var id1 = divs[i].getAttribute('id');
+    var id2 = divs[i].getAttribute('title');
+    var id3 = divs[i].getAttribute('name');
+    if(id3=="Avanzados" || id3.substring(0,17) =="SubGrupoAvanzados"){       
+      $("#comboBoxIntermedios"+cont).append("<OPTION VALUE="+id1+">"+id2+"</OPTION>");
+    }
+  }
+};
 function addComboBoxIntermedios(elemento){
   $(".comboBoxIntermedios").each(function(){
     $(this).append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
@@ -181,8 +192,8 @@ function crearSubGrupoAvanzados() {
 };
 function crearSubGrupoIntermedios() {
    $("#fakeDiv2").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
+   fillComboBoxIntermedios(cont);
    cont+=1;
-   //fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
    $("#cleanButton").show();
 };
