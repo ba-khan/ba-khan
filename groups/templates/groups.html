@@ -59,8 +59,6 @@ $(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 $(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
 $(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
 $(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
-$(".comboBoxIntermedios").append("<OPTION VALUE=2>{{ request.user.username }}</OPTION>");
-$(".comboBoxReforzamiento").append("<OPTION VALUE=3>{{ request.user.username }}</OPTION>");
 var divs = document.querySelectorAll('.cuadradito');
    for (var i = 0; i < divs.length; i++) {
        var id1 = divs[i].getAttribute('id');
@@ -93,7 +91,7 @@ $('#cleanButton').show();
        
 var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
           
-       
+alert(e.target.id)
 document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
 //document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
 //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
