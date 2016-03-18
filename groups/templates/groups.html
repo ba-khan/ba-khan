@@ -121,25 +121,43 @@ function drop(e){
             
   if($('#'+elementoArrastrado).attr('name')=='SinGrupo'){
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
-    //alert(elementoArrastrado)
-    //document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
-    //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+    if(e.target.id=='Avanzados'){
+      addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
+    }
+    if(e.target.id=='Intermedios'){
+      addComboBoxReforzamiento(elementoArrastrado);
+    }
+  }
+  else if($('#'+elementoArrastrado).attr('name')=='Avanzados'){
+    removeComboBoxIntermedios(elementoArrastrado);
+    removeComboBoxReforzamiento(elementoArrastrado);
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    if(e.target.id=='Intermedios'){
+      //alert(e.target.id)
+      //addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
+    }
+  }
+  else if($('#'+elementoArrastrado).attr('name')=='Intermedios'){
+    //removeComboBoxIntermedios(elementoArrastrado);
+    removeComboBoxReforzamiento(elementoArrastrado);
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
     if(e.target.id=='Avanzados'){
       //alert(e.target.id)
       addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
-  if($('#'+elementoArrastrado).attr('name')=='Avanzados'){
-    removeComboBoxIntermedios(elementoArrastrado);
-    removeComboBoxReforzamiento(elementoArrastrado);
+  else if($('#'+elementoArrastrado).attr('name')=='Reforzamiento'){
+    //removeComboBoxIntermedios(elementoArrastrado);
+    //removeComboBoxReforzamiento(elementoArrastrado);
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
-    //alert(elementoArrastrado)
-    //document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
-    //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
     if(e.target.id=='Avanzados'){
-      //alert(e.target.id)
       addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
+    }
+    if(e.target.id=='Intermedios'){
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
