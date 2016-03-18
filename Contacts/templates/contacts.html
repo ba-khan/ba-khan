@@ -125,11 +125,11 @@ function reloadPage(){
 	setTimeout(function(){
 		$('.response').fadeOut();
 		$("#popup").append($('#loading').css('display','none'));
-		$('#profile-throbber2').fadeIn();
+		$('#loading').fadeIn();
 		$("#hover").fadeIn();
 		$("#popup").fadeIn();
 		document.location.reload(true);
-	}, 750); 
+	}, 1000); 
 	
 }
 
