@@ -93,10 +93,45 @@
 	
 </div>
 <br>
+
+	<div style="display: none;" id="profile-throbber2" class="profile-throbber">
+		<div class="throbber-grid">   
+		    <!--[if lte IE 9]>
+		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+		    <![endif]-->
+		    
+		    <div class="throbber-row clearfix">
+		         <div class="block-0 throbber-block"></div>
+		         <div class="block-1 throbber-block"></div>
+		         <div class="block-2 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-7 throbber-block"></div>
+		         <div class="block-8 throbber-block"></div>
+		         <div class="block-3 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-6 throbber-block"></div>
+		         <div class="block-5 throbber-block"></div>
+		         <div class="block-4 throbber-block"></div>
+		    </div>
+		</div>
+	</div>
+
 </div> <!-- cerrar div principal del home  -->
 
 <script>
-
+function reloadPage(){
+	setTimeout(function(){
+		$('.response').fadeOut();
+		$("#popup").append($('#profile-throbber2').css('display','none'));
+		$('#profile-throbber2').fadeIn();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		document.location.reload(true);
+	}, 750); 
+	
+}
 
 function saveData(id){
 	$("#acceptSave").remove();
@@ -151,16 +186,16 @@ function confirmSave(answer,id){
 					$("#popup").append("<p class='response'>"+response+"</p>");
 					auxResponse = response;
 					if (auxResponse == "Cambios guardados correctamente"){
-						reloadLocation();
+						reloadPage();
 					}
 				}
 		});
-		$("#hover").fadeOut().css('display', 'none');
-		$("#popup").fadeOut().css('display', 'none');
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
 	}
 	if (answer==0){
-		$("#hover").fadeOut(1000).css('display', 'none');
-		$("#popup").fadeOut(1000).css('display', 'none');
+		$("#hover").fadeOut(1000);
+		$("#popup").fadeOut(1000);
 	}
 }
 
