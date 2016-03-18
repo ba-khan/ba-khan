@@ -86,19 +86,22 @@ $(".comboBoxReforzamiento").each(function() {
    }
        };
 function addComboBoxIntermedios(elemento){
-//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
-  //$(".comboBoxIntermedios").empty();
-  //$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
-  //alert($('#'+elemento).attr('name'));
-
-  $(".comboBoxIntermedios").append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
-
-
+  $(".comboBoxIntermedios").each(function(){
+    $(this).append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
+  });
+};
+function addComboBoxReforzamiento(elemento){
+  $(".comboBoxReforzamiento").each(function(){
+    $(this).append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
+  });
 };
 function removeComboBoxIntermedios(elemento){
-  //$(".comboBoxIntermedios").append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
   $(".comboBoxIntermedios option[value="+$('#'+elemento).attr('id')+"]").remove();
 };
+function removeComboBoxReforzamiento(elemento){
+  $(".comboBoxReforzamiento option[value="+$('#'+elemento).attr('id')+"]").remove();
+};
+
 function drop(e){
 
   $('#cleanButton').show();
@@ -113,10 +116,12 @@ function drop(e){
     if(e.target.id=='Avanzados'){
       //alert(e.target.id)
       addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
     }
   }
   if($('#'+elementoArrastrado).attr('name')=='Avanzados'){
     removeComboBoxIntermedios(elementoArrastrado);
+    removeComboBoxReforzamiento(elementoArrastrado);
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
     //alert(elementoArrastrado)
     //document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
@@ -124,6 +129,7 @@ function drop(e){
     if(e.target.id=='Avanzados'){
       //alert(e.target.id)
       addComboBoxIntermedios(elementoArrastrado);
+      addComboBoxReforzamiento(elementoArrastrado);
     }
   }
   //fillComboBox();
@@ -169,14 +175,14 @@ function crearSubGrupoAvanzados() {
 
    $("#fakeDiv1").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivAvanzados(this)'>x</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
-   fillComboBox();
+   //fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
    $("#cleanButton").show();
 };
 function crearSubGrupoIntermedios() {
    $("#fakeDiv2").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
-   fillComboBox();
+   //fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
    $("#cleanButton").show();
 };
@@ -184,7 +190,7 @@ function crearSubGrupoReforzamiento() {
 
    $("#fakeDiv3").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='link pagina 1'>Seleccionar Tutor</OPTION></SELECT></div>");
    cont+=1;
-   fillComboBox();
+   //fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
    $("#cleanButton").show();
 };
