@@ -1,8 +1,68 @@
 <html>
 <head>
 	<title>No encontrado</title>
+	<script src="../../static/js/jquery-latest.min.js"></script>
+	<style>
+            body {
+                background:white;
+            }
+            html:not(.embed) #page_content_wrapper_uno {
+                text-align: center;
+                padding: 30px;
+            }
+            html:not(.embed) #page_content_wrapper_dos {
+                width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
 </head>
 <body>
-	<h3>Dirección no encontrada</h3>
+
+<div id="page_content_wrapper_uno">
+    <div id="page_content_wrapper_dos">
+                
+    <style>
+        #tree-container {
+            padding-top: 45px;
+        }
+        #leaf {
+            position: relative;
+            top: -108px;
+            left: -62px;
+        }
+    </style>
+
+    <h2>Lo sentimos, no podemos encontrar lo que buscas.</h2><br>
+    <div id="tree-container">
+        <img src="../../static/img/missing-leaf.png"><br>
+        <img id="leaf" src="../../static/img/leaf2.png" style="left: -62px; top: -90px;">
+    </div>
+    <h2>Parece que esta página no está disponible. <a href="/">Visita nuestra página de inicio</a>.</h2>
+    <p>Si el problema persiste y piensas que algo está mal, por favor <a href="#">infórmanos mandando un reporte</a>.</p>
+
+    </div>
+</div>
+
+
+
 </body>
+<script type="text/javascript">
+        var shake = 4;
+        var sway = 6;
+        var drop = 20;
+
+        setTimeout(function() {
+            $("#leaf").animate({left: "+=" + shake}, 100)
+                .animate({left: "-=" + shake}, 100)
+                .animate({left: "+=" + shake}, 100)
+                .animate({left: "-=" + shake}, 100)
+                .animate({left: "+=" + shake}, 100)
+                .animate({left: "-=" + shake}, 100)
+                .animate({left: "-=" + sway, top: "+=" + drop}, 750, "linear")
+                .animate({left: "+=" + sway, top: "+=" + drop}, 750, "linear")
+                .animate({left: "-=" + sway, top: "+=" + drop}, 750, "linear")
+                .animate({left: "+=" + sway, top: "+=" + drop}, 750, "linear");
+        }, 1000);
+</script>
 </html>
