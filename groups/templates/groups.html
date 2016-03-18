@@ -54,7 +54,7 @@ return false;
 };
 function fillComboBox(){
 //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
-$('select').empty();
+//$('select').empty();
 $(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 $(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
 $(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
@@ -85,52 +85,83 @@ $(".comboBoxReforzamiento").each(function() {
 }
    }
        };
+function addComboBoxIntermedios(elemento){
+//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+  //$(".comboBoxIntermedios").empty();
+  //$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
+  //alert($('#'+elemento).attr('name'));
+
+  $(".comboBoxIntermedios").append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
+
+
+};
+function removeComboBoxIntermedios(elemento){
+  //$(".comboBoxIntermedios").append("<OPTION VALUE="+$('#'+elemento).attr('id')+">"+$('#'+elemento).attr('title')+"</OPTION>");
+  $(".comboBoxIntermedios option[value="+$('#'+elemento).attr('id')+"]").remove();
+};
 function drop(e){
 
-$('#cleanButton').show();
-       
-var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
-          
-alert(e.target.id)
-document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
-//document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
-//rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
-fillComboBox();
-e.target.appendChild(document.getElementById(elementoArrastrado));
-e.target.style.border = '';  // Quita el borde
-
-          
-tamElemX = $('#'+elementoArrastrado).width();
-          
-tamElemY = $('#'+elementoArrastrado).height();
-  
-          
-posXCont = $('#'+e.target.id).position().left;
-          
-posYCont = $('#'+e.target.id).position().top;
-          
-// Posicion absoluta del raton
-          
-x = e.layerX;
-          
-y = e.layerY;
-          
-          
-// Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
-          
-if (posXCont + tamContX <= x + tamElemX){
-           
-x = posXCont + tamContX - tamElemX - 15;
+  $('#cleanButton').show();
          
+  var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+            
+  if($('#'+elementoArrastrado).attr('name')=='SinGrupo'){
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    //alert(elementoArrastrado)
+    //document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
+    //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+    if(e.target.id=='Avanzados'){
+      //alert(e.target.id)
+      addComboBoxIntermedios(elementoArrastrado);
+    }
+  }
+  if($('#'+elementoArrastrado).attr('name')=='Avanzados'){
+    removeComboBoxIntermedios(elementoArrastrado);
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    //alert(elementoArrastrado)
+    //document.getElementById(elementoArrastrado).setAttribute("label",e.target.name);         
+    //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
+    if(e.target.id=='Avanzados'){
+      //alert(e.target.id)
+      addComboBoxIntermedios(elementoArrastrado);
+    }
+  }
+  //fillComboBox();
+  e.target.appendChild(document.getElementById(elementoArrastrado));
+  e.target.style.border = '';  // Quita el borde
 
-}
+            
+  tamElemX = $('#'+elementoArrastrado).width();
+            
+  tamElemY = $('#'+elementoArrastrado).height();
+    
+            
+  posXCont = $('#'+e.target.id).position().left;
+            
+  posYCont = $('#'+e.target.id).position().top;
+            
+  // Posicion absoluta del raton
+            
+  x = e.layerX;
+            
+  y = e.layerY;
+            
+            
+  // Si parte del elemento que se quiere mover se queda fuera se cambia las coordenadas para que no sea asi
+            
+  if (posXCont + tamContX <= x + tamElemX){
+             
+  x = posXCont + tamContX - tamElemX - 15;
+           
 
-          
-document.getElementById(elementoArrastrado).style.position = "absolute";
-          
-document.getElementById(elementoArrastrado).style.left = x + "px";
-          
-document.getElementById(elementoArrastrado).style.top = y + "px";
+  }
+
+            
+  document.getElementById(elementoArrastrado).style.position = "absolute";
+            
+  document.getElementById(elementoArrastrado).style.left = x + "px";
+            
+  document.getElementById(elementoArrastrado).style.top = y + "px";
 
 
 };       
