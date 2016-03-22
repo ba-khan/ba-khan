@@ -43,9 +43,6 @@ class Command(BaseCommand):
             levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
                 ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
                 ).order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
-            if assesment.pk==285:
-                for l in levels:
-                    print l
             struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
                 ).values('kaid_student','id_student_skill'
                 ).order_by('kaid_student','id_student_skill')
@@ -107,23 +104,39 @@ class Command(BaseCommand):
                     except:
                         grade.struggling = 0
                     try:
-                        if grade.kaid_student_id=='kaid_962822484535083405338400':
-                            lev = levels.filter(kaid_student=grade.kaid_student_id)#,skill_progress__to_level=u'practiced')
-                            for l in lev:
-                                print l
-                        grade.practiced = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='practiced').count()
+                        lev = levels.filter(kaid_student=grade.kaid_student_id)
+                        studentPracticed = 0
+                        studentMastery1 = 0
+                        studentMastery2 = 0
+                        studentMastery3 = 0
+                        for l in lev:
+                            if l['skill_progress__to_level']=='practiced':
+                                studentPracticed += 1
+                            if l['skill_progress__to_level']=='mastery1':
+                                studentMastery1 += 1
+                            if l['skill_progress__to_level']=='mastery2':
+                                studentMastery2 += 1
+                            if l['skill_progress__to_level']=='mastery3':
+                                studentMastery3 += 1
+                    except:
+                        studentPracticed = 0
+                        studentMastery1 = 0
+                        studentMastery2 = 0
+                        studentMastery3 = 0
+                    try:
+                        grade.practiced = studentPracticed
                     except:
                         grade.practiced = 0
                     try:
-                        grade.mastery1 = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='mastery1').count()
+                        grade.mastery1 = studentMastery1
                     except:
                         grade.mastery1 = 0
                     try:
-                        grade.mastery2 = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='mastery2').count()
+                        grade.mastery2 = studentMastery2
                     except:
                         grade.mastery2 = 0
                     try:
-                        grade.mastery3 = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
+                        grade.mastery3 = studentMastery3
                     except:
                         grade.mastery3 = 0
                     try:
