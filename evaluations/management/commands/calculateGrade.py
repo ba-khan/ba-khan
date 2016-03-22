@@ -42,7 +42,10 @@ class Command(BaseCommand):
                 date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
             levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False,skill_progress__date__range=(assesment.start_date,assesment.end_date)
                 ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
-                ).order_by('kaid_student','id_student_skill').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+                ).order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+            if assesment.pk==285:
+                for l in levels:
+                    print l
             struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
                 ).values('kaid_student','id_student_skill'
                 ).order_by('kaid_student','id_student_skill')
@@ -104,19 +107,23 @@ class Command(BaseCommand):
                     except:
                         grade.struggling = 0
                     try:
-                        grade.practiced = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='practiced').count()
+                        if grade.kaid_student_id=='kaid_962822484535083405338400':
+                            lev = levels.filter(kaid_student=grade.kaid_student_id)#,skill_progress__to_level=u'practiced')
+                            for l in lev:
+                                print l
+                        grade.practiced = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='practiced').count()
                     except:
                         grade.practiced = 0
                     try:
-                        grade.mastery1 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery1').count()
+                        grade.mastery1 = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='mastery1').count()
                     except:
                         grade.mastery1 = 0
                     try:
-                        grade.mastery2 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery2').count()
+                        grade.mastery2 = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='mastery2').count()
                     except:
                         grade.mastery2 = 0
                     try:
-                        grade.mastery3 = levels.filter(kaid_student_id=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
+                        grade.mastery3 = levels.filter(kaid_student=grade.kaid_student_id,skill_progress__to_level='mastery3').count()
                     except:
                         grade.mastery3 = 0
                     try:
