@@ -1607,8 +1607,20 @@
 			var kaids =[];
 			validarEvaluacion();
 			if (validarRealizarEvaluacion() || validarEvaluacion()){
+				$(".response").remove();
+				Loading();
+				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
+				$("#hover").css('pointer-events','none');
+				$("#close").css('pointer-events','none');
+				$("a").css('pointer-events','none');
+				$("input").css('pointer-events','none');
+				$("button").css('pointer-events','none');
+				$("img").css('pointer-events','none');
+				
+				
 				$('#button_realizar').hide();
 				$('#button_cancelar').hide();
+
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1620,7 +1632,7 @@
 					type: "POST",
 					data: $("#formJson").serialize(),
 					success: function(response){
-						Loading();
+						location.reload();
 					}
 				});
 			}
@@ -1703,6 +1715,15 @@
 			return flag;
 		}
 		function modificarNota(){
+			$(".response").remove();
+			Loading();
+			$("#popup_evaluacion").append("<p class='response'>Editando...</p>");
+			$("#hover").css('pointer-events','none');
+			$("#close").css('pointer-events','none');
+			$("a").css('pointer-events','none');
+			$("input").css('pointer-events','none');
+			$("button").css('pointer-events','none');
+			$("img").css('pointer-events','none');
 			var comentario = $('#textarea_coment').val()
 			$("input[name='input_comment']").val(comentario)
 			$.ajax({
@@ -1713,7 +1734,7 @@
 					location.reload();
 				}
 			});		
-			$('#hover').fadeOut();
+			//$('#hover').fadeOut();
 			$('#popup').fadeOut();
 		}
 		function nuevaEvaluacion(){
@@ -1898,6 +1919,15 @@
 			var kaids =[];
 			validarEvaluacion();
 			if (validarRealizarEvaluacion()||validarEvaluacion()){
+				$(".response").remove();
+				Loading();
+				$("#popup_evaluacion").append("<p class='response'>Editando...</p>");
+				$("#hover").css('pointer-events','none');
+				$("#close").css('pointer-events','none');
+				$("a").css('pointer-events','none');
+				$("input").css('pointer-events','none');
+				$("button").css('pointer-events','none');
+				$("img").css('pointer-events','none');
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1909,7 +1939,7 @@
 					type: "POST",
 					data: $("#formJson").serialize(),
 					success: function(response){
-						Loading();
+						location.reload();
 					}
 				});
 
