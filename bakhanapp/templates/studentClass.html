@@ -1045,7 +1045,6 @@
 		          return skill_levels_scaling(d.prev_value);})
 		      .attr('y',12)
 		      .attr('height', "20px")
-		      .attr('title',d.value)
 		      .style('fill', function(d, i){ return skills_level_colors[i]; });
 	    
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
