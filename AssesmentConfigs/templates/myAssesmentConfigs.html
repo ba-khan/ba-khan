@@ -106,7 +106,7 @@ function onSlide(ui,id) {
 <div class="container">
 	<div id="sidebar">
     	<ul>
-    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="icon-plus-sign"></i> Nueva Configuracion</a></li>
+    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Pauta</a></li>
         	{% for config in assesment_configs %}  
 			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
 			{% endfor %}
