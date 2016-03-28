@@ -1181,7 +1181,14 @@
 	        .attr("dy", function(d,i){return 6 + effort_scalings[d.cl](students[i][assesment_id].effort);})
 	        .text(function(d,i){
 	        	if (students[i][assesment_id].grade!=null){
-	        		nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade;
+	        		nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade + students[i][assesment_id].teacher_grade;
+	        		if (nota>max_grade){
+	        			nota = max_grade;
+	        			nota = nota+"+";
+	        		}
+	        		if (students[i][assesment_id].teacher_grade!=0){
+	        			nota = nota+" *";
+	        		}
 	        		return nota;
 	        	}else{
 	        		return "S.E.";
