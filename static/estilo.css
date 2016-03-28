@@ -647,3 +647,9 @@ label.sort-filter{
     height: 205px;
   }
 }
+.plus:after{
+  content:'+ ';
+  font-weight: bold;
+  font-size:120%;
+
+}
