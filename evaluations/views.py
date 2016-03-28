@@ -76,7 +76,6 @@ def updateGrade(request):
         teacher_grade=eval(args['input_grade_teacher'])
         teacher_comment=args['input_comment']
         id_grade=eval(args['input_grade_id'])
-
         update_grade = Grade.objects.get(pk=id_grade)
         update_grade.teacher_grade = teacher_grade
         update_grade.comment = teacher_comment 

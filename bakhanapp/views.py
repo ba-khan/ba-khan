@@ -218,13 +218,13 @@ def getClassStudents(request, id_class):
             mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
             struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
             assesments = Assesment.objects.filter(id_class_id=id_class)
-            grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade').order_by('id_assesment')
+            grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade','grade__teacher_grade','grade__comment').order_by('id_assesment')
             dictGrades = {}
             for g in grades:
                 name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
                 name = name[0]['name']
                 skls = getSkillsCorrect(g['grade__id_grade'])
-                dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls)
+                dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls,g['grade__teacher_grade'],g['grade__comment'])
             #print dictGrades[(67,'kaid_962822484535083405338400')][1]
             assesment_array=[]
             threads = []
@@ -327,6 +327,14 @@ def getClassStudents(request, id_class):
                         student_assesment["grade"] = None
                         student_assesment["effort"] = 0.1
                         student_assesment["grade_id"] = 0
+                    try:
+                        student_assesment["teacher_grade"] = dictGrades[(assesment['id'],student.kaid_student)][7]
+                    except:
+                        student_assesment["teacher_grade"] = 0
+                    try:
+                        student_assesment["comment"] = dictGrades[(assesment['id'],student.kaid_student)][8]
+                    except:
+                        student_assesment["comment"] = "sin comentarios"
                     try:
                         student_assesment['performance_points'] = dictGrades[(assesment['id'],student.kaid_student)][2]
                     except:
