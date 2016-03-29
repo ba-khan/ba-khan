@@ -61,6 +61,185 @@ from django.db import connection
 
 import random
 
+CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
+CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
+    
+CALLBACK_BASE = '127.0.0.1'
+SERVER_URL = 'http://www.khanacademy.org'
+SERVER_URL2 = 'http://es.khanacademy.org'
+    
+DEFAULT_API_RESOURCE = '/api/v1/playlists'
+VERIFIER = None
+    
+
+# Create the callback server that's used to set the oauth verifier after the
+# request token is authorized.
+def create_callback_server():
+    class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+        def do_GET(self):
+            global VERIFIER
+
+            params = cgi.parse_qs(self.path.split('?', 1)[1],
+                keep_blank_values=False)
+            VERIFIER = params['oauth_verifier'][0]
+
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.end_headers()
+            self.wfile.write('OAuth request token fetched and authorized;' +
+                ' you can close this window. B!tch.')
+            #webbrowser.open('http://www.google.cl')
+            
+            
+
+        def log_request(self, code='-', size='-'):
+            pass
+
+    server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler)
+    return server
+
+
+# Make an authenticated API call using the given rauth session.
+#/api/v1/user?userId=&username=javierperezferrada&email=
+
+def get_api_resource(session,request):
+    resource_url = '/api/v1/user?userId=&username=&email='
+
+    url = SERVER_URL + resource_url
+    split_url = url.split('?', 1)
+    params = {}
+
+    # Separate out the URL's parameters, if applicable.
+    if len(split_url) == 2:
+        url = split_url[0]
+        params = cgi.parse_qs(split_url[1], keep_blank_values=False)
+
+    #start = time.time()
+    response = session.get(url, params=params)
+    #end = time.time()
+    json_response = response.json()
+    email = json_response['email']
+    #username = json_response['username']
+    user = auth.authenticate(username=email, password=email)
+    if user:
+        auth.login(request, user)
+        return True
+    else:
+        user = User.objects.create_user(username=email,email=email,password=email)
+        user.save()
+        return False
+
+def authenticate(request):
+    global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
+    
+    # Set consumer key, consumer secret, and server base URL from user input or
+    # use default values.
+    CONSUMER_KEY = CONSUMER_KEY
+    CONSUMER_SECRET = CONSUMER_SECRET
+    SERVER_URL = SERVER_URL
+
+    # Create an OAuth1Service using rauth.
+    service = rauth.OAuth1Service(
+           name='test',
+           consumer_key=CONSUMER_KEY,
+           consumer_secret=CONSUMER_SECRET,
+           request_token_url=SERVER_URL + '/api/auth2/request_token',
+           access_token_url=SERVER_URL + '/api/auth2/access_token',
+           authorize_url=SERVER_URL + '/api/auth2/authorize',
+           base_url=SERVER_URL + '/api/auth2')
+
+    callback_server = create_callback_server()
+
+    # 1. Get a request token.
+    request_token, secret_request_token = service.get_request_token(
+        params={'oauth_callback': 'http://%s:%d/' %
+            (CALLBACK_BASE, callback_server.server_address[1])})
+    
+    # 2. Authorize your request token.
+    authorize_url = service.get_authorize_url(request_token)
+    #return HttpResponseRedirect(authorize_url)
+    webbrowser.open(authorize_url, new=0)
+    
+    callback_server.handle_request()
+    callback_server.server_close()
+
+    # 3. Get an access token.
+    session = service.get_auth_session(request_token, secret_request_token,
+        params={'oauth_verifier': VERIFIER})
+
+    # Repeatedly prompt user for a resource and make authenticated API calls.
+    if get_api_resource(session,request):
+        return HttpResponseRedirect('/inicio')
+    else:
+        return HttpResponseRedirect('/access/rejected')
+    
+def run_tests():
+    global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
+    
+    # Set consumer key, consumer secret, and server base URL from user input or
+    # use default values.
+    CONSUMER_KEY = CONSUMER_KEY
+    CONSUMER_SECRET = CONSUMER_SECRET
+    SERVER_URL = SERVER_URL
+
+    # Create an OAuth1Service using rauth.
+    service = rauth.OAuth1Service(
+           name='test',
+           consumer_key=CONSUMER_KEY,
+           consumer_secret=CONSUMER_SECRET,
+           request_token_url=SERVER_URL + '/api/auth2/request_token',
+           access_token_url=SERVER_URL + '/api/auth2/access_token',
+           authorize_url=SERVER_URL + '/api/auth2/authorize',
+           base_url=SERVER_URL + '/api/auth2')
+
+    callback_server = create_callback_server()
+
+    # 1. Get a request token.
+    request_token, secret_request_token = service.get_request_token(
+        params={'oauth_callback': 'http://%s:%d/' %
+            (CALLBACK_BASE, callback_server.server_address[1])})
+    
+    # 2. Authorize your request token.
+    authorize_url = service.get_authorize_url(request_token)
+    webbrowser.open(authorize_url)
+
+    callback_server.handle_request()
+    callback_server.server_close()
+
+    # 3. Get an access token.
+    session = service.get_auth_session(request_token, secret_request_token,
+        params={'oauth_verifier': VERIFIER})
+
+    # Repeatedly prompt user for a resource and make authenticated API calls.
+    #print
+    #while(True):
+    #    get_api_resource(session)
+    return session
+
+def getTopictree():
+    topictree=[]
+    temp=[]
+    chapters=Chapter.objects.filter(id_subject_name_id='math')
+    for chapter in chapters:
+        topics=Topic.objects.filter(id_chapter_name_id=chapter.id_chapter_name)
+        #print(chapter)
+        for topic in topics:
+            subtopics=Subtopic.objects.filter(id_topic_name_id=topic.id_topic_name)
+            #print(topic)
+            for subtopic in subtopics:
+                subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopic.id_subtopic_name)
+                for subtopic_skill in subtopic_skills:
+                    skills=Skill.objects.filter(id_skill_name=subtopic_skill.id_skill_name_id)
+                    for skill in skills:
+                        temp.append(chapter)
+                        temp.append(topic)
+                        temp.append(subtopic)
+                        temp.append(skill)
+                        print(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
+                        topictree.append(temp)
+                        temp=[]
+    return topictree
+
 def get_api_resource2(session,llamada,server):
 
     url = server + llamada
@@ -76,7 +255,6 @@ def get_api_resource2(session,llamada,server):
     response = session.get(url, params=params)
     encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
     end = time.time()
-    
 
     print "JASON: \n"
     return encoded_response
@@ -90,50 +268,30 @@ def poblar_skill():
         conn.commit()
     '''
 
-def poblar_student_skill(student, dates, session):
-    llamada = "/api/v1/user/exercises?kaid="+student.kaid_student+"&userId=&username=&email=&exercises="
-    jason = get_api_resource2(session,llamada,SERVER_URL)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    for j in range(len(data)):
-        skills = Skill.objects.filter(id_skill_name=data[j]["exercise_model"]["id"])
-        if (len(skills)>0):
-            student_skill = Student_Skill.objects.create(total_done = data[j]["total_done"],
-                                                               total_correct = data[j]["total_correct"],
-                                                               streak = data[j]["streak"],
-                                                               longest_streak = data[j]["longest_streak"],
-                                                               last_skill_progress = data[j]["exercise_progress"]["level"],
-                                                               total_hints = data[j]["last_count_hints"],
-                                                               struggling = data[j]["exercise_states"]["struggling"],
-                                                               id_skill_name_id = data[j]["exercise_model"]["id"],
-                                                               kaid_student_id = student.kaid_student
-                                                               )
-        else:
-            print "skill fantasma"
-
-def poblar_skill_attempts(student, dates, session):
-    student_skills = Student_Skill.objects.filter(kaid_student_id=student.kaid_student)
+def poblar_skill_attempts(kaid_student, dates, session):
+    student_skills = Student_Skill.objects.all()
     for i in range(len(student_skills)):
         skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
-        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+student.name+"&email=&dt_start="+dates
+        print skills[0]["name"]
+        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId="+kaid_student+"&username=&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
-        if (data):
-            for j in range(len(data)):
-                skill_attempts = Skill_Attempt.objects.create(count_attempts = data[j]["count_attempts"],
+        for j in range(len(data)):
+            print data[j]["problem_number"]
+
+            skill_attempts = Skill_Attempt.objects.create(count_attempts = data[j]["count_attempts"],
                                                                    mission = data[j]["mission"],
                                                                    time_taken = data[j]["time_taken"],
                                                                    count_hints = data[j]["count_hints"],
                                                                    skipped = data[j]["skipped"],
-                                                                   points_earned = data[j]["points_earned"],
-                                                                   date = data[j]["time_done"],
+                                                                   points_earned = 0,
+                                                                   date = data[j]["time_done"][:10],
                                                                    correct = data[j]["correct"],
                                                                    id_skill_name_id = skills[0]["id_skill_name"],
-                                                                   kaid_student_id = student.kaid_student,
+                                                                   kaid_student_id = data[j]["kaid"],
                                                                    problem_number = data[j]["problem_number"]
                                                                    )
-            
 
 def poblar_topictree(session,buscar, reemplazar,cur,conn):
     topictree = get_api_resource2(session,"/api/v1/topictree",SERVER_URL2)
@@ -185,47 +343,45 @@ def poblar_topictree(session,buscar, reemplazar,cur,conn):
                         #subtopic_videos = subtopic_videos+(data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])+"\n"
                         id_subtopic_videos+=1
                         
-def poblar_skill_progress(student,dates,session):
-    llamada = "/api/v1/user/exercises/progress_changes?userId=&username="+student.name+"&email=&dt_start="+dates
+def poblar_skill_progress(kaid_student,dates,session):
+    llamada = "/api/v1/user/exercises/progress_changes?userId="+kaid_student+"&username=&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    print "exercises progress = "
-    print len(data) 
     for i in range(len(data)):
         skill = Skill.objects.filter(name=data[i]["exercise_name"]).values('id_skill_name','name')
-        if (len(skill)>0):
-            student_skill=Student_Skill.objects.filter(kaid_student_id=student.kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
-            if (student_skill):
-                skill_progress = Skill_Progress.objects.create(to_level = data[i]["to_progress"]["level"],
-                                                                       from_level = data[i]["from_progress"]["level"],
-                                                                       date = data[i]["date"],
-                                                                       id_student_skill_id = student_skill[0]["id_student_skill"]
-                                                                       )
-
-def poblar_student_video(student, dates, session):
-    llamada = "/api/v1/user/videos?userId=&username="+student.name+"&email=&dt_start="+dates
+        #print skill[0]["id_skill_name"]
+        print skill[0]["name"]
+        student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
+        if (student_skill):
+            print student_skill[0]["id_student_skill"]
+            skill_progress = Skill_Progress.objects.create(to_level = data[i]["to_progress"]["level"],
+                                                                   from_level = data[i]["from_progress"]["level"],
+                                                                   date = data[i]["date"],
+                                                                   id_student_skill_id = student_skill[0]["id_student_skill"]
+                                                                   )
+            print data[i]["date"]
+            
+def poblar_student_video(kaid_student, dates, session):
+    llamada = "/api/v1/user/videos?userId="+kaid_student+"&username=&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    if (data):
-        for i in range(len(data)):
-            video = Video.objects.filter(id_video_name=data[i]["video"]["id"])
-            if (video):
-                if data[i]["points"] >0 :
-                    student_video = Student_Video.objects.create(total_seconds_watched = data[i]["seconds_watched"],
-                                                                               total_points_earned = data[i]["points"],
-                                                                               last_second_watched = data[i]["last_second_watched"],
-                                                                               is_video_complete = data[i]["completed"],
-                                                                               id_video_name_id = data[i]["video"]["id"],
-                                                                               kaid_student_id = student.kaid_student,
-                                                                               youtube_id = data[i]["video"]["youtube_id"]
-                                                                               )
+    for i in range(len(data)):
+        if data[i]["points"] >0 :
+            student_video = Student_Video.objects.create(total_seconds_watched = data[i]["seconds_watched"],
+                                                                       total_points_earned = data[i]["points"],
+                                                                       last_second_watched = data[i]["last_second_watched"],
+                                                                       is_video_complete = data[i]["completed"],
+                                                                       id_video_name_id = data[i]["video"]["id"],
+                                                                       kaid_student_id = kaid_student,
+                                                                       youtube_id = data[i]["video"]["youtube_id"]
+                                                                       )
 
-def poblar_video_playing(student, dates, session):   
-    student_videos = Student_Video.objects.filter(kaid_student_id=student.kaid_student).values('youtube_id','id_video_name_id')
+def poblar_video_playing(kaid_student, dates, session):   
+    student_videos = Student_Video.objects.filter(kaid_student_id=kaid_student).values('youtube_id','id_video_name_id')
     for i in range(len(student_videos)):
-        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId=&username="+student.name+"&email=&dt_start="+dates
+        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId"+kaid_student+"=&username=&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL2)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
@@ -236,7 +392,7 @@ def poblar_video_playing(student, dates, session):
                                                                        is_video_complete = data[j]["is_video_completed"],
                                                                        date = data[j]["time_watched"],
                                                                        id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                       kaid_student_id = student.kaid_student
+                                                                       kaid_student_id = kaid_student
                                                                        )
             
 @login_required()
