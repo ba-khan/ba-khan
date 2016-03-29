@@ -192,8 +192,9 @@ function saveNewAdmin(){
 		type: "POST",
 		data: $("#form0").serialize(),
 			success: function(response){
-				$("#hover").fadeIn().css('display', '');
-				$("#popup").fadeIn().css('display', '');
+				$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
 				$("#popup").append("<p class='response'>"+response+"</p>");
 				auxResponse = response;
 				if (auxResponse == "Administrador guardado correctamente"){
@@ -224,12 +225,14 @@ function saveData(id){
 	if (invalids>0){
 		response = "Campos inválidos";
 		$("#popup").append("<p class='response'>"+response+"</p>");
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
+		$("#close").show();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
 	}
 	else{
 		$('.response').remove();
 		$('.question').remove();
+		$("#close").hide();
 		$("#popup").append("<p class='question'>¿Desea guardar cambios de Administrador?</p>");
 		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
 		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
@@ -260,10 +263,10 @@ function confirmSave(answer,id){
 					$("#cancelDelete").remove();
 					$('.response').remove();
 					$('.question').remove();
-					
+					$("#close").fadeIn();
 					$("#popup").append("<p class='response'>"+response+"</p>");
-					$("#hover").fadeIn().css('display', '');
-					$("#popup").fadeIn().css('display', '');
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
 					
 					auxResponse = response;
 					if (auxResponse == "Nuevo Administrador guardado correctamente"){
@@ -275,8 +278,8 @@ function confirmSave(answer,id){
 		//$("#popup").fadeOut().css('display', 'none');
 	}
 	if (answer==0){
-		$("#hover").fadeOut(1000).css('display', 'none');
-		$("#popup").fadeOut(1000).css('display', 'none');
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
 	}
 }
 
@@ -294,12 +297,14 @@ function deleteData(id){
 	if (invalids>0){
 		response = "Campos inválidos";
 		$("#popup").append("<p class='response'>"+response+"</p>");
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
+		$("#close").show();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
 	}
 	else{
 		$('.response').remove();
 		$('.question').remove();
+		$("#close").hide();
 		$("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
 		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
 		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
@@ -347,8 +352,8 @@ function confirmDelete(answer,id){
 		//$("#popup").fadeOut().css('display', 'none');
 	}
 	if (answer==0){
-		$("#hover").fadeOut(1000).css('display', 'none');
-		$("#popup").fadeOut(1000).css('display', 'none');
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
 	}
 }
 
