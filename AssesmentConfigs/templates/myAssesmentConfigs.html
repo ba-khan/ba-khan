@@ -150,7 +150,7 @@ function onSlide(ui,id) {
 						</div><br>
 						<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
 						<script>slidear(0);</script>
-						<div style="float:left;margin-left:125px"><a href='javascript:saveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
+						<div style="float:left;margin-left:125px"><a href='javascript:confirmSaveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
 					</form>
 				</div>
 				<div id="skills">
@@ -277,6 +277,9 @@ function onSlide(ui,id) {
     	<div id="editConfig" style="display:none">
     		<p>¿Desea guardar los cambios de la pauta?</p>
     	</div>
+    	<div id="saveNewConfig" style="display:none">
+    		<p>¿Desea guardar la nueva pauta?</p>
+    	</div>
     </div>
 
     <div style="display: none;" id="profile-throbber2" class="profile-throbber">
@@ -357,31 +360,59 @@ function reloadLocation(){
 	    location.reload();
 	    });
 }
+
+function confirmSaveConfig(){
+	$("#close").hide();
+	$("#hover").fadeIn().css('display', '');
+	$("#popup").fadeIn().css('display', '');
+	$('.response').remove();
+	$('#deleteConfig').css('display', 'none');
+	$('#editConfig').css('display', 'none');
+	$("#acceptEdit").remove();
+	$("#cancelEdit").remove();
+	$("#saveNewConfig").css('display','');
+	$("#saveNewConfig").append("<a href='javascript:saveConfig(1)' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
+	$("#saveNewConfig").append("<a href='javascript:saveConfig(0)' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
+}
+
 var auxResponse;
-function saveConfig(id){
+function saveConfig(answer){
 	//alert("intentando guardar");
-	$.ajax({
-		url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
-		type: "POST",
-		data: $("#form0").serialize(),
-			success: function(response){
-				//alert(response);
-				$('#deleteConfig').css('display', 'none');
-				$('#editConfig').css('display', 'none');
-				$('.response').remove();
-				$("#hover").fadeIn();
-				$("#popup").fadeIn();
-				$("#popup").append("<p class='response'>"+response+"</p>");
-				auxResponse = response;
-				if (auxResponse == "Pauta guardada correctamente"){
-					$("#hover").css('pointer-events','none');
-					$("#close").css('pointer-events','none');
-					$("a").css('pointer-events','none');
-					reloadPage();
-					
+	if(answer==1){
+		$("#popup").append($('#profile-throbber2').css('display',''));
+		$("#saveNewConfig").css('display','none');
+		$.ajax({
+			url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
+			type: "POST",
+			data: $("#form0").serialize(),
+				success: function(response){
+					//alert(response);
+					$("#popup").append($('#profile-throbber2').css('display','none'));
+					$('#deleteConfig').css('display', 'none');
+					$('#editConfig').css('display', 'none');
+					$('.response').remove();
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					auxResponse = response;
+					if (auxResponse == "Pauta guardada correctamente"){
+						$("#hover").css('pointer-events','none');
+						$("#close").css('pointer-events','none');
+						$("a").css('pointer-events','none');
+						reloadPage();
+						
+					}
+					else{
+						$("#close").fadeIn();
+					}
 				}
-			}
-	});
+		});
+	}
+	else{
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+		$("#saveNewConfig").fadeOut();
+	}
 }
 
 function reloadPage(){
@@ -449,6 +480,7 @@ function editConfig(id){
 		$("#popup").fadeIn().css('display', '');
 		$('.response').remove();
 		$('#deleteConfig').css('display', 'none');
+		$('#saveNewConfig').css('display', 'none');
 		$("#acceptEdit").remove();
 		$("#cancelEdit").remove();
 		$("#editConfig").css('display','');
@@ -475,13 +507,8 @@ function confirmEdit(answer,id){
 					setTimeout(function(){
   						$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
 						$('.response').fadeIn();
-						topictreeId='#topictree'+id
-						$(topictreeId+(" ul")).css('pointer-events', 'none');
-						$(topictreeId).css('opacity', '0.8');
-						$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
-						$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
-						$(document.getElementById('editConfigButton'+id)).css('display', '');
-						$(document.getElementById('deleteConfigButton'+id)).css('display', '');
+						$("#close").fadeIn();
+						cancelEditConfig(id);
 					}, 750); 
 					
 				}
@@ -494,8 +521,9 @@ function confirmEdit(answer,id){
 		setTimeout(function() {
 		  $("#close").show();
 		}, 750);
+		cancelEditConfig(id);
 	}
-	cpestana = document.getElementById('cpestana'+id);
+	/*cpestana = document.getElementById('cpestana'+id);
 	inputs = cpestana.getElementsByTagName('input');
 	for (i=0;i<inputs.length;i++){
 		inputs[i].setAttribute("disabled","");
@@ -503,7 +531,7 @@ function confirmEdit(answer,id){
 	$( "#slider"+id ).slider( "disable" );
 	topictreeId='#topictree'+id;
 	$(topictreeId+(" ul")).css('pointer-events', 'none');
-	$(topictreeId).css('opacity', '0.8');
+	$(topictreeId).css('opacity', '0.8');*/
 
 }
 function deleteConfig(id){
@@ -514,6 +542,7 @@ function deleteConfig(id){
 		$("#deleteConfig").css('display','');
 		$('.response').remove();
 		$('#editConfig').css('display', 'none');
+		$('#saveNewConfig').css('display', 'none');
 		$("#acceptDelete").remove();
 		$("#cancelDelete").remove();
 		$("#deleteConfig").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
