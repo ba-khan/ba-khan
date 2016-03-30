@@ -147,6 +147,8 @@ class Command(BaseCommand):
                         grade.bonus_grade = (grade.performance_points * assesment.max_effort_bonus)/100
                     except:
                         grade.bonus_grade = 0
+                    grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
+                    grade.total_recomended = totalSkills
                     grade.save()
             #Aqui comienza el calculo de la bonificacion de empegno.        
             grades = Grade.objects.filter(id_assesment_id=assesment.pk)

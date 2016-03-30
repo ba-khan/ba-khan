@@ -203,6 +203,7 @@ class Grade(models.Model):
     evaluated = models.BooleanField(default=False)
     bonus_grade = models.FloatField(null=True)
     unstarted = models.IntegerField(null=True)
+    total_recomended = models.IntegerField(null=True)
     
     class Meta:
         unique_together = ('kaid_student', 'id_assesment')
