@@ -394,6 +394,16 @@ def poblar_video_playing(kaid_student, dates, session):
                                                                        id_video_name_id = student_videos[i]["id_video_name_id"],
                                                                        kaid_student_id = kaid_student
                                                                        )
+
+def coach_students(session):
+    llamada = "/api/v1/user/students"
+    jason = get_api_resource2(session,llamada,SERVER_URL2)
+    source = unicode(jason, 'ISO-8859-1')
+    data = simplejson.loads(source)
+    with open('data.txt', 'w') as outfile:
+        json.dump(data, outfile)
+    for j in range(len(data)):
+        print data[j]["username"]
             
 @login_required()
 def poblarBD(session):
@@ -424,6 +434,7 @@ def poblarBD(session):
     video_playings = Video_Playing.objects.all()
     video_playings.delete()
     '''
+    coach_students(session)
     
     #'''
     students = Student.objects.all()
