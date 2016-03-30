@@ -186,12 +186,12 @@ def paralellAssesment(assesment,students,queue):
     return queue
 def getSkillsCorrect(grade_id):
     #skls = Skill_Log.objects.filter(id_grade_id=grade_id)
-    skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct')
+    skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct','skill_log__skill_progress')
     aux = []
     for s in skls:
         #name = Skill.objects.get(pk=s.id_skill_name_id).name_spanish
         #aux2 = [s.id_grade_id,s.id_skill_name_id,s.incorrect,s.correct,name]
-        aux2 = [s['name_spanish'],s['skill_log__id_grade_id'],s['skill_log__id_skill_name_id'],s['skill_log__incorrect'],s['skill_log__correct']]
+        aux2 = [s['name_spanish'],s['skill_log__id_grade_id'],s['skill_log__id_skill_name_id'],s['skill_log__incorrect'],s['skill_log__correct'],s['skill_log__skill_progress']]
         aux.append(aux2)
     return aux
 

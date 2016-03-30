@@ -312,3 +312,4 @@ class Skill_Log(models.Model):
     correct = models.IntegerField(null=True)
     incorrect =  models.IntegerField(null=True)
     id_grade = models.ForeignKey(Grade)
+    skill_progress = models.CharField(max_length=20)
