@@ -56,9 +56,9 @@ return false;
 function fillComboBox(){
 //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
 //$('select').empty();
-$(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
-$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
-$(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
+//$(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
+//$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
+//$(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
 $(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
 var divs = document.querySelectorAll('.cuadradito');
    for (var i = 0; i < divs.length; i++) {
@@ -141,45 +141,79 @@ function drop(e){
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
-  else if($('#'+elementoArrastrado).attr('name')=='Avanzados' || $('#'+elementoArrastrado).attr('name').substring(0,17) =="SubGrupoAvanzados"){
-    removeComboBoxIntermedios(elementoArrastrado);
-    removeComboBoxReforzamiento(elementoArrastrado);
+  else if($('#'+elementoArrastrado).attr('name')=='Avanzados'){//$('#'+elementoArrastrado).attr('name').substring(0,17) =="SubGrupoAvanzados"
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    if(e.target.id=='Avanzados' ){
+    }
+    if(e.target.id=='Intermedios'){
+      removeComboBoxIntermedios(elementoArrastrado);
+    }
+    if(e.target.id=='Reforzamiento'){
+      removeComboBoxIntermedios(elementoArrastrado);
+      removeComboBoxReforzamiento(elementoArrastrado);
+    }
+    if(e.target.id.substring(0,21)=="SubGrupoReforzamiento" || e.target.id.substring(0,19)=="SubGrupoIntermedios" || e.target.id.substring(0,17) =="SubGrupoAvanzados"){
+      removeComboBoxIntermedios(elementoArrastrado);
+      removeComboBoxReforzamiento(elementoArrastrado);
+    }
+  }
+  else if($('#'+elementoArrastrado).attr('name')=='Intermedios'){
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    if(e.target.id=='Avanzados'){
+      addComboBoxIntermedios(elementoArrastrado);
+    }
+    if(e.target.id=='Intermedios'){
+    }
+    if(e.target.id=='Reforzamiento'){
+      removeComboBoxReforzamiento(elementoArrastrado);
+    }
+    if(e.target.id.substring(0,21)=="SubGrupoReforzamiento" || e.target.id.substring(0,19)=="SubGrupoIntermedios" || e.target.id.substring(0,17) =="SubGrupoAvanzados"){
+      removeComboBoxIntermedios(elementoArrastrado);
+      removeComboBoxReforzamiento(elementoArrastrado);
+    }
+  }
+  else if($('#'+elementoArrastrado).attr('name')=='Reforzamiento'){
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
     if(e.target.id=='Avanzados'){
       addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
     if(e.target.id=='Intermedios'){
-      //alert(e.target.id)
-      //addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
-  else if($('#'+elementoArrastrado).attr('name')=='Intermedios' || $('#'+elementoArrastrado).attr('name').substring(0,19)=="SubGrupoIntermedios"){
-    //removeComboBoxIntermedios(elementoArrastrado);
-    removeComboBoxReforzamiento(elementoArrastrado);
+  else if($('#'+elementoArrastrado).attr('name').substring(0,21)=="SubGrupoReforzamiento"){
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
     if(e.target.id=='Avanzados'){
-      //alert(e.target.id)
       addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
     if(e.target.id=='Intermedios'){
-      //alert(e.target.id)
-      //addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
   }
-  else if($('#'+elementoArrastrado).attr('name')=='Reforzamiento' || $('#'+elementoArrastrado).attr('name').substring(0,21)=="SubGrupoReforzamiento" ){
-    //removeComboBoxIntermedios(elementoArrastrado);
-    //removeComboBoxReforzamiento(elementoArrastrado);
+  else if($('#'+elementoArrastrado).attr('name').substring(0,19)=="SubGrupoIntermedios"){
     document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
     if(e.target.id=='Avanzados'){
       addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
     }
     if(e.target.id=='Intermedios'){
+      addComboBoxReforzamiento
+    }
+    if(e.target.id=='Reforzamiento'){
+    }
+  }
+  else if($('#'+elementoArrastrado).attr('name').substring(0,17) =="SubGrupoAvanzados"){//
+    document.getElementById(elementoArrastrado).setAttribute("name",e.target.id);
+    if(e.target.id=='Avanzados' ){
+      addComboBoxIntermedios(elementoArrastrado);
       addComboBoxReforzamiento(elementoArrastrado);
+    }
+    if(e.target.id=='Intermedios'){
+      addComboBoxIntermedios(elementoArrastrado);
+    }
+    if(e.target.id=='Reforzamiento'){
     }
   }
   //fillComboBox();
