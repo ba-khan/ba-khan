@@ -66,6 +66,7 @@
 	    	<div id="resumen_data"></div>
 	    	<h4>Histograma de notas:</h4>
 	    	<div id="resumen_graph" class="resumen_graph"></div>
+	    	<div id="skills_boxplot" class="resumen_graph"></div>
 	    	<hr><h4>Habilidades:</h4>
 	    	<div id="resumen_skill"></div>
 	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
@@ -1443,7 +1444,64 @@
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
     }
 
-    
+    function drawSkillsBoxPlot(){
+    	console.log("Highcharts");
+    	var textSkillLevels = ["No practicado", "En dificultad", "Practicado", "Nivel 1", "Nivel 2","Dominado"];
+    	$('#skills_boxplot').highcharts({
+
+	        chart: {
+	            type: 'boxplot'
+	        },
+
+	        title: {
+	            text: 'Habilidades practicadas'
+	        },
+
+	        legend: {
+	            enabled: false
+	        },
+
+	        xAxis: {
+	            categories: ['Contar hasta 10', 'Suma', 'Resta', 'Multiplicación', 'División','Contar hasta 100','Contar hasta 1000','Decimales','Recta 1','Recta 2'],
+	            title: {
+	                text: 'Habilidad: '
+	            }
+	        },
+
+	        yAxis: {
+	            title: {
+	                text: 'Nivel alcanzado'
+	            },
+	            labels: {
+		            formatter: function() {
+		                return textSkillLevels[this.value];
+		            }
+		        },
+		        tickInterval: 1,
+		        max: 5
+	        },
+
+	        series: [{
+	            name: 'Niveles',
+	            data: [
+	                [0, 2, 2, 3, 5],
+	                [1, 2, 2, 3, 4],
+	                [0, 0, 1, 2, 3],
+	                [1, 2, 3, 4, 3],
+	                [2, 2, 2, 4, 4],
+	                [0, 2, 2, 3, 3],
+	                [2, 3, 3, 3, 4],
+	                [0, 2, 2, 3, 4],
+	                [1, 2, 5, 5, 5],
+	                [0, 1, 1, 5, 5]
+	            ],
+	            tooltip: {
+	                headerFormat: '<em>Habilidad: {point.key}</em><br/>'
+	            }
+	        }]
+
+	    });
+    }
 
 
     function drawHistogram(min_grade, max_grade, grades, bins){
@@ -1987,14 +2045,23 @@
 				}
 			}
 
-			student=assesments[aux]['assesment_student']
+			//student=assesments[aux]['assesment_student']
 			$('#resumen_data').append("<p><strong> Nombre:</strong> "+assesments[aux]['name']+" </p>");
 			$('#resumen_data').append("<p><strong> Inicio:</strong> "+assesments[aux]['start_date']+" </p>");
 			$('#resumen_data').append("<p><strong> Término:</strong> "+assesments[aux]['end_date']+" </p><br>");
+			$('#resumen_data').append("<p><strong> Puntaje Máximo:</strong> "+assesments[aux]['max_grade']+" </p>");
+			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+assesments[aux]['min_grade']+" </p><br>");
 			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+assesments[aux]['max_grade']+" </p>");
 			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+assesments[aux]['min_grade']+" </p><br>");
-			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+student.length+"</p><br><hr>");
-						
+			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br><hr>");
+			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+assesments[aux]['max_grade']+" </p>");
+			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+assesments[aux]['min_grade']+" </p><br>");
+					
+			var grade_order = [];
+			for (var k=0; k<students.length; k++){
+				grade_order.push(students[k]['assesment'+id_assesment]['grade']);
+			}
+
 			$.ajax({
 				url: "{% url 'evaluations:getSkillAssesment' 1 %}",
 				async:false,
@@ -2008,14 +2075,32 @@
 					}
 				}
 			});
-			var grade_order = [];
-			for (var k=0; k<students.length; k++){
-				grade_order.push(students[k]['assesment'+id_assesment]['grade'])
-
+			
+			/*for (var k=0; k<students.length; k++){
+				grade_order.push(students[k]['assesment'+id_assesment]['grade']);
+			}*/
+			skills_sample=[];
+			console.log(students);
+			if (students){
+				console.log(students[0]['assesment'+id_assesment]["skills"]);
+				skills_sample=students[0]['assesment'+id_assesment]["skills"];
 			}
-			//console.log(grade_order);
+			skill_names=skills_sample.map(function(d){ 
+					return d[0];//the first attribute of each skills is its spanish name
+			});
+			console.log(skill_names);
+			for (var j=0; j<skills_sample.length; j++){
+				reached_skill_levels=[0,0,0,0,0,0]
+				console.log("students in skill: "+skill_names[j]);
+				for (var s=0; s<students.length; s++){
+					student_skill_level=students[s]['assesment'+id_assesment]["skills"];
+				}
+			}
+			//console.log(student);
+			drawSkillsBoxPlot();
 			drawHistogram(assesments[aux]['min_grade'],assesments[aux]['max_grade'],grade_order,10);
 			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
+
 
 		}
 
@@ -2228,7 +2313,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 <script type="text/javascript"> 
     $(document).ready(function () {
-    $("#resumen_skill").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16'})
+    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -300} })
     });
     
     var texts = document.getElementsByTagName("text");
