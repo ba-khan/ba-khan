@@ -125,19 +125,17 @@ def paralellAssesment(assesment,students,queue):
     assesment_json["end_date"]= str(assesment.end_date)
     assesment_json["assesment_student"]=[]
     grades = Grade.objects.filter(id_assesment_id=assesment.id_assesment).values('kaid_student_id','correct','incorrect','video_time','excercice_time',
-        'struggling','practiced','mastery1','mastery2','mastery3')
+        'struggling','practiced','mastery1','mastery2','mastery3','total_recomended','recomended_complete')
     dictGrades = {}
     for g in grades:
         dictGrades[g['kaid_student_id']] = (g['correct'],g['incorrect'],g['video_time'],g['excercice_time'],g['struggling'],g['practiced'],g['mastery1'],
-            g['mastery2'],g['mastery3'])
+            g['mastery2'],g['mastery3'],g['total_recomended'],g['recomended_complete'])
     i=0
     for student in students:
         student_json={}
         student_json["id"]=i
         student_json["name"]=student.name
-        completed_percentage=round(random.uniform(0,1),2)
-        total_rec=round(random.uniform(0,1),2)
-        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+
         try:
             student_json["skills_time"] = dictGrades[student.kaid_student][3]
         except:
@@ -178,6 +176,15 @@ def paralellAssesment(assesment,students,queue):
         except:
             skills_level["mastery3"] = 0
         student_json["skills_level"]=skills_level
+        try:
+            completed_percentage=dictGrades[student.kaid_student][10]/float(dictGrades[student.kaid_student][9])
+        except:
+            completed_percentage = 0
+        try:
+            total_rec=dictGrades[student.kaid_student][9]/float(1000)
+        except:
+            total_rec = 0
+        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
 
         assesment_json["assesment_student"].append(student_json)
         i+=1
@@ -186,12 +193,12 @@ def paralellAssesment(assesment,students,queue):
     return queue
 def getSkillsCorrect(grade_id):
     #skls = Skill_Log.objects.filter(id_grade_id=grade_id)
-    skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct')
+    skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct','skill_log__skill_progress')
     aux = []
     for s in skls:
         #name = Skill.objects.get(pk=s.id_skill_name_id).name_spanish
         #aux2 = [s.id_grade_id,s.id_skill_name_id,s.incorrect,s.correct,name]
-        aux2 = [s['name_spanish'],s['skill_log__id_grade_id'],s['skill_log__id_skill_name_id'],s['skill_log__incorrect'],s['skill_log__correct']]
+        aux2 = [s['name_spanish'],s['skill_log__id_grade_id'],s['skill_log__id_skill_name_id'],s['skill_log__incorrect'],s['skill_log__correct'],s['skill_log__skill_progress']]
         aux.append(aux2)
     return aux
 
@@ -217,6 +224,9 @@ def getClassStudents(request, id_class):
             mastery2 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery2',struggling=False).values('kaid_student_id').annotate(mastery2=Count('last_skill_progress'))
             mastery3 = Student_Skill.objects.filter(kaid_student__in=students,last_skill_progress='mastery3',struggling=False).values('kaid_student_id').annotate(mastery3=Count('last_skill_progress'))
             struggling = Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
+            total_recomended = Grade.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(total_recomended=Sum('total_recomended')) #Student_Skill.objects.filter(kaid_student__in=students,struggling=True).values('kaid_student_id').annotate(struggling=Count('last_skill_progress'))
+            recomended_complete = Grade.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(recomended_complete=Sum('recomended_complete'))
+
             assesments = Assesment.objects.filter(id_class_id=id_class)
             grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade','grade__teacher_grade','grade__comment').order_by('id_assesment')
             dictGrades = {}
@@ -245,6 +255,8 @@ def getClassStudents(request, id_class):
             dictMastery2 ={}
             dictMastery3 ={}
             dictStruggling ={}
+            dictTotalRecomended={}
+            dictRecomendedComplete={}
             for vid in time_video:
                 dictTotalTimeVideo[vid['kaid_student_id']] = vid['time']
             for te in time_excercice:
@@ -263,6 +275,10 @@ def getClassStudents(request, id_class):
                 dictMastery3[mas['kaid_student_id']] = mas['mastery3']
             for mas in struggling:
                 dictStruggling[mas['kaid_student_id']] = mas['struggling']
+            for total in total_recomended:
+                dictTotalRecomended[total['kaid_student_id']] = total['total_recomended']
+            for recomended in recomended_complete:
+                dictRecomendedComplete[recomended['kaid_student_id']] = recomended['recomended_complete']
             json_array=[]
             i=0
             for student in students:
@@ -270,8 +286,14 @@ def getClassStudents(request, id_class):
                 student_json["id"] = i
                 student_json['kaid'] = student.kaid_student
                 student_json["name"] = student.name
-                completed_percentage=round(random.uniform(0,1),2)
-                total_rec=round(random.uniform(0,1),2)
+                try:
+                    completed_percentage=dictRecomendedComplete[student.kaid_student]/float(dictTotalRecomended[student.kaid_student])
+                except:
+                    completed_percentage = 0
+                try:
+                    total_rec = dictTotalRecomended[student.kaid_student]/float(1000)
+                except:
+                    total_rec = 0
                 student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
                 try:
                     student_json["skills_time"] = dictTotalTimeExcercice[student.kaid_student]

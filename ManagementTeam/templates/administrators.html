@@ -170,12 +170,12 @@ input{
 
 <script>
 function showNewAdmin(){
-	$('#newAdmin').toggle('blind',1000);
+	$('#newAdmin').toggle('blind',10);
 	$('#buttonNewAdmin').hide();
-	setTimeout(toBottom, 1000);
+	setTimeout(toBottom, 10);
 	}
 function toBottom(){
-	$('html,body').animate({scrollTop: document.body.scrollHeight},"fast");
+	$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
 
 }
 

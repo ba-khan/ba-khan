@@ -184,7 +184,7 @@ class Grade(models.Model):
     id_assesment = models.ForeignKey(Assesment)
     grade = models.FloatField()
     teacher_grade = models.IntegerField(null=True)
-    performance_points = models.IntegerField()
+    performance_points = models.FloatField()
     effort_points = models.FloatField()
     recomended_complete = models.IntegerField(null=True)
     excercice_time = models.IntegerField(null=True)
@@ -203,6 +203,7 @@ class Grade(models.Model):
     evaluated = models.BooleanField(default=False)
     bonus_grade = models.FloatField(null=True)
     unstarted = models.IntegerField(null=True)
+    total_recomended = models.IntegerField(null=True)
     
     class Meta:
         unique_together = ('kaid_student', 'id_assesment')
@@ -312,3 +313,4 @@ class Skill_Log(models.Model):
     correct = models.IntegerField(null=True)
     incorrect =  models.IntegerField(null=True)
     id_grade = models.ForeignKey(Grade)
+    skill_progress = models.CharField(max_length=20)
