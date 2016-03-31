@@ -62,12 +62,12 @@ from django.db import connection
 
 import random
 
-CONSUMER_KEY = 'uMCFkRw7QSJ3WkLs' #clave generada para don UTPs
-CONSUMER_SECRET = 'tH8vhEBstXe6jFyG' #clave generada para don UTPs
+CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
+CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
     
 CALLBACK_BASE = '127.0.0.1'
-SERVER_URL = 'http://www.khanacademy.org'
-SERVER_URL2 = 'http://es.khanacademy.org'
+SERVER_URL = 'https://www.khanacademy.org'
+SERVER_URL2 = 'https://es.khanacademy.org'
     
 DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
@@ -136,16 +136,26 @@ def run_tests():
     authorize_url = service.get_authorize_url(request_token)
     print authorize_url
 
+    #webbrowser.open(authorize_url) #Abre ventana para hacer click en aceptar y loguearse
+
+
+#LINKS
+#https://github.com/Khan/khan-api/wiki/Khan-Academy-API-Authentication
+#http://es.python-requests.org/es/latest/user/quickstart.html#cabeceras-personalizadas
+#https://teamtreehouse.com/community/khan-academy-api-authentication-in-nodejs
+#http://www.pythonforbeginners.com/requests/using-requests-in-python
+
+
     #hacer peticion POST a authorize_url con los parametros request_token, user, pass
-    #webbrowser.open(authorize_url)
-    r = requests.post('http://es.khanacademy.org/api/auth2/authorize', noClickParams)
+    headers = {'content-type': 'application/json'}
+    r = requests.post('https://www.khanacademy.org/api/auth2/authorize', data=json.dumps(noClickParams), headers=headers)
     print r.url
     
     print r.text
-    #print r.status_code
-    #print r
+    print r.status_code
+    print r
 
-    #callback_server.handle_request()
+    #callback_server.handle_request() #Esto esperaba el click de aceptar
     callback_server.server_close()
 
     # 3. Get an access token.
