@@ -184,7 +184,7 @@ class Grade(models.Model):
     id_assesment = models.ForeignKey(Assesment)
     grade = models.FloatField()
     teacher_grade = models.IntegerField(null=True)
-    performance_points = models.IntegerField()
+    performance_points = models.FloatField()
     effort_points = models.FloatField()
     recomended_complete = models.IntegerField(null=True)
     excercice_time = models.IntegerField(null=True)

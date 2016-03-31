@@ -23,6 +23,8 @@ class Command(BaseCommand):
         assesments = Assesment.objects.all()#filter(end_date__lte=currentDate)
         for assesment in assesments:
             approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
+            importance_skill_level = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).importance_skill_level
+            importance_completed_rec = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).importance_completed_rec
             skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
             totalSkills = skills.count()
             grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
@@ -69,8 +71,6 @@ class Command(BaseCommand):
                 dictTimeVideo[vid['kaid_student_id']] = vid['time']
             for grade in grades_involved:
                 if grade.evaluated == False:
-                    grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)
-                    grade.grade = getGrade(approval_percentage,grade.performance_points,assesment.min_grade,assesment.max_grade,assesment.approval_grade)
                     try:
                         grade.excercice_time = dictTimeExcercice[grade.kaid_student_id]
                     except:
@@ -147,8 +147,12 @@ class Command(BaseCommand):
                         grade.bonus_grade = (grade.performance_points * assesment.max_effort_bonus)/100
                     except:
                         grade.bonus_grade = 0
+                    grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)*(importance_skill_level/float(100))
                     grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
                     grade.total_recomended = totalSkills
+                    points_recomended = grade.recomended_complete / float(grade.total_recomended) * 100
+                    total_points = grade.performance_points + (points_recomended * importance_skill_level/float(100))
+                    grade.grade = getGrade(approval_percentage,total_points,assesment.min_grade,assesment.max_grade,assesment.approval_grade)
                     grade.save()
             #Aqui comienza el calculo de la bonificacion de empegno.        
             grades = Grade.objects.filter(id_assesment_id=assesment.pk)
