@@ -109,7 +109,7 @@ def getClassSkills(request,id_class):
     return students_skills
 
 
-def paralellAssesment(assesment,students,queue):
+def parallelAssesment(assesment,students,queue):
     #print '****************inicio el thread*********************'
     inicio = time.time()
     assesment_json={}
@@ -187,6 +187,10 @@ def paralellAssesment(assesment,students,queue):
         student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
 
         assesment_json["assesment_student"].append(student_json)
+
+        print student_json
+        print "separador"
+        
         i+=1
     queue.put(assesment_json)
 
@@ -240,7 +244,7 @@ def getClassStudents(request, id_class):
             threads = []
             queue = Queue.Queue()
             for assesment in assesments:
-                t = threading.Thread(target=paralellAssesment,args=(assesment,students,queue))
+                t = threading.Thread(target=parallelAssesment,args=(assesment,students,queue))
                 threads.append(t)
                 t.start()
             for assesment in assesments:
