@@ -1863,11 +1863,6 @@
 					showAssesment(id_assesment);
 					return true					
 				});
-				$("#evCancelar").on("click",function(){
-					$('#hover').fadeOut();
-					$("#popup_error").fadeOut();
-					return false
-				});
 			}else{
 				showDiv();
 				showAssesment(id_assesment);
@@ -1881,6 +1876,7 @@
 				$("#popupEvaluacion").empty();
 	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
 	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").unbind();
 				$("#evAceptar").on("click",function(){
 					evReady=0;
 					$('#hover').fadeOut();
@@ -1907,6 +1903,7 @@
 				$("#popupEvaluacion").empty();
 	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
 	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").unbind();
 				$("#evAceptar").on("click",function(){
 					evReady=0;
 					$('#hover').fadeOut();
@@ -2395,6 +2392,11 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     $(document).ready(function () {
     $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -300} })
     });
+    $("#evCancelar").on("click",function(){
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					return false
+				});
     
     var texts = document.getElementsByTagName("text");
     var n = texts.length;
