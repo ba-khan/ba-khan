@@ -2052,15 +2052,28 @@
 					aux=i
 				}
 			}
-			min = assesments[aux]['max_grade'];
-			max = assesments[aux]['min_grade'];
+			approval_percentage = assesments[aux].approval_percentage
+			nmin = assesments[aux]['max_grade'];
+			pmin = 0;
+			nmax = assesments[aux]['min_grade'];
+			pmax = 0;
+			nmedia = (nmin-nmax)*(approval_percentage/100) + nmax;
+			aprobados = 0;
+			reprobados = 0;
 			for (var i = 0; i < students.length; i++) {
 				actualGrade = students[i]["assesment"+id_assesment].grade
-				if (actualGrade<min){
-					min=actualGrade;
+				if (actualGrade<nmin){
+					nmin=actualGrade;
+					pmin = students[i]["assesment"+id_assesment].performance_points
 				}
-				if (actualGrade>max){
-					max=actualGrade;
+				if (actualGrade>nmax){
+					nmax=actualGrade;
+					pmax = students[i]["assesment"+id_assesment].performance_points
+				}
+				if (actualGrade<nmedia){
+					reprobados++;
+				}else{
+					aprobados++;
 				}
 			};
 
@@ -2068,13 +2081,13 @@
 			$('#resumen_data').append("<p><strong> Nombre:</strong> "+assesments[aux]['name']+" </p>");
 			$('#resumen_data').append("<p><strong> Inicio:</strong> "+assesments[aux]['start_date']+" </p>");
 			$('#resumen_data').append("<p><strong> Término:</strong> "+assesments[aux]['end_date']+" </p><br>");
-			$('#resumen_data').append("<p><strong> Puntaje Máximo:</strong> "+assesments[aux]['max_grade']+" </p>");
-			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+assesments[aux]['min_grade']+" </p><br>");
-			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+max+" </p>");
-			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+min+" </p><br>");
+			$('#resumen_data').append("<p><strong> Puntaje Máximo:</strong> "+pmax+" </p>");
+			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+pmin+" </p><br>");
+			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+nmax+" </p>");
+			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+nmin+" </p><br>");
 			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br><hr>");
-			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+assesments[aux]['max_grade']+" </p>");
-			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+assesments[aux]['min_grade']+" </p><br>");
+			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+aprobados+" </p>");
+			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+reprobados+" </p><br>");
 					
 			var grade_order = [];
 			for (var k=0; k<students.length; k++){
