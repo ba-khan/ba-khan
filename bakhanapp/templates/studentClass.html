@@ -2143,9 +2143,9 @@
 				console.log(reached_skill_levels);
 				reached_skill_levels.sort(function(a, b){return a-b});
 				var min = reached_skill_levels[0];
-				var q1 = percentile(reached_skill_levels,25);
-				var median = percentile(reached_skill_levels,50);
-				var q3 =  percentile(reached_skill_levels,75);
+				var q1 = percentile(reached_skill_levels,0.25);
+				var median = percentile(reached_skill_levels,0.50);
+				var q3 =  percentile(reached_skill_levels,0.75);
 				var max = reached_skill_levels[reached_skill_levels.length-1];
 				var quartiles = [min,q1,median,q3,max];
 				console.log(quartiles);
