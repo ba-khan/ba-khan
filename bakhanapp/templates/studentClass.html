@@ -1446,6 +1446,8 @@
 
     function drawSkillsBoxPlot(skill_levels,skill_names){
     	var textSkillLevels = ["No practicado","En dificultades","Practicado","Nivel 1","Nivel 2","Dominado"];
+    	console.log(skill_names);
+    	console.log(skill_levels);
     	$('#skills_boxplot').highcharts({
 
 	        chart: {
@@ -2076,8 +2078,6 @@
 			skill_names=skills_sample.map(function(d){ 
 					return d[0];//the first attribute of each skills is its spanish name
 			});
-			console.log(skill_names);
-			console.log(students);
 			console.log('assesment'+id_assesment);
 			var all_skill_levels = [];
 			for (var j=0; j<skills_sample.length; j++){
