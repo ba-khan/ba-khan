@@ -1448,9 +1448,9 @@
     	var textSkillLevels = ["No practicado","En dificultades","Practicado","Nivel 1","Nivel 2","Dominado"];
     	console.log(skill_names);
     	console.log(skill_levels);
-    	for (var i=0;i<skill_names.length;i++){
+    	/*for (var i=0;i<skill_names.length;i++){
     		skill_names[i]=skill_names[i].substring(0,10);
-    	}
+    	}*/
     	$('#skills_boxplot').highcharts({
 
 	        chart: {
@@ -1487,7 +1487,7 @@
 
 	        series: [{
 	            name: 'Niveles',
-	            data: [skill_levels],
+	            data: skill_levels,
 	            tooltip: {
 	                headerFormat: '<em>Habilidad: {point.key}</em><br/>'
 	            }
