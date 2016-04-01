@@ -62,6 +62,8 @@ from django.db import connection
 
 import random
 
+import urlparse
+
 CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
 CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
     
@@ -79,7 +81,7 @@ def create_callback_server():
     class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         def do_GET(self):
             global VERIFIER
-
+            print "kk"
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
             VERIFIER = params['oauth_verifier'][0]
@@ -125,12 +127,13 @@ def run_tests():
 
     # 1. Get a request token.
     request_token, secret_request_token = service.get_request_token(
-        params={'oauth_callback': 'http://%s:%d/' %
-            (CALLBACK_BASE, callback_server.server_address[1])})
+        params={'oauth_callback': SERVER_URL +'/api/auth/default_callback'}) #'http://%s:%d/' %
+            #(CALLBACK_BASE, callback_server.server_address[1])})
 
     print request_token
     print secret_request_token
-    noClickParams = {'oauth_token':request_token, 'identifier':'utpbakhan', 'password':'clave1234'}
+    passw='clave1234'
+    noClickParams = {'oauth_token':request_token, 'identifier':'utpbakhan', 'password':passw}
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
@@ -147,25 +150,39 @@ def run_tests():
 
 
     #hacer peticion POST a authorize_url con los parametros request_token, user, pass
-    headers = {'content-type': 'application/json'}
-    r = requests.post('https://www.khanacademy.org/api/auth2/authorize', data=json.dumps(noClickParams), headers=headers)
+    #headers = {'content-type': 'application/json'}
+    post_url=SERVER_URL +'/api/auth2/authorize'
+    #credentials = json.dumps(noClickParams)
+    #session = requests.Session()
+    #print session
+    #r = session.post('https://www.khanacademy.org/api/auth2/authorize', data=noClickParams)#, headers=headers)
+    #session = requests.Session()
+    #print session
+    #r = session.post(post_url, data=noClickParams)
+    #print r.status_code
+
+    r = requests.post(post_url, data=noClickParams)
     print r.url
     
     print r.text
     print r.status_code
-    print r
-
+    #print r
+    access_url = urlparse.parse_qs(urlparse.urlparse(r.url).query)
+    oauth_verifier_raw = access_url["oauth_verifier"][0]
+    oauth_verifier = oauth_verifier_raw.encode('ascii','ignore')
+    print oauth_verifier
     #callback_server.handle_request() #Esto esperaba el click de aceptar
     callback_server.server_close()
 
     # 3. Get an access token.
     session = service.get_auth_session(request_token, secret_request_token,
-        params={'oauth_verifier': VERIFIER})
+        params={'oauth_verifier': oauth_verifier})
 
     # Repeatedly prompt user for a resource and make authenticated API calls.
     #print
     #while(True):
     #    get_api_resource(session)
+    print session
     return session
 
 def getTopictree():
