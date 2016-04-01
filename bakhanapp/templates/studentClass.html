@@ -1444,9 +1444,8 @@
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
     }
 
-    function drawSkillsBoxPlot(){
-    	console.log("Highcharts");
-    	var textSkillLevels = ["No practicado", "En dificultad", "Practicado", "Nivel 1", "Nivel 2","Dominado"];
+    function drawSkillsBoxPlot(skill_levels,skill_names){
+    	var textSkillLevels = ["No practicado","En dificultades","Practicado","Nivel 1","Nivel 2","Dominado"];
     	$('#skills_boxplot').highcharts({
 
 	        chart: {
@@ -1462,7 +1461,7 @@
 	        },
 
 	        xAxis: {
-	            categories: ['Contar hasta 10', 'Suma', 'Resta', 'Multiplicación', 'División','Contar hasta 100','Contar hasta 1000','Decimales','Recta 1','Recta 2'],
+	            categories: skill_names,
 	            title: {
 	                text: 'Habilidad: '
 	            }
@@ -1483,18 +1482,7 @@
 
 	        series: [{
 	            name: 'Niveles',
-	            data: [
-	                [0, 2, 2, 3, 5],
-	                [1, 2, 2, 3, 4],
-	                [0, 0, 1, 2, 3],
-	                [1, 2, 3, 4, 3],
-	                [2, 2, 2, 4, 4],
-	                [0, 2, 2, 3, 3],
-	                [2, 3, 3, 3, 4],
-	                [0, 2, 2, 3, 4],
-	                [1, 2, 5, 5, 5],
-	                [0, 1, 1, 5, 5]
-	            ],
+	            data: skill_levels,
 	            tooltip: {
 	                headerFormat: '<em>Habilidad: {point.key}</em><br/>'
 	            }
@@ -2089,15 +2077,59 @@
 					return d[0];//the first attribute of each skills is its spanish name
 			});
 			console.log(skill_names);
+			console.log(students);
+			console.log('assesment'+id_assesment);
+			var all_skill_levels = [];
 			for (var j=0; j<skills_sample.length; j++){
-				reached_skill_levels=[0,0,0,0,0,0]
+				reached_skill_levels=[]
 				console.log("students in skill: "+skill_names[j]);
 				for (var s=0; s<students.length; s++){
-					student_skill_level=students[s]['assesment'+id_assesment]["skills"];
+					student_skill_level=students[s]['assesment'+id_assesment]["skills"][j][5];
+					console.log(student_skill_level);
+					if (student_skill_level){
+						switch (student_skill_level){
+							case "unstarted":
+								reached_skill_levels.push(0);
+								//reached_skill_levels[0]++;
+								break;
+							case "struggling":
+								reached_skill_levels.push(1);
+								//reached_skill_levels[1]++;
+								break;
+							case "practiced":
+								reached_skill_levels.push(2);
+								//reached_skill_levels[2]++;
+								break;
+							case "mastery1":
+								reached_skill_levels.push(3);
+								//reached_skill_levels[3]++;
+								break;
+							case "mastery2":
+								reached_skill_levels.push(4);
+								//reached_skill_levels[4]++;
+								break;
+							case "mastery3":
+								reached_skill_levels.push(5);
+								//reached_skill_levels[4]++;
+								break;
+							default:
+								reached_skill_levels.push(0);
+								//reached_skill_levels[0]++;
+						}
+					}else{
+						reached_skill_levels.push(0);
+					}
+					
 				}
+				console.log("reached_skill_levels");
+				console.log(reached_skill_levels);
+				reached_skill_levels.sort(function(a, b){return a-b});
+				all_skill_levels.push(reached_skill_levels);
 			}
+			console.log(all_skill_levels);
 			//console.log(student);
-			drawSkillsBoxPlot();
+			drawSkillsBoxPlot(all_skill_levels,skill_names);
+			//drawSkillsBoxPlot();
 			drawHistogram(assesments[aux]['min_grade'],assesments[aux]['max_grade'],grade_order,10);
 			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
 
