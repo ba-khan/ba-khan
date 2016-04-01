@@ -1444,6 +1444,21 @@
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
     }
 
+    function percentile(arr, p) {
+	    if (arr.length === 0) return 0;
+	    if (typeof p !== 'number') throw new TypeError('p must be a number');
+	    if (p <= 0) return arr[0];
+	    if (p >= 1) return arr[arr.length - 1];
+
+	    var index = arr.length * p,
+	        lower = Math.floor(index),
+	        upper = lower + 1,
+	        weight = index % 1;
+
+	    if (upper >= arr.length) return arr[lower];
+	    return arr[lower] * (1 - weight) + arr[upper] * weight;
+	}
+
     function drawSkillsBoxPlot(skill_levels,skill_names){
     	var textSkillLevels = ["No practicado","En dificultades","Practicado","Nivel 1","Nivel 2","Dominado"];
     	console.log(skill_names);
@@ -2127,7 +2142,13 @@
 				console.log("reached_skill_levels");
 				console.log(reached_skill_levels);
 				reached_skill_levels.sort(function(a, b){return a-b});
-				all_skill_levels.push(reached_skill_levels);
+				var min = reached_skill_levels[0];
+				var q1 = percentile(reached_skill_levels,25);
+				var median = percentile(reached_skill_levels,50);
+				var q3 =  percentile(reached_skill_levels,75);
+				var max = reached_skill_levels[reached_skill_levels.length-1];
+				var quartiles = [min,q1,median,q3,max];
+				all_skill_levels.push(quartiles);
 			}
 			console.log(all_skill_levels);
 			//console.log(student);
