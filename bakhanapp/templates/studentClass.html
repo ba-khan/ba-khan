@@ -1456,7 +1456,7 @@
 	        weight = index % 1;
 
 	    if (upper >= arr.length) return arr[lower];
-	    return arr[lower] * (1 - weight) + arr[upper] * weight;
+	    return arr[lower]; //* (1 - weight) + arr[upper] * weight;
 	}
 
     function drawSkillsBoxPlot(skill_levels,skill_names){
@@ -2100,10 +2100,9 @@
 			var all_skill_levels = [];
 			for (var j=0; j<skills_sample.length; j++){
 				reached_skill_levels=[]
-				console.log("students in skill: "+skill_names[j]);
 				for (var s=0; s<students.length; s++){
 					student_skill_level=students[s]['assesment'+id_assesment]["skills"][j][5];
-					console.log(student_skill_level);
+					//console.log(student_skill_level);
 					if (student_skill_level){
 						switch (student_skill_level){
 							case "unstarted":
