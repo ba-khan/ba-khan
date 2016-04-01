@@ -1863,11 +1863,6 @@
 					showAssesment(id_assesment);
 					return true					
 				});
-				$("#evCancelar").on("click",function(){
-					$('#hover').fadeOut();
-					$("#popup_error").fadeOut();
-					return false
-				});
 			}else{
 				showDiv();
 				showAssesment(id_assesment);
@@ -1881,6 +1876,7 @@
 				$("#popupEvaluacion").empty();
 	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
 	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").unbind();
 				$("#evAceptar").on("click",function(){
 					evReady=0;
 					$('#hover').fadeOut();
@@ -1907,6 +1903,7 @@
 				$("#popupEvaluacion").empty();
 	    		$("#popupEvaluacion").append("<p>Se descartaran los cambios de la nueva evaluación no guardada</p>");
 	    		$("#popup_error").fadeIn().css('display', '');
+				$("#evAceptar").unbind();
 				$("#evAceptar").on("click",function(){
 					evReady=0;
 					$('#hover').fadeOut();
@@ -2052,18 +2049,42 @@
 					aux=i
 				}
 			}
+			approval_percentage = assesments[aux].approval_percentage
+			nmin = assesments[aux]['max_grade'];
+			pmin = 0;
+			nmax = assesments[aux]['min_grade'];
+			pmax = 0;
+			nmedia = (nmin-nmax)*(approval_percentage/100) + nmax;
+			aprobados = 0;
+			reprobados = 0;
+			for (var i = 0; i < students.length; i++) {
+				actualGrade = students[i]["assesment"+id_assesment].grade
+				if (actualGrade<nmin){
+					nmin=actualGrade;
+					pmin = students[i]["assesment"+id_assesment].performance_points
+				}
+				if (actualGrade>nmax){
+					nmax=actualGrade;
+					pmax = students[i]["assesment"+id_assesment].performance_points
+				}
+				if (actualGrade<nmedia){
+					reprobados++;
+				}else{
+					aprobados++;
+				}
+			};
 
 			//student=assesments[aux]['assesment_student']
 			$('#resumen_data').append("<p><strong> Nombre:</strong> "+assesments[aux]['name']+" </p>");
 			$('#resumen_data').append("<p><strong> Inicio:</strong> "+assesments[aux]['start_date']+" </p>");
 			$('#resumen_data').append("<p><strong> Término:</strong> "+assesments[aux]['end_date']+" </p><br>");
-			$('#resumen_data').append("<p><strong> Puntaje Máximo:</strong> "+assesments[aux]['max_grade']+" </p>");
-			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+assesments[aux]['min_grade']+" </p><br>");
-			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+assesments[aux]['max_grade']+" </p>");
-			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+assesments[aux]['min_grade']+" </p><br>");
+			$('#resumen_data').append("<p><strong> Puntaje Máximo:</strong> "+pmax+" </p>");
+			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+pmin+" </p><br>");
+			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+nmax+" </p>");
+			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+nmin+" </p><br>");
 			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br><hr>");
-			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+assesments[aux]['max_grade']+" </p>");
-			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+assesments[aux]['min_grade']+" </p><br>");
+			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+aprobados+" </p>");
+			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+reprobados+" </p><br>");
 					
 			var grade_order = [];
 			for (var k=0; k<students.length; k++){
@@ -2371,6 +2392,11 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     $(document).ready(function () {
     $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -300} })
     });
+    $("#evCancelar").on("click",function(){
+					$('#hover').fadeOut();
+					$("#popup_error").fadeOut();
+					return false
+				});
     
     var texts = document.getElementsByTagName("text");
     var n = texts.length;
