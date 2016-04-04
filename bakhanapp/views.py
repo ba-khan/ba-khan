@@ -92,7 +92,7 @@ def teacher(request):
 @login_required()
 def getTeacherClasses(request):
     ##request.session.set_expiry(timeSleep)
-    print request.user.user_profile.kaid
+    #print request.user.user_profile.kaid
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -188,8 +188,8 @@ def parallelAssesment(assesment,students,queue):
 
         assesment_json["assesment_student"].append(student_json)
 
-        print student_json
-        print "separador"
+        #print student_json
+        #print "separador"
         
         i+=1
     queue.put(assesment_json)
