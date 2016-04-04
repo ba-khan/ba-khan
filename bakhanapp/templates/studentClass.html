@@ -1930,7 +1930,50 @@
 			}
 		}
 		function showAssesment(id_assesment){	
-			editAssesment(id_assesment);
+			$.ajax({
+				url: "{% url 'evaluations:getAssesment' %}",
+				async:false,
+				type: "POST",
+				data: {assesment:id_assesment},
+				success: function(response){
+					json_assesment=JSON.parse(response);
+					$("input[name='input_nombre']").val(json_assesment[0]['fields']['name']);
+					$("input[name='fecha_inicio']").val(json_assesment[0]['fields']['start_date']);
+					$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
+					$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
+					$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
+					$("input[name='nota_aprobacion']").val(json_assesment[0]['fields']['approval_grade']);
+					$("input[name='bono_esfuerzo']").val(json_assesment[0]['fields']['max_effort_bonus']);
+					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
+					$('#comboBox').prop('disabled', true);
+					$('#estudiantesEvaluados').empty();
+					$('#estudiantesEvaluados').append('<strong>Estudiantes Calificados</strong>');
+				}
+			});
+			M_student = [];
+			$.ajax({
+				url: "{% url 'evaluations:getStudentAssesment' %}",
+				async:false,
+				type: "POST",
+				data: {assesment:id_assesment},
+				success: function(response){
+					json_student=JSON.parse(response);
+					for (i=0;i<json_student.length;i++){
+						M_student.push(json_student[i]['fields']['kaid_student']);
+					}
+				}
+			});
+			{% if students %}
+				$("#sinEvaluar").empty();
+				$("#Evaluados").empty();
+				{% for student in students %}
+				if(M_student.indexOf("{{student.kaid_student}}") != -1){
+					$("#Evaluados").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+				}else{
+					$("#sinEvaluar").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+				}
+				{% endfor %}
+			{% endif %}
 			$("input[name='input_nombre']").prop('disabled', true);
 			$("input[name='fecha_inicio']").prop('disabled', true);
 			$("input[name='fecha_termino']").prop('disabled', true);
@@ -1940,6 +1983,7 @@
 			$("input[name='bono_esfuerzo']").prop('disabled', true);
 			$('#comboBox').prop('disabled', true);
 			$('#button_editar').hide()
+			$('#button_realizar').hide()
 
 		}
 		function editAssesment(id_assesment){	
