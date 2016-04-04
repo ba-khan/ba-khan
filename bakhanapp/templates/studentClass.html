@@ -37,25 +37,27 @@
 
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
-    	<div style="align:left;">
+    	<div style="align:center;margin-left:15%;width:90%">
 	    	<form method="post" id='formGrade'>{% csrf_token %}
 				<div id="popup_nombre"><p style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
-				<p style="margin:0px;">Nota:
-					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
+				<p>Nota:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:385px;" disabled/></p>
+				<p>Bonificación por Esfuerzo:
+					<input name="input_bonificacion" id="input_bonificacion" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:255px;" disabled/>
 				</p>
-				<p>Bonificación por Esfuerzo
-					<input name="input_bonificacion" id="input_bonificacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
-				</p>
+				<p>--------------------------------------------------------------------------------------------------------------</p>
+				<p>Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
 				<p><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
-				<p>Bonificación del Profesor
-					<input name="input_grade_teacher" id="input_grade_teacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+				<p>Bonificación del Profesor:
+					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:256px;"/>
 				</p>
-				<p style="margin-top:10px;margin-bottom:0px;">Comentario
-					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:550px;height:50px;padding-top:5px"></textarea>
+				<p>--------------------------------------------------------------------------------------------------------------</p>
+				<p>Nota Final: <input class="vaciar" id="final" type="text" style="width:30px;padding:5px;margin-left:348px;" disabled/></p>
+				<p style="margin-top:10px;margin-bottom:0px;">Comentario:
+					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:440px;height:50px;padding-top:5px"></textarea>
 					<input name="input_comment" class="vaciar" id="input_comment" type="text" style="display:none;"/>
 				</p>
 			</form>
-			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" value="Modificar Nota"></div>
+			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" style="margin-left:-100px;" value="Modificar Nota"></div>
     	</div>
     </div>
 
@@ -119,12 +121,12 @@
 			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Calificados</strong></div>	
 			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
 		</div>
-	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
+	    <div class="flechas"><IMG id='flechaTodos' style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
 	    <div>
 			<div id="estudiantesEvaluados" style="padding-left:220px;margin-bottom:-10px"></div>	
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 		</div>
-		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
+		<div class="flechas"><IMG id='flechaNinguno' style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div class="cntFechas" style="margin-left:200px;margin-right: 100px;">
 				<div style="height:50px;width:200px;" class="fechas">
 					<p class="label_input"><strong>Fecha de Inicio</strong></p>
@@ -271,16 +273,22 @@
 	for (i=0;i<students.length;i++){
 		cont=0;
 		average=0;
-		for(k=0;k<assesments.length;k++){
-			aux=students[i]["assesment"+assesments[k]['id']].grade;
-			if(aux=!null){
-				average=average+students[i]["assesment"+assesments[k]['id']].grade;
-				cont=cont+1;
+		if(assesments.length > 0){
+			for(k=0;k<assesments.length;k++){
+				aux=students[i]["assesment"+assesments[k]['id']].grade;
+				if(aux=!null){
+					average=average+students[i]["assesment"+assesments[k]['id']].grade;
+					cont=cont+1;
+				}
 			}
+			average=Math.round((average/cont)*10)/10;
+			averages.push(average);
+			students[i]['average']=(average);
+		}else{
+			average='---';
+			averages.push(average);
+			students[i]['average']=(average);
 		}
-		average=Math.round((average/cont)*10)/10;
-		averages.push(average);
-		students[i]['average']=(average);
 	}
 
 	//Sort assesments array by their creation date
@@ -1814,6 +1822,16 @@
 			$('#popup').fadeOut();
 		}
 		function nuevaEvaluacion(){
+			$("#flechaTodos").attr('onClick','EvaluarTodos()');
+			$("#flechaNinguno").attr('onClick','noEvaluarTodos()');
+			$("input[name='input_nombre']").prop('disabled', false);
+			$("input[name='fecha_inicio']").prop('disabled', false);
+			$("input[name='fecha_termino']").prop('disabled', false);
+			$("input[name='nota_maxima']").prop('disabled', false);
+			$("input[name='nota_minima']").prop('disabled', false);
+			$("input[name='nota_aprobacion']").prop('disabled', false);
+			$("input[name='bono_esfuerzo']").prop('disabled', false);
+			$('#comboBox').prop('disabled', false);
 			showDiv();
 			evReady = 1;
 			$('#estudiantesEvaluados').empty();
@@ -1922,7 +1940,50 @@
 			}
 		}
 		function showAssesment(id_assesment){	
-			editAssesment(id_assesment);
+			$.ajax({
+				url: "{% url 'evaluations:getAssesment' %}",
+				async:false,
+				type: "POST",
+				data: {assesment:id_assesment},
+				success: function(response){
+					json_assesment=JSON.parse(response);
+					$("input[name='input_nombre']").val(json_assesment[0]['fields']['name']);
+					$("input[name='fecha_inicio']").val(json_assesment[0]['fields']['start_date']);
+					$("input[name='fecha_termino']").val(json_assesment[0]['fields']['end_date']);
+					$("input[name='nota_maxima']").val(json_assesment[0]['fields']['max_grade']);
+					$("input[name='nota_minima']").val(json_assesment[0]['fields']['min_grade']);
+					$("input[name='nota_aprobacion']").val(json_assesment[0]['fields']['approval_grade']);
+					$("input[name='bono_esfuerzo']").val(json_assesment[0]['fields']['max_effort_bonus']);
+					$("#comboBox option[value="+json_assesment[0]['fields']['id_assesment_conf']+"]").prop('selected', 'selected').change();
+					$('#comboBox').prop('disabled', true);
+					$('#estudiantesEvaluados').empty();
+					$('#estudiantesEvaluados').append('<strong>Estudiantes Calificados</strong>');
+				}
+			});
+			M_student = [];
+			$.ajax({
+				url: "{% url 'evaluations:getStudentAssesment' %}",
+				async:false,
+				type: "POST",
+				data: {assesment:id_assesment},
+				success: function(response){
+					json_student=JSON.parse(response);
+					for (i=0;i<json_student.length;i++){
+						M_student.push(json_student[i]['fields']['kaid_student']);
+					}
+				}
+			});
+			{% if students %}
+				$("#sinEvaluar").empty();
+				$("#Evaluados").empty();
+				{% for student in students %}
+				if(M_student.indexOf("{{student.kaid_student}}") != -1){
+					$("#Evaluados").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+				}else{
+					$("#sinEvaluar").append("<div title='{{ student.name }}' class='cuadradito' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
+				}
+				{% endfor %}
+			{% endif %}
 			$("input[name='input_nombre']").prop('disabled', true);
 			$("input[name='fecha_inicio']").prop('disabled', true);
 			$("input[name='fecha_termino']").prop('disabled', true);
@@ -1932,9 +1993,23 @@
 			$("input[name='bono_esfuerzo']").prop('disabled', true);
 			$('#comboBox').prop('disabled', true);
 			$('#button_editar').hide()
+			$('#button_realizar').hide()
+			$("#flechaTodos").attr('onClick','disabled');
+			$("#flechaNinguno").attr('onClick','disabled');
+
 
 		}
 		function editAssesment(id_assesment){	
+			$("#flechaTodos").attr('onClick','EvaluarTodos()');
+			$("#flechaNinguno").attr('onClick','noEvaluarTodos()');
+			$("input[name='input_nombre']").prop('disabled', false);
+			$("input[name='fecha_inicio']").prop('disabled', false);
+			$("input[name='fecha_termino']").prop('disabled', false);
+			$("input[name='nota_maxima']").prop('disabled', false);
+			$("input[name='nota_minima']").prop('disabled', false);
+			$("input[name='nota_aprobacion']").prop('disabled', false);
+			$("input[name='bono_esfuerzo']").prop('disabled', false);
+			$('#comboBox').prop('disabled', false);
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
@@ -2382,6 +2457,16 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   	if( $('#contenido_a_mostrar').is(":visible") ){
     	$('#contenido_a_mostrar').toggle('blind',1000)
 	}
+  }
+  function autoCalculateGrade(){
+  	sugerida = parseFloat($('#input_grade').val()) + parseFloat($('#input_bonificacion').val());
+  	autoGrade = sugerida + parseFloat($('#input_grade_teacher').val());
+  	$('#sugerida').val(sugerida);
+  	if (autoGrade>0){
+  		$('#final').val(autoGrade);
+  	}else{
+  		$('#final').val(sugerida);
+  	}
   }
 
 
