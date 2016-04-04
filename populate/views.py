@@ -333,13 +333,18 @@ def poblar_topictree(session,buscar, reemplazar):
                 new_subtopic = Subtopic(id_subtopic_name=aux1,name_spanish=aux2,id_topic_name_id=aux3)
                 new_subtopic.save()
                 '''
-                cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
+                skills = get_api_resource2(session,"/api/v1/topic/"+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL)
+                data_skills = simplejson.loads(skills)
+                for p in range(len(data_skills)):
+                    print data_skills[p]["name"]
+                    Skill.objects.filter(id_skill_name=data_skills[p]["content_id"]).update(name=data_skills[p]["name"])
+                '''cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
                 print cant_videos
                 for l in range(0,cant_videos):
                     #consulta = """UPDATE bakhanapp_video SET name_spanish = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["translated_title"].replace(buscar,reemplazar)+"""' WHERE id_video_name = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["id"]+"""';"""
                     #cur.execute(consulta)
                     #conn.commit()
-                    '''
+                    
                     if (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Exercise"):
                         aux1 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
@@ -353,7 +358,7 @@ def poblar_topictree(session,buscar, reemplazar):
                         new_subtopic_skill = Subtopic_Skill(id_skill_name_id=aux4,id_subtopic_name_id=aux5)
                         new_subtopic_skill.save()
                         id_subtopic_skills+=1
-                    '''
+                    
                     if (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Video"):
                         aux1 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
@@ -366,6 +371,7 @@ def poblar_topictree(session,buscar, reemplazar):
                         new_subtopic_video = Subtopic_Video(id_subtopic_name_id=aux4,id_video_name_id=aux5)
                         new_subtopic_video.save()
                         id_subtopic_videos+=1
+                    '''
                         
                         
 
@@ -532,7 +538,7 @@ def poblarBD(session):
     threads = []
     students = Student.objects.all()
     
-    for i in range(200,len(students)):
+    for i in range(50):
         print i
         t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
         threads.append(t)
@@ -565,7 +571,7 @@ def threadPopulate(students,i,dates,session):
     #    print i
     #poblar_student_skill(students[i].kaid_student, dates, session) #listo
     print students[i].name
-    #poblar_skill_attempts(students[i].name, dates, session) 
+    poblar_skill_attempts(students[i].name, dates, session) 
     #poblar_skill_progress(students[i].kaid_student, dates, session)
     #poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
     #poblar_video_playing(students[i].name,students[i].kaid_student, dates, session) #listo
