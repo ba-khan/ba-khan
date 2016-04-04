@@ -37,20 +37,22 @@
 
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
-    	<div style="align:left;">
+    	<div style="align:center;margin-left:15%;width:90%">
 	    	<form method="post" id='formGrade'>{% csrf_token %}
 				<div id="popup_nombre"><p style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
-				<p style="margin:0px;">Nota:
-					<input name="input_grade" id="input_grade" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
+				<p>Nota:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:160px;" disabled/></p>
+				<p>Bonificación por Esfuerzo:
+					<input name="input_bonificacion" id="input_bonificacion" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:30px;" disabled/>
 				</p>
-				<p>Bonificación por Esfuerzo
-					<input name="input_bonificacion" id="input_bonificacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px" disabled/>
-				</p>
+				<p>----------------------------------------------------------</p>
+				<p>Nota sugerida: <input class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:98px;" disabled/></p>
 				<p><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
-				<p>Bonificación del Profesor
-					<input name="input_grade_teacher" id="input_grade_teacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="align:left;width:30px;padding:5px"/>
+				<p>Bonificación del Profesor:
+					<input name="input_grade_teacher" id="input_grade_teacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:30px;margin-left:30px;"/>
 				</p>
-				<p style="margin-top:10px;margin-bottom:0px;">Comentario
+				<p>----------------------------------------------------------</p>
+				<p>Nota Final: <input class="vaciar" type="text" style="width:30px;padding:5px;margin-left:123px;" disabled/></p>
+				<p style="margin-top:10px;margin-bottom:0px;">Comentario:
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:550px;height:50px;padding-top:5px"></textarea>
 					<input name="input_comment" class="vaciar" id="input_comment" type="text" style="display:none;"/>
 				</p>
