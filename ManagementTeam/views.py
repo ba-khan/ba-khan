@@ -26,7 +26,7 @@ import json
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def getAdministrators(request):
-    request.session.set_expiry(timeSleep)
+    #request.session.set_expiry(timeSleep)
     try:
         teacher = Teacher.objects.get(email=request.user.email)
     except:

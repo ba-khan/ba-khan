@@ -103,7 +103,7 @@ def getMakedGroup(request,id_class):
 
 @login_required()
 def getGroups(request, id_class):
-    request.session.set_expiry(timeSleep)
+    #request.session.set_expiry(timeSleep)
     topictree=getTopictree('math')
     g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)

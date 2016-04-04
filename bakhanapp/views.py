@@ -91,7 +91,7 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
-    request.session.set_expiry(timeSleep)
+    ##request.session.set_expiry(timeSleep)
     print request.user.user_profile.kaid
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
@@ -209,7 +209,7 @@ def getSkillsCorrect(grade_id):
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado y carga el dashboard
-    request.session.set_expiry(600)#10 minutos
+    #request.session.set_expiry(timeSleep)#10 minutos
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     try:
