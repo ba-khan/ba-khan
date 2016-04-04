@@ -2002,6 +2002,14 @@
 		function editAssesment(id_assesment){	
 			$("#flechaTodos").attr('onClick','EvaluarTodos()');
 			$("#flechaNinguno").attr('onClick','noEvaluarTodos()');
+			$("input[name='input_nombre']").prop('disabled', false);
+			$("input[name='fecha_inicio']").prop('disabled', false);
+			$("input[name='fecha_termino']").prop('disabled', false);
+			$("input[name='nota_maxima']").prop('disabled', false);
+			$("input[name='nota_minima']").prop('disabled', false);
+			$("input[name='nota_aprobacion']").prop('disabled', false);
+			$("input[name='bono_esfuerzo']").prop('disabled', false);
+			$('#comboBox').prop('disabled', false);
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
