@@ -121,12 +121,12 @@
 			<div style="padding-left:220px;margin-bottom:-10px"><strong>Estudiantes No Calificados</strong></div>	
 			<div id="sinEvaluar" class="sinEvaluar" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>
 		</div>
-	    <div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
+	    <div class="flechas"><IMG id='flechaTodos' style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5b.svg'%}" onClick="EvaluarTodos()"></div>
 	    <div>
 			<div id="estudiantesEvaluados" style="padding-left:220px;margin-bottom:-10px"></div>	
 			<div id="Evaluados" class="Evaluados" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div>				
 		</div>
-		<div class="flechas"><IMG style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
+		<div class="flechas"><IMG id='flechaNinguno' style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div class="cntFechas" style="margin-left:200px;margin-right: 100px;">
 				<div style="height:50px;width:200px;" class="fechas">
 					<p class="label_input"><strong>Fecha de Inicio</strong></p>
@@ -1984,9 +1984,14 @@
 			$('#comboBox').prop('disabled', true);
 			$('#button_editar').hide()
 			$('#button_realizar').hide()
+			$("#flechaTodos").attr('onClick','disabled');
+			$("#flechaNinguno").attr('onClick','disabled');
+
 
 		}
 		function editAssesment(id_assesment){	
+			$("#flechaTodos").attr('onClick','EvaluarTodos()');
+			$("#flechaNinguno").attr('onClick','noEvaluarTodos()');
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
