@@ -271,16 +271,22 @@
 	for (i=0;i<students.length;i++){
 		cont=0;
 		average=0;
-		for(k=0;k<assesments.length;k++){
-			aux=students[i]["assesment"+assesments[k]['id']].grade;
-			if(aux=!null){
-				average=average+students[i]["assesment"+assesments[k]['id']].grade;
-				cont=cont+1;
+		if(assesments.length > 0){
+			for(k=0;k<assesments.length;k++){
+				aux=students[i]["assesment"+assesments[k]['id']].grade;
+				if(aux=!null){
+					average=average+students[i]["assesment"+assesments[k]['id']].grade;
+					cont=cont+1;
+				}
 			}
+			average=Math.round((average/cont)*10)/10;
+			averages.push(average);
+			students[i]['average']=(average);
+		}else{
+			average='---';
+			averages.push(average);
+			students[i]['average']=(average);
 		}
-		average=Math.round((average/cont)*10)/10;
-		averages.push(average);
-		students[i]['average']=(average);
 	}
 
 	//Sort assesments array by their creation date
