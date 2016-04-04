@@ -64,6 +64,8 @@ import random
 
 import urlparse
 
+import threading
+
 CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
 CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
     
@@ -237,35 +239,62 @@ def poblar_skill():
         conn.commit()
     '''
 
+def poblar_student_skill(kaid_student, dates, session):
+    llamada = "/api/v1/user/exercises?kaid="+kaid_student
+    jason = get_api_resource2(session,llamada,SERVER_URL2)
+    source = unicode(jason, 'ISO-8859-1')
+    data = simplejson.loads(source)
+    for i in range(len(data)):
+        #if data[i]["points"] >0 :
+        try:
+            student_skill = Student_Skill(total_done = data[i]["total_done"],
+                                                                       total_correct = data[i]["total_correct"],
+                                                                       streak = data[i]["streak"],
+                                                                       longest_streak = data[i]["longest_streak"],
+                                                                       last_skill_progress = data[i]["exercise_progress"]["level"],
+                                                                       total_hints = data[i]["last_count_hints"],
+                                                                       struggling = data[i]["exercise_states"]["struggling"],
+                                                                       id_skill_name_id = data[i]["exercise_model"]["id"],
+                                                                       kaid_student_id = kaid_student
+                                                                       )
+            student_skill.save()
+        except:
+            #pass
+            print "skill de otra materia"
+
 def poblar_skill_attempts(kaid_student, dates, session):
     student_skills = Student_Skill.objects.all()
     for i in range(len(student_skills)):
         skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
-        print skills[0]["name"]
-        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId="+kaid_student+"&username=&email=&dt_start="+dates
+        print skills[0]["id_skill_name"]
+        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+kaid_student+"&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
         for j in range(len(data)):
-            print data[j]["problem_number"]
+            #print data[j]["problem_number"]
+            try:
+                skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
+                                                                       mission = data[j]["mission"],
+                                                                       time_taken = data[j]["time_taken"],
+                                                                       count_hints = data[j]["count_hints"],
+                                                                       skipped = data[j]["skipped"],
+                                                                       points_earned = 0,
+                                                                       date = data[j]["time_done"][:10],
+                                                                       correct = data[j]["correct"],
+                                                                       id_skill_name_id = skills[0]["id_skill_name"],
+                                                                       kaid_student_id = data[j]["kaid"],
+                                                                       problem_number = data[j]["problem_number"]
+                                                                       )
+                skill_attempts.save()
+            except:
+                pass
+                print "otra materia (?)"
 
-            skill_attempts = Skill_Attempt.objects.create(count_attempts = data[j]["count_attempts"],
-                                                                   mission = data[j]["mission"],
-                                                                   time_taken = data[j]["time_taken"],
-                                                                   count_hints = data[j]["count_hints"],
-                                                                   skipped = data[j]["skipped"],
-                                                                   points_earned = 0,
-                                                                   date = data[j]["time_done"][:10],
-                                                                   correct = data[j]["correct"],
-                                                                   id_skill_name_id = skills[0]["id_skill_name"],
-                                                                   kaid_student_id = data[j]["kaid"],
-                                                                   problem_number = data[j]["problem_number"]
-                                                                   )
-
-def poblar_topictree(session,buscar, reemplazar,cur,conn):
+def poblar_topictree(session,buscar, reemplazar):
     topictree = get_api_resource2(session,"/api/v1/topictree",SERVER_URL2)
-    source_topictree = unicode(topictree, 'ISO-8859-1')
-    data_topictree = simplejson.loads(source_topictree)
+    #source_topictree = unicode(topictree, 'ISO-8859-1')
+    data_topictree = simplejson.loads(topictree)
     #print data_topictree[i]["translated_title"]
 
     chapters=""
@@ -279,39 +308,68 @@ def poblar_topictree(session,buscar, reemplazar,cur,conn):
     id_subtopic_videos = 1
     cant_chapters = len(data_topictree["children"][1]["children"])
     for i in range(0,cant_chapters):
-        #chapters = chapters+(data["children"][1]["children"][i]["slug"])+";"
-        #chapters = chapters+(data["children"][1]["children"][i]["translated_title"])+";"
-        #chapters = chapters+(data["children"][1]["slug"])+"\n"
+        '''
+        aux1 = (data_topictree["children"][1]["children"][i]["slug"])
+        aux2 = (data_topictree["children"][1]["children"][i]["translated_title"])
+        aux3 = (data_topictree["children"][1]["slug"])
+        new_chapter = Chapter(id_chapter_name=aux1,name_spanish=aux2,id_subject_name_id=aux3)
+        new_chapter.save()
+        '''
         cant_topic = len(data_topictree["children"][1]["children"][i]["children"])
         for j in range(0,cant_topic):
-            #topics = topics+(data["children"][1]["children"][i]["children"][j]["slug"])+";"
-            #topics = topics+(data["children"][1]["children"][i]["children"][j]["translated_title"])+";"
-            #topics = topics+(data["children"][1]["children"][i]["slug"])+"\n"
+            '''
+            aux1 = data_topictree["children"][1]["children"][i]["children"][j]["slug"]
+            aux2 = data_topictree["children"][1]["children"][i]["children"][j]["translated_title"]
+            aux3 = data_topictree["children"][1]["children"][i]["slug"]
+            new_topic = Topic(id_topic_name=aux1,name_spanish=aux2,id_chapter_name_id=aux3)
+            new_topic.save()
+            '''
             cant_subtopic = len(data_topictree["children"][1]["children"][i]["children"][j]["children"])
             for k in range(0,cant_subtopic):
-                #subtopics = subtopics+(data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])+";"
-                #subtopics = subtopics+(data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])+";"
-                #subtopics = subtopics+(data["children"][1]["children"][i]["children"][j]["slug"])+"\n"
-                cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"])
+                '''
+                aux1 = data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]
+                aux2 = data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"]
+                aux3 = data_topictree["children"][1]["children"][i]["children"][j]["slug"]
+                new_subtopic = Subtopic(id_subtopic_name=aux1,name_spanish=aux2,id_topic_name_id=aux3)
+                new_subtopic.save()
+                '''
+                cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
+                print cant_videos
                 for l in range(0,cant_videos):
-                    consulta = """UPDATE bakhanapp_video SET name_spanish = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["translated_title"].replace(buscar,reemplazar)+"""' WHERE id_video_name = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["id"]+"""';"""
-                    cur.execute(consulta)
-                    conn.commit()
+                    #consulta = """UPDATE bakhanapp_video SET name_spanish = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["translated_title"].replace(buscar,reemplazar)+"""' WHERE id_video_name = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["id"]+"""';"""
+                    #cur.execute(consulta)
+                    #conn.commit()
+                    '''
                     if (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Exercise"):
-                        skills = skills+(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])+";"
-                        skills = skills+(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])+"\n"
-                        #subtopic_skills = subtopic_skills+(str)(id_subtopic_skills)+";"
-                        subtopic_skills = subtopic_skills+(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])+";"
-                        subtopic_skills = subtopic_skills+(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])+"\n"
+                        aux1 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
+                        aux2 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
+                        aux3 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
+                        new_skill = Skill(id_skill_name=aux1,name_spanish=aux2,name=aux3)
+                        new_skill.save()
+                        print aux2
+
+                        aux4 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
+                        aux5 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
+                        new_subtopic_skill = Subtopic_Skill(id_skill_name_id=aux4,id_subtopic_name_id=aux5)
+                        new_subtopic_skill.save()
                         id_subtopic_skills+=1
+                    '''
                     if (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Video"):
-                        videos = videos+(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])+";"
-                        videos = videos+(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])+"\n"
-                        #subtopic_videos = subtopic_videos+(str)(id_subtopic_videos)+";"
-                        #subtopic_videos = subtopic_videos+(data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])+";"
-                        #subtopic_videos = subtopic_videos+(data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])+"\n"
+                        aux1 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
+                        aux2 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
+                        aux3 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
+                        new_video = Video(id_video_name=aux1,name_spanish=aux2)
+                        new_video.save()
+
+                        aux4 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
+                        aux5 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
+                        new_subtopic_video = Subtopic_Video(id_subtopic_name_id=aux4,id_video_name_id=aux5)
+                        new_subtopic_video.save()
                         id_subtopic_videos+=1
                         
+                        
+
+
 def poblar_skill_progress(kaid_student,dates,session):
     llamada = "/api/v1/user/exercises/progress_changes?userId="+kaid_student+"&username=&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
@@ -331,14 +389,15 @@ def poblar_skill_progress(kaid_student,dates,session):
                                                                    )
             print data[i]["date"]
             
-def poblar_student_video(kaid_student, dates, session):
-    llamada = "/api/v1/user/videos?userId="+kaid_student+"&username=&email=&dt_start="+dates
+def poblar_student_video(student_name,kaid_student, dates, session):
+    llamada = "/api/v1/user/videos?userId=&username="+student_name+"&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
     for i in range(len(data)):
-        if data[i]["points"] >0 :
-            student_video = Student_Video.objects.create(total_seconds_watched = data[i]["seconds_watched"],
+        #if data[i]["points"] >0 :
+        try:
+            student_video = Student_Video(total_seconds_watched = data[i]["seconds_watched"],
                                                                        total_points_earned = data[i]["points"],
                                                                        last_second_watched = data[i]["last_second_watched"],
                                                                        is_video_complete = data[i]["completed"],
@@ -346,25 +405,34 @@ def poblar_student_video(kaid_student, dates, session):
                                                                        kaid_student_id = kaid_student,
                                                                        youtube_id = data[i]["video"]["youtube_id"]
                                                                        )
+            student_video.save()
+        except:
+            pass
+            print "error"
 
-def poblar_video_playing(kaid_student, dates, session):   
+def poblar_video_playing(student_name,kaid_student, dates, session):   
     student_videos = Student_Video.objects.filter(kaid_student_id=kaid_student).values('youtube_id','id_video_name_id')
     for i in range(len(student_videos)):
-        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId"+kaid_student+"=&username=&email=&dt_start="+dates
+        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId=&username="+student_name+"&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL2)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
         for j in range(len(data)):
-            video_playing = Video_Playing.objects.create(seconds_watched = data[j]["seconds_watched"],
-                                                                       points_earned = data[j]["points_earned"],
-                                                                       last_second_watched = data[j]["last_second_watched"],
-                                                                       is_video_complete = data[j]["is_video_completed"],
-                                                                       date = data[j]["time_watched"],
-                                                                       id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                       kaid_student_id = kaid_student
-                                                                       )
+            try:
+                video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
+                                                                           points_earned = data[j]["points_earned"],
+                                                                           last_second_watched = data[j]["last_second_watched"],
+                                                                           is_video_complete = data[j]["is_video_completed"],
+                                                                           date = data[j]["time_watched"],
+                                                                           id_video_name_id = student_videos[i]["id_video_name_id"],
+                                                                           kaid_student_id = kaid_student
+                                                                           )
+                video_playing.save()
+            except:
+                pass
+                print "error"
 
-def coach_students(session):
+def coach_students(session): #ver los estudiantes que tienen como coach a cierto usuario. no entrega info de cursos
     llamada = "/api/v1/user/students"
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
@@ -373,6 +441,37 @@ def coach_students(session):
         json.dump(data, outfile)
     for j in range(len(data)):
         print data[j]["username"]
+
+def poblar_students(session):
+    # Open the workbook and select the first worksheet
+    wb = xlrd.open_workbook('2MC-2016.xlsx')
+    sh = wb.sheet_by_index(0)
+     
+    # List to hold dictionaries
+    students_list = []
+     
+    # Iterate through each row in worksheet and fetch values into dict
+    for rownum in range(1, sh.nrows):
+        student = OrderedDict()
+        row_values = sh.row_values(rownum)
+        student['name'] = row_values[0]
+        student['points'] = int(row_values[11])
+        student['class'] = row_values[12]
+        student['kaid'] = row_values[13][28:]
+
+        new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
+        new_student.save()
+
+        new_student_class = Student_Class(id_class_id=7,kaid_student_id=row_values[13][28:])
+
+        new_student_class.save()
+                
+     
+        students_list.append(student)
+        print students_list[rownum-1]['points']
+     
+    # Serialize the list of dicts to JSON
+    j = json.dumps(students_list)
             
 @login_required()
 def poblarBD(session):
@@ -386,11 +485,35 @@ def poblarBD(session):
     #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
     #cur = conn.cursor()
     #kaid_student = "kaid_485871758161384306203631"
-    dates = "2014-01-01T00%3A00%3A00Z&dt_end=2017-01-01T00%3A00%3A00Z"  
+    dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-04-01T00%3A00%3A00Z"  
     
+    
+    
+    '''
+    chapter = Chapter.objects.all()
+    chapter.delete()
+    topic = Topic.objects.all()
+    topic.delete()
+    subtopic = Subtopic.objects.all()
+    subtopic.delete()
+    skill = Skill.objects.all()
+    skill.delete()
+    video = Video.objects.all()
+    video.delete()
+    subtopic_skill = Subtopic_Skill.objects.all()
+    subtopic_skill.delete()
+    subtopic_video = Subtopic_Video.objects.all()
+    subtopic_video.delete()
+    '''
+    
+
+    
+    #poblar_topictree(session,buscar,reemplazar)
+
     '''
     student_skills = Student_Skill.objects.all()
     student_skills.delete()
+    
     
     skill_attempts = Skill_Attempt.objects.all()
     skill_attempts.delete()
@@ -406,13 +529,44 @@ def poblarBD(session):
     '''
     #coach_students(session)
     
-    #'''
-    #students = Student.objects.all()
-    #for i in range(len(students)):
-        #print i
-        #poblar_student_skill(students[i], dates, session)
-        #poblar_skill_attempts(students[i], dates, session)
-        #poblar_skill_progress(students[i], dates, session)
-        #poblar_student_video(students[i], dates, session)
-        #poblar_video_playing(students[i], dates, session)
-    #'''
+    threads = []
+    students = Student.objects.all()
+    
+    for i in range(200,len(students)):
+        print i
+        t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+        threads.append(t)
+        t.start()
+        
+        
+    
+    
+    '''
+    t = threading.Thread(target=threadPopulate,args=(students,0,2,dates,session))
+    threads.append(t)
+    t.start()
+    t = threading.Thread(target=threadPopulate,args=(students,2,4,dates,session))
+    threads.append(t)
+    t.start()
+    t = threading.Thread(target=threadPopulate,args=(students,4,6,dates,session))
+    threads.append(t)
+    t.start()
+    t = threading.Thread(target=threadPopulate,args=(students,6,8,dates,session))
+    threads.append(t)
+    t.start()
+    t = threading.Thread(target=threadPopulate,args=(students,8,10,dates,session))
+    threads.append(t)
+    t.start()
+    '''
+
+def threadPopulate(students,i,dates,session):
+    """thread populate function"""
+    #for i in range(start,end):
+    #    print i
+    #poblar_student_skill(students[i].kaid_student, dates, session) #listo
+    print students[i].name
+    #poblar_skill_attempts(students[i].name, dates, session) 
+    #poblar_skill_progress(students[i].kaid_student, dates, session)
+    #poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
+    #poblar_video_playing(students[i].name,students[i].kaid_student, dates, session) #listo
+    return
