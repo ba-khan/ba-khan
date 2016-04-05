@@ -1161,10 +1161,11 @@
     		})
     		.style("fill",
     				function(d,i){ 
-    					if (students[i][assesment_id].grade<approval_grade){
-    						return reprobateColor[assesment_num_id](students[i][assesment_id].grade);
+    					nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade + students[i][assesment_id].teacher_grade; 
+    					if (nota<approval_grade){
+    						return reprobateColor[assesment_num_id](nota);
     					}else{
-    						return approveColor[assesment_num_id](students[i][assesment_id].grade);
+    						return approveColor[assesment_num_id](nota);
     					}
     			  })
     		.on("click",function(d){
