@@ -366,7 +366,7 @@ def getClassStudents(request, id_class):
                     except:
                         student_assesment['performance_points'] = None
                     try:
-                        student_assesment['bonus_grade'] = dictGrades[(assesment['id'],student.kaid_student)][4]
+                        student_assesment['bonus_grade'] = round(dictGrades[(assesment['id'],student.kaid_student)][4],1)
                     except:
                         student_assesment['bonus_grade'] = 0
                     try:
