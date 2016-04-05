@@ -117,6 +117,7 @@ def parallelAssesment(assesment,students,queue):
     assesment_json["name"]=assesment.name
     assesment_json["config_name"]= assesment.id_assesment_conf.name
     assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
+    assesment_json["approval_grade"]= assesment.approval_grade
     assesment_json["top_score"]= assesment.id_assesment_conf.top_score
     assesment_json["max_grade"]= assesment.max_grade
     assesment_json["min_grade"]= assesment.min_grade
