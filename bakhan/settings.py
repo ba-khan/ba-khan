@@ -135,5 +135,5 @@ LOGIN_REDIRECT_URL = "/"
 # Redirect when login is not correct.
 LOGIN_URL = '/'
 #cierra sesion al cerrar el navegador
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
 
