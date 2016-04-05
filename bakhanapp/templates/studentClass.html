@@ -1130,8 +1130,8 @@
     	var approval_percentage=assesments[assesment_num_id].approval_percentage;
     	var min_grade=assesments[assesment_num_id].min_grade;
     	var max_grade=assesments[assesment_num_id].max_grade;
-    	//var approval_grade=assesments[assesment_num_id].approval_grade;
-    	var approval_grade = (max_grade-min_grade)*(approval_percentage/100) + min_grade;
+    	var approval_grade=assesments[assesment_num_id].approval_grade;
+    	//var approval_grade = (max_grade-min_grade)*(approval_percentage/100) + min_grade;
     	reprobateColor[assesment_num_id] = d3.scale.linear()
 		  .domain([min_grade, approval_grade])//, 1.9 / (reprobateColors.length - 1)))
 		  .range(reprobateColors);
@@ -1161,7 +1161,7 @@
     		})
     		.style("fill",
     				function(d,i){ 
-    					nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade + students[i][assesment_id].teacher_grade; 
+    					nota = students[i][assesment_id].grade + students[i][assesment_id].bonus_grade + students[i][assesment_id].teacher_grade;
     					if (nota<approval_grade){
     						return reprobateColor[assesment_num_id](nota);
     					}else{
