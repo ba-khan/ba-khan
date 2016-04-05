@@ -143,10 +143,6 @@ class Command(BaseCommand):
                         grade.unstarted = totalSkills - grade.practiced - grade.mastery1 - grade.mastery2 - grade.mastery3 - grade.struggling
                     except:
                         grade.unstarted = 0
-                    try:
-                        grade.bonus_grade = (grade.performance_points * assesment.max_effort_bonus)/100
-                    except:
-                        grade.bonus_grade = 0
                     grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)*(importance_skill_level/float(100))
                     grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
                     grade.total_recomended = totalSkills
@@ -188,6 +184,10 @@ class Command(BaseCommand):
                         grade.effort_points = video * percentageVideoTime + excercice * percentageExcerciceTime + incorrects * percentageIncorrects
                     except:
                         grade.effort_points = 0
+                    try:
+                        grade.bonus_grade = (grade.effort_points * assesment.max_effort_bonus)
+                    except:
+                        grade.bonus_grade = 0
                     if assesment.end_date < today:
                         grade.evaluated = True
                     grade.save()

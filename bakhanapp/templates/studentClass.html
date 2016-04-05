@@ -1832,6 +1832,8 @@
 			$("input[name='nota_aprobacion']").prop('disabled', false);
 			$("input[name='bono_esfuerzo']").prop('disabled', false);
 			$('#comboBox').prop('disabled', false);
+			$("input[name='fecha_termino']").attr('onchange', 'validarRealizarEvaluacion()');
+			$("input[name='fecha_termino']").attr('onkeyup', 'validarRealizarEvaluacion()');
 			showDiv();
 			evReady = 1;
 			$('#estudiantesEvaluados').empty();
@@ -1996,6 +1998,8 @@
 			$('#button_realizar').hide()
 			$("#flechaTodos").attr('onClick','disabled');
 			$("#flechaNinguno").attr('onClick','disabled');
+			$("input[name='fecha_termino']").attr('onchange', '');
+			$("input[name='fecha_termino']").attr('onkeyup', '');
 
 
 		}
@@ -2010,6 +2014,8 @@
 			$("input[name='nota_aprobacion']").prop('disabled', false);
 			$("input[name='bono_esfuerzo']").prop('disabled', false);
 			$('#comboBox').prop('disabled', false);
+			$("input[name='fecha_termino']").attr('onchange', 'validarRealizarEvaluacion()');
+			$("input[name='fecha_termino']").attr('onkeyup', 'validarRealizarEvaluacion()');
 			$.ajax({
 				url: "{% url 'evaluations:getAssesment' %}",
 				async:false,
@@ -2059,6 +2065,8 @@
 			$("input[name='input_id_assesment']").val(id_assesment)
 			$('#button_realizar').hide()
 			$('#button_editar').show()
+			$("input[name='fecha_termino']").attr('onchange', 'validarRealizarEvaluacion()');
+			$("input[name='fecha_termino']").attr('onkeyup', 'validarRealizarEvaluacion()');
 		}
 		function updateAssesment(){
 			id_assesment = $("input[name='input_id_assesment']").val();
