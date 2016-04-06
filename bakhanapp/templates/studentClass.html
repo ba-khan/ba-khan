@@ -11,6 +11,8 @@
 
 {% block body2 %}	
 <style>
+
+
 	.tipsy{
 		width:250px;
 	}
@@ -2477,6 +2479,19 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   		$('#final').val(sugerida);
   	}
   }
+  function scrollTable(){
+  	//$('#studentsDashboard').fixedHeaderTable({ footer: false, cloneHeadToFoot: false, fixedColumn: false });
+  	//$('#studentsDashboard').fixedHeaderTable({ height: '400', altClass: 'odd', themeClass: 'fancyDarkTable' });
+  	$('#myTable05').fixedHeaderTable({ altClass: 'odd', footer: true, fixedColumns: 1 });
+  	$('div.fht-tbody').addClass('grid_8'); 
+  	$('div.fht-tbody').addClass('height250');
+  	$('#studentsDashboard').addClass('fancyTable');
+  	$('#studentsDashboard').fixedHeaderTable({
+		altClass: 'odd',
+		fixedColumns: 1,
+	});
+       
+  }
 
 
 </script>
@@ -2484,7 +2499,8 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 <script type="text/javascript"> 
     $(document).ready(function () {
-    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -300} })
+    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -300} });
+
     });
     $("#evCancelar").on("click",function(){
 					$('#hover').fadeOut();
