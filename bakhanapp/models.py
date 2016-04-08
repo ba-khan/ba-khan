@@ -254,7 +254,7 @@ class Skill_Attempt(models.Model):
     count_hints = models.IntegerField()
     skipped = models.BooleanField()
     points_earned = models.IntegerField()
-    date = models.DateField()
+    date = models.DateTimeField()
     correct = models.BooleanField()
     video = models.BooleanField(default=False)
     

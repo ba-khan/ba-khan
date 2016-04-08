@@ -65,6 +65,8 @@ import random
 import urlparse
 
 import threading
+from threading import Semaphore
+semafaro = Semaphore(50)
 
 CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
 CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
@@ -259,37 +261,39 @@ def poblar_student_skill(kaid_student, dates, session):
                                                                        )
             student_skill.save()
         except:
-            #pass
-            print "skill de otra materia"
+            pass
+            #print "skill de otra materia"
+    #print "listo student_skill"
 
-def poblar_skill_attempts(kaid_student, dates, session):
-    student_skills = Student_Skill.objects.all()
+def poblar_skill_attempts(name_student, kaid_student, dates, session):
+    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student)
     for i in range(len(student_skills)):
         skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
-        print skills[0]["id_skill_name"]
-        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+kaid_student+"&email=&dt_start="+dates
+        #print skills[0]["id_skill_name"]
+        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
         jason = get_api_resource2(session,llamada,SERVER_URL)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
-        for j in range(len(data)):
-            #print data[j]["problem_number"]
-            try:
+        try:
+            for j in range(len(data)):
+                #print data[j]["time_done"]
                 skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
                                                                        mission = data[j]["mission"],
                                                                        time_taken = data[j]["time_taken"],
                                                                        count_hints = data[j]["count_hints"],
                                                                        skipped = data[j]["skipped"],
                                                                        points_earned = 0,
-                                                                       date = data[j]["time_done"][:10],
+                                                                       date = data[j]["time_done"],
                                                                        correct = data[j]["correct"],
                                                                        id_skill_name_id = skills[0]["id_skill_name"],
                                                                        kaid_student_id = data[j]["kaid"],
                                                                        problem_number = data[j]["problem_number"]
                                                                        )
                 skill_attempts.save()
-            except:
-                pass
-                print "otra materia (?)"
+        except:
+            pass
+            #print "otra materia (?)"
+    #print "listeilors"
 
 def poblar_topictree(session,buscar, reemplazar):
     topictree = get_api_resource2(session,"/api/v1/topictree",SERVER_URL2)
@@ -333,11 +337,11 @@ def poblar_topictree(session,buscar, reemplazar):
                 new_subtopic = Subtopic(id_subtopic_name=aux1,name_spanish=aux2,id_topic_name_id=aux3)
                 new_subtopic.save()
                 '''
-                skills = get_api_resource2(session,"/api/v1/topic/"+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL)
+                skills = get_api_resource2(session,"/api/v1/topic/"+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL2)
                 data_skills = simplejson.loads(skills)
                 for p in range(len(data_skills)):
-                    print data_skills[p]["name"]
-                    Skill.objects.filter(id_skill_name=data_skills[p]["content_id"]).update(name=data_skills[p]["name"])
+                    print data_skills[p]["translated_title"]
+                    Skill.objects.filter(id_skill_name=data_skills[p]["content_id"]).update(name_spanish=data_skills[p]["translated_title"])
                 '''cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
                 print cant_videos
                 for l in range(0,cant_videos):
@@ -376,24 +380,25 @@ def poblar_topictree(session,buscar, reemplazar):
                         
 
 
-def poblar_skill_progress(kaid_student,dates,session):
-    llamada = "/api/v1/user/exercises/progress_changes?userId="+kaid_student+"&username=&email=&dt_start="+dates
+def poblar_skill_progress(student_name,kaid_student,dates,session):
+    llamada = "/api/v1/user/exercises/progress_changes?userId="+student_name+"&username=&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
     for i in range(len(data)):
         skill = Skill.objects.filter(name=data[i]["exercise_name"]).values('id_skill_name','name')
         #print skill[0]["id_skill_name"]
-        print skill[0]["name"]
+        #print skill[0]["name"]
         student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
         if (student_skill):
-            print student_skill[0]["id_student_skill"]
+            #print student_skill[0]["id_student_skill"]
             skill_progress = Skill_Progress.objects.create(to_level = data[i]["to_progress"]["level"],
                                                                    from_level = data[i]["from_progress"]["level"],
                                                                    date = data[i]["date"],
                                                                    id_student_skill_id = student_skill[0]["id_student_skill"]
                                                                    )
-            print data[i]["date"]
+            #print data[i]["date"]
+    #print "listo skill_progress"
             
 def poblar_student_video(student_name,kaid_student, dates, session):
     llamada = "/api/v1/user/videos?userId=&username="+student_name+"&email=&dt_start="+dates
@@ -414,7 +419,8 @@ def poblar_student_video(student_name,kaid_student, dates, session):
             student_video.save()
         except:
             pass
-            print "error"
+            #print "error"
+    #print "listo student_video"
 
 def poblar_video_playing(student_name,kaid_student, dates, session):   
     student_videos = Student_Video.objects.filter(kaid_student_id=kaid_student).values('youtube_id','id_video_name_id')
@@ -423,8 +429,9 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
         jason = get_api_resource2(session,llamada,SERVER_URL2)
         source = unicode(jason, 'ISO-8859-1')
         data = simplejson.loads(source)
-        for j in range(len(data)):
-            try:
+        try:
+            for j in range(len(data)):
+                
                 video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
                                                                            points_earned = data[j]["points_earned"],
                                                                            last_second_watched = data[j]["last_second_watched"],
@@ -434,9 +441,10 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
                                                                            kaid_student_id = kaid_student
                                                                            )
                 video_playing.save()
-            except:
-                pass
-                print "error"
+        except:
+            pass
+            #print "error"
+    #print "listo video_playing"
 
 def coach_students(session): #ver los estudiantes que tienen como coach a cierto usuario. no entrega info de cursos
     llamada = "/api/v1/user/students"
@@ -491,7 +499,12 @@ def poblarBD(session):
     #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
     #cur = conn.cursor()
     #kaid_student = "kaid_485871758161384306203631"
-    dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-04-01T00%3A00%3A00Z"  
+    
+    today = time.strftime("%Y-%m-%d")
+    yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+    #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
+
+    dates = "2016-04-03T00%3A00%3A00Z&dt_end=2016-04-04T00%3A00%3A00Z"  
     
     
     
@@ -538,11 +551,12 @@ def poblarBD(session):
     threads = []
     students = Student.objects.all()
     
-    for i in range(50):
-        print i
+    for i in range(len(students)):
+        #print i
         t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
         threads.append(t)
         t.start()
+    
         
         
     
@@ -567,12 +581,12 @@ def poblarBD(session):
 
 def threadPopulate(students,i,dates,session):
     """thread populate function"""
-    #for i in range(start,end):
-    #    print i
+    semafaro.acquire()
     #poblar_student_skill(students[i].kaid_student, dates, session) #listo
-    print students[i].name
-    poblar_skill_attempts(students[i].name, dates, session) 
-    #poblar_skill_progress(students[i].kaid_student, dates, session)
+    #poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
+    #poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
     #poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
-    #poblar_video_playing(students[i].name,students[i].kaid_student, dates, session) #listo
+    #poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
+    print threading.currentThread().getName(), "Terminado"
+    semafaro.release()
     return
