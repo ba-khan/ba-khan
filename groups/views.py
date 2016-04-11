@@ -61,6 +61,7 @@ import datetime
 
 def getSkillGroup(request,id_class):
     #funcion que devuelve un json con los skills de un grupo
+    request.session.set_expiry(timeSleep)
     if request.method == 'POST':
         args = request.POST
         id_master_group = args['id_master_group']
@@ -73,6 +74,7 @@ def getSkillGroup(request,id_class):
 
 def getStudentGroup(request,id_class):
     #funcion que devuelve un json con los datos de grupos y alumnos
+    request.session.set_expiry(timeSleep)
     if request.method == 'POST':
         args = request.POST
         kaid_teacher = request.user.user_profile.kaid
@@ -86,6 +88,7 @@ def getStudentGroup(request,id_class):
 
 def getMakedGroup(request,id_class):
     #funcion que devuelve un json con los datos de grupos y alumnos ya realizaados cuando se selecciona una agrupacion.
+    request.session.set_expiry(timeSleep)
     if request.method == 'POST':
         args = request.POST
         id_master_group = args['id_master_group']
@@ -103,7 +106,7 @@ def getMakedGroup(request,id_class):
 
 @login_required()
 def getGroups(request, id_class):
-    #request.session.set_expiry(timeSleep)
+    request.session.set_expiry(timeSleep)
     topictree=getTopictree('math')
     g = Master_Group.objects.filter(id_class=id_class)
     data = serializers.serialize('json', g)
@@ -199,6 +202,7 @@ def getGroups(request, id_class):
     return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
+    request.session.set_expiry(timeSleep)
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
     #print skills_selected                                                         #aqui llegan bien las habilidades seleccionadas
     students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
@@ -216,6 +220,7 @@ def makeGroups(id_class,skills_selected):
     return json_data
 
 def getTypeStudent(kaid_student,args):
+    request.session.set_expiry(timeSleep)
     #Funcion que entrega en que nivel grupo debe ser organizado un estudiante
     #de acuerdo a su nivel en las skills seleccionadas por el profesor.
     #skills = Group_Skill.objects.filter(id_group_id=id_group)

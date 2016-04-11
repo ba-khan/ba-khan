@@ -83,6 +83,7 @@ def getSkillAssesment(request,id_class):
 
 @login_required()
 def home(request):
+    request.session.set_expiry(timeSleep)
     return render_to_response('home.html',context_instance=RequestContext(request))
 
 @login_required()
@@ -91,7 +92,7 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
-    ##request.session.set_expiry(timeSleep)
+    request.session.set_expiry(timeSleep)
     #print request.user.user_profile.kaid
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
@@ -102,6 +103,7 @@ def getTeacherClasses(request):
     
 
 def getClassSkills(request,id_class):
+    request.session.set_expiry(timeSleep)
     #Funcion que entrega un arreglo con la cantidad de habilidades en cada nivel de dominio
     students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#devuelve todos los estudiantes de una clase
     students_skills = Student_Skill.objects.filter(kaid_student__in=students).values('last_skill_progress','kaid_student').annotate(scount=Count('kaid_student'))
@@ -110,6 +112,7 @@ def getClassSkills(request,id_class):
 
 
 def parallelAssesment(assesment,students,queue):
+    request.session.set_expiry(timeSleep)
     #print '****************inicio el thread*********************'
     inicio = time.time()
     assesment_json={}
@@ -197,6 +200,7 @@ def parallelAssesment(assesment,students,queue):
 
     return queue
 def getSkillsCorrect(grade_id):
+    request.session.set_expiry(timeSleep)
     #skls = Skill_Log.objects.filter(id_grade_id=grade_id)
     skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct','skill_log__skill_progress')
     aux = []
@@ -210,7 +214,7 @@ def getSkillsCorrect(grade_id):
 @login_required()
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado y carga el dashboard
-    #request.session.set_expiry(timeSleep)#10 minutos
+    request.session.set_expiry(timeSleep)#10 minutos
     classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     try:
@@ -403,6 +407,7 @@ def getClassStudents(request, id_class):
 
 
 def getTopictree(subject):
+    request.session.set_expiry(timeSleep)
     topictree_json={}
     topictree_json['checkbox']={'keep_selected_style':False}
     topictree_json['plugins']=['checkbox','search']

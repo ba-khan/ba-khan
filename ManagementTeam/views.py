@@ -26,7 +26,7 @@ import json
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def getAdministrators(request):
-    #request.session.set_expiry(timeSleep)
+    request.session.set_expiry(timeSleep)
     try:
         teacher = Teacher.objects.get(email=request.user.email)
     except:
@@ -37,6 +37,7 @@ def getAdministrators(request):
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def saveAdministrator(request):
+    request.session.set_expiry(timeSleep)
     user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
     if request.is_ajax():
         if request.method == 'POST':
@@ -63,6 +64,7 @@ def saveAdministrator(request):
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def deleteAdministrator(request):
+    request.session.set_expiry(timeSleep)
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
@@ -73,6 +75,7 @@ def deleteAdministrator(request):
 
 @permission_required('bakhanapp.isAdmin', login_url="/inicio")
 def newAdministrator(request):
+    request.session.set_expiry(timeSleep)
     user = Teacher.objects.get(email=request.user.email)
     if request.method == 'POST':
         args = request.POST

@@ -71,6 +71,7 @@ from django.db import connection
 import random
 
 def updateGrade(request):
+    request.session.set_expiry(timeSleep)
     if request.method == 'POST':
         args = request.POST
         teacher_grade=eval(args['input_grade_teacher'])
@@ -84,6 +85,7 @@ def updateGrade(request):
     return HttpResponse()
 
 def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
+    request.session.set_expiry(timeSleep)
     if request.method == 'POST':
         args = request.POST
         id_assesment=args['assesment']
@@ -95,6 +97,7 @@ def getAssesment(request): #entrega una evaluacion (con todos sus parametros)
     return HttpResponse(assesment_data)
 
 def updateAssesment(request): #modifica una evaluacion 
+    request.session.set_expiry(timeSleep)
     if request.method =='POST':
         args = request.POST
         id_assesment=args['input_id_assesment']
@@ -145,6 +148,7 @@ def updateAssesment(request): #modifica una evaluacion
     return HttpResponse()
 
 def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion
+    request.session.set_expiry(timeSleep)
     if request.method =='POST':
         args = request.POST
         id_assesment=args['assesment']
@@ -155,6 +159,7 @@ def getStudentAssesment(request): #entrega a todos los alumnos a los que se le r
     return HttpResponse(student_data)
 
 def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y una tupla en grade para cada student, ademas envia mails a todos
+    request.session.set_expiry(timeSleep)
     if request.method == 'POST':
         args = request.POST
         fecha1=args['fecha_inicio']
@@ -311,6 +316,7 @@ def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config,id_class):
     return(contenido)
 
 def getCurso(id_class):
+    request.session.set_expiry(timeSleep)
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     curso = Class.objects.filter(pk=id_class).values('level')
     letra = Class.objects.filter(pk=id_class).values('letter')
@@ -321,6 +327,7 @@ def getCurso(id_class):
     return(respuesta)
 
 def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
+    request.session.set_expiry(timeSleep)
     mnsj_skills = ''
     g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
     n = Skill.objects.filter(id_skill_name__in=g)
