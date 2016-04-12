@@ -407,7 +407,6 @@ def getClassStudents(request, id_class):
 
 
 def getTopictree(subject):
-    request.session.set_expiry(timeSleep)
     topictree_json={}
     topictree_json['checkbox']={'keep_selected_style':False}
     topictree_json['plugins']=['checkbox','search']
