@@ -202,7 +202,6 @@ def getGroups(request, id_class):
     return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
-    request.session.set_expiry(timeSleep)
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
     #print skills_selected                                                         #aqui llegan bien las habilidades seleccionadas
     students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#retorna todos los estudiantes de un curso
@@ -220,7 +219,6 @@ def makeGroups(id_class,skills_selected):
     return json_data
 
 def getTypeStudent(kaid_student,args):
-    request.session.set_expiry(timeSleep)
     #Funcion que entrega en que nivel grupo debe ser organizado un estudiante
     #de acuerdo a su nivel en las skills seleccionadas por el profesor.
     #skills = Group_Skill.objects.filter(id_group_id=id_group)

@@ -112,7 +112,6 @@ def getClassSkills(request,id_class):
 
 
 def parallelAssesment(assesment,students,queue):
-    request.session.set_expiry(timeSleep)
     #print '****************inicio el thread*********************'
     inicio = time.time()
     assesment_json={}
@@ -200,7 +199,6 @@ def parallelAssesment(assesment,students,queue):
 
     return queue
 def getSkillsCorrect(grade_id):
-    request.session.set_expiry(timeSleep)
     #skls = Skill_Log.objects.filter(id_grade_id=grade_id)
     skls = Skill.objects.filter(skill_log__id_grade_id=grade_id).values('name_spanish','skill_log__id_grade_id','skill_log__id_skill_name_id','skill_log__incorrect','skill_log__correct','skill_log__skill_progress')
     aux = []
