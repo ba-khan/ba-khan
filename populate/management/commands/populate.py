@@ -403,19 +403,21 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
             
 def poblar_student_video(student_name,kaid_student, dates, session):
     llamada = "/api/v1/user/videos?userId=&username="+student_name+"&email=&dt_start="+dates
-    jason = get_api_resource2(session,llamada,SERVER_URL2)
+    jason = get_api_resource2(session,llamada,SERVER_URL)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    for i in range(len(data)):
+    #print "videos: ", len(data)
+    for k in range(len(data)):
         #if data[i]["points"] >0 :
+        #Tratar de hacer una especie de update_or_create()
         try:
-            student_video = Student_Video(total_seconds_watched = data[i]["seconds_watched"],
-                                                                       total_points_earned = data[i]["points"],
-                                                                       last_second_watched = data[i]["last_second_watched"],
-                                                                       is_video_complete = data[i]["completed"],
-                                                                       id_video_name_id = data[i]["video"]["id"],
+            student_video = Student_Video(total_seconds_watched = data[k]["seconds_watched"],
+                                                                       total_points_earned = data[k]["points"],
+                                                                       last_second_watched = data[k]["last_second_watched"],
+                                                                       is_video_complete = data[k]["completed"],
+                                                                       id_video_name_id = data[k]["video"]["id"],
                                                                        kaid_student_id = kaid_student,
-                                                                       youtube_id = data[i]["video"]["youtube_id"]
+                                                                       youtube_id = data[k]["video"]["youtube_id"]
                                                                        )
             student_video.save()
         except:
@@ -508,7 +510,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         session = run_tests()
-        print "logueadoooo"
+        #print "logueadoooo"
         #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
         #source = unicode(jason, 'ISO-8859-1')
         #data = simplejson.loads(source)
@@ -520,9 +522,11 @@ class Command(BaseCommand):
 
         today = time.strftime("%Y-%m-%d")
         yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
-        #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
+        #print "hoy: ", today
+        #print "ayer: ", yesterday
+        dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
-        dates = "2016-04-04T00%3A00%3A00Z&dt_end=2016-04-05T00%3A00%3A00Z"  
+        #dates = "2016-04-01T00%3A00%3A00Z&dt_end=2016-04-10T00%3A00%3A00Z"  
 
 
 
@@ -543,8 +547,6 @@ class Command(BaseCommand):
         subtopic_video.delete()
         '''
 
-
-
         #poblar_topictree(session,buscar,reemplazar)
 
         '''
@@ -557,9 +559,10 @@ class Command(BaseCommand):
 
         skill_progress = Skill_Progress.objects.all()
         skill_progress.delete()
-
+        
         student_videos = Student_Video.objects.all()
         student_videos.delete()
+        
 
         video_playings = Video_Playing.objects.all()
         video_playings.delete()
@@ -575,24 +578,5 @@ class Command(BaseCommand):
             threads.append(t)
             t.start()
 
-            
-            
+        #print "Todos los threads lanzados"
 
-
-        '''
-        t = threading.Thread(target=threadPopulate,args=(students,0,2,dates,session))
-        threads.append(t)
-        t.start()
-        t = threading.Thread(target=threadPopulate,args=(students,2,4,dates,session))
-        threads.append(t)
-        t.start()
-        t = threading.Thread(target=threadPopulate,args=(students,4,6,dates,session))
-        threads.append(t)
-        t.start()
-        t = threading.Thread(target=threadPopulate,args=(students,6,8,dates,session))
-        threads.append(t)
-        t.start()
-        t = threading.Thread(target=threadPopulate,args=(students,8,10,dates,session))
-        threads.append(t)
-        t.start()
-        '''
