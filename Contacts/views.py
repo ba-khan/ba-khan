@@ -14,7 +14,7 @@ from django import template
 from bakhanapp.models import Student
 from bakhanapp.models import Student_Class
 from bakhanapp.models import Tutor
-
+from configs import timeSleep
 register = template.Library()
 
 import json
