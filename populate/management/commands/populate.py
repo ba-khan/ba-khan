@@ -494,11 +494,11 @@ def poblar_students(session):
 def threadPopulate(students,i,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    #poblar_student_skill(students[i].kaid_student, dates, session) #listo
-    #poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
-    #poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
-    #poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
-    #poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
+    poblar_student_skill(students[i].kaid_student, dates, session) #listo
+    poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
+    poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
+    poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
+    poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
     print threading.currentThread().getName(), "Terminado"
     semafaro.release()
     return
