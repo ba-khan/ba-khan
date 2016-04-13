@@ -494,11 +494,11 @@ def poblar_students(session):
 def threadPopulate(students,i,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    poblar_student_skill(students[i].kaid_student, dates, session) #listo
-    poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
-    poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
-    poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
-    poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
+    #poblar_student_skill(students[i].kaid_student, dates, session) #listo
+    #poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
+    #poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
+    #poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
+    #poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
     print threading.currentThread().getName(), "Terminado"
     semafaro.release()
     return
@@ -522,8 +522,8 @@ class Command(BaseCommand):
 
         today = time.strftime("%Y-%m-%d")
         yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
-        #print "hoy: ", today
-        #print "ayer: ", yesterday
+        print "hoy: ", today
+        print "ayer: ", yesterday
         dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
         #dates = "2016-04-01T00%3A00%3A00Z&dt_end=2016-04-10T00%3A00%3A00Z"  
