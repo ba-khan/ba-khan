@@ -6,5 +6,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         #funcion que se ejecutara al hacer python manage.py calculateGrade
-        c = Class(level=9,letter='x',year=2020,id_institution_id=1)
+        c = Class(id_class=9,level=9,letter='x',year=2020,id_institution_id=1)
         c.save()
