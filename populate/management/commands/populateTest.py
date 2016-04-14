@@ -520,6 +520,7 @@ def threadPopulate(students,i,dates,session):
     except:
         print "error video_playing ", students[i].name
     fin = threading.currentThread().getName()+" Terminado \n"
+    print fin
     f.write(fin)
     semafaro.release()
     return
