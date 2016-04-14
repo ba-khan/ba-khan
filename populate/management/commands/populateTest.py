@@ -80,6 +80,8 @@ SERVER_URL2 = 'https://es.khanacademy.org'
     
 DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
+
+f = open ("log-populateTest.txt", "a")
     
 
 # Create the callback server that's used to set the oauth verifier after the
@@ -517,7 +519,8 @@ def threadPopulate(students,i,dates,session):
         poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
     except:
         print "error video_playing ", students[i].name
-    print threading.currentThread().getName(), "Terminado"
+    fin = threading.currentThread().getName()+" Terminado \n"
+    f.write(fin)
     semafaro.release()
     return
 
@@ -532,6 +535,7 @@ class Command(BaseCommand):
         #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
         #source = unicode(jason, 'ISO-8859-1')
         #data = simplejson.loads(source)
+        
         buscar = "'"
         reemplazar = " "
         #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
@@ -542,9 +546,10 @@ class Command(BaseCommand):
         yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
 
         #poblar_students(session)
-
-        print "hoy: ", today
-        print "ayer: ", yesterday
+        hoy = "\n hoy: "+today+"\n"
+        ayer = "ayer: "+yesterday+"\n"
+        f.write(hoy)
+        f.write(ayer)
         #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
         dates = "2016-03-13T00%3A00%3A00Z&dt_end=2016-04-15T00%3A00%3A00Z"  
@@ -589,7 +594,6 @@ class Command(BaseCommand):
 
         threads = []
         students = Student.objects.all()
-        
         
         #for i in range(len(students)):
         for i in range((len(students)-5),(len(students))):
