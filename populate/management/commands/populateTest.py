@@ -545,11 +545,9 @@ class Command(BaseCommand):
 
         print "hoy: ", today
         print "ayer: ", yesterday
-        dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
+        #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
-        #dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-04-13T00%3A00%3A00Z"  
-
-
+        dates = "2016-03-13T00%3A00%3A00Z&dt_end=2016-04-15T00%3A00%3A00Z"  
 
         '''
         chapter = Chapter.objects.all()
@@ -574,7 +572,6 @@ class Command(BaseCommand):
         student_skills = Student_Skill.objects.all()
         student_skills.delete()
 
-
         skill_attempts = Skill_Attempt.objects.all()
         skill_attempts.delete()
 
@@ -593,8 +590,9 @@ class Command(BaseCommand):
         threads = []
         students = Student.objects.all()
         
-        #for i in range((len(students)-5),(len(students))):
-        for i in range(len(students)):
+        
+        #for i in range(len(students)):
+        for i in range((len(students)-5),(len(students))):
             #print i
             #print students[i].name
             t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
