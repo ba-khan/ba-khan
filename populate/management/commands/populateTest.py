@@ -51,7 +51,7 @@ import time
 import webbrowser
 import psycopg2
 import requests
-import xlrd
+#import xlrd
 from collections import OrderedDict
 
 import json
@@ -602,7 +602,6 @@ class Command(BaseCommand):
             t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
             threads.append(t)
             t.start()
-            
 
         #print "Todos los threads lanzados"
 
