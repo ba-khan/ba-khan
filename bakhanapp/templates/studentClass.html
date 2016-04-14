@@ -39,19 +39,19 @@
     	<div id="close">X</div>
     	<div style="align:center;margin-left:15%;width:90%">
 	    	<form method="post" id='formGrade'>{% csrf_token %}
-				<div id="popup_nombre"><p style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
-				<p>  Nota:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:385px;" disabled/></p>
-				<p>+ Bonificación por Esfuerzo:
+				<div id="popup_nombre"><p id="pgrade" style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
+				<p id="pgrade">  Nota:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:385px;" disabled/></p>
+				<p id="pgrade">+ Bonificación por Esfuerzo:
 					<input name="input_bonificacion" id="input_bonificacion" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:245px;" disabled/>
 				</p>
-				<p>--------------------------------------------------------------------------------------------------------------</p>
-				<p>  Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
-				<p><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
-				<p>+ Bonificación del Profesor:
+				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
+				<p id="pgrade">  Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
+				<p id="pgrade"><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
+				<p id="pgrade">+ Bonificación del Profesor:
 					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;"/>
 				</p>
-				<p>--------------------------------------------------------------------------------------------------------------</p>
-				<p>  Nota Final: <input class="vaciar" id="final" type="text" style="width:30px;padding:5px;margin-left:348px;" disabled/></p>
+				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
+				<p id="pgrade">  Nota Final: <input class="vaciar" id="final" type="text" style="width:30px;padding:5px;margin-left:348px;" disabled/></p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario:
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:440px;height:50px;padding-top:5px"></textarea>
 					<input name="input_comment" class="vaciar" id="input_comment" type="text" style="display:none;"/>
@@ -1171,8 +1171,8 @@
     		.on("click",function(d){
     			//console.log(d)
     			$('#popup_nombre').empty();
-    			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.head_assesment+"</strong></p>");
-    			$('#popup_nombre').append("<p style='margin-top:0px;'><strong>"+d.value.name+"</strong></p>");
+    			$('#popup_nombre').append("<p id='pgrade' style='margin-top:0px;'><strong>"+d.head_assesment+"</strong></p>");
+    			$('#popup_nombre').append("<p id='pgrade' style='margin-top:0px;'><strong>"+d.value.name+"</strong></p>");
     			//$('#popup_nombre').append("<p style='margin-top:0px;'><strong>Nota: </strong>"+d.value.grade+"<strong>    Bonificacion: </strong>"+d.value.bonus_grade+"</p>");
     			$('#input_grade_id').val(eval(d.value.grade_id));
     			$('#textarea_coment').val(d.value.comment);
