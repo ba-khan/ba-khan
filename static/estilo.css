@@ -385,6 +385,23 @@ label.sort-filter{
   cursor: pointer;
   box-shadow: 0 0 10px 0 #9DB63B;
 }
+#close-resumen{
+  position: absolute;
+  background: #9DB63B;
+  color: white;
+  right: 4px;
+  top: 4px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 8px;
+  font-weight: bold;
+  font-family: 'Arial Black', Arial, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 0 10px 0 #9DB63B;
+}
 
 
 #popup,#popup_evaluacion,#popup_error{
