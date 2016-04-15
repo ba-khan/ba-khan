@@ -526,8 +526,6 @@ class Command(BaseCommand):
     help = 'Puebla la base de datos con ejercicios y videos vistos por los estudiantes'
 
     def handle(self, *args, **options):
-        c = Class(id_class=9,level=9,letter='x',year=2020,id_institution_id=1)
-        c.save()
 
         session = run_tests()
         #print "logueadoooo"
@@ -603,7 +601,8 @@ class Command(BaseCommand):
             threads.append(t)
             t.start()
             
-
+        c = Class(id_class=9,level=9,letter='x',year=2020,id_institution_id=1)
+        c.save()
 
         #print "Todos los threads lanzados"
 
