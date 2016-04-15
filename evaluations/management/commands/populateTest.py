@@ -1,6 +1,6 @@
-from django.shortcuts import render
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
+from django.shortcuts import render
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
 from django.template.context import RequestContext
 from django.core.management.base import BaseCommand, CommandError
@@ -69,6 +69,93 @@ import urlparse
 
 import threading
 from threading import Semaphore
+
+class Command(BaseCommand):
+    help = 'Puebla la base de datos con ejercicios y videos vistos por los estudiantes'
+
+    def handle(self, *args, **options):
+
+        session = run_tests()
+        #print "logueadoooo"
+        #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
+        #source = unicode(jason, 'ISO-8859-1')
+        #data = simplejson.loads(source)
+        
+        buscar = "'"
+        reemplazar = " "
+        #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
+        #cur = conn.cursor()
+        #kaid_student = "kaid_485871758161384306203631"
+
+        today = time.strftime("%Y-%m-%d")
+        yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+
+        #poblar_students(session)
+        hoy = "\n hoy: "+today+"\n"
+        ayer = "ayer: "+yesterday+"\n"
+        f.write(hoy)
+        f.write(ayer)
+        #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
+
+        dates = "2016-03-13T00%3A00%3A00Z&dt_end=2016-04-15T00%3A00%3A00Z"  
+
+        '''
+        chapter = Chapter.objects.all()
+        chapter.delete()
+        topic = Topic.objects.all()
+        topic.delete()
+        subtopic = Subtopic.objects.all()
+        subtopic.delete()
+        skill = Skill.objects.all()
+        skill.delete()
+        video = Video.objects.all()
+        video.delete()
+        subtopic_skill = Subtopic_Skill.objects.all()
+        subtopic_skill.delete()
+        subtopic_video = Subtopic_Video.objects.all()
+        subtopic_video.delete()
+        '''
+
+        #poblar_topictree(session,buscar,reemplazar)
+
+        '''
+        student_skills = Student_Skill.objects.all()
+        student_skills.delete()
+
+        skill_attempts = Skill_Attempt.objects.all()
+        skill_attempts.delete()
+
+        skill_progress = Skill_Progress.objects.all()
+        skill_progress.delete()
+        
+        student_videos = Student_Video.objects.all()
+        student_videos.delete()
+        
+
+        video_playings = Video_Playing.objects.all()
+        video_playings.delete()
+        '''
+        #coach_students(session)
+
+        threads = []
+        students = Student.objects.all()
+        
+        #for i in range(len(students)):
+        for i in range((len(students)-5),(len(students))):
+            #print i
+            #print students[i].name
+            t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+            threads.append(t)
+            t.start()
+
+        #print "Todos los threads lanzados"
+
+
+
+
+
+
+
 semafaro = Semaphore(50)
 
 CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
@@ -525,84 +612,4 @@ def threadPopulate(students,i,dates,session):
     semafaro.release()
     return
 
-
-class Command(BaseCommand):
-    help = 'Puebla la base de datos con ejercicios y videos vistos por los estudiantes'
-
-    def handle(self, *args, **options):
-
-        session = run_tests()
-        #print "logueadoooo"
-        #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
-        #source = unicode(jason, 'ISO-8859-1')
-        #data = simplejson.loads(source)
-        
-        buscar = "'"
-        reemplazar = " "
-        #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
-        #cur = conn.cursor()
-        #kaid_student = "kaid_485871758161384306203631"
-
-        today = time.strftime("%Y-%m-%d")
-        yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
-
-        #poblar_students(session)
-        hoy = "\n hoy: "+today+"\n"
-        ayer = "ayer: "+yesterday+"\n"
-        f.write(hoy)
-        f.write(ayer)
-        #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
-
-        dates = "2016-03-13T00%3A00%3A00Z&dt_end=2016-04-15T00%3A00%3A00Z"  
-
-        '''
-        chapter = Chapter.objects.all()
-        chapter.delete()
-        topic = Topic.objects.all()
-        topic.delete()
-        subtopic = Subtopic.objects.all()
-        subtopic.delete()
-        skill = Skill.objects.all()
-        skill.delete()
-        video = Video.objects.all()
-        video.delete()
-        subtopic_skill = Subtopic_Skill.objects.all()
-        subtopic_skill.delete()
-        subtopic_video = Subtopic_Video.objects.all()
-        subtopic_video.delete()
-        '''
-
-        #poblar_topictree(session,buscar,reemplazar)
-
-        '''
-        student_skills = Student_Skill.objects.all()
-        student_skills.delete()
-
-        skill_attempts = Skill_Attempt.objects.all()
-        skill_attempts.delete()
-
-        skill_progress = Skill_Progress.objects.all()
-        skill_progress.delete()
-        
-        student_videos = Student_Video.objects.all()
-        student_videos.delete()
-        
-
-        video_playings = Video_Playing.objects.all()
-        video_playings.delete()
-        '''
-        #coach_students(session)
-
-        threads = []
-        students = Student.objects.all()
-        
-        #for i in range(len(students)):
-        for i in range((len(students)-5),(len(students))):
-            #print i
-            #print students[i].name
-            t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
-            threads.append(t)
-            t.start()
-
-        #print "Todos los threads lanzados"
 
