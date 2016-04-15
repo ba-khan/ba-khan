@@ -2260,7 +2260,9 @@
 			drawSkillsBoxPlot(all_skill_levels,skill_names);
 			//drawSkillsBoxPlot();
 			drawHistogram(assesments[aux]['min_grade'],assesments[aux]['max_grade'],grade_order,10);
-			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])		
+			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])
+			$('.highcharts-button').css('visibility','hidden');	
+			$('text:contains("Highcharts.com")').css('visibility','hidden');	
 
 
 		}
