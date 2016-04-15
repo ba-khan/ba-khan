@@ -606,12 +606,6 @@ label.sort-filter{
   hr{
     margin: 10px 0px 10px 0px;
   }
-  #resumen_skill{
-    overflow: auto;
-    width:530px;
-    height:110px;
-    position: relative;
-  }
    #resumen_skill li:first-child{
     margin-top: 5px;
   }
@@ -651,6 +645,7 @@ label.sort-filter{
     width:530px;
     height:230px;
     position: relative;
+    margin-bottom: 30px;
   }
   #resumen_graph{
     height: 205px;
