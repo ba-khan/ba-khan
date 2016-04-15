@@ -602,8 +602,5 @@ class Command(BaseCommand):
             threads.append(t)
             t.start()
             
-        c = Class(id_class=9,level=9,letter='x',year=2020,id_institution_id=1)
-        c.save()
-
         #print "Todos los threads lanzados"
 
