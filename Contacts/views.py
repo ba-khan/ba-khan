@@ -11,7 +11,7 @@ from django.contrib import auth
 from django.db.models import Count
 
 from django import template
-from bakhanapp.models import Student
+from bakhanapp.models import Student, Class
 from bakhanapp.models import Student_Class
 from bakhanapp.models import Tutor
 from configs import timeSleep
@@ -35,7 +35,10 @@ def getContacts(request, id_class):
             tutor = Tutor.objects.create(name="", kaid_student_child_id=student.kaid_student)
             data.append(tutor)
         datas.append(data)
-    return render_to_response('contacts.html', {'datas':datas, 'id_class':id_class}, context_instance=RequestContext(request))
+    classroom = Class.objects.filter(id_class=id_class)
+    N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+    spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
+    return render_to_response('contacts.html', {'datas':datas, 'id_class':id_class,'spanish_classroom':spanish_classroom}, context_instance=RequestContext(request))
 
 @login_required()
 def saveContact(request, id_class):
