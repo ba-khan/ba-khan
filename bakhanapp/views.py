@@ -397,11 +397,13 @@ def getClassStudents(request, id_class):
 
             json_data = json.dumps(json_dict)
             classroom = Class.objects.filter(id_class=id_class)
+            N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+            spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
             assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
-                                        's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
+                                        's_skills':s_skills, 'assesment_configs':assesment_configs,'spanish_classroom':spanish_classroom}, #'grades':grades,
                                         context_instance=RequestContext(request)
                                     )
         else:
