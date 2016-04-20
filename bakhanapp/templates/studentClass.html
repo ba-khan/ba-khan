@@ -48,16 +48,28 @@
 				<p id="pgrade">  Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
 				<p id="pgrade"><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
 				<p id="pgrade">+ Bonificación del Profesor:
+				{% if isTeacher %}
 					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;"/>
+				{% else %}
+					<input name="input_grade_teacher" id="input_grade_teacher"  class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;" disabled />
+				{% endif %}
+				
+					
 				</p>
 				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
 				<p id="pgrade">  Nota Final: <input class="vaciar" id="final" type="text" style="width:30px;padding:5px;margin-left:348px;" disabled/></p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario:
+					{% if isTeacher %}
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:440px;height:50px;padding-top:5px"></textarea>
+					{% else %}
+					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:440px;height:50px;padding-top:5px" disabled></textarea>
+					{% endif %}
 					<input name="input_comment" class="vaciar" id="input_comment" type="text" style="display:none;"/>
 				</p>
 			</form>
+			{% if isTeacher %}
 			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" style="margin-left:-100px;" value="Modificar Nota"></div>
+			{% endif %}
     	</div>
     </div>
 
