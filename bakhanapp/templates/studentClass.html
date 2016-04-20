@@ -306,7 +306,7 @@
         { head: 'Ejercicios desarrollados', cl: 'exercises', values: d3.f('exercises') , type:'numeric'},
         { head: 'Tiempo en ejercicios', cl: 'skills_time', value: d3.f('skills_time'), valueF : d3.f('skills_time',length()) , type:'numeric'},
         { head: 'Tiempo en videos', cl: 'videos_time', valueF: d3.f('video_time', length()), value: d3.f('video_time') , type:'numeric'},
-        { head: 'Habilidades dominadas', cl: 'skills_level', values: d3.f('skills_level'), type:'numeric'},
+        { head: 'Habilidades', cl: 'skills_level', values: d3.f('skills_level'), type:'numeric'},
         //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
     ];
 
@@ -460,7 +460,7 @@
 		  	   <div class="arrow-down skills_level" name="`+d.cl+`"></div>
 	  		   <select class="skills_level" name="`+d.cl+`">
 	  		   		<option value="total">Total</option>
-						<option value="mastery3">Dominado</option>
+					<option value="mastery3">Dominado</option>
 					<option value="mastery2">Nivel 2</option>
 					<option value="mastery1">Nivel 1</option>
 					<option value="practiced">Practicado</option>
@@ -1221,7 +1221,7 @@
     	});
 	    	
 	    $("circle."+assesment_id).tipsy({ 
-	        gravity: 'se',
+	        gravity: 'ne',
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
