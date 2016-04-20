@@ -491,7 +491,9 @@ function saveGroups(){
 
 <div style="height:54px; margin:10px;">
   <h1>Grupos</h1>
+  {% if isTeacher %}
   <button type='input' onclick='newGroups()' class="kui-button kui-button-plain kui-button-primary" id='newButton'><i class="plus"></i> Nueva agrupación</button>
+  {% endif %}
   <button type='input' onclick='cleanGroups()' class="kui-button kui-button-plain kui-button-primary" id='cleanButton'>Limpiar agrupación</button>
 </div>
     <div id='content'>
