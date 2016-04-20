@@ -24,7 +24,7 @@ from configs import timeSleep
 import json
 
 
-@permission_required('bakhanapp.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/")
 def getAdministrators(request):
     request.session.set_expiry(timeSleep)
     try:
@@ -35,7 +35,7 @@ def getAdministrators(request):
     #print administrators
     return render_to_response('administrators.html', {'administrators': administrators}, context_instance=RequestContext(request))
 
-@permission_required('bakhanapp.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/")
 def saveAdministrator(request):
     request.session.set_expiry(timeSleep)
     user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
@@ -62,7 +62,7 @@ def saveAdministrator(request):
 
     return HttpResponse("Error")
 
-@permission_required('bakhanapp.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/")
 def deleteAdministrator(request):
     request.session.set_expiry(timeSleep)
     if request.is_ajax():
@@ -73,7 +73,7 @@ def deleteAdministrator(request):
             return HttpResponse("Administrador eliminado correctamente")
     return HttpResponse("Error al eliminar")
 
-@permission_required('bakhanapp.isAdmin', login_url="/inicio")
+@permission_required('bakhanapp.isAdmin', login_url="/")
 def newAdministrator(request):
     request.session.set_expiry(timeSleep)
     user = Teacher.objects.get(email=request.user.email)
