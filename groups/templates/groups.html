@@ -498,27 +498,31 @@ function saveGroups(){
        <div id="SinGrupo" name="SinGrupo" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>No agrupados</h3></ul></div>
  
         <div id="Avanzados" name="Avanzados" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><ul><h3>Avanzados</h3></ul>
-        <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
+{% if isTeacher %}
+<SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
 <OPTION VALUE="2">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+{% endif %}
 <div id="fakeDiv1"></div>
         </div>
  
        <div id="Intermedios" name="Intermedios" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><h3>Intermedios</h3>
-       
+{% if isTeacher %}       
 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="2">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+{% endif %}
 <div id="fakeDiv2"></div>
        </div>
        <div id="Reforzamiento" name="Reforzamiento" class="scroll" ondragover="return over(event)" ondrop="return drop(event)"><h3>Reforzamiento</h3>
-       
+{% if isTeacher %}       
 <SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="3">Seleccionar Tutor</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
+{% endif %}
 <div id="fakeDiv3"></div>
        </div>
 <div class="input-wrapper" id="topictree_div">
@@ -531,8 +535,10 @@ function saveGroups(){
 
 
 <div id="buttons">
+  {% if isTeacher %}
   <input type='button' onclick='saveGroups()' class="kui-button kui-button-plain kui-button-primary" value='Guardar' id='saveButton'>
   <input type='button' onclick='makeGroups()' class="kui-button kui-button-plain kui-button-primary" value='Agrupación Automática' id='makeButton'>
+  {% endif %}
 </div>
 </div>
 
