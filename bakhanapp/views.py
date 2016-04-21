@@ -92,10 +92,15 @@ def teacher(request):
 
 @login_required()
 def getTeacherClasses(request):
+    #funcion que es llamada con la url:/inicio
     request.session.set_expiry(timeSleep)
     #print request.user.user_profile.kaid
     #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
-    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
+    #Si la persona logeada es un administrador, muestra todos los cursos de su establecimiento.
+    if(request.user.has_perm('bakhanapp.isAdmin')):
+        classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
+    else:
+        classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class')).order_by('level','letter')
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
@@ -213,7 +218,10 @@ def getSkillsCorrect(grade_id):
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado y carga el dashboard
     request.session.set_expiry(timeSleep)#10 minutos
-    classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
+    if(request.user.has_perm('bakhanapp.isAdmin')):
+        classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+    else:
+        classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     try:
         clas = Class.objects.get(id_class=id_class)
@@ -389,11 +397,16 @@ def getClassStudents(request, id_class):
 
             json_data = json.dumps(json_dict)
             classroom = Class.objects.filter(id_class=id_class)
+            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid,id_class_id=id_class)):
+                isTeacher = True
+            else:
+                isTeacher = False
+            spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
             assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
-                                        's_skills':s_skills, 'assesment_configs':assesment_configs}, #'grades':grades,
+                                        's_skills':s_skills, 'assesment_configs':assesment_configs,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher}, #'grades':grades,
                                         context_instance=RequestContext(request)
                                     )
         else:

@@ -48,16 +48,28 @@
 				<p id="pgrade">  Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
 				<p id="pgrade"><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
 				<p id="pgrade">+ Bonificación del Profesor:
+				{% if isTeacher %}
 					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;"/>
+				{% else %}
+					<input name="input_grade_teacher" id="input_grade_teacher"  class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;" disabled />
+				{% endif %}
+				
+					
 				</p>
 				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
 				<p id="pgrade">  Nota Final: <input class="vaciar" id="final" type="text" style="width:30px;padding:5px;margin-left:348px;" disabled/></p>
 				<p style="margin-top:10px;margin-bottom:0px;">Comentario:
+					{% if isTeacher %}
 					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:440px;height:50px;padding-top:5px"></textarea>
+					{% else %}
+					<textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:440px;height:50px;padding-top:5px" disabled></textarea>
+					{% endif %}
 					<input name="input_comment" class="vaciar" id="input_comment" type="text" style="display:none;"/>
 				</p>
 			</form>
+			{% if isTeacher %}
 			<div><input type="button" onClick="modificarNota()" class="kui-button kui-button-plain kui-button-primary" style="margin-left:-100px;" value="Modificar Nota"></div>
+			{% endif %}
     	</div>
     </div>
 
@@ -87,8 +99,9 @@
     		</div>
     	</div>
     </div>
-
+    {% if isTeacher %}
 	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="plus"></i> Nueva Calificación</button></div> 
+	{% endif %}
 	<form action="" method="post" id='formJson'>{% csrf_token %}
 	<div id="contenido_a_mostrar" style="display:none;" value=>
 		<div id="inputs" align="left">
@@ -473,7 +486,10 @@
     $(".arrow-down.skills_level").attr("column",function(){
     	return $("th.skills_level").index();
 	});
-
+    var isT = false;
+    {% if isTeacher %}
+	 	isT = true;
+	{% endif %}
     var endDates = [];
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
@@ -482,8 +498,7 @@
     	endDate = new Date(Date.parse(json["assesments"][i]["end_date"]))
     	endDate = endDate.getTime() + 97200000
     	endDate = new Date(endDate)
-		
-    	if (todayDate<endDate){
+    	if (todayDate<endDate && isT){
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
@@ -502,6 +517,24 @@
     		.attr("id","ribbon"+i).html("<span>En Curso</span>");
 
     		
+    	}
+    	else if (todayDate<endDate){
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr('class',"buttonsES")
+    		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+
+			endDates.push(endDate)
+    		   		
+    		table.select('th.'+class_id)
+    		.append('span')
+    		.attr("class","counter")
+    		.attr("id","cntdwn"+i);
+
+    		table.select('th.'+class_id)
+    		.append('div')
+    		.attr("class","ribbon")
+    		.attr("id","ribbon"+i).html("<span>En Curso</span>");	
     	}
     	else{
     		table.select('th.'+class_id)
@@ -2556,6 +2589,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     }
    
 
+$('#breadcrumb').html('Curso / {{ spanish_classroom }}')
 
 </script>
 

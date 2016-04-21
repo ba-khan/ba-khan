@@ -199,7 +199,16 @@ def getGroups(request, id_class):
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
         for s in students:
             s.type = 'SinGrupo'
-    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups},context_instance=RequestContext(request))
+    classroom = Class.objects.filter(id_class=id_class)
+    N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+    spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid,id_class_id=id_class)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    kaid_teacher_object=Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher')
+    kaid_teacher = kaid_teacher_object[0]['kaid_teacher']
+    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher,'kaid_teacher':kaid_teacher},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
