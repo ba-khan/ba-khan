@@ -206,7 +206,9 @@ def getGroups(request, id_class):
         isTeacher = True
     else:
         isTeacher = False
-    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher},context_instance=RequestContext(request))
+    kaid_teacher_object=Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher')
+    kaid_teacher = kaid_teacher_object[0]['kaid_teacher']
+    return render_to_response('groups.html',{'students': students,'topictree':topictree,'id_class':id_class,'groups':groups,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher,'kaid_teacher':kaid_teacher},context_instance=RequestContext(request))
 
 def makeGroups(id_class,skills_selected):
     #Funcion que entrega un arreglo con los estudiantes y su nivel de agrupamiento.
