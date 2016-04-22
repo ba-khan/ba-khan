@@ -422,6 +422,9 @@ label.sort-filter{
 #popup{
   height:380px;
 }
+#popup p{
+  text-align: center;
+}
 
 #profile-throbber{
   padding-top:85px;
