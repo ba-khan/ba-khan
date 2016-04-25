@@ -411,7 +411,7 @@ def poblar_student_video(student_name,kaid_student, dates, session):
     jason = get_api_resource2(session,llamada,SERVER_URL)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    #print "videos: ", len(data)
+    print "videos: ", len(data)
     for k in range(len(data)):
         #if data[i]["points"] >0 :
         #Tratar de hacer una especie de update_or_create()
@@ -551,9 +551,9 @@ class Command(BaseCommand):
         ayer = "ayer: "+yesterday+"\n"
         f.write(hoy)
         f.write(ayer)
-        #dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
+        dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
-        dates = "2016-03-13T00%3A00%3A00Z&dt_end=2016-04-15T00%3A00%3A00Z"  
+        #dates = "2016-04-22T00%3A00%3A00Z&dt_end=2016-04-25T00%3A00%3A00Z"  
 
         '''
         chapter = Chapter.objects.all()
@@ -597,7 +597,7 @@ class Command(BaseCommand):
         students = Student.objects.all()
         
         #for i in range(len(students)):
-        for i in range((len(students)-5),(len(students))):
+        for i in range((len(students)-5-51),(len(students)-51)):
             #print i
             #print students[i].name
             t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
