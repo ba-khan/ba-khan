@@ -37,7 +37,7 @@
 
 	<div id="popup" class="popup" style="display:none">
     	<div id="close">X</div>
-    	<div style="align:center;margin-left:15%;width:90%">
+    	<div style="align:center;margin-left:6%;width:90%">
 	    	<form method="post" id='formGrade'>{% csrf_token %}
 				<div id="popup_nombre"><p id="pgrade" style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
 				<p id="pgrade">  Nota:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:385px;" disabled/></p>
@@ -1079,6 +1079,7 @@
 		      .enter()
 		      .append('rect')
 		      .attr("class","skills_level")
+		      .attr("id",function(d,i){return i;})
 		      .attr('width', function(d){
 		          return skill_levels_scaling(d.value);})
 		      .attr('x',function(d, i){
@@ -1086,6 +1087,23 @@
 		      .attr('y',12)
 		      .attr('height', "20px")
 		      .style('fill', function(d, i){ return skills_level_colors[i]; });
+
+		       $("svg.skills_level").tipsy({ 
+				        gravity: 'ne',
+				        opacity: 1,
+				        html: true, 
+				        title: function() {
+				          var d = this.__data__;
+				          tooltp =(`<ul>
+				          		<li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>`+d.values.struggling+`</li>
+				          		<li style='text-align:left;'><font color='#9CDCEB'>Practicado: </font>`+d.values.practiced+`</li>
+				          		<li style='text-align:left;'><font color='#58C4DD'>Nivel 1: </font>`+d.values.mastery1+`</li>
+				          		<li style='text-align:left;'><font color='#29ABCA'>Nivel 2: </font>`+d.values.mastery2+`</li>
+				          		<li style='text-align:left;'><font color='#1C758A'>Dominado: </font>`+d.values.mastery3+`</li>
+				          		</strong></ul>`);
+				          return tooltp
+				        }
+				    });
 	    
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
   			return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
