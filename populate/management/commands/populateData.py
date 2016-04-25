@@ -70,9 +70,6 @@ import urlparse
 import threading
 from threading import Semaphore
 semafaro = Semaphore(50)
-
-CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
-CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
     
 CALLBACK_BASE = '127.0.0.1'
 SERVER_URL = 'https://www.khanacademy.org'
@@ -111,13 +108,14 @@ def create_callback_server():
 #/api/v1/user?userId=&username=javierperezferrada&email=
 
     
-def run_tests():
-    global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
+def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
+    #global CONSUMER_KEY, CONSUMER_SECRET, SERVER_URL
+    global SERVER_URL
     
     # Set consumer key, consumer secret, and server base URL from user input or
     # use default values.
-    CONSUMER_KEY = CONSUMER_KEY
-    CONSUMER_SECRET = CONSUMER_SECRET
+    #CONSUMER_KEY = CONSUMER_KEY
+    #CONSUMER_SECRET = CONSUMER_SECRET
     SERVER_URL = SERVER_URL
 
     # Create an OAuth1Service using rauth.
@@ -139,8 +137,8 @@ def run_tests():
 
     print request_token
     print secret_request_token
-    passw='clave1234'
-    noClickParams = {'oauth_token':request_token, 'identifier':'utpbakhan', 'password':passw}
+    
+    noClickParams = {'oauth_token':request_token, 'identifier':identifier, 'password':passw}
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
@@ -457,14 +455,15 @@ def coach_students(session): #ver los estudiantes que tienen como coach a cierto
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    with open('data.txt', 'w') as outfile:
-        json.dump(data, outfile)
+    #with open('data.txt', 'w') as outfile:
+    #    json.dump(data, outfile)
+    print len(data)
     for j in range(len(data)):
         print data[j]["username"]
 
 def poblar_students(session):
     # Open the workbook and select the first worksheet
-    wb = xlrd.open_workbook('1MT-2016.xlsx')
+    wb = xlrd.open_workbook('6BA-2016-Alabama.xlsx')
     sh = wb.sheet_by_index(0)
      
     # List to hold dictionaries
@@ -482,7 +481,7 @@ def poblar_students(session):
         new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
         new_student.save()
 
-        new_student_class = Student_Class(id_class_id=8,kaid_student_id=row_values[13][28:])
+        new_student_class = Student_Class(id_class_id=12,kaid_student_id=row_values[13][28:])
 
         new_student_class.save()
                 
@@ -526,81 +525,116 @@ class Command(BaseCommand):
     help = 'Puebla la base de datos con ejercicios y videos vistos por los estudiantes'
 
     def handle(self, *args, **options):
+        #CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
+        #CONSUMER_KEY = '8Bn3UyhPHamgCvGN' #Clave para LeonardoMunoz esc Alabama
+        keys = ['AStAffVHzEtpSFJ3','8Bn3UyhPHamgCvGN']
+        #CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
+        #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
+        secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
+        #passw='clave1234'
+        #identifier='utpbakhan'
+        #passw='CONTRASENA'
+        #identifier='LeonardoMunoz'
+        identifiers = ['utpbakhan','LeonardoMunoz']
+        passes = ['clave1234', 'CONTRASENA']
+
+        #meter los parametros anteriores en alguna parte de la base de datos
+
         
+        for i in range(len(keys)):
 
-        session = run_tests()
-        #print "logueadoooo"
-        #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
-        #source = unicode(jason, 'ISO-8859-1')
-        #data = simplejson.loads(source)
-        buscar = "'"
-        reemplazar = " "
-        #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
-        #cur = conn.cursor()
-        #kaid_student = "kaid_485871758161384306203631"
+            session = run_tests(identifiers[i],passes[i],keys[i],secrets[i])
+            #print "logueadoooo"
+            #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
+            #source = unicode(jason, 'ISO-8859-1')
+            #data = simplejson.loads(source)
+            #buscar = "'"
+            #reemplazar = " "
+            #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
+            #cur = conn.cursor()
+            #kaid_student = "kaid_485871758161384306203631"
 
-        today = time.strftime("%Y-%m-%d")
-        yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+            today = time.strftime("%Y-%m-%d")
+            yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
 
-        #poblar_students(session)
+            #coach_students(session)
+            #poblar_students(session)
 
-        print "hoy: ", today
-        print "ayer: ", yesterday
-        dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
+            print "hoy: ", today
+            print "ayer: ", yesterday
+            dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
-        #dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-04-13T00%3A00%3A00Z"  
-
-
-
-        '''
-        chapter = Chapter.objects.all()
-        chapter.delete()
-        topic = Topic.objects.all()
-        topic.delete()
-        subtopic = Subtopic.objects.all()
-        subtopic.delete()
-        skill = Skill.objects.all()
-        skill.delete()
-        video = Video.objects.all()
-        video.delete()
-        subtopic_skill = Subtopic_Skill.objects.all()
-        subtopic_skill.delete()
-        subtopic_video = Subtopic_Video.objects.all()
-        subtopic_video.delete()
-        '''
-
-        #poblar_topictree(session,buscar,reemplazar)
-
-        '''
-        student_skills = Student_Skill.objects.all()
-        student_skills.delete()
+            #dates = "2016-04-23T00%3A00%3A00Z&dt_end=2016-04-24T00%3A00%3A00Z"  
 
 
-        skill_attempts = Skill_Attempt.objects.all()
-        skill_attempts.delete()
 
-        skill_progress = Skill_Progress.objects.all()
-        skill_progress.delete()
-        
-        student_videos = Student_Video.objects.all()
-        student_videos.delete()
-        
+            '''
+            chapter = Chapter.objects.all()
+            chapter.delete()
+            topic = Topic.objects.all()
+            topic.delete()
+            subtopic = Subtopic.objects.all()
+            subtopic.delete()
+            skill = Skill.objects.all()
+            skill.delete()
+            video = Video.objects.all()
+            video.delete()
+            subtopic_skill = Subtopic_Skill.objects.all()
+            subtopic_skill.delete()
+            subtopic_video = Subtopic_Video.objects.all()
+            subtopic_video.delete()
+            '''
 
-        video_playings = Video_Playing.objects.all()
-        video_playings.delete()
-        '''
-        #coach_students(session)
+            #poblar_topictree(session,buscar,reemplazar)
 
-        threads = []
-        students = Student.objects.all()
-        
-        #for i in range((len(students)-5),(len(students))):
-        for i in range(len(students)):
-            #print i
-            #print students[i].name
-            t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
-            threads.append(t)
-            t.start()
+            '''
+            student_skills = Student_Skill.objects.all()
+            student_skills.delete()
+
+
+            skill_attempts = Skill_Attempt.objects.all()
+            skill_attempts.delete()
+
+            skill_progress = Skill_Progress.objects.all()
+            skill_progress.delete()
             
-        #print "Todos los threads lanzados"
+            student_videos = Student_Video.objects.all()
+            student_videos.delete()
+            
+
+            video_playings = Video_Playing.objects.all()
+            video_playings.delete()
+            '''
+            #coach_students(session)
+
+
+            #hacer queries para obtener los estudiantes del establecimiento correspondiente
+
+            threads = []
+            students = Student.objects.all()
+
+            if (i==0):
+                for i in range(len(students)-51):
+                    #print i
+                    #print students[i].name
+                    t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+                    threads.append(t)
+                    t.start()
+            else:
+                for i in range((len(students)-51),len(students)):
+                    #print i
+                    #print students[i].name
+                    t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+                    threads.append(t)
+                    t.start()
+            
+            '''
+            for i in range(len(students)):
+                #print i
+                #print students[i].name
+                t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+                threads.append(t)
+                t.start()'''
+                
+            #print "Todos los threads lanzados"
 
