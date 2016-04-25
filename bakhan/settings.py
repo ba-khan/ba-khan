@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'AssesmentConfigs',
     'Contacts',
     'ManagementTeam',
+    'classRoster',
 )
 
 MIDDLEWARE_CLASSES = (
