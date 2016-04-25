@@ -1079,6 +1079,7 @@
 		      .enter()
 		      .append('rect')
 		      .attr("class","skills_level")
+		      .attr("id",function(d,i){return i;})
 		      .attr('width', function(d){
 		          return skill_levels_scaling(d.value);})
 		      .attr('x',function(d, i){
@@ -1086,6 +1087,23 @@
 		      .attr('y',12)
 		      .attr('height', "20px")
 		      .style('fill', function(d, i){ return skills_level_colors[i]; });
+
+		       $("svg.skills_level").tipsy({ 
+				        gravity: 'ne',
+				        opacity: 1,
+				        html: true, 
+				        title: function() {
+				          var d = this.__data__;
+				          tooltp =(`<ul>
+				          		<li style='text-align:left;'>struggling: `+d.values.struggling+`</li>
+				          		<li style='text-align:left;'>practiced: `+d.values.practiced+`</li>
+				          		<li style='text-align:left;'>mastery1: `+d.values.mastery1+`</li>
+				          		<li style='text-align:left;'>mastery2: `+d.values.mastery2+`</li>
+				          		<li style='text-align:left;'>mastery3: `+d.values.mastery3+`</li>
+				          		</ul>`);
+				          return tooltp
+				        }
+				    });
 	    
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
   			return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
