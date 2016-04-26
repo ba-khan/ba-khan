@@ -77,6 +77,15 @@ SERVER_URL2 = 'https://es.khanacademy.org'
     
 DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    filename='/var/www/html/bakhanproyecto/populate.log',
+                    filemode='w')
+logging.debug('A debug message')
+logging.info('Some information')
+logging.warning('A shot across the bows')
     
 
 # Create the callback server that's used to set the oauth verifier after the
@@ -260,7 +269,7 @@ def poblar_student_skill(kaid_student, dates, session):
                                                                        id_skill_name_id = data[i]["exercise_model"]["id"],
                                                                        kaid_student_id = kaid_student
                                                                        )
-            student_skill.save()
+            #student_skill.save()
         except:
             pass
             #print "skill de otra materia"
@@ -290,7 +299,7 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
                                                                        kaid_student_id = data[j]["kaid"],
                                                                        problem_number = data[j]["problem_number"]
                                                                        )
-                skill_attempts.save()
+                #skill_attempts.save()
 
         except:
             pass
@@ -420,7 +429,7 @@ def poblar_student_video(student_name,kaid_student, dates, session):
                                                                        kaid_student_id = kaid_student,
                                                                        youtube_id = data[k]["video"]["youtube_id"]
                                                                        )
-            student_video.save()
+            #student_video.save()
         except:
             pass
             #print "error"
@@ -444,7 +453,7 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
                                                                            id_video_name_id = student_videos[i]["id_video_name_id"],
                                                                            kaid_student_id = kaid_student
                                                                            )
-                video_playing.save()
+                #video_playing.save()
         except:
             pass
             #print "error"
@@ -479,11 +488,11 @@ def poblar_students(session):
         student['kaid'] = row_values[13][28:]
 
         new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
-        new_student.save()
+        #new_student.save()
 
         new_student_class = Student_Class(id_class_id=12,kaid_student_id=row_values[13][28:])
 
-        new_student_class.save()
+        #new_student_class.save()
                 
      
         students_list.append(student)
