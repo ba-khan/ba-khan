@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/contactos/', include('Contacts.urls', namespace="Contacts")), 
 
     url(r'^inicio/administradores/', include('ManagementTeam.urls', namespace="ManagementTeam")),
+    url(r'^inicio/nomina/', include('classRoster.urls', namespace="classRoster")),
     
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),

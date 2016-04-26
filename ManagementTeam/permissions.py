@@ -5,7 +5,7 @@ content_type = ContentType.objects.get(app_label='bakhanapp', model='administrat
 permission = Permission.objects.create(codename='isAdmin',
                                        name='Is Admin',
                                        content_type=content_type)
-user = User.objects.get(username='utp@lsmb.cl')
+user = User.objects.get(username='utp')
 group = Group.objects.get(name='administrators')
 group.permissions.add(permission)
 user.groups.add(group)
