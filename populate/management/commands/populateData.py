@@ -79,6 +79,10 @@ DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
 import logging
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    filename='/var/www/html/bakhanproyecto/populate.log',
+                    filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
 logging.warning('A shot across the bows')
