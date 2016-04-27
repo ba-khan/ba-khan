@@ -81,7 +81,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='/var/www/html/bakhanproyecto/populate.log',
+                    filename='populate\management\commands\populate.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
@@ -94,7 +94,7 @@ def create_callback_server():
     class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         def do_GET(self):
             global VERIFIER
-            print "kk"
+            logging.debug("kk")
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
             VERIFIER = params['oauth_verifier'][0]
@@ -144,14 +144,14 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
         params={'oauth_callback': SERVER_URL +'/api/auth/default_callback'}) #'http://%s:%d/' %
             #(CALLBACK_BASE, callback_server.server_address[1])})
 
-    print request_token
-    print secret_request_token
+    logging.debug(request_token)
+    logging.debug(secret_request_token)
     
     noClickParams = {'oauth_token':request_token, 'identifier':identifier, 'password':passw}
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
-    print authorize_url
+    logging.debug(authorize_url)
 
     #webbrowser.open(authorize_url) #Abre ventana para hacer click en aceptar y loguearse
 
@@ -176,15 +176,15 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
     #print r.status_code
 
     r = requests.post(post_url, data=noClickParams)
-    print r.url
+    logging.debug(r.url)
     
-    print r.text
-    print r.status_code
+    logging.debug(r.text)
+    logging.debug(r.status_code)
     #print r
     access_url = urlparse.parse_qs(urlparse.urlparse(r.url).query)
     oauth_verifier_raw = access_url["oauth_verifier"][0]
     oauth_verifier = oauth_verifier_raw.encode('ascii','ignore')
-    print oauth_verifier
+    logging.debug(oauth_verifier)
     #callback_server.handle_request() #Esto esperaba el click de aceptar
     callback_server.server_close()
 
@@ -196,7 +196,7 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
     #print
     #while(True):
     #    get_api_resource(session)
-    print session
+    logging.debug(session)
     return session
 
 def getTopictree():
@@ -218,7 +218,7 @@ def getTopictree():
                         temp.append(topic)
                         temp.append(subtopic)
                         temp.append(skill)
-                        print(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
+                        logging.debug(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
                         topictree.append(temp)
                         temp=[]
     return topictree
@@ -351,7 +351,7 @@ def poblar_topictree(session,buscar, reemplazar):
                 skills = get_api_resource2(session,"/api/v1/topic/"+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL2)
                 data_skills = simplejson.loads(skills)
                 for p in range(len(data_skills)):
-                    print data_skills[p]["translated_title"]
+                    logging.debug(data_skills[p]["translated_title"])
                     Skill.objects.filter(id_skill_name=data_skills[p]["content_id"]).update(name_spanish=data_skills[p]["translated_title"])
                 '''cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
                 print cant_videos
@@ -466,9 +466,9 @@ def coach_students(session): #ver los estudiantes que tienen como coach a cierto
     data = simplejson.loads(source)
     #with open('data.txt', 'w') as outfile:
     #    json.dump(data, outfile)
-    print len(data)
+    logging.debug(len(data))
     for j in range(len(data)):
-        print data[j]["username"]
+        logging.debug(data[j]["username"])
 
 def poblar_students(session):
     # Open the workbook and select the first worksheet
@@ -496,7 +496,7 @@ def poblar_students(session):
                 
      
         students_list.append(student)
-        print students_list[rownum-1]['points']
+        logging.debug(students_list[rownum-1]['points'])
      
     # Serialize the list of dicts to JSON
     j = json.dumps(students_list)
@@ -508,24 +508,30 @@ def threadPopulate(students,i,dates,session):
     try:
         poblar_student_skill(students[i].kaid_student, dates, session) #listo
     except:
-        print "error student_skill ", students[i].name
+        msg="error student_skill " + students[i].name
+        logging.debug(msg)
     try:
         poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
     except:
-        print "error student_attempts ", students[i].name
+        msg = "error student_attempts "+students[i].name
+        logging.debug(msg)
     try:
         poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
     except:
-        print "error student_progress ", students[i].name
+        msg="error student_progress "+ students[i].name
+        logging.debug(msg)
     try:
         poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
     except:
-        print "error student_video ", students[i].name
+        msg="error student_video "+ students[i].name
+        logging.debug(msg)
     try:
         poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
     except:
-        print "error video_playing ", students[i].name
-    print threading.currentThread().getName(), "Terminado"
+        msg="error video_playing "+ students[i].name
+        logging.debug(msg)
+    msg = threading.currentThread().getName() + "Terminado"
+    logging.debug(msg)
     semafaro.release()
     return
 
@@ -568,9 +574,10 @@ class Command(BaseCommand):
 
             #coach_students(session)
             #poblar_students(session)
-
-            print "hoy: ", today
-            print "ayer: ", yesterday
+            msg="hoy: " + today
+            logging.debug(msg)
+            msg="ayer: " + yesterday
+            logging.debug(msg)
             dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
 
             #dates = "2016-04-23T00%3A00%3A00Z&dt_end=2016-04-24T00%3A00%3A00Z"  
