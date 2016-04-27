@@ -147,7 +147,7 @@ class Command(BaseCommand):
                     grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
                     grade.total_recomended = totalSkills
                     points_recomended = grade.recomended_complete / float(grade.total_recomended) * 100
-                    total_points = grade.performance_points + (points_recomended * importance_skill_level/float(100))
+                    total_points = grade.performance_points + (points_recomended * importance_completed_rec/float(100))
                     grade.grade = getGrade(approval_percentage,total_points,assesment.min_grade,assesment.max_grade,assesment.approval_grade)
                     grade.save()
             #Aqui comienza el calculo de la bonificacion de empegno.        
