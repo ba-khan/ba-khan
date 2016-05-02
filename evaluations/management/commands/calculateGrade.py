@@ -268,5 +268,8 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
             points = points + scores[last_level['to_level']]
         except: 
             print 'no hay registros'
-    points = points / len(configured_skills)
+    try:
+        points = points / len(configured_skills)
+    except:
+        points = 0
     return points
