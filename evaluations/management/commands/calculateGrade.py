@@ -146,7 +146,10 @@ class Command(BaseCommand):
                     grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)*(importance_skill_level/float(100))
                     grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
                     grade.total_recomended = totalSkills
-                    points_recomended = grade.recomended_complete / float(grade.total_recomended) * 100
+                    try:
+                        points_recomended = grade.recomended_complete / float(grade.total_recomended) * 100
+                    except:
+                        points_recomended = 0
                     total_points = grade.performance_points + (points_recomended * importance_completed_rec/float(100))
                     grade.grade = getGrade(approval_percentage,total_points,assesment.min_grade,assesment.max_grade,assesment.approval_grade)
                     grade.save()
