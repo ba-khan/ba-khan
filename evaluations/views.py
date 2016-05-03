@@ -327,7 +327,6 @@ def getCurso(id_class):
     return(respuesta)
 
 def getSkillAssesment(id_asses_config): #recibe la configuracion y devuelve el html con todas las skill (un <p> por skill)
-    request.session.set_expiry(timeSleep)
     mnsj_skills = ''
     g = Assesment_Skill.objects.filter(id_assesment_config=id_asses_config).values('id_skill_name_id')
     n = Skill.objects.filter(id_skill_name__in=g)
