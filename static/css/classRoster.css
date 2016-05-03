@@ -118,3 +118,25 @@ h3, h5{
     padding-left: 0px;
     margin: 0px 0px 0px 5px;
 }
+  table.testgrid { border-collapse: collapse; border: 1px solid #CCB; width:90%; margin-left: 5%; margin-top: 5%;}
+  table.testgrid td, table.testgrid th { padding: 5px; border: 1px solid #E0E0E0;}
+  table.testgrid th { background: #E5E5E5; text-align: left;}
+
+table.testgrid th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table.testgrid td {
+  text-align: left;
+}
+.teacherTable, .studentTable{
+  height:70%;
+  width:100%;
+  overflow-y: scroll;
+  outline: none;
+}

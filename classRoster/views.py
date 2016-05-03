@@ -17,6 +17,10 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher
+from bakhanapp.models import Class
+from bakhanapp.models import Student
+from bakhanapp.models import Student_Class
+from bakhanapp.models import Class_Subject
 
 register = template.Library()
 from configs import timeSleep
@@ -34,4 +38,13 @@ def getRoster(request):
     #administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
     #print administrators
     #return render_to_response('classRoster.html', {'administrators': administrators}, context_instance=RequestContext(request))
-    return render_to_response('classRoster.html', context_instance=RequestContext(request))
+    students = []
+    teachers = Teacher.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+    print teachers
+    classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
+    for clas in classes:
+    	a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
+    	for b in a:
+    		students.append(b)
+
+    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers}, context_instance=RequestContext(request))

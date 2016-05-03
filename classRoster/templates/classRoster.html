@@ -7,7 +7,56 @@ Nomina
 {% endblock %}
 
 {% block body2 %}
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+<script src="{% static 'js/stickytable.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
+
+<script>
+	window.onload = function() {
+        teachersGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+		// we build and load the metadata in Javascript
+		teachersGrid.load({ metadata: [
+			{ name: "teacher_user", datatype: "html", editable: false }
+		]});
+		// then we attach to the HTML table and render it
+		teachersGrid.attachToHTMLTable('teachergrid');
+		var searchTeacher = document.getElementById('searchTeacher');
+		searchTeacher.addEventListener(
+		    'keyup',
+		    function (){
+		    	teachersGrid.filter(searchTeacher.value);
+		    }
+		);
+		teachersGrid.renderGrid();
+
+
+		studentsGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+		// we build and load the metadata in Javascript
+		studentsGrid.load({ metadata: [
+			{ name: "student_user", datatype: "html", editable: false }
+		]});
+		// then we attach to the HTML table and render it
+		studentsGrid.attachToHTMLTable('studentgrid');
+		var searchStudent = document.getElementById('searchStudent');
+		searchStudent.addEventListener(
+		    'keyup',
+		    function (){
+		    	studentsGrid.filter(searchStudent.value);
+		    }
+		);
+		studentsGrid.renderGrid();
+	} 
+
+	
+	
+</script>
 
 
 <br>
@@ -20,11 +69,35 @@ Nomina
 	<div id="teachersDiv">
 		<h3>Seleccionar Profesor</h3>
 		<label for="searchTeacher">Buscar: </label><input type="text" id="searchTeacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+		<div id="teacherTable">
+			<table id="teachergrid" class="testgrid">
+				<tr>
+					<th>Profesor</th>
+				</tr>
+				{% for teacher in teachers %}
+				<tr id="R{{ forloop.counter }}">
+					<td><label><input type="checkbox" id="teacher{{ forloop.counter }}" value="{{ teacher }}"> {{ teacher }}</label></td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
 	</div>
 
 	<div id="studentsDiv">
 		<h3>Seleccionar Estudiantes</h3>
 		<label for="searchStudent">Buscar: </label><input type="text" id="searchStudent" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+		<div class="studentTable">
+			<table id="studentgrid" class="testgrid">
+				<tr>
+					<th>Estudiante</th>
+				</tr>
+				{% for student in students %}
+				<tr id="R{{ forloop.counter }}">
+					<td><label><input type="checkbox" id="student{{ forloop.counter }}" value="{{ student }}"> {{ student }}</label></td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
 	</div>
 
 	<div id="classDiv">
@@ -100,5 +173,6 @@ Nomina
 
 <script type="text/javascript">
   $('#nomina').addClass('active selected');
+  $("#studentgrid").stickyTableHeaders({ scrollableArea: $(".studentTable") });
 </script>
 {% endblock %}
