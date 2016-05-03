@@ -40,6 +40,7 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
+from bakhanapp.models import Institution
 
 import datetime
 
@@ -502,33 +503,33 @@ def poblar_students(session):
     j = json.dumps(students_list)
             
 
-def threadPopulate(students,i,dates,session):
+def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
     try:
-        poblar_student_skill(students[i].kaid_student, dates, session) #listo
+        poblar_student_skill(students.kaid_student, dates, session) #listo
     except:
-        msg="error student_skill " + students[i].name
+        msg="error student_skill " + students.name
         logging.debug(msg)
     try:
-        poblar_skill_attempts(students[i].name,students[i].kaid_student, dates, session) #listo
+        poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
-        msg = "error student_attempts "+students[i].name
+        msg = "error student_attempts "+students.name
         logging.debug(msg)
     try:
-        poblar_skill_progress(students[i].name,students[i].kaid_student, dates, session) #listo
+        poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except:
-        msg="error student_progress "+ students[i].name
+        msg="error student_progress "+ students.name
         logging.debug(msg)
     try:
-        poblar_student_video(students[i].name,students[i].kaid_student, dates, session) #listo
+        poblar_student_video(students.name,students.kaid_student, dates, session) #listo
     except:
-        msg="error student_video "+ students[i].name
+        msg="error student_video "+ students.name
         logging.debug(msg)
     try:
-        poblar_video_playing(students[i].name,students[i].kaid_student, dates, session)
+        poblar_video_playing(students.name,students.kaid_student, dates, session)
     except:
-        msg="error video_playing "+ students[i].name
+        msg="error video_playing "+ students.name
         logging.debug(msg)
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
@@ -542,23 +543,28 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         #CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
         #CONSUMER_KEY = '8Bn3UyhPHamgCvGN' #Clave para LeonardoMunoz esc Alabama
-        keys = ['AStAffVHzEtpSFJ3','8Bn3UyhPHamgCvGN']
+        #keys = ['AStAffVHzEtpSFJ3','8Bn3UyhPHamgCvGN']
         #CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
         #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
-        secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
+        #secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
         #passw='clave1234'
         #identifier='utpbakhan'
         #passw='CONTRASENA'
         #identifier='LeonardoMunoz'
-        identifiers = ['utpbakhan','LeonardoMunoz']
-        passes = ['clave1234', 'CONTRASENA']
+        #identifiers = ['utpbakhan','LeonardoMunoz']
+        #passes = ['clave1234', 'CONTRASENA']
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        
-        for i in range(len(keys)):
+        institution = Institution.objects.all()
 
-            session = run_tests(identifiers[i],passes[i],keys[i],secrets[i])
+        for inst in institution:
+            keys = inst.key
+            secrets = inst.secret
+            identifiers = inst.identifier
+            passes = inst.password
+
+            session = run_tests(identifiers,passes,keys,secrets)
             #print "logueadoooo"
             #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
             #source = unicode(jason, 'ISO-8859-1')
@@ -569,20 +575,21 @@ class Command(BaseCommand):
             #cur = conn.cursor()
             #kaid_student = "kaid_485871758161384306203631"
 
-            today = time.strftime("%Y-%m-%d")
-            yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+            today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+            today = today.replace(":","%3A")
+            #yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+            #instituto = Institution.objects.get(id_institution= i)
+            yesterday = inst.last_load
 
-            #coach_students(session)
-            #poblar_students(session)
+            inst.last_load = today
+            inst.save()
+
             msg="hoy: " + today
             logging.debug(msg)
             msg="ayer: " + yesterday
             logging.debug(msg)
-            dates = yesterday+"T00%3A00%3A00Z&dt_end="+today+"T00%3A00%3A00Z"
-
+            dates = yesterday+"&dt_end="+today
             #dates = "2016-04-23T00%3A00%3A00Z&dt_end=2016-04-24T00%3A00%3A00Z"  
-
-
 
             '''
             chapter = Chapter.objects.all()
@@ -621,36 +628,22 @@ class Command(BaseCommand):
             video_playings = Video_Playing.objects.all()
             video_playings.delete()
             '''
-            #coach_students(session)
-
-
-            #hacer queries para obtener los estudiantes del establecimiento correspondiente
 
             threads = []
-            students = Student.objects.all()
+            #students = Student.objects.all()
+            students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id__in=Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")).values("kaid_student_id"))
 
-            if (i==0):
-                for i in range(len(students)-51):
-                    #print i
-                    #print students[i].name
-                    t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
-                    threads.append(t)
-                    t.start()
-            else:
-                for i in range((len(students)-51),len(students)):
-                    #print i
-                    #print students[i].name
-                    t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
-                    threads.append(t)
-                    t.start()
-            
             '''
-            for i in range(len(students)):
-                #print i
+            t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+            threads.append(t)
+            t.start()
+
+            '''
+            for i in students:
                 #print students[i].name
-                t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
+                t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                 threads.append(t)
-                t.start()'''
+                t.start()
                 
-            #print "Todos los threads lanzados"
+            #print "Todos los threads lanzados" antes 22047
 
