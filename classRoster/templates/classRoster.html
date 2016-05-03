@@ -8,11 +8,96 @@ Nomina
 
 {% block body2 %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
+
+
+<br>
 <div class="container">
 <div class="main-content">
-<h1 id='main-title'>Crear Curso</h1>
+
+<br>
+<h1>Crear Curso</h1>
+
+	<div id="teachersDiv">
+		<h3>Seleccionar Profesor</h3>
+		<label for="searchTeacher">Buscar: </label><input type="text" id="searchTeacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+	</div>
+
+	<div id="studentsDiv">
+		<h3>Seleccionar Estudiantes</h3>
+		<label for="searchStudent">Buscar: </label><input type="text" id="searchStudent" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+	</div>
+
+	<div id="classDiv">
+		<h3>Curso</h3>
+		<label for="levels">Nivel: </label>
+		<select id="levels">
+			<option value="1">1° Básico</option>
+			<option value="2">2° Básico</option>
+			<option value="3">3° Básico</option>
+			<option value="4">4° Básico</option>
+			<option value="5">5° Básico</option>
+			<option value="6">6° Básico</option>
+			<option value="7">7° Básico</option>
+			<option value="8">8° Básico</option>
+			<option value="9">1° Medio</option>
+			<option value="10">2° Medio</option>
+			<option value="11">3° Medio</option>
+			<option value="12">4° Medio</option>
+		</select>
+		<label for="letter">Letra: </label>
+		<select id="letter">
+			<option value="A">A</option>
+			<option value="B">B</option>
+			<option value="C">C</option>
+			<option value="D">D</option>
+			<option value="E">E</option>
+			<option value="F">F</option>
+			<option value="G">G</option>
+		</select>
+		<br>
+		<label for="teacher">Profesor: </label>
+		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
+		<h5>Estudiantes</h5>
+		<div id="studentsClass"></div>
+		<a onclick="javascript:" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
+		<a onclick="javascript:" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+	</div>
+
 </div>
+<br>
 </div>
+
+<div id="popup" style="display:none">
+	<!--<div id="close">X</div>-->
+</div>
+<br>
+
+	<div style="display: none;" id="loading" class="profile-throbber">
+		<div class="throbber-grid">   
+		    <!--[if lte IE 9]>
+		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+		    <![endif]-->
+		    
+		    <div class="throbber-row clearfix">
+		         <div class="block-0 throbber-block"></div>
+		         <div class="block-1 throbber-block"></div>
+		         <div class="block-2 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-7 throbber-block"></div>
+		         <div class="block-8 throbber-block"></div>
+		         <div class="block-3 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-6 throbber-block"></div>
+		         <div class="block-5 throbber-block"></div>
+		         <div class="block-4 throbber-block"></div>
+		    </div>
+		</div>
+	</div>
+
+</div> <!-- cerrar div principal del home  -->
+
 <script type="text/javascript">
   $('#nomina').addClass('active selected');
 </script>
