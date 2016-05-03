@@ -18,6 +18,11 @@ class Institution(models.Model):
     city = models.CharField(max_length=30)
     address = models.CharField(max_length=100,null=True)
     phone = models.CharField(max_length=15,null=True)
+    last_load = models.CharField(max_length=25)
+    key = models.CharField(max_length=20)
+    secret = models.CharField(max_length=20)
+    identifier = models.CharField(max_length=20)
+    password = models.CharField(max_length=20)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
