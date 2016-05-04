@@ -1089,7 +1089,7 @@
 		      .style('fill', function(d, i){ return skills_level_colors[i]; });
 
 		       $("svg.skills_level").tipsy({ 
-				        gravity: 'ne',
+				        gravity: $.fn.tipsy.autoNS,
 				        opacity: 1,
 				        html: true, 
 				        title: function() {
@@ -1273,7 +1273,8 @@
     	});
 	    	
 	    $("circle."+assesment_id).tipsy({ 
-	        gravity: 'ne',
+	    	css: {width: 800},
+	        gravity: $.fn.tipsy.autoNS,
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
@@ -2560,7 +2561,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     }
 
     $(".SE").tipsy({ 
-	        gravity: 'se',
+	        gravity: $.fn.tipsy.autoNS,
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
@@ -2582,7 +2583,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     	
     	var th = $("th."+aux);
     	th.tipsy({
-    		gravity: 'ne',
+    		gravity: $.fn.tipsy.autoNS,
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
