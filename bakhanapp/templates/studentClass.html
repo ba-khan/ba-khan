@@ -11,9 +11,6 @@
 
 {% block body2 %}	
 <style>
-	.tipsy{
-		width:250px;
-	}
 
 	tr:hover {
 		background-color: #BFDAB3; /* resaltar filas */
@@ -1271,14 +1268,10 @@
     			var textWidth = d3.select(this).node().getBBox().width;
 				return "translate("+(-(textWidth/2))+",0)";
     	});
-	    	
-	    $("circle."+assesment_id).tipsy({ 
-	    	css: {width: 800},
-	        gravity: $.fn.tipsy.autoNS,
-	        opacity: 1,
-	        html: true, 
-	        title: function() {
-	          var d = this.__data__;
+
+	      $("circle."+assesment_id).qtip({
+             content: function() {
+	          var d = $(this).prop("__data__");
 	          var id_json_student = $(this).attr("id_json");
 	          var id_json_assesment = d.column;
 	          var student_data = json["assesments"][id_json_assesment]["assesment_student"][id_json_student];
@@ -1291,22 +1284,35 @@
 	          var bonus_grade = d.value.bonus_grade;
 	          var teacher_grade = d.value.teacher_grade;
 	          var grade = d.value.grade;
-	          var skl = `<li style='text-align:left;'><strong>Habilidades: </strong></li>`
+	          var skl = "<li style='text-align:left;'><strong>Habilidades: </strong></li>"
 	          for (i=0;i<(d.value.skills).length;i++){
 	          	//alert(d.value.skills[i][1]);
-	          	skl = skl + `<li style='text-align:left;'><div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>`+d.value.skills[i][0] 
-	          	skl = skl + ` <font color="#1C758A">C: `+d.value.skills[i][4]+`</font><font color="#C30202"> I: `+d.value.skills[i][3]+`</font></li>`  
+	          	skl = skl + "<li style='text-align:left;'><div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+d.value.skills[i][0] 
+	          	skl = skl + "<font color='#1C758A'>C: "+d.value.skills[i][4]+"</font><font color='#C30202'> I: "+d.value.skills[i][3]+"</font></li>" 
 	          };
 	          var algo = `<li>Nota ficticia: `+5+`</li>`
-	          tooltp =(`<ul>
-	          		<li style='text-align:left;'>Nota por Desempeño:`+grade+`</li>
-	          		<li style='text-align:left;'>Bonificacion por Esfuerzo:`+bonus_grade+`</li>
-	          		<li style='text-align:left;'>Bonificacion del Profesor:`+teacher_grade+`</li>
-	          		`+skl+`
-	          		</ul>`);
-	          return tooltp
-	        }
-	      });
+	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño:"+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo:"+bonus_grade+"</li><li style='text-lign:left;'>Bonificacion del Profesor:"+teacher_grade+"</li>"+skl+"</ul>");
+	          test = '<p>resultado:'+id_json_assesment+'</p>'
+	          return tooltp}
+             , 
+                    
+                show: { 
+                    event: 'mouseenter', 
+                    delay: 10, 
+                    solo: true,   
+                    effect: function(offset) {$(this).slideDown(100);}  
+                    },
+                    
+                hide: { 
+                    event: 'mouseleave', 
+                    delay: 50, 
+                    fixed: true 
+                    },
+                position: { 
+                	my: 'top right',
+     				at: 'bottom center'
+ 				}
+         });
 	    /*
 		   lo que habia antes en el tipsy
 		   <li>% de recomend. completadas: `+Math.round((student_data.recommendations.completed_perc)*100)+`</li>
