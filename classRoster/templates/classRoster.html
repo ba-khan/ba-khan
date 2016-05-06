@@ -69,14 +69,14 @@ Nomina
 	<div id="teachersDiv">
 		<h3>Seleccionar Profesor</h3>
 		<label for="searchTeacher">Buscar: </label><input type="text" id="searchTeacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
-		<div id="teacherTable">
+		<div class="teacherTable">
 			<table id="teachergrid" class="testgrid">
 				<tr>
 					<th>Profesor</th>
 				</tr>
 				{% for teacher in teachers %}
 				<tr id="R{{ forloop.counter }}">
-					<td><label><input type="checkbox" id="teacher{{ forloop.counter }}" value="{{ teacher }}"> {{ teacher }}</label></td>
+					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}"> {{ teacher }}</label></td>
 				</tr>
 				{% endfor %}
 			</table>
@@ -89,7 +89,7 @@ Nomina
 		<div class="studentTable">
 			<table id="studentgrid" class="testgrid">
 				<tr>
-					<th>Estudiante</th>
+					<th>Estudiantes</th>
 				</tr>
 				{% for student in students %}
 				<tr id="R{{ forloop.counter }}">
@@ -173,6 +173,51 @@ Nomina
 
 <script type="text/javascript">
   $('#nomina').addClass('active selected');
-  $("#studentgrid").stickyTableHeaders({ scrollableArea: $(".studentTable") });
+  //$("#studentgrid").stickyTableHeaders({ scrollableArea: $(".studentTable") });
+//$('input:radio[name=radioTeachers]')[0].checked = true;
+//alert ($('input:radio[name=radioTeachers]:checked').val());
+/*
+var ele = document.getElementsByName('radioTeachers');
+var i = ele.length;
+for (var j = 0; j < i; j++) {
+    if (ele[j].checked) { //index has to be j.
+        alert('radio '+j+' checked');
+    }
+    else {
+        alert('radio '+j+' unchecked');
+    }
+}
+*/
+$(document).ready(function( ){
+      $( "input[name='radioTeachers']" ).on(
+        {
+          'change' : function( )
+                     {
+                       $.each( $( "input[name='radioTeachers']" ),
+                               function( )
+                               {
+                                 var ObjectId, ObjectValue;
+
+                                 if( $(this).is(':checked') )
+                                 {
+                                   /*Checked radio button OBJECT */
+
+                                   console.log(this);                      /* Jquery "this" Object */
+                                   ObjectId    = $(this).attr( 'id' );     /* Id of above Jquery object */
+                                   ObjectValue = $(this).val(  );          /* Value of above Jquery object */
+                                 }
+                                  else
+                                 {
+                                   /* UnChecked radio button OBJECT */
+                                   console.log(this);                      /* Jquery "this" Object */
+                                   ObjectId    = $(this).attr( 'id' );     /* Id of above Jquery object */
+                                   ObjectValue = $(this).val(  );          /* Value of above Jquery object */
+                                 }
+                               }
+                             );
+                     }
+        }
+     );
+  });
 </script>
 {% endblock %}
