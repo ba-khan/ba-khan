@@ -518,10 +518,27 @@ label.sort-filter{
 	margin-left: -2px;
     font-size: 12px;
 }
+.qtip{
+  border-color: #fff;
+  border-radius: 5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.35);
+}
 
-.tipsy { font-size: 14px; position: absolute; padding: 5px; z-index: 100000; }
+.qtip-content
+{
+max-height: 400px;
+max-width: 1000px;
+overflow: auto;
+background-color: #fff;
+color: #000;
+padding: 5px 8px 4px 8px;
 
-  .tipsy-inner { background-color: #fff; color: #000; max-width: 300px; padding: 5px 8px 4px 8px; text-align: center; }
+}
+.tipsy { font-size: 14px; position: absolute; padding: 5px; z-index: 100000;}
+
+  .tipsy-inner { background-color: #fff; color: #000; max-width: 1048px; padding: 5px 8px 4px 8px; text-align: center; }
 
   /* Rounded corners */
   /*.tipsy-inner { border-radius: 3px solid #999; -moz-border-radius: 3px solid #999; -webkit-border-radius: 3px solid #999; }*/
