@@ -18,47 +18,6 @@ Nomina
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
 
-<script>
-	window.onload = function() {
-        teachersGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
-		// we build and load the metadata in Javascript
-		teachersGrid.load({ metadata: [
-			{ name: "teacher_user", datatype: "html", editable: false }
-		]});
-		// then we attach to the HTML table and render it
-		teachersGrid.attachToHTMLTable('teachergrid');
-		var searchTeacher = document.getElementById('searchTeacher');
-		searchTeacher.addEventListener(
-		    'keyup',
-		    function (){
-		    	teachersGrid.filter(searchTeacher.value);
-		    }
-		);
-		teachersGrid.renderGrid();
-
-
-		studentsGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
-		// we build and load the metadata in Javascript
-		studentsGrid.load({ metadata: [
-			{ name: "student_user", datatype: "html", editable: false }
-		]});
-		// then we attach to the HTML table and render it
-		studentsGrid.attachToHTMLTable('studentgrid');
-		var searchStudent = document.getElementById('searchStudent');
-		searchStudent.addEventListener(
-		    'keyup',
-		    function (){
-		    	studentsGrid.filter(searchStudent.value);
-		    }
-		);
-		studentsGrid.renderGrid();
-	} 
-
-	
-	
-</script>
-
-
 <br>
 <div class="container">
 <div class="main-content">
@@ -75,11 +34,12 @@ Nomina
 					<th>Profesor</th>
 				</tr>
 				{% for teacher in teachers %}
-				<tr id="R{{ forloop.counter }}">
+				<tr id="R{{ forloop.counter }}" >
 					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}"> {{ teacher }}</label></td>
 				</tr>
 				{% endfor %}
 			</table>
+			<a onclick="javascript:" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Nuevo Profesor</a>
 		</div>
 	</div>
 
@@ -87,16 +47,20 @@ Nomina
 		<h3>Seleccionar Estudiantes</h3>
 		<label for="searchStudent">Buscar: </label><input type="text" id="searchStudent" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
 		<div class="studentTable">
+
 			<table id="studentgrid" class="testgrid">
 				<tr>
 					<th>Estudiantes</th>
 				</tr>
+				
 				{% for student in students %}
-				<tr id="R{{ forloop.counter }}">
-					<td><label><input type="checkbox" id="student{{ forloop.counter }}" value="{{ student }}"> {{ student }}</label></td>
+				<tr id="R{{ forloop.counter }}" >
+					<td><input type="checkbox" id="student{{ forloop.counter }}" value="{{ student }}"></input><label for="student{{ forloop.counter }}">{{ student }}</label></td>
 				</tr>
 				{% endfor %}
+				
 			</table>
+
 		</div>
 	</div>
 
@@ -133,7 +97,7 @@ Nomina
 		<h5>Estudiantes</h5>
 		<div id="studentsClass"></div>
 		<a onclick="javascript:" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
-		<a onclick="javascript:" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+		<a onclick="javascript:saveClass()" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
 </div>
@@ -141,7 +105,7 @@ Nomina
 </div>
 
 <div id="popup" style="display:none">
-	<!--<div id="close">X</div>-->
+	<div id="close">X</div>
 </div>
 <br>
 
@@ -172,52 +136,139 @@ Nomina
 </div> <!-- cerrar div principal del home  -->
 
 <script type="text/javascript">
-  $('#nomina').addClass('active selected');
-  //$("#studentgrid").stickyTableHeaders({ scrollableArea: $(".studentTable") });
-//$('input:radio[name=radioTeachers]')[0].checked = true;
-//alert ($('input:radio[name=radioTeachers]:checked').val());
-/*
-var ele = document.getElementsByName('radioTeachers');
-var i = ele.length;
-for (var j = 0; j < i; j++) {
-    if (ele[j].checked) { //index has to be j.
-        alert('radio '+j+' checked');
-    }
-    else {
-        alert('radio '+j+' unchecked');
-    }
+$('#nomina').addClass('active selected'); 
+
+$(document).ready(function(){
+  $("#hover").click(function(){
+        $(this).fadeOut();
+    $("#popup").fadeOut();
+    });
+  
+  //chiusura al click sul pulsante
+  $("#close").click(function(){
+        $("#hover").fadeOut();
+    $("#popup").fadeOut();
+    });
+
+
+	// Write on keyup event of keyword input element
+	$("#searchStudent").keyup(function(){
+		// When value of the input is not blank
+		if( $(this).val() != "")
+		{
+			// Show only matching TR, hide rest of them
+			$("#studentgrid tbody>tr").hide();
+			$("#studentgrid td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+		}
+		else
+		{
+			// When there is no input or clean again, show everything back
+			$("#studentgrid tbody>tr").show();
+		}
+	});
+});
+$(document).ready(function(){
+	// Write on keyup event of keyword input element
+	$("#searchTeacher").keyup(function(){
+		// When value of the input is not blank
+		if( $(this).val() != "")
+		{
+			// Show only matching TR, hide rest of them
+			$("#teachergrid tbody>tr").hide();
+			$("#teachergrid td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+		}
+		else
+		{
+			// When there is no input or clean again, show everything back
+			$("#teachergrid tbody>tr").show();
+		}
+	});
+});
+// jQuery expression for case-insensitive filter
+$.extend($.expr[":"], 
+{
+    "contains-ci": function(elem, i, match, array) 
+	{
+		return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+	}
+});
+
+
+    $(document).ready(function(){
+        $('input[type="checkbox"]').click(function(){
+            if($(this).is(":checked")){
+            	$("#studentsClass").append("<li id='"+$(this).val()+"'>"+$(this).val()+"</li>");
+                //console.log($(this).val());
+            }
+            else if($(this).is(":not(:checked)")){
+                $("#"+$(this).val()+"").remove();
+            }
+        });
+    });
+
+    $(document).ready(function(){
+        $('input[type="radio"]').click(function(){
+            if($(this).is(":checked")){
+                //console.log($(this).val());
+                $("#teacher").val($(this).val());
+            }
+            else if($(this).is(":not(:checked)")){
+                console.log("Checkbox is unchecked.");
+            }
+        });
+    });
+
+    
+
+function saveClass(){
+	var classJson = new Object();
+	classJson.teacher = $("#teacher").val();
+	if (classJson.teacher==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger profesor</p>");
+		return;
+	}
+	classJson.level = $("#levels").val();
+	classJson.letter = $("#letter").val();
+	classJson.students = [];
+	$("li").each(function (index){ 
+		classJson.students.push($(this).html());
+	});
+	if (classJson.students.length == 0){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger estudiantes</p>");
+		return;
+	}
+	console.log(classJson);
+	/*$.ajax({
+		url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
+		type: "POST",
+		data: classJson,
+			success: function(response){
+				//alert(response);
+				$("#popup").append($('#profile-throbber2').css('display','none'));
+				$('#deleteConfig').css('display', 'none');
+				$('#editConfig').css('display', 'none');
+				$('.response').remove();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+				$("#popup").append("<p class='response'>"+response+"</p>");
+				auxResponse = response;
+				if (auxResponse == "Curso guardado correctamente"){
+					$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					$("a").css('pointer-events','none');
+					reloadPage();
+				}
+				else{
+					$("#close").fadeIn();
+				}
+			}
+	});*/
 }
-*/
-$(document).ready(function( ){
-      $( "input[name='radioTeachers']" ).on(
-        {
-          'change' : function( )
-                     {
-                       $.each( $( "input[name='radioTeachers']" ),
-                               function( )
-                               {
-                                 var ObjectId, ObjectValue;
-
-                                 if( $(this).is(':checked') )
-                                 {
-                                   /*Checked radio button OBJECT */
-
-                                   console.log(this);                      /* Jquery "this" Object */
-                                   ObjectId    = $(this).attr( 'id' );     /* Id of above Jquery object */
-                                   ObjectValue = $(this).val(  );          /* Value of above Jquery object */
-                                 }
-                                  else
-                                 {
-                                   /* UnChecked radio button OBJECT */
-                                   console.log(this);                      /* Jquery "this" Object */
-                                   ObjectId    = $(this).attr( 'id' );     /* Id of above Jquery object */
-                                   ObjectValue = $(this).val(  );          /* Value of above Jquery object */
-                                 }
-                               }
-                             );
-                     }
-        }
-     );
-  });
 </script>
 {% endblock %}
