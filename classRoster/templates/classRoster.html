@@ -14,6 +14,7 @@ Nomina
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 <script src="{% static 'js/stickytable.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
@@ -38,8 +39,15 @@ Nomina
 					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}"> {{ teacher }}</label></td>
 				</tr>
 				{% endfor %}
+				<tr>
+					<td>
+						<label for="newTeacher">Nuevo profesor: </label>
+						<input id="newTeacher" value="" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+				<a onclick="javascript:newTeacherClass()" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Nuevo Profesor</a>
+					</td>
+				</tr>
 			</table>
-			<a onclick="javascript:" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Nuevo Profesor</a>
+			
 		</div>
 	</div>
 
@@ -96,7 +104,7 @@ Nomina
 		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
 		<h5>Estudiantes</h5>
 		<div id="studentsClass"></div>
-		<a onclick="javascript:" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
+		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
 		<a onclick="javascript:saveClass()" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
@@ -139,16 +147,18 @@ Nomina
 $('#nomina').addClass('active selected'); 
 
 $(document).ready(function(){
-  $("#hover").click(function(){
-        $(this).fadeOut();
-    $("#popup").fadeOut();
-    });
-  
-  //chiusura al click sul pulsante
-  $("#close").click(function(){
-        $("#hover").fadeOut();
-    $("#popup").fadeOut();
-    });
+	$("#hover").click(function(){
+	    $(this).fadeOut();
+		$("#popup").fadeOut();
+	});
+	$("#close").click(function(){
+	    $("#hover").fadeOut();
+		$("#popup").fadeOut();
+	});
+
+	$(".studentTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+	$("#studentsClass").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
+	$(".teacherTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
 
 
 	// Write on keyup event of keyword input element
@@ -166,9 +176,7 @@ $(document).ready(function(){
 			$("#studentgrid tbody>tr").show();
 		}
 	});
-});
-$(document).ready(function(){
-	// Write on keyup event of keyword input element
+
 	$("#searchTeacher").keyup(function(){
 		// When value of the input is not blank
 		if( $(this).val() != "")
@@ -183,7 +191,28 @@ $(document).ready(function(){
 			$("#teachergrid tbody>tr").show();
 		}
 	});
+
+	$('input[type="checkbox"]').click(function(){
+	    if($(this).is(":checked")){
+	    	$("#studentsClass").append("<li id='"+$(this).val()+"'>"+$(this).val()+"</li>");
+	        //console.log($(this).val());
+	    }
+	    else if($(this).is(":not(:checked)")){
+	        $("#"+$(this).val()+"").remove();
+	    }
+	});
+
+	$('input[type="radio"]').click(function(){
+        if($(this).is(":checked")){
+            //console.log($(this).val());
+            $("#teacher").val($(this).val());
+        }
+        else if($(this).is(":not(:checked)")){
+            console.log("Checkbox is unchecked.");
+        }
+    });
 });
+
 // jQuery expression for case-insensitive filter
 $.extend($.expr[":"], 
 {
@@ -192,33 +221,6 @@ $.extend($.expr[":"],
 		return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
 	}
 });
-
-
-    $(document).ready(function(){
-        $('input[type="checkbox"]').click(function(){
-            if($(this).is(":checked")){
-            	$("#studentsClass").append("<li id='"+$(this).val()+"'>"+$(this).val()+"</li>");
-                //console.log($(this).val());
-            }
-            else if($(this).is(":not(:checked)")){
-                $("#"+$(this).val()+"").remove();
-            }
-        });
-    });
-
-    $(document).ready(function(){
-        $('input[type="radio"]').click(function(){
-            if($(this).is(":checked")){
-                //console.log($(this).val());
-                $("#teacher").val($(this).val());
-            }
-            else if($(this).is(":not(:checked)")){
-                console.log("Checkbox is unchecked.");
-            }
-        });
-    });
-
-    
 
 function saveClass(){
 	var classJson = new Object();
@@ -244,15 +246,11 @@ function saveClass(){
 		return;
 	}
 	console.log(classJson);
-	/*$.ajax({
-		url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
+	$.ajax({
+		url: "{% url 'classRoster:newClass' %}",
 		type: "POST",
 		data: classJson,
 			success: function(response){
-				//alert(response);
-				$("#popup").append($('#profile-throbber2').css('display','none'));
-				$('#deleteConfig').css('display', 'none');
-				$('#editConfig').css('display', 'none');
 				$('.response').remove();
 				$("#hover").fadeIn();
 				$("#popup").fadeIn();
@@ -262,13 +260,43 @@ function saveClass(){
 					$("#hover").css('pointer-events','none');
 					$("#close").css('pointer-events','none');
 					$("a").css('pointer-events','none');
-					reloadPage();
+					location.reload();
 				}
 				else{
 					$("#close").fadeIn();
 				}
 			}
-	});*/
+	});
 }
+
+function resetClass(){
+	$("input:checkbox").each(function (index){ 
+		$(this).prop("checked",false);
+	});
+	$("input:radio").each(function (index){ 
+		$(this).prop("checked",false);
+	});
+	$("li").each(function (index){ 
+		$(this).remove();
+	});
+	$("#teacher").val("");
+	$("#levels").val(1);
+	$("#letter").val("A");
+}
+
+function newTeacherClass(){
+	var newTeacher = new Object();
+	newTeacher.username = $("#newTeacher").val();
+	$.ajax({
+		url: "{% url 'classRoster:newTeacherClass' %}",
+		type: "POST",
+		data: newTeacher,
+			success: function(response){
+				alert(response);
+			}
+	});
+}
+	
 </script>
+
 {% endblock %}

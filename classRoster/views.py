@@ -25,7 +25,7 @@ from bakhanapp.models import Class_Subject
 register = template.Library()
 from configs import timeSleep
 
-import json
+import simplejson as json
 
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
@@ -48,3 +48,17 @@ def getRoster(request):
     		students.append(b)
 
     return render_to_response('classRoster.html', {'students':students, 'teachers':teachers}, context_instance=RequestContext(request))
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def newTeacherClass(request):
+    if request.method == 'POST':
+        newTeacher = request.POST["username"]
+        print newTeacher
+        return HttpResponse("Nuevo profesor "+newTeacher)
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def newClass(request):
+    if request.method == 'POST':
+        newClass = request.POST
+        print newClass
+        return HttpResponse("Curso guardado correctamente")
