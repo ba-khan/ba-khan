@@ -119,11 +119,7 @@ Nomina
 
 	<div style="display: none;" id="loading" class="profile-throbber">
 		<div class="throbber-grid">   
-		    <!--[if lte IE 9]>
-		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
-		    <![endif]-->
-		    
-		    <div class="throbber-row clearfix">
+   			    <div class="throbber-row clearfix">
 		         <div class="block-0 throbber-block"></div>
 		         <div class="block-1 throbber-block"></div>
 		         <div class="block-2 throbber-block"></div>
@@ -252,19 +248,6 @@ function saveClass(){
 		data: classJson,
 			success: function(response){
 				$('.response').remove();
-				$("#hover").fadeIn();
-				$("#popup").fadeIn();
-				$("#popup").append("<p class='response'>"+response+"</p>");
-				auxResponse = response;
-				if (auxResponse == "Curso guardado correctamente"){
-					$("#hover").css('pointer-events','none');
-					$("#close").css('pointer-events','none');
-					$("a").css('pointer-events','none');
-					location.reload();
-				}
-				else{
-					$("#close").fadeIn();
-				}
 			}
 	});
 }
@@ -287,14 +270,44 @@ function resetClass(){
 function newTeacherClass(){
 	var newTeacher = new Object();
 	newTeacher.username = $("#newTeacher").val();
-	$.ajax({
-		url: "{% url 'classRoster:newTeacherClass' %}",
-		type: "POST",
-		data: newTeacher,
-			success: function(response){
-				alert(response);
-			}
-	});
+	if (newTeacher.username==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Ingrese nombre de usuario de KhanAcademy del profesor a buscar.</p>");
+		return;
+	}
+	else{
+		$(".response").remove()
+		$("#popup").append("<p class='response'>Buscando al profesor. Espere un momento por favor...</p>");
+		$("#popup").append($('#loading').css('display',''));
+		$("#hover").css('pointer-events','none');
+		$("#close").css('pointer-events','none');
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$.ajax({
+			url: "{% url 'classRoster:newTeacherClass' %}",
+			type: "POST",
+			data: newTeacher,
+				success: function(response){
+					$(".response").fadeOut();
+					$('#loading').fadeOut();
+					$(".response").remove()
+					$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+					$(".response").fadeIn();
+					if (response=="Nuevo profesor creado."){
+						setTimeout(function(){
+							document.location.reload(true);
+						}, 750); 
+					}
+					else{
+						$("#hover").css('pointer-events','');
+						$("#close").css('pointer-events','');
+					}
+					//alert(response);
+				}
+		});
+	}
 }
 	
 </script>

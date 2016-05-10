@@ -133,7 +133,7 @@ def create_callback_server():
     return server
 
 def searchTeacher(session,newTeacher):
-    llamada = "/api/v1/user?username="+newTeacher
+    llamada = "/api/v1/user?userId="+newTeacher
     jason = get_api_resource2(session,llamada,SERVER_URL)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
@@ -176,10 +176,23 @@ def newTeacherClass(request):
     
         sessions = run_tests(identifiers,passes,keys,secrets)
         data = searchTeacher(sessions,newTeacher)
-        print data["username"]
+
+        if data["is_child_account"]==False and data["nickname"]==newTeacher:
+            try:
+                teacher = Teacher.objects.get(kaid_teacher=data["kaid"])
+                return HttpResponse("Ya existe el profesor.")
+            except:
+                teacher = Teacher(kaid_teacher=data["kaid"],
+                    name = data["nickname"],
+                    email = data["email"],
+                    id_institution_id = inst.id_institution)
+                teacher.save()
+                return HttpResponse("Nuevo profesor creado.")
+        else:
+            return HttpResponse("No se encuentra el profesor.")
        
 
-        return HttpResponse("Nuevo profesor "+newTeacher)
+        
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newClass(request):
