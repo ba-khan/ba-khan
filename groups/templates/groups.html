@@ -895,7 +895,8 @@ $(document).ready(function(){
   {% if isTeacher %}
      
   {% else %}
-    var id_group=0
+    var id_group=0;
+    var date;
     $.ajax({ // solicita los estudiantes de cada grupo
      url: "{% url 'groups:getLastGroup' id_class %}",
      type: "GET",
@@ -918,11 +919,14 @@ $(document).ready(function(){
         }else{
           var last = JSON.parse(response);
           id_group = last[0]['pk'];
+          date = new Date(last[0]['fields']['date']);
         }
      }
     });
     if(id_group!=0){
       drawGroup(id_group);
+      label = formatDate(date.getDate(),(date.getMonth()+1),date.getFullYear(),date.getHours(),date.getMinutes(),date.getSeconds());
+      $('#name').append(label);
     }
   {% endif %}
 
