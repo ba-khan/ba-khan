@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^historial/$', views.getMakedGroup, name='getMakedGroup'),
     url(r'^estudiantes/$', views.getStudentGroup, name='getStudentGroup'),
     url(r'^habilidades/$', views.getSkillGroup, name='getSkillGroup'),
+    url(r'^ultimo/$', views.getLastGroup, name='getLastGroup'),
 ]
