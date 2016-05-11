@@ -230,10 +230,11 @@ function saveClass(){
 	}
 	classJson.level = $("#levels").val();
 	classJson.letter = $("#letter").val();
-	classJson.students = [];
+	var studentsArray = [];
 	$("li").each(function (index){ 
-		classJson.students.push($(this).html());
+		studentsArray.push($(this).html());
 	});
+	classJson.students = studentsArray;
 	if (classJson.students.length == 0){
 		$('.response').remove();
 		$("#hover").fadeIn();
@@ -242,12 +243,25 @@ function saveClass(){
 		return;
 	}
 	console.log(classJson);
+	$(".response").remove()
+	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
 	$.ajax({
 		url: "{% url 'classRoster:newClass' %}",
 		type: "POST",
 		data: classJson,
 			success: function(response){
-				$('.response').remove();
+				$(".response").fadeOut();
+				$('#loading').fadeOut();
+				$(".response").remove()
+				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+				$(".response").fadeIn();
+				$("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
 			}
 	});
 }
@@ -303,8 +317,6 @@ function newTeacherClass(){
 					else{
 						$("#hover").css('pointer-events','');
 						$("#close").css('pointer-events','');
-					}
-					//alert(response);
 				}
 		});
 	}
