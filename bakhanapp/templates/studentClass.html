@@ -2626,7 +2626,7 @@ function generateExcel(id_assesment){
 		data: {"id_assesment":id_assesment,csrfmiddlewaretoken: '{{ csrf_token }}'},
 		success: function(response){
 			alert(response);
-			var blob = new Blob(['hola'], {type: 'application/vnd.ms-excel; charset=utf-8'});
+			var blob = new Blob([response]);//, {type: 'application/vnd.ms-excel; charset=utf-8'});
 	        var link = document.createElement('a');
 	        link.href = window.URL.createObjectURL(blob);
 	        link.download = "example.xls";

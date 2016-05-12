@@ -69,34 +69,38 @@ import Queue
 import xlwt
 from datetime import datetime
 from django.http import HttpResponse
+import base64
+import xlsxwriter
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
+from xlsxwriter.workbook import Workbook
 
 @login_required()
 def generateExcel(request):
     request.session.set_expiry(timeSleep)
     if request.method == 'POST':
-        args = request.POST
-        id_assesment = args['id_assesment']
-        infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
-        #print "aqui va el valior"
-        #print infoAssesment
         try:
-            response = HttpResponse(content_type='application/vnd.ms-excel; charset=utf-8')
+            args = request.POST
+            id_assesment = args['id_assesment']
+            infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
+            #print "aqui va el valior"
+            #print infoAssesment
+            output = StringIO.StringIO()
+
+            book = Workbook(output)
+            sheet = book.add_worksheet('test')       
+            sheet.write(0, 0, 'Hello, world!')
+            book.close()
+
+            # construct response
+            output.seek(0)
+            response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            response['Content-Disposition'] = "attachment; filename=test.xlsx"
         except Exception as e:
             print e
 
-        style0 = xlwt.easyxf('font: name Times New Roman, color-index red, bold on',num_format_str='#,##0.00')
-        style1 = xlwt.easyxf(num_format_str='D-MMM-YY')
-
-        wb = xlwt.Workbook()
-        ws = wb.add_sheet('A Test Sheet')
-
-        ws.write(0, 0, 1234.56, style0)
-        ws.write(1, 0, datetime.now(), style1)
-        ws.write(2, 0, 1)
-        ws.write(2, 1, 1)
-        ws.write(2, 2, xlwt.Formula("A3+B3"))
-
-        wb.save(response)
     return response
 
 
