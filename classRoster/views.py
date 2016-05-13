@@ -133,7 +133,7 @@ def create_callback_server():
     return server
 
 def searchTeacher(session,newTeacher):
-    llamada = "/api/v1/user?userId="+newTeacher
+    llamada = "/api/v1/user?username="+newTeacher
     jason = get_api_resource2(session,llamada,SERVER_URL)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
@@ -143,21 +143,13 @@ def searchTeacher(session,newTeacher):
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def getRoster(request):
     request.session.set_expiry(timeSleep)
-    #try:
-    #    teacher = Teacher.objects.get(email=request.user.email)
-    #except:
-    #    return render_to_response('administrators.html', context_instance=RequestContext(request))
-    #administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
-    #print administrators
-    #return render_to_response('classRoster.html', {'administrators': administrators}, context_instance=RequestContext(request))
     students = []
     teachers = Teacher.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
-    print teachers
     classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
     for clas in classes:
-    	a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
-    	for b in a:
-    		students.append(b)
+        a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
+        for b in a:
+            students.append(b)
 
     return render_to_response('classRoster.html', {'students':students, 'teachers':teachers}, context_instance=RequestContext(request))
 
@@ -165,7 +157,6 @@ def getRoster(request):
 def newTeacherClass(request):
     if request.method == 'POST':
         newTeacher = request.POST["username"]
-        print newTeacher
 
         inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
 
@@ -173,20 +164,21 @@ def newTeacherClass(request):
         secrets = inst.secret
         identifiers = inst.identifier
         passes = inst.password
-    
+
         sessions = run_tests(identifiers,passes,keys,secrets)
         data = searchTeacher(sessions,newTeacher)
 
-        if data["is_child_account"]==False and data["nickname"]==newTeacher:
+        #if data["is_child_account"]==False and data["nickname"]==newTeacher: FALTA UNA VALIDACION MAS
+        if data["username"]==newTeacher:
             try:
                 teacher = Teacher.objects.get(kaid_teacher=data["kaid"])
                 return HttpResponse("Ya existe el profesor.")
             except:
-                teacher = Teacher(kaid_teacher=data["kaid"],
-                    name = data["nickname"],
-                    email = data["email"],
-                    id_institution_id = inst.id_institution)
-                teacher.save()
+                if data["email"]==None:
+                    email=""
+                else:
+                    email = data["email"]
+                teacher = Teacher.objects.create(kaid_teacher=data["kaid"], name=data["username"], email=email, id_institution_id=inst.id_institution)
                 return HttpResponse("Nuevo profesor creado.")
         else:
             return HttpResponse("No se encuentra el profesor.")
@@ -199,18 +191,20 @@ def newClass(request):
         letter = newClass["letter"]
         #teacher = newClass["teacher"]
         teacher = Teacher.objects.get(name=newClass["teacher"])
+        kaid_teacher = teacher.kaid_teacher
         students = newClass.getlist("students[]")
 
         inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
-
-
+        id_institution = int(inst.id_institution)
         try:
-            curso = Class.objects.get(level=level,letter=letter,id_institution_id=inst.id_institution)
+            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution)
             return HttpResponse("Ya existe el curso")
         except:
-            curso = Class.objects.create(level=level, letter=letter, id_institution_id=inst.id_institution, year=2016)
+            print "Crear nuevo curso"
+            curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=2016)
             id_curso = int(curso.id_class)
-            class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=teacher.kaid_teacher)
+            class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher) #AQUI SE CAE, AYER FUNCIONABA ASI TAL CUAL :(
+            print class_subject
             for student in students:
                 aux = Student.objects.get(name=student)
                 student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
