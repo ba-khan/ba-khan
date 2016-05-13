@@ -1751,7 +1751,6 @@
 			validarEvaluacion();
 			if (validarRealizarEvaluacion() || validarEvaluacion()){
 				$(".response").remove();
-				Loading();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
 				$("#hover").css('pointer-events','none');
 				$("#close").css('pointer-events','none');
@@ -1773,10 +1772,15 @@
 				$.ajax({
 					url: "{% url 'evaluations:newAssesment3' %}",
 					type: "POST",
+					async: false,
 					data: $("#formJson").serialize(),
-					success: function(response){
-						location.reload();
-					}
+					success: function(response) {
+			            Loading();
+			            return response;
+			        },
+			        complete: function(){
+			        	location.reload();
+			        }
 				});
 			}
 			else{
@@ -2136,7 +2140,6 @@
 			validarEvaluacion();
 			if (validarRealizarEvaluacion()||validarEvaluacion()){
 				$(".response").remove();
-				Loading();
 				$("#popup_evaluacion").append("<p class='response'>Editando...</p>");
 				$("#hover").css('pointer-events','none');
 				$("#close").css('pointer-events','none');
@@ -2153,10 +2156,15 @@
 				$.ajax({
 					url: "{% url 'evaluations:updateAssesment' %}",
 					type: "POST",
+					async: false,
 					data: $("#formJson").serialize(),
-					success: function(response){
-						location.reload();
-					}
+					success: function(response) {
+			            loading();
+			            return response;
+			        },
+			        complete: function(){
+			        	location.reload();
+			        }
 				});
 
 			}
