@@ -102,17 +102,31 @@ h3, h5{
  	margin-left: 5%;
  	margin-top: 10px;
  }
+.simple-input, .simple-input.search-input {
+  font-size: 15px;
+}
+
 
  #resetButton, #saveButton{
  	cursor:pointer; 
  	width:100px; 
  	height: 32px; 
- 	padding:8px
+ 	padding:8px;
+  margin-top: 2%;
  }
  #resetButton{
  	margin-left: 23%;
     margin-right: 5%;
  }
+
+ #newTeacherButton {
+    cursor: pointer;
+    width: 125px;
+    height: 35px;
+    padding: 8px;
+    margin-left: 25%;
+    margin-top: 5%;
+  }
 
  .simple-input.search-input {
     padding-left: 0px;
@@ -137,6 +151,12 @@ table.testgrid td {
 .teacherTable, .studentTable{
   height:70%;
   width:90%; margin-left: 5%; margin-top: 5%;
+  overflow-y: auto;
+  outline: none;
+}
+
+#studentsClass li{  padding-left: 5%; }
+#studentsClass{
   overflow-y: auto;
   outline: none;
 }

@@ -57,7 +57,16 @@ from bakhanapp.views import getTopictree
 import time
 import datetime
 
-
+def getLastGroup(request,id_class):
+    try:
+        g = Master_Group.objects.filter(id_class=id_class)
+        l = g.latest('date')
+        data = serializers.serialize('json', [l])
+        struct = json.loads(data)
+        last = json.dumps(struct)
+    except Exception as e:
+        last = False
+    return HttpResponse(last)
 
 def getSkillGroup(request,id_class):
     #funcion que devuelve un json con los skills de un grupo

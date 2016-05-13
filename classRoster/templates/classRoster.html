@@ -14,50 +14,10 @@ Nomina
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 <script src="{% static 'js/stickytable.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
-
-<script>
-	window.onload = function() {
-        teachersGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
-		// we build and load the metadata in Javascript
-		teachersGrid.load({ metadata: [
-			{ name: "teacher_user", datatype: "html", editable: false }
-		]});
-		// then we attach to the HTML table and render it
-		teachersGrid.attachToHTMLTable('teachergrid');
-		var searchTeacher = document.getElementById('searchTeacher');
-		searchTeacher.addEventListener(
-		    'keyup',
-		    function (){
-		    	teachersGrid.filter(searchTeacher.value);
-		    }
-		);
-		teachersGrid.renderGrid();
-
-
-		studentsGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
-		// we build and load the metadata in Javascript
-		studentsGrid.load({ metadata: [
-			{ name: "student_user", datatype: "html", editable: false }
-		]});
-		// then we attach to the HTML table and render it
-		studentsGrid.attachToHTMLTable('studentgrid');
-		var searchStudent = document.getElementById('searchStudent');
-		searchStudent.addEventListener(
-		    'keyup',
-		    function (){
-		    	studentsGrid.filter(searchStudent.value);
-		    }
-		);
-		studentsGrid.renderGrid();
-	} 
-
-	
-	
-</script>
-
 
 <br>
 <div class="container">
@@ -75,11 +35,19 @@ Nomina
 					<th>Profesor</th>
 				</tr>
 				{% for teacher in teachers %}
-				<tr id="R{{ forloop.counter }}">
+				<tr id="R{{ forloop.counter }}" >
 					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}"> {{ teacher }}</label></td>
 				</tr>
 				{% endfor %}
+				<tr>
+					<td>
+						<label for="newTeacher">Nuevo profesor: </label>
+						<input id="newTeacher" value="" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+				<a onclick="javascript:newTeacherClass()" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Nuevo Profesor</a>
+					</td>
+				</tr>
 			</table>
+			
 		</div>
 	</div>
 
@@ -87,16 +55,20 @@ Nomina
 		<h3>Seleccionar Estudiantes</h3>
 		<label for="searchStudent">Buscar: </label><input type="text" id="searchStudent" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
 		<div class="studentTable">
+
 			<table id="studentgrid" class="testgrid">
 				<tr>
 					<th>Estudiantes</th>
 				</tr>
+				
 				{% for student in students %}
-				<tr id="R{{ forloop.counter }}">
-					<td><label><input type="checkbox" id="student{{ forloop.counter }}" value="{{ student }}"> {{ student }}</label></td>
+				<tr id="R{{ forloop.counter }}" >
+					<td><input type="checkbox" id="student{{ forloop.counter }}" value="{{ student }}"></input><label for="student{{ forloop.counter }}">{{ student }}</label></td>
 				</tr>
 				{% endfor %}
+				
 			</table>
+
 		</div>
 	</div>
 
@@ -132,8 +104,8 @@ Nomina
 		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
 		<h5>Estudiantes</h5>
 		<div id="studentsClass"></div>
-		<a onclick="javascript:" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
-		<a onclick="javascript:" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
+		<a onclick="javascript:saveClass()" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
 </div>
@@ -141,17 +113,13 @@ Nomina
 </div>
 
 <div id="popup" style="display:none">
-	<!--<div id="close">X</div>-->
+	<div id="close">X</div>
 </div>
 <br>
 
 	<div style="display: none;" id="loading" class="profile-throbber">
 		<div class="throbber-grid">   
-		    <!--[if lte IE 9]>
-		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
-		    <![endif]-->
-		    
-		    <div class="throbber-row clearfix">
+   			    <div class="throbber-row clearfix">
 		         <div class="block-0 throbber-block"></div>
 		         <div class="block-1 throbber-block"></div>
 		         <div class="block-2 throbber-block"></div>
@@ -172,52 +140,189 @@ Nomina
 </div> <!-- cerrar div principal del home  -->
 
 <script type="text/javascript">
-  $('#nomina').addClass('active selected');
-  //$("#studentgrid").stickyTableHeaders({ scrollableArea: $(".studentTable") });
-//$('input:radio[name=radioTeachers]')[0].checked = true;
-//alert ($('input:radio[name=radioTeachers]:checked').val());
-/*
-var ele = document.getElementsByName('radioTeachers');
-var i = ele.length;
-for (var j = 0; j < i; j++) {
-    if (ele[j].checked) { //index has to be j.
-        alert('radio '+j+' checked');
-    }
-    else {
-        alert('radio '+j+' unchecked');
-    }
-}
-*/
-$(document).ready(function( ){
-      $( "input[name='radioTeachers']" ).on(
-        {
-          'change' : function( )
-                     {
-                       $.each( $( "input[name='radioTeachers']" ),
-                               function( )
-                               {
-                                 var ObjectId, ObjectValue;
+$('#nomina').addClass('active selected'); 
 
-                                 if( $(this).is(':checked') )
-                                 {
-                                   /*Checked radio button OBJECT */
+$(document).ready(function(){
+	$("#hover").click(function(){
+	    $(this).fadeOut();
+		$("#popup").fadeOut();
+	});
+	$("#close").click(function(){
+	    $("#hover").fadeOut();
+		$("#popup").fadeOut();
+	});
 
-                                   console.log(this);                      /* Jquery "this" Object */
-                                   ObjectId    = $(this).attr( 'id' );     /* Id of above Jquery object */
-                                   ObjectValue = $(this).val(  );          /* Value of above Jquery object */
-                                 }
-                                  else
-                                 {
-                                   /* UnChecked radio button OBJECT */
-                                   console.log(this);                      /* Jquery "this" Object */
-                                   ObjectId    = $(this).attr( 'id' );     /* Id of above Jquery object */
-                                   ObjectValue = $(this).val(  );          /* Value of above Jquery object */
-                                 }
-                               }
-                             );
-                     }
+	$(".studentTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+	$("#studentsClass").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
+	$(".teacherTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+
+
+	// Write on keyup event of keyword input element
+	$("#searchStudent").keyup(function(){
+		// When value of the input is not blank
+		if( $(this).val() != "")
+		{
+			// Show only matching TR, hide rest of them
+			$("#studentgrid tbody>tr").hide();
+			$("#studentgrid td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+		}
+		else
+		{
+			// When there is no input or clean again, show everything back
+			$("#studentgrid tbody>tr").show();
+		}
+	});
+
+	$("#searchTeacher").keyup(function(){
+		// When value of the input is not blank
+		if( $(this).val() != "")
+		{
+			// Show only matching TR, hide rest of them
+			$("#teachergrid tbody>tr").hide();
+			$("#teachergrid td:contains-ci('" + $(this).val() + "')").parent("tr").show();
+		}
+		else
+		{
+			// When there is no input or clean again, show everything back
+			$("#teachergrid tbody>tr").show();
+		}
+	});
+
+	$('input[type="checkbox"]').click(function(){
+	    if($(this).is(":checked")){
+	    	$("#studentsClass").append("<li id='"+$(this).val()+"'>"+$(this).val()+"</li>");
+	        //console.log($(this).val());
+	    }
+	    else if($(this).is(":not(:checked)")){
+	        $("#"+$(this).val()+"").remove();
+	    }
+	});
+
+	$('input[type="radio"]').click(function(){
+        if($(this).is(":checked")){
+            //console.log($(this).val());
+            $("#teacher").val($(this).val());
         }
-     );
-  });
+        else if($(this).is(":not(:checked)")){
+            console.log("Checkbox is unchecked.");
+        }
+    });
+});
+
+// jQuery expression for case-insensitive filter
+$.extend($.expr[":"], 
+{
+    "contains-ci": function(elem, i, match, array) 
+	{
+		return (elem.textContent || elem.innerText || $(elem).text() || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+	}
+});
+
+function saveClass(){
+	var classJson = new Object();
+	classJson.teacher = $("#teacher").val();
+	if (classJson.teacher==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger profesor</p>");
+		return;
+	}
+	classJson.level = $("#levels").val();
+	classJson.letter = $("#letter").val();
+	var studentsArray = [];
+	$("li").each(function (index){ 
+		studentsArray.push($(this).html());
+	});
+	classJson.students = studentsArray;
+	if (classJson.students.length == 0){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger estudiantes</p>");
+		return;
+	}
+	console.log(classJson);
+	$(".response").remove()
+	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+	$.ajax({
+		url: "{% url 'classRoster:newClass' %}",
+		type: "POST",
+		data: classJson,
+			success: function(response){
+				$(".response").fadeOut();
+				$('#loading').fadeOut();
+				$(".response").remove()
+				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+				$(".response").fadeIn();
+				$("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+			}
+	});
+}
+
+function resetClass(){
+	$("input:checkbox").each(function (index){ 
+		$(this).prop("checked",false);
+	});
+	$("input:radio").each(function (index){ 
+		$(this).prop("checked",false);
+	});
+	$("li").each(function (index){ 
+		$(this).remove();
+	});
+	$("#teacher").val("");
+	$("#levels").val(1);
+	$("#letter").val("A");
+}
+
+function newTeacherClass(){
+	var newTeacher = new Object();
+	newTeacher.username = $("#newTeacher").val();
+	if (newTeacher.username==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Ingrese nombre de usuario de KhanAcademy del profesor a buscar.</p>");
+		return;
+	}
+	else{
+		$(".response").remove()
+		$("#popup").append("<p class='response'>Buscando al profesor. Espere un momento por favor...</p>");
+		$("#popup").append($('#loading').css('display',''));
+		$("#hover").css('pointer-events','none');
+		$("#close").css('pointer-events','none');
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$.ajax({
+			url: "{% url 'classRoster:newTeacherClass' %}",
+			type: "POST",
+			data: newTeacher,
+				success: function(response){
+					$(".response").fadeOut();
+					$('#loading').fadeOut();
+					$(".response").remove()
+					$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+					$(".response").fadeIn();
+					if (response=="Nuevo profesor creado."){
+						setTimeout(function(){
+							document.location.reload(true);
+						}, 750); 
+					}
+					else{
+						$("#hover").css('pointer-events','');
+						$("#close").css('pointer-events','');
+					}
+				}
+		});
+	}
+}
+	
 </script>
+
 {% endblock %}

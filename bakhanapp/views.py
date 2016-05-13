@@ -218,8 +218,9 @@ def getSkillsCorrect(grade_id):
 def getClassStudents(request, id_class):
     #Esta funcion entrega todos los estudiantes que pertenecen a un curso determinado y carga el dashboard
     request.session.set_expiry(timeSleep)#10 minutos
+    id_institition_request=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
     if(request.user.has_perm('bakhanapp.isAdmin')):
-        classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+        classes = Class.objects.filter(id_institution_id=id_institition_request)
     else:
         classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class'))
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -399,11 +400,13 @@ def getClassStudents(request, id_class):
             classroom = Class.objects.filter(id_class=id_class)
             if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid,id_class_id=id_class)):
                 isTeacher = True
+                assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
             else:
                 isTeacher = False
+                assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
-            assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
+            
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                         's_skills':s_skills, 'assesment_configs':assesment_configs,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher}, #'grades':grades,

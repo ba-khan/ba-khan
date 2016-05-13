@@ -718,103 +718,8 @@ var className;
         $("#timelineItem_"+datum.id).attr('class') = "selected";
         $("#timelineItem_"+datum.id).addClass(className+" selected");
         $("circle").removeClass("selected");*/
-      	//Funcion que carga todos los datos del grupo datum.id
-      	var groups
-        var students
-        var skills
-      	$.ajax({ // solicita los grupos creados en la agrupacion seleccionada
-			   url: "{% url 'groups:getMakedGroup' id_class %}",
-			   type: "POST",
-         async: false,
-			   data: {id_master_group : datum.id},
-			   success: function (response) {
-					groups = JSON.parse(response);
-          //Eliminar las agrupaciones anteriores mostradas en pantalla.
-          $('.cuadradito').appendTo('#SinGrupo');
-          $('select').remove();
-          $('#Avanzados').empty();
-          $('#Intermedios').empty();
-          $('#Reforzamiento').empty();
-					for(var i=0;i<groups.length;i++){//en este for se crean todos los div segun la agrupacion seleccionada.
-            //Agrega cada subgrupo en el div que le corresponde.
-            type = "#"+groups[i]['fields']['type'];//type grupo
-            tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
-            if (type == '#Avanzados'){
-              $('#Avanzados').append("<h3>Avanzados<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
-              $('#Avanzados').append("<div id='fakeDiv1'></div>");
-              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
-              
-            }
-            if (type == '#Intermedios'){
-              $("#Intermedios").append("<h3>Intermedios<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
-              $('#Intermedios').append("<div id='fakeDiv2'></div>");
-              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
-              
-            }
-            if (type == '#Reforzamiento'){
-              $("#Reforzamiento").append("<h3>Reforzamiento<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
-              $('#Reforzamiento').append("<div id='fakeDiv3'></div>");
-              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
-              
-            }
-            if (type.substring(1,22) == 'SubGrupoReforzamiento'){
-              $("#fakeDiv3").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
-            }
-            if (type.substring(1,20) == 'SubGrupoIntermedios'){
-              $("#fakeDiv2").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
-            }
-            if (type.substring(1,18) == 'SubGrupoAvanzados'){
-              $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
-                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
-            }
-					}
-			   }
-		    });
-        $.ajax({ // solicita los estudiantes de cada grupo
-         url: "{% url 'groups:getStudentGroup' id_class %}",
-         type: "POST",
-         async: false,
-         data: {id_master_group : datum.id},
-         success: function (response) {
-            students = JSON.parse(response);
-            for(var i=0;i<students.length;i++){
-              var g = "." + (students[i]['fields']['id_group']).toString();
-              var s = "#" + (students[i]['fields']['kaid_student']).toString();
-              $(s).appendTo(g);//agrega cada estudiante a su correspondiente agrupacion.
-          }
-         }
-        });
-        $('#topictree_div').remove();
-        $('#saveButton').remove();
-        $('#makeButton').remove();
-        $.ajax({ // solicita las habilidades de cada grupo
-         url: "{% url 'groups:getSkillGroup' id_class %}",
-         type: "POST",
-         async: false,
-         data: {id_master_group : datum.id},
-         success: function (response) {
-            skills = JSON.parse(response);
-            $('#skills').empty();
-            $('#skills').css('display','inline');
-            $('#skills').append("<h3>Habilidades</h3><br>");
-            if(skills.length==0){
-              $('#skills').append("<li>No hay Habilidades asociadas</li>");
-            }
-            else{
-              for(var i=0;i<skills.length;i++){
-                $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
-              }
-            }
-         }
-        });
-        $(".cuadradito").removeAttr("draggable");
-        $('.nuevo_sub').remove()
-        $('#ascrail2004').remove()
-        $('#ascrail2004-hr').remove()
-        $('#cleanButton').remove();
-        $('#newButton').show();
+        drawGroup(datum.id);
+      	
       })
       .scroll(function (x, scale) {
       })
@@ -868,10 +773,107 @@ function cleanGroups() {
   $('#cleanButton').hide();
   initGroups();
 };
-</script>
+function drawGroup(id){
+  //Funcion que carga todos los datos del grupo id
+        var groups
+        var students
+        var skills
+        $.ajax({ // solicita los grupos creados en la agrupacion seleccionada
+         url: "{% url 'groups:getMakedGroup' id_class %}",
+         type: "POST",
+         async: false,
+         data: {id_master_group : id,csrfmiddlewaretoken: '{{ csrf_token }}'},
+         success: function (response) {
+          groups = JSON.parse(response);
+          //Eliminar las agrupaciones anteriores mostradas en pantalla.
+          $('.cuadradito').appendTo('#SinGrupo');
+          $('select').remove();
+          $('#Avanzados').empty();
+          $('#Intermedios').empty();
+          $('#Reforzamiento').empty();
+          for(var i=0;i<groups.length;i++){//en este for se crean todos los div segun la agrupacion seleccionada.
+            //Agrega cada subgrupo en el div que le corresponde.
+            type = "#"+groups[i]['fields']['type'];//type grupo
+            tutor = "#"+groups[i]['fields']['kaid_student_tutor'];
+            if (type == '#Avanzados'){
+              $('#Avanzados').append("<h3>Avanzados<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
+              $('#Avanzados').append("<div id='fakeDiv1'></div>");
+              $("#Avanzados").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
+              
+            }
+            if (type == '#Intermedios'){
+              $("#Intermedios").append("<h3>Intermedios<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
+              $('#Intermedios').append("<div id='fakeDiv2'></div>");
+              $("#Intermedios").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
+              
+            }
+            if (type == '#Reforzamiento'){
+              $("#Reforzamiento").append("<h3>Reforzamiento<h3><h4>Tutor: "+$(tutor).attr('title')+"</h4>");
+              $('#Reforzamiento').append("<div id='fakeDiv3'></div>");
+              $("#Reforzamiento").append("<div class='"+(groups[i]['pk']).toString()+"' ></div>");
+              
+            }
+            if (type.substring(1,22) == 'SubGrupoReforzamiento'){
+              $("#fakeDiv3").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"'><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
+            }
+            if (type.substring(1,20) == 'SubGrupoIntermedios'){
+              $("#fakeDiv2").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
+            }
+            if (type.substring(1,18) == 'SubGrupoAvanzados'){
+              $("#fakeDiv1").append("<br><hr><div class='subGrupo scroll "+(groups[i]['pk']).toString()+"' id='"
+                +groups[i]['fields']['type']+"' ><h4>Tutor: "+$(tutor).attr('title')+"</h4></div>");
+            }
+          }
+         }
+        });
+        $.ajax({ // solicita los estudiantes de cada grupo
+         url: "{% url 'groups:getStudentGroup' id_class %}",
+         type: "POST",
+         async: false,
+         data: {id_master_group : id,csrfmiddlewaretoken: '{{ csrf_token }}'},
+         success: function (response) {
+            students = JSON.parse(response);
+            for(var i=0;i<students.length;i++){
+              var g = "." + (students[i]['fields']['id_group']).toString();
+              var s = "#" + (students[i]['fields']['kaid_student']).toString();
+              $(s).appendTo(g);//agrega cada estudiante a su correspondiente agrupacion.
+          }
+         }
+        });
+        $('#topictree_div').remove();
+        $('#saveButton').remove();
+        $('#makeButton').remove();
+        $.ajax({ // solicita las habilidades de cada grupo
+         url: "{% url 'groups:getSkillGroup' id_class %}",
+         type: "POST",
+         async: false,
+         data: {id_master_group : id,csrfmiddlewaretoken: '{{ csrf_token }}'},
+         success: function (response) {
+            skills = JSON.parse(response);
+            $('#skills').empty();
+            $('#skills').css('display','inline');
+            $('#skills').append("<h3>Habilidades</h3><br>");
+            if(skills.length==0){
+              $('#skills').append("<li>No hay Habilidades asociadas</li>");
+            }
+            else{
+              for(var i=0;i<skills.length;i++){
+                $('#skills').append("<li>"+skills[i]['fields']['name_spanish']+"</li>");
+              }
+            }
+         }
+        });
+        $(".cuadradito").removeAttr("draggable");
+        $('.nuevo_sub').remove()
+        $('#ascrail2004').remove()
+        $('#ascrail2004-hr').remove()
+        $('#cleanButton').remove();
+        $('#newButton').show();
+}
 
-<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
-<script type="text/javascript"> 
+
     $(document).ready(function () {
     $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' })
     });
@@ -890,12 +892,48 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       });
   });
+  {% if isTeacher %}
+     
+  {% else %}
+    var id_group=0;
+    var date;
+    $.ajax({ // solicita los estudiantes de cada grupo
+     url: "{% url 'groups:getLastGroup' id_class %}",
+     type: "GET",
+     async: false,
+     success: function (response) {
+        if(response.localeCompare('False')==0){
+          $("#popup").append("<p class='response'>No hay agrupaciones realizadas.</p>");
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#hover").click(function(){
+            $(this).fadeOut();
+            $("#popup").fadeOut();
+            window.location.replace("/inicio");
+          });
+          $("#close").click(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+            window.location.replace("/inicio");
+          });
+        }else{
+          var last = JSON.parse(response);
+          id_group = last[0]['pk'];
+          date = new Date(last[0]['fields']['date']);
+        }
+     }
+    });
+    if(id_group!=0){
+      drawGroup(id_group);
+      label = formatDate(date.getDate(),(date.getMonth()+1),date.getFullYear(),date.getHours(),date.getMinutes(),date.getSeconds());
+      $('#name').append(label);
+    }
+  {% endif %}
 
-</script>
 
-<script>
     //$( ".jstree-themeicon" ).remove();
     $('#topictree').jstree(true).hide_icons();
     $('#breadcrumb').html('Grupos / {{ spanish_classroom }}')
   </script>
+  <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 {% endblock %}
