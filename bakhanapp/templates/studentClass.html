@@ -988,7 +988,7 @@
 		    .attr("y", 5)
 		    .attr("dy", ".35em")
 			.attr("fill", "black")
-		    .text(function(d) { return d.values["incorrect"] });
+		    .text(function(d) { return "I:"+d.values["incorrect"]});
 		correct_incorrect.selectAll("text")
 			.attr("transform",function(d){
 				var textWidth = d3.select(this).node().getBBox().width;
@@ -1004,7 +1004,6 @@
 	    	.attr("width",function(d){return escalarCorrectIncorrect(d.values["correct"])})
 	    	.attr("height","15");
 	    	//.style("fill","#9DB63B");
-	    
 	    correct_incorrect
 	    	.append("text")
 	    	.attr("class","correct")
@@ -1012,7 +1011,8 @@
 		    .attr("y", 5)
 		    .attr("dy", ".35em")
 			.attr("fill", "black")
-		    .text(function(d) { return d.values["correct"] });
+			//.attr("font","#1C758A")
+		    .text(function(d) { return "C:"+d.values["correct"]});
 		
 		//Sorting by the total of exercises done is default
 	  		d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values["correct"]+d.values["incorrect"];});
