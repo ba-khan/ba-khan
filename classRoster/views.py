@@ -106,7 +106,10 @@ def get_api_resource2(sessions,llamada,server):
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
     start = time.time()
     responses = sessions.get(url, params=params)
-    encoded_response=responses.text.encode(sys.stdout.encoding,errors='replace')
+    #print responses
+    #encoded_response=responses.text.encode(sys.stdout.encoding,errors='replace')  #AQUÍ ESTÁ MURIENDOSE 
+    encoded_response=responses.text
+    print encoded_response
     end = time.time()
     return encoded_response
 
@@ -135,8 +138,8 @@ def create_callback_server():
 def searchTeacher(session,newTeacher):
     llamada = "/api/v1/user?username="+newTeacher
     jason = get_api_resource2(session,llamada,SERVER_URL)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
+    #source = unicode(jason, 'ISO-8859-1')
+    data = simplejson.loads(jason)
     return data
 
 
