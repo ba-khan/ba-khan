@@ -34,18 +34,19 @@ Nomina
 				<tr>
 					<th>Profesor</th>
 				</tr>
+				<tr>
+					<td>
+						<label for="newTeacher">Nuevo profesor: </label>
+						<input id="newTeacher" value="" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+				<a onclick="javascript:newTeacherClass()" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Agregar</a>
+					</td>
+				</tr>
 				{% for teacher in teachers %}
 				<tr id="R{{ forloop.counter }}" >
 					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}"> {{ teacher }}</label></td>
 				</tr>
 				{% endfor %}
-				<tr>
-					<td>
-						<label for="newTeacher">Nuevo profesor: </label>
-						<input id="newTeacher" value="" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
-				<a onclick="javascript:newTeacherClass()" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Nuevo Profesor</a>
-					</td>
-				</tr>
+				
 			</table>
 			
 		</div>
@@ -103,9 +104,10 @@ Nomina
 		<label for="teacher">Profesor: </label>
 		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
 		<h5>Estudiantes</h5>
+		<p id="counter">0</p>
 		<div id="studentsClass"></div>
 		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
-		<a onclick="javascript:saveClass()" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
 </div>
@@ -191,20 +193,21 @@ $(document).ready(function(){
 	$('input[type="checkbox"]').click(function(){
 	    if($(this).is(":checked")){
 	    	$("#studentsClass").append("<li id='"+$(this).val()+"'>"+$(this).val()+"</li>");
-	        //console.log($(this).val());
+	    	var studentsLen = $("li").length;
+	    	$("#counter").html(studentsLen);
 	    }
 	    else if($(this).is(":not(:checked)")){
-	        $("#"+$(this).val()+"").remove();
+	        var parent = document.getElementById("studentsClass");
+	        var child = document.getElementById($(this).val());
+	        parent.removeChild(child);
+	        var studentsLen = $("li").length;
+	    	$("#counter").html(studentsLen);
 	    }
 	});
 
 	$('input[type="radio"]').click(function(){
         if($(this).is(":checked")){
-            //console.log($(this).val());
             $("#teacher").val($(this).val());
-        }
-        else if($(this).is(":not(:checked)")){
-            console.log("Checkbox is unchecked.");
         }
     });
 });
@@ -218,8 +221,8 @@ $.extend($.expr[":"],
 	}
 });
 
-function saveClass(){
-	var classJson = new Object();
+var classJson = new Object();
+function confirmSaveClass(){
 	classJson.teacher = $("#teacher").val();
 	if (classJson.teacher==""){
 		$('.response').remove();
@@ -242,8 +245,42 @@ function saveClass(){
 		$("#popup").append("<p class='response'>Falta escoger estudiantes</p>");
 		return;
 	}
-	console.log(classJson);
+
+	var studentsLen = $("li").length;
+	levels = ["","1°","2°","3°","4°","5°","6°","7°","8°","1°","2°","3°","4°"]
+	if (classJson.level>0 && classJson.level<9){
+		level = levels[classJson.level]+" Básico "
+	}
+	else{
+		level = levels[classJson.level]+" Medio "
+	}
+
 	$(".response").remove()
+	$("#popup").append("<p class='response'>¿Está seguro que desea guardar el curso "+level+classJson.letter+" a cargo del profesor "+classJson.teacher+" con "+studentsLen+" estudiantes?</p>");
+	$("#popup").append('<button onclick="javascript:saveClass(classJson)" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Aceptar</button>');
+	$("#popup").append('<button onclick="javascript:cancelSaveClass()" id="cancelSaveButton" class="kui-button kui-button-plain kui-button-primary">Cancelar</button>');
+	$("a").css('pointer-events','none');
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+}
+
+function cancelSaveClass(){
+	$("#hover").fadeOut();
+	$("#popup").fadeOut();
+	$(".response").remove();
+	$("#saveButton").remove();
+	$("#cancelSaveButton").remove();
+	$("#hover").css('pointer-events','');
+	$("#close").css('pointer-events','');
+	$("a").css('pointer-events','');
+}
+
+function saveClass(classJson){
+	$(".response").remove();
+	$("#saveButton").remove();
+	$("#cancelSaveButton").remove();
 	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
 	$("#popup").append($('#loading').css('display',''));
 	$("#hover").css('pointer-events','none');
@@ -262,6 +299,7 @@ function saveClass(){
 				$(".response").fadeIn();
 				$("#hover").css('pointer-events','');
 				$("#close").css('pointer-events','');
+				$("a").css('pointer-events','');
 			}
 	});
 }
@@ -279,6 +317,8 @@ function resetClass(){
 	$("#teacher").val("");
 	$("#levels").val(1);
 	$("#letter").val("A");
+	var studentsLen = $("li").length;
+	$("#counter").html(studentsLen);
 }
 
 function newTeacherClass(){
@@ -297,6 +337,7 @@ function newTeacherClass(){
 		$("#popup").append($('#loading').css('display',''));
 		$("#hover").css('pointer-events','none');
 		$("#close").css('pointer-events','none');
+		$("a").css('pointer-events','none');
 		$("#hover").fadeIn();
 		$("#popup").fadeIn();
 		$.ajax({
@@ -317,6 +358,7 @@ function newTeacherClass(){
 					else{
 						$("#hover").css('pointer-events','');
 						$("#close").css('pointer-events','');
+						$("a").css('pointer-events','');
 					}
 				}
 		});

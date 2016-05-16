@@ -107,7 +107,7 @@ h3, h5{
 }
 
 
- #resetButton, #saveButton{
+ #resetButton, #confirmSaveButton, #saveButton, #cancelSaveButton{
  	cursor:pointer; 
  	width:100px; 
  	height: 32px; 
@@ -117,6 +117,9 @@ h3, h5{
  #resetButton{
  	margin-left: 23%;
     margin-right: 5%;
+ }
+ #cancelSaveButton{
+  margin-left: 5%;
  }
 
  #newTeacherButton {
@@ -159,4 +162,18 @@ table.testgrid td {
 #studentsClass{
   overflow-y: auto;
   outline: none;
+}
+
+#counter{
+  text-align: right;
+  margin: 0px;
+  display: inline-block;
+}
+
+#popup p {
+    text-align: center;
+    margin: 5%;
+}
+#newTeacher{
+  width: 135px;
 }
