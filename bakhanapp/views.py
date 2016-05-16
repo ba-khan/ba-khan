@@ -9,7 +9,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count,Sum
-
+from django.http import HttpResponseBadRequest, JsonResponse, HttpResponse
+from django import forms
+from django.template import RequestContext
 
 from django import template
 from bakhanapp.models import Assesment_Skill
@@ -66,6 +68,13 @@ import random
 import datetime
 import threading
 import Queue
+
+
+import django_excel as excel
+
+import pyexcel.ext.xls
+import pyexcel.ext.xlsx
+import pyexcel.ext.ods3
 
 
 
@@ -406,6 +415,9 @@ def getClassStudents(request, id_class):
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
+
+            return excel.make_response_from_a_table(
+            Assesment, 'xls', file_name="Assesment")
             
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
@@ -527,3 +539,24 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
+
+def export_data(request, atype):
+    if atype == "sheet":
+        return excel.make_response_from_a_table(
+            Question, 'xls', file_name="sheet")
+    elif atype == "book":
+        return excel.make_response_from_tables(
+            [Question, Choice], 'xls', file_name="book")
+    elif atype == "custom":
+        question = Question.objects.get(slug='ide')
+        query_sets = Choice.objects.filter(question=question)
+        column_names = ['choice_text', 'id', 'votes']
+        return excel.make_response_from_query_sets(
+            query_sets,
+            column_names,
+            'xls',
+            file_name="custom"
+        )
+    else:
+        return HttpResponseBadRequest("Bad request. please put one of these \
+                                      in your url suffix: sheet, book or custom")
