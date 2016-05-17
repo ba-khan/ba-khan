@@ -415,9 +415,10 @@ def getClassStudents(request, id_class):
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
-
-            return excel.make_response_from_a_table(
-            Assesment, 'xls', file_name="Assesment")
+            column_names = ['grade', 'kaid_student_id', 'effort_points']
+            grades = Grade.objects.filter(id_assesment_id=17)
+            return excel.make_response_from_query_sets(
+            grades,column_names, 'xls', file_name="Assesment")
             
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
@@ -426,7 +427,9 @@ def getClassStudents(request, id_class):
                                     )
         else:
             return HttpResponseRedirect("/inicio")
-    except:
+    except Exception as e:
+        print '***Error*** al intentar mostras la información del curso '
+        print e
         return HttpResponseRedirect("/inicio")
 
 
