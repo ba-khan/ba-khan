@@ -417,16 +417,21 @@ def getClassStudents(request, id_class):
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
-            
+            #********************************************************************************************************************************************
             #funcion que genera el excel de una evaluacion
+            #variables
             id_assesment = 17
-            totalFields = 3
             delta = 7
-            fields = ['estudiante','nota','esfuerzo']
+            viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
+                'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
+                'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado']
+            totalFields = len(viewFields)
             #carga al arreglo los datos de la evaluacion id_assesment
             try:
                 assesment = Assesment.objects.get(id_assesment=id_assesment)
-                grades = Grade.objects.filter(id_assesment_id=id_assesment)
+                grades = Student.objects.filter(grade__id_assesment_id=id_assesment
+                    ).values('name','grade__grade',
+                    'grade__bonus_grade')
             except Exception as e:
                 print '***ERROR*** Ha fallado la query linea 424'
                 print e
@@ -450,18 +455,19 @@ def getClassStudents(request, id_class):
             data[4][0] = 'Bonificacion por Esfuerzo'
             data[4][1] = assesment.max_effort_bonus
             #carga las notas y las variables disponibles en grade
-            
+            for grade in grades:
+                print grade
             for k in range(totalFields):
-                data[delta-1][k] = fields[k]
+                data[delta-1][k] = viewFields[k]
             for i in range(totalGrades):
                 for j in range(totalFields):
                     if j==0:
-                        data[i+delta][j] = grades[i].kaid_student_id
+                        data[i+delta][j] = grades[i]['name']
                     elif j==1:
-                        data[i+delta][j] = grades[i].grade
+                        data[i+delta][j] = grades[i]['grade__grade']
                     elif j==2:
-                        data[i+delta][j] = grades[i].bonus_grade
-              
+                        data[i+delta][j] = grades[i]['grade__bonus_grade']
+            #*******************************************************************************************************************************************  
                 
 
           
