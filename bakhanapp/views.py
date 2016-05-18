@@ -79,6 +79,7 @@ import pyexcel as pe
 import StringIO
 
 
+
 def getSkillAssesment(request,id_class):
     if request.method == 'POST':
         args = request.POST
@@ -416,14 +417,61 @@ def getClassStudents(request, id_class):
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
-            data = [['nombre', 'nota', 'esfuerzo'], [4, 5, 6], [7, 8, 9]]
+            
+            #funcion que genera el excel de una evaluacion
+            id_assesment = 17
+            totalFields = 3
+            delta = 7
+            fields = ['estudiante','nota','esfuerzo']
+            #carga al arreglo los datos de la evaluacion id_assesment
+            try:
+                assesment = Assesment.objects.get(id_assesment=id_assesment)
+                grades = Grade.objects.filter(id_assesment_id=id_assesment)
+            except Exception as e:
+                print '***ERROR*** Ha fallado la query linea 424'
+                print e
+
+            totalGrades = grades.count()
+
+            #crea el arreglo inicial
+            w, h = totalFields +10 ,totalGrades + delta + 10
+            data = [['' for x in range(w)] for y in range(h)] 
+            print '***************debug******************'
+            print assesment
+            
+            data[0][0] = 'Evaluacion'
+            data[0][1] = assesment.name
+            data[1][0] = 'Nota Minima'
+            data[1][1] = assesment.min_grade
+            data[2][0] = 'Nota Maxima'
+            data[2][1] = assesment.max_grade
+            data[3][0] = 'Nota de Aprobacion'
+            data[3][1] = assesment.approval_grade
+            data[4][0] = 'Bonificacion por Esfuerzo'
+            data[4][1] = assesment.max_effort_bonus
+            #carga las notas y las variables disponibles en grade
+            
+            for k in range(totalFields):
+                data[delta-1][k] = fields[k]
+            for i in range(totalGrades):
+                for j in range(totalFields):
+                    if j==0:
+                        data[i+delta][j] = grades[i].kaid_student_id
+                    elif j==1:
+                        data[i+delta][j] = grades[i].grade
+                    elif j==2:
+                        data[i+delta][j] = grades[i].bonus_grade
+              
+                
+
+          
             #sheet = pe.Sheet(data)
             #io = StringIO()
             #sheet.save_to_memory("xls", io)
             #column_names = ['grade', 'kaid_student_id', 'effort_points']
             #grades = Grade.objects.filter(id_assesment_id=17)
             return excel.make_response(
-                pe.Sheet(data), 'xls', file_name="Assesment")
+                pe.Sheet(data), 'xls', file_name=assesment.name)
             
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
