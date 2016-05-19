@@ -420,18 +420,20 @@ def getClassStudents(request, id_class):
             #********************************************************************************************************************************************
             #funcion que genera el excel de una evaluacion
             #variables
-            id_assesment = 17
+            id_assesment = 19
             delta = 7
             viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
                 'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
-                'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado']
+                'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
+                'Nota','Bonificacion por esfuerzo']
             totalFields = len(viewFields)
             #carga al arreglo los datos de la evaluacion id_assesment
             try:
                 assesment = Assesment.objects.get(id_assesment=id_assesment)
                 grades = Student.objects.filter(grade__id_assesment_id=id_assesment
                     ).values('name','grade__grade',
-                    'grade__bonus_grade')
+                    'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
+                    'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3')
             except Exception as e:
                 print '***ERROR*** Ha fallado la query linea 424'
                 print e
@@ -463,9 +465,29 @@ def getClassStudents(request, id_class):
                 for j in range(totalFields):
                     if j==0:
                         data[i+delta][j] = grades[i]['name']
-                    elif j==1:
+                    if j==1:
+                        data[i+delta][j] = grades[i]['grade__recomended_complete']
+                    if j==2:
+                        data[i+delta][j] = grades[i]['grade__incorrect']
+                    if j==3:
+                        data[i+delta][j] = grades[i]['grade__correct']
+                    if j==4:
+                        data[i+delta][j] = grades[i]['grade__excercice_time']
+                    if j==5:
+                        data[i+delta][j] = grades[i]['grade__video_time']
+                    if j==6:
+                        data[i+delta][j] = grades[i]['grade__struggling']
+                    if j==7:
+                        data[i+delta][j] = grades[i]['grade__practiced']
+                    if j==8:
+                        data[i+delta][j] = grades[i]['grade__mastery1']
+                    if j==9:
+                        data[i+delta][j] = grades[i]['grade__mastery2']
+                    if j==10:
+                        data[i+delta][j] = grades[i]['grade__mastery3']
+                    elif j==11:
                         data[i+delta][j] = grades[i]['grade__grade']
-                    elif j==2:
+                    elif j==12:
                         data[i+delta][j] = grades[i]['grade__bonus_grade']
             #*******************************************************************************************************************************************  
                 
