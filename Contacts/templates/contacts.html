@@ -61,12 +61,16 @@
 <h1 style="text-align:center;">Contactos</h1>
 <label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
 <br><br>
+<div>
+	<div id="Alumnos">Estudiantes</div>
+	<div id="Apoderados">Apoderados</div>
+</div>
 <table id="htmlgrid" class="testgrid">
 	<tr>
-		<th>Estudiante</th>
+		<th>Nombre</th>
 		<th>E-Mail</th>
 		<th>Teléfono</th>
-		<th>Apoderado</th>
+		<th>Nombre</th>
 		<th>E-Mail</th>
 		<th>Teléfono</th>
 		<th>Acciones</th>
@@ -214,5 +218,24 @@ $(document).ready(function(){
 	});
 	$('#breadcrumb').html('Contactos / {{ spanish_classroom }}')
 </script>
+
+<style type="text/css">
+	#Alumnos{
+		width: 575px;
+		height: 30px;
+		border: solid 1px #C1C1C1;
+		background-color: #CCCCCC;
+		float:left;
+		text-align: center;
+	}
+	#Apoderados{
+		width: 371px;
+		height: 30px;
+		border: solid 1px #C1C1C1;
+		background-color: #CCCCCC;
+		float:left;
+		text-align: center;
+	}
+</style>
 
 {% endblock %}
