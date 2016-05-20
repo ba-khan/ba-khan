@@ -70,6 +70,8 @@ import xlwt
 from datetime import datetime
 from django.http import HttpResponse
 
+
+
 @login_required()
 def generateExcel(request):
     request.session.set_expiry(timeSleep)
@@ -77,27 +79,78 @@ def generateExcel(request):
         args = request.POST
         id_assesment = args['id_assesment']
         infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
-        #print "aqui va el valior"
-        #print infoAssesment
+        
+        #funcion que genera el excel de una evaluacion
+        #variables
+        id_assesment = 19
+        delta = 7
+        viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
+            'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
+            'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
+            'Nota','Bonificacion por esfuerzo']
+        totalFields = len(viewFields)
+        #carga al arreglo los datos de la evaluacion id_assesment
         try:
-            response = HttpResponse(content_type='application/vnd.ms-excel; charset=utf-8')
+            assesment = Assesment.objects.get(id_assesment=id_assesment)
+            grades = Student.objects.filter(grade__id_assesment_id=id_assesment
+                ).values('name','grade__grade',
+                'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
+                'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3')
         except Exception as e:
+            print '***ERROR*** Ha fallado la query linea 424'
             print e
 
-        style0 = xlwt.easyxf('font: name Times New Roman, color-index red, bold on',num_format_str='#,##0.00')
-        style1 = xlwt.easyxf(num_format_str='D-MMM-YY')
+        totalGrades = grades.count()
 
-        wb = xlwt.Workbook()
-        ws = wb.add_sheet('A Test Sheet')
-
-        ws.write(0, 0, 1234.56, style0)
-        ws.write(1, 0, datetime.now(), style1)
-        ws.write(2, 0, 1)
-        ws.write(2, 1, 1)
-        ws.write(2, 2, xlwt.Formula("A3+B3"))
-
-        wb.save(response)
-    return response
+        #crea el arreglo inicial
+        w, h = totalFields +10 ,totalGrades + delta + 10
+        data = [['' for x in range(w)] for y in range(h)] 
+        print '***************debug******************'
+        print assesment
+        
+        data[0][0] = 'Evaluacion'
+        data[0][1] = assesment.name
+        data[1][0] = 'Nota Minima'
+        data[1][1] = assesment.min_grade
+        data[2][0] = 'Nota Maxima'
+        data[2][1] = assesment.max_grade
+        data[3][0] = 'Nota de Aprobacion'
+        data[3][1] = assesment.approval_grade
+        data[4][0] = 'Bonificacion por Esfuerzo'
+        data[4][1] = assesment.max_effort_bonus
+        #carga las notas y las variables disponibles en grade
+        for k in range(totalFields):
+            data[delta-1][k] = viewFields[k]
+        for i in range(totalGrades):
+            for j in range(totalFields):
+                if j==0:
+                    data[i+delta][j] = grades[i]['name']
+                if j==1:
+                    data[i+delta][j] = grades[i]['grade__recomended_complete']
+                if j==2:
+                    data[i+delta][j] = grades[i]['grade__incorrect']
+                if j==3:
+                    data[i+delta][j] = grades[i]['grade__correct']
+                if j==4:
+                    data[i+delta][j] = grades[i]['grade__excercice_time']
+                if j==5:
+                    data[i+delta][j] = grades[i]['grade__video_time']
+                if j==6:
+                    data[i+delta][j] = grades[i]['grade__struggling']
+                if j==7:
+                    data[i+delta][j] = grades[i]['grade__practiced']
+                if j==8:
+                    data[i+delta][j] = grades[i]['grade__mastery1']
+                if j==9:
+                    data[i+delta][j] = grades[i]['grade__mastery2']
+                if j==10:
+                    data[i+delta][j] = grades[i]['grade__mastery3']
+                elif j==11:
+                    data[i+delta][j] = grades[i]['grade__grade']
+                elif j==12:
+                    data[i+delta][j] = grades[i]['grade__bonus_grade']
+        return excel.make_response(
+            pe.Sheet(data), 'xls', file_name=assesment.name)
 
 
 def getSkillAssesment(request,id_class):
