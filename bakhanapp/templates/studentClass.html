@@ -2620,7 +2620,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 $('#breadcrumb').html('Curso / {{ spanish_classroom }}')
 
 function generateExcel(id_assesment){
-
+	window.location = "{% url 'generateExcel' %}";
 	$.ajax({
 		url: "{% url 'generateExcel' %}",
 		type: "POST",

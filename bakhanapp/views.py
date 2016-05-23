@@ -77,14 +77,15 @@ import pyexcel.ext.xls
 @login_required()
 def generateExcel(request):
     request.session.set_expiry(timeSleep)
-    if request.method == 'POST':
-        args = request.POST
-        id_assesment = args['id_assesment']
+    if request.method == 'GET':
+        #args = request.POST
+        #id_assesment = args['id_assesment']
+        id_assesment = 19
         infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
         
         #funcion que genera el excel de una evaluacion
         #variables
-        id_assesment = 19
+        
         delta = 7
         viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
             'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
