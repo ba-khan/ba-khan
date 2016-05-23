@@ -620,30 +620,29 @@ class Command(BaseCommand):
             #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
             #source = unicode(jason, 'ISO-8859-1')
             #data = simplejson.loads(source)
-            #buscar = "'"
-            #reemplazar = " "
+            buscar = "'"
+            reemplazar = " "
             #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
             #cur = conn.cursor()
             #kaid_student = "kaid_485871758161384306203631"
 
-            # DESCOMENTAR!! today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
-            # DESCOMENTAR!! today = today.replace(":","%3A")
+            #today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+            #today = today.replace(":","%3A")
             #yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
             #instituto = Institution.objects.get(id_institution= i)
-            # DESCOMENTAR!! yesterday = inst.last_load
+            #yesterday = inst.last_load
 
-            ''' DESCOMENTAR!! 
-            inst.last_load = today
-            inst.save()
+            #inst.last_load = today
+            #inst.save()
 
-            msg="hoy: " + today
-            logging.debug(msg)
-            msg="ayer: " + yesterday
-            logging.debug(msg)
-            dates = yesterday+"&dt_end="+today
-            #dates = "2016-04-23T00%3A00%3A00Z&dt_end=2016-04-24T00%3A00%3A00Z"  
-            ''' 
-            dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-19T00%3A00%3A00Z"
+            #msg="hoy: " + today
+            #logging.debug(msg)
+            #msg="ayer: " + yesterday
+            #logging.debug(msg)
+            #dates = yesterday+"&dt_end="+today
+            dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-23T00%3A00%3A00Z"  
+
+
             '''
             chapter = Chapter.objects.all()
             chapter.delete()
@@ -682,9 +681,26 @@ class Command(BaseCommand):
             video_playings.delete()
             '''
 
-            threads = []
-            #students = Student.objects.all()
-            students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id__in=Class.objects.filter(id_institution_id=inst.id_institution).values("id_class"))) #.values("kaid_student_id"))
+            #print inst.id_institution
+            # ESTA CONSULTA FILTRA POR CADA CURSO DE CADA INSTITUCION
+            consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+
+            for cons in consulta:
+                #print cons["id_class"]
+                threads = []
+                students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
+
+                for i in students:
+                    #print students[i].name
+                    t = threading.Thread(target=threadPopulate,args=(i,dates,session))
+                    threads.append(t)
+                    t.start()
+            
+            #threads = []
+            #students = Student.objects.filter(student_class__id_class_id=4) # filtrar por institucion
+            #students = Student.objects.filter(kaid_student='kaid_605807502720918375029433')
+            #print "estudiantes abajo"
+            #print students
 
             '''
             t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
@@ -692,11 +708,22 @@ class Command(BaseCommand):
             t.start()
 
             '''
+            '''
+            assesments = Assesment.objects.all()
+            for assesment in assesments:
+                print assesment.id_assesment_conf_id
+            
+                skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
+            
+                levels = Student_Skill.objects.filter(kaid_student__in=students)
+            '''
+            '''
             for i in students:
                 #print students[i].name
                 t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                 threads.append(t)
                 t.start()
+               '''
                 
             #print "Todos los threads lanzados" antes 22047
 
