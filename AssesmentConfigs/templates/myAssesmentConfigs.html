@@ -11,15 +11,20 @@
 <script>
 trees = [];
 function getTopicTree(id){
+	console.log("uno");
 	var topictree = JSON.parse('{{ topictree | escapejs }}');
+	console.log("dos");
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
+			//console.log(data["selected"]);
 		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
 		    selected_skills_id=new Array();
 		    //selected_subtopic_skill=new Array();
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
-		    	if (selected_skills[i].data){
-		    		selected_skills_id.push({'skill_id':selected_skills[i].data["skill_id"],id:selected_skills[i].id});
+		    	//console.log(selected_skills[i]);
+		    	if (selected_skills[i].id){
+		    		//console.log("entro al if");
+		    		selected_skills_id.push({'skill_id':selected_skills[i].id,id:selected_skills[i].id});
 		    		//selected_subtopic_skill.push(selected_skills[i].id);
 		    	}
 		    }
