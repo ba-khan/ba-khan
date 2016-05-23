@@ -443,22 +443,45 @@ def poblar_topictree(session,buscar, reemplazar):
 
 
 def poblar_skill_progress(student_name,kaid_student,dates,session):
-    #realiza la llamada a la API entregandole el username del estudiante y el rango de fechas
     llamada = "/api/v1/user/exercises/progress_changes?userId=&username="+student_name+"&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    
+    #print len(data)
     try:
         for i in range(len(data)):
-            #para cada progreso lo debe guardar en la tabla skill_progress
+            #print i
+            #print data[i]["exercise_name"]
+            try:
+                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=data[i]["exercise_name"]).values("id_student_skill")
+                new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
+                    from_level=data[i]["from_progress"]["level"], 
+                    date=data[i]["date"], 
+                    id_skill_name=data[i]["exercise_name"],
+                    kaid_student=kaid_student,
+                    id_student_skill_id=student_skill[0]["id_student_skill"])
+                new_progress.save()
+            except:
+                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_student_skill")
+                new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
+                    from_level=data[i]["from_progress"]["level"], 
+                    date=data[i]["date"], 
+                    id_skill_name=data[i]["exercise_name"],
+                    kaid_student=kaid_student,
+                    id_student_skill_id=student_skill[0]["id_student_skill"])
+                new_progress.save()
+                
+            #print student_skill[0]["id_student_skill"]
+            '''
             new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
                         from_level=data[i]["from_progress"]["level"], 
                         date=data[i]["date"], 
                         id_skill_name_id=data[i]["exercise_name"],
-                        kaid_student=kaid_student)
+                        kaid_student=kaid_student,
+                        id_student_skill_id=student_skill[0]["id_student_skill"])
             new_progress.save()
-
+            '''
+            #print "guardo bien"
     except Exception as e:
         print e
             
