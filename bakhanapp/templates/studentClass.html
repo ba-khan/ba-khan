@@ -2620,13 +2620,14 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 $('#breadcrumb').html('Curso / {{ spanish_classroom }}')
 
 function generateExcel(id_assesment){
+
 	$.ajax({
 		url: "{% url 'generateExcel' %}",
 		type: "POST",
 		data: {"id_assesment":id_assesment,csrfmiddlewaretoken: '{{ csrf_token }}'},
 		success: function(response){
 			alert(response);
-			var blob = new Blob(['hola'], {type: 'application/vnd.ms-excel; charset=utf-8'});
+			var blob = new Blob(response);
 	        var link = document.createElement('a');
 	        link.href = window.URL.createObjectURL(blob);
 	        link.download = "example.xls";

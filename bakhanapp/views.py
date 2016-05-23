@@ -69,7 +69,9 @@ import Queue
 import xlwt
 from datetime import datetime
 from django.http import HttpResponse
-
+import django_excel as excel
+import pyexcel as pe
+import pyexcel.ext.xls
 
 
 @login_required()
@@ -149,8 +151,13 @@ def generateExcel(request):
                     data[i+delta][j] = grades[i]['grade__grade']
                 elif j==12:
                     data[i+delta][j] = grades[i]['grade__bonus_grade']
-        return excel.make_response(
-            pe.Sheet(data), 'xls', file_name=assesment.name)
+        try:
+            response = excel.make_response(pe.Sheet(data), 'xls', file_name=assesment.name)
+        except Exception as e:
+            print '***ERROR*** no se ha podido generar la respuesta excel'
+            print e
+            response = False
+        return response
 
 
 def getSkillAssesment(request,id_class):
