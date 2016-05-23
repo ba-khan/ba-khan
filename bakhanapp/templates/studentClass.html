@@ -1749,7 +1749,8 @@
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
 			validarEvaluacion();
-			if (validarRealizarEvaluacion() || validarEvaluacion()){
+			validarRealizarEvaluacion();
+			if (validarRealizarEvaluacion() && validarEvaluacion()){
 				$(".response").remove();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
 				$("#hover").css('pointer-events','none');
