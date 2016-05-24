@@ -75,12 +75,12 @@ import pyexcel.ext.xls
 
 
 @login_required()
-def generateExcel(request):
+def generateAssesmentExcel(request, id_assesment):
     request.session.set_expiry(timeSleep)
     if request.method == 'GET':
         #args = request.POST
         #id_assesment = args['id_assesment']
-        id_assesment = 19
+        #id_assesment = 19
         infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
         
         #funcion que genera el excel de una evaluacion
@@ -506,7 +506,9 @@ def getClassStudents(request, id_class):
                                     )
         else:
             return HttpResponseRedirect("/inicio")
-    except:
+    except Exception as e:
+        print '***ERROR*** no se ha podido cargar el dashboard'
+        print e
         return HttpResponseRedirect("/inicio")
 
 
