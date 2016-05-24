@@ -3,7 +3,7 @@ simplejson==3.8.1
 websocket-server==0.4
 django-debug-toolbar==1.4
 django-excel
-import pyexcel.ext.xls
+pyexcel.ext.xls
 nose
 rednose
 nose-cov
