@@ -1,3 +1,13 @@
+.excelButton {
+    background:url(img/Excel.png);
+    background-size: 32px;
+    cursor:pointer;
+    width: 32px;
+    height: 32px;
+    border: none;
+    margin-right:20px;
+    margin-left:-5%;
+}
 .container{
 
   height: 500;
@@ -509,7 +519,7 @@ label.sort-filter{
 .buttonsES{
 	position:absolute;
 	top:-35px;
-	width:98px;
+	width:129px;
 }
 
 .counter{

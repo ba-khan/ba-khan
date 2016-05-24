@@ -499,7 +499,7 @@
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
-    		.html('<button type="button" class="editButton" title="Editar" onClick="isEvaluation('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		.html('<button type="button" class="editButton" title="Editar" onClick="isEvaluation('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button><button type="button" class="excelButton" title="Descargar" onClick="generateExcel('+number_class_id+')"></button>')
 
 			endDates.push(endDate)
     		   		
@@ -519,7 +519,7 @@
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
-    		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button><button type="button" class="excelButton" title="Descargar" onClick="generateExcel('+number_class_id+')"></button>')
 
 			endDates.push(endDate)
     		   		
@@ -537,7 +537,7 @@
     		table.select('th.'+class_id)
     		.append('div')
     		.attr('class',"buttonsES")
-    		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button>')
+    		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button><button type="button" class="excelButton" title="Descargar" onClick="generateExcel('+number_class_id+')"></button>')
 	
     	}
   	
@@ -2627,6 +2627,11 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
    
 
 $('#breadcrumb').html('Curso / {{ spanish_classroom }}')
+
+function generateExcel(id_assesment){
+	window.location = "/inicio/cursos/generateAssesmentExcel/"+id_assesment;
+	
+}
 
 </script>
 
