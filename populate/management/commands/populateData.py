@@ -538,11 +538,12 @@ def coach_students(session): #ver los estudiantes que tienen como coach a cierto
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
-    #with open('data.txt', 'w') as outfile:
-    #    json.dump(data, outfile)
-    logging.debug(len(data))
     for j in range(len(data)):
-        logging.debug(data[j]["username"])
+        try:
+            new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["username"],email=data[j]["username"],points=data[j]["points"],phone=0)
+            new_student.save()
+        except:
+            logging.debug("error con estudiante "+data[j]["username"])
 
 def poblar_students(session):
     # Open the workbook and select the first worksheet
@@ -639,6 +640,10 @@ class Command(BaseCommand):
             passes = inst.password
 
             session = run_tests(identifiers,passes,keys,secrets)
+
+            # CARGAR ESTUDIANTES NUEVOS
+            coach_students(session)
+
             #print "logueadoooo"
             #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
             #source = unicode(jason, 'ISO-8859-1')
