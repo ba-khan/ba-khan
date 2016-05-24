@@ -66,7 +66,6 @@ import random
 import datetime
 import threading
 import Queue
-import xlwt
 from datetime import datetime
 from django.http import HttpResponse
 import django_excel as excel
