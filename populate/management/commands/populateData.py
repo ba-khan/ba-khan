@@ -642,7 +642,7 @@ class Command(BaseCommand):
             session = run_tests(identifiers,passes,keys,secrets)
 
             # CARGAR ESTUDIANTES NUEVOS
-            coach_students(session)
+            #coach_students(session)
 
             #print "logueadoooo"
             #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
