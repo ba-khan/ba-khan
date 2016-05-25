@@ -381,6 +381,7 @@
         .attr('id','studentsDashboard')
         .style('width', '99%');
         
+    //create button new evaluation    
     table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluación{% endfor %}')
 
     // create table header
@@ -557,7 +558,15 @@
  						<option value="grade">Nota</option>
 						<option value="effort">Esfuerzo</option>
 				  	</select>
-				 	`});   	   	
+				 	`});   	
+
+		table.append("button")
+        .attr("type","button")
+        .attr("class","excelButton")
+        .attr("id",'button')
+        .append("div")
+        .attr("class","label")
+        .text('hola');   	
     }	 
     
     $(".arrow-up.assesment").attr("column",function(){
@@ -581,7 +590,21 @@
     $(".arrow-down.averages").attr("column",function(){
         return $("th.averages").index();
     });
+    
+    //add button downloadClassExcel
+    d3.select("body")
+    	.append("button")
+        .attr("type","button")
+        .attr("class","btn-btn")
+        .attr("id",'button')
+        .append("div")
+        .attr("class","label")
+        .text('Descargar'); 
 
+
+//*******************************************************************************************************************************
+//**************** d3 end generation main ***************************************************************************************
+//*******************************************************************************************************************************
 
     var dataIndex = 0;
     var backgroundJobs = data[dataIndex];
