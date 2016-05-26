@@ -92,7 +92,7 @@ def editAssesmentConfig(request,id_assesment_config):
 
         for skill in skills_selected:
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
-                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                                                    id_skill_name=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
 
@@ -125,7 +125,7 @@ def newAssesmentConfig(request):
                 print skill['skill_id']
                 try:
                     new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                        id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                                                        id_skill_name=skill['skill_id'],id_subtopic_skill_id=skill['id'])
                 except:
                     continue
                 
