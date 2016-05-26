@@ -45,10 +45,12 @@
 		    'keyup',
 		    function (){
 		    	editableGrid.filter(searchField.value);
+		    	resize();
 		    }
 		);
 		
 		editableGrid.renderGrid();
+		resize();
 	} 
 	
 </script>
@@ -125,6 +127,18 @@
 </div> <!-- cerrar div principal del home  -->
 
 <script>
+function resize(){
+	var a = $("th:eq(0)").width();
+	var b = $("th:eq(1)").width();
+	var c = $("th:eq(2)").width();
+	var d = $("th:eq(3)").width();
+	var e = $("th:eq(4)").width();
+	var f = $("th:eq(5)").width();
+	var g = $("th:eq(6)").width();
+
+	$("#Alumnos").width(a+b+c+35)
+	$("#Apoderados").width(d+e+f+g+46)
+}
 function reloadPage(){
 	setTimeout(function(){
 		$('.response').fadeOut();
@@ -220,22 +234,14 @@ $(document).ready(function(){
 </script>
 
 <style type="text/css">
-	#Alumnos{
-		width: 575px;
+	#Alumnos, #Apoderados{
 		height: 30px;
 		border: solid 1px #C1C1C1;
 		background-color: #CCCCCC;
 		float:left;
 		text-align: center;
 	}
-	#Apoderados{
-		width: 371px;
-		height: 30px;
-		border: solid 1px #C1C1C1;
-		background-color: #CCCCCC;
-		float:left;
-		text-align: center;
-	}
+
 </style>
 
 {% endblock %}
