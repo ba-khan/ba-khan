@@ -89,20 +89,26 @@ def generateAssesmentExcel(request, id_assesment):
             'Nota','Bonificacion por esfuerzo']
         totalFields = len(viewFields)
         #carga al arreglo los datos de la evaluacion id_assesment
-        try:
+        try: #id01
             assesment = Assesment.objects.get(id_assesment=id_assesment)
+            config = Assesment_Config.objects.get(id_assesment_config=assesment.id_assesment_conf_id)
+            skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id).values('name_spanish')
             grades = Student.objects.filter(grade__id_assesment_id=id_assesment
                 ).values('name','grade__grade',
                 'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
                 'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3')
         except Exception as e:
-            print '***ERROR*** Ha fallado la query linea 424'
+            print '***ERROR*** try: #id01 in generateAssesmentExce(request, id_assesment)'
             print e
 
         totalGrades = grades.count()
+        totalConf = 9 
+        totalSkills = skills.count()
+        #print '***DEBUG***'
+        #print totalSkills
 
         #crea el arreglo inicial
-        w, h = totalFields +10 ,totalGrades + delta + 10
+        w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
         data = [['' for x in range(w)] for y in range(h)] 
 
         
@@ -147,13 +153,15 @@ def generateAssesmentExcel(request, id_assesment):
                     data[i+delta][j] = grades[i]['grade__grade']
                 elif j==12:
                     data[i+delta][j] = grades[i]['grade__bonus_grade']
+        for l in range(totalSkills):
+            data[totalGrades+delta+l][0]=skills[l]['name_spanish']
         try:
             #create multi-sheet book with array
-            dataTest={
+            arrayAssesment={
                 "Detalle": data,
                 "Resumen": [['X', 'Y', 'Z'], [1,2,3],[4,5,6]]
             }
-            book = pe.Book(dataTest)
+            book = pe.Book(arrayAssesment)
         except Exception as e:
             print '***ERROR*** problemas al crear multiples hojas excel con dataTest'
             print e
