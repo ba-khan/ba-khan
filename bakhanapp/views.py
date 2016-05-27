@@ -77,9 +77,6 @@ import pyexcel.ext.xls
 def generateAssesmentExcel(request, id_assesment):
     request.session.set_expiry(timeSleep)
     if request.method == 'GET':
-        #args = request.POST
-        #id_assesment = args['id_assesment']
-        #id_assesment = 19
         infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
         
         #funcion que genera el excel de una evaluacion
@@ -107,8 +104,7 @@ def generateAssesmentExcel(request, id_assesment):
         #crea el arreglo inicial
         w, h = totalFields +10 ,totalGrades + delta + 10
         data = [['' for x in range(w)] for y in range(h)] 
-        print '***************debug******************'
-        print assesment
+
         
         data[0][0] = 'Evaluacion'
         data[0][1] = assesment.name
@@ -152,7 +148,17 @@ def generateAssesmentExcel(request, id_assesment):
                 elif j==12:
                     data[i+delta][j] = grades[i]['grade__bonus_grade']
         try:
-            response = excel.make_response(pe.Sheet(data), 'xls', file_name=assesment.name)
+            #create multi-sheet book with array
+            dataTest={
+                "Detalle": data,
+                "Resumen": [['X', 'Y', 'Z'], [1,2,3],[4,5,6]]
+            }
+            book = pe.Book(dataTest)
+        except Exception as e:
+            print '***ERROR*** problemas al crear multiples hojas excel con dataTest'
+            print e
+        try:
+            response = excel.make_response(book, 'xls', file_name=assesment.name)
         except Exception as e:
             print '***ERROR*** no se ha podido generar la respuesta excel'
             print e
