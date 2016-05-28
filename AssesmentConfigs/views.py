@@ -38,10 +38,10 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_array=[]
     for assesment_config in assesment_configs:
         #print assesment_config.id_assesment_config
-        assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name')
-        config_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_subtopic_skill')
-        #print assesment_skills
-        skills = Skill.objects.filter(name__in=assesment_skills).values('name_spanish')
+        assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
+        config_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_subtopic_skill_id')
+       #print assesment_skills
+        skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
         #print skills
         config_json={}
         config_json["id_assesment_config"]=assesment_config.id_assesment_config
@@ -61,7 +61,6 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
             config_json["assesment_skills_spanish"].append(skills[i])
             config_json["config_skills"].append(config_skills[i])
         #print config_json["assesment_skills"]
-        print config_json["assesment_skills_spanish"]
         json_array.append(config_json)
     
     json_dict={"assesmentConfigs":json_array}
@@ -69,7 +68,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     #print (json_data)
     topictree= getTopictree('math')
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
-    
+
 def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
         args = request.POST
@@ -92,7 +91,7 @@ def editAssesmentConfig(request,id_assesment_config):
 
         for skill in skills_selected:
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
-                                                    id_skill_name=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
 
@@ -125,7 +124,7 @@ def newAssesmentConfig(request):
                 print skill['skill_id']
                 try:
                     new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                        id_skill_name=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                                                        id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
                 except:
                     continue
                 

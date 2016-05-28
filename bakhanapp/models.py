@@ -51,6 +51,7 @@ class Student(models.Model):
     email = models.EmailField(max_length=50,null=True)
     phone = models.IntegerField(null=True)
     points = models.IntegerField()
+    id_institution = models.ForeignKey(Institution)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
@@ -278,12 +279,10 @@ class Video_Playing(models.Model):
 
 class Skill_Progress(models.Model):
     id_skill_progress = models.AutoField(primary_key=True)
+    id_student_skill = models.ForeignKey(Student_Skill)
     to_level = models.CharField(max_length=50)
     from_level = models.CharField(max_length=50)
     date = models.DateTimeField()
-    id_skill_name = models.CharField(max_length=100)
-    kaid_student = models.CharField(max_length=40)
-    id_student_skill = models.ForeignKey(Student_Skill)
     
     class Meta:
       ordering = ['-date']

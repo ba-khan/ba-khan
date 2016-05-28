@@ -253,9 +253,12 @@ def poblar_skill():
     '''
 
 def poblar_student_skill(name_student, kaid_student, dates, session):
+    print "entro al poblar"
     skills=Skill.objects.values('name')
+    print skills
     #obtiene todos los skills de la tabla Skill
     for j in range(len(skills)):
+        print j
         #para cada skill realiza una llamada a la API entregandole ese skill y el username del estudiante
         #llamada = "/api/v1/user/exercises?kaid=&userId=&username="+name_student+"&email=&exercises="+skills[j]['name']
         llamada = "/api/v1/user/exercises/"+skills[j]["name"]+"?exercise_name="+skills[j]["name"]+"&userId=&username="+name_student+"&email="
@@ -279,7 +282,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                last_skill_progress = data["exercise_progress"]["level"],
                                                                                total_hints = data["last_count_hints"],
                                                                                struggling = data["exercise_states"]["struggling"],
-                                                                               id_skill_name_id = data["exercise"],
+                                                                               id_skill_name_id = data["exercise_model"]["id"],
                                                                                kaid_student_id = data["kaid"]
                                                                                )
                                                                                
@@ -302,7 +305,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    last_skill_progress = data["exercise_progress"]["level"],
                                                                                    total_hints = data["last_count_hints"],
                                                                                    struggling = data["exercise_states"]["struggling"],
-                                                                                   id_skill_name_id = data["exercise"],
+                                                                                   id_skill_name_id = data["exercise_model"]["id"],
                                                                                    kaid_student_id = data["kaid"]
                                                                                    )
                                                                                    
@@ -317,21 +320,55 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         except Exception as e:
             print e
             pass
-           
 
 def poblar_skill_attempts(name_student, kaid_student, dates, session):
-    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student).values('id_skill_name_id')
+    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student)
+    for i in range(len(student_skills)):
+        skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
+        #print skills[0]["id_skill_name"]
+        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
+        jason = get_api_resource2(session,llamada,SERVER_URL)
+        source = unicode(jason, 'ISO-8859-1')
+        data = simplejson.loads(source)
+        try:
+            for j in range(len(data)):
+                #print data[j]["time_done"]
+                skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
+                                                                       mission = data[j]["mission"],
+                                                                       time_taken = data[j]["time_taken"],
+                                                                       count_hints = data[j]["count_hints"],
+                                                                       skipped = data[j]["skipped"],
+                                                                       points_earned = 0,
+                                                                       date = data[j]["time_done"],
+                                                                       correct = data[j]["correct"],
+                                                                       id_skill_name_id = skills[0]["id_skill_name"],
+                                                                       kaid_student_id = data[j]["kaid"],
+                                                                       problem_number = data[j]["problem_number"]
+                                                                       )
+                skill_attempts.save()
+
+        except:
+            pass
+            #print "otra materia (?)"
+    #print "listeilors"
+    
+'''
+def poblar_skill_attempts(name_student, kaid_student, dates, session):
+    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_skill_name")
+    print student_skills[0]["id_skill_name"]
     #obtiene la skills de cada estudiante
     #student_skills = Skill_Progress.objects.filter(kaid_student=kaid_student).order_by('id_skill_name_id').distinct('id_skill_name_id').values('id_skill_name_id')
     
     for i in range(len(student_skills)):
         #recorre todas las skills de un estudiante y realiza la llamada a la API
         try:
-            llamada = "/api/v1/user/exercises/"+student_skills[i]["id_skill_name_id"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
+            llamada = "/api/v1/user/exercises/"+student_skills[0]["id_skill_name"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
             #llamada = "/api/v1/user/exercises/division_0.5/log?userId=&username=opazo.munoz.esteban&email=&dt_start="+dates
             jason = get_api_resource2(session,llamada,SERVER_URL)
             source = unicode(jason, 'ISO-8859-1')
             data = simplejson.loads(source)
+            print data
+            
             #para cada habilidad intenta insertar los attempts si son distintos de null
             try:
                 for j in range(len(data)):
@@ -344,7 +381,7 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
                                                                            points_earned = 0,
                                                                            date = data[j]["time_done"],
                                                                            correct = data[j]["correct"],
-                                                                           id_skill_name_id = student_skills[i]["id_skill_name_id"],
+                                                                           id_skill_name_id = student_skills[i]["id_skill_name"],
                                                                            kaid_student_id = data[j]["kaid"],
                                                                            problem_number = data[j]["problem_number"]
                                                                            )
@@ -354,111 +391,29 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
             except Exception as e:
                 print e
                 pass
+                
         except Exception as e:
             print e
-
-def poblar_topictree(session,buscar, reemplazar):
-    topictree = get_api_resource2(session,"/api/v1/topictree",SERVER_URL2)
-    #source_topictree = unicode(topictree, 'ISO-8859-1')
-    data_topictree = simplejson.loads(topictree)
-    #print data_topictree[i]["translated_title"]
-
-    chapters=""
-    topics=""
-    subtopics=""
-    videos = ""
-    skills = ""
-    subtopic_skills = ""
-    id_subtopic_skills = 1
-    subtopic_videos = ""
-    id_subtopic_videos = 1
-    cant_chapters = len(data_topictree["children"][1]["children"])
-    for i in range(0,cant_chapters):
-        '''
-        aux1 = (data_topictree["children"][1]["children"][i]["slug"])
-        aux2 = (data_topictree["children"][1]["children"][i]["translated_title"])
-        aux3 = (data_topictree["children"][1]["slug"])
-        new_chapter = Chapter(id_chapter_name=aux1,name_spanish=aux2,id_subject_name_id=aux3)
-        new_chapter.save()
-        '''
-        cant_topic = len(data_topictree["children"][1]["children"][i]["children"])
-        for j in range(0,cant_topic):
-            '''
-            aux1 = data_topictree["children"][1]["children"][i]["children"][j]["slug"]
-            aux2 = data_topictree["children"][1]["children"][i]["children"][j]["translated_title"]
-            aux3 = data_topictree["children"][1]["children"][i]["slug"]
-            new_topic = Topic(id_topic_name=aux1,name_spanish=aux2,id_chapter_name_id=aux3)
-            new_topic.save()
-            '''
-            cant_subtopic = len(data_topictree["children"][1]["children"][i]["children"][j]["children"])
-            for k in range(0,cant_subtopic):
-                '''
-                aux1 = data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]
-                aux2 = data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"]
-                aux3 = data_topictree["children"][1]["children"][i]["children"][j]["slug"]
-                new_subtopic = Subtopic(id_subtopic_name=aux1,name_spanish=aux2,id_topic_name_id=aux3)
-                new_subtopic.save()
-                '''
-                skills = get_api_resource2(session,"/api/v1/topic/"+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL2)
-                data_skills = simplejson.loads(skills)
-                for p in range(len(data_skills)):
-                    logging.debug(data_skills[p]["translated_title"])
-                    Skill.objects.filter(id_skill_name=data_skills[p]["content_id"]).update(name_spanish=data_skills[p]["translated_title"])
-                '''cant_videos = len(data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
-                print cant_videos
-                for l in range(0,cant_videos):
-                    #consulta = """UPDATE bakhanapp_video SET name_spanish = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["translated_title"].replace(buscar,reemplazar)+"""' WHERE id_video_name = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["id"]+"""';"""
-                    #cur.execute(consulta)
-                    #conn.commit()
-                    
-                    if (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Exercise"):
-                        aux1 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
-                        aux2 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
-                        aux3 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
-                        new_skill = Skill(id_skill_name=aux1,name_spanish=aux2,name=aux3)
-                        new_skill.save()
-                        print aux2
-
-                        aux4 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
-                        aux5 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
-                        new_subtopic_skill = Subtopic_Skill(id_skill_name_id=aux4,id_subtopic_name_id=aux5)
-                        new_subtopic_skill.save()
-                        id_subtopic_skills+=1
-                    
-                    if (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Video"):
-                        aux1 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
-                        aux2 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
-                        aux3 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
-                        new_video = Video(id_video_name=aux1,name_spanish=aux2)
-                        new_video.save()
-
-                        aux4 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
-                        aux5 = (data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
-                        new_subtopic_video = Subtopic_Video(id_subtopic_name_id=aux4,id_video_name_id=aux5)
-                        new_subtopic_video.save()
-                        id_subtopic_videos+=1
-                    '''
-                        
-                        
-
+  '''  
 
 def poblar_skill_progress(student_name,kaid_student,dates,session):
+#realiza la llamada a la API entregandole el username del estudiante y el rango de fechas
     llamada = "/api/v1/user/exercises/progress_changes?userId=&username="+student_name+"&email=&dt_start="+dates
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
+    
     #print len(data)
     try:
         for i in range(len(data)):
+            #para cada progreso lo debe guardar en la tabla skill_progress
             #print i
             #print data[i]["exercise_name"]
             try:
-                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=data[i]["exercise_name"]).values("id_student_skill")
+                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=data[i]["id_skill_name"]).values("id_student_skill")
                 new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
                     from_level=data[i]["from_progress"]["level"], 
                     date=data[i]["date"], 
-                    id_skill_name=data[i]["exercise_name"],
-                    kaid_student=kaid_student,
                     id_student_skill_id=student_skill[0]["id_student_skill"])
                 new_progress.save()
             except:
@@ -466,8 +421,6 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                 new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
                     from_level=data[i]["from_progress"]["level"], 
                     date=data[i]["date"], 
-                    id_skill_name=data[i]["exercise_name"],
-                    kaid_student=kaid_student,
                     id_student_skill_id=student_skill[0]["id_student_skill"])
                 new_progress.save()
                 
@@ -480,6 +433,7 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                         kaid_student=kaid_student,
                         id_student_skill_id=student_skill[0]["id_student_skill"])
             new_progress.save()
+
             '''
             #print "guardo bien"
     except Exception as e:
@@ -538,12 +492,11 @@ def coach_students(session): #ver los estudiantes que tienen como coach a cierto
     jason = get_api_resource2(session,llamada,SERVER_URL2)
     source = unicode(jason, 'ISO-8859-1')
     data = simplejson.loads(source)
+    #with open('data.txt', 'w') as outfile:
+    #    json.dump(data, outfile)
+    logging.debug(len(data))
     for j in range(len(data)):
-        try:
-            new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["username"],email=data[j]["username"],points=data[j]["points"],phone=0)
-            new_student.save()
-        except:
-            logging.debug("error con estudiante "+data[j]["username"])
+        logging.debug(data[j]["username"])
 
 def poblar_students(session):
     # Open the workbook and select the first worksheet
@@ -580,22 +533,25 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
+    '''
     try:
-        #se le agrega el parametro students.name al poblar_student_skill
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
         logging.debug(msg)
+        '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
+        '''
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except:
         msg="error student_progress "+ students.name
         logging.debug(msg)
+        
     try:
         poblar_student_video(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -606,6 +562,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
+        '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -616,14 +573,14 @@ class Command(BaseCommand):
     help = 'Puebla la base de datos con ejercicios y videos vistos por los estudiantes'
 
     def handle(self, *args, **options):
-        #CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
+        CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
         #CONSUMER_KEY = '8Bn3UyhPHamgCvGN' #Clave para LeonardoMunoz esc Alabama
         #keys = ['AStAffVHzEtpSFJ3','8Bn3UyhPHamgCvGN']
-        #CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
+        CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
         #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
         #secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
-        #passw='clave1234'
-        #identifier='utpbakhan'
+        passw='clave1234'
+        identifier='utpbakhan'
         #passw='CONTRASENA'
         #identifier='LeonardoMunoz'
         #identifiers = ['utpbakhan','LeonardoMunoz']
@@ -639,119 +596,52 @@ class Command(BaseCommand):
             identifiers = inst.identifier
             passes = inst.password
 
-            session = run_tests(identifiers,passes,keys,secrets)
+            try:
 
-            # CARGAR ESTUDIANTES NUEVOS
-            #coach_students(session)
+                session = run_tests(identifiers,passes,keys,secrets)
 
-            #print "logueadoooo"
-            #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
-            #source = unicode(jason, 'ISO-8859-1')
-            #data = simplejson.loads(source)
-            buscar = "'"
-            reemplazar = " "
-            #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
-            #cur = conn.cursor()
-            #kaid_student = "kaid_485871758161384306203631"
+                #coach_students(session, inst.id_institution)
 
-            #today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
-            #today = today.replace(":","%3A")
-            #yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
-            #instituto = Institution.objects.get(id_institution= i)
-            #yesterday = inst.last_load
+                #print "logueadoooo"
+                #jason = get_api_resource2(session,"/api/v1/exercises",SERVER_URL2)
+                #source = unicode(jason, 'ISO-8859-1')
+                #data = simplejson.loads(source)
+                buscar = "'"
+                reemplazar = " "
+                #conn = psycopg2.connect(host="localhost", database="bakhanDB", user="postgres", password="root")
+                #cur = conn.cursor()
+                #kaid_student = "kaid_485871758161384306203631"
 
-            #inst.last_load = today
-            #inst.save()
+                #today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+                #today = today.replace(":","%3A")
+                #yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+                #instituto = Institution.objects.get(id_institution= i)
+                #yesterday = inst.last_load
 
-            #msg="hoy: " + today
-            #logging.debug(msg)
-            #msg="ayer: " + yesterday
-            #logging.debug(msg)
-            #dates = yesterday+"&dt_end="+today
-            dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-23T00%3A00%3A00Z"  
+                #inst.last_load = today
+                #inst.save()
 
-
-            '''
-            chapter = Chapter.objects.all()
-            chapter.delete()
-            topic = Topic.objects.all()
-            topic.delete()
-            subtopic = Subtopic.objects.all()
-            subtopic.delete()
-            skill = Skill.objects.all()
-            skill.delete()
-            video = Video.objects.all()
-            video.delete()
-            subtopic_skill = Subtopic_Skill.objects.all()
-            subtopic_skill.delete()
-            subtopic_video = Subtopic_Video.objects.all()
-            subtopic_video.delete()
-            '''
-
-            #poblar_topictree(session,buscar,reemplazar)
-
-            '''
-            student_skills = Student_Skill.objects.all()
-            student_skills.delete()
+                #msg="hoy: " + today
+                #logging.debug(msg)
+                #msg="ayer: " + yesterday
+                #logging.debug(msg)
+                #dates = yesterday+"&dt_end="+today
+                dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-27T00%3A00%3A00Z"  
 
 
-            skill_attempts = Skill_Attempt.objects.all()
-            skill_attempts.delete()
 
-            skill_progress = Skill_Progress.objects.all()
-            skill_progress.delete()
-            
-            student_videos = Student_Video.objects.all()
-            student_videos.delete()
-            
+                consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
-            video_playings = Video_Playing.objects.all()
-            video_playings.delete()
-            '''
+                for cons in consulta:
+                    #print cons["id_class"]
+                    threads = []
+                    students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
 
-            #print inst.id_institution
-            # ESTA CONSULTA FILTRA POR CADA CURSO DE CADA INSTITUCION
-            consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+                    for i in students:
+                        #print students[i].name
+                        t = threading.Thread(target=threadPopulate,args=(i,dates,session))
+                        threads.append(t)
+                        t.start()
 
-            for cons in consulta:
-                #print cons["id_class"]
-                threads = []
-                students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
-
-                for i in students:
-                    #print students[i].name
-                    t = threading.Thread(target=threadPopulate,args=(i,dates,session))
-                    threads.append(t)
-                    t.start()
-            
-            #threads = []
-            #students = Student.objects.filter(student_class__id_class_id=4) # filtrar por institucion
-            #students = Student.objects.filter(kaid_student='kaid_605807502720918375029433')
-            #print "estudiantes abajo"
-            #print students
-
-            '''
-            t = threading.Thread(target=threadPopulate,args=(students,i,dates,session))
-            threads.append(t)
-            t.start()
-
-            '''
-            '''
-            assesments = Assesment.objects.all()
-            for assesment in assesments:
-                print assesment.id_assesment_conf_id
-            
-                skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
-            
-                levels = Student_Skill.objects.filter(kaid_student__in=students)
-            '''
-            '''
-            for i in students:
-                #print students[i].name
-                t = threading.Thread(target=threadPopulate,args=(i,dates,session))
-                threads.append(t)
-                t.start()
-               '''
-                
-            #print "Todos los threads lanzados" antes 22047
-
+            except Exception as e:
+                print e
