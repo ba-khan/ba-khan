@@ -351,50 +351,7 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
             pass
             #print "otra materia (?)"
     #print "listeilors"
-    
-'''
-def poblar_skill_attempts(name_student, kaid_student, dates, session):
-    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_skill_name")
-    print student_skills[0]["id_skill_name"]
-    #obtiene la skills de cada estudiante
-    #student_skills = Skill_Progress.objects.filter(kaid_student=kaid_student).order_by('id_skill_name_id').distinct('id_skill_name_id').values('id_skill_name_id')
-    
-    for i in range(len(student_skills)):
-        #recorre todas las skills de un estudiante y realiza la llamada a la API
-        try:
-            llamada = "/api/v1/user/exercises/"+student_skills[0]["id_skill_name"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
-            #llamada = "/api/v1/user/exercises/division_0.5/log?userId=&username=opazo.munoz.esteban&email=&dt_start="+dates
-            jason = get_api_resource2(session,llamada,SERVER_URL)
-            source = unicode(jason, 'ISO-8859-1')
-            data = simplejson.loads(source)
-            print data
-            
-            #para cada habilidad intenta insertar los attempts si son distintos de null
-            try:
-                for j in range(len(data)):
-                    #print data[j]["count_attempts"]
-                    skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
-                                                                           mission = data[j]["mission"],
-                                                                           time_taken = data[j]["time_taken"],
-                                                                           count_hints = data[j]["count_hints"],
-                                                                           skipped = data[j]["skipped"],
-                                                                           points_earned = 0,
-                                                                           date = data[j]["time_done"],
-                                                                           correct = data[j]["correct"],
-                                                                           id_skill_name_id = student_skills[i]["id_skill_name"],
-                                                                           kaid_student_id = data[j]["kaid"],
-                                                                           problem_number = data[j]["problem_number"]
-                                                                           )
-                    skill_attempts.save()
-                
 
-            except Exception as e:
-                print e
-                pass
-                
-        except Exception as e:
-            print e
-  '''  
 
 def poblar_skill_progress(student_name,kaid_student,dates,session):
 #realiza la llamada a la API entregandole el username del estudiante y el rango de fechas
@@ -425,16 +382,7 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                 new_progress.save()
                 
             #print student_skill[0]["id_student_skill"]
-            '''
-            new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                        from_level=data[i]["from_progress"]["level"], 
-                        date=data[i]["date"], 
-                        id_skill_name_id=data[i]["exercise_name"],
-                        kaid_student=kaid_student,
-                        id_student_skill_id=student_skill[0]["id_student_skill"])
-            new_progress.save()
 
-            '''
             #print "guardo bien"
     except Exception as e:
         print e
@@ -533,19 +481,19 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    '''
+
     try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
         logging.debug(msg)
-        '''
+        
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
-        '''
+        
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -557,12 +505,13 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_video "+ students.name
         logging.debug(msg)
+
     try:
         poblar_video_playing(students.name,students.kaid_student, dates, session)
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-        '''
+        
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -612,21 +561,21 @@ class Command(BaseCommand):
                 #cur = conn.cursor()
                 #kaid_student = "kaid_485871758161384306203631"
 
-                #today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
-                #today = today.replace(":","%3A")
-                #yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+                today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+                today = today.replace(":","%3A")
+                yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
-                #yesterday = inst.last_load
+                yesterday = inst.last_load
 
-                #inst.last_load = today
-                #inst.save()
+                inst.last_load = today
+                inst.save()
 
-                #msg="hoy: " + today
-                #logging.debug(msg)
-                #msg="ayer: " + yesterday
-                #logging.debug(msg)
-                #dates = yesterday+"&dt_end="+today
-                dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-27T00%3A00%3A00Z"  
+                msg="hoy: " + today
+                logging.debug(msg)
+                msg="ayer: " + yesterday
+                logging.debug(msg)
+                dates = yesterday+"&dt_end="+today
+                #dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-27T00%3A00%3A00Z"  
 
 
 
