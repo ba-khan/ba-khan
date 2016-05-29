@@ -366,13 +366,17 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
             #para cada progreso lo debe guardar en la tabla skill_progress
             #print i
             #print data[i]["exercise_name"]
+            skill = Skill.objects.filter(name=data[i]["exercise_name"]).values('id_skill_name','name')
             try:
-                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=data[i]["id_skill_name"]).values("id_student_skill")
+                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
                 new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
                     from_level=data[i]["from_progress"]["level"], 
                     date=data[i]["date"], 
                     id_student_skill_id=student_skill[0]["id_student_skill"])
                 new_progress.save()
+            except Exception as e:
+                print e
+            '''    
             except:
                 student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_student_skill")
                 new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
@@ -380,9 +384,18 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                     date=data[i]["date"], 
                     id_student_skill_id=student_skill[0]["id_student_skill"])
                 new_progress.save()
-                
+            '''    
             #print student_skill[0]["id_student_skill"]
+            '''
+            new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
+                        from_level=data[i]["from_progress"]["level"], 
+                        date=data[i]["date"], 
+                        id_skill_name_id=data[i]["exercise_name"],
+                        kaid_student=kaid_student,
+                        id_student_skill_id=student_skill[0]["id_student_skill"])
+            new_progress.save()
 
+            '''
             #print "guardo bien"
     except Exception as e:
         print e
