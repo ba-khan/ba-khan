@@ -148,11 +148,17 @@ def getRoster(request):
     request.session.set_expiry(timeSleep)
     students = []
     teachers = Teacher.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+
+    institution = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
+    print institution
+    students = Student.objects.filter(id_institution_id=institution)
+    print students
+
     classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
-    for clas in classes:
-        a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
-        for b in a:
-            students.append(b)
+    #for clas in classes:
+        #a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
+        #for b in a:
+            #students.append(b)
 
     return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes}, context_instance=RequestContext(request))
 

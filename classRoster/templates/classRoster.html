@@ -110,20 +110,21 @@ Nomina
 		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
-	{% for class in classes %}
 	<div id="classesDiv">
-		
-		<div id="class{{forloop.counter">
+
+		<label for="selectClass">Curso: </label>
+		<select id="selectClass">
+			{% for class in classes %}
 			{% if class.level > 8 %}
-			<h3>{{class.level|add:-8}} Medio {{class.letter}}</h3>
+			<option value="{{class.id_class}},{{class.level}}{{class.letter}}">{{class.level|add:-8}} Medio {{class.letter}} </option>
 			{% else %}
-			<h3>{{class.level}} Básico {{class.letter}} </h3>
+			<option value="{{class.id_class}},{{class.level}}{{class.letter}}">{{class.level}} Básico {{class.letter}} </option>
 			{% endif %}
-			<a onclick="javascript:viewClass({{class.id_class}},{{class.level}}, '{{class.letter}}')" id="viewClassButton" class="kui-button kui-button-plain kui-button-primary">Ver Curso</a>
-		</div>
-		
+			{% endfor %}
+		</select>
+		<a onclick="javascript:viewClass()" id="viewClassButton" class="kui-button kui-button-plain kui-button-primary">Ver Curso</a>
+
 	</div>
-	{% endfor %}
 
 </div>
 <br>
@@ -380,8 +381,14 @@ function newTeacherClass(){
 	}
 }
 
-function viewClass(id_class, level, letter){
+function viewClass(){
 	resetClass();
+	selectClass = $("#selectClass").val();
+	
+	var letter = selectClass[selectClass.length-1]
+	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf(letter))
+	var id_class = selectClass.substring(0,selectClass.indexOf(","))
+
 	var classObj = new Object();
 	classObj.idClass = id_class;
 	$.ajax({
@@ -397,12 +404,13 @@ function viewClass(id_class, level, letter){
 					$("#studentsClass").append("<li id='"+response[a]['fields']['name']+"'>"+response[a]['fields']['name']+"</li>");
 					$("#levels").val(level);
 					$("#letter").val(letter);
+					var studentsLen = $("li").length;
+					$("#counter").html(studentsLen);
 				}
 				
 			}
 		});
-	var studentsLen = $("li").length;
-	$("#counter").html(studentsLen);
+	
 }
 	
 </script>
