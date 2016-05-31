@@ -96,7 +96,9 @@ def generateAssesmentExcel(request, id_assesment):
             grades = Student.objects.filter(grade__id_assesment_id=id_assesment
                 ).values('name','grade__grade',
                 'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
-                'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3')
+                'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
+            for g in grades:
+                print g
         except Exception as e:
             print '***ERROR*** try: #id01 in generateAssesmentExce(request, id_assesment)'
             print e
