@@ -225,18 +225,44 @@ def viewClass(request):
         classObj = request.POST
         clas = Class.objects.get(id_class=classObj['idClass'])
         students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id'))
+        teacher = Teacher.objects.filter(kaid_teacher=Class_Subject.objects.filter(id_class_id=classObj['idClass']).values('kaid_teacher_id'))
+        data_teacher = serializers.serialize('json', teacher)
+        struct_teacher = json.loads(data_teacher)
 
         data_students = serializers.serialize('json', students)
         struct_students = json.loads(data_students)
+        struct_students.append(struct_teacher)
         students = json.dumps(struct_students)
-        print students
+
         return HttpResponse(students)
 
-        #st_jsn = json.dumps(list(students), cls=DjangoJSONEncoder)
-        #response_data = {}
-        #response_data['clas'] = json.dumps(clas, cls=DjangoJSONEncoder)
-        #response_data['students'] = st_jsn
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def editClass(request):
+    if request.method == 'POST':
+        newClass = request.POST
+        level = int(newClass["level"])
+        letter = newClass["letter"]
+        #teacher = newClass["teacher"]
+        teacher = Teacher.objects.get(name=newClass["teacher"])
+        kaid_teacher = teacher.kaid_teacher
+        students = newClass.getlist("students[]")
 
-        #print response_data
-        
-        #return JsonResponse(response_data)
+        inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+        id_institution = int(inst.id_institution)
+        try:
+            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution)
+            id_class=curso.id_class
+            class_subject = Class_Subject.objects.get(id_class_id=id_class)
+            class_subject.kaid_teacher_id = kaid_teacher
+            class_subject.save() #GUARDA EL PROFESOR
+
+            student_class = Student_Class.objects.filter(id_class_id=id_class)
+            student_class.delete()
+
+            for student in students:
+                aux = Student.objects.get(name=student)
+                student_class = Student_Class.objects.create(id_class_id=id_class, kaid_student_id=aux.kaid_student)
+
+            return HttpResponse("Curso editado correctamente")
+        except:
+            return HttpResponse("Error al editar")

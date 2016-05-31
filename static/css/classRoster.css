@@ -107,7 +107,7 @@ h3, h5{
 }
 
 
- #resetButton, #confirmSaveButton, #saveButton, #cancelSaveButton{
+ #resetButton, #confirmSaveButton, #saveButton, #confirmEditButton, #cancelSaveButton, #editButton{
  	cursor:pointer; 
  	width:100px; 
  	height: 32px; 

@@ -43,7 +43,7 @@ Nomina
 				</tr>
 				{% for teacher in teachers %}
 				<tr id="R{{ forloop.counter }}" >
-					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}"> {{ teacher }}</label></td>
+					<td><label><input type="radio" name="radioTeachers" value="{{ teacher }}" id="{{ teacher }}"> {{ teacher }}</label></td>
 				</tr>
 				{% endfor %}
 				
@@ -108,6 +108,7 @@ Nomina
 		<div id="studentsClass"></div>
 		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
 		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+		<a onclick="javascript:confirmEditClass()" id="confirmEditButton" class="kui-button kui-button-plain kui-button-primary" style="display:none">Editar</a>
 	</div>
 
 
@@ -288,6 +289,7 @@ function cancelSaveClass(){
 	$("#popup").fadeOut();
 	$(".response").remove();
 	$("#saveButton").remove();
+	$("#editButton").remove();
 	$("#cancelSaveButton").remove();
 	$("#hover").css('pointer-events','');
 	$("#close").css('pointer-events','');
@@ -336,6 +338,9 @@ function resetClass(){
 	$("#letter").val("A");
 	var studentsLen = $("li").length;
 	$("#counter").html(studentsLen);
+
+	$("#confirmSaveButton").show();
+	$("#confirmEditButton").hide();
 }
 
 function newTeacherClass(){
@@ -383,7 +388,20 @@ function newTeacherClass(){
 }
 
 function viewClass(){
+	
+	$(".response").remove();
+	$("#popup").append("<p class='response'>Cargando el curso. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading'));
+	$('#loading').show();
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+
 	resetClass();
+	$("#confirmSaveButton").css('display','none');
+	$("#confirmEditButton").css('display','');
+
 	selectClass = $("#selectClass").val();
 	
 	var letter = selectClass[selectClass.length-1]
@@ -398,21 +416,100 @@ function viewClass(){
 			data: classObj,
 			dataType: "json",
 			success: function(response){
-				//Clickear lo que hay que clickear
-				for (var a in response){
-					$("input:checkbox[value='"+response[a]['fields']['name']+"']").attr("checked", true);
+				for (a=0;a<response.length-1;a++){
+					$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
 					$("#studentsClass").append("<li id='"+response[a]['fields']['name']+"'>"+response[a]['fields']['name']+"</li>");
 					$("#levels").val(level);
 					$("#letter").val(letter);
 					var studentsLen = $("li").length;
 					$("#counter").html(studentsLen);
 				}
-				
+				$("input:radio[value='"+response[response.length-1][0]['fields']['name']+"']").prop("checked", true);
+				$("#teacher").val(response[response.length-1][0]['fields']['name']);
 			}
 		});
+
+
+	$(".response").remove();
+	$('#loading').css('display','none');
+	$("#hover").css('pointer-events','');
+	$("#close").css('pointer-events','');
+	$("#hover").fadeOut();
+	$("#popup").fadeOut();
 	
 }
-	
+
+function confirmEditClass(){
+	classJson.teacher = $("#teacher").val();
+	if (classJson.teacher==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger profesor</p>");
+		return;
+	}
+	classJson.level = $("#levels").val();
+	classJson.letter = $("#letter").val();
+	var studentsArray = [];
+	$("li").each(function (index){ 
+		studentsArray.push($(this).html());
+	});
+	classJson.students = studentsArray;
+	if (classJson.students.length == 0){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger estudiantes</p>");
+		return;
+	}
+
+	var studentsLen = $("li").length;
+	levels = ["","1°","2°","3°","4°","5°","6°","7°","8°","1°","2°","3°","4°"]
+	if (classJson.level>0 && classJson.level<9){
+		level = levels[classJson.level]+" Básico "
+	}
+	else{
+		level = levels[classJson.level]+" Medio "
+	}
+
+	$(".response").remove()
+	$("#popup").append("<p class='response'>¿Está seguro que desea editar el curso "+level+classJson.letter+" a cargo del profesor "+classJson.teacher+" con "+studentsLen+" estudiantes?</p>");
+	$("#popup").append('<button onclick="javascript:saveClass(classJson)" id="editButton" class="kui-button kui-button-plain kui-button-primary">Aceptar</button>');
+	$("#popup").append('<button onclick="javascript:cancelSaveClass()" id="cancelSaveButton" class="kui-button kui-button-plain kui-button-primary">Cancelar</button>');
+	$("a").css('pointer-events','none');
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+}
+
+function saveClass(classJson){
+	$(".response").remove();
+	$("#editButton").remove();
+	$("#cancelSaveButton").remove();
+	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+	$.ajax({
+		url: "{% url 'classRoster:editClass' %}",
+		type: "POST",
+		data: classJson,
+			success: function(response){
+				$(".response").fadeOut();
+				$('#loading').fadeOut();
+				$(".response").remove()
+				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+				$(".response").fadeIn();
+				$("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+				$("a").css('pointer-events','');
+			}
+	});
+}
+
 </script>
 
 {% endblock %}
