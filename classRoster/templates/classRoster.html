@@ -103,15 +103,16 @@ Nomina
 		<br>
 		<label for="teacher">Profesor: </label>
 		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
-		<h5>Estudiantes</h5>
-		<p id="counter">0</p>
+		<h5>Estudiantes: <p id="counter">0</p></h5>
+		
 		<div id="studentsClass"></div>
 		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
 		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
-	<div id="classesDiv">
 
+	<div id="classesDiv">
+		<h1 style="margin-top:1%">Ver Cursos</h1>
 		<label for="selectClass">Curso: </label>
 		<select id="selectClass">
 			{% for class in classes %}
@@ -399,7 +400,6 @@ function viewClass(){
 			success: function(response){
 				//Clickear lo que hay que clickear
 				for (var a in response){
-					console.log(response[a]['fields']['name']);
 					$("input:checkbox[value='"+response[a]['fields']['name']+"']").attr("checked", true);
 					$("#studentsClass").append("<li id='"+response[a]['fields']['name']+"'>"+response[a]['fields']['name']+"</li>");
 					$("#levels").val(level);

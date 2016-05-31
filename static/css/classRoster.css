@@ -187,4 +187,11 @@ table.testgrid td {
   position: relative;
   float: left;
   margin-top: 1%;
+  padding-bottom: 1%;
+}
+#viewClassButton{
+  margin-left: 2%;
+}
+#classesDiv h1{
+  margin-bottom: 1%;
 }

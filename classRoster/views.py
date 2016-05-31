@@ -212,7 +212,7 @@ def newClass(request):
             print "Crear nuevo curso"
             curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=2016)
             id_curso = int(curso.id_class)
-            class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher) #AQUI SE CAE, AYER FUNCIONABA ASI TAL CUAL :(
+            class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
             print class_subject
             for student in students:
                 aux = Student.objects.get(name=student)
