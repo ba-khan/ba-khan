@@ -82,7 +82,7 @@ def generateAssesmentExcel(request, id_assesment):
         #funcion que genera el excel de una evaluacion
         #variables
         
-        delta = 7
+        delta = 9
         viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
             'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
             'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
@@ -104,7 +104,7 @@ def generateAssesmentExcel(request, id_assesment):
             print e
 
         totalGrades = grades.count()
-        totalConf = 9 
+        totalConf = 10 
         totalSkills = skills.count()
         #print '***DEBUG***'
         #print totalSkills
@@ -113,8 +113,8 @@ def generateAssesmentExcel(request, id_assesment):
         w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
         data = [['' for x in range(w)] for y in range(h)] 
 
-        
-        data[0][0] = 'Evaluacion'
+        #carga del arreglo assesment
+        data[0][0] = 'Nombre de la calificacion'
         data[0][1] = assesment.name
         data[1][0] = 'Nota Minima'
         data[1][1] = assesment.min_grade
@@ -124,6 +124,10 @@ def generateAssesmentExcel(request, id_assesment):
         data[3][1] = assesment.approval_grade
         data[4][0] = 'Bonificacion por Esfuerzo'
         data[4][1] = assesment.max_effort_bonus
+        data[5][0] = 'Fecha de inicio'
+        data[5][1] = assesment.start_date
+        data[6][0] = 'Fecha de termino'
+        data[6][1] = assesment.end_date
         #carga las notas y las variables disponibles en grade
         for k in range(totalFields):
             data[delta-1][k] = viewFields[k]
