@@ -110,6 +110,21 @@ Nomina
 		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 	</div>
 
+	{% for class in classes %}
+	<div id="classesDiv">
+		
+		<div id="class{{forloop.counter">
+			{% if class.level > 8 %}
+			<h3>{{class.level|add:-8}} Medio {{class.letter}}</h3>
+			{% else %}
+			<h3>{{class.level}} Básico {{class.letter}} </h3>
+			{% endif %}
+			<a onclick="javascript:viewClass({{class.id_class}},{{class.level}}, '{{class.letter}}')" id="viewClassButton" class="kui-button kui-button-plain kui-button-primary">Ver Curso</a>
+		</div>
+		
+	</div>
+	{% endfor %}
+
 </div>
 <br>
 </div>
@@ -363,6 +378,31 @@ function newTeacherClass(){
 				}
 		});
 	}
+}
+
+function viewClass(id_class, level, letter){
+	resetClass();
+	var classObj = new Object();
+	classObj.idClass = id_class;
+	$.ajax({
+			url: "{% url 'classRoster:viewClass' %}",
+			type: "POST",
+			data: classObj,
+			dataType: "json",
+			success: function(response){
+				//Clickear lo que hay que clickear
+				for (var a in response){
+					console.log(response[a]['fields']['name']);
+					$("input:checkbox[value='"+response[a]['fields']['name']+"']").attr("checked", true);
+					$("#studentsClass").append("<li id='"+response[a]['fields']['name']+"'>"+response[a]['fields']['name']+"</li>");
+					$("#levels").val(level);
+					$("#letter").val(letter);
+				}
+				
+			}
+		});
+	var studentsLen = $("li").length;
+	$("#counter").html(studentsLen);
 }
 	
 </script>

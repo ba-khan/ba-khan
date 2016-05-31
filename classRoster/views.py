@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
-from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
 from django.core.management.base import BaseCommand, CommandError
 from bakhanapp.forms import AssesmentConfigForm,AssesmentForm
@@ -13,6 +13,8 @@ from django.contrib import auth
 from django.db.models import Count
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.http import JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 from django import template
@@ -152,7 +154,7 @@ def getRoster(request):
         for b in a:
             students.append(b)
 
-    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers}, context_instance=RequestContext(request))
+    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes}, context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newTeacherClass(request):
@@ -210,3 +212,25 @@ def newClass(request):
                 aux = Student.objects.get(name=student)
                 student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
             return HttpResponse("Nuevo curso creado")
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def viewClass(request):
+    if request.method == 'POST':
+        classObj = request.POST
+        clas = Class.objects.get(id_class=classObj['idClass'])
+        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id'))
+
+        data_students = serializers.serialize('json', students)
+        struct_students = json.loads(data_students)
+        students = json.dumps(struct_students)
+        print students
+        return HttpResponse(students)
+
+        #st_jsn = json.dumps(list(students), cls=DjangoJSONEncoder)
+        #response_data = {}
+        #response_data['clas'] = json.dumps(clas, cls=DjangoJSONEncoder)
+        #response_data['students'] = st_jsn
+
+        #print response_data
+        
+        #return JsonResponse(response_data)
