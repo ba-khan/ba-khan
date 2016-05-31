@@ -1830,7 +1830,8 @@
 			}else{
 				$('#fecha_inicio').css('color', '#000000');
 			}
-			if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
+			//if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
+			if(date_end == null || startDate > endDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
 				$('#fecha_termino').css('color', '#C30202');
 				flag = false;
 			}else{
