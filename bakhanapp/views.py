@@ -155,8 +155,9 @@ def generateAssesmentExcel(request, id_assesment):
                     data[i+delta][j] = grades[i]['grade__grade']
                 elif j==12:
                     data[i+delta][j] = grades[i]['grade__bonus_grade']
+        data[totalGrades+delta+1][0]='Habilidades evaluadas:'
         for l in range(totalSkills):
-            data[totalGrades+delta+l][0]=skills[l]['name_spanish']
+            data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
         try:
             #create multi-sheet book with array
             arrayAssesment={
