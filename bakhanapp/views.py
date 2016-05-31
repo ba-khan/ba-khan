@@ -97,8 +97,6 @@ def generateAssesmentExcel(request, id_assesment):
                 ).values('name','grade__grade',
                 'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
                 'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
-            for g in grades:
-                print g
         except Exception as e:
             print '***ERROR*** try: #id01 in generateAssesmentExce(request, id_assesment)'
             print e
@@ -159,14 +157,59 @@ def generateAssesmentExcel(request, id_assesment):
                     data[i+delta][j] = grades[i]['grade__grade']
                 elif j==12:
                     data[i+delta][j] = grades[i]['grade__bonus_grade']
+        #load skills to excel array data
         data[totalGrades+delta+1][0]='Habilidades evaluadas:'
         for l in range(totalSkills):
             data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
+        #load resumen data
+        try:#id_1001
+            wr,hr = 10,30
+            datar = [['' for x in range(wr)] for y in range(hr)] 
+            datar[0][0] = 'Nombre de la calificacion'
+            datar[0][1] = data[0][1]
+            datar[1][0] = 'Nota Minima'
+            datar[1][1] = data[1][1]
+            datar[2][0] = 'Nota Maxima'
+            datar[2][1] = data[2][1]
+            datar[3][0] = 'Nota de Aprobacion'
+            datar[3][1] = data[3][1]
+            datar[4][0] = 'Bonificacion por Esfuerzo'
+            datar[4][1] = data[4][1]
+            datar[5][0] = 'Fecha de inicio'
+            datar[5][1] = data[5][1]
+            datar[6][0] = 'Fecha de termino'
+            datar[6][1] = data[6][1]
+
+            datar[1][3] = 'Alumnos participantes'
+            datar[1][4] = grades.count()
+            datar[2][3] = 'Aprobados'
+            datar[2][4] = grades.filter(grade__grade__gte=assesment.approval_grade).count()
+            datar[3][3] = 'Reprobados'
+            datar[3][4] = grades.filter(grade__grade__lt=assesment.approval_grade).count()
+            #load histogram data
+            datar[8][0] = 'Histograma'
+            datar[9][0] = 'Desde'
+            datar[9][1] = 'Hasta'
+            datar[9][2] = 'Cantidad'
+            rangeHistogram = (data[2][1] - data[1][1])/float(10)
+            datar[10][0] = data[1][1]
+            datar[10][1] = data[1][1] + rangeHistogram
+            datar[10][2] = grades.filter(grade__grade__gte=datar[10][0],grade__grade__lte=datar[10][1]).count() 
+            for i in range(8):
+                datar[i+delta+2][0] = datar[i+delta+1][1] + 0.1
+                datar[i+delta+2][1] = datar[i+delta+2][0] + rangeHistogram
+                datar[i+delta+2][2] = grades.filter(grade__grade__gte=datar[i+delta+2][0],grade__grade__lte=datar[i+delta+2][1]).count() 
+            datar[19][0] = datar[18][1] + 0.1
+            datar[19][1] = data[2][1]
+            datar[19][2] = grades.filter(grade__grade__gte=datar[19][0],grade__grade__lte=datar[19][1]).count() 
+        except Exception as e:
+            print '***ERROR*** problemas en bakhanapp views.py try id_1001'
+            print e
         try:
             #create multi-sheet book with array
             arrayAssesment={
                 "Detalle": data,
-                "Resumen": [['X', 'Y', 'Z'], [1,2,3],[4,5,6]]
+                "Resumen": datar
             }
             book = pe.Book(arrayAssesment)
         except Exception as e:
