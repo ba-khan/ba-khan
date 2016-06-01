@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^inicio/administradores/', include('ManagementTeam.urls', namespace="ManagementTeam")),
     url(r'^inicio/nomina/', include('classRoster.urls', namespace="classRoster")),
     url(r'^inicio/cursos/generateAssesmentExcel/(?P<id_assesment>[0-9]+)/$', 'bakhanapp.views.generateAssesmentExcel', name='generateAssesmentExcel'),
+    url(r'^inicio/cursos/generateClassExcel/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.generateClassExcel', name='generateClassExcel'),
     
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),

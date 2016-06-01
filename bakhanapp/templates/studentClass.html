@@ -585,15 +585,19 @@
     });
     
     //add button downloadClassExcel
-    d3.select("body")
-    	.append("button")
-        .attr("type","button")
-        .attr("class","btn-btn")
-        .attr("id",'button')
-        .append("div")
-        .attr("class","label")
-        .text('Descargar'); 
-
+    {% for class in classroom %}
+    	var e_id_class = {{class.id_class}}
+    {% endfor%}
+    if(assesments.length>0){
+	    d3.select("body")
+	    	.append("div")
+	    	.attr("class","btn-excel-content")
+	    	.append("button")
+	        .attr("type","button")
+	        .attr("class","btn-download")
+	        .attr("id",'button')
+	        .attr("onClick","generateClassExcel("+e_id_class+")"); 
+    }
 
 //*******************************************************************************************************************************
 //**************** d3 end generation main ***************************************************************************************
@@ -2647,6 +2651,10 @@ $('#breadcrumb').html('Curso / {{ spanish_classroom }}')
 
 function generateExcel(id_assesment){
 	window.location = "/inicio/cursos/generateAssesmentExcel/"+id_assesment;
+	
+}
+function generateClassExcel(id_class){
+	window.location = "/inicio/cursos/generateClassExcel/"+id_class;
 	
 }
 /*fin*/

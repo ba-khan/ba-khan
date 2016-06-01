@@ -72,188 +72,49 @@ import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
 
+@login_required()
+def generateClassExcel(request, id_class):
+    #funcion que genera el excel de un curso completo con todas sus evaluaciones
+    request.session.set_expiry(timeSleep)
+    if request.method == 'GET':
+        #funcion que genera el excel de una evaluacion
+        assesment = Assesment.objects.filter(id_class=id_class)
+        rClass = Class.objects.get(id_class=id_class)
+        N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+        
+        nameClass= N[int(rClass.level)]  +' '+ rClass.letter
+        print nameClass
+        try:#id1004
+            #create multi-sheet book with array
+            arrayAssesment={}
+            for a in assesment:
+                arrayAssesment[a.name+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
+                arrayAssesment[a.name+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
+            book = pe.Book(arrayAssesment)
+        except Exception as e:
+            print '***ERROR*** problemas al crear multiples hojas excel con dataTest try id1004'
+            print e
+        try:
+            response = excel.make_response(book, 'xls', file_name=nameClass)
+        except Exception as e:
+            print '***ERROR*** no se ha podido generar la respuesta excel en generateClassExcel'
+            print e
+            response = False
+        return response
 
 @login_required()
 def generateAssesmentExcel(request, id_assesment):
     request.session.set_expiry(timeSleep)
     if request.method == 'GET':
-        infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
-        
         #funcion que genera el excel de una evaluacion
-        #variables
-        
-        delta = 9
-        viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
-            'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
-            'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
-            'Nota','Bonificacion por esfuerzo']
-        totalFields = len(viewFields)
-        #carga al arreglo los datos de la evaluacion id_assesment
-        try: #id01
-            assesment = Assesment.objects.get(id_assesment=id_assesment)
-            config = Assesment_Config.objects.get(id_assesment_config=assesment.id_assesment_conf_id)
-            skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id).values('name_spanish')
-            grades = Student.objects.filter(grade__id_assesment_id=id_assesment
-                ).values('name','grade__grade',
-                'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
-                'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
-        except Exception as e:
-            print '***ERROR*** try: #id01 in generateAssesmentExce(request, id_assesment)'
-            print e
-
-        totalGrades = grades.count()
-        totalConf = 10 
-        totalSkills = skills.count()
-        #print '***DEBUG***'
-        #print totalSkills
-
-        #crea el arreglo inicial
-        w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
-        data = [['' for x in range(w)] for y in range(h)] 
-
-        #carga del arreglo assesment
-        data[0][0] = 'Nombre de la calificacion'
-        data[0][1] = assesment.name
-        data[1][0] = 'Nota Minima'
-        data[1][1] = assesment.min_grade
-        data[2][0] = 'Nota Maxima'
-        data[2][1] = assesment.max_grade
-        data[3][0] = 'Nota de Aprobacion'
-        data[3][1] = assesment.approval_grade
-        data[4][0] = 'Bonificacion por Esfuerzo'
-        data[4][1] = assesment.max_effort_bonus
-        data[5][0] = 'Fecha de inicio'
-        data[5][1] = assesment.start_date
-        data[6][0] = 'Fecha de termino'
-        data[6][1] = assesment.end_date
-        #carga las notas y las variables disponibles en grade
-        for k in range(totalFields):
-            data[delta-1][k] = viewFields[k]
-        for i in range(totalGrades):
-            for j in range(totalFields):
-                if j==0:
-                    data[i+delta][j] = grades[i]['name']
-                if j==1:
-                    data[i+delta][j] = grades[i]['grade__recomended_complete']
-                if j==2:
-                    data[i+delta][j] = grades[i]['grade__incorrect']
-                if j==3:
-                    data[i+delta][j] = grades[i]['grade__correct']
-                if j==4:
-                    data[i+delta][j] = grades[i]['grade__excercice_time']
-                if j==5:
-                    data[i+delta][j] = grades[i]['grade__video_time']
-                if j==6:
-                    data[i+delta][j] = grades[i]['grade__struggling']
-                if j==7:
-                    data[i+delta][j] = grades[i]['grade__practiced']
-                if j==8:
-                    data[i+delta][j] = grades[i]['grade__mastery1']
-                if j==9:
-                    data[i+delta][j] = grades[i]['grade__mastery2']
-                if j==10:
-                    data[i+delta][j] = grades[i]['grade__mastery3']
-                elif j==11:
-                    data[i+delta][j] = grades[i]['grade__grade']
-                elif j==12:
-                    data[i+delta][j] = grades[i]['grade__bonus_grade']
-        #load skills to excel array data
-        data[totalGrades+delta+1][0]='Habilidades evaluadas:'
-        for l in range(totalSkills):
-            data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
-        #load resumen data
-        try:#id_1001
-            wr,hr = 10,30+totalSkills
-            datar = [['' for x in range(wr)] for y in range(hr)] 
-            datar[0][0] = 'Nombre de la calificacion'
-            datar[0][1] = data[0][1]
-            datar[1][0] = 'Nota Minima'
-            datar[1][1] = data[1][1]
-            datar[2][0] = 'Nota Maxima'
-            datar[2][1] = data[2][1]
-            datar[3][0] = 'Nota de Aprobacion'
-            datar[3][1] = data[3][1]
-            datar[4][0] = 'Bonificacion por Esfuerzo'
-            datar[4][1] = data[4][1]
-            datar[5][0] = 'Fecha de inicio'
-            datar[5][1] = data[5][1]
-            datar[6][0] = 'Fecha de termino'
-            datar[6][1] = data[6][1]
-
-            datar[1][3] = 'Alumnos participantes'
-            datar[1][4] = grades.count()
-            datar[2][3] = 'Aprobados'
-            datar[2][4] = grades.filter(grade__grade__gte=assesment.approval_grade).count()
-            datar[3][3] = 'Reprobados'
-            datar[3][4] = grades.filter(grade__grade__lt=assesment.approval_grade).count()
-            #load histogram data
-            datar[8][0] = 'Histograma'
-            datar[9][0] = 'Desde'
-            datar[9][1] = 'Hasta'
-            datar[9][2] = 'Cantidad'
-            rangeHistogram = (data[2][1] - data[1][1])/float(10)
-            datar[10][0] = data[1][1]
-            datar[10][1] = data[1][1] + rangeHistogram
-            datar[10][2] = grades.filter(grade__grade__gte=datar[10][0],grade__grade__lte=datar[10][1]).count() 
-            for i in range(8):
-                datar[i+delta+2][0] = datar[i+delta+1][1] + 0.1
-                datar[i+delta+2][1] = datar[i+delta+2][0] + rangeHistogram
-                datar[i+delta+2][2] = grades.filter(grade__grade__gte=datar[i+delta+2][0],grade__grade__lte=datar[i+delta+2][1]).count() 
-            datar[19][0] = datar[18][1] + 0.1
-            datar[19][1] = data[2][1]
-            datar[19][2] = grades.filter(grade__grade__gte=datar[19][0],grade__grade__lte=datar[19][1]).count() 
-        except Exception as e:
-            print '***ERROR*** problemas en bakhanapp views.py try id_1001'
-            print e
-        try:#id1002
-            #load q skill level
-            print '***DEPURACION***'
-            delta2 = 23
-            datar[delta2-2][0] = 'Cantidad de alumnos en cada nivel por habilidad'
-            datar[delta2-1][0] = 'Habilidad'
-            datar[delta2-1][1] = 'No Practicado'
-            datar[delta2-1][2] = 'En Dificultad'
-            datar[delta2-1][3] = 'Practicado'
-            datar[delta2-1][4] = 'Nivel 1'
-            datar[delta2-1][5] = 'Nivel 2'
-            datar[delta2-1][6] = 'Dominado'
-            qGrades = Grade.objects.filter(id_assesment=assesment)
-            qSkills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id)
-            for i in range(totalSkills):
-                datar[i+delta2][0]=qSkills[i].name_spanish
-                datar[i+delta2][1]=0
-                datar[i+delta2][2]=0
-                datar[i+delta2][3]=0
-                datar[i+delta2][4]=0
-                datar[i+delta2][5]=0
-                datar[i+delta2][6]=0
-                skill_logs = Skill_Log.objects.filter(id_skill_name=qSkills[i],id_grade__in=qGrades)
-                for sl in skill_logs:
-                    print sl.skill_progress
-                    if sl.skill_progress == 'unstarted':
-                        datar[i+delta2][1]+=1
-                    if sl.skill_progress == 'struggling':
-                        datar[i+delta2][2]+=1
-                    if sl.skill_progress == 'practiced':
-                        datar[i+delta2][3]+=1
-                    if sl.skill_progress == 'mastery1':
-                        datar[i+delta2][4]+=1
-                    if sl.skill_progress == 'mastery2':
-                        datar[i+delta2][5]+=1
-                    if sl.skill_progress == 'mastery3':
-                        datar[i+delta2][6]+=1
-
-
-  
-        
-        except Exception as e:
-            print '***ERROR*** problemas en bakhanapp views.py try id_1002'
-            print e
+        assesment = Assesment.objects.get(id_assesment=id_assesment)
+        #data = getArrayAssesmentDetail(id_assesment)
+        #datar = getArrayAssesmentResumen(id_assesment)
         try:
             #create multi-sheet book with array
             arrayAssesment={
-                "Detalle": data,
-                "Resumen": datar
+                "Detalle": getArrayAssesmentDetail(id_assesment),
+                "Resumen": getArrayAssesmentResumen(id_assesment)
             }
             book = pe.Book(arrayAssesment)
         except Exception as e:
@@ -267,6 +128,197 @@ def generateAssesmentExcel(request, id_assesment):
             response = False
         return response
 
+def getArrayAssesmentResumen(id_assesment):
+    #load resumen data
+    delta = 9
+    try:#id1003
+        assesment = Assesment.objects.get(id_assesment=id_assesment)
+        qGrades = Grade.objects.filter(id_assesment=assesment)
+        qSkills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id)
+    except Exception as e:
+        print '***ERROR*** problemas en bakhanapp views.py try id_1003'
+        print e 
+    totalSkills = qSkills.count()
+    w, h = 2,7
+    data = [['' for x in range(w)] for y in range(h)] 
+    data[0][0] = 'Nombre de la calificacion'
+    data[0][1] = assesment.name
+    data[1][0] = 'Nota Minima'
+    data[1][1] = assesment.min_grade
+    data[2][0] = 'Nota Maxima'
+    data[2][1] = assesment.max_grade
+    data[3][0] = 'Nota de Aprobacion'
+    data[3][1] = assesment.approval_grade
+    data[4][0] = 'Bonificacion por Esfuerzo'
+    data[4][1] = assesment.max_effort_bonus
+    data[5][0] = 'Fecha de inicio'
+    data[5][1] = assesment.start_date
+    data[6][0] = 'Fecha de termino'
+    data[6][1] = assesment.end_date
+    try:#id1001
+        wr,hr = 10,30+totalSkills
+        datar = [['' for x in range(wr)] for y in range(hr)] 
+        datar[0][0] = 'Nombre de la calificacion'
+        datar[0][1] = data[0][1]
+        datar[1][0] = 'Nota Minima'
+        datar[1][1] = data[1][1]
+        datar[2][0] = 'Nota Maxima'
+        datar[2][1] = data[2][1]
+        datar[3][0] = 'Nota de Aprobacion'
+        datar[3][1] = data[3][1]
+        datar[4][0] = 'Bonificacion por Esfuerzo'
+        datar[4][1] = data[4][1]
+        datar[5][0] = 'Fecha de inicio'
+        datar[5][1] = data[5][1]
+        datar[6][0] = 'Fecha de termino'
+        datar[6][1] = data[6][1]
+
+        datar[1][3] = 'Alumnos participantes'
+        datar[1][4] = qGrades.count()
+        datar[2][3] = 'Aprobados'
+        datar[2][4] = qGrades.filter(grade__gte=assesment.approval_grade).count()
+        datar[3][3] = 'Reprobados'
+        datar[3][4] = qGrades.filter(grade__lt=assesment.approval_grade).count()
+        #load histogram data
+        datar[8][0] = 'Histograma'
+        datar[9][0] = 'Desde'
+        datar[9][1] = 'Hasta'
+        datar[9][2] = 'Cantidad'
+        rangeHistogram = (data[2][1] - data[1][1])/float(10)
+        datar[10][0] = data[1][1]
+        datar[10][1] = data[1][1] + rangeHistogram
+        datar[10][2] = qGrades.filter(grade__gte=datar[10][0],grade__lte=datar[10][1]).count() 
+        for i in range(8):
+            datar[i+delta+2][0] = datar[i+delta+1][1] + 0.1
+            datar[i+delta+2][1] = datar[i+delta+2][0] + rangeHistogram
+            datar[i+delta+2][2] = qGrades.filter(grade__gte=datar[i+delta+2][0],grade__lte=datar[i+delta+2][1]).count() 
+        datar[19][0] = datar[18][1] + 0.1
+        datar[19][1] = data[2][1]
+        datar[19][2] = qGrades.filter(grade__gte=datar[19][0],grade__lte=datar[19][1]).count() 
+    except Exception as e:
+        print '***ERROR*** problemas en bakhanapp views.py try id1001'
+        print e
+    try:#id1002
+        #load q skill level
+        delta2 = 23
+        datar[delta2-2][0] = 'Cantidad de alumnos en cada nivel por habilidad'
+        datar[delta2-1][0] = 'Habilidad'
+        datar[delta2-1][1] = 'No Practicado'
+        datar[delta2-1][2] = 'En Dificultad'
+        datar[delta2-1][3] = 'Practicado'
+        datar[delta2-1][4] = 'Nivel 1'
+        datar[delta2-1][5] = 'Nivel 2'
+        datar[delta2-1][6] = 'Dominado'
+        
+        for i in range(totalSkills):
+            datar[i+delta2][0]=qSkills[i].name_spanish
+            datar[i+delta2][1]=0
+            datar[i+delta2][2]=0
+            datar[i+delta2][3]=0
+            datar[i+delta2][4]=0
+            datar[i+delta2][5]=0
+            datar[i+delta2][6]=0
+            skill_logs = Skill_Log.objects.filter(id_skill_name=qSkills[i],id_grade__in=qGrades)
+            for sl in skill_logs:
+                if sl.skill_progress == 'unstarted':
+                    datar[i+delta2][1]+=1
+                if sl.skill_progress == 'struggling':
+                    datar[i+delta2][2]+=1
+                if sl.skill_progress == 'practiced':
+                    datar[i+delta2][3]+=1
+                if sl.skill_progress == 'mastery1':
+                    datar[i+delta2][4]+=1
+                if sl.skill_progress == 'mastery2':
+                    datar[i+delta2][5]+=1
+                if sl.skill_progress == 'mastery3':
+                    datar[i+delta2][6]+=1
+    except Exception as e:
+        print '***ERROR*** problemas en bakhanapp views.py try id_1002'
+        print e
+    return datar
+
+def getArrayAssesmentDetail(id_assesment):
+    infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
+    delta = 9
+    viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
+        'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
+        'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
+        'Nota','Bonificacion por esfuerzo']
+    totalFields = len(viewFields)
+    #carga al arreglo los datos de la evaluacion id_assesment
+    try: #id01
+        assesment = Assesment.objects.get(id_assesment=id_assesment)
+        config = Assesment_Config.objects.get(id_assesment_config=assesment.id_assesment_conf_id)
+        skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id).values('name_spanish')
+        grades = Student.objects.filter(grade__id_assesment_id=id_assesment
+            ).values('name','grade__grade',
+            'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
+            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
+    except Exception as e:
+        print '***ERROR*** try: #id01 in generateAssesmentExce(request, id_assesment)'
+        print e
+
+    totalGrades = grades.count()
+    totalConf = 10 
+    totalSkills = skills.count()
+    #print '***DEBUG***'
+    #print totalSkills
+
+    #crea el arreglo inicial
+    w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
+    data = [['' for x in range(w)] for y in range(h)] 
+
+    #carga del arreglo assesment
+    data[0][0] = 'Nombre de la calificacion'
+    data[0][1] = assesment.name
+    data[1][0] = 'Nota Minima'
+    data[1][1] = assesment.min_grade
+    data[2][0] = 'Nota Maxima'
+    data[2][1] = assesment.max_grade
+    data[3][0] = 'Nota de Aprobacion'
+    data[3][1] = assesment.approval_grade
+    data[4][0] = 'Bonificacion por Esfuerzo'
+    data[4][1] = assesment.max_effort_bonus
+    data[5][0] = 'Fecha de inicio'
+    data[5][1] = assesment.start_date
+    data[6][0] = 'Fecha de termino'
+    data[6][1] = assesment.end_date
+    #carga las notas y las variables disponibles en grade
+    for k in range(totalFields):
+        data[delta-1][k] = viewFields[k]
+    for i in range(totalGrades):
+        for j in range(totalFields):
+            if j==0:
+                data[i+delta][j] = grades[i]['name']
+            if j==1:
+                data[i+delta][j] = grades[i]['grade__recomended_complete']
+            if j==2:
+                data[i+delta][j] = grades[i]['grade__incorrect']
+            if j==3:
+                data[i+delta][j] = grades[i]['grade__correct']
+            if j==4:
+                data[i+delta][j] = grades[i]['grade__excercice_time']
+            if j==5:
+                data[i+delta][j] = grades[i]['grade__video_time']
+            if j==6:
+                data[i+delta][j] = grades[i]['grade__struggling']
+            if j==7:
+                data[i+delta][j] = grades[i]['grade__practiced']
+            if j==8:
+                data[i+delta][j] = grades[i]['grade__mastery1']
+            if j==9:
+                data[i+delta][j] = grades[i]['grade__mastery2']
+            if j==10:
+                data[i+delta][j] = grades[i]['grade__mastery3']
+            elif j==11:
+                data[i+delta][j] = grades[i]['grade__grade']
+            elif j==12:
+                data[i+delta][j] = grades[i]['grade__bonus_grade']
+    #load skills to excel array data
+    data[totalGrades+delta+1][0]='Habilidades evaluadas:'
+    for l in range(totalSkills):
+        data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
+    return data
 
 def getSkillAssesment(request,id_class):
     if request.method == 'POST':
