@@ -163,7 +163,7 @@ def generateAssesmentExcel(request, id_assesment):
             data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
         #load resumen data
         try:#id_1001
-            wr,hr = 10,30
+            wr,hr = 10,30+totalSkills
             datar = [['' for x in range(wr)] for y in range(hr)] 
             datar[0][0] = 'Nombre de la calificacion'
             datar[0][1] = data[0][1]
@@ -204,6 +204,50 @@ def generateAssesmentExcel(request, id_assesment):
             datar[19][2] = grades.filter(grade__grade__gte=datar[19][0],grade__grade__lte=datar[19][1]).count() 
         except Exception as e:
             print '***ERROR*** problemas en bakhanapp views.py try id_1001'
+            print e
+        try:#id1002
+            #load q skill level
+            print '***DEPURACION***'
+            delta2 = 23
+            datar[delta2-2][0] = 'Cantidad de alumnos en cada nivel por habilidad'
+            datar[delta2-1][0] = 'Habilidad'
+            datar[delta2-1][1] = 'No Practicado'
+            datar[delta2-1][2] = 'En Dificultad'
+            datar[delta2-1][3] = 'Practicado'
+            datar[delta2-1][4] = 'Nivel 1'
+            datar[delta2-1][5] = 'Nivel 2'
+            datar[delta2-1][6] = 'Dominado'
+            qGrades = Grade.objects.filter(id_assesment=assesment)
+            qSkills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id)
+            for i in range(totalSkills):
+                datar[i+delta2][0]=qSkills[i].name_spanish
+                datar[i+delta2][1]=0
+                datar[i+delta2][2]=0
+                datar[i+delta2][3]=0
+                datar[i+delta2][4]=0
+                datar[i+delta2][5]=0
+                datar[i+delta2][6]=0
+                skill_logs = Skill_Log.objects.filter(id_skill_name=qSkills[i],id_grade__in=qGrades)
+                for sl in skill_logs:
+                    print sl.skill_progress
+                    if sl.skill_progress == 'unstarted':
+                        datar[i+delta2][1]+=1
+                    if sl.skill_progress == 'struggling':
+                        datar[i+delta2][2]+=1
+                    if sl.skill_progress == 'practiced':
+                        datar[i+delta2][3]+=1
+                    if sl.skill_progress == 'mastery1':
+                        datar[i+delta2][4]+=1
+                    if sl.skill_progress == 'mastery2':
+                        datar[i+delta2][5]+=1
+                    if sl.skill_progress == 'mastery3':
+                        datar[i+delta2][6]+=1
+
+
+  
+        
+        except Exception as e:
+            print '***ERROR*** problemas en bakhanapp views.py try id_1002'
             print e
         try:
             #create multi-sheet book with array
