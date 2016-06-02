@@ -56,15 +56,18 @@ from django.utils import timezone
 from bakhanapp.views import getTopictree
 import time
 import datetime
+#max try:#id3006 //sumar 1 cuando se agregue in try con id para hacer debug
 
 def getLastGroup(request,id_class):
-    try:
+    try:#id3004
         g = Master_Group.objects.filter(id_class=id_class)
         l = g.latest('date')
         data = serializers.serialize('json', [l])
         struct = json.loads(data)
         last = json.dumps(struct)
     except Exception as e:
+        print '***ERROR*** en Groups:views.py try:#id3004'
+        print e
         last = False
     return HttpResponse(last)
 
@@ -131,46 +134,57 @@ def getGroups(request, id_class):
                 tutors[0]['kaid_tutor_reforzamiento'] = request.user.user_profile.kaid
             if tutors[0]['kaid_tutor_intermedios'] =='2':
                 tutors[0]['kaid_tutor_intermedios'] = request.user.user_profile.kaid
-            tutors[0]['kaid_tutor_avanzados'] = request.user.user_profile.kaid 
-            master = Master_Group()
-            master.name = 'test'
-            #master.date = timezone.now()
-            #print master.date
-            fecha = time.time()
-            print fecha
-            hoy= datetime.datetime.fromtimestamp(fecha).strftime('%Y-%m-%d %H:%M:%S')
-            print hoy
-            #t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
-            master.date_int = int(fecha)
-            master.kaid_teacher = request.user.user_profile.kaid
-            master.id_class = id_class
-            master.date = hoy
+            tutors[0]['kaid_tutor_avanzados'] = request.user.user_profile.kaid
+            try:#id3005 
+                master = Master_Group()
+                master.name = 'test'
+                #master.date = timezone.now()
+                #print master.date
+                fecha = time.time()
+                #print fecha
+                hoy= datetime.datetime.fromtimestamp(fecha).strftime('%Y-%m-%d %H:%M:%S')
+                #print hoy
+                #t = time.mktime(time.strptime(hoy, "%Y-%m-%d %H:%M:%S"))
+                master.date_int = int(fecha)
+                master.kaid_teacher = request.user.user_profile.kaid
+                master.id_class = id_class
+                master.date = hoy
 
-            master.save()
-            print master.date_int
-            new_Avanzados = Group()
-            new_Avanzados.type = 'Avanzados'
-            new_Avanzados.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
-            new_Avanzados.master = master.id
-            new_Avanzados.save()
-            new_Intermedios = Group()
-            new_Intermedios.type = 'Intermedios'
-            new_Intermedios.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
-            new_Intermedios.master = master.id
-            new_Intermedios.save()
-            new_Reforzamiento = Group()
-            new_Reforzamiento.type = 'Reforzamiento'
-            new_Reforzamiento.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
-            new_Reforzamiento.master = master.id
-            new_Reforzamiento.save()
-            new_SinGrupo = Group()
-            new_SinGrupo.type = 'SinGrupo'
-            new_SinGrupo.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
-            new_SinGrupo.master = master.id
-            new_SinGrupo.save()
+                master.save()
+            except Exception as e:
+                print '***ERROR*** en Groups:views.py try:#id3005'
+                print e
+            try:#id3006
+                new_Avanzados = Group()
+                new_Avanzados.type = 'Avanzados'
+                new_Avanzados.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
+                new_Avanzados.master = master.id
+                new_Avanzados.save()
+                new_Intermedios = Group()
+                new_Intermedios.type = 'Intermedios'
+                new_Intermedios.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
+                new_Intermedios.master = master.id
+                new_Intermedios.save()
+                new_Reforzamiento = Group()
+                new_Reforzamiento.type = 'Reforzamiento'
+                new_Reforzamiento.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
+                new_Reforzamiento.master = master.id
+                new_Reforzamiento.save()
+                new_SinGrupo = Group()
+                new_SinGrupo.type = 'SinGrupo'
+                new_SinGrupo.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
+                new_SinGrupo.master = master.id
+                new_SinGrupo.save()
+            except Exception as e:
+                print '***ERROR*** en Groups:views.py try:#id3006'
+                print e
             for skills in skills_selected:
-                Group_Skill(id_group_id=master.id,
-                    id_skill_id=skills).save()
+                try:#id3001
+                    Group_Skill(id_group_id=master.id,
+                        id_skill_id=skills).save()
+                except Exception as e:
+                    print '***ERROR*** en Groups:views.py try:#id3001'
+                    print e
             groups = eval(args['student_groups'])
 
             subGroups = eval(args['subGroups'])
@@ -184,21 +198,26 @@ def getGroups(request, id_class):
 
             #print dicSub
             for sub in subGroups:
-                if "kaid_" not in sub['tutor']: 
-                    new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=request.user.user_profile.kaid)
-                else:
-                    new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
-                new_group.save()
+                try:#id3002
+                    if "kaid_" not in sub['tutor']: 
+                        new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=request.user.user_profile.kaid)
+                    else:
+                        new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
+                    new_group.save()
+                except Exception as e:
+                    print '***ERROR*** en Groups:views.py try:#id3002'
+                    print e
                 dicSub[sub['name']] = new_group.id_group
 
             
 
             for g in groups:#guarda el estududiante el en respectivo grupo avanzados, intermedio o reforzamiento.
-                #print 
-                #print dicSub[str(g['group'])]
-                Group_Student(id_group_id=dicSub[str(g['group'])],
-                                  kaid_student_id=g['kaid_student']).save()
-                
+                try:#id3003
+                    Group_Student(id_group_id=dicSub[str(g['group'])],
+                                      kaid_student_id=g['kaid_student']).save()
+                except Exception as e:
+                    print '***ERROR*** en Groups:views.py try:#id3003'
+                    print e
             students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
             for s in students:
                 s.type = 'SinGrupo'
