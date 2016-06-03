@@ -392,7 +392,7 @@ function newTeacherClass(){
 }
 
 function viewClass(){
-	
+	resetClass();
 	$(".response").remove();
 	$("#popup").append("<p class='response'>Cargando el curso. Espere un momento por favor...</p>");
 	$("#popup").append($('#loading'));
@@ -402,7 +402,7 @@ function viewClass(){
 	$("#hover").fadeIn();
 	$("#popup").fadeIn();
 
-	resetClass();
+	
 	$("#confirmSaveButton").css('display','none');
 	$("#confirmEditButton").css('display','');
 
@@ -431,16 +431,20 @@ function viewClass(){
 				}
 				$("input:radio[value='"+response[response.length-1][0]['fields']['name']+"']").prop("checked", true);
 				$("#teacher").val(response[response.length-1][0]['fields']['name']);
+			
+				setTimeout(function(){
+					$(".response").remove();
+					$('#loading').css('display','none');
+					$("#hover").css('pointer-events','');
+					$("#close").css('pointer-events','');
+					$("#hover").fadeOut();
+					$("#popup").fadeOut();
+				}, 750); 
 			}
 		});
 
-
-	$(".response").remove();
-	$('#loading').css('display','none');
-	$("#hover").css('pointer-events','');
-	$("#close").css('pointer-events','');
-	$("#hover").fadeOut();
-	$("#popup").fadeOut();
+/*
+	*/ 
 	
 }
 
