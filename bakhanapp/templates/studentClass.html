@@ -1772,18 +1772,16 @@
 			validarRealizarEvaluacion();
 			if (validarRealizarEvaluacion() && validarEvaluacion()){
 				$(".response").remove();
+				Loading();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
 				$("#hover").css('pointer-events','none');
 				$("#close").css('pointer-events','none');
 				$("a").css('pointer-events','none');
 				$("input").css('pointer-events','none');
 				$("button").css('pointer-events','none');
-				$("img").css('pointer-events','none');
-				
-				
+				$("img").css('pointer-events','none');				
 				$('#button_realizar').hide();
 				$('#button_cancelar').hide();
-
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1793,12 +1791,8 @@
 				$.ajax({
 					url: "{% url 'evaluations:newAssesment3' %}",
 					type: "POST",
-					async: false,
+					//async: false,
 					data: $("#formJson").serialize(),
-					success: function(response) {
-			            Loading();
-			            return response;
-			        },
 			        complete: function(){
 			        	location.reload();
 			        }
@@ -2161,6 +2155,7 @@
 			var kaids =[];
 			validarEvaluacion();
 			if (validarRealizarEvaluacion()||validarEvaluacion()){
+				Loading();
 				$(".response").remove();
 				$("#popup_evaluacion").append("<p class='response'>Editando...</p>");
 				$("#hover").css('pointer-events','none');
@@ -2180,15 +2175,10 @@
 					type: "POST",
 					async: false,
 					data: $("#formJson").serialize(),
-					success: function(response) {
-			            loading();
-			            return response;
-			        },
 			        complete: function(){
 			        	location.reload();
 			        }
 				});
-
 			}
 			else{
 				$("#hover").fadeIn().css('display', '');
@@ -2199,10 +2189,11 @@
 
 		}
 		function Loading(){
-			$("#popup_evaluacion").fadeIn();
-  			$("#hover").fadeIn();
+			$("#popup_evaluacion").show();
+  			$("#hover").show();
   			$("#profile-throbber2").show();
 			$(".vaciar").empty();
+			console.log("entro en loading");
 			location.reload();
 		}
 		function resumenAssesment(id_assesment){
