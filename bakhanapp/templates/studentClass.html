@@ -1771,8 +1771,8 @@
 			validarEvaluacion();
 			validarRealizarEvaluacion();
 			if (validarRealizarEvaluacion() && validarEvaluacion()){
-				Loading();
 				$(".response").remove();
+				Loading();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
 				$("#hover").css('pointer-events','none');
 				$("#close").css('pointer-events','none');
@@ -1791,7 +1791,7 @@
 				$.ajax({
 					url: "{% url 'evaluations:newAssesment3' %}",
 					type: "POST",
-					async: false,
+					//async: false,
 					data: $("#formJson").serialize(),
 			        complete: function(){
 			        	location.reload();
@@ -2190,10 +2190,10 @@
 		}
 		function Loading(){
 			$("#popup_evaluacion").show();
-			console.log("entro en loading");
   			$("#hover").show();
   			$("#profile-throbber2").show();
 			$(".vaciar").empty();
+			console.log("entro en loading");
 			location.reload();
 		}
 		function resumenAssesment(id_assesment){
