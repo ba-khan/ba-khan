@@ -210,7 +210,7 @@ $(document).ready(function(){
 
 	$('input[type="checkbox"]').click(function(){
 	    if($(this).is(":checked")){
-	    	$("#studentsClass").append("<li id='"+$(this).val()+"'>"+$(this).val()+"</li>");
+	    	$("#studentsClass").append("<div id=div"+$(this)[0].id+" class='student_li_div'><li id='"+$(this).val()+"' class='student_li'>"+$(this).val()+"</li><a id='uncheckStudent' onclick='javascript:uncheckStudent("+$(this)[0].id+")'>X</a></div>");
 	    	var studentsLen = $("li").length;
 	    	$("#counter").html(studentsLen);
 	    }
@@ -341,6 +341,10 @@ function resetClass(){
 
 	$("#confirmSaveButton").show();
 	$("#confirmEditButton").hide();
+
+	$(".student_li_div").each(function (index){ 
+		$(this).remove();
+	})
 }
 
 function newTeacherClass(){
@@ -418,7 +422,8 @@ function viewClass(){
 			success: function(response){
 				for (a=0;a<response.length-1;a++){
 					$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
-					$("#studentsClass").append("<li id='"+response[a]['fields']['name']+"'>"+response[a]['fields']['name']+"</li>");
+					$("#studentsClass").append("<div id=std"+(a+1)+" class='student_li_div'><li id='"+response[a]['fields']['name']+"' class='student_li'>"+response[a]['fields']['name']+"</li><a onclick='javascript:uncheckStudent2(std"+(a+1)+")' id='uncheckStudent'>X</a></div>");
+
 					$("#levels").val(level);
 					$("#letter").val(letter);
 					var studentsLen = $("li").length;
@@ -508,6 +513,21 @@ function editClass(classJson){
 				$("a").css('pointer-events','');
 			}
 	});
+}
+
+function uncheckStudent(student){
+	var std = $(student);
+	$("input:checkbox[value='"+std[0].value+"']").prop("checked", false);
+	$("#div"+std[0].id).remove();
+	var studentsLen = $("li").length;
+	$("#counter").html(studentsLen);
+}
+
+function uncheckStudent2(student){
+	$("input:checkbox[value='"+$(student)[0].children[0].innerText+"']").prop("checked", false);
+	$(student).remove();
+	var studentsLen = $("li").length;
+	$("#counter").html(studentsLen);
 }
 
 </script>
