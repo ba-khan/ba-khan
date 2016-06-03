@@ -1771,6 +1771,7 @@
 			validarEvaluacion();
 			validarRealizarEvaluacion();
 			if (validarRealizarEvaluacion() && validarEvaluacion()){
+				Loading();
 				$(".response").remove();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
 				$("#hover").css('pointer-events','none');
@@ -1792,9 +1793,6 @@
 					type: "POST",
 					async: false,
 					data: $("#formJson").serialize(),
-					beforeSend: function() {
-						Loading();  
-		            },
 			        complete: function(){
 			        	location.reload();
 			        }
@@ -2157,6 +2155,7 @@
 			var kaids =[];
 			validarEvaluacion();
 			if (validarRealizarEvaluacion()||validarEvaluacion()){
+				Loading();
 				$(".response").remove();
 				$("#popup_evaluacion").append("<p class='response'>Editando...</p>");
 				$("#hover").css('pointer-events','none');
@@ -2176,9 +2175,6 @@
 					type: "POST",
 					async: false,
 					data: $("#formJson").serialize(),
-					beforeSend: function() {
-						Loading();  
-		            },
 			        complete: function(){
 			        	location.reload();
 			        }
@@ -2193,8 +2189,9 @@
 
 		}
 		function Loading(){
-			$("#popup_evaluacion").fadeIn();
-  			$("#hover").fadeIn();
+			$("#popup_evaluacion").show();
+			console.log("entro en loading");
+  			$("#hover").show();
   			$("#profile-throbber2").show();
 			$(".vaciar").empty();
 			location.reload();
