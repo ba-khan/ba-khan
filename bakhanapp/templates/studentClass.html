@@ -1778,12 +1778,9 @@
 				$("a").css('pointer-events','none');
 				$("input").css('pointer-events','none');
 				$("button").css('pointer-events','none');
-				$("img").css('pointer-events','none');
-				
-				
+				$("img").css('pointer-events','none');				
 				$('#button_realizar').hide();
 				$('#button_cancelar').hide();
-
 				for (var i = 0; i < cuadritos.length; i++) {
 					kaids.push({
 						kaid_student:cuadritos[i].id
@@ -1795,10 +1792,9 @@
 					type: "POST",
 					async: false,
 					data: $("#formJson").serialize(),
-					success: function(response) {
-			            Loading();
-			            return response;
-			        },
+					beforeSend: function() {
+						Loading();  
+		            },
 			        complete: function(){
 			        	location.reload();
 			        }
@@ -2180,15 +2176,13 @@
 					type: "POST",
 					async: false,
 					data: $("#formJson").serialize(),
-					success: function(response) {
-			            loading();
-			            return response;
-			        },
+					beforeSend: function() {
+						Loading();  
+		            },
 			        complete: function(){
 			        	location.reload();
 			        }
 				});
-
 			}
 			else{
 				$("#hover").fadeIn().css('display', '');
