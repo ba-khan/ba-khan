@@ -294,7 +294,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     except Exception as e:
                         #print "entro al except"
                         print e
-                        pass
+
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
                         try:
@@ -317,7 +317,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                         except Exception as e:
                             
                             print e
-                            pass
+
             except Exception as e:
                 #print "error"
                 if data["last_attempt_number"]>0:
@@ -343,7 +343,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     except Exception as e:
                         #print "entro al except"
                         print e
-                        pass
+
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
                         try:
@@ -366,12 +366,12 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                         except Exception as e:
                             
                             print e
-                            pass
+ 
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
                    
         except Exception as e:
             print e
-            pass
+
 
 def poblar_skill_attempts(name_student, kaid_student, dates, session):
     student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student)

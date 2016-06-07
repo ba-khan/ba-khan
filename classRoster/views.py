@@ -150,8 +150,7 @@ def getRoster(request):
     teachers = Teacher.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
 
     institution = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
-    print institution
-    students = Student.objects.filter(id_institution_id=institution)
+    students = Student.objects.filter(id_institution_id=institution).order_by('name')
     print students
 
     classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
@@ -224,7 +223,7 @@ def viewClass(request):
     if request.method == 'POST':
         classObj = request.POST
         clas = Class.objects.get(id_class=classObj['idClass'])
-        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id'))
+        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id')).order_by('name')
         teacher = Teacher.objects.filter(kaid_teacher=Class_Subject.objects.filter(id_class_id=classObj['idClass']).values('kaid_teacher_id'))
         data_teacher = serializers.serialize('json', teacher)
         struct_teacher = json.loads(data_teacher)

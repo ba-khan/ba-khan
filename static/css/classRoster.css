@@ -195,3 +195,20 @@ table.testgrid td {
 #classesDiv h1{
   margin-bottom: 1%;
 }
+.student_li{
+  float:left;
+}
+#uncheckStudent{
+    float: right;
+    margin-right: 5%;
+    color:red;
+    font-weight: bold;
+    cursor:pointer;
+}
+.student_li_div{
+    width: 100%;
+    height: 10%;
+}
+.student_li_div:hover{
+  background-color: rgb(217, 217, 217);
+}

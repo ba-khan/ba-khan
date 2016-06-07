@@ -1,13 +1,3 @@
-.excelButton {
-    background:url(img/Excel.png);
-    background-size: 32px;
-    cursor:pointer;
-    width: 32px;
-    height: 32px;
-    border: none;
-    margin-right:20px;
-    margin-left:-5%;
-}
 .container{
 
   height: 500;
@@ -489,32 +479,42 @@ label.sort-filter{
 
 .editButton {
     background:url(img/editButton.png);
-    background-size: 32px;
-    cursor:pointer;
-    width: 32px;
-    height: 32px;
-    border: none;
-    margin-left:0%;
-}
-.showButton {
-    background:url(img/ver.png);
     background-size: 25px;
     cursor:pointer;
     width: 25px;
     height: 25px;
     border: none;
     margin-left:0%;
+}
+.showButton {
+    background:url(img/ver.png);
+    background-size: 20px;
+    cursor:pointer;
+    width: 20px;
+    height: 20px;
+    border: none;
+    margin-left:0%;
     margin-bottom: 5px;
 }
 .summaryButton {
     background:url(img/summaryButton.png);
-    background-size: 32px;
+    background-size: 22px;
     cursor:pointer;
-    width: 32px;
-    height: 32px;
+    width: 22px;
+    height: 22px;
     border: none;
     margin-right:10%;
     margin-left:10%;
+}
+.excelButton {
+    background:url(img/Excel.png);
+    background-size: 23px;
+    cursor:pointer;
+    width: 23px;
+    height: 23px;
+    border: none;
+    margin-right:20px;
+    margin-left:-5%;
 }
 .btn-download{
   background:url(img/carpetaExcel.png);
@@ -530,7 +530,7 @@ label.sort-filter{
 .buttonsES{
 	position:absolute;
 	top:-35px;
-	width:137px;
+	width:109px;
 }
 
 .counter{
