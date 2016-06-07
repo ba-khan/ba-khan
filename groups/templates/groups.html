@@ -53,12 +53,20 @@ return false;
 return false;
    }
 };
+function clearComboBox(){
+  $(".comboBoxAvanzados").html('');
+  $(".comboBoxIntermedios").html('');
+  $(".comboBoxReforzamiento").html('');
+}
 function fillComboBox(){
 //rellenamos los comboBox con tutores dependiendo de el grupo en el que esten
 //$('select').empty();
 //$(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 //$(".comboBoxIntermedios").append("<OPTION VALUE=2>Seleccionar Tutor</OPTION>");
 //$(".comboBoxReforzamiento").append("<OPTION VALUE=3>Seleccionar Tutor</OPTION>");
+$(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
+$(".comboBoxIntermedios").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
+$(".comboBoxReforzamiento").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 $(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
 var divs = document.querySelectorAll('.cuadradito');
    for (var i = 0; i < divs.length; i++) {
@@ -339,7 +347,7 @@ function makeGroups() {
        type: "POST",
        data: $("#formJson").serialize(),
        success: function (response) {
-       
+            
             $('.cuadradito').remove();
                   var student = JSON.parse(response);
                   for(var i=0;i<student.length;i++){
@@ -362,7 +370,8 @@ function makeGroups() {
                   
             } 
           }
-          fillComboBox()
+          clearComboBox();
+          fillComboBox();
           $('#profile-throbber2').fadeOut();
           $(".response").remove();
           /*$("#popup").append("<p class='response' style='display:none'>Agrupacion realizada correctamente.</p>");
@@ -714,7 +723,7 @@ var className;
         $("#timelineItem_"+datum.id).attr('cy','15px');
         className = $("#timelineItem_"+datum.id).attr('class');
         /*console.log(className);
-        $("#timelineItem_"+datum.id).attr('class') = "selected";
+          $("#timelineItem_"+datum.id).attr('class') = "selected";
         $("#timelineItem_"+datum.id).addClass(className+" selected");
         $("circle").removeClass("selected");*/
         drawGroup(datum.id);
