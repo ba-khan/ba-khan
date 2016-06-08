@@ -156,6 +156,8 @@
 	</div>
 	</form>
 
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
 	<script type="text/javascript">	
 		var Needle = (function() {
 	        /** 
@@ -1372,19 +1374,27 @@
         var fmt = d3.format('02d');
         return function(l) { return Math.floor(l / 60) + ':' + fmt(l % 60) + ''; };
     }
-	
+		
     function drawRecommendations(){
+    	var tip = d3.tip()
+		  .attr('class', 'd3-tip')
+		  .offset([-10, 0])
+		  .html("<strong>Ventas:</strong> <span style='color:red'>test</span>");
     	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
     	var recommendations = tbody.selectAll('.recommendations')
     							.append("svg")
     							.attr("class","recommendations")
     							.attr("width","80")
-    							.attr("height",height);
+    							.attr("height",height)
+    							.call(tip);
+    	
     	var g_rec = recommendations.append('g').attr("class","recommendations")
     		.attr('transform', "translate(" + 40 + ", " + (height-5) + ")")
     		.attr("id_student",function(d,i){
     			return i;
-    		});
+    		})
+    		.on('mouseover', tip.show)
+  			.on('mouseout', tip.hide);
     	/*g_rec.each(function(d,i){
     		arc1_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
     		arc2_array[i]=d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
@@ -1446,7 +1456,7 @@
     			d3_needle.moveTo(completed_perc);
 	    		d3_needles.push(d3_needle);
     		});
-
+		var tip_recommendations = d3.selectAll
  		
     }
 	
