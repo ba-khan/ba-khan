@@ -62,7 +62,7 @@
 
  #teachersDiv, #studentsDiv{
  	width:27%;
- 	height:400px;
+ 	height:425px;
  	background: #fff;
  	border: 1px solid #ddd;
  	border-radius: 5px;
@@ -72,7 +72,7 @@
  }
 #classDiv{
 	width:43%;
- 	height:400px;
+ 	height:425px;
  	background: #fff;
  	border: 1px solid #ddd;
  	border-radius: 5px;
@@ -175,7 +175,7 @@ table.testgrid td {
     margin: 5%;
 }
 #newTeacher{
-  width: 135px;
+  width: 42%;
 }
 
 #classesDiv{
@@ -211,4 +211,21 @@ table.testgrid td {
 }
 .student_li_div:hover{
   background-color: rgb(217, 217, 217);
+}
+#year, #levels, #letter{
+    width: 17%;
+    margin-left: 1%;
+    color: black;
+    font-style: normal;
+    font-size: 14px;
+}
+#additional, #teacher, #selectClass{
+    width: 25%;
+    margin-left: 3%;
+    color: black;
+    font-style: normal;
+    font-size: 14px;
+  }
+#year:disabled, #levels:disabled, #letter:disabled, #additional:disabled, #teacher:disabled {
+    color: #999;
 }

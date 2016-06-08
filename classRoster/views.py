@@ -197,6 +197,11 @@ def newClass(request):
         newClass = request.POST
         level = int(newClass["level"])
         letter = newClass["letter"]
+        year = newClass["year"]
+        additional = newClass["additional"]
+        if additional=="":
+            additional = None
+            print additional
         #teacher = newClass["teacher"]
         teacher = Teacher.objects.get(name=newClass["teacher"])
         kaid_teacher = teacher.kaid_teacher
@@ -205,11 +210,11 @@ def newClass(request):
         inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
         id_institution = int(inst.id_institution)
         try:
-            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution)
+            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional)
             return HttpResponse("Ya existe el curso")
         except:
             print "Crear nuevo curso"
-            curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=2016)
+            curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
             id_curso = int(curso.id_class)
             class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
             print class_subject
@@ -241,7 +246,12 @@ def editClass(request):
         newClass = request.POST
         level = int(newClass["level"])
         letter = newClass["letter"]
-        #teacher = newClass["teacher"]
+        year = int(newClass["year"])
+        additional = newClass["additional"]
+        print additional
+        if additional=="":
+            additional = None
+            print "adasd"
         teacher = Teacher.objects.get(name=newClass["teacher"])
         kaid_teacher = teacher.kaid_teacher
         students = newClass.getlist("students[]")
@@ -249,7 +259,8 @@ def editClass(request):
         inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
         id_institution = int(inst.id_institution)
         try:
-            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution)
+
+            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, year=year, additional=additional)
             id_class=curso.id_class
             class_subject = Class_Subject.objects.get(id_class_id=id_class)
             class_subject.kaid_teacher_id = kaid_teacher

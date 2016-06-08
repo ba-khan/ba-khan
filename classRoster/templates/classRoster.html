@@ -76,7 +76,7 @@ Nomina
 	<div id="classDiv">
 		<h3>Curso</h3>
 		<label for="levels">Nivel: </label>
-		<select id="levels">
+		<select id="levels" class="ui-corner-all placeholder simple-input blur-on-esc">
 			<option value="1">1° Básico</option>
 			<option value="2">2° Básico</option>
 			<option value="3">3° Básico</option>
@@ -91,7 +91,7 @@ Nomina
 			<option value="12">4° Medio</option>
 		</select>
 		<label for="letter">Letra: </label>
-		<select id="letter">
+		<select id="letter" class="ui-corner-all placeholder simple-input blur-on-esc">
 			<option value="A">A</option>
 			<option value="B">B</option>
 			<option value="C">C</option>
@@ -100,7 +100,11 @@ Nomina
 			<option value="F">F</option>
 			<option value="G">G</option>
 		</select>
+		<label for="year">Año: </label>
+		<input type="number" id="year" min="2016" value="2016" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
 		<br>
+		<label for="additional">Adicional: </label>
+		<input type="text" id="additional" placeholder="Opcional" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
 		<label for="teacher">Profesor: </label>
 		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
 		<h5>Estudiantes: <p id="counter">0</p></h5>
@@ -115,12 +119,20 @@ Nomina
 	<div id="classesDiv">
 		<h1 style="margin-top:1%">Ver Cursos</h1>
 		<label for="selectClass">Curso: </label>
-		<select id="selectClass">
+		<select id="selectClass" class="ui-corner-all placeholder simple-input blur-on-esc">
 			{% for class in classes %}
 			{% if class.level > 8 %}
-			<option value="{{class.id_class}},{{class.level}}{{class.letter}}">{{class.level|add:-8}} Medio {{class.letter}} </option>
+				{% if class.additional %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} {{class.additional}} </option>
+				{% else %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} </option>
+				{% endif %}
 			{% else %}
-			<option value="{{class.id_class}},{{class.level}}{{class.letter}}">{{class.level}} Básico {{class.letter}} </option>
+				{% if class.additional %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level}} Básico {{class.letter}} {{class.year}} {{class.additional}} </option>
+				{% else %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level}} Básico {{class.letter}} {{class.year}} </option>
+				{% endif %}
 			{% endif %}
 			{% endfor %}
 		</select>
@@ -241,6 +253,16 @@ $.extend($.expr[":"],
 
 var classJson = new Object();
 function confirmSaveClass(){
+	classJson.additional = $("#additional").val();
+	console.log(classJson.additional);
+	classJson.year = $("#year").val();
+	if (classJson.year<2016){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Año inválido</p>");
+		return;
+	}
 	classJson.teacher = $("#teacher").val();
 	if (classJson.teacher==""){
 		$('.response').remove();
@@ -274,7 +296,7 @@ function confirmSaveClass(){
 	}
 
 	$(".response").remove()
-	$("#popup").append("<p class='response'>¿Está seguro que desea guardar el curso "+level+classJson.letter+" a cargo del profesor "+classJson.teacher+" con "+studentsLen+" estudiantes?</p>");
+	$("#popup").append("<p class='response'>¿Está seguro que desea guardar el curso "+level+classJson.letter+" "+classJson.year+" a cargo del profesor "+classJson.teacher+" con "+studentsLen+" estudiantes?</p>");
 	$("#popup").append('<button onclick="javascript:saveClass(classJson)" id="saveButton" class="kui-button kui-button-plain kui-button-primary">Aceptar</button>');
 	$("#popup").append('<button onclick="javascript:cancelSaveClass()" id="cancelSaveButton" class="kui-button kui-button-plain kui-button-primary">Cancelar</button>');
 	$("a").css('pointer-events','none');
@@ -334,8 +356,10 @@ function resetClass(){
 		$(this).remove();
 	});
 	$("#teacher").val("");
-	$("#levels").val(1);
-	$("#letter").val("A");
+	$("#levels").val(1); $("#levels").prop('disabled', false);
+	$("#letter").val("A"); $("#letter").prop('disabled', false);
+	$("#year").val(2016); $("#year").prop('disabled', false);
+	$("#additional").val(null); $("#additional").prop('disabled', false);
 	var studentsLen = $("li").length;
 	$("#counter").html(studentsLen);
 
@@ -408,9 +432,12 @@ function viewClass(){
 
 	selectClass = $("#selectClass").val();
 	
-	var letter = selectClass[selectClass.length-1]
-	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf(letter))
 	var id_class = selectClass.substring(0,selectClass.indexOf(","))
+	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf("."))
+	var letter = selectClass.substring(selectClass.indexOf(".")+1,selectClass.indexOf("-"))
+	var year = selectClass.substring(selectClass.indexOf("-")+1,selectClass.indexOf("_"))
+	var additional = selectClass.substring(selectClass.indexOf("_")+1,selectClass.length)
+	if (additional==""){additional=" "}
 
 	var classObj = new Object();
 	classObj.idClass = id_class;
@@ -424,8 +451,10 @@ function viewClass(){
 					$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
 					$("#studentsClass").append("<div id=std"+(a+1)+" class='student_li_div'><li id='"+response[a]['fields']['name']+"' class='student_li'>"+response[a]['fields']['name']+"</li><a onclick='javascript:uncheckStudent2(std"+(a+1)+")' id='uncheckStudent'>X</a></div>");
 
-					$("#levels").val(level);
-					$("#letter").val(letter);
+					$("#levels").val(level); $("#levels").prop('disabled', true);
+					$("#letter").val(letter); $("#letter").prop('disabled', true);
+					$("#year").val(year); $("#year").prop('disabled', true);
+					$("#additional").val(additional); $("#additional").prop('disabled', true);
 					var studentsLen = $("li").length;
 					$("#counter").html(studentsLen);
 				}
@@ -449,6 +478,17 @@ function viewClass(){
 }
 
 function confirmEditClass(){
+	classJson.additional = $("#additional").val();
+	if (classJson.additional == " "){ classJson.additional=null}
+	console.log(classJson.additional);
+	classJson.year = $("#year").val();
+	if (classJson.year<2016){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Año inválido</p>");
+		return;
+	}
 	classJson.teacher = $("#teacher").val();
 	if (classJson.teacher==""){
 		$('.response').remove();
@@ -482,7 +522,7 @@ function confirmEditClass(){
 	}
 
 	$(".response").remove()
-	$("#popup").append("<p class='response'>¿Está seguro que desea editar el curso "+level+classJson.letter+" a cargo del profesor "+classJson.teacher+" con "+studentsLen+" estudiantes?</p>");
+	$("#popup").append("<p class='response'>¿Está seguro que desea editar el curso "+level+classJson.letter+" "+classJson.year+" a cargo del profesor "+classJson.teacher+" con "+studentsLen+" estudiantes?</p>");
 	$("#popup").append('<button onclick="javascript:editClass(classJson)" id="editButton" class="kui-button kui-button-plain kui-button-primary">Aceptar</button>');
 	$("#popup").append('<button onclick="javascript:cancelSaveClass()" id="cancelSaveButton" class="kui-button kui-button-plain kui-button-primary">Cancelar</button>');
 	$("a").css('pointer-events','none');

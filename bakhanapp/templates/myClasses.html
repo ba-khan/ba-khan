@@ -21,7 +21,11 @@
 									<div class="student-list"><ul>
 										<!-- columna 1 -->
 										<div class="student-list-column" style="width:25%;">
-											<font size="4">{{ class.level }} {{ class.letter }}</font>		
+											{% if class.additional %}
+											<font size="4">{{ class.level }} {{ class.letter }} {{ class.year }} {{ class.additional }}</font>		
+											{% else %}
+											<font size="4">{{ class.level }} {{ class.letter }} {{ class.year }}</font>
+											{% endif %}
 										</div>
 										<!-- columna 2 -->
 										<div class="student-list-column" style="width:25%;">
