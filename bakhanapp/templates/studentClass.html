@@ -96,9 +96,11 @@
     		</div>
     	</div>
     </div>
+    <div style="margin:10px" id='content-sup'>
     {% if isTeacher %}
-	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="plus"></i> Nueva Calificación</button></div> 
+	<button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="plus"></i> Nueva Calificación</button>
 	{% endif %}
+	</div> 
 	<form action="" method="post" id='formJson'>{% csrf_token %}
 	<div id="contenido_a_mostrar" style="display:none;" value=>
 		<div id="inputs" align="left">
@@ -589,13 +591,12 @@
     	var e_id_class = {{class.id_class}}
     {% endfor%}
     if(assesments.length>0){
-	    d3.select("body")
-	    	.append("div")
-	    	.attr("class","btn-excel-content")
+	    d3.select("#content-sup")
 	    	.append("button")
 	        .attr("type","button")
 	        .attr("class","btn-download")
 	        .attr("id",'button')
+	        .attr('title','Descargar Todo')
 	        .attr("onClick","generateClassExcel("+e_id_class+")"); 
     }
 

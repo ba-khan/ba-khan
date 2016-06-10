@@ -532,7 +532,12 @@ label.sort-filter{
 	top:-35px;
 	width:109px;
 }
-
+#descargarExcelCurso{
+  float:right;
+}
+#content-sup{
+  height: 30px;
+}
 .counter{
 	position:absolute;
 	top:-50px;
