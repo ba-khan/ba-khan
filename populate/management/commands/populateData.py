@@ -80,9 +80,11 @@ DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
 import logging
 
+now = datetime.datetime.now()
+fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate\management\commands\populate.log',
+                    filename='populate\management\commands\populate'+fecha+'.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
