@@ -517,7 +517,7 @@ label.sort-filter{
     margin-left:-5%;
 }
 .btn-download{
-  background:url(img/carpetaExcel.png);
+  background:url(img/icono_descargar.png);
   float: right;
   background-size: 50px;
   cursor:pointer;
