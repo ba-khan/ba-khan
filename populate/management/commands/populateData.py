@@ -396,13 +396,13 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
                                                                        date = data[j]["time_done"],
                                                                        correct = data[j]["correct"],
                                                                        id_skill_name_id = skills[0]["id_skill_name"],
-                                                                       kaid_student_id = data[j]["kaid"],
+                                                                       kaid_student_id = kaid_student,
                                                                        problem_number = data[j]["problem_number"]
                                                                        )
                 skill_attempts.save()
 
-        except:
-            pass
+        except Exception as e:
+            print e
             #print "otra materia (?)"
     #print "listeilors"
 
@@ -473,8 +473,8 @@ def poblar_student_video(student_name,kaid_student, dates, session):
                                                                        youtube_id = data[k]["video"]["youtube_id"]
                                                                        )
             student_video.save()
-        except:
-            pass
+        except Exception as e:
+            print e
             #print "error"
     #print "listo student_video"
 
