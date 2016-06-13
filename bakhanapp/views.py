@@ -185,13 +185,14 @@ def getArrayAssesmentResumen(id_assesment):
         datar[9][1] = 'Hasta'
         datar[9][2] = 'Cantidad'
         rangeHistogram = (data[2][1] - data[1][1])/float(10)
+        rangeHistogram = float("{0:.1f}".format(rangeHistogram))
         datar[10][0] = data[1][1]
         datar[10][1] = data[1][1] + rangeHistogram
-        datar[10][2] = qGrades.filter(grade__gte=datar[10][0],grade__lte=datar[10][1]).count() 
+        datar[10][2] = qGrades.filter(grade__gte=datar[10][0],grade__lt=datar[10][1]).count() 
         for i in range(8):
-            datar[i+delta+2][0] = datar[i+delta+1][1] + 0.1
+            datar[i+delta+2][0] = datar[i+delta+1][1] 
             datar[i+delta+2][1] = datar[i+delta+2][0] + rangeHistogram
-            datar[i+delta+2][2] = qGrades.filter(grade__gte=datar[i+delta+2][0],grade__lte=datar[i+delta+2][1]).count() 
+            datar[i+delta+2][2] = qGrades.filter(grade__gte=datar[i+delta+2][0],grade__lt=datar[i+delta+2][1]).count() 
         datar[19][0] = datar[18][1] + 0.1
         datar[19][1] = data[2][1]
         datar[19][2] = qGrades.filter(grade__gte=datar[19][0],grade__lte=datar[19][1]).count() 
