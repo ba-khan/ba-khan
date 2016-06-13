@@ -238,7 +238,6 @@
   	    	$("#popup").fadeOut();
   	    	$("#popup_resumen").fadeOut();
   	    });
-
   	  	//This code was for using a pop up menu to choose the row sorting criterion
   	  	//$('body').append('<div id="sortMenu" class="sortMenu-content"><ul><li class="sortMenu-header">Ordenar por...</li><li class="sortMenu-option">Nota</li><li class="sortMenu-option">Esfuerzo</li></ul></div>');
   		
@@ -1775,7 +1774,7 @@
 			var kaids =[];
 			validarEvaluacion();
 			validarRealizarEvaluacion();
-			if (validarRealizarEvaluacion() && validarEvaluacion()){
+			if (NombrePrueba() && validarRealizarEvaluacion() && validarEvaluacion() ){
 				$(".response").remove();
 				Loading();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
@@ -1881,6 +1880,19 @@
 				$('#nota_aprobacion').css('color', '#000000');
 			}
 			return flag;
+		}
+		function NombrePrueba(){
+			var assesmentNames = []
+	  	  	for (i=0;i<assesments.length;i++){
+	  	  		assesmentNames.push(assesments[i].name);
+	  	  	}
+			if ($.inArray($('#input_nombre').val(), assesmentNames) > -1){
+				$('#input_nombre').css('color', '#C30202');
+				return false
+			}else{
+				$('#input_nombre').css('color', '#000000');
+				return true
+			}
 		}
 		function modificarNota(){
 			$(".response").remove();
