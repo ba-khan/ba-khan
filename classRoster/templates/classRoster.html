@@ -134,7 +134,7 @@ Nomina
 		<div id="studentsClass"></div>
 		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
 		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
-		<a onclick="javascript:confirmEditClass()" id="confirmEditButton" class="kui-button kui-button-plain kui-button-primary" style="display:none">Editar</a>
+		<a onclick="javascript:confirmEditClass()" id="confirmEditButton" class="kui-button kui-button-submit kui-button-primary" style="display:none">Editar</a>
 	</div>
 
 </div>
@@ -250,7 +250,6 @@ $.extend($.expr[":"],
 var classJson = new Object();
 function confirmSaveClass(){
 	classJson.additional = $("#additional").val();
-	console.log(classJson.additional);
 	classJson.year = $("#year").val();
 	if (classJson.year<2016){
 		$('.response').remove();
@@ -334,9 +333,9 @@ function saveClass(classJson){
 				$(".response").remove()
 				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
 				$(".response").fadeIn();
-				$("#hover").css('pointer-events','');
-				$("#close").css('pointer-events','');
-				$("a").css('pointer-events','');
+				setTimeout(function(){
+					location.reload();
+				}, 750); 
 			}
 	});
 }
@@ -410,7 +409,7 @@ function newTeacherClass(){
 		});
 	}
 }
-
+var id_class;
 function viewClass(){
 	resetClass();
 	$(".response").remove();
@@ -428,7 +427,7 @@ function viewClass(){
 
 	selectClass = $("#selectClass").val();
 	
-	var id_class = selectClass.substring(0,selectClass.indexOf(","))
+	id_class = selectClass.substring(0,selectClass.indexOf(","))
 	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf("."))
 	var letter = selectClass.substring(selectClass.indexOf(".")+1,selectClass.indexOf("-"))
 	var year = selectClass.substring(selectClass.indexOf("-")+1,selectClass.indexOf("_"))
@@ -447,10 +446,10 @@ function viewClass(){
 					$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
 					$("#studentsClass").append("<div id=std"+(a+1)+" class='student_li_div'><li id='"+response[a]['fields']['name']+"' class='student_li'>"+response[a]['fields']['name']+"</li><a onclick='javascript:uncheckStudent2(std"+(a+1)+")' id='uncheckStudent'>X</a></div>");
 
-					$("#levels").val(level); $("#levels").prop('disabled', true);
-					$("#letter").val(letter); $("#letter").prop('disabled', true);
-					$("#year").val(year); $("#year").prop('disabled', true);
-					$("#additional").val(additional); $("#additional").prop('disabled', true);
+					$("#levels").val(level); // $("#levels").prop('disabled', true);
+					$("#letter").val(letter); // $("#letter").prop('disabled', true);
+					$("#year").val(year); // $("#year").prop('disabled', true);
+					$("#additional").val(additional); // $("#additional").prop('disabled', true);
 					var studentsLen = $("li").length;
 					$("#counter").html(studentsLen);
 				}
@@ -474,9 +473,9 @@ function viewClass(){
 }
 
 function confirmEditClass(){
+	classJson.idClass = id_class;
 	classJson.additional = $("#additional").val();
 	if (classJson.additional == " "){ classJson.additional=null}
-	console.log(classJson.additional);
 	classJson.year = $("#year").val();
 	if (classJson.year<2016){
 		$('.response').remove();
@@ -548,11 +547,12 @@ function editClass(classJson){
 				$(".response").remove()
 				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
 				$(".response").fadeIn();
-				$("#hover").css('pointer-events','');
-				$("#close").css('pointer-events','');
-				$("a").css('pointer-events','');
+				setTimeout(function(){
+					location.reload();
+				}, 750); 
 			}
 	});
+	
 }
 
 function uncheckStudent(student){
