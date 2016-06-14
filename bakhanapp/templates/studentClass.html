@@ -1121,6 +1121,26 @@
 				          return tooltp
 				        }
 				    });
+
+		      	$("svg.recommendations").tipsy({ 
+				        gravity: $.fn.tipsy.autoNS,
+				        opacity: 1,
+				        html: true, 
+				        title: function() {
+				        	var b = this.__data__;
+				          	//var c = json["students"];
+				          	//for (i=0;i<c.length;i++){
+				          	//	console.log(c[i]);
+		       				//}
+				          	console.log(b);
+				          
+				          tooltp =(`<ul>
+				          		<li style='text-align:left;'><strong><font color='#C30202'>% rcmendadas: </font>`+b.values.completed_perc+`</li>
+				          		</strong></ul>`);
+				          return tooltp
+				          
+				        }
+				    });
 	    
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
   			return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
@@ -1843,9 +1863,19 @@
 			}
 			return flag
 		}
+		function nombreEvaluacion(){
+			{% for class in classroom %}
+   				var e_id_class = {{class.id_class}}
+    		{% endfor %}
+    		input_name = document.getElementById("input_nombre").value;
+    		console.log(input_name);
+			//flag = true;
+
+		}
 		function validarRealizarEvaluacion(){
 			$("#botonesEvaluacion").hide();			
 			input_name = document.getElementById("input_nombre").value;
+			nombreEvaluacion();
 			grade_min = document.getElementById("nota_minima").value;
 			grade_max = document.getElementById("nota_maxima").value;
 			approval_percentage = document.getElementById("nota_aprobacion").value;
@@ -1876,6 +1906,8 @@
 				$('#nota_aprobacion').css('color', '#000000');
 			}
 			return flag;
+
+
 		}
 		function modificarNota(){
 			$(".response").remove();
