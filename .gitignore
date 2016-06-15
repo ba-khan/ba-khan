@@ -5,3 +5,4 @@ log-populateTest.txt
 *populateTest.log
 *PresupuestoVPS.xlsx
 calculateGrade.log
+*.sh
