@@ -22,9 +22,31 @@ Nomina
 <br>
 <div class="container">
 <div class="main-content">
+	<div id="classesDiv">
+		<h1 style="margin-top:1%">Ver Cursos</h1>
+		<label for="selectClass">Curso: </label>
+		<select id="selectClass" class="ui-corner-all placeholder simple-input blur-on-esc">
+			{% for class in classes %}
+			{% if class.level > 8 %}
+				{% if class.additional %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} {{class.additional}} </option>
+				{% else %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} </option>
+				{% endif %}
+			{% else %}
+				{% if class.additional %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level}} Básico {{class.letter}} {{class.year}} {{class.additional}} </option>
+				{% else %}
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level}} Básico {{class.letter}} {{class.year}} </option>
+				{% endif %}
+			{% endif %}
+			{% endfor %}
+		</select>
+		<a onclick="javascript:viewClass()" id="viewClassButton" class="kui-button kui-button-plain kui-button-primary">Ver Curso</a>
+	</div>
 
 <br>
-<h1>Crear Curso</h1>
+<h1 style="padding-top: 125px;">Crear Curso</h1>
 
 	<div id="teachersDiv">
 		<h3>Seleccionar Profesor</h3>
@@ -38,7 +60,7 @@ Nomina
 					<td>
 						<label for="newTeacher">Nuevo profesor: </label>
 						<input id="newTeacher" value="" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
-				<a onclick="javascript:newTeacherClass()" id="newTeacherButton" class="kui-button kui-button-plain kui-button-primary">Agregar</a>
+				<a onclick="javascript:newTeacherClass()" id="newTeacherButton" style="color:#56861f;"><i class="plus"></i></a>
 					</td>
 				</tr>
 				{% for teacher in teachers %}
@@ -112,32 +134,7 @@ Nomina
 		<div id="studentsClass"></div>
 		<a onclick="javascript:resetClass()" id="resetButton" class="kui-button kui-button-plain kui-button-primary">Reestablecer</a>
 		<a onclick="javascript:confirmSaveClass()" id="confirmSaveButton" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
-		<a onclick="javascript:confirmEditClass()" id="confirmEditButton" class="kui-button kui-button-plain kui-button-primary" style="display:none">Editar</a>
-	</div>
-
-
-	<div id="classesDiv">
-		<h1 style="margin-top:1%">Ver Cursos</h1>
-		<label for="selectClass">Curso: </label>
-		<select id="selectClass" class="ui-corner-all placeholder simple-input blur-on-esc">
-			{% for class in classes %}
-			{% if class.level > 8 %}
-				{% if class.additional %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} {{class.additional}} </option>
-				{% else %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} </option>
-				{% endif %}
-			{% else %}
-				{% if class.additional %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level}} Básico {{class.letter}} {{class.year}} {{class.additional}} </option>
-				{% else %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level}} Básico {{class.letter}} {{class.year}} </option>
-				{% endif %}
-			{% endif %}
-			{% endfor %}
-		</select>
-		<a onclick="javascript:viewClass()" id="viewClassButton" class="kui-button kui-button-plain kui-button-primary">Ver Curso</a>
-
+		<a onclick="javascript:confirmEditClass()" id="confirmEditButton" class="kui-button kui-button-submit kui-button-primary" style="display:none">Editar</a>
 	</div>
 
 </div>
@@ -227,9 +224,8 @@ $(document).ready(function(){
 	    	$("#counter").html(studentsLen);
 	    }
 	    else if($(this).is(":not(:checked)")){
-	        var parent = document.getElementById("studentsClass");
 	        var child = document.getElementById($(this).val());
-	        parent.removeChild(child);
+	        $(child).closest('div').remove();
 	        var studentsLen = $("li").length;
 	    	$("#counter").html(studentsLen);
 	    }
@@ -254,7 +250,6 @@ $.extend($.expr[":"],
 var classJson = new Object();
 function confirmSaveClass(){
 	classJson.additional = $("#additional").val();
-	console.log(classJson.additional);
 	classJson.year = $("#year").val();
 	if (classJson.year<2016){
 		$('.response').remove();
@@ -338,9 +333,9 @@ function saveClass(classJson){
 				$(".response").remove()
 				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
 				$(".response").fadeIn();
-				$("#hover").css('pointer-events','');
-				$("#close").css('pointer-events','');
-				$("a").css('pointer-events','');
+				setTimeout(function(){
+					location.reload();
+				}, 750); 
 			}
 	});
 }
@@ -414,7 +409,7 @@ function newTeacherClass(){
 		});
 	}
 }
-
+var id_class;
 function viewClass(){
 	resetClass();
 	$(".response").remove();
@@ -432,7 +427,7 @@ function viewClass(){
 
 	selectClass = $("#selectClass").val();
 	
-	var id_class = selectClass.substring(0,selectClass.indexOf(","))
+	id_class = selectClass.substring(0,selectClass.indexOf(","))
 	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf("."))
 	var letter = selectClass.substring(selectClass.indexOf(".")+1,selectClass.indexOf("-"))
 	var year = selectClass.substring(selectClass.indexOf("-")+1,selectClass.indexOf("_"))
@@ -451,10 +446,10 @@ function viewClass(){
 					$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
 					$("#studentsClass").append("<div id=std"+(a+1)+" class='student_li_div'><li id='"+response[a]['fields']['name']+"' class='student_li'>"+response[a]['fields']['name']+"</li><a onclick='javascript:uncheckStudent2(std"+(a+1)+")' id='uncheckStudent'>X</a></div>");
 
-					$("#levels").val(level); $("#levels").prop('disabled', true);
-					$("#letter").val(letter); $("#letter").prop('disabled', true);
-					$("#year").val(year); $("#year").prop('disabled', true);
-					$("#additional").val(additional); $("#additional").prop('disabled', true);
+					$("#levels").val(level); // $("#levels").prop('disabled', true);
+					$("#letter").val(letter); // $("#letter").prop('disabled', true);
+					$("#year").val(year); // $("#year").prop('disabled', true);
+					$("#additional").val(additional); // $("#additional").prop('disabled', true);
 					var studentsLen = $("li").length;
 					$("#counter").html(studentsLen);
 				}
@@ -478,9 +473,9 @@ function viewClass(){
 }
 
 function confirmEditClass(){
+	classJson.idClass = id_class;
 	classJson.additional = $("#additional").val();
 	if (classJson.additional == " "){ classJson.additional=null}
-	console.log(classJson.additional);
 	classJson.year = $("#year").val();
 	if (classJson.year<2016){
 		$('.response').remove();
@@ -552,11 +547,12 @@ function editClass(classJson){
 				$(".response").remove()
 				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
 				$(".response").fadeIn();
-				$("#hover").css('pointer-events','');
-				$("#close").css('pointer-events','');
-				$("a").css('pointer-events','');
+				setTimeout(function(){
+					location.reload();
+				}, 750); 
 			}
 	});
+	
 }
 
 function uncheckStudent(student){

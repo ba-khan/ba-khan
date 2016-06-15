@@ -37,8 +37,8 @@
 
 		// then we attach to the HTML table and render it
 		editableGrid.attachToHTMLTable('htmlgrid');
-		editableGrid.addCellValidator("student_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 40000000 && parseInt(value) < 99999999); } }));
-		editableGrid.addCellValidator("tutor_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 40000000 && parseInt(value) < 99999999); } }));
+		editableGrid.addCellValidator("student_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 400000000 && parseInt(value) < 999999999); } }));
+		editableGrid.addCellValidator("tutor_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 400000000 && parseInt(value) < 999999999); } }));
 		
 		var searchField = document.getElementById('searchField');
 		searchField.addEventListener(
@@ -71,20 +71,26 @@
 	<tr>
 		<th>Nombre</th>
 		<th>E-Mail</th>
-		<th>Teléfono</th>
+		<th>Celular</th>
 		<th>Nombre</th>
 		<th>E-Mail</th>
-		<th>Teléfono</th>
+		<th>Celular</th>
 		<th>Acciones</th>
 	</tr>
 	{% for data in datas %}
 	<tr id="R{{ forloop.counter }}">
 		<td>{{ data.0.name }}</td>
 		<td>{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
-		<td id="sPhone{{ forloop.counter }}">{{ data.0.phone }}</td>
+		<td id="sPhone{{ forloop.counter }}">
+			{% if not data.0.phone == 0 %}
+			{{ data.0.phone }}
+			{% endif %}
+		</td>
 		<td>{{ data.1.name }}</td>
 		<td>{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
-		<td>{{ data.1.phone }}</td>
+		<td>{% if not data.0.phone == 0 %}
+			{{ data.1.phone }}
+			{% endif %}</td>
 		<td class="editablegrid-action" data-title="action" style="width:100px">
 			<a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 		</td>

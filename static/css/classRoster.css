@@ -127,7 +127,6 @@ h3, h5{
     width: 125px;
     height: 35px;
     padding: 8px;
-    margin-left: 25%;
     margin-top: 5%;
   }
 
@@ -175,7 +174,8 @@ table.testgrid td {
     margin: 5%;
 }
 #newTeacher{
-  width: 42%;
+  width: 36%;
+  margin-left: 1%;
 }
 
 #classesDiv{
