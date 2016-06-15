@@ -1132,11 +1132,15 @@
 				          	//for (i=0;i<c.length;i++){
 				          	//	console.log(c[i]);
 		       				//}
-				          	console.log(b);
-				          
-				          tooltp =(`<ul>
-				          		<li style='text-align:left;'><strong><font color='#C30202'>% rcmendadas: </font>`+b.values.completed_perc+`</li>
-				          		</strong></ul>`);
+				          	var x = (b.values.skills_com);
+				          	tooltp = `<ul><li style='text-align:left;'><strong>Habilidades Rec. Completadas</strong>`;
+				          	for(i=0;i<x.length;i++){
+				          		tooltp = tooltp+
+				          		`<li style='text-align:left;'>`+b.values.skills_com[i]+`</li>`
+				          		
+				          	}
+				          	tooltp = tooltp + `</ul>`;
+
 				          return tooltp
 				          
 				        }

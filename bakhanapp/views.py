@@ -394,9 +394,9 @@ def parallelAssesment(assesment,students,queue):
             g['mastery2'],g['mastery3'],g['total_recomended'],g['recomended_complete'])
     i=0
     try:#id2001
-        print assesment.id_assesment 
+        #print assesment.id_assesment 
         g = Grade.objects.filter(id_assesment_id=assesment.id_assesment).values('id_grade')
-        print g.count()
+        #print g.count()
         #print g
         #print g
         #skills_complete = Skill.objects.filter(skill_log__id_grade__in=g, skill_log__skill_progress='practiced').values('name_spanish','skill_log__skill_progress')
