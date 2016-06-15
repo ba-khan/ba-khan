@@ -395,6 +395,7 @@ def parallelAssesment(assesment,students,queue):
     try:#id2001
         print assesment.id_assesment 
         g = Grade.objects.filter(id_assesment_id=assesment.id_assesment).values('id_grade')
+        print g.count()
         #print g
         #print g
         #skills_complete = Skill.objects.filter(skill_log__id_grade__in=g, skill_log__skill_progress='practiced').values('name_spanish','skill_log__skill_progress')
@@ -430,7 +431,11 @@ def parallelAssesment(assesment,students,queue):
         try:#id2002
             #if student.kaid_student=='kaid_650486821916405105888593':
             #print student.kaid_student
-            skills_complete = Skill.objects.filter((Q(skill_log__skill_progress='practiced')|Q(skill_log__skill_progress='mastery1')|Q(skill_log__skill_progress='mastery2')|Q(skill_log__skill_progress='mastery3'))&Q(student_skill__kaid_student_id=student.kaid_student)&Q(skill_log__id_grade_id__in=g)).values('name_spanish', 'student_skill__kaid_student_id')
+            g_student=g.filter(kaid_student_id=student.kaid_student)
+
+            skills_complete = Skill.objects.filter((Q(skill_log__skill_progress='practiced')|Q(skill_log__skill_progress='mastery1')|
+                Q(skill_log__skill_progress='mastery2')|Q(skill_log__skill_progress='mastery3')),
+                skill_log__id_grade=g_student).values('name_spanish')
             #    print "len abajo"
             #    print len(skills_complete)
             for s in skills_complete:
