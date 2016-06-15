@@ -23,6 +23,13 @@ Nomina
 <div class="container">
 <div class="main-content">
 	<div id="classesDiv">
+		<h1 style="margin-top:1%">Subir Estudiantes</h1>
+		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="pic" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+		<a onclick="javascript:uploadExcel($('#miexcel'))" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
+	</div>
+
+	<div id="classesDiv">
 		<h1 style="margin-top:1%">Ver Cursos</h1>
 		<label for="selectClass">Curso: </label>
 		<select id="selectClass" class="ui-corner-all placeholder simple-input blur-on-esc">
@@ -470,6 +477,18 @@ function viewClass(){
 /*
 	*/ 
 	
+}
+
+function uploadExcel(mexcel){
+	console.log(mexcel);
+	$.ajax({
+		url: "{% url 'classRoster:uploadExcel' %}",
+		type: "POST",
+		data: mexcel,
+			success: function(response){
+				console.log(response);
+			}
+	});
 }
 
 function confirmEditClass(){

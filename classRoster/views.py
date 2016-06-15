@@ -277,3 +277,11 @@ def editClass(request):
             return HttpResponse("Curso editado correctamente")
         except:
             return HttpResponse("Error al editar")
+
+
+def uploadExcel(request):
+    if request.method == 'POST':
+        excel = request.POST
+        print excel["pic"][12:]
+        wb = xlrd.open_workbook(excel['pic'][12:])
+        return HttpResponse("algo")

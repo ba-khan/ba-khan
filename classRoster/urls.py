@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^newClass$', views.newClass, name='newClass'),
     url(r'^viewClass$', views.viewClass, name='viewClass'),
     url(r'^editClass$', views.editClass, name='editClass'),
+    url(r'^uploadExcel$', views.uploadExcel, name='uploadExcel'),
     #url(r'^historial/$', views.getMakedGroup, name='getMakedGroup'),
     #url(r'^estudiantes/$', views.getStudentGroup, name='getStudentGroup'),
     #url(r'^habilidades/$', views.getSkillGroup, name='getSkillGroup'),
