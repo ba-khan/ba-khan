@@ -231,10 +231,17 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
     #    json.dump(data, outfile)
     logging.debug(len(data))
     for j in range(len(data)):
+        if data[j]["email"]!=None:
+            email = data[j]["email"]
+        else:
+            email = data[j]["username"]
         try:
-
-            new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["username"],email=data[j]["username"],points=data[j]["points"],phone=0, id_institution_id=id_institution)
-            new_student.save()
+            if data[j]["username"]=="":
+                new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["nickname"],email=email,points=data[j]["points"],phone=0, id_institution_id=id_institution)
+                new_student.save()
+            else:
+                new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["username"],email=email,points=data[j]["points"],phone=0, id_institution_id=id_institution)
+                new_student.save()
         except Exception as e:
             print e
             #logging.debug("error con estudiante "+data[j]["username"])

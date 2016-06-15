@@ -96,9 +96,11 @@
     		</div>
     	</div>
     </div>
+    <div style="margin:10px" id='content-sup'>
     {% if isTeacher %}
-	<div style="margin:10px"><button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="plus"></i> Nueva Calificación</button></div> 
+	<button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="plus"></i> Nueva Calificación</button>
 	{% endif %}
+	</div> 
 	<form action="" method="post" id='formJson'>{% csrf_token %}
 	<div id="contenido_a_mostrar" style="display:none;" value=>
 		<div id="inputs" align="left">
@@ -236,7 +238,6 @@
   	    	$("#popup").fadeOut();
   	    	$("#popup_resumen").fadeOut();
   	    });
-
   	  	//This code was for using a pop up menu to choose the row sorting criterion
   	  	//$('body').append('<div id="sortMenu" class="sortMenu-content"><ul><li class="sortMenu-header">Ordenar por...</li><li class="sortMenu-option">Nota</li><li class="sortMenu-option">Esfuerzo</li></ul></div>');
   		
@@ -589,13 +590,12 @@
     	var e_id_class = {{class.id_class}}
     {% endfor%}
     if(assesments.length>0){
-	    d3.select("body")
-	    	.append("div")
-	    	.attr("class","btn-excel-content")
+	    d3.select("#content-sup")
 	    	.append("button")
 	        .attr("type","button")
 	        .attr("class","btn-download")
 	        .attr("id",'button')
+	        .attr('title','Descargar Todo')
 	        .attr("onClick","generateClassExcel("+e_id_class+")"); 
     }
 
@@ -1285,6 +1285,10 @@
 	        			nota = max_grade;
 	        			nota = nota+"+";
 	        		}
+	        		if (nota<min_grade){
+	        			nota = min_grade;
+	        			//nota = nota+"-";
+	        		}
 	        		if (students[i][assesment_id].teacher_grade!=0){
 	        			nota = nota+" *";
 	        		}
@@ -1331,7 +1335,7 @@
 	          	skl = skl + "<font color='#1C758A'>C: "+d.value.skills[i][4]+"</font><font color='#C30202'> I: "+d.value.skills[i][3]+"</font></li>" 
 	          };
 	          var algo = `<li>Nota ficticia: `+5+`</li>`
-	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño:"+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo:"+bonus_grade+"</li><li style='text-lign:left;'>Bonificacion del Profesor:"+teacher_grade+"</li>"+skl+"</ul>");
+	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño:"+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo:"+bonus_grade+"</li><li style='text-lign:left;'>Ajuste del Profesor:"+teacher_grade+"</li>"+skl+"</ul>");
 	          test = '<p>resultado:'+id_json_assesment+'</p>'
 	          return tooltp}
              , 
@@ -1790,7 +1794,7 @@
 			var kaids =[];
 			validarEvaluacion();
 			validarRealizarEvaluacion();
-			if (validarRealizarEvaluacion() && validarEvaluacion()){
+			if (NombrePrueba() && validarRealizarEvaluacion() && validarEvaluacion() ){
 				$(".response").remove();
 				Loading();
 				$("#popup_evaluacion").append("<p class='response'>Guardando...</p>");
@@ -1897,6 +1901,19 @@
 				$('#nota_aprobacion').css('color', '#000000');
 			}
 			return flag;
+		}
+		function NombrePrueba(){
+			var assesmentNames = []
+	  	  	for (i=0;i<assesments.length;i++){
+	  	  		assesmentNames.push(assesments[i].name);
+	  	  	}
+			if ($.inArray($('#input_nombre').val(), assesmentNames) > -1){
+				$('#input_nombre').css('color', '#C30202');
+				return false
+			}else{
+				$('#input_nombre').css('color', '#000000');
+				return true
+			}
 		}
 		function modificarNota(){
 			$(".response").remove();

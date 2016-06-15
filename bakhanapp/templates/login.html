@@ -79,7 +79,7 @@
       <h2 class="regular-header login-button-header">
             Inicia sesión con tu cuenta Khan Academy
         </h2>
-        <a role="button" aria-disabled="false" onClick="openPopup()" href="javascript:void(0)" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+        <a id="loginButton" role="button" aria-disabled="false" onClick="openPopup()" href="javascript:void(0)" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
       </div>
     </div>
 
@@ -87,6 +87,12 @@
 
 
   <script type="text/javascript">
+  
+    var loginButton = document.getElementById('loginButton');
+    loginButton.addEventListener('click', function(){
+      $(loginButton).css('pointer-events','none');
+    }, false);
+
     var ws;
     var url;
     var connected=false;
