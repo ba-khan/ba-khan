@@ -230,6 +230,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
     #with open('data.txt', 'w') as outfile:
     #    json.dump(data, outfile)
     logging.debug(len(data))
+
     for j in range(len(data)):
         if data[j]["email"]!=None:
             email = data[j]["email"]
@@ -237,10 +238,18 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
             email = data[j]["username"]
         try:
             if data[j]["username"]=="":
-                new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["nickname"],email=email,points=data[j]["points"],phone=0, id_institution_id=id_institution)
+                new_student = Student(kaid_student=data[j]["kaid"])
+                new_student.name=data[j]["nickname"]
+                new_student.email=email
+                new_student.points=data[j]["points"]
+                new_student.id_institution_id=id_institution
                 new_student.save()
             else:
-                new_student = Student(kaid_student=data[j]["kaid"],name=data[j]["username"],email=email,points=data[j]["points"],phone=0, id_institution_id=id_institution)
+                new_student = Student(kaid_student=data[j]["kaid"])
+                new_student.name=data[j]["username"]
+                new_student.email=email
+                new_student.points=data[j]["points"]
+                new_student.id_institution_id=id_institution
                 new_student.save()
         except Exception as e:
             print e
