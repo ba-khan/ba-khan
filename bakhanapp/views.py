@@ -604,10 +604,33 @@ def getClassStudents(request, id_class):
             json_array=[]
             i=0
             for student in students:
+                skills_completadas=[]
                 student_json = {}
                 student_json["id"] = i
                 student_json['kaid'] = student.kaid_student
                 student_json["name"] = student.name
+                try:#id3002
+                    #if student.kaid_student=='kaid_650486821916405105888593':
+                    #print student.kaid_student
+                    g = Grade.objects.filter(kaid_student_id=student.kaid_student).values('id_grade')
+
+                    skills_complete = Skill.objects.filter((Q(skill_log__skill_progress='practiced')|Q(skill_log__skill_progress='mastery1')|
+                        Q(skill_log__skill_progress='mastery2')|Q(skill_log__skill_progress='mastery3')),
+                        skill_log__id_grade=g).values('name_spanish').distinct('name_spanish')
+                    #    print "len abajo"
+                    #    print len(skills_complete)
+                    for s in skills_complete:
+                        #print s['name_spanish']
+                        skills_completad = s['name_spanish']
+                        skills_completadas.append(skills_completad)
+                    #skills_completadas = dictSkills[student.kaid_student]
+                    #print skills_completadas
+                    #print len(skills_completadas)
+                except Exception as e:
+                    skills_completadas = []
+                    #print "***ERROR*** ha fallado try:#id2002 bakhanapp/views.py"
+                    print e
+
                 try:
                     completed_percentage=dictRecomendedComplete[student.kaid_student]/float(dictTotalRecomended[student.kaid_student])
                 except:
@@ -616,7 +639,7 @@ def getClassStudents(request, id_class):
                     total_rec = dictTotalRecomended[student.kaid_student]/float(1000)
                 except:
                     total_rec = 0
-                student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+                student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec, "skills_com":skills_completadas}
                 try:
                     student_json["skills_time"] = dictTotalTimeExcercice[student.kaid_student]
                 except:
