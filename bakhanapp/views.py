@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db.models import Count,Sum
+from django.db.models import Q
 
 
 from django import template
@@ -387,15 +388,68 @@ def parallelAssesment(assesment,students,queue):
     grades = Grade.objects.filter(id_assesment_id=assesment.id_assesment).values('kaid_student_id','correct','incorrect','video_time','excercice_time',
         'struggling','practiced','mastery1','mastery2','mastery3','total_recomended','recomended_complete')
     dictGrades = {}
+    dictSkills = {}
     for g in grades:
         dictGrades[g['kaid_student_id']] = (g['correct'],g['incorrect'],g['video_time'],g['excercice_time'],g['struggling'],g['practiced'],g['mastery1'],
             g['mastery2'],g['mastery3'],g['total_recomended'],g['recomended_complete'])
     i=0
+    try:#id2001
+        #print assesment.id_assesment 
+        g = Grade.objects.filter(id_assesment_id=assesment.id_assesment).values('id_grade')
+        #print g.count()
+        #print g
+        #print g
+        #skills_complete = Skill.objects.filter(skill_log__id_grade__in=g, skill_log__skill_progress='practiced').values('name_spanish','skill_log__skill_progress')
+        #skills_practiced = Skill_Log.objects.filter(skill_progress='practiced',id_grade_id__in=g).values('id_skill_name_id')
+        #skills_mastery1 = Skill_Log.objects.filter(skill_progress='mastery1',id_grade_id__in=g).values('id_skill_name_id')
+        #skills_mastery2 = Skill_Log.objects.filter(skill_progress='mastery2',id_grade_id__in=g).values('id_skill_name_id')
+        #skills_mastery3 = Skill_Log.objects.filter(skill_progress='mastery3',id_grade_id__in=g).values('id_skill_name_id')
+  
+        #skills_complete = Skill.objects.filter((Q(skill_log__skill_progress='practiced')|Q(skill_log__skill_progress='mastery1')|Q(skill_log__skill_progress='mastery2')|Q(skill_log__skill_progress='mastery3'))&Q(student_skill__id_grade_id__in=g)).values('name_spanish', 'student_skill__kaid_student_id')
+        #print skills_complete
+        #print skills_complete
+        #print "skills_copmplete abajo"
+        #print len(skills_complete)
+        #for s in skills_complete:
+        #    print s
+            #print "aca abajo"
+            #print s['name_spanish']
+            #print s['student_skill__kaid_student_id']
+        #    dictSkills[s['student_skill__kaid_student_id']] = (s['name_spanish'])
+        #    print s['name_spanish']
+            #dictSkills[s['name_spanish'] = (s['name_spanish'])
+        #print dictGrades[0]
+    except Exception as e:
+        #print '***ERROR*** ha fallado try:#id2001 bakhanapp/views.py'
+        print e
+    
     for student in students:
+        skills_completadas=[]
         student_json={}
         student_json["id"]=i
         student_json["name"]=student.name
 
+        try:#id2002
+            #if student.kaid_student=='kaid_650486821916405105888593':
+            #print student.kaid_student
+            g_student=g.filter(kaid_student_id=student.kaid_student)
+
+            skills_complete = Skill.objects.filter((Q(skill_log__skill_progress='practiced')|Q(skill_log__skill_progress='mastery1')|
+                Q(skill_log__skill_progress='mastery2')|Q(skill_log__skill_progress='mastery3')),
+                skill_log__id_grade=g_student).values('name_spanish')
+            #    print "len abajo"
+            #    print len(skills_complete)
+            for s in skills_complete:
+                #print s['name_spanish']
+                skills_completad = s['name_spanish']
+                skills_completadas.append(skills_completad)
+            #skills_completadas = dictSkills[student.kaid_student]
+            #print skills_completadas
+            #print len(skills_completadas)
+        except Exception as e:
+            skills_completadas = []
+            #print "***ERROR*** ha fallado try:#id2002 bakhanapp/views.py"
+            print e
         try:
             student_json["skills_time"] = dictGrades[student.kaid_student][3]
         except:
@@ -444,7 +498,7 @@ def parallelAssesment(assesment,students,queue):
             total_rec=dictGrades[student.kaid_student][9]/float(1000)
         except:
             total_rec = 0
-        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+        student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec, "skills_com":skills_completadas}
 
         assesment_json["assesment_student"].append(student_json)
 
@@ -550,10 +604,33 @@ def getClassStudents(request, id_class):
             json_array=[]
             i=0
             for student in students:
+                skills_completadas=[]
                 student_json = {}
                 student_json["id"] = i
                 student_json['kaid'] = student.kaid_student
                 student_json["name"] = student.name
+                try:#id3002
+                    #if student.kaid_student=='kaid_650486821916405105888593':
+                    #print student.kaid_student
+                    g = Grade.objects.filter(kaid_student_id=student.kaid_student).values('id_grade')
+
+                    skills_complete = Skill.objects.filter((Q(skill_log__skill_progress='practiced')|Q(skill_log__skill_progress='mastery1')|
+                        Q(skill_log__skill_progress='mastery2')|Q(skill_log__skill_progress='mastery3')),
+                        skill_log__id_grade=g).values('name_spanish').distinct('name_spanish')
+                    #    print "len abajo"
+                    #    print len(skills_complete)
+                    for s in skills_complete:
+                        #print s['name_spanish']
+                        skills_completad = s['name_spanish']
+                        skills_completadas.append(skills_completad)
+                    #skills_completadas = dictSkills[student.kaid_student]
+                    #print skills_completadas
+                    #print len(skills_completadas)
+                except Exception as e:
+                    skills_completadas = []
+                    #print "***ERROR*** ha fallado try:#id2002 bakhanapp/views.py"
+                    print e
+
                 try:
                     completed_percentage=dictRecomendedComplete[student.kaid_student]/float(dictTotalRecomended[student.kaid_student])
                 except:
@@ -562,7 +639,7 @@ def getClassStudents(request, id_class):
                     total_rec = dictTotalRecomended[student.kaid_student]/float(1000)
                 except:
                     total_rec = 0
-                student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec}
+                student_json["recommendations"]={"completed_perc":completed_percentage,"total":total_rec, "skills_com":skills_completadas}
                 try:
                     student_json["skills_time"] = dictTotalTimeExcercice[student.kaid_student]
                 except:

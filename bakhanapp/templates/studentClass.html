@@ -1121,6 +1121,43 @@
 				          return tooltp
 				        }
 				    });
+
+		      	$("svg.recommendations").qtip({ 
+		      		content: function() {
+				        	var b = $(this).prop("__data__");
+				          	//var c = json["students"];
+				          	//for (i=0;i<c.length;i++){
+				          	//	console.log(c[i]);
+		       				//}
+				          	var x = (b.values.skills_com);
+				          	tooltp = `<ul><li style='text-align:left;'><strong>Habilidades Rec. Completadas</strong>`;
+				          	for(i=0;i<x.length;i++){
+				          		tooltp = tooltp+
+				          		`<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>`+b.values.skills_com[i]+`</li>`
+				          		
+				          	}
+				          	tooltp = tooltp + `</ul>`;
+
+				          return tooltp
+				    },
+                    
+	                show: { 
+	                    event: 'mouseenter', 
+	                    delay: 10, 
+	                    solo: true,   
+	                    effect: function(offset) {$(this).slideDown(100);}  
+	                    },
+	                    
+	                hide: { 
+	                    event: 'mouseleave', 
+	                    delay: 50, 
+	                    fixed: true 
+	                    },
+	                position: { 
+	                	my: 'top right',
+	     				at: 'bottom center'
+	 				}
+				    });
 	    
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
   			return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
@@ -1847,6 +1884,7 @@
 			}
 			return flag
 		}
+
 		function validarRealizarEvaluacion(){
 			$("#botonesEvaluacion").hide();			
 			input_name = document.getElementById("input_nombre").value;
