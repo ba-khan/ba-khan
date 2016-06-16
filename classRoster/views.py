@@ -279,7 +279,7 @@ def editClass(request):
         except:
             return HttpResponse("Error al editar")
 
-
+@permission_required('bakhanapp.isAdmin', login_url="/")
 def uploadExcel(request):
     print "entro aca"
     if request.method == 'POST':
@@ -306,11 +306,11 @@ def uploadExcel(request):
 
             #new_student_class.save()
             
-            print student
+            print student['class']
          
             students_list.append(student)
          
         # Serialize the list of dicts to JSON
         j = json.dumps(students_list)
 
-        return HttpResponse("algo")
+        return HttpResponse(j)
