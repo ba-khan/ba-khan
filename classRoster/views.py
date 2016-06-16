@@ -289,8 +289,18 @@ def uploadExcel(request):
         sh = wb.sheet_by_index(0)
         # List to hold dictionaries
         students_list = []
-         
+        class_list = []
+
+        clas = OrderedDict()
         # Iterate through each row in worksheet and fetch values into dict
+        for rownum in range(1, sh.nrows):
+            row_values = sh.row_values(rownum)
+            aux = row_values[12]
+            try:
+                clas[aux] = []
+            except:
+                pass
+
         for rownum in range(1, sh.nrows):
             student = OrderedDict()
             row_values = sh.row_values(rownum)
@@ -299,18 +309,14 @@ def uploadExcel(request):
             student['class'] = row_values[12]
             student['kaid'] = row_values[13][28:]
 
-            #new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
-            #new_student.save()
+            aux = row_values[12]
+            try:
+                clas[aux].append(student)
+            except:
+                pass
 
-            #new_student_class = Student_Class(id_class_id=12,kaid_student_id=row_values[13][28:])
-
-            #new_student_class.save()
-            
-            print student['class']
-         
-            students_list.append(student)
-         
         # Serialize the list of dicts to JSON
-        j = json.dumps(students_list)
+        class_list.append(clas)
+        j = json.dumps(class_list)
 
         return HttpResponse(j)
