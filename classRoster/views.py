@@ -280,8 +280,14 @@ def editClass(request):
 
 
 def uploadExcel(request):
+    print "entro aca"
     if request.method == 'POST':
-        excel = request.POST
-        print excel["pic"][12:]
-        wb = xlrd.open_workbook(excel['pic'][12:])
+        excel = request.body
+        bdy = json.loads(excel)
+        #bdy = json_loads(excel)
+        #contenido =bdy[0]
+        #print "el nomnbre es"
+        #print contenido
+        #print excel["pic"][12:]
+        #wb = xlrd.open_workbook(excel['pic'][12:])
         return HttpResponse("algo")

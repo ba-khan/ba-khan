@@ -26,7 +26,7 @@ Nomina
 		<h1 style="margin-top:1%">Subir Estudiantes</h1>
 		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="pic" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 
-		<a onclick="javascript:uploadExcel($('#miexcel'))" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
+		<a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
 	</div>
 
 	<div id="classesDiv">
@@ -479,14 +479,17 @@ function viewClass(){
 	
 }
 
-function uploadExcel(mexcel){
-	console.log(mexcel);
+function uploadExcel(){
+	var a = document.getElementById('miexcel').files[0].name
+	//var fd = new FormData($(mexcel).get(0));
+	console.log(a);
+	
 	$.ajax({
 		url: "{% url 'classRoster:uploadExcel' %}",
 		type: "POST",
-		data: mexcel,
+		data: a,
 			success: function(response){
-				console.log(response);
+				console.log("as");
 			}
 	});
 }
