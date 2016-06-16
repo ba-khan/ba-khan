@@ -295,25 +295,18 @@ def uploadExcel(request):
         # Iterate through each row in worksheet and fetch values into dict
         for rownum in range(1, sh.nrows):
             row_values = sh.row_values(rownum)
-            aux = row_values[12]
-            try:
-                clas[aux] = []
-            except:
-                pass
-
-        for rownum in range(1, sh.nrows):
             student = OrderedDict()
-            row_values = sh.row_values(rownum)
             student['name'] = row_values[0]
             student['points'] = int(row_values[11])
             student['class'] = row_values[12]
             student['kaid'] = row_values[13][28:]
 
             aux = row_values[12]
-            try:
+            if aux in clas:
                 clas[aux].append(student)
-            except:
-                pass
+            else:
+                clas[aux] = []
+                clas[aux].append(student)
 
         # Serialize the list of dicts to JSON
         class_list.append(clas)
