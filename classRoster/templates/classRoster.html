@@ -24,9 +24,11 @@ Nomina
 <div class="main-content">
 	<div id="classesDiv">
 		<h1 style="margin-top:1%">Subir Estudiantes</h1>
-		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="pic" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+		<form id="miexcelForm" name="miexcelForm">
+		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="miexcel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 
 		<a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
+		</form>
 	</div>
 
 	<div id="classesDiv">
@@ -473,25 +475,7 @@ function viewClass(){
 				}, 750); 
 			}
 		});
-
-/*
-	*/ 
 	
-}
-
-function uploadExcel(){
-	var a = document.getElementById('miexcel').files[0].name
-	//var fd = new FormData($(mexcel).get(0));
-	console.log(a);
-	
-	$.ajax({
-		url: "{% url 'classRoster:uploadExcel' %}",
-		type: "POST",
-		data: a,
-			success: function(response){
-				console.log("as");
-			}
-	});
 }
 
 function confirmEditClass(){
@@ -590,6 +574,27 @@ function uncheckStudent2(student){
 	$(student).remove();
 	var studentsLen = $("li").length;
 	$("#counter").html(studentsLen);
+}
+
+function uploadExcel(){
+	var data = new FormData();
+	$.each($('#miexcel')[0].files, function(i, file) {
+	    data.append('file-'+i, file);
+	});
+	//var fd = new FormData($(mexcel).get(0));
+	//console.log(a);
+	
+	$.ajax({
+		url: "{% url 'classRoster:uploadExcel' %}",
+		data: data,
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+	    type: 'POST',
+	    success: function(response){
+	        console.log(response);
+	    }
+	});
 }
 
 </script>

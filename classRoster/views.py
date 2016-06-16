@@ -47,6 +47,7 @@ import codecs
 from lib2to3.fixer_util import String
 from django.core import serializers
 from django.db import connection
+import xlrd
 
 import random
 
@@ -282,12 +283,34 @@ def editClass(request):
 def uploadExcel(request):
     print "entro aca"
     if request.method == 'POST':
-        excel = request.body
-        bdy = json.loads(excel)
-        #bdy = json_loads(excel)
-        #contenido =bdy[0]
-        #print "el nomnbre es"
-        #print contenido
-        #print excel["pic"][12:]
-        #wb = xlrd.open_workbook(excel['pic'][12:])
+        excel = request.FILES
+        print excel
+        wb = xlrd.open_workbook(filename=None, file_contents=excel['file-0'].read())
+        sh = wb.sheet_by_index(0)
+        # List to hold dictionaries
+        students_list = []
+         
+        # Iterate through each row in worksheet and fetch values into dict
+        for rownum in range(1, sh.nrows):
+            student = OrderedDict()
+            row_values = sh.row_values(rownum)
+            student['name'] = row_values[0]
+            student['points'] = int(row_values[11])
+            student['class'] = row_values[12]
+            student['kaid'] = row_values[13][28:]
+
+            #new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
+            #new_student.save()
+
+            #new_student_class = Student_Class(id_class_id=12,kaid_student_id=row_values[13][28:])
+
+            #new_student_class.save()
+            
+            print student
+         
+            students_list.append(student)
+         
+        # Serialize the list of dicts to JSON
+        j = json.dumps(students_list)
+
         return HttpResponse("algo")
