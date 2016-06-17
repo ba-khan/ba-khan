@@ -15,6 +15,7 @@ Nomina
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 <script src="{% static 'js/stickytable.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript" src="http://mbostock.github.com/d3/d3.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
@@ -29,6 +30,10 @@ Nomina
 
 		<a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
 		</form>
+	</div>
+
+	<div id="tableStudent">
+
 	</div>
 
 	<div id="classesDiv">
@@ -181,6 +186,7 @@ Nomina
 $('#nomina').addClass('active selected'); 
 
 $(document).ready(function(){
+	$("#tableStudent").hide();
 	$("#hover").click(function(){
 	    $(this).fadeOut();
 		$("#popup").fadeOut();
@@ -577,7 +583,7 @@ function uncheckStudent2(student){
 }
 
 function uploadExcel(){
-
+	$("#tableStudent").show();
 	var data = new FormData();
 	$.each($('#miexcel')[0].files, function(i, file) {
 	    data.append('file-'+i, file);
@@ -601,6 +607,67 @@ function uploadExcel(){
 
 }
 
+</script>
+
+<script>
+function tabulate(data, columns) {
+    var table = d3.select("#tableStudent").append("table"),
+        thead = table.append("thead"),
+        tbody = table.append("tbody");
+
+    // append the header row
+    thead.append("tr")
+        .selectAll("th")
+        .data(columns)
+        .enter()
+        .append("th")
+            .text(function(column) { return column; });
+
+    // create a row for each object in the data
+    var rows = tbody.selectAll("tr")
+        .data(data)
+        .enter()
+        .append("tr");
+
+    // create a cell in each row for each column
+    var cells = rows.selectAll("td")
+        .data(function(row) {
+            return columns.map(function(column) {
+                return {column: column, value: row[column]};
+            });
+        })
+        .enter()
+        .append("td")
+            .text(function(d) { return d.value; });
+    
+    return table;
+}
+
+// create some people
+
+
+
+var people = [
+    {curso: "Jill", estudiantes: 30},
+    {curso: "Bob", estudiantes: 32},
+    {curso: "George", estudiantes: 29},
+    {curso: "Sally", estudiantes: 31}
+];
+
+// render the table
+var peopleTable = tabulate(people, ["curso", "estudiantes"]);
+
+// uppercase the column headers
+peopleTable.selectAll("thead th")
+    .text(function(column) {
+        return column.charAt(0).toUpperCase() + column.substr(1);
+    });
+    
+// sort by age
+peopleTable.selectAll("tbody tr")
+    .sort(function(a, b) {
+        return d3.descending(a.estudiantes, b.estudiantes);
+    });
 </script>
 
 {% endblock %}

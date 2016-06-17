@@ -302,11 +302,9 @@ def uploadExcel(request):
             student['kaid'] = row_values[13][28:]
 
             aux = row_values[12]
-            try:
-                aux2 = aux[:(aux.index(','))]
-                separateClass(aux2, clas, student)
-            except:
-                separateClass(aux, clas, student)
+            aux = aux.split(', ')
+            #print len(aux2)
+            separateClass(aux, clas, student)
 
         # Serialize the list of dicts to JSON
         class_list.append(clas)
@@ -315,8 +313,10 @@ def uploadExcel(request):
         return HttpResponse(j)
 
 def separateClass(aux, clas, student):
-    if aux in clas:
-        clas[aux].append(student)
-    else:
-        clas[aux] = []
-        clas[aux].append(student)
+    for i in range(0,len(aux)):
+        j = aux[i]
+        if j in clas:
+            clas[j].append(student)
+        else:
+            clas[j] = []
+            clas[j].append(student)
