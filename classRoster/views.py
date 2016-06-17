@@ -290,7 +290,7 @@ def uploadExcel(request):
         # List to hold dictionaries
         students_list = []
         class_list = []
-
+        name_class = []
         clas = OrderedDict()
         # Iterate through each row in worksheet and fetch values into dict
         for rownum in range(1, sh.nrows):
@@ -304,19 +304,23 @@ def uploadExcel(request):
             aux = row_values[12]
             aux = aux.split(', ')
             #print len(aux2)
-            separateClass(aux, clas, student)
+            for i in range(0,len(aux)):
+                j = aux[i]
+                if j in name_class:
+                    pass
+                else:
+                    name_class.append(j)
+                if j in clas:
+                    clas[j].append(student)
+                else:
+                    clas[j] = []
+                    clas[j].append(student)
 
         # Serialize the list of dicts to JSON
         class_list.append(clas)
+        class_list.append(name_class)
         j = json.dumps(class_list)
 
         return HttpResponse(j)
 
-def separateClass(aux, clas, student):
-    for i in range(0,len(aux)):
-        j = aux[i]
-        if j in clas:
-            clas[j].append(student)
-        else:
-            clas[j] = []
-            clas[j].append(student)
+#def separateClass(aux, clas, student):
