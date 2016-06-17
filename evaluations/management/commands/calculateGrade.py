@@ -36,6 +36,7 @@ class Command(BaseCommand):
             logging.info(e)
         for assesment in assesments:
             try:#id01
+                assesment.end_date = assesment.end_date+timedelta(days=1)
                 approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
                 importance_skill_level = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).importance_skill_level
                 importance_completed_rec = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).importance_completed_rec
