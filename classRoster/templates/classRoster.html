@@ -611,9 +611,15 @@ function uploadExcel(){
 
 </script>
 
-<script>
+<script type="text/javascript">
+
+
+function showStudent(name){
+	console.log(name);
+}
 
 function drawClasses(array, json){
+
 
 	function tabulate(data, columns) {
 	    var table = d3.select("#tableStudent").append("table"),
@@ -634,6 +640,7 @@ function drawClasses(array, json){
 	        .enter()
 	        .append("tr");
 
+
 	    // create a cell in each row for each column
 	    var cells = rows.selectAll("td")
 	        .data(function(row) {
@@ -644,6 +651,13 @@ function drawClasses(array, json){
 	        .enter()
 	        .append("td")
 	            .text(function(d) { return d.value; });
+
+	    //var x = "asdf";
+	    //var lupa = d3.selectAll("td:last-child")
+	    //	.html('<button type="button" class="showButton" onClick="showStudent('+x+')"></button>');
+
+
+	    //console.log(data);
 	    
 	    return table;
 	}
@@ -659,14 +673,18 @@ function drawClasses(array, json){
 	];*/
 
 	for(var j=0;j<array.length;j++){
-		//console.log(json[array[j]].length);
-		people.push({curso:array[j], 'cantidad de estudiantes':json[array[j]].length, 'ver estudiantes':'(agregar lupa)', 'guardar curso': '(boton guardar)'})
+		//console.log(json[array[j]]);
+		people.push({curso:array[j], 'cantidad de estudiantes':json[array[j]].length, 'guardar': 'a', 'ver estudiantes': '(lupa)'})
+		for(var k=0;k<json[array[j]].length;k++){
+			//console.log(json[array[j]][k].name);
+			people.push({curso:'', 'cantidad de estudiantes':'', 'guardar': '', 'ver estudiantes': json[array[j]][k].name})
+		}
 	}
 
 	
 
 	// render the table
-	var peopleTable = tabulate(people, ["curso", "cantidad de estudiantes", "ver estudiantes", "guardar curso"]);
+	var peopleTable = tabulate(people, ["curso", "cantidad de estudiantes", "guardar", "ver estudiantes"]);
 
 	// uppercase the column headers
 	peopleTable.selectAll("thead th")
