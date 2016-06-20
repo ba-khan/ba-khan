@@ -229,3 +229,7 @@ table.testgrid td {
 #year:disabled, #levels:disabled, #letter:disabled, #additional:disabled, #teacher:disabled {
     color: #999;
 }
+
+tr:hover{
+  background-color: rgb(217, 217, 217);
+}

@@ -26,7 +26,7 @@ Nomina
 	<div id="classesDiv">
 		<h1 style="margin-top:1%">Subir Estudiantes</h1>
 		<form id="miexcelForm" name="miexcelForm">
-		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="miexcel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="miexcel" accept=".csv, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 
 		<a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
 		</form>
@@ -614,12 +614,15 @@ function uploadExcel(){
 <script type="text/javascript">
 
 
-function showStudent(name){
-	console.log(name);
+function showStudent(count){
+	for(var k=0;k<jsonResponse[0][jsonResponse[1][count-1]].length;k++){
+			name = (jsonResponse[0][jsonResponse[1][count-1]][k].name);
+			console.log(name);
+		}
 }
 
 function drawClasses(array, json){
-
+	var array = array; var json = json;
 
 	function tabulate(data, columns) {
 	    var table = d3.select("#tableStudent").append("table"),
@@ -642,6 +645,7 @@ function drawClasses(array, json){
 
 
 	    // create a cell in each row for each column
+	    var count = 0
 	    var cells = rows.selectAll("td")
 	        .data(function(row) {
 	            return columns.map(function(column) {
@@ -650,14 +654,26 @@ function drawClasses(array, json){
 	        })
 	        .enter()
 	        .append("td")
-	            .text(function(d) { return d.value; });
+	            .html(function(d) {
+	            	console.log(count);
+	            	if (d.column=="ver estudiantes") {
+	            		count = count+1;
+	            		return "<button class='showButton' onClick='showStudent("+count+")'></button>"
+	            	}
+	            	if (d.column=="guardar") {
+	            		return '<button onclick="javascript:saveExcelClass()" id="saveExcelClass" class="kui-button kui-button-plain kui-button-primary">Guardar</button>'
+	            	}
+	            	else{
+	            		return d.value; 
+	            	}
+	            });
 
 	    var x = 'ds';
-	    var lupa = d3.selectAll("td:last-child")
+	    /*var lupa = d3.selectAll("td:last-child")
 	    //	.html('<button type="button" class="showButton" onClick="showStudent('+x+')"></button>');
 	    	.append("button")
 	    	.attr("class", "showButton")
-	    	.attr("onClick", "showStudent("+x+")");
+	    	.attr("onClick", "showStudent("+x+")");*/
 
 
 	    //console.log(data);
@@ -668,26 +684,19 @@ function drawClasses(array, json){
 	// create some people
 	var people = []
 
-	/*var people = [
-	    {curso: "Jill", estudiantes: 30},
-	    {curso: "Bob", estudiantes: 32},
-	    {curso: "George", estudiantes: 29},
-	    {curso: "Sally", estudiantes: 31}
-	];*/
-
 	for(var j=0;j<array.length;j++){
 		//console.log(json[array[j]]);
-		people.push({curso:array[j], 'cantidad de estudiantes':json[array[j]].length, 'guardar': 'a', 'ver estudiantes': '(lupa)'})
+		people.push({curso:array[j], 'cantidad de estudiantes':json[array[j]].length, 'ver estudiantes': 'Ver Estudiantes', 'guardar': 'Guardar'})
 		for(var k=0;k<json[array[j]].length;k++){
 			//console.log(json[array[j]][k].name);
-			people.push({curso:'', 'cantidad de estudiantes':'', 'guardar': '', 'ver estudiantes': json[array[j]][k].name})
+			//people.push({curso:'', 'cantidad de estudiantes':'', 'guardar': '', 'ver estudiantes': json[array[j]][k].name})
 		}
 	}
 
 	
 
 	// render the table
-	var peopleTable = tabulate(people, ["curso", "cantidad de estudiantes", "guardar", "ver estudiantes"]);
+	var peopleTable = tabulate(people, ["curso", "cantidad de estudiantes", "ver estudiantes", "guardar"]);
 
 	// uppercase the column headers
 	peopleTable.selectAll("thead th")
@@ -698,7 +707,7 @@ function drawClasses(array, json){
 	// sort by age
 	peopleTable.selectAll("tbody tr")
 	    .sort(function(a, b) {
-	        return d3.descending(a.estudiantes, b.estudiantes);
+	        return d3.ascending(a.curso, b.curso);
 	    });
 }
 </script>
