@@ -652,9 +652,12 @@ function drawClasses(array, json){
 	        .append("td")
 	            .text(function(d) { return d.value; });
 
-	    //var x = "asdf";
-	    //var lupa = d3.selectAll("td:last-child")
+	    var x = 'ds';
+	    var lupa = d3.selectAll("td:last-child")
 	    //	.html('<button type="button" class="showButton" onClick="showStudent('+x+')"></button>');
+	    	.append("button")
+	    	.attr("class", "showButton")
+	    	.attr("onClick", "showStudent("+x+")");
 
 
 	    //console.log(data);
