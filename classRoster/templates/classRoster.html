@@ -181,6 +181,12 @@ Nomina
 <script type="text/javascript">
 $('#nomina').addClass('active selected'); 
 
+function drawNiceScrolls(){
+	$(".studentTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+	$("#studentsClass").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
+	$(".teacherTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+}
+
 $(document).ready(function(){
 	$("#hover").click(function(){
 	    $(this).fadeOut();
@@ -191,10 +197,7 @@ $(document).ready(function(){
 		$("#popup").fadeOut();
 	});
 
-	$(".studentTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
-	$("#studentsClass").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
-	$(".teacherTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
-
+	drawNiceScrolls();
 
 	// Write on keyup event of keyword input element
 	$("#searchStudent").keyup(function(){
@@ -619,9 +622,17 @@ function showStudent(count){
 
 function drawClasses(array, json){
 	var array = array; var json = json;
-
+	if ($("#divExcel")) {
+		$("#divExcelClasses").getNiceScroll().remove();
+		$("#excelStudents").getNiceScroll().remove();
+		$("#divExcel").remove();
+	};
+	$(".studentTable").getNiceScroll().remove();
+	$("#studentsClass").getNiceScroll().remove();
+	$(".teacherTable").getNiceScroll().remove();
+	
 	function tabulate(data, columns) {
-	    var table = d3.select("#excelDiv").append("div").attr("id","divExcelClasses").append("table").attr('class','testgrid').attr('id','excelClasses'),
+	    var table = d3.select("#excelDiv").append("div").attr("id","divExcel").append("div").attr("id","divExcelClasses").append("table").attr('class','testgrid').attr('id','excelClasses'),
 	        thead = table.append("thead"),
 	        tbody = table.append("tbody");
 
@@ -706,8 +717,12 @@ function drawClasses(array, json){
 	        return d3.ascending(a.curso, b.curso);
 	    });
 
-	d3.select("#excelDiv").append("h3").text("Estudiantes");
-	var excelStudents = d3.select("#excelDiv").append("div").attr("id","excelStudents");
+	d3.select("#divExcel").append("h3").text("Estudiantes");
+	var excelStudents = d3.select("#divExcel").append("div").attr("id","excelStudents");
+
+	drawNiceScrolls();
+	$("#divExcelClasses").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+	$("#excelStudents").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
 }
 </script>
 
