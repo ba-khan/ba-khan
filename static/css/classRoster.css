@@ -157,7 +157,7 @@ table.testgrid td {
   outline: none;
 }
 
-#studentsClass li{  padding-left: 5%; }
+#studentsClass li, #excelStudents li{  padding-left: 5%; }
 #studentsClass{
   overflow-y: auto;
   outline: none;
@@ -178,7 +178,7 @@ table.testgrid td {
   margin-left: 1%;
 }
 
-#classesDiv{
+#classesDiv, #excelDiv{
   width: 99.5%;
   height: 100%;
   background: #fff;
@@ -232,4 +232,25 @@ table.testgrid td {
 
 tr:hover{
   background-color: rgb(217, 217, 217);
+}
+
+#divExcelClasses {
+    width: 50%;
+    height: 400px;
+    margin: 2%;
+    overflow: auto;
+    outline: none;
+    float: left;
+}
+
+#excelStudents{
+  width: 40%;
+  height: 300px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: auto;
+  outline: none;
+  float: left;
+  position: relative;
+  margin-left: 2%;
 }

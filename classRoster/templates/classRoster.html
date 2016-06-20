@@ -23,17 +23,13 @@ Nomina
 <br>
 <div class="container">
 <div class="main-content">
-	<div id="classesDiv">
+	<div id="excelDiv">
 		<h1 style="margin-top:1%">Subir Estudiantes</h1>
 		<form id="miexcelForm" name="miexcelForm">
 		<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="miexcel" accept=".csv, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 
 		<a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
 		</form>
-	</div>
-
-	<div id="tableStudent">
-
 	</div>
 
 	<div id="classesDiv">
@@ -186,7 +182,6 @@ Nomina
 $('#nomina').addClass('active selected'); 
 
 $(document).ready(function(){
-	$("#tableStudent").hide();
 	$("#hover").click(function(){
 	    $(this).fadeOut();
 		$("#popup").fadeOut();
@@ -583,7 +578,6 @@ function uncheckStudent2(student){
 }
 
 function uploadExcel(){
-	$("#tableStudent").show();
 	var data = new FormData();
 	$.each($('#miexcel')[0].files, function(i, file) {
 	    data.append('file-'+i, file);
@@ -615,9 +609,11 @@ function uploadExcel(){
 
 
 function showStudent(count){
+	resetClass();
 	for(var k=0;k<jsonResponse[0][jsonResponse[1][count-1]].length;k++){
 			name = (jsonResponse[0][jsonResponse[1][count-1]][k].name);
 			console.log(name);
+			$("#excelStudents").append("<div class='student_li_div'><li class='student_li'>"+name+"</li></div>");
 		}
 }
 
@@ -625,7 +621,7 @@ function drawClasses(array, json){
 	var array = array; var json = json;
 
 	function tabulate(data, columns) {
-	    var table = d3.select("#tableStudent").append("table"),
+	    var table = d3.select("#excelDiv").append("div").attr("id","divExcelClasses").append("table").attr('class','testgrid').attr('id','excelClasses'),
 	        thead = table.append("thead"),
 	        tbody = table.append("tbody");
 
@@ -709,6 +705,9 @@ function drawClasses(array, json){
 	    .sort(function(a, b) {
 	        return d3.ascending(a.curso, b.curso);
 	    });
+
+	d3.select("#excelDiv").append("h3").text("Estudiantes");
+	var excelStudents = d3.select("#excelDiv").append("div").attr("id","excelStudents");
 }
 </script>
 
