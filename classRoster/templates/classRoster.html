@@ -339,7 +339,7 @@ function saveClass(classJson){
 	$.ajax({
 		url: "{% url 'classRoster:newClass' %}",
 		type: "POST",
-		data: classJson,
+		data: {classJson},
 			success: function(response){
 				$(".response").fadeOut();
 				$('#loading').fadeOut();
@@ -615,9 +615,42 @@ function showStudent(count){
 	resetClass();
 	for(var k=0;k<jsonResponse[0][jsonResponse[1][count-1]].length;k++){
 			name = (jsonResponse[0][jsonResponse[1][count-1]][k].name);
-			console.log(name);
+			//console.log(name);
 			$("#excelStudents").append("<div class='student_li_div'><li class='student_li'>"+name+"</li></div>");
 		}
+}
+
+function saveExcelClass(cnt){
+	//console.log(jsonResponse[1][cnt-1]);
+	/*
+	var nombre=[];
+	var puntos=[];
+	var curso=[];
+	var id=[];
+	*/
+	var arreglo= new Object();
+	for(var k=0;k<jsonResponse[0][jsonResponse[1][cnt-1]].length;k++){
+		arreglo[k] = jsonResponse[0][jsonResponse[1][cnt-1]][k];
+		/*
+		name = (jsonResponse[0][jsonResponse[1][cnt-1]][k].name);
+		points = (jsonResponse[0][jsonResponse[1][cnt-1]][k].points);
+		clase = (jsonResponse[0][jsonResponse[1][cnt-1]][k].class);
+		kaid = (jsonResponse[0][jsonResponse[1][cnt-1]][k].kaid);
+		//console.log(jsonResponse[0][jsonResponse[1][cnt-1]][k].name);
+		nombre[k] = name;
+		puntos[k] = points;
+		curso[k] = clase;
+		id[k] = kaid;*/
+		//console.log(arreglo);
+		//$("#excelStudents").append("<div class='student_li_div'><li class='student_li'>"+name+"</li></div>");
+	}
+	$.ajax({
+		url: "{% url 'classRoster:saveExcelClass' %}",
+		type: "POST",
+		data: {class: jsonResponse[1][cnt-1], student: arreglo},
+			success: function(response){
+			}
+	});
 }
 
 function drawClasses(array, json){
@@ -652,7 +685,8 @@ function drawClasses(array, json){
 
 
 	    // create a cell in each row for each column
-	    var count = 0
+	    var count = 0;
+	    var cnt = 0;
 	    var cells = rows.selectAll("td")
 	        .data(function(row) {
 	            return columns.map(function(column) {
@@ -662,13 +696,14 @@ function drawClasses(array, json){
 	        .enter()
 	        .append("td")
 	            .html(function(d) {
-	            	console.log(count);
+	            	//console.log(count);
 	            	if (d.column=="ver estudiantes") {
 	            		count = count+1;
 	            		return "<button class='showButton' onClick='showStudent("+count+")'></button>"
 	            	}
 	            	if (d.column=="guardar") {
-	            		return '<button onclick="javascript:saveExcelClass()" id="saveExcelClass" class="kui-button kui-button-plain kui-button-primary">Guardar</button>'
+	            		cnt = cnt +1;
+	            		return '<button onclick="javascript:saveExcelClass('+cnt+')" id="saveExcelClass" class="kui-button kui-button-plain kui-button-primary">Guardar</button>'
 	            	}
 	            	else{
 	            		return d.value; 

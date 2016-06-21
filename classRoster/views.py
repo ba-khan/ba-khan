@@ -281,10 +281,8 @@ def editClass(request):
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def uploadExcel(request):
-    print "entro aca"
     if request.method == 'POST':
         excel = request.FILES
-        print excel
         wb = xlrd.open_workbook(filename=None, file_contents=excel['file-0'].read())
         sh = wb.sheet_by_index(0)
         # List to hold dictionaries
@@ -323,4 +321,15 @@ def uploadExcel(request):
 
         return HttpResponse(j)
 
-#def separateClass(aux, clas, student):
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def saveExcelClass(request):
+    if request.method == 'POST':
+        est = request.POST
+        longitud = (len(est)-1)/4
+        #print longitud
+        clase = est["class"]
+        for i in range(0,longitud):
+            kaid = est["student["+str(i)+"][kaid]"]
+            points = est["student["+str(i)+"][points]"]
+            name = est["student["+str(i)+"][name]"]
+        return HttpResponse(est)
