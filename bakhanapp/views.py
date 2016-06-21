@@ -16,7 +16,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
-from bakhanapp.models import Class
+from bakhanapp.models import Class,Institution
 from bakhanapp.models import Teacher,User_Profile
 from bakhanapp.models import Skill
 from bakhanapp.models import Skill_Progress
@@ -72,6 +72,8 @@ from django.http import HttpResponse
 import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
+
+#ultimo try:#id4001 para este archivo
 
 @login_required()
 def generateClassExcel(request, id_class):
@@ -348,7 +350,18 @@ def getTeacherClasses(request):
     #funcion que es llamada con la url:/inicio
     request.session.set_expiry(timeSleep)
     #print request.user.user_profile.kaid
-    #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
+    #Esta funcion corresponde a estar logueado en el sistema
+    #Si la persona logeada es un super usario, muestra las opciones para crear, editar y eliminar instituciones.
+    if(request.user.has_perm('bakhanapp.isSuper')):
+        print '********dep**********'
+        try:#id4001
+            institutions = Institution.objects.all().order_by('pk')
+            return render_to_response('institutions.html',{'institutions':institutions}, context_instance=RequestContext(request))
+        except Exception as e:
+            print '****ERROR****'
+            print 'ha fallado try:#id4001 en bakhanapp:views.py'
+            print e
+        
     #Si la persona logeada es un administrador, muestra todos los cursos de su establecimiento.
     if(request.user.has_perm('bakhanapp.isAdmin')):
         classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')

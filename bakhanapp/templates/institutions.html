@@ -1,0 +1,38 @@
+{% extends 'home.html' %}
+{% load static %}
+{% load  smart_if %}
+
+{% block title %}
+	Instituciones
+{% endblock %}
+
+{% block body2 %}
+<div>		
+	<h3>Instituciones</h3>
+</div>
+{% if institutions %}
+<div id='tableInstiution'>
+	<table id='institution'>
+	{%for i in institutions%}
+  <tr>
+    <td>{{ i.pk }}</td>
+    <td>{{ i.name}}</td> 
+    <td>{{i.city}}</td>
+    <td>{{i.address}}</td>
+    <td>{{i.phone}}</td>
+    <td>{{i.last_load}}</td>
+    <td>{{i.key}}</td>
+    <td>{{i.secret}}</td>
+    <td>{{i.identifier}}</td>
+    <td>{{i.password}}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endif %}
+
+<script type="text/javascript">
+	$('#institutions').addClass('active selected');
+
+</script>
+{% endblock %}
