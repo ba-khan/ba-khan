@@ -84,6 +84,7 @@ def authenticateUser(request):
         username = args["username"]
         email = args["email"]
         kaid = args['kaid']
+        avatar_url = args['avatar_url']
         #print username+" "+email
         user = auth.authenticate(username=username, password=email)
         if user:
