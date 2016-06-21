@@ -84,15 +84,16 @@ def authenticateUser(request):
         username = args["username"]
         email = args["email"]
         kaid = args['kaid']
-        avatar_url = args['avatar_url']
-        #print username+" "+email
+        avatar_url = args['avatar_url'][40:]
         user = auth.authenticate(username=username, password=email)
         if user:
+            user.last_name = avatar_url
+            user.save()
             auth.login(request, user)
             authorized = True
             return HttpResponse(authorized)
         else:
-            user = User.objects.create_user(username=username,email=email,password=email)#,first_name=kaid)
+            user = User.objects.create_user(username=username,email=email,password=email,last_name=avatar_url)#,first_name=kaid)
             user.save()
             u=User_Profile(user=user,kaid=kaid)
             u.save()
