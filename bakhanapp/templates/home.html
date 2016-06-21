@@ -57,11 +57,11 @@
 		<div class="checklist-section">
 			<div class="progress-header">
 				<div class="header-label">
-					<img class="checklist-badge" src="https://es.khanacademy.org/images/badges/moon/productive-40x40.png">
+					<img height="80" width="80" src="https://cdn.kastatic.org/images/avatars/{{ request.user.last_name}}" style="float: left">
 					{% if perms.bakhanapp.isAdmin %} 
-					<span class="header-text">Hola Administrador {{ request.user.username }}</span>
+					<span class="header-text" style="float: left;margin-top: 4%;">Hola Administrador {{ request.user.username }}</span>
 					{% else %}
-					<span class="header-text">Hola Profesor {{ request.user.username }}</span>
+					<span class="header-text" style="float: left;margin-top: 4%;">Hola Profesor {{ request.user.username }}</span>
 					{% endif %}
 				</div>
 				<div id='breadcrumb'></div>
