@@ -255,7 +255,7 @@ def getArrayAssesmentDetail(id_assesment):
         grades = Student.objects.filter(grade__id_assesment_id=id_assesment
             ).values('name','grade__grade',
             'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
-            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
+            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3', 'nickname').order_by('name')
     except Exception as e:
         print '***ERROR*** try: #id01 in generateAssesmentExce(request, id_assesment)'
         print e
@@ -374,7 +374,7 @@ def parallelAssesment(assesment,students,queue):
     inicio = time.time()
     assesment_json={}
     assesment_json["id"]=assesment.id_assesment
-    assesment_json["name"]=assesment.name
+    assesment_json["name"]=assesment.nickname
     assesment_json["config_name"]= assesment.id_assesment_conf.name
     assesment_json["approval_percentage"]= assesment.id_assesment_conf.approval_percentage
     assesment_json["approval_grade"]= assesment.approval_grade
@@ -427,7 +427,7 @@ def parallelAssesment(assesment,students,queue):
         skills_completadas=[]
         student_json={}
         student_json["id"]=i
-        student_json["name"]=student.name
+        student_json["name"]=student.nickname
 
         try:#id2002
             #if student.kaid_student=='kaid_650486821916405105888593':
@@ -553,8 +553,8 @@ def getClassStudents(request, id_class):
             grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade','grade__teacher_grade','grade__comment').order_by('id_assesment')
             dictGrades = {}
             for g in grades:
-                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
-                name = name[0]['name']
+                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name', 'nickname')
+                name = name[0]['nickname']
                 skls = getSkillsCorrect(g['grade__id_grade'])
                 dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls,g['grade__teacher_grade'],g['grade__comment'])
             #print dictGrades[(67,'kaid_962822484535083405338400')][1]
@@ -608,7 +608,7 @@ def getClassStudents(request, id_class):
                 student_json = {}
                 student_json["id"] = i
                 student_json['kaid'] = student.kaid_student
-                student_json["name"] = student.name
+                student_json["name"] = student.nickname
                 try:#id3002
                     #if student.kaid_student=='kaid_650486821916405105888593':
                     #print student.kaid_student
