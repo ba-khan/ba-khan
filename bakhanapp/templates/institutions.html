@@ -7,32 +7,220 @@
 {% endblock %}
 
 {% block body2 %}
-<div>		
-	<h3>Instituciones</h3>
-</div>
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+  <br><br>
+<h1 style="text-align:center;">Instituciones</h1>
 {% if institutions %}
 <div id='tableInstiution'>
-	<table id='institution'>
-	{%for i in institutions%}
-  <tr>
-    <td>{{ i.pk }}</td>
-    <td>{{ i.name}}</td> 
-    <td>{{i.city}}</td>
-    <td>{{i.address}}</td>
-    <td>{{i.phone}}</td>
-    <td>{{i.last_load}}</td>
-    <td>{{i.key}}</td>
-    <td>{{i.secret}}</td>
-    <td>{{i.identifier}}</td>
-    <td>{{i.password}}</td>
-  </tr>
+  <table id="adminGrid" class="testgrid">
+    <tr>
+      <th>id</th>
+      <th>Nombre</th>
+      <th>Ciudad</th>
+      <th>Dirección</th>
+      <th>Teléfono</th>
+      <th>Última carga</th>
+      <th>LLave</th>
+      <th>Secreto</th>
+      <th>Usuario</th>
+      <th>Contraseña</th>
+      <th>Acciones</th>
+    </tr>
+    {% for i in institutions %}
+    <tr id="R{{ forloop.counter }}">
+      <td>{{ i.pk }}</td>
+      <td>{{ i.name}}</td> 
+      <td>{{i.city}}</td>
+      <td>{{i.address}}</td>
+      <td>{{i.phone}}</td>
+      <td>{{i.last_load}}</td>
+      <td>{{i.key}}</td>
+      <td>{{i.secret}}</td>
+      <td>{{i.identifier}}</td>
+      <td>{{i.password}}</td>
+      <td class="editablegrid-action" data-title="action" style="width:205px">
+        <a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+        <a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
+      </td>
+    </tr>
+
   {% endfor %}
 </table>
 </div>
 {% endif %}
 
+
+<br>
+<div class="container">
+<div class="main-content">
+
+  <br>
+  
+  
+  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewAdmin' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Institución</button> </div>
+  <!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
+  <div id="newInstitution">
+    <form action="" method="post" id="form0">{% csrf_token %}
+      <h3>Nueva Institución</h3>
+      <label for='name'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='city'>Ciudad: </label><input id="newCity" onchange="validar()" onkeyup="validar()" name="city" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='address'>Dirección: </label><input id="newAddress" onchange="validar()" onkeyup="validar()" name="address" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='phone'>Teléfono: </label><input id="newPhone" onchange="validar()" onkeyup="validar()" name="phone" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='key'>Llave: </label><input id="newkey" onchange="validar()" onkeyup="validar()" name="key" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='secret'>Secreto: </label><input id="newSecret" onchange="validar()" onkeyup="validar()" name="secret" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='identifier'>Usuario: </label><input id="newIdentifier" onchange="validar()" onkeyup="validar()" name="identifier" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='password'>Contraseña: </label><input id="newPassword" onchange="validar()" onkeyup="validar()" name="password" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+      <a onclick='javascript:saveNewInstitution()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Institución</a>
+    </form>
+  </div>
+</div>
+<br>
+</div>
+
+<div id="popup" style="display:none">
+  <div id="close">X</div>
+</div>
+<br>
+
+</div> <!-- cerrar div principal del home  -->
+
 <script type="text/javascript">
 	$('#institutions').addClass('active selected');
 
 </script>
+
+<script>
+  window.onload = function () {
+        administratorGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+
+    // we build and load the metadata in Javascript
+    administratorGrid.load({ metadata: [
+      { name: "admin_name", datatype: "string", editable: false },
+      { name: "admin_email", datatype: "email", editable: true },
+      { name: "admin_phone", datatype: "integer", editable: true },
+      { name: "action", datatype: "html", editable: false }
+    ]});
+
+    // then we attach to the HTML table and render it
+    administratorGrid.attachToHTMLTable('adminGrid');
+
+    administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 100000000 && parseInt(value) < 999999999); } }));
+    
+    var searchField = document.getElementById('searchField');
+    searchField.addEventListener(
+        'keyup',
+        function (){
+          administratorGrid.filter(searchField.value);
+        }
+    );
+
+    administratorGrid.renderGrid();
+  } 
+</script>
+<script type="text/javascript">
+function saveNewInstitution(){
+  console.log('saving new institution');
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  console.log('start validation');
+  if(validar()){
+    console.log('passed validation')
+    $.ajax({
+    url: "{% url 'new_institution' %}",
+    type: "POST",
+    data: $("#form0").serialize(),
+      success: function(response){
+        $("#close").hide();
+        $("#hover").fadeIn();
+        $("#popup").fadeIn();
+        $("#popup").append("<p class='response'>"+response+"</p>");
+        auxResponse = response;
+        if (auxResponse == "Administrador guardado correctamente"){
+          $("#hover").css('pointer-events','none');
+          $("#close").css('pointer-events','none');
+          window.setTimeout(function(){location.reload()},1000);
+        }
+      }
+    });
+  }else{
+    console.log('not passed validation');
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+  }
+}
+
+function validar(){
+  flag = true;
+  nName = document.getElementById("newName").value;
+  nCity = document.getElementById("newCity").value;
+  nAddress = document.getElementById("newAddress").value;
+  nPhone = document.getElementById("newPhone").value;
+  nSecret = document.getElementById("newSecret").value;
+  nIdentifier = document.getElementById("newIdentifier").value;
+  nPassword = document.getElementById("newPassword").value;
+
+
+  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+    $("#newName").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newName").css('color', '#000000');
+  }
+  if(nCity == null || nCity.length == 0 || /^\s+$/.test(nCity)) {
+    $("#newCity").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newCity").css('color', '#000000');
+  }
+  if(nAddress == null || nAddress.length == 0 || /^\s+$/.test(nAddress)) {
+    $("#newAddress").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newAddress").css('color', '#000000');
+  }
+  if(nPhone.length != 9) {
+    $("#newPhone").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newPhone").css('color', '#000000');
+  }
+  if(nSecret == null || nSecret.length == 0 || /^\s+$/.test(nSecret)) {
+    $("#newSecret").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newSecret").css('color', '#000000');
+  }
+  if(nIdentifier == null || nIdentifier.length == 0 || /^\s+$/.test(nIdentifier)) {
+    $("#newIdentifier").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newIdentifier").css('color', '#000000');
+  }
+  if(nPassword == null || nPassword.length == 0 || /^\s+$/.test(nPassword)) {
+    $("#newPassword").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newPassword").css('color', '#000000');
+  }
+  return flag;
+}
+</script>
+
+
+
 {% endblock %}

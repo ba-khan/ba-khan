@@ -73,7 +73,28 @@ import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
 
-#ultimo try:#id4001 para este archivo
+#ultimo try:#id4002 para este archivo
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def newInstitution(request):
+    request.session.set_expiry(timeSleep)
+    if request.method == 'POST':
+        args = request.POST
+        try:#id4002
+            institution = Institution.objects.create(name=args['name'],
+                city=args['city'],
+                address=args['address'],
+                phone=args['phone'],
+                key=args['key'],
+                secret=args['secret'],
+                identifier=args['identifier'],
+                password=args['password'])
+            return HttpResponse("Administrador guardado correctamente")
+        except Exception as e:
+            print '****ERROR**** try:#id4002'
+            print e
+            return HttpResponse("Error al guardar")
+
 
 @login_required()
 def generateClassExcel(request, id_class):

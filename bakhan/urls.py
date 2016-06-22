@@ -13,6 +13,7 @@ urlpatterns = [
     #url(r'^inicio/$', 'bakhanapp.views.home', name='home'), #aplicacion bakhanapp se encarga del home.
     #esto era antes, ahora ya no hay home, pasa directo a "cursos"
     url(r'^inicio/$','bakhanapp.views.getTeacherClasses', name='cursos'),
+    url(r'^inicio/institution/new$', 'bakhanapp.views.newInstitution', name='new_institution'),
 
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/grupos/', include('groups.urls', namespace="groups")),#aplicacion groups.
     url(r'^home/poblarbd/', include('populate.urls', namespace="populate")),#aplicacion para poblar la base de datos
