@@ -328,8 +328,51 @@ def saveExcelClass(request):
         longitud = (len(est)-1)/4
         #print longitud
         clase = est["class"]
-        for i in range(0,longitud):
-            kaid = est["student["+str(i)+"][kaid]"]
-            points = est["student["+str(i)+"][points]"]
-            name = est["student["+str(i)+"][name]"]
+        cur = clase.split('-')
+        curso = cur[0]
+        longnivel = len(curso)
+        if longnivel!=3:
+            nivel = 0
+            letra = "#"
+            adicional = curso
+            try:
+                anio = cur[1]
+            except:
+                anio = 0
+        else:
+            adicional = ""
+            try:
+                nivel = int(curso[0])
+                letra = curso[2]
+                anio = cur[1]
+                if curso[1]=='M':
+                    nivel = nivel +8
+                else:
+                    if curso[1]!='B':
+                        nivel = 0
+            except:
+                nivel = 0
+                letra = "#"
+                anio=0
+        #print adicional
+
+        teachers = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
+        #print teach[0]['id_institution_id']
+        classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teach['id_institution_id']).values('id_class')
+        print classe[0]['id_class']
+        '''
+        try:
+            if classe[0] is None:
+                newClass = Class(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+                newClass.save()
+            else:
+                newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+                newClass.save()
+            for i in range(0,longitud):
+                kaid = est["student["+str(i)+"][kaid]"]
+                points = est["student["+str(i)+"][points]"]
+                name = est["student["+str(i)+"][name]"]
+        except Exception as e:
+            print e
+        '''
         return HttpResponse(est)

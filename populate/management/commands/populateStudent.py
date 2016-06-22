@@ -243,6 +243,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                 new_student.email=email
                 new_student.points=data[j]["points"]
                 new_student.id_institution_id=id_institution
+                new_student.nickname = data[j]["nickname"]
                 new_student.save()
             else:
                 new_student = Student(kaid_student=data[j]["kaid"])
@@ -250,6 +251,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                 new_student.email=email
                 new_student.points=data[j]["points"]
                 new_student.id_institution_id=id_institution
+                new_student.nickname = data[j]["nickname"]
                 new_student.save()
         except Exception as e:
             print e
@@ -309,6 +311,7 @@ class Command(BaseCommand):
         #meter los parametros anteriores en alguna parte de la base de datos
 
         institution = Institution.objects.all()
+        #institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key
