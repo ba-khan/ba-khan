@@ -79,7 +79,7 @@
 	</tr>
 	{% for data in datas %}
 	<tr id="R{{ forloop.counter }}">
-		<td>{{ data.0.name }}</td>
+		<td>{{ data.0.nickname }}</td>
 		<td>{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
 		<td id="sPhone{{ forloop.counter }}">
 			{% if not data.0.phone == 0 %}
