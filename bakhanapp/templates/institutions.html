@@ -21,7 +21,7 @@
 <h1 style="text-align:center;">Instituciones</h1>
 {% if institutions %}
 <div id='tableInstiution'>
-  <table id="adminGrid" class="testgrid">
+  <table id="institutionGrid" class="testgrid">
     <tr>
       <th>id</th>
       <th>Nombre</th>
@@ -66,7 +66,7 @@
   <br>
   
   
-  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewAdmin' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Institución</button> </div>
+  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewInstitution' onclick="javascript:showNewInstitution()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Institución</button> </div>
   <!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
   <div id="newInstitution">
     <form action="" method="post" id="form0">{% csrf_token %}
@@ -112,7 +112,7 @@
     ]});
 
     // then we attach to the HTML table and render it
-    administratorGrid.attachToHTMLTable('adminGrid');
+    administratorGrid.attachToHTMLTable('institutionGrid');
 
     administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 100000000 && parseInt(value) < 999999999); } }));
     
@@ -159,16 +159,35 @@ function saveNewInstitution(){
     type: "POST",
     data: $("#form0").serialize(),
       success: function(response){
-        $("#form0").trigger("reset");
+        //console.log(response)
+        jsonResponse = JSON.parse(response);
+        console.log(jsonResponse);
         $("#close").hide();
         $("#hover").fadeIn();
         $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-        if (auxResponse == "Administrador guardado correctamente"){
+        
+        console.log(jsonResponse[0].model)
+        if (jsonResponse[0].model == "bakhanapp.institution"){
+          $("#popup").append("<p class='response'>Institución creada correctamente</p>");
+          $("#form0").trigger("reset");
           $("#hover").css('pointer-events','none');
           $("#close").css('pointer-events','none');
-          window.setTimeout(function(){location.reload()},1000);
+          $("#newInstitution").hide();
+          $("#buttonNewInstitution").show()
+          $("#institutionGrid").append("<tr><td>"+jsonResponse[0].pk+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].name+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].city+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].address+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].phone+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].last_load+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].key+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].secret+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].identifier+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].password+"</td></tr>");
+          window.setTimeout(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+          },1500);
         }
       }
     });
@@ -234,6 +253,17 @@ function validar(){
     $("#newPassword").css('color', '#000000');
   }
   return flag;
+}
+
+function showNewInstitution(){
+  $('#newInstitution').toggle('blind',10);
+  $('#buttonNewInstitution').hide();
+  setTimeout(toBottom, 10);
+  }
+
+function toBottom(){
+  $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+
 }
 </script>
 

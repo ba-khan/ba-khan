@@ -89,7 +89,11 @@ def newInstitution(request):
                 secret=args['secret'],
                 identifier=args['identifier'],
                 password=args['password'])
-            return HttpResponse("Institucion guardada correctamente")
+            iterableArray=[institution]
+            data = serializers.serialize('json', iterableArray)
+            struct = json.loads(data)
+            jsonResponse = json.dumps(struct)
+            return HttpResponse(jsonResponse)
         except Exception as e:
             print '****ERROR**** try:#id4002'
             print e
