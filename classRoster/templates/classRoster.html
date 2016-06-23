@@ -644,11 +644,28 @@ function saveExcelClass(cnt){
 		//console.log(arreglo);
 		//$("#excelStudents").append("<div class='student_li_div'><li class='student_li'>"+name+"</li></div>");
 	}
+	$(".response").remove();
+	$("#editButton").remove();
+	$("#cancelSaveButton").remove();
+	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
 	$.ajax({
 		url: "{% url 'classRoster:saveExcelClass' %}",
 		type: "POST",
 		data: {class: jsonResponse[1][cnt-1], student: arreglo},
 			success: function(response){
+				$(".response").fadeOut();
+				$('#loading').fadeOut();
+				$(".response").remove()
+				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+				$(".response").fadeIn();
+				setTimeout(function(){
+					location.reload();
+				}, 750); 
 			}
 	});
 }
