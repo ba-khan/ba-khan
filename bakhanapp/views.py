@@ -89,7 +89,7 @@ def newInstitution(request):
                 secret=args['secret'],
                 identifier=args['identifier'],
                 password=args['password'])
-            return HttpResponse("Administrador guardado correctamente")
+            return HttpResponse("Institucion guardada correctamente")
         except Exception as e:
             print '****ERROR**** try:#id4002'
             print e

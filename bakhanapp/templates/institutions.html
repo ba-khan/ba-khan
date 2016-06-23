@@ -128,6 +128,21 @@
   } 
 </script>
 <script type="text/javascript">
+$(document).ready(function(){
+    //chiusura al click sulla parte scura
+    $("#hover").click(function(){
+          $(this).fadeOut();
+      $("#popup").fadeOut();
+      });
+    
+    //chiusura al click sul pulsante
+    $("#close").click(function(){
+          $("#hover").fadeOut();
+      $("#popup").fadeOut();
+      });
+    
+});
+
 function saveNewInstitution(){
   console.log('saving new institution');
   $("#acceptSave").remove();
@@ -144,6 +159,7 @@ function saveNewInstitution(){
     type: "POST",
     data: $("#form0").serialize(),
       success: function(response){
+        $("#form0").trigger("reset");
         $("#close").hide();
         $("#hover").fadeIn();
         $("#popup").fadeIn();
