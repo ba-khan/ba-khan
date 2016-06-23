@@ -358,21 +358,42 @@ def saveExcelClass(request):
 
         teachers = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
         #print teach[0]['id_institution_id']
-        classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teach['id_institution_id']).values('id_class')
-        print classe[0]['id_class']
-        '''
         try:
-            if classe[0] is None:
-                newClass = Class(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
-                newClass.save()
-            else:
-                newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
-                newClass.save()
+            classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id']).values('id_class')
+            newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+            newClass.save()
+
             for i in range(0,longitud):
                 kaid = est["student["+str(i)+"][kaid]"]
                 points = est["student["+str(i)+"][points]"]
                 name = est["student["+str(i)+"][name]"]
+                try:
+                    stdnt_class = Student_Class.objects.filter(id_class_id=classe[0]['id_class'], kaid_student_id=kaid).values('id_student_class')
+                    newStudentClass = Student_Class(id_student_class=stdnt_class[0]['id_student_class'], id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
+                    newStudentClass.save()
+
+                except:
+                    newStudentClass = Student_Class(id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
+                    newStudentClass.save()
+
+                #newStudent = Student(kaid_student=kaid, name=name, email='', points=points, id_institution_id=teachers[0]['id_institution_id'], nickname=name)
+                #newStudent.save()
+
         except Exception as e:
-            print e
-        '''
+            newClass = Class(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+            newClass.save()
+
+            getClass = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional).values('id_class')
+
+            for i in range(0,longitud):
+                kaid = est["student["+str(i)+"][kaid]"]
+                points = est["student["+str(i)+"][points]"]
+                name = est["student["+str(i)+"][name]"]
+
+                newStudentClass = Student_Class(id_class_id=getClass[0]['id_class'], kaid_student_id=kaid)
+                newStudentClass.save()
+
+                #newStudent = Student(kaid_student=kaid, name=name, email='', points=points, id_institution_id=teachers[0]['id_institution_id'], nickname=name)
+                #newStudent.save()
+        
         return HttpResponse(est)
