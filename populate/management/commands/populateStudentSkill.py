@@ -84,11 +84,11 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populatedata'+fecha+'.log',
+                    filename='populatestudentskill.log',
                     filemode='w')
-logging.debug('A debug message')
-logging.info('Some information')
-logging.warning('A shot across the bows')
+logging.debug('Debug')
+logging.info('Info')
+logging.warning('Warning')
     
 
 # Create the callback server that's used to set the oauth verifier after the
@@ -254,175 +254,113 @@ def poblar_skill():
         conn.commit()
     '''
 
-
-def poblar_skill_attempts(name_student, kaid_student, dates, session):
-    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student)
-    for i in range(len(student_skills)):
-        skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
-        #print skills[0]["id_skill_name"]
-        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
-        jason = get_api_resource2(session,llamada,SERVER_URL)
-        source = unicode(jason, 'ISO-8859-1')
-        data = simplejson.loads(source)
+def poblar_student_skill(name_student, kaid_student, dates, session):
+    #print "entro al poblar"
+    skills=Skill.objects.values('name')
+    #print skills
+    #obtiene todos los skills de la tabla Skill
+    for j in range(len(skills)):
+        #print j
+        #para cada skill realiza una llamada a la API entregandole ese skill y el username del estudiante
+        #llamada = "/api/v1/user/exercises?kaid=&userId=&username="+name_student+"&email=&exercises="+skills[j]['name']
+        llamada = "/api/v1/user/exercises/"+skills[j]["name"]+"?exercise_name="+skills[j]["name"]+"&userId=&username="+name_student+"&email="
+        #intenta obtener el json de la llamada si existe
         try:
-            for j in range(len(data)):
-                #print data[j]["time_done"]
-                skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
-                                                                       mission = data[j]["mission"],
-                                                                       time_taken = data[j]["time_taken"],
-                                                                       count_hints = data[j]["count_hints"],
-                                                                       skipped = data[j]["skipped"],
-                                                                       points_earned = 0,
-                                                                       date = data[j]["time_done"],
-                                                                       correct = data[j]["correct"],
-                                                                       id_skill_name_id = skills[0]["id_skill_name"],
-                                                                       kaid_student_id = kaid_student,
-                                                                       problem_number = data[j]["problem_number"]
-                                                                       )
-                skill_attempts.save()
-
-        except Exception as e:
-            print e
-            #print "otra materia (?)"
-    #print "listeilors"
-
-
-def poblar_skill_progress(student_name,kaid_student,dates,session):
-#realiza la llamada a la API entregandole el username del estudiante y el rango de fechas
-    llamada = "/api/v1/user/exercises/progress_changes?userId=&username="+student_name+"&email=&dt_start="+dates
-    jason = get_api_resource2(session,llamada,SERVER_URL2)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    
-    #print len(data)
-    try:
-        for i in range(len(data)):
-            #para cada progreso lo debe guardar en la tabla skill_progress
-            #print i
-            #print data[i]["exercise_name"]
-            skill = Skill.objects.filter(name=data[i]["exercise_name"]).values('id_skill_name','name')
+            #print j
+            jason = get_api_resource2(session,llamada,SERVER_URL2)
+            source = unicode(jason, 'ISO-8859-1')
+            data = simplejson.loads(source)
             try:
-                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
-                new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                    from_level=data[i]["from_progress"]["level"], 
-                    date=data[i]["date"], 
-                    id_student_skill_id=student_skill[0]["id_student_skill"])
-                new_progress.save()
+                stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data["exercise_model"]["id"], kaid_student_id=data["kaid"]).values("id_student_skill")
+                #print stdnt_skillid
+                if data["last_attempt_number"]>0:
+                    data["last_attempt_number"]=1
+                #si la fecha maximum_exercise_progress_dt no es nulo inserta
+                if data["maximum_exercise_progress_dt"]!=None:
+                    #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
+                    student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                                                    total_done = data["total_done"]+data["last_attempt_number"],
+                                                    total_correct = data["total_correct"],
+                                                    streak = data["streak"],
+                                                    longest_streak = data["longest_streak"],
+                                                    last_skill_progress = data["exercise_progress"]["level"],
+                                                    total_hints = data["last_count_hints"],
+                                                    struggling = data["exercise_states"]["struggling"],
+                                                    id_skill_name_id = data["exercise_model"]["id"],
+                                                    kaid_student_id = data["kaid"])
+                                                                               
+                
+                    student_skill.save()
+                        
+
+                else:
+                    if data["total_done"]!=None and data["total_done"]>0:
+                            #si el total_done es distinto de null y mayor que 0, debe insertar
+                            
+                        student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                                                    total_done = data["total_done"]+data["last_attempt_number"],
+                                                    total_correct = data["total_correct"],
+                                                    streak = data["streak"],
+                                                    longest_streak = data["longest_streak"],
+                                                    last_skill_progress = data["exercise_progress"]["level"],
+                                                    total_hints = data["last_count_hints"],
+                                                    struggling = data["exercise_states"]["struggling"],
+                                                    id_skill_name_id = data["exercise_model"]["id"],
+                                                    kaid_student_id = data["kaid"])
+                                                                                   
+                       
+                        student_skill.save()
+
             except Exception as e:
-                print e
-            '''    
-            except:
-                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_student_skill")
-                new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                    from_level=data[i]["from_progress"]["level"], 
-                    date=data[i]["date"], 
-                    id_student_skill_id=student_skill[0]["id_student_skill"])
-                new_progress.save()
-            '''    
-            #print student_skill[0]["id_student_skill"]
-            '''
-            new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                        from_level=data[i]["from_progress"]["level"], 
-                        date=data[i]["date"], 
-                        id_skill_name_id=data[i]["exercise_name"],
-                        kaid_student=kaid_student,
-                        id_student_skill_id=student_skill[0]["id_student_skill"])
-            new_progress.save()
+                #print "error"
+                if data["last_attempt_number"]>0:
+                    data["last_attempt_number"]=1
+                #si la fecha maximum_exercise_progress_dt no es nulo inserta
+                if data["maximum_exercise_progress_dt"]!=None:
 
-            '''
-            #print "guardo bien"
-    except Exception as e:
-        print e
-            
-def poblar_student_video(student_name,kaid_student, dates, session):
-    llamada = "/api/v1/user/videos?userId=&username="+student_name+"&email=&dt_start="+dates
-    jason = get_api_resource2(session,llamada,SERVER_URL)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    #print "videos: ", len(data)
-    for k in range(len(data)):
-        #if data[i]["points"] >0 :
-        #Tratar de hacer una especie de update_or_create()
-        try:
-            student_video = Student_Video(total_seconds_watched = data[k]["seconds_watched"],
-                                                                       total_points_earned = data[k]["points"],
-                                                                       last_second_watched = data[k]["last_second_watched"],
-                                                                       is_video_complete = data[k]["completed"],
-                                                                       id_video_name_id = data[k]["video"]["id"],
-                                                                       kaid_student_id = kaid_student,
-                                                                       youtube_id = data[k]["video"]["youtube_id"]
-                                                                       )
-            student_video.save()
-        except Exception as e:
-            print e
-            #print "error"
-    #print "listo student_video"
-
-def poblar_video_playing(student_name,kaid_student, dates, session):   
-    student_videos = Student_Video.objects.filter(kaid_student_id=kaid_student).values('youtube_id','id_video_name_id')
-    for i in range(len(student_videos)):
-        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId=&username="+student_name+"&email=&dt_start="+dates
-        jason = get_api_resource2(session,llamada,SERVER_URL2)
-        source = unicode(jason, 'ISO-8859-1')
-        data = simplejson.loads(source)
-        try:
-            for j in range(len(data)):
+                    #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
+                    student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
+                                                                               total_correct = data["total_correct"],
+                                                                               streak = data["streak"],
+                                                                               longest_streak = data["longest_streak"],
+                                                                               last_skill_progress = data["exercise_progress"]["level"],
+                                                                               total_hints = data["last_count_hints"],
+                                                                               struggling = data["exercise_states"]["struggling"],
+                                                                               id_skill_name_id = data["exercise_model"]["id"],
+                                                                               kaid_student_id = data["kaid"]
+                                                                               )
+                                                                               
                 
-                video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
-                                                                           points_earned = data[j]["points_earned"],
-                                                                           last_second_watched = data[j]["last_second_watched"],
-                                                                           is_video_complete = data[j]["is_video_completed"],
-                                                                           date = data[j]["time_watched"],
-                                                                           id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                           kaid_student_id = kaid_student
-                                                                           )
-                video_playing.save()
-        except:
-            pass
-            #print "error"
-    #print "listo video_playing"
+                    student_skill.save()
 
-def coach_students(session): #ver los estudiantes que tienen como coach a cierto usuario. no entrega info de cursos
-    llamada = "/api/v1/user/students"
-    jason = get_api_resource2(session,llamada,SERVER_URL2)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    #with open('data.txt', 'w') as outfile:
-    #    json.dump(data, outfile)
-    logging.debug(len(data))
-    for j in range(len(data)):
-        logging.debug(data[j]["username"])
 
-def poblar_students(session):
-    # Open the workbook and select the first worksheet
-    wb = xlrd.open_workbook('6BA-2016-Alabama.xlsx')
-    sh = wb.sheet_by_index(0)
-     
-    # List to hold dictionaries
-    students_list = []
-     
-    # Iterate through each row in worksheet and fetch values into dict
-    for rownum in range(1, sh.nrows):
-        student = OrderedDict()
-        row_values = sh.row_values(rownum)
-        student['name'] = row_values[0]
-        student['points'] = int(row_values[11])
-        student['class'] = row_values[12]
-        student['kaid'] = row_values[13][28:]
+                else:
+                    if data["total_done"]!=None and data["total_done"]>0:
 
-        new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
-        new_student.save()
+                        #si el total_done es distinto de null y mayor que 0, debe insertar
+                        
+                        student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
+                                                                                   total_correct = data["total_correct"],
+                                                                                   streak = data["streak"],
+                                                                                   longest_streak = data["longest_streak"],
+                                                                                   last_skill_progress = data["exercise_progress"]["level"],
+                                                                                   total_hints = data["last_count_hints"],
+                                                                                   struggling = data["exercise_states"]["struggling"],
+                                                                                   id_skill_name_id = data["exercise_model"]["id"],
+                                                                                   kaid_student_id = data["kaid"]
+                                                                                   )
+                                                                                   
+                       
+                        student_skill.save()
+   
+ 
+            #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
+                   
+        except Exception as e:#id01
+                logging.error('ha fallado try:#id01 en populateStudentSkill.py')
+                logging.info(e)
 
-        new_student_class = Student_Class(id_class_id=12,kaid_student_id=row_values[13][28:])
 
-        new_student_class.save()
-                
-     
-        students_list.append(student)
-        logging.debug(students_list[rownum-1]['points'])
-     
-    # Serialize the list of dicts to JSON
-    j = json.dumps(students_list)
             
 
 def threadPopulate(students,dates,session):
@@ -430,29 +368,11 @@ def threadPopulate(students,dates,session):
     semafaro.acquire()
 
     try:
-        poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
+        poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
-        msg = "error student_attempts "+students.name
+        msg="error student_skill " + students.name
         logging.debug(msg)
 
-    try:
-        poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
-    except:
-        msg="error student_progress "+ students.name
-        logging.debug(msg)
-  
-    try:
-        poblar_student_video(students.name,students.kaid_student, dates, session) #listo
-    except:
-        msg="error student_video "+ students.name
-        logging.debug(msg)
-
-    try:
-        poblar_video_playing(students.name,students.kaid_student, dates, session)
-    except:
-        msg="error video_playing "+ students.name
-        logging.debug(msg)
-  
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
