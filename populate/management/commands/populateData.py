@@ -367,18 +367,31 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
         data = simplejson.loads(source)
         try:
             for j in range(len(data)):
-                
-                video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
-                                                                           points_earned = data[j]["points_earned"],
-                                                                           last_second_watched = data[j]["last_second_watched"],
-                                                                           is_video_complete = data[j]["is_video_completed"],
-                                                                           date = data[j]["time_watched"],
-                                                                           id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                           kaid_student_id = kaid_student
-                                                                           )
-                video_playing.save()
-        except:
-            pass
+                try:
+                    idvideo = Video_Playing.objects.filter(date=data[j]["time_watched"], id_video_name_id=student_videos[i]["id_video_name_id"], kaid_student_id= kaid_student).values('id_video_playing')
+                    #print idvideo[0]['id_video_playing']
+                    video_playing = Video_Playing(id_video_playing=idvideo[0]['id_video_playing'], seconds_watched = data[j]["seconds_watched"],
+                                                                               points_earned = data[j]["points_earned"],
+                                                                               last_second_watched = data[j]["last_second_watched"],
+                                                                               is_video_complete = data[j]["is_video_completed"],
+                                                                               date = data[j]["time_watched"],
+                                                                               id_video_name_id = student_videos[i]["id_video_name_id"],
+                                                                               kaid_student_id = kaid_student
+                                                                               )
+                    video_playing.save()
+                except:
+                    video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
+                                                                               points_earned = data[j]["points_earned"],
+                                                                               last_second_watched = data[j]["last_second_watched"],
+                                                                               is_video_complete = data[j]["is_video_completed"],
+                                                                               date = data[j]["time_watched"],
+                                                                               id_video_name_id = student_videos[i]["id_video_name_id"],
+                                                                               kaid_student_id = kaid_student
+                                                                               )
+                    video_playing.save()
+
+        except Exception as e:
+            print e
             #print "error"
     #print "listo video_playing"
 
@@ -428,7 +441,7 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -446,7 +459,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_video "+ students.name
         logging.debug(msg)
-
+    '''
     try:
         poblar_video_playing(students.name,students.kaid_student, dates, session)
     except:
