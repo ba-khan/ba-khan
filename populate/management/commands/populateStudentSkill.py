@@ -276,7 +276,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                 if data["last_attempt_number"]>0:
                     data["last_attempt_number"]=1
                 #si la fecha maximum_exercise_progress_dt no es nulo inserta
-                if data["maximum_exercise_progress_dt"]!=None:
+                if data["maximum_exercise_progress_dt"]!=None:#id1
                     #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
                     student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
                                                     total_done = data["total_done"]+data["last_attempt_number"],
@@ -291,9 +291,10 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                
                 
                     student_skill.save()
+                    logging.info("exito en TRY IF #ID1")
                         
 
-                else:
+                else:#id2
                     if data["total_done"]!=None and data["total_done"]>0:
                             #si el total_done es distinto de null y mayor que 0, debe insertar
                             
@@ -310,13 +311,14 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    
                        
                         student_skill.save()
+                        logging.info("exito en TRY ELSE #ID2")
 
             except Exception as e:
                 #print "error"
                 if data["last_attempt_number"]>0:
                     data["last_attempt_number"]=1
                 #si la fecha maximum_exercise_progress_dt no es nulo inserta
-                if data["maximum_exercise_progress_dt"]!=None:
+                if data["maximum_exercise_progress_dt"]!=None:#ID3
 
                     #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
                     student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
@@ -332,9 +334,9 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                
                 
                     student_skill.save()
+                    logging.info("exito en EXCEPT IF #ID3")
 
-
-                else:
+                else:#ID4
                     if data["total_done"]!=None and data["total_done"]>0:
 
                         #si el total_done es distinto de null y mayor que 0, debe insertar
@@ -352,13 +354,13 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    
                        
                         student_skill.save()
-   
+                        logging.info("exito en TRY ELSE #ID4")
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
                    
         except Exception as e:#id01
                 logging.error('ha fallado try:#id01 en populateStudentSkill.py')
-                logging.info(e)
+                logging.error(e)
 
 
             
