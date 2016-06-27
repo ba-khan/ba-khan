@@ -441,7 +441,7 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    '''
+
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -459,7 +459,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_video "+ students.name
         logging.debug(msg)
-    '''
+
     try:
         poblar_video_playing(students.name,students.kaid_student, dates, session)
     except:
