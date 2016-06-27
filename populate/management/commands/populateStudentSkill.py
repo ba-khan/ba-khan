@@ -400,8 +400,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        institution = Institution.objects.all()
-        #institution = Institution.objects.filter(id_institution=7)
+        #institution = Institution.objects.all()
+        institution = Institution.objects.filter(id_institution=7)
 
 
         for inst in institution:
