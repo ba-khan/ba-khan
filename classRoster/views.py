@@ -358,30 +358,52 @@ def saveExcelClass(request):
 
         teachers = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
         #print teach[0]['id_institution_id']
-        try:
-            classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id']).values('id_class')
-            newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
-            newClass.save()
+        #try:
+            #classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id']).values('id_class')
+            #newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+            #newClass.save()
 
-            for i in range(0,longitud):
-                kaid = est["student["+str(i)+"][kaid]"]
-                points = est["student["+str(i)+"][points]"]
-                name = est["student["+str(i)+"][name]"]
+        for i in range(0,longitud):
+            kaid = est["student["+str(i)+"][kaid]"]
+            points = est["student["+str(i)+"][points]"]
+            name = est["student["+str(i)+"][name]"]
+
+            estudiantekaid = Student.objects.filter(kaid_student=kaid).values('kaid_student')
+
+            #estudiante = Student.objects.filter(kaid_student=kaid, id_institution_id=teachers[0]['id_institution_id'])
+
+            if not estudiantekaid:
+                newStdnt = Student(kaid_student=kaid, name=name, email='', points=points, phone='', id_institution_id=teachers[0]['id_institution_id'], nickname=name)
+                newStdnt.save()
+
+                classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id']).values('id_class')
+                newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+                newClass.save()
+
+                newStudentClass = Student_Class(id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
+                newStudentClass.save()
+            else:
+                estudianteinst = Student.objects.filter(kaid_student=kaid, id_institution_id=teachers[0]['id_institution_id']).values('kaid_student')
+                if not estudianteinst:
+                    print "error de institucion"
+                else:
+                    print "alumno ya agregado"
+                '''
                 try:
                     stdnt_class = Student_Class.objects.filter(id_class_id=classe[0]['id_class'], kaid_student_id=kaid).values('id_student_class')
                     newStudentClass = Student_Class(id_student_class=stdnt_class[0]['id_student_class'], id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
-                    newStudentClass.save()
+                    #newStudentClass.save()
 
                 except:
                     newStudentClass = Student_Class(id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
-                    newStudentClass.save()
+                    #newStudentClass.save()
 
                 #newStudent = Student(kaid_student=kaid, name=name, email='', points=points, id_institution_id=teachers[0]['id_institution_id'], nickname=name)
                 #newStudent.save()
-
+        '''        '''
         except Exception as e:
             newClass = Class(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
-            newClass.save()
+            #newClass.save()
 
             getClass = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional).values('id_class')
 
@@ -391,9 +413,9 @@ def saveExcelClass(request):
                 name = est["student["+str(i)+"][name]"]
 
                 newStudentClass = Student_Class(id_class_id=getClass[0]['id_class'], kaid_student_id=kaid)
-                newStudentClass.save()
+                #newStudentClass.save()
 
                 #newStudent = Student(kaid_student=kaid, name=name, email='', points=points, id_institution_id=teachers[0]['id_institution_id'], nickname=name)
                 #newStudent.save()
-        
+        '''
         return HttpResponse(est)
