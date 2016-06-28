@@ -43,12 +43,14 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Institution
 
 import datetime
+import time
+from time import localtime
 
 import cgi
 import rauth
 import SimpleHTTPServer
 import SocketServer
-import time
+
 import webbrowser
 import psycopg2
 import requests
@@ -517,7 +519,7 @@ class Command(BaseCommand):
                 #cur = conn.cursor()
                 #kaid_student = "kaid_485871758161384306203631"
 
-                today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+                today = time.strftime("%Y-%m-%dT%H:%M:%SZ", localtime())
                 today = today.replace(":","%3A")
                 yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
@@ -542,7 +544,7 @@ class Command(BaseCommand):
                 threads = []
                 #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
                 students = Student.objects.filter(id_institution_id=inst.id_institution)
-
+                
                 for i in students:
                     #print students[i].name
                     t = threading.Thread(target=threadPopulate,args=(i,dates,session))
