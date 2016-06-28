@@ -73,7 +73,22 @@ import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
 
-#ultimo try:#id4002 para este archivo
+#ultimo try:#id4003 para este archivo
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def deleteInstitution(request):
+    request.session.set_expiry(timeSleep)
+    try:#id4003 en bakhanapp:views.py
+        if request.is_ajax():
+            if request.method == 'POST':
+                json_str = json.loads(request.body)
+                institution = Institution.objects.get(pk=json_str["pk"])
+                institution.delete()
+                return HttpResponse("Institucion eliminada correctamente")
+    except Exception as e:
+        print '****ERROR**** en try:#id4003 bakhanapp:views.py'
+        print e
+        return HttpResponse("Error al eliminar")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newInstitution(request):
@@ -89,7 +104,7 @@ def newInstitution(request):
                 secret=args['secret'],
                 identifier=args['identifier'],
                 password=args['password'])
-            iterableArray=[institution]
+            iterableArray = [institution]
             data = serializers.serialize('json', iterableArray)
             struct = json.loads(data)
             jsonResponse = json.dumps(struct)

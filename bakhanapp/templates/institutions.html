@@ -15,10 +15,13 @@
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
-
-<label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
-  <br><br>
 <h1 style="text-align:center;">Instituciones</h1>
+<div>
+  <label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewInstitution' onclick="javascript:showNewInstitution()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Institución</button> </div>
+    <br><br>
+</div>
+
 {% if institutions %}
 <div id='tableInstiution'>
   <table id="institutionGrid" class="testgrid">
@@ -66,7 +69,7 @@
   <br>
   
   
-  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewInstitution' onclick="javascript:showNewInstitution()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Institución</button> </div>
+  
   <!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
   <div id="newInstitution">
     <form action="" method="post" id="form0">{% csrf_token %}
@@ -79,7 +82,7 @@
       <label for='secret'>Secreto: </label><input id="newSecret" onchange="validar()" onkeyup="validar()" name="secret" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
       <label for='identifier'>Usuario: </label><input id="newIdentifier" onchange="validar()" onkeyup="validar()" name="identifier" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
       <label for='password'>Contraseña: </label><input id="newPassword" onchange="validar()" onkeyup="validar()" name="password" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-      <a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+      <a onclick='javascript:cancelNewInstitution();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
       <a onclick='javascript:saveNewInstitution()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Institución</a>
     </form>
   </div>
@@ -141,7 +144,109 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       });
     
+    $('#newInstitution').hide();
 });
+function deleteData(id){
+  console.log(pk);
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  
+  tr = document.getElementById("R"+id);
+  invalids = tr.getElementsByClassName("invalid").length;
+  if (invalids>0){
+    response = "Campos inválidos";
+    $("#popup").append("<p class='response'>"+response+"</p>");
+    $("#close").show();
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
+  }
+  else{
+    $('.response').remove();
+    $('.question').remove();
+    $("#close").hide();
+    $("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
+    $("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+    $("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+  }
+
+}
+
+function deleteData(id){
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  
+  tr = document.getElementById("R"+id);
+  invalids = tr.getElementsByClassName("invalid").length;
+  if (invalids>0){
+    response = "Campos inválidos";
+    $("#popup").append("<p class='response'>"+response+"</p>");
+    $("#close").show();
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
+  }
+  else{
+    $('.response').remove();
+    $('.question').remove();
+    $("#close").hide();
+    $("#popup").append("<p class='question'>¿Desea eliminar Institucion?</p>");
+    $("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+    $("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+  }
+
+}
+
+
+function confirmDelete(answer,id){
+  if (answer==1){
+    tr = $(document.getElementById("R"+id));
+    var tdJson = new Object();
+
+        tdJson.pk= tr["context"]["children"][0].textContent;
+    
+    $.ajax({
+      url: "{% url 'delete_institution' %}",
+      type: "POST",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(tdJson),
+        success: function(response){
+          $("#acceptSave").remove();
+          $("#cancelSave").remove();
+          $("#acceptDelete").remove();
+          $("#cancelDelete").remove();
+          $('.response').remove();
+          $('.question').remove();
+          $("#hover").fadeIn().css('display', '');
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          $("#popup").fadeIn().css('display', '');
+          
+          auxResponse = response;
+          if (auxResponse == "Institucion eliminada correctamente"){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            window.setTimeout(function(){location.reload()},1000);
+          }
+        }
+    });
+    //$("#hover").fadeOut().css('display', 'none');
+    //$("#popup").fadeOut().css('display', 'none');
+  }
+  if (answer==0){
+    $("#hover").fadeOut();
+    $("#popup").fadeOut();
+  }
+}
 
 function saveNewInstitution(){
   console.log('saving new institution');
@@ -174,7 +279,7 @@ function saveNewInstitution(){
           $("#close").css('pointer-events','none');
           $("#newInstitution").hide();
           $("#buttonNewInstitution").show()
-          $("#institutionGrid").append("<tr><td>"+jsonResponse[0].pk+"</td>"
+          $("#institutionGrid").append("<tr id='R"+jsonResponse[0].pk+"'><td>"+jsonResponse[0].pk+"</td>"
                                         +"<td>"+jsonResponse[0]["fields"].name+"</td>"
                                         +"<td>"+jsonResponse[0]["fields"].city+"</td>"
                                         +"<td>"+jsonResponse[0]["fields"].address+"</td>"
@@ -183,7 +288,8 @@ function saveNewInstitution(){
                                         +"<td>"+jsonResponse[0]["fields"].key+"</td>"
                                         +"<td>"+jsonResponse[0]["fields"].secret+"</td>"
                                         +"<td>"+jsonResponse[0]["fields"].identifier+"</td>"
-                                        +"<td>"+jsonResponse[0]["fields"].password+"</td></tr>");
+                                        +"<td>"+jsonResponse[0]["fields"].password+"</td>"
+                                        +"<td class='editablegrid-action' data-title='action' style='width:205px'><a onclick='javascript:saveData("+jsonResponse[0].pk+")' style='cursor:pointer; width:100px; height: 32px; padding:8px' class='kui-button kui-button-plain kui-button-primary'>Guardar</a><a onclick='javascript:deleteData("+jsonResponse[0].pk+")' style='cursor:pointer; width:100px; height: 32px; padding:8px' class='kui-button kui-button-plain kui-button-primary'>Eliminar</a></td></tr>");
           window.setTimeout(function(){
             $("#hover").fadeOut();
             $("#popup").fadeOut();
@@ -261,9 +367,19 @@ function showNewInstitution(){
   setTimeout(toBottom, 10);
   }
 
+function cancelNewInstitution(){
+  $("#form0").trigger("reset");
+  $("#newInstitution").hide();
+  $("#buttonNewInstitution").show();
+  toTop();
+}
+
 function toBottom(){
   $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+}
 
+function toTop(){
+  $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
 }
 </script>
 
