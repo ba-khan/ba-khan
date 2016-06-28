@@ -277,39 +277,47 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     data["last_attempt_number"]=1
                 #si la fecha maximum_exercise_progress_dt no es nulo inserta
                 if data["maximum_exercise_progress_dt"]!=None:
-                    #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
-                    student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
-                                                    total_done = data["total_done"]+data["last_attempt_number"],
-                                                    total_correct = data["total_correct"],
-                                                    streak = data["streak"],
-                                                    longest_streak = data["longest_streak"],
-                                                    last_skill_progress = data["exercise_progress"]["level"],
-                                                    total_hints = data["last_count_hints"],
-                                                    struggling = data["exercise_states"]["struggling"],
-                                                    id_skill_name_id = data["exercise_model"]["id"],
-                                                    kaid_student_id = data["kaid"])
-                                                                               
-                
-                    student_skill.save()
-                        
+                    try:
+                        #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
+                        student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                                                        total_done = data["total_done"]+data["last_attempt_number"],
+                                                        total_correct = data["total_correct"],
+                                                        streak = data["streak"],
+                                                        longest_streak = data["longest_streak"],
+                                                        last_skill_progress = data["exercise_progress"]["level"],
+                                                        total_hints = data["last_count_hints"],
+                                                        struggling = data["exercise_states"]["struggling"],
+                                                        id_skill_name_id = data["exercise_model"]["id"],
+                                                        kaid_student_id = data["kaid"])
+                                                                                   
+                    
+                        student_skill.save()
+                        except Exception as e:#id10
+                            logging.error('ha fallado try:#id10 en populateStudentSkill.py')
+                            logging.info(e)
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
                             #si el total_done es distinto de null y mayor que 0, debe insertar
-                            
-                        student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
-                                                    total_done = data["total_done"]+data["last_attempt_number"],
-                                                    total_correct = data["total_correct"],
-                                                    streak = data["streak"],
-                                                    longest_streak = data["longest_streak"],
-                                                    last_skill_progress = data["exercise_progress"]["level"],
-                                                    total_hints = data["last_count_hints"],
-                                                    struggling = data["exercise_states"]["struggling"],
-                                                    id_skill_name_id = data["exercise_model"]["id"],
-                                                    kaid_student_id = data["kaid"])
-                                                                                   
-                       
-                        student_skill.save()
+                        try:    
+                            student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                                                        total_done = data["total_done"]+data["last_attempt_number"],
+                                                        total_correct = data["total_correct"],
+                                                        streak = data["streak"],
+                                                        longest_streak = data["longest_streak"],
+                                                        last_skill_progress = data["exercise_progress"]["level"],
+                                                        total_hints = data["last_count_hints"],
+                                                        struggling = data["exercise_states"]["struggling"],
+                                                        id_skill_name_id = data["exercise_model"]["id"],
+                                                        kaid_student_id = data["kaid"])
+                                                                                       
+                           
+                            student_skill.save()
+
+                        except Exception as e:#id11
+                            logging.error('ha fallado try:#id11 en populateStudentSkill.py')
+                            logging.info(e)
+
 
             except Exception as e:
                 #print "error"
@@ -317,28 +325,8 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     data["last_attempt_number"]=1
                 #si la fecha maximum_exercise_progress_dt no es nulo inserta
                 if data["maximum_exercise_progress_dt"]!=None:
-
-                    #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
-                    student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
-                                                                               total_correct = data["total_correct"],
-                                                                               streak = data["streak"],
-                                                                               longest_streak = data["longest_streak"],
-                                                                               last_skill_progress = data["exercise_progress"]["level"],
-                                                                               total_hints = data["last_count_hints"],
-                                                                               struggling = data["exercise_states"]["struggling"],
-                                                                               id_skill_name_id = data["exercise_model"]["id"],
-                                                                               kaid_student_id = data["kaid"]
-                                                                               )
-                                                                               
-                
-                    student_skill.save()
-
-
-                else:
-                    if data["total_done"]!=None and data["total_done"]>0:
-
-                        #si el total_done es distinto de null y mayor que 0, debe insertar
-                        
+                    try:
+                        #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
                         student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
                                                                                    total_correct = data["total_correct"],
                                                                                    streak = data["streak"],
@@ -350,8 +338,33 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    kaid_student_id = data["kaid"]
                                                                                    )
                                                                                    
-                       
+                    
                         student_skill.save()
+                    except Exception as e:#id12
+                        logging.error('ha fallado try:#id12 en populateStudentSkill.py')
+                        logging.info(e)
+
+                else:
+                    if data["total_done"]!=None and data["total_done"]>0:
+                        try:
+                            #si el total_done es distinto de null y mayor que 0, debe insertar
+                            
+                            student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
+                                                                                       total_correct = data["total_correct"],
+                                                                                       streak = data["streak"],
+                                                                                       longest_streak = data["longest_streak"],
+                                                                                       last_skill_progress = data["exercise_progress"]["level"],
+                                                                                       total_hints = data["last_count_hints"],
+                                                                                       struggling = data["exercise_states"]["struggling"],
+                                                                                       id_skill_name_id = data["exercise_model"]["id"],
+                                                                                       kaid_student_id = data["kaid"]
+                                                                                       )
+                                                                                       
+                           
+                            student_skill.save()
+                    except Exception as e:#id13
+                        logging.error('ha fallado try:#id13 en populateStudentSkill.py')
+                        logging.info(e)
    
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
@@ -398,8 +411,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        institution = Institution.objects.all()
-        #institution = Institution.objects.filter(id_institution=7)
+        #institution = Institution.objects.all()
+        institution = Institution.objects.filter(id_institution=3)
 
 
         for inst in institution:
@@ -431,7 +444,7 @@ class Command(BaseCommand):
                 yesterday = inst.last_load
 
                 inst.last_load = today
-                inst.save()
+                #inst.save()
 
                 msg="hoy: " + today
                 logging.debug(msg)
