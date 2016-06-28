@@ -441,7 +441,7 @@ class Command(BaseCommand):
                 yesterday = inst.last_load
 
                 inst.last_load = today
-                inst.save()
+                #inst.save()
 
                 msg="hoy: " + today
                 logging.debug(msg)
