@@ -230,12 +230,13 @@ function confirmDelete(answer,id){
           $("#hover").fadeIn().css('display', '');
           $("#popup").append("<p class='response'>"+response+"</p>");
           $("#popup").fadeIn().css('display', '');
-          
-          auxResponse = response;
-          if (auxResponse == "Institucion eliminada correctamente"){
+          console.log(response);
+          if (parseInt(response)>=0){
             $("#hover").css('pointer-events','none');
             $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
+            $('#R'+response).hide();
+            $("#hover").hide();
+            $("#popup").hide();
           }
         }
     });

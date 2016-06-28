@@ -84,7 +84,7 @@ def deleteInstitution(request):
                 json_str = json.loads(request.body)
                 institution = Institution.objects.get(pk=json_str["pk"])
                 institution.delete()
-                return HttpResponse("Institucion eliminada correctamente")
+                return HttpResponse(json_str["pk"])
     except Exception as e:
         print '****ERROR**** en try:#id4003 bakhanapp:views.py'
         print e
