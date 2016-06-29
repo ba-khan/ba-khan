@@ -96,11 +96,11 @@
     		</div>
     	</div>
     </div>
-    <div style="margin:10px" id='content-sup'>
+    
     {% if isTeacher %}
 	<button class="kui-button kui-button-plain kui-button-primary" onclick="nuevaEvaluacion()"><i class="plus"></i> Nueva Calificación</button>
 	{% endif %}
-	</div> 
+	
 	<form action="" method="post" id='formJson'>{% csrf_token %}
 	<div id="contenido_a_mostrar" style="display:none;" value=>
 		<div id="inputs" align="left">
@@ -157,7 +157,8 @@
 		</div>
 	</div>
 	</form>
-
+	<div style="margin:10px" id='content-sup'>
+	</div> 
 	<script type="text/javascript">	
 		var Needle = (function() {
 	        /** 
