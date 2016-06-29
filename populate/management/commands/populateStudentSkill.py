@@ -292,9 +292,9 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    
                     
                         student_skill.save()
-                        except Exception as e:#id10
-                            logging.error('ha fallado try:#id10 en populateStudentSkill.py')
-                            logging.info(e)
+                    except Exception as e:#id10
+                        logging.error('ha fallado try:#id10 en populateStudentSkill.py')
+                        logging.info(e)
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
@@ -362,9 +362,9 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                        
                            
                             student_skill.save()
-                    except Exception as e:#id13
-                        logging.error('ha fallado try:#id13 en populateStudentSkill.py')
-                        logging.info(e)
+                        except Exception as e:#id13
+                            logging.error('ha fallado try:#id13 en populateStudentSkill.py')
+                            logging.info(e)
    
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
