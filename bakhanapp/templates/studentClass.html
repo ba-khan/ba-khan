@@ -162,7 +162,7 @@
 	<script type="text/javascript">	
 		var Needle = (function() {
 	        /** 
-	          * Helper function that returns the `d` value
+	          * Helper function that returns the 'd' value
 	          * for moving the needle
 	        **/
 	        var recalcPointerPos = function(perc) {
@@ -400,8 +400,7 @@
     
     table.select('th.name').append('div')
     		.attr("class","sort-div")
-    		.html(function (d){ return `<div class="arrow-up name" name="`+d.cl+`"></div>
-	  		   <div class="arrow-down name" name="`+d.cl+`"></div>`});
+    		.html(function (d){ return '<div class="arrow-up name" name="'+d.cl+'"></div><div class="arrow-down name" name="'+d.cl+'"></div>'});
     	
     $(".arrow-up.name").attr("column",function(){
         return $("th.name").index();
@@ -412,8 +411,7 @@
     
     table.select('th.skills_time').append('div')
 		.attr("class","sort-div")
-		.html(function (d){ return `<div class="arrow-up skills_time" name="`+d.cl+`"></div>
-  		   <div class="arrow-down skills_time" name="`+d.cl+`"></div>`});
+		.html(function (d){ return '<div class="arrow-up skills_time" name="'+d.cl+'"></div><div class="arrow-down skills_time" name="'+d.cl+'"></div>'});
 	
 	$(".arrow-up.skills_time").attr("column",function(){
     	return $("th.skills_time").index();
@@ -424,8 +422,7 @@
 
 	table.select('th.videos_time').append('div')
 		.attr("class","sort-div")
-		.html(function (d){ return `<div class="arrow-up videos_time" name="`+d.cl+`"></div>
-  		   <div class="arrow-down videos_time" name="`+d.cl+`"></div>`});
+		.html(function (d){ return '<div class="arrow-up videos_time" name="'+d.cl+'"></div> <div class="arrow-down videos_time" name="'+d.cl+'"></div>'});
 	
 	$(".arrow-up.videos_time").attr("column",function(){
     	return $("th.videos_time").index();
@@ -436,8 +433,7 @@
 
     table.select('th.recommendations').append('div')
     		.attr("class","sort-div")
-    		.html(function (d){ return `<div class="arrow-up recommendations" name="`+d.cl+`"></div>
-	  		   <div class="arrow-down recommendations" name="`+d.cl+`"></div>`});
+    		.html(function (d){ return '<div class="arrow-up recommendations" name="'+d.cl+'"></div><div class="arrow-down recommendations" name="'+d.cl+'"></div>'});
     	
     $(".arrow-up.recommendations").attr("column",function(){
         return $("th.recommendations").index();
@@ -448,16 +444,7 @@
     
     table.select('th.exercises').append('div')
 		.attr("class","sort-div")
-		.html(function (d){ return `
-			   <label class="sort-filter">Ordenar por: </label>
-	    	   <div class="arrow-up exercises" name="`+d.cl+`"></div>
-		  	   <div class="arrow-down exercises" name="`+d.cl+`"></div>
-		  	 	<select class="exercises" name="`+d.cl+`">
-	  		   		<option value="total">Total</option>
-					<option value="correct">Correctos</option>
-					<option value="incorrect">Incorrectos</option>
-		  		</select>
-			  	`});
+		.html(function (d){ return '<label class="sort-filter">Ordenar por: </label><div class="arrow-up exercises" name="'+d.cl+'"></div><div class="arrow-down exercises" name="'+d.cl+'"></div><select class="exercises" name="'+d.cl+'"><option value="total">Total</option><option value="correct">Correctos</option><option value="incorrect">Incorrectos</option></select>'});
     $(".arrow-up.exercises").attr("column",function(){
 		return $("th.exercises").index();
 	});
@@ -467,19 +454,7 @@
     
     table.select('th.skills_level').append('div')
 		.attr("class","sort-div")
-		.html(function (d){ return `
-			   <label class="sort-filter">Ordenar por: </label>
-	    	   <div class="arrow-up skills_level" name="`+d.cl+`"></div>
-		  	   <div class="arrow-down skills_level" name="`+d.cl+`"></div>
-	  		   <select class="skills_level" name="`+d.cl+`">
-	  		   		<option value="total">Total</option>
-					<option value="mastery3">Dominado</option>
-					<option value="mastery2">Nivel 2</option>
-					<option value="mastery1">Nivel 1</option>
-					<option value="practiced">Practicado</option>
-					<option value="struggling">En dificultad</option>
-			  	</select>
-			  	`});
+		.html(function (d){ return '<label class="sort-filter">Ordenar por: </label><div class="arrow-up skills_level" name="'+d.cl+'"></div> <div class="arrow-down skills_level" name="'+d.cl+'"></div><select class="skills_level" name="'+d.cl+'"><option value="total">Total</option><option value="mastery3">Dominado</option><option value="mastery2">Nivel 2</option><option value="mastery1">Nivel 1</option><option value="practiced">Practicado</option><option value="struggling">En dificultad</option></select>'});
     $(".arrow-up.skills_level").attr("column",function(){
 		return $("th.skills_level").index();
 	});
@@ -552,15 +527,7 @@
     	
     	table.select('th.'+class_id).append('div')
     		.attr("class","sort-div-filter")
-    		.html(function (d){ return `
-		  		    <label class="sort-filter">Ordenar por: </label>
-		    		<div class="arrow-up assesment" name="`+d.cl+`"></div>
-	    	  		<div class="arrow-down assesment" name="`+d.cl+`"></div>
-    				<select class="assesment" name="`+d.cl+`">
- 						<option value="grade">Nota</option>
-						<option value="effort">Esfuerzo</option>
-				  	</select>
-				 	`});   	
+    		.html(function (d){ return '<label class="sort-filter">Ordenar por: </label><div class="arrow-up assesment" name="'+d.cl+'"></div><div class="arrow-down assesment" name="'+d.cl+'"></div><select class="assesment" name="'+d.cl+'"><option value="grade">Nota</option><option value="effort">Esfuerzo</option></select>'});   	
  	
     }	 
     
@@ -576,8 +543,7 @@
     
     table.select('th.averages').append('div')
     		.attr("class","sort-div")
-    		.html(function (d){ return `<div class="arrow-up averages" averages="`+d.cl+`"></div>
-	  		   <div class="arrow-down averages" averages="`+d.cl+`"></div>`});
+    		.html(function (d){ return '<div class="arrow-up averages" averages="'+d.cl+'"></div><div class="arrow-down averages" averages="'+d.cl+'"></div>'});
     	
     $(".arrow-up.averages").attr("column",function(){
         return $("th.averages").index();
@@ -1112,13 +1078,7 @@
 				        html: true, 
 				        title: function() {
 				          var d = this.__data__;
-				          tooltp =(`<ul>
-				          		<li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>`+d.values.struggling+`</li>
-				          		<li style='text-align:left;'><font color='#9CDCEB'>Practicado: </font>`+d.values.practiced+`</li>
-				          		<li style='text-align:left;'><font color='#58C4DD'>Nivel 1: </font>`+d.values.mastery1+`</li>
-				          		<li style='text-align:left;'><font color='#29ABCA'>Nivel 2: </font>`+d.values.mastery2+`</li>
-				          		<li style='text-align:left;'><font color='#1C758A'>Dominado: </font>`+d.values.mastery3+`</li>
-				          		</strong></ul>`);
+				          tooltp =('<ul><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>'+d.values.struggling+'</li><li style='text-align:left;'><font color='#9CDCEB'>Practicado: </font>'+d.values.practiced+'</li><li style='text-align:left;'><font color='#58C4DD'>Nivel 1: </font>'+d.values.mastery1+'</li><li style='text-align:left;'><font color='#29ABCA'>Nivel 2: </font>'+d.values.mastery2+'</li><li style='text-align:left;'><font color='#1C758A'>Dominado: </font>'+d.values.mastery3+'</li></strong></ul>');
 				          return tooltp
 				        }
 				    });
@@ -1131,13 +1091,13 @@
 				          	//	console.log(c[i]);
 		       				//}
 				          	var x = (b.values.skills_com);
-				          	tooltp = `<ul><li style='text-align:left;'><strong>Habilidades Rec. Completadas</strong>`;
+				          	tooltp = '<ul><li style='text-align:left;'><strong>Habilidades Rec. Completadas</strong>';
 				          	for(i=0;i<x.length;i++){
 				          		tooltp = tooltp+
-				          		`<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>`+b.values.skills_com[i]+`</li>`
+				          		'<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>'+b.values.skills_com[i]+'</li>'
 				          		
 				          	}
-				          	tooltp = tooltp + `</ul>`;
+				          	tooltp = tooltp + '</ul>';
 
 				          return tooltp
 				    },
@@ -1352,7 +1312,7 @@
 	          	skl = skl + "<li style='text-align:left;'><div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+d.value.skills[i][0] 
 	          	skl = skl + "<font color='#1C758A'>C: "+d.value.skills[i][4]+"</font><font color='#C30202'> I: "+d.value.skills[i][3]+"</font></li>" 
 	          };
-	          var algo = `<li>Nota ficticia: `+5+`</li>`
+	          var algo = '<li>Nota ficticia: '+5+'</li>'
 	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño:"+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo:"+bonus_grade+"</li><li style='text-lign:left;'>Ajuste del Profesor:"+teacher_grade+"</li>"+skl+"</ul>");
 	          test = '<p>resultado:'+id_json_assesment+'</p>'
 	          return tooltp}
@@ -1377,16 +1337,16 @@
          });
 	    /*
 		   lo que habia antes en el tipsy
-		   <li>% de recomend. completadas: `+Math.round((student_data.recommendations.completed_perc)*100)+`</li>
-	       <li>Ejercicios incorrectos:`+student_data.exercises.incorrect+`</li>
-	       <li>Ejercicios correctos: `+student_data.exercises.correct+`</li>
-	       <li>Tiempo en ejercicios: `+mins_skills_time+`:`+secs_skills_time+` minutos</li>
-	       <li>Tiempo en videos: `+mins_video_time+`:`+secs_video_time+` minutos</li>
-	       <li>Hab. dominadas: `+student_data.skills_level.mastery3+`</li>
-	       <li>Hab. nivel 2: `+student_data.skills_level.mastery2+`</li>
-	       <li>Hab. nivel 1: `+student_data.skills_level.mastery1+`</li>
-	       <li>Hab. practicadas: `+student_data.skills_level.practiced+`</li>
-	       <li>Hab. en dificultad: `+student_data.skills_level.struggling+`</li>
+		   <li>% de recomend. completadas: '+Math.round((student_data.recommendations.completed_perc)*100)+'</li>
+	       <li>Ejercicios incorrectos:'+student_data.exercises.incorrect+'</li>
+	       <li>Ejercicios correctos: '+student_data.exercises.correct+'</li>
+	       <li>Tiempo en ejercicios: '+mins_skills_time+':'+secs_skills_time+' minutos</li>
+	       <li>Tiempo en videos: '+mins_video_time+':'+secs_video_time+' minutos</li>
+	       <li>Hab. dominadas: '+student_data.skills_level.mastery3+'</li>
+	       <li>Hab. nivel 2: '+student_data.skills_level.mastery2+'</li>
+	       <li>Hab. nivel 1: '+student_data.skills_level.mastery1+'</li>
+	       <li>Hab. practicadas: '+student_data.skills_level.practiced+'</li>
+	       <li>Hab. en dificultad: '+student_data.skills_level.struggling+'</li>
 	    */
 	        
     }
@@ -2648,9 +2608,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return `<ul>
-	          		<li>Estudiante sin evaluar</li>
-	          		</ul>`;
+	          return '<ul><li>Estudiante sin evaluar</li></ul>';
 	        }
 	      });
 
@@ -2677,12 +2635,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     			top_score=assesments[id_json_assesment]["top_score"];
     			min=assesments[id_json_assesment]["max_grade"];
     			max=assesments[id_json_assesment]["min_grade"];
-	          return `<ul>
-	          		<li>Nombre de la pauta: `+name+`</li>
-	          		<li>% de aprobación: `+percentage+`</li>
-	          		<li>Nota máxima: `+min+`</li>
-	          		<li>Nota mínima: `+max+`</li>
-	          		</ul>`;
+	          return '<ul><li>Nombre de la pauta: '+name+'</li><li>% de aprobación: '+percentage+'</li><li>Nota máxima: '+min+'</li><li>Nota mínima: '+max+'</li></ul>';
 	        }
     	});
     	/*columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>
