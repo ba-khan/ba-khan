@@ -37,6 +37,7 @@ class Command(BaseCommand):
             logging.info(e)
         for assesment in assesments:
             try:#id01
+                assesment.end_date = assesment.end_date+timedelta(days=1)
                 config = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id)
                 approval_percentage = config.approval_percentage
                 importance_skill_level = config.importance_skill_level
