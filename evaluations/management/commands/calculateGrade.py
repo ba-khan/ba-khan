@@ -63,8 +63,8 @@ class Command(BaseCommand):
                     ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date','id_skill_name_id'
                     ).order_by('kaid_student','id_skill_name_id','-skill_progress__date').distinct('kaid_student','id_skill_name_id')#,skill_progress__to_level='practiced'
                 struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
-                    ).values('kaid_student','id_student_skill'
-                    ).order_by('kaid_student','id_student_skill')
+                    ).values('kaid_student','id_student_skill','id_skill_name_id'
+                    ).order_by('kaid_student','id_skill_name_id','id_student_skill').distinct('kaid_student','id_skill_name_id')
             except Exception as e:
                 logging.error('ha fallado try:#id01 en CalculateGrade.py')
                 logging.info(e)
