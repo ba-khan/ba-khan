@@ -271,9 +271,11 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         try:
             #print j
             jason = get_api_resource2(session,llamada,SERVER_URL2)
+            logging.info("el json es "+jason)
             source = unicode(jason, 'ISO-8859-1')
+            logging.info("source es "+source)
             data = simplejson.loads(source)
-            logging.debug(data)
+            logging.info("data es "+data)
             try:
                 stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data["exercise_model"]["id"], kaid_student_id=data["kaid"]).values("id_student_skill")
                 #print stdnt_skillid
@@ -567,7 +569,7 @@ def threadPopulate(students,dates,session):
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
-        #logging.debug(msg)
+        logging.debug(msg)
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
