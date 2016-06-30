@@ -266,13 +266,14 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         #para cada skill realiza una llamada a la API entregandole ese skill y el username del estudiante
         #llamada = "/api/v1/user/exercises?kaid=&userId=&username="+name_student+"&email=&exercises="+skills[j]['name']
         llamada = "/api/v1/user/exercises/"+skills[j]["name"]+"?exercise_name="+skills[j]["name"]+"&userId=&username="+name_student+"&email="
-        logging.debug(llamada)
+        #logging.debug(llamada)
         #intenta obtener el json de la llamada si existe
         try:
             #print j
             jason = get_api_resource2(session,llamada,SERVER_URL2)
             source = unicode(jason, 'ISO-8859-1')
             data = simplejson.loads(source)
+            logging.debug(data)
             try:
                 stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data["exercise_model"]["id"], kaid_student_id=data["kaid"]).values("id_student_skill")
                 #print stdnt_skillid
