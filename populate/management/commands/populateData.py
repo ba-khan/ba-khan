@@ -245,7 +245,7 @@ def get_api_resource2(session,llamada,server):
     #logging.info(split_url)
     response = session.get(url, params=params)
     logging.info(response)
-    encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
+    encoded_response=response.text.encode(sys.stdout.encoding,errors='ignore')
     logging.info("encoded response es: ")
     logging.info(encoded_response)
     end = time.time()
@@ -276,7 +276,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         #intenta obtener el json de la llamada si existe
         try:
             #print j
-            logging.info("el j es "+str(j))
+            #logging.info("el j es "+str(j))
             jason = get_api_resource2(session,llamada,SERVER_URL2)
             logging.info("el json es "+jason)
             source = unicode(jason, 'ISO-8859-1')
