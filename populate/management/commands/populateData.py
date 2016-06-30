@@ -266,6 +266,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         #para cada skill realiza una llamada a la API entregandole ese skill y el username del estudiante
         #llamada = "/api/v1/user/exercises?kaid=&userId=&username="+name_student+"&email=&exercises="+skills[j]['name']
         llamada = "/api/v1/user/exercises/"+skills[j]["name"]+"?exercise_name="+skills[j]["name"]+"&userId=&username="+name_student+"&email="
+        logging.debug(llamada)
         #intenta obtener el json de la llamada si existe
         try:
             #print j
@@ -565,7 +566,7 @@ def threadPopulate(students,dates,session):
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
-        logging.debug(msg)
+        #logging.debug(msg)
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
