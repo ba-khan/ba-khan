@@ -240,6 +240,8 @@ def get_api_resource2(session,llamada,server):
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
 
     start = time.time()
+    logging.info("los parametros son: ")
+    logging.info(params)
     response = session.get(url, params=params)
     encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
     end = time.time()
