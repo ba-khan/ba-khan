@@ -270,7 +270,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         #intenta obtener el json de la llamada si existe
         try:
             #print j
-            logging.info("el j es "+j)
+            logging.info("el j es "+str(j))
             jason = get_api_resource2(session,llamada,SERVER_URL2)
             logging.info("el json es "+jason)
             source = unicode(jason, 'ISO-8859-1')
