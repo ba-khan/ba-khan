@@ -245,8 +245,8 @@ def get_api_resource2(session,llamada,server):
     start = time.time()
     response = session.get(url, params=params)
     encoded_response=response.text.encode(sys.stdout.encoding,'ISO-8859-1')
-    logging.info("el encode respinse es:")
-    logging.info(encoded_response)
+    #logging.info("el encode respinse es:")
+    #logging.info(encoded_response)
     end = time.time()
 
     #print "JASON: \n"
@@ -570,7 +570,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-    '''
+
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -594,7 +594,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-    ''' 
+ 
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
