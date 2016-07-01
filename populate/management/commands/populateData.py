@@ -50,7 +50,7 @@ import cgi
 import rauth
 import SimpleHTTPServer
 import SocketServer
-
+import time
 import webbrowser
 import psycopg2
 import requests
@@ -86,7 +86,7 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populatedata'+fecha+'.log',
+                    filename='populate'+fecha+'.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
@@ -240,14 +240,8 @@ def get_api_resource2(session,llamada,server):
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
 
     start = time.time()
-    logging.info("la url es: ")
-    #logging.info(params)
-    #logging.info(split_url)
     response = session.get(url, params=params)
-    logging.info(url)
-    encoded_response=response.text.encode(sys.stdout.encoding,errors='ignore')
-    #logging.info("encoded response es: ")
-    #logging.info(encoded_response)
+    encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
     end = time.time()
 
     #print "JASON: \n"
@@ -272,17 +266,12 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         #para cada skill realiza una llamada a la API entregandole ese skill y el username del estudiante
         #llamada = "/api/v1/user/exercises?kaid=&userId=&username="+name_student+"&email=&exercises="+skills[j]['name']
         llamada = "/api/v1/user/exercises/"+skills[j]["name"]+"?exercise_name="+skills[j]["name"]+"&userId=&username="+name_student+"&email="
-        #logging.debug(llamada)
         #intenta obtener el json de la llamada si existe
         try:
             #print j
-            #logging.info("el j es "+str(j))
             jason = get_api_resource2(session,llamada,SERVER_URL2)
-            logging.info("el json es "+jason)
             source = unicode(jason, 'ISO-8859-1')
-            logging.info("source es "+source)
             data = simplejson.loads(source)
-            logging.info("data es "+data)
             try:
                 stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data["exercise_model"]["id"], kaid_student_id=data["kaid"]).values("id_student_skill")
                 #print stdnt_skillid
@@ -305,14 +294,16 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    
                     
                         student_skill.save()
-                    except Exception as e:#id10
-                        logging.error('ha fallado try:#id10 en populateStudentSkill.py')
-                        logging.info(e)
+                        
+                    except Exception as e:
+                        #print "entro al except"
+                        print e
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
+                        try:
                             #si el total_done es distinto de null y mayor que 0, debe insertar
-                        try:    
+                            
                             student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
                                                         total_done = data["total_done"]+data["last_attempt_number"],
                                                         total_correct = data["total_correct"],
@@ -326,11 +317,10 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                        
                            
                             student_skill.save()
-
-                        except Exception as e:#id11
-                            logging.error('ha fallado try:#id11 en populateStudentSkill.py')
-                            logging.info(e)
-
+                            
+                        except Exception as e:
+                            
+                            print e
 
             except Exception as e:
                 #print "error"
@@ -353,9 +343,10 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    
                     
                         student_skill.save()
-                    except Exception as e:#id12
-                        logging.error('ha fallado try:#id12 en populateStudentSkill.py')
-                        logging.info(e)
+                        
+                    except Exception as e:
+                        #print "entro al except"
+                        print e
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
@@ -375,16 +366,15 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                        
                            
                             student_skill.save()
-                        except Exception as e:#id13
-                            logging.error('ha fallado try:#id13 en populateStudentSkill.py')
-                            logging.info(e)
-   
+                            
+                        except Exception as e:                      
+                            print e
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
                    
-        except Exception as e:#id01
-                logging.error('ha fallado try:#id01 en populateStudentSkill.py')
-                logging.info(e)
+        except Exception as e:
+            logging.info(e)
+
 
 def poblar_skill_attempts(name_student, kaid_student, dates, session):
     student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student)
@@ -459,7 +449,6 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                         kaid_student=kaid_student,
                         id_student_skill_id=student_skill[0]["id_student_skill"])
             new_progress.save()
-
             '''
             #print "guardo bien"
     except Exception as e:
@@ -500,7 +489,6 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
             for j in range(len(data)):
                 try:
                     idvideo = Video_Playing.objects.filter(date=data[j]["time_watched"], id_video_name_id=student_videos[i]["id_video_name_id"], kaid_student_id= kaid_student).values('id_video_playing')
-                    #print idvideo[0]['id_video_playing']
                     video_playing = Video_Playing(id_video_playing=idvideo[0]['id_video_playing'], seconds_watched = data[j]["seconds_watched"],
                                                                                points_earned = data[j]["points_earned"],
                                                                                last_second_watched = data[j]["last_second_watched"],
@@ -519,9 +507,8 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
                                                                                id_video_name_id = student_videos[i]["id_video_name_id"],
                                                                                kaid_student_id = kaid_student
                                                                                )
-                    video_playing.save()
-
-        except Exception as e:
+                    video_playing.save()                   
+        except:
             print e
             #print "error"
     #print "listo video_playing"
@@ -572,23 +559,25 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
+
     try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
         logging.debug(msg)
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
-
+        
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except:
         msg="error student_progress "+ students.name
         logging.debug(msg)
-  
+        
     try:
         poblar_student_video(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -600,7 +589,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-  
+    ''' 
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -617,8 +606,8 @@ class Command(BaseCommand):
         CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
         #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
         #secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
-        #passw='clave1234'
-        #identifier='utpbakhan'
+        passw='clave1234'
+        identifier='utpbakhan'
         #passw='CONTRASENA'
         #identifier='LeonardoMunoz'
         #identifiers = ['utpbakhan','LeonardoMunoz']
@@ -626,9 +615,7 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
-        institution = Institution.objects.filter(id_institution=5)
-
+        institution = Institution.objects.all()
 
         for inst in institution:
             keys = inst.key
@@ -666,7 +653,7 @@ class Command(BaseCommand):
                 msg="ayer: " + yesterday
                 logging.debug(msg)
                 #dates = yesterday+"&dt_end="+today
-                dates = "2016-06-28T00%3A00%3A00Z&dt_end=2016-06-30T00%3A00%3A00Z"  
+                dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-02T00%3A00%3A00Z"  
 
 
 
@@ -677,7 +664,8 @@ class Command(BaseCommand):
                 threads = []
                 #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
                 students = Student.objects.filter(id_institution_id=inst.id_institution)
-                
+
+
                 for i in students:
                     #print students[i].name
                     t = threading.Thread(target=threadPopulate,args=(i,dates,session))
