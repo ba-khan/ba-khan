@@ -86,7 +86,7 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate'+fecha+'.log',
+                    filename='populate.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
@@ -233,11 +233,14 @@ def get_api_resource2(session,llamada,server):
     url = server + llamada
     split_url = url.split('?', 1)
     params = {}
+    logging.info(url)
 
     # Separate out the URL's parameters, if applicable.
     if len(split_url) == 2:
         url = split_url[0]
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
+
+    logging.info(params)
 
     start = time.time()
     response = session.get(url, params=params)
@@ -564,7 +567,7 @@ def threadPopulate(students,dates,session):
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
-        logging.debug(msg)
+        #logging.debug(msg)
     '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
