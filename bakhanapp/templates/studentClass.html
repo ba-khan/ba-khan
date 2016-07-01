@@ -2624,7 +2624,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     	
     	var th = $("th."+aux);
     	th.tipsy({
-    		gravity: 'nw',
+    		gravity: 'ne',
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
@@ -2635,7 +2635,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     			top_score=assesments[id_json_assesment]["top_score"];
     			min=assesments[id_json_assesment]["max_grade"];
     			max=assesments[id_json_assesment]["min_grade"];
-	          return '<ul><li>Nombre de la pauta: '+name+'</li><li>% de aprobación: '+percentage+'</li><li>Nota máxima: '+min+'</li><li>Nota mínima: '+max+'</li></ul>';
+	          return '<ul style="width:180px"><li>Nombre de la pauta: '+name+'</li><li>% de aprobación: '+percentage+'</li><li>Nota máxima: '+min+'</li><li>Nota mínima: '+max+'</li></ul>';
 	        }
     	});
     	/*columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, tooltip: "Nombre: "+json["assesments"][i]["config_name"]+"<hr style=margin: 0>
