@@ -233,18 +233,20 @@ def get_api_resource2(session,llamada,server):
     url = server + llamada
     split_url = url.split('?', 1)
     params = {}
-    logging.info(url)
+    #logging.info(url)
 
     # Separate out the URL's parameters, if applicable.
     if len(split_url) == 2:
         url = split_url[0]
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
 
-    logging.info(params)
+    #logging.info(params)
 
     start = time.time()
     response = session.get(url, params=params)
     encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
+    logging.info("el encode respinse es:")
+    logging.info(encoded_response)
     end = time.time()
 
     #print "JASON: \n"
