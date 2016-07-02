@@ -244,7 +244,7 @@ def get_api_resource2(session,llamada,server):
 
     start = time.time()
     response = session.get(url, params=params)
-    encoded_response=response.text.encode(sys.stdout.encoding,errors='ignore')
+    encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
     #logging.info("el encode respinse es:")
     #logging.info(encoded_response)
     end = time.time()
