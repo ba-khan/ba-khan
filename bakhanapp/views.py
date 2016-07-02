@@ -11,7 +11,7 @@ from django.contrib import auth
 from django.db.models import Count,Sum
 from django.db.models import Q
 
-
+import unicodedata
 from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
@@ -89,8 +89,17 @@ def generateClassExcel(request, id_class):
             #create multi-sheet book with array
             arrayAssesment={}
             for a in assesment:
-                arrayAssesment[a.name+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
-                arrayAssesment[a.name+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
+                name_sheet = strip_acent(a.name)
+                if len(name_sheet) > 22:
+                    words = name_sheet.split()
+                    print len(words)
+                    length = 22/len(words)
+                    name_sheet=''
+                    for w in words:
+                        name_sheet += w[:length]
+                name_sheet = name_sheet.replace(' ','')
+                arrayAssesment[name_sheet+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
+                arrayAssesment[name_sheet+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
             book = pe.Book(arrayAssesment)
         except Exception as e:
             print '***ERROR*** problemas al crear multiples hojas excel con dataTest try id1004'
@@ -553,7 +562,7 @@ def getClassStudents(request, id_class):
             grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade','grade__teacher_grade','grade__comment').order_by('id_assesment')
             dictGrades = {}
             for g in grades:
-                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
+                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name', 'name')
                 name = name[0]['name']
                 skls = getSkillsCorrect(g['grade__id_grade'])
                 dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls,g['grade__teacher_grade'],g['grade__comment'])
@@ -858,3 +867,8 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
+
+
+def strip_acent(s):
+   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+ 

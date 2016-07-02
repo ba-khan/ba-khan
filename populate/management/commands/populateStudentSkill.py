@@ -292,9 +292,10 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    
                     
                         student_skill.save()
-                        except Exception as e:#id10
-                            logging.error('ha fallado try:#id10 en populateStudentSkill.py')
-                            logging.info(e)
+
+                    except Exception as e:#id10
+                        logging.error('ha fallado try:#id10 en populateStudentSkill.py')
+                        logging.info(e)
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
@@ -362,9 +363,10 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                        
                            
                             student_skill.save()
-                    except Exception as e:#id13
-                        logging.error('ha fallado try:#id13 en populateStudentSkill.py')
-                        logging.info(e)
+
+                        except Exception as e:#id13
+                            logging.error('ha fallado try:#id13 en populateStudentSkill.py')
+                            logging.info(e)
    
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
@@ -373,8 +375,6 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                 logging.error('ha fallado try:#id01 en populateStudentSkill.py')
                 logging.info(e)
 
-
-            
 
 def threadPopulate(students,dates,session):
     """thread populate function"""
@@ -412,8 +412,8 @@ class Command(BaseCommand):
         #meter los parametros anteriores en alguna parte de la base de datos
 
         #institution = Institution.objects.all()
-        institution = Institution.objects.filter(id_institution=3)
 
+        institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key

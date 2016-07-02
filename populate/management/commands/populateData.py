@@ -43,6 +43,8 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Institution
 
 import datetime
+import time
+from time import localtime
 
 import cgi
 import rauth
@@ -84,7 +86,7 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populatedata'+fecha+'.log',
+                    filename='populate.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
@@ -231,15 +233,20 @@ def get_api_resource2(session,llamada,server):
     url = server + llamada
     split_url = url.split('?', 1)
     params = {}
+    #logging.info(url)
 
     # Separate out the URL's parameters, if applicable.
     if len(split_url) == 2:
         url = split_url[0]
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
 
+    #logging.info(params)
+
     start = time.time()
     response = session.get(url, params=params)
-    encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
+    encoded_response=response.text.encode(sys.stdout.encoding,'ISO-8859-1')
+    #logging.info("el encode respinse es:")
+    #logging.info(encoded_response)
     end = time.time()
 
     #print "JASON: \n"
@@ -277,39 +284,48 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     data["last_attempt_number"]=1
                 #si la fecha maximum_exercise_progress_dt no es nulo inserta
                 if data["maximum_exercise_progress_dt"]!=None:
-                    #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
-                    student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
-                                                    total_done = data["total_done"]+data["last_attempt_number"],
-                                                    total_correct = data["total_correct"],
-                                                    streak = data["streak"],
-                                                    longest_streak = data["longest_streak"],
-                                                    last_skill_progress = data["exercise_progress"]["level"],
-                                                    total_hints = data["last_count_hints"],
-                                                    struggling = data["exercise_states"]["struggling"],
-                                                    id_skill_name_id = data["exercise_model"]["id"],
-                                                    kaid_student_id = data["kaid"])
-                                                                               
-                
-                    student_skill.save()
+                    try:
+                        #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
+                        student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                                                        total_done = data["total_done"]+data["last_attempt_number"],
+                                                        total_correct = data["total_correct"],
+                                                        streak = data["streak"],
+                                                        longest_streak = data["longest_streak"],
+                                                        last_skill_progress = data["exercise_progress"]["level"],
+                                                        total_hints = data["last_count_hints"],
+                                                        struggling = data["exercise_states"]["struggling"],
+                                                        id_skill_name_id = data["exercise_model"]["id"],
+                                                        kaid_student_id = data["kaid"])
+                                                                                   
+                    
+                        student_skill.save()
                         
+                    except Exception as e:
+                        #print "entro al except"
+                        print e
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
+                        try:
                             #si el total_done es distinto de null y mayor que 0, debe insertar
                             
-                        student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
-                                                    total_done = data["total_done"]+data["last_attempt_number"],
-                                                    total_correct = data["total_correct"],
-                                                    streak = data["streak"],
-                                                    longest_streak = data["longest_streak"],
-                                                    last_skill_progress = data["exercise_progress"]["level"],
-                                                    total_hints = data["last_count_hints"],
-                                                    struggling = data["exercise_states"]["struggling"],
-                                                    id_skill_name_id = data["exercise_model"]["id"],
-                                                    kaid_student_id = data["kaid"])
-                                                                                   
-                       
-                        student_skill.save()
+                            student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                                                        total_done = data["total_done"]+data["last_attempt_number"],
+                                                        total_correct = data["total_correct"],
+                                                        streak = data["streak"],
+                                                        longest_streak = data["longest_streak"],
+                                                        last_skill_progress = data["exercise_progress"]["level"],
+                                                        total_hints = data["last_count_hints"],
+                                                        struggling = data["exercise_states"]["struggling"],
+                                                        id_skill_name_id = data["exercise_model"]["id"],
+                                                        kaid_student_id = data["kaid"])
+                                                                                       
+                           
+                            student_skill.save()
+                            
+                        except Exception as e:
+                            
+                            print e
 
             except Exception as e:
                 #print "error"
@@ -317,28 +333,8 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     data["last_attempt_number"]=1
                 #si la fecha maximum_exercise_progress_dt no es nulo inserta
                 if data["maximum_exercise_progress_dt"]!=None:
-
-                    #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
-                    student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
-                                                                               total_correct = data["total_correct"],
-                                                                               streak = data["streak"],
-                                                                               longest_streak = data["longest_streak"],
-                                                                               last_skill_progress = data["exercise_progress"]["level"],
-                                                                               total_hints = data["last_count_hints"],
-                                                                               struggling = data["exercise_states"]["struggling"],
-                                                                               id_skill_name_id = data["exercise_model"]["id"],
-                                                                               kaid_student_id = data["kaid"]
-                                                                               )
-                                                                               
-                
-                    student_skill.save()
-
-
-                else:
-                    if data["total_done"]!=None and data["total_done"]>0:
-
-                        #si el total_done es distinto de null y mayor que 0, debe insertar
-                        
+                    try:
+                        #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
                         student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
                                                                                    total_correct = data["total_correct"],
                                                                                    streak = data["streak"],
@@ -350,14 +346,39 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    kaid_student_id = data["kaid"]
                                                                                    )
                                                                                    
-                       
+                    
                         student_skill.save()
-   
+                        
+                    except Exception as e:
+                        #print "entro al except"
+                        print e
+
+                else:
+                    if data["total_done"]!=None and data["total_done"]>0:
+                        try:
+                            #si el total_done es distinto de null y mayor que 0, debe insertar
+                            
+                            student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
+                                                                                       total_correct = data["total_correct"],
+                                                                                       streak = data["streak"],
+                                                                                       longest_streak = data["longest_streak"],
+                                                                                       last_skill_progress = data["exercise_progress"]["level"],
+                                                                                       total_hints = data["last_count_hints"],
+                                                                                       struggling = data["exercise_states"]["struggling"],
+                                                                                       id_skill_name_id = data["exercise_model"]["id"],
+                                                                                       kaid_student_id = data["kaid"]
+                                                                                       )
+                                                                                       
+                           
+                            student_skill.save()
+                            
+                        except Exception as e:                      
+                            print e
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
                    
         except Exception as e:
-            print e
+            logging.info(e)
 
 
 def poblar_skill_attempts(name_student, kaid_student, dates, session):
@@ -433,7 +454,6 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                         kaid_student=kaid_student,
                         id_student_skill_id=student_skill[0]["id_student_skill"])
             new_progress.save()
-
             '''
             #print "guardo bien"
     except Exception as e:
@@ -472,18 +492,29 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
         data = simplejson.loads(source)
         try:
             for j in range(len(data)):
-                
-                video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
-                                                                           points_earned = data[j]["points_earned"],
-                                                                           last_second_watched = data[j]["last_second_watched"],
-                                                                           is_video_complete = data[j]["is_video_completed"],
-                                                                           date = data[j]["time_watched"],
-                                                                           id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                           kaid_student_id = kaid_student
-                                                                           )
-                video_playing.save()
+                try:
+                    idvideo = Video_Playing.objects.filter(date=data[j]["time_watched"], id_video_name_id=student_videos[i]["id_video_name_id"], kaid_student_id= kaid_student).values('id_video_playing')
+                    video_playing = Video_Playing(id_video_playing=idvideo[0]['id_video_playing'], seconds_watched = data[j]["seconds_watched"],
+                                                                               points_earned = data[j]["points_earned"],
+                                                                               last_second_watched = data[j]["last_second_watched"],
+                                                                               is_video_complete = data[j]["is_video_completed"],
+                                                                               date = data[j]["time_watched"],
+                                                                               id_video_name_id = student_videos[i]["id_video_name_id"],
+                                                                               kaid_student_id = kaid_student
+                                                                               )
+                    video_playing.save()
+                except:
+                    video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
+                                                                               points_earned = data[j]["points_earned"],
+                                                                               last_second_watched = data[j]["last_second_watched"],
+                                                                               is_video_complete = data[j]["is_video_completed"],
+                                                                               date = data[j]["time_watched"],
+                                                                               id_video_name_id = student_videos[i]["id_video_name_id"],
+                                                                               kaid_student_id = kaid_student
+                                                                               )
+                    video_playing.save()                   
         except:
-            pass
+            print e
             #print "error"
     #print "listo video_playing"
 
@@ -538,8 +569,8 @@ def threadPopulate(students,dates,session):
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
-        logging.debug(msg)
-        
+        #logging.debug(msg)
+
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -563,7 +594,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-        
+ 
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -613,7 +644,7 @@ class Command(BaseCommand):
                 #cur = conn.cursor()
                 #kaid_student = "kaid_485871758161384306203631"
 
-                today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
+                today = time.strftime("%Y-%m-%dT%H:%M:%SZ", localtime())
                 today = today.replace(":","%3A")
                 yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
@@ -626,8 +657,8 @@ class Command(BaseCommand):
                 logging.debug(msg)
                 msg="ayer: " + yesterday
                 logging.debug(msg)
-                dates = yesterday+"&dt_end="+today
-                #dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-05-27T00%3A00%3A00Z"  
+                #dates = yesterday+"&dt_end="+today
+                dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-02T00%3A00%3A00Z"  
 
 
 
@@ -638,6 +669,7 @@ class Command(BaseCommand):
                 threads = []
                 #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
                 students = Student.objects.filter(id_institution_id=inst.id_institution)
+
 
                 for i in students:
                     #print students[i].name
