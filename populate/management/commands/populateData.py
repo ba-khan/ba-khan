@@ -244,7 +244,7 @@ def get_api_resource2(session,llamada,server):
 
     start = time.time()
     response = session.get(url, params=params)
-    encoded_response=response.text.encode(sys.stdout.encoding,'ISO-8859-1')
+    encoded_response=response.text.encode(sys.stdout.encoding,errors=ignore)
     #logging.info("el encode respinse es:")
     #logging.info(encoded_response)
     end = time.time()
@@ -570,7 +570,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -594,7 +594,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
- 
+    '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -611,8 +611,8 @@ class Command(BaseCommand):
         CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
         #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
         #secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
-        passw='clave1234'
-        identifier='utpbakhan'
+        #passw='clave1234'
+        #identifier='utpbakhan'
         #passw='CONTRASENA'
         #identifier='LeonardoMunoz'
         #identifiers = ['utpbakhan','LeonardoMunoz']
@@ -620,7 +620,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        institution = Institution.objects.all()
+        #institution = Institution.objects.all()
+        institution = Institution.objects.filter(id_institution=7)
 
         for inst in institution:
             keys = inst.key
