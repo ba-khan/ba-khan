@@ -641,6 +641,16 @@ function uncheckStudent2(student){
 }
 
 function uploadExcel(){
+	$("#divExcelClasses").remove();
+	resetExcelClass();
+	$(".response").remove();
+	$("#popup").append("<p class='response'>Cargando el excel. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+
 	var data = new FormData();
 	$.each($('#miexcel')[0].files, function(i, file) {
 	    data.append('file-'+i, file);
@@ -657,13 +667,14 @@ function uploadExcel(){
 	    success: function(response){
 	    	console.log(response);
 	        jsonResponse = response;
-	        drawClasses(jsonResponse[1], jsonResponse[0])
-	        for (var i = jsonResponse.length - 1; i >= 0; i--) {
-	        	//drawClasses(jsonResponse[1]);
-	        };
+	        drawClasses(jsonResponse[1], jsonResponse[0]);
+	        $("#hover").css('pointer-events','');
+			$("#close").css('pointer-events','');
+			$("#hover").fadeOut();
+			$("#popup").fadeOut();
+			$('#loading').fadeOut();
 	    }
 	});
-
 }
 
 </script>
@@ -696,39 +707,6 @@ function showStudent(count){
 
 	$("#excelClassDiv").append('<button onclick="javascript:confirmSaveExcelClass('+count+')" id="confirmSaveExcelClass" class="kui-button kui-button-plain kui-button-primary">Guardar</button>')
 }
-
-/*function saveExcelClass(cnt){
-	showStudent(cnt);
-
-	var arreglo= new Object();
-	for(var k=0;k<jsonResponse[0][jsonResponse[1][cnt-1]].length;k++){
-		arreglo[k] = jsonResponse[0][jsonResponse[1][cnt-1]][k];
-	}
-	$(".response").remove();
-	$("#editButton").remove();
-	$("#cancelSaveButton").remove();
-	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
-	$("#popup").append($('#loading').css('display',''));
-	$("#hover").css('pointer-events','none');
-	$("#close").css('pointer-events','none');
-	$("#hover").fadeIn();
-	$("#popup").fadeIn();
-	$.ajax({
-		url: "{% url 'classRoster:saveExcelClass' %}",
-		type: "POST",
-		data: {class: jsonResponse[1][cnt-1], student: arreglo},
-			success: function(response){
-				$(".response").fadeOut();
-				$('#loading').fadeOut();
-				$(".response").remove()
-				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
-				$(".response").fadeIn();
-				setTimeout(function(){
-					location.reload();
-				}, 750); 
-			}
-	});
-}*/
 
 var excelClassJson = new Object();
 function confirmSaveExcelClass(){

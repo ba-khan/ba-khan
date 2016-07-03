@@ -118,7 +118,7 @@ h3, h5{
  	margin-left: 23%;
     margin-right: 5%;
  }
- #cancelSaveButton{
+ #cancelSaveButton, #cancelSaveExcelButton{
   margin-left: 5%;
  }
 
@@ -262,4 +262,9 @@ tr:hover{
   float: left;
   position: relative;
   margin-left: 2%;
+}
+
+#confirmSaveExcelClass {
+    float: left;
+    margin-left: 40%;
 }
