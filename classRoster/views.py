@@ -1,5 +1,6 @@
-from django.shortcuts import render
 # -*- encoding: utf-8 -*-
+from django.shortcuts import render
+
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
@@ -282,9 +283,12 @@ def editClass(request):
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def uploadExcel(request):
     if request.method == 'POST':
-        excel = request.FILES
-        wb = xlrd.open_workbook(filename=None, file_contents=excel['file-0'].read())
-        sh = wb.sheet_by_index(0)
+        try:
+            excel = request.FILES
+            wb = xlrd.open_workbook(filename=None, file_contents=excel['file-0'].read())
+            sh = wb.sheet_by_index(0)
+        except:
+            return HttpResponse(json.dumps("False"))
         # List to hold dictionaries
         students_list = []
         class_list = []
@@ -295,12 +299,15 @@ def uploadExcel(request):
         for rownum in range(1, sh.nrows):
             row_values = sh.row_values(rownum)
             student = OrderedDict()
-            student['name'] = row_values[0]
-            student['points'] = int(row_values[11])
-            student['class'] = row_values[12]
-            student['kaid'] = row_values[13][28:]
+            try:
+                student['name'] = row_values[0]
+                student['points'] = int(row_values[11])
+                student['class'] = row_values[12]
+                student['kaid'] = row_values[13][28:]
 
-            aux = row_values[12]
+                aux = row_values[12]
+            except:
+                return HttpResponse(json.dumps("False"))
             aux = aux.split(', ')
             #print len(aux2)
             for i in range(0,len(aux)):

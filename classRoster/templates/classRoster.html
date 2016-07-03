@@ -641,6 +641,16 @@ function uncheckStudent2(student){
 }
 
 function uploadExcel(){
+    var filename = $("#miexcel").val();
+    var extension = filename.replace(/^.*\./, '');
+    if (extension!="xlsx") {
+    	$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Formato de archivo no válido. Debe ser .xlsx</p>");
+		return;
+    };
+
 	$("#divExcelClasses").remove();
 	resetExcelClass();
 	$(".response").remove();
@@ -665,14 +675,29 @@ function uploadExcel(){
 	    type: 'POST',
 	    dataType: 'json',
 	    success: function(response){
-	    	console.log(response);
-	        jsonResponse = response;
-	        drawClasses(jsonResponse[1], jsonResponse[0]);
-	        $("#hover").css('pointer-events','');
-			$("#close").css('pointer-events','');
-			$("#hover").fadeOut();
-			$("#popup").fadeOut();
-			$('#loading').fadeOut();
+	    	if (response == "False") {
+	    		$("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+				$("#hover").fadeOut();
+				$("#popup").fadeOut();
+				$('#loading').fadeOut();
+	    		$('.response').remove();
+	    		$("#popup").append("<p class='response'>Archivo no válido</p>");
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+				return;
+	    		
+	    	}
+	    	else{
+	    		jsonResponse = response;
+		        drawClasses(jsonResponse[1], jsonResponse[0]);
+		        $("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+				$("#hover").fadeOut();
+				$("#popup").fadeOut();
+				$('#loading').fadeOut();
+	    	};
+	        
 	    }
 	});
 }
