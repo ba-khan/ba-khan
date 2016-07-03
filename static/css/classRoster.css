@@ -79,9 +79,9 @@
  	position: relative;
  	float:left;
 }
-#studentsClass{
+#studentsClass, #excelStudentsClass{
 	width:90%;
-	height:50%;
+	height:205px;
 	border: 1px solid #ddd;
  	border-radius: 5px;
  	float:left;
@@ -157,13 +157,13 @@ table.testgrid td {
   outline: none;
 }
 
-#studentsClass li, #excelStudents li{  padding-left: 5%; }
-#studentsClass{
+#studentsClass li, #excelStudentsClass li{  padding-left: 5%; }
+#studentsClass, #excelStudentsClass{
   overflow-y: auto;
   outline: none;
 }
 
-#counter{
+#counter, #excelCounter{
   text-align: right;
   margin: 0px;
   display: inline-block;
@@ -195,7 +195,7 @@ table.testgrid td {
 #classesDiv h1{
   margin-bottom: 1%;
 }
-.student_li{
+.student_li, .excelStudent_li{
   float:left;
 }
 #uncheckStudent{
@@ -205,21 +205,23 @@ table.testgrid td {
     font-weight: bold;
     cursor:pointer;
 }
-.student_li_div{
+.student_li_div, .excelStudent_li_div{
     width: 100%;
     height: 10%;
 }
-.student_li_div:hover{
+.student_li_div:hover, .excelStudent_li_div:hover{
   background-color: rgb(217, 217, 217);
 }
-#year, #levels, #letter{
+#year, #levels, #letter,
+#excelYear, #excelLevels, #excelLetter{
     width: 17%;
     margin-left: 1%;
     color: black;
     font-style: normal;
     font-size: 14px;
 }
-#additional, #teacher, #selectClass{
+#additional, #teacher, #selectClass,
+#excelAdditional, #excelTeacher{
     width: 25%;
     margin-left: 3%;
     color: black;
@@ -234,8 +236,15 @@ tr:hover{
   background-color: rgb(217, 217, 217);
 }
 
+#uploadExcel, #excelClassDiv{
+  width:50%;
+  float: left;
+}
+
+#excelClassDiv{ display: none; }
+
 #divExcelClasses {
-    width: 50%;
+    width: 100%;
     height: 400px;
     margin: 2%;
     overflow: hidden;
