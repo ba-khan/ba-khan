@@ -1,4 +1,3 @@
-from django.shortcuts import render
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
@@ -570,7 +569,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-    '''
+
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -594,7 +593,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-    '''
+
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -620,8 +619,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
-        institution = Institution.objects.filter(id_institution=7)
+        institution = Institution.objects.all()
+        #institution = Institution.objects.filter(id_institution=7)
 
         for inst in institution:
             keys = inst.key
@@ -659,7 +658,7 @@ class Command(BaseCommand):
                 msg="ayer: " + yesterday
                 logging.debug(msg)
                 #dates = yesterday+"&dt_end="+today
-                dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-02T00%3A00%3A00Z"  
+                dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-04T00%3A00%3A00Z"  
 
 
 
