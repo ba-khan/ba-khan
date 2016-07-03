@@ -347,7 +347,7 @@ def saveExcelClass(request):
         id_institution = int(inst.id_institution)
         for student in students:
             aux = Student.objects.get(name=student)
-            if aux.institution!=id_institution:
+            if aux.id_institution_id!=id_institution:
                 return HttpResponse("Estudiantes no corresponden a esta institución")
         try:
             curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional)
