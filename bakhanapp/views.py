@@ -366,7 +366,11 @@ def getTeacherClasses(request):
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
-    return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('myClasses.html', {'classes': classes,'isTeacher':isTeacher}, context_instance=RequestContext(request))
     
 
 def getClassSkills(request,id_class):
