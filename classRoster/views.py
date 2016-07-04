@@ -156,8 +156,11 @@ def getRoster(request):
         #a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
         #for b in a:
             #students.append(b)
-
-    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newTeacherClass(request):

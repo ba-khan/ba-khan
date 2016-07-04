@@ -16,7 +16,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher
+from bakhanapp.models import Teacher,Class_Subject
 
 register = template.Library()
 from configs import timeSleep
@@ -33,7 +33,11 @@ def getAdministrators(request):
         return render_to_response('administrators.html', context_instance=RequestContext(request))
     administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
     #print administrators
-    return render_to_response('administrators.html', {'administrators': administrators}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('administrators.html', {'administrators': administrators,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def saveAdministrator(request):
