@@ -287,9 +287,10 @@
 		average=0;
 		if(assesments.length > 0){
 			for(k=0;k<assesments.length;k++){
-				aux=students[i]["assesment"+assesments[k]['id']].grade;
+				//console.log(students[i]["assesment"+assesments[k]['id']].bonus_grade);
+				aux=students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
 				if(aux=!null){
-					average=average+students[i]["assesment"+assesments[k]['id']].grade;
+					average=average+students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
 					cont=cont+1;
 				}
 			}
