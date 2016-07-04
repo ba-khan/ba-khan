@@ -269,36 +269,40 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
         #print i
         #if data[i]["points"] >0 :
         try:
-            print "entro al try"
-            stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data[i]["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
-            print stdnt_skillid[0]["id_student_skill"]
- 
-            student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"],
-                                                                       total_correct = data[i]["total_correct"],
-                                                                       streak = data[i]["streak"],
-                                                                       longest_streak = data[i]["longest_streak"],
-                                                                       last_skill_progress = data[i]["exercise_progress"]["level"],
-                                                                       total_hints = data[i]["last_count_hints"],
-                                                                       struggling = data[i]["exercise_states"]["struggling"],
-                                                                       id_skill_name_id = data[i]["exercise_model"]["id"],
-                                                                       kaid_student_id = kaid_student
-                                                                       )
-            student_skill.save()
+            try:
+                print "entro al try"
+                stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data[i]["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
+                print stdnt_skillid[0]["id_student_skill"]
+     
+                student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"],
+                                                                           total_correct = data[i]["total_correct"],
+                                                                           streak = data[i]["streak"],
+                                                                           longest_streak = data[i]["longest_streak"],
+                                                                           last_skill_progress = data[i]["exercise_progress"]["level"],
+                                                                           total_hints = data[i]["last_count_hints"],
+                                                                           struggling = data[i]["exercise_states"]["struggling"],
+                                                                           id_skill_name_id = data[i]["exercise_model"]["id"],
+                                                                           kaid_student_id = kaid_student
+                                                                           )
+                student_skill.save()
 
-        except Exception as e:
-            print e
-            student_skill = Student_Skill(total_done = data[i]["total_done"],
-                                               total_correct = data[i]["total_correct"],
-                                               streak = data[i]["streak"],
-                                               longest_streak = data[i]["longest_streak"],
-                                               last_skill_progress = data[i]["exercise_progress"]["level"],
-                                               total_hints = data[i]["last_count_hints"],
-                                               struggling = data[i]["exercise_states"]["struggling"],
-                                               id_skill_name_id = data[i]["exercise_model"]["id"],
-                                               kaid_student_id = kaid_student
-                                               )
-            print "guardo except"
-            student_skill.save()
+            except Exception as e:
+                print e
+                student_skill = Student_Skill(total_done = data[i]["total_done"],
+                                                   total_correct = data[i]["total_correct"],
+                                                   streak = data[i]["streak"],
+                                                   longest_streak = data[i]["longest_streak"],
+                                                   last_skill_progress = data[i]["exercise_progress"]["level"],
+                                                   total_hints = data[i]["last_count_hints"],
+                                                   struggling = data[i]["exercise_states"]["struggling"],
+                                                   id_skill_name_id = data[i]["exercise_model"]["id"],
+                                                   kaid_student_id = kaid_student
+                                                   )
+                print "guardo except"
+                student_skill.save()
+        except Exception as e:#idsk01
+            logging.info("fallo en idsk01")
+            logging.info(e)
 
             #print e
 
@@ -615,7 +619,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -639,7 +643,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-    '''
+
     msg = threading.currentThread().getName() + "Terminado"
     #logging.debug(msg)
     semafaro.release()
@@ -703,8 +707,8 @@ class Command(BaseCommand):
                 #logging.debug(msg)
                 msg="ayer: " + yesterday
                 #logging.debug(msg)
-                dates = yesterday+"&dt_end="+today
-                #dates = "2016-03-01T00%3A00%3A00Z&dt_end=2016-07-04T00%3A00%3A00Z"  
+                #dates = yesterday+"&dt_end="+today
+                dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-05T00%3A00%3A00Z"  
 
 
 
