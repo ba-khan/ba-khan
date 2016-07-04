@@ -657,8 +657,8 @@ class Command(BaseCommand):
                 logging.debug(msg)
                 msg="ayer: " + yesterday
                 logging.debug(msg)
-                #dates = yesterday+"&dt_end="+today
-                dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-04T00%3A00%3A00Z"  
+                dates = yesterday+"&dt_end="+today
+                #dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-04T00%3A00%3A00Z"  
 
 
 
