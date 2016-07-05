@@ -11,7 +11,7 @@ from django.contrib import auth
 from django.db.models import Count
 
 from django import template
-from bakhanapp.models import Assesment_Skill
+from bakhanapp.models import Assesment_Skill,Class_Subject
 
 register = template.Library()
 
@@ -67,7 +67,11 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_data = json.dumps(json_dict)
     #print (json_data)
     topictree= getTopictree('math')
-    return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
