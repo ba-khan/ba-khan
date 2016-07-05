@@ -129,6 +129,7 @@ class Chapter(models.Model):
     id_chapter_name = models.CharField(max_length=150,primary_key=True)
     id_subject_name = models.ForeignKey(Subject)
     name_spanish = models.CharField(max_length=150)
+    index = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -137,6 +138,7 @@ class Topic(models.Model):
     id_topic_name = models.CharField(max_length=150,primary_key=True)
     id_chapter_name = models.ForeignKey(Chapter)
     name_spanish = models.CharField(max_length=150)
+    index = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -146,6 +148,7 @@ class Subtopic(models.Model):
     id_subtopic_name = models.CharField(max_length=150,primary_key=True)
     id_topic_name = models.ForeignKey(Topic)
     name_spanish = models.CharField(max_length=150)
+    index = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -154,6 +157,7 @@ class Skill(models.Model):
     id_skill_name = models.CharField(max_length=150,primary_key=True)
     name_spanish = models.CharField(max_length=150,null=True)
     name = models.CharField(max_length=150,null=True)
+    index = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
