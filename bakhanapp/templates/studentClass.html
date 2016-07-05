@@ -78,9 +78,9 @@
 	    	<h4>Histograma de notas:</h4>
 	    	<div id="resumen_graph" class="resumen_graph"></div>
 	    	<div id="skills_boxplot" class="resumen_graph"></div>
-	    	<hr><h4>Habilidades:</h4>
+	    	<!--<hr><h4>Habilidades:</h4>
 	    	<div id="resumen_skill"></div>
-	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
+	    	<div id="resumen_grade" class="resumen_grade"></div>
 	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
 	    	
     	</div>
@@ -2263,7 +2263,8 @@
 			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+pmin+" </p><br>");
 			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+nmax+" </p>");
 			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+nmin+" </p><br>");
-			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br><hr>");
+			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br>");
+			$('#resumen_data').append("<p><strong> Habilidades:</strong> <a id='qtipSkills'>Ver Habilidades</a> </p><br><hr>");
 			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+aprobados+" </p>");
 			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+reprobados+" </p><br>");
 					
@@ -2272,18 +2273,40 @@
 				grade_order.push(students[k]['assesment'+id_assesment]['grade']);
 			}
 
-			$.ajax({
-				url: "{% url 'evaluations:getSkillAssesment' 1 %}",
-				async:false,
-				type: "POST",
-				data: {id_asses_config: id_assesment_confi},
-				success: function (response) {
-					skills = JSON.parse(response);
-					$("#resumen_skills").append("<h4>Habilidades:</p>");
-					for(var i=0;i<skills.length;i++){
-						$("#resumen_skill").append("<li>"+skills[i]['fields']['name_spanish']+"</li>");					
-					}
-				}
+			$("#qtipSkills").qtip({ 
+	      		content: function() {
+	      			tooltp ="";
+	      			$.ajax({
+						url: "{% url 'evaluations:getSkillAssesment' 1 %}",
+						async:false,
+						type: "POST",
+						data: {id_asses_config: id_assesment_confi},
+						success: function (response) {
+							skills = JSON.parse(response);
+							for(var i=0;i<skills.length;i++){
+								tooltp = tooltp +("<li>"+skills[i]['fields']['name_spanish']+"</li>") + "<br>";					
+							}
+						}
+					});
+			        return tooltp
+			    },
+                
+                show: { 
+                    event: 'mouseenter', 
+                    delay: 10, 
+                    solo: true,   
+                    effect: function(offset) {$(this).slideDown(100);}  
+                    },
+                    
+                hide: { 
+                    event: 'mouseleave', 
+                    delay: 50, 
+                    fixed: true 
+                    },
+                position: { 
+                	my: 'top right',
+     				at: 'bottom center'
+ 				}
 			});
 			
 			/*for (var k=0; k<students.length; k++){
