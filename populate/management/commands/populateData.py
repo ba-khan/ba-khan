@@ -712,7 +712,7 @@ class Command(BaseCommand):
 
 
 
-                #consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+                consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
                 for cons in consulta:
                     #print cons["id_class"]
