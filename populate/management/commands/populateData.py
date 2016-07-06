@@ -116,7 +116,6 @@ def create_callback_server():
     server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler)
     return server
 
-
 # Make an authenticated API call using the given rauth session.
 #/api/v1/user?userId=&username=javierperezferrada&email=
 
