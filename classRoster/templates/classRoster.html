@@ -15,6 +15,7 @@ Nominas
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 <script src="{% static 'js/stickytable.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+<script type="text/javascript" src="http://mbostock.github.com/d3/d3.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/classRoster.css'%}">
@@ -22,6 +23,61 @@ Nominas
 <br>
 <div class="container">
 <div class="main-content">
+	<div id="excelDiv">
+		<h1 style="margin-top:1%">Subir Excel de Khan</h1>
+		<div id="uploadExcel">
+			<form id="miexcelForm" name="miexcelForm">
+			<label for="selectClass">Excel: </label><input type="file" id="miexcel" name="miexcel" accept=".csv, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+			<a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
+			</form>
+		</div>
+		
+		<div id="excelClassDiv">
+			<h3>Curso</h3>
+			<label for="excelLevels">Nivel: </label>
+			<select id="excelLevels" class="ui-corner-all placeholder simple-input blur-on-esc">
+				<option value="0"></option>
+				<option value="1">1° Básico</option>
+				<option value="2">2° Básico</option>
+				<option value="3">3° Básico</option>
+				<option value="4">4° Básico</option>
+				<option value="5">5° Básico</option>
+				<option value="6">6° Básico</option>
+				<option value="7">7° Básico</option>
+				<option value="8">8° Básico</option>
+				<option value="9">1° Medio</option>
+				<option value="10">2° Medio</option>
+				<option value="11">3° Medio</option>
+				<option value="12">4° Medio</option>
+			</select>
+			<label for="excelLetter">Letra: </label>
+			<select id="excelLetter" class="ui-corner-all placeholder simple-input blur-on-esc">
+				<option value=""></option>
+				<option value="A">A</option>
+				<option value="B">B</option>
+				<option value="C">C</option>
+				<option value="D">D</option>
+				<option value="E">E</option>
+				<option value="F">F</option>
+				<option value="G">G</option>
+			</select>
+			<label for="excelYear">Año: </label>
+			<input type="number" id="excelYear" min="2016" value="2016" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+			<br>
+			<label for="excelAdditional">Adicional: </label>
+			<input type="text" id="excelAdditional" placeholder="Opcional" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+			<label for="excelTeacher">Profesor: </label>
+			<select id="excelTeacher" class="ui-corner-all placeholder simple-input blur-on-esc">
+			</select>
+			<h5>Estudiantes: <p id="excelCounter">0</p></h5>
+			
+			<div id="excelStudentsClass"></div>
+
+		</div>
+
+	</div>
+
 	<div id="classesDiv">
 		<h1 style="margin-top:1%">Ver Cursos</h1>
 		<label for="selectClass">Curso: </label>
@@ -171,6 +227,12 @@ Nominas
 <script type="text/javascript">
 $('#nomina').addClass('active selected'); 
 
+function drawNiceScrolls(){
+	$(".studentTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+	$("#studentsClass").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
+	$(".teacherTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+}
+
 $(document).ready(function(){
 	$("#hover").click(function(){
 	    $(this).fadeOut();
@@ -181,10 +243,7 @@ $(document).ready(function(){
 		$("#popup").fadeOut();
 	});
 
-	$(".studentTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
-	$("#studentsClass").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
-	$(".teacherTable").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
-
+	drawNiceScrolls();
 
 	// Write on keyup event of keyword input element
 	$("#searchStudent").keyup(function(){
@@ -220,13 +279,13 @@ $(document).ready(function(){
 	$('input[type="checkbox"]').click(function(){
 	    if($(this).is(":checked")){
 	    	$("#studentsClass").append("<div id=div"+$(this)[0].id+" class='student_li_div'><li id='"+$(this).val()+"' class='student_li'>"+$(this).val()+"</li><a id='uncheckStudent' onclick='javascript:uncheckStudent("+$(this)[0].id+")'>X</a></div>");
-	    	var studentsLen = $("li").length;
+	    	var studentsLen = $(".student_li").length;
 	    	$("#counter").html(studentsLen);
 	    }
 	    else if($(this).is(":not(:checked)")){
 	        var child = document.getElementById($(this).val());
 	        $(child).closest('div').remove();
-	        var studentsLen = $("li").length;
+	        var studentsLen = $(".student_li").length;
 	    	$("#counter").html(studentsLen);
 	    }
 	});
@@ -271,7 +330,7 @@ function confirmSaveClass(){
 	classJson.level = $("#levels").val();
 	classJson.letter = $("#letter").val();
 	var studentsArray = [];
-	$("li").each(function (index){ 
+	$(".student_li").each(function (index){ 
 		studentsArray.push($(this).html());
 	});
 	classJson.students = studentsArray;
@@ -283,7 +342,7 @@ function confirmSaveClass(){
 		return;
 	}
 
-	var studentsLen = $("li").length;
+	var studentsLen = $(".student_li").length;
 	levels = ["","1°","2°","3°","4°","5°","6°","7°","8°","1°","2°","3°","4°"]
 	if (classJson.level>0 && classJson.level<9){
 		level = levels[classJson.level]+" Básico "
@@ -328,7 +387,7 @@ function saveClass(classJson){
 	$.ajax({
 		url: "{% url 'classRoster:newClass' %}",
 		type: "POST",
-		data: classJson,
+		data: {classJson},
 			success: function(response){
 				$(".response").fadeOut();
 				$('#loading').fadeOut();
@@ -349,21 +408,33 @@ function resetClass(){
 	$("input:radio").each(function (index){ 
 		$(this).prop("checked",false);
 	});
-	$("li").each(function (index){ 
+	/*$("li").each(function (index){ 
 		$(this).remove();
-	});
+	});*/
 	$("#teacher").val("");
 	$("#levels").val(1); $("#levels").prop('disabled', false);
 	$("#letter").val("A"); $("#letter").prop('disabled', false);
 	$("#year").val(2016); $("#year").prop('disabled', false);
 	$("#additional").val(null); $("#additional").prop('disabled', false);
-	var studentsLen = $("li").length;
+	var studentsLen = $(".student_li").length;
 	$("#counter").html(studentsLen);
 
 	$("#confirmSaveButton").show();
 	$("#confirmEditButton").hide();
 
 	$(".student_li_div").each(function (index){ 
+		$(this).remove();
+	})
+}
+
+function resetExcelClass(){
+	$("#confirmSaveExcelClass").remove();
+	$("#excelLevels").val(0); $("#excelLevels").prop('disabled', false);
+	$("#excelLetter").val(""); $("#excelLetter").prop('disabled', false);
+	$("#excelYear").val(2016); $("#excelYear").prop('disabled', false);
+	$("#excelAdditional").val(null); $("#excelAdditional").prop('disabled', false);
+
+	$(".excelStudent_li_div").each(function (index){ 
 		$(this).remove();
 	})
 }
@@ -452,7 +523,7 @@ function viewClass(){
 					$("#letter").val(letter); // $("#letter").prop('disabled', true);
 					$("#year").val(year); // $("#year").prop('disabled', true);
 					$("#additional").val(additional); // $("#additional").prop('disabled', true);
-					var studentsLen = $("li").length;
+					var studentsLen = $(".student_li").length;
 					$("#counter").html(studentsLen);
 				}
 				$("input:radio[value='"+response[response.length-1][0]['fields']['name']+"']").prop("checked", true);
@@ -468,9 +539,6 @@ function viewClass(){
 				}, 750); 
 			}
 		});
-
-/*
-	*/ 
 	
 }
 
@@ -497,7 +565,7 @@ function confirmEditClass(){
 	classJson.level = $("#levels").val();
 	classJson.letter = $("#letter").val();
 	var studentsArray = [];
-	$("li").each(function (index){ 
+	$(".student_li").each(function (index){ 
 		studentsArray.push($(this).html());
 	});
 	classJson.students = studentsArray;
@@ -509,7 +577,7 @@ function confirmEditClass(){
 		return;
 	}
 
-	var studentsLen = $("li").length;
+	var studentsLen = $(".student_li").length;
 	levels = ["","1°","2°","3°","4°","5°","6°","7°","8°","1°","2°","3°","4°"]
 	if (classJson.level>0 && classJson.level<9){
 		level = levels[classJson.level]+" Básico "
@@ -561,17 +629,317 @@ function uncheckStudent(student){
 	var std = $(student);
 	$("input:checkbox[value='"+std[0].value+"']").prop("checked", false);
 	$("#div"+std[0].id).remove();
-	var studentsLen = $("li").length;
+	var studentsLen = $(".student_li").length;
 	$("#counter").html(studentsLen);
 }
 
 function uncheckStudent2(student){
 	$("input:checkbox[value='"+$(student)[0].children[0].innerText+"']").prop("checked", false);
 	$(student).remove();
-	var studentsLen = $("li").length;
+	var studentsLen = $(".student_li").length;
 	$("#counter").html(studentsLen);
 }
 
+function uploadExcel(){
+    var filename = $("#miexcel").val();
+    var extension = filename.replace(/^.*\./, '');
+    if (extension!="xlsx") {
+    	$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Formato de archivo no válido. Debe ser .xlsx</p>");
+		return;
+    };
+
+	$("#divExcelClasses").remove();
+	resetExcelClass();
+	$(".response").remove();
+	$("#popup").append("<p class='response'>Cargando el excel. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+
+	var data = new FormData();
+	$.each($('#miexcel')[0].files, function(i, file) {
+	    data.append('file-'+i, file);
+	});
+	
+	$.ajax({
+		url: "{% url 'classRoster:uploadExcel' %}",
+		data: data,
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+	    type: 'POST',
+	    dataType: 'json',
+	    success: function(response){
+	    	if (response == "False") {
+	    		$("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+				$("#hover").fadeOut();
+				$("#popup").fadeOut();
+				$('#loading').fadeOut();
+	    		$('.response').remove();
+	    		$("#popup").append("<p class='response'>Archivo no válido</p>");
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+				return;
+	    		
+	    	}
+	    	else{
+	    		jsonResponse = response;
+		        drawClasses(jsonResponse[1], jsonResponse[0]);
+		        $("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+				$("#hover").fadeOut();
+				$("#popup").fadeOut();
+				$('#loading').fadeOut();
+	    	};
+	        
+	    }
+	});
+}
+
+</script>
+
+<script type="text/javascript">
+
+
+function showStudent(count){
+	resetExcelClass();
+	$("#confirmSaveExcelClass").remove();
+	$('input[type=radio]').each(function(){
+	 	$("#excelTeacher").append("<option value="+$(this).val()+">"+$(this).val()+"</option>") //opciones de profesor
+	});
+
+	excelClass = jsonResponse[1][count-1]; // el curso
+
+	console.log(jsonResponse[2][count-1])
+	$("#excelYear").val(jsonResponse[2][count-1]["anio"]);
+	$("#excelAdditional").val(jsonResponse[2][count-1]["adicional"]);
+	if(jsonResponse[2][count-1]["nivel"]!=0 || jsonResponse[2][count-1]["letra"]!="#"){
+		$("#excelLetter").val(jsonResponse[2][count-1]["letra"]);
+		$("#excelLevels").val(jsonResponse[2][count-1]["nivel"]);
+	}
+
+	for(var k=0;k<jsonResponse[0][jsonResponse[1][count-1]].length;k++){ // estudiantes
+		name = (jsonResponse[0][jsonResponse[1][count-1]][k].name);
+		$("#excelStudentsClass").append("<div class='excelStudent_li_div'><li class='excelStudent_li'>"+name+"</li></div>");
+	}
+	$("#excelCounter").html(jsonResponse[0][jsonResponse[1][count-1]].length);
+
+	$("#excelClassDiv").append('<button onclick="javascript:confirmSaveExcelClass('+count+')" id="confirmSaveExcelClass" class="kui-button kui-button-plain kui-button-primary">Guardar</button>')
+}
+
+var excelClassJson = new Object();
+function confirmSaveExcelClass(){
+	excelClassJson.additional = $("#excelAdditional").val();
+	excelClassJson.year = $("#excelYear").val();
+	if (excelClassJson.year<2016){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Año inválido</p>");
+		return;
+	}
+	excelClassJson.teacher = $("#excelTeacher").val();
+	if (excelClassJson.teacher==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger profesor</p>");
+		return;
+	}
+	excelClassJson.level = $("#excelLevels").val();
+	if (excelClassJson.level==0){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger el nivel</p>");
+		return;
+	}
+	excelClassJson.letter = $("#excelLetter").val();
+	if (excelClassJson.letter==""){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger la letra</p>");
+		return;
+	}
+	var studentsArray = [];
+	$(".excelStudent_li").each(function (index){ 
+		studentsArray.push($(this).html());
+	});
+	excelClassJson.students = studentsArray;
+	if (excelClassJson.students.length == 0){
+		$('.response').remove();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#popup").append("<p class='response'>Falta escoger estudiantes</p>");
+		return;
+	}
+
+	var studentsLen = $(".excelStudent_li").length;
+	levels = ["","1°","2°","3°","4°","5°","6°","7°","8°","1°","2°","3°","4°"]
+	if (excelClassJson.level>0 && excelClassJson.level<9){
+		level = levels[excelClassJson.level]+" Básico "
+	}
+	else{
+		level = levels[excelClassJson.level]+" Medio "
+	}
+
+	$(".response").remove()
+	$("#popup").append("<p class='response'>¿Está seguro que desea guardar el curso "+level+excelClassJson.letter+" "+excelClassJson.year+" a cargo del profesor "+excelClassJson.teacher+" con "+studentsLen+" estudiantes?</p>");
+	$("#popup").append('<button onclick="javascript:saveExcelClass(excelClassJson)" id="saveExcelButton" class="kui-button kui-button-plain kui-button-primary">Aceptar</button>');
+	$("#popup").append('<button onclick="javascript:cancelSaveExcelClass()" id="cancelSaveExcelButton" class="kui-button kui-button-plain kui-button-primary">Cancelar</button>');
+	$("a").css('pointer-events','none');
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+	console.log(excelClassJson);
+}
+
+function cancelSaveExcelClass(){
+	$("#hover").fadeOut();
+	$("#popup").fadeOut();
+	$(".response").remove();
+	$("#saveExcelButton").remove();
+	$("#cancelSaveExcelButton").remove();
+	$("#hover").css('pointer-events','');
+	$("#close").css('pointer-events','');
+	$("a").css('pointer-events','');
+}
+
+function saveExcelClass(excelClassJson){
+	console.log(excelClassJson);
+	$(".response").remove();
+	$("#saveExcelButton").remove();
+	$("#cancelSaveExcelButton").remove();
+	$("#popup").append("<p class='response'>Guardando el curso. Espere un momento por favor...</p>");
+	$("#popup").append($('#loading').css('display',''));
+	$("#hover").css('pointer-events','none');
+	$("#close").css('pointer-events','none');
+	$("#hover").fadeIn();
+	$("#popup").fadeIn();
+	$.ajax({
+		url: "{% url 'classRoster:saveExcelClass' %}",
+		type: "POST",
+		data: {excelClassJson},
+			success: function(response){
+				$(".response").fadeOut();
+				$('#loading').fadeOut();
+				$(".response").remove()
+				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+				$(".response").fadeIn();
+				setTimeout(function(){
+					location.reload();
+				}, 750); 
+			}
+	});
+}
+
+function drawClasses(array, json){
+	var array = array; var json = json;
+	if ($("#divExcel")) {
+		$("#divExcelClasses").getNiceScroll().remove();
+		$("#excelStudents").getNiceScroll().remove();
+		$("#divExcel").remove();
+	};
+	$(".studentTable").getNiceScroll().remove();
+	$("#studentsClass").getNiceScroll().remove();
+	$(".teacherTable").getNiceScroll().remove();
+	
+	function tabulate(data, columns) {
+	    var table = d3.select("#uploadExcel").append("div").attr("id","divExcelClasses").append("table").attr('class','testgrid').attr('id','excelClasses'),
+	        thead = table.append("thead"),
+	        tbody = table.append("tbody");
+
+	    // append the header row
+	    thead.append("tr")
+	        .selectAll("th")
+	        .data(columns)
+	        .enter()
+	        .append("th")
+	            .text(function(column) { return column; });
+
+	    // create a row for each object in the data
+	    var rows = tbody.selectAll("tr")
+	        .data(data)
+	        .enter()
+	        .append("tr");
+
+
+	    // create a cell in each row for each column
+	    var count = 0;
+	    var cnt = 0;
+	    var cells = rows.selectAll("td")
+	        .data(function(row) {
+	            return columns.map(function(column) {
+	                return {column: column, value: row[column]};
+	            });
+	        })
+	        .enter()
+	        .append("td")
+	            .html(function(d) {
+	            	//console.log(count);
+	            	if (d.column=="ver estudiantes") {
+	            		count = count+1;
+	            		return "<button class='showButton' onClick='showStudent("+count+")'></button>"
+	            	}
+	            	/*if (d.column=="guardar") {
+	            		cnt = cnt +1;
+	            		return '<button onclick="javascript:confirmSaveExcelClass('+cnt+')" id="confirmSaveExcelClass" class="kui-button kui-button-plain kui-button-primary">Guardar</button>'
+	            	}*/
+	            	else{
+	            		return d.value; 
+	            	}
+	            });
+
+	    var x = 'ds';
+	    
+	    return table;
+	}
+
+	// create some people
+	var people = []
+
+	for(var j=0;j<array.length;j++){
+		//console.log(json[array[j]]);
+		people.push({curso:array[j], 'cantidad de estudiantes':json[array[j]].length, 'ver estudiantes': 'Ver Estudiantes'})
+		for(var k=0;k<json[array[j]].length;k++){
+			//console.log(json[array[j]][k].name);
+			//people.push({curso:'', 'cantidad de estudiantes':'', 'guardar': '', 'ver estudiantes': json[array[j]][k].name})
+		}
+	}
+
+	
+
+	// render the table
+	var peopleTable = tabulate(people, ["curso", "cantidad de estudiantes", "ver estudiantes"]);
+
+	// uppercase the column headers
+	peopleTable.selectAll("thead th")
+	    .text(function(column) {
+	        return column.charAt(0).toUpperCase() + column.substr(1);
+	    });
+	    
+	// sort by age
+	peopleTable.selectAll("tbody tr")
+	    .sort(function(a, b) {
+	        return d3.ascending(a.curso, b.curso);
+	    });
+
+	//d3.select("#divExcel").append("h3").text("Estudiantes");
+	//var excelStudents = d3.select("#divExcel").append("div").attr("id","excelStudents");
+	$("#excelClassDiv").show();
+
+	drawNiceScrolls();
+	$("#divExcelClasses").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+	$("#excelStudents").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:10 });
+}
 </script>
 
 {% endblock %}
