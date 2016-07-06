@@ -71,7 +71,7 @@ import urlparse
 
 import threading
 from threading import Semaphore
-semafaro = Semaphore(10)
+semafaro = Semaphore(50)
     
 CALLBACK_BASE = '127.0.0.1'
 SERVER_URL = 'https://www.khanacademy.org'
@@ -85,7 +85,7 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate.log',
+                    filename='populate'+now+'.log',
                     filemode='w')
 #logging.debug('A debug message')
 #logging.info('Some information')
@@ -619,7 +619,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -643,7 +643,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-    '''
+
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
