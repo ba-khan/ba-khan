@@ -714,18 +714,18 @@ class Command(BaseCommand):
 
                 #consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
-                #for cons in consulta:
+                for cons in consulta:
                     #print cons["id_class"]
-                threads = []
-                #students = Student.objects.filter(student_class__id_class_id=34)
-                students = Student.objects.filter(id_institution_id=inst.id_institution)
+                    threads = []
+                    students = Student.objects.filter(student_class__id_class_id=36)
+                    #students = Student.objects.filter(id_institution_id=inst.id_institution)
 
 
-                for i in students:
-                    #print students[i].name
-                    t = threading.Thread(target=threadPopulate,args=(i,dates,session))
-                    threads.append(t)
-                    t.start()
+                    for i in students:
+                        #print students[i].name
+                        t = threading.Thread(target=threadPopulate,args=(i,dates,session))
+                        threads.append(t)
+                        t.start()
 
             except Exception as e:
                 print e
