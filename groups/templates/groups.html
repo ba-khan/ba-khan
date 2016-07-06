@@ -296,6 +296,9 @@ var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
 for(var i=0; i<cuadritos.length; i++)
                {
                    $("#Avanzados").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Avanzados' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+                   console.log('hola')
+                   addComboBoxIntermedios(cuadritos[i].id);
+                   addComboBoxReforzamiento(cuadritos[i].id);
                }
 parentDiv.removeChild(openDiv[0]);
 };
@@ -306,6 +309,7 @@ var cuadritos = openDiv[0].getElementsByClassName('cuadradito')
 for(var i=0; i<cuadritos.length; i++)
                {
                    $("#Intermedios").append("<div title="+cuadritos[i].innerHTML+" class='cuadradito' name='Intermedios' id="+cuadritos[i].id+" draggable='true' ondragstart='start(event)' ondragend='end(event)'>"+cuadritos[i].innerHTML+"</div>");
+                   addComboBoxReforzamiento(cuadritos[i].id);
                }
 parentDiv.removeChild(openDiv[0]);
 };
