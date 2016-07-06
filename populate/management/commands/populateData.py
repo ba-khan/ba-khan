@@ -270,9 +270,9 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
         #if data[i]["points"] >0 :
         try:
             try:
-                print "entro al try"
+                #print "entro al try"
                 stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data[i]["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
-                print stdnt_skillid[0]["id_student_skill"]
+                #print stdnt_skillid[0]["id_student_skill"]
      
                 student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"],
                                                                            total_correct = data[i]["total_correct"],
@@ -287,7 +287,7 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
                 student_skill.save()
 
             except Exception as e:
-                print e
+                #print e
                 student_skill = Student_Skill(total_done = data[i]["total_done"],
                                                    total_correct = data[i]["total_correct"],
                                                    streak = data[i]["streak"],
@@ -298,7 +298,7 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
                                                    id_skill_name_id = data[i]["exercise_model"]["id"],
                                                    kaid_student_id = kaid_student
                                                    )
-                print "guardo except"
+                #print "guardo except"
                 student_skill.save()
         except Exception as e:#idsk01
             logging.info("fallo en idsk01")
@@ -619,7 +619,7 @@ def threadPopulate(students,dates,session):
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-    '''
+
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except:
@@ -643,9 +643,9 @@ def threadPopulate(students,dates,session):
     except:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-
+    '''
     msg = threading.currentThread().getName() + "Terminado"
-    #logging.debug(msg)
+    logging.debug(msg)
     semafaro.release()
     return
 
@@ -669,8 +669,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        institution = Institution.objects.all()
-        #institution = Institution.objects.filter(id_institution=5)
+        #institution = Institution.objects.all()
+        institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key
@@ -707,8 +707,8 @@ class Command(BaseCommand):
                 #logging.debug(msg)
                 msg="ayer: " + yesterday
                 #logging.debug(msg)
-                dates = yesterday+"&dt_end="+today
-                #dates = "2015-03-01T00%3A00%3A00Z&dt_end=2016-07-05T00%3A00%3A00Z"  
+                #dates = yesterday+"&dt_end="+today
+                dates = "2016-06-01T00%3A00%3A00Z&dt_end=2016-07-05T00%3A00%3A00Z"  
 
 
 
