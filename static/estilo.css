@@ -468,7 +468,7 @@ label.sort-filter{
 }
 
 .bar text {
-  fill: #fff;
+  fill: #000;
 }
 
 .axis path, .axis line {
