@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.db.models import Count,Sum
+from django.db.models import Count,Sum,Max
 from django.db.models import Q
 
 import unicodedata
@@ -809,23 +809,24 @@ def getTopictree(subject):
     for subject in subjects:
         subject_obj={"id": subject.id_subject_name, "parent":"#", "text": subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
         topictree.append(subject_obj)
-    subject_chapter=Chapter.objects.all()
+    subject_chapter=Chapter.objects.order_by('index')
     for chapter in subject_chapter:
         chapter_obj={"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "icon":"false"}
         topictree.append(chapter_obj)
-    chapter_topic=Topic.objects.all()
+    chapter_topic=Topic.objects.order_by('index')
     for topic in chapter_topic:
         topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
         topictree.append(topic_obj)
-    topic_subtopic=Subtopic.objects.all()
+    topic_subtopic=Subtopic.objects.exclude(index=None).order_by('index')
     for subtopic in topic_subtopic:
         subtopic_obj={"id":subtopic.id_subtopic_name, "parent": subtopic.id_topic_name_id, "text":subtopic.name_spanish, "icon":"false"}
         topictree.append(subtopic_obj)
-    subtopic_skill=Subtopic_Skill.objects.select_related('id_skill_name')
+    subtopic_skill=Subtopic_Skill.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_skill_name')
     id=0
     for skill in subtopic_skill:
         skill_id=skill.id_subtopic_skill
-        skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false"}
+        skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false", "index":skill.id_skill_name.index}
+        sorted(skill_obj, key=skill_obj.get)
         topictree.append(skill_obj)
         id=id+1
     #print("--- %s seconds ---" % (time.time() - start_time))
