@@ -1015,7 +1015,7 @@
 		      .attr("width", function(d){return escalarCorrectIncorrect(d.values["incorrect"]); });
 
 	    var incorrect_texts = tbody.selectAll("text.incorrect")//correct_incorrect
-	    	.text(function(d) { return d.values["incorrect"] })
+	    	.text(function(d) { return "I:"+d.values["incorrect"] })
 		    .transition().duration(750)
 	    	.attr("transform",function(d){
 				var textWidth = d3.select(this).node().getBBox().width;
@@ -1027,7 +1027,7 @@
 	    	.attr("width",function(d){return escalarCorrectIncorrect(d.values["correct"])})
 	    var correct_texts = tbody.selectAll("text.correct")
 	    	.transition().duration(750)
-		    .text(function(d) { return d.values["correct"] });
+		    .text(function(d) { return "C:"+d.values["correct"] });
 	    var sortingCriterion = $("select.exercises").val();
 	    //console.log(sortingCriterion);
 	  		if (sortingCriterion=="total"){
