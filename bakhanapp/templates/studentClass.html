@@ -1114,12 +1114,18 @@
 	                    
 	                hide: { 
 	                    event: 'mouseleave', 
-	                    delay: 50, 
+	                    delay: 90, 
 	                    fixed: true 
 	                    },
 	                position: { 
-	                	my: 'top right',
-	     				at: 'bottom center'
+	                	my: 'bottomRight',
+     					at: 'topMiddle',
+     					adjust: {
+     						y: 10
+     					}
+	 				},
+	 				adjust: {
+	 					resize: false
 	 				}
 				    });
 	    
@@ -1313,11 +1319,11 @@
 	          for (i=0;i<(d.value.skills).length;i++){
 	          	//alert(d.value.skills[i][1]);
 	          	skl = skl + "<li style='text-align:left;'><div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+d.value.skills[i][0] 
-	          	skl = skl + "<font color='#1C758A'>C: "+d.value.skills[i][4]+"</font><font color='#C30202'> I: "+d.value.skills[i][3]+"</font></li>" 
+	          	skl = skl + "<font color='#1C758A'> - C: "+d.value.skills[i][4]+"</font><font color='#C30202'>  I: "+d.value.skills[i][3]+"</font></li>" 
 	          };
 	          var algo = '<li>Nota ficticia: '+5+'</li>'
-	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño:"+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo:"+bonus_grade+"</li><li style='text-lign:left;'>Ajuste del Profesor:"+teacher_grade+"</li>"+skl+"</ul>");
-	          test = '<p>resultado:'+id_json_assesment+'</p>'
+	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño: "+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo: "+bonus_grade+"</li><li style='text-lign:left;'>Ajuste del Profesor: "+teacher_grade+"</li>"+skl+"</ul>");
+	          test = '<p>resultado: '+id_json_assesment+'</p>'
 	          return tooltp}
              , 
                     
@@ -1334,8 +1340,8 @@
                     fixed: true 
                     },
                 position: { 
-                	my: 'top right',
-     				at: 'bottom center'
+                	my: 'bottom right',
+     				at: 'top left'
  				}
          });
 	    /*

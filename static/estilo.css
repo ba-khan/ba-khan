@@ -554,7 +554,7 @@ label.sort-filter{
 
 .qtip-content
 {
-max-height: 400px;
+max-height: 350px;
 max-width: 1000px;
 overflow: auto;
 background-color: #fff;
