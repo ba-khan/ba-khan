@@ -78,9 +78,9 @@
 	    	<h4>Histograma de notas:</h4>
 	    	<div id="resumen_graph" class="resumen_graph"></div>
 	    	<div id="skills_boxplot" class="resumen_graph"></div>
-	    	<hr><h4>Habilidades:</h4>
+	    	<!--<hr><h4>Habilidades:</h4>
 	    	<div id="resumen_skill"></div>
-	    	<!--<div id="resumen_grade" class="resumen_grade"></div>
+	    	<div id="resumen_grade" class="resumen_grade"></div>
 	    	<div id="resumen_grade_count" class="resumen_grade"></div>-->
 	    	
     	</div>
@@ -232,9 +232,11 @@
   	    	$("#popup_resumen").fadeOut();
   	    	$("#popup_evaluacion").fadeOut();
   	    	$("#popup_error").fadeOut();
+  	    	showResumenSkills(true);
 
   	    });
   	  	$("#close").click(function(){
+  	  		showResumenSkills(true);
   	        $("#hover").fadeOut();
   	    	$("#popup").fadeOut();
   	    	$("#popup_resumen").fadeOut();
@@ -287,10 +289,10 @@
 		average=0;
 		if(assesments.length > 0){
 			for(k=0;k<assesments.length;k++){
-				//console.log(students[i]["assesment"+assesments[k]['id']].bonus_grade);
-				aux=students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
-				if(aux=!null){
-					average=average+students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
+				aux= students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
+				if(aux!=null){
+					if (aux>assesments[k]['max_grade']) {aux=assesments[k]['max_grade']};
+					average=average+aux
 					cont=cont+1;
 				}
 			}
@@ -1013,7 +1015,7 @@
 		      .attr("width", function(d){return escalarCorrectIncorrect(d.values["incorrect"]); });
 
 	    var incorrect_texts = tbody.selectAll("text.incorrect")//correct_incorrect
-	    	.text(function(d) { return d.values["incorrect"] })
+	    	.text(function(d) { return "I:"+d.values["incorrect"] })
 		    .transition().duration(750)
 	    	.attr("transform",function(d){
 				var textWidth = d3.select(this).node().getBBox().width;
@@ -1025,7 +1027,7 @@
 	    	.attr("width",function(d){return escalarCorrectIncorrect(d.values["correct"])})
 	    var correct_texts = tbody.selectAll("text.correct")
 	    	.transition().duration(750)
-		    .text(function(d) { return d.values["correct"] });
+		    .text(function(d) { return "C:"+d.values["correct"] });
 	    var sortingCriterion = $("select.exercises").val();
 	    //console.log(sortingCriterion);
 	  		if (sortingCriterion=="total"){
@@ -1112,12 +1114,18 @@
 	                    
 	                hide: { 
 	                    event: 'mouseleave', 
-	                    delay: 50, 
+	                    delay: 90, 
 	                    fixed: true 
 	                    },
 	                position: { 
-	                	my: 'top right',
-	     				at: 'bottom center'
+	                	my: 'bottomRight',
+     					at: 'topMiddle',
+     					adjust: {
+     						y: 10
+     					}
+	 				},
+	 				adjust: {
+	 					resize: false
 	 				}
 				    });
 	    
@@ -1311,11 +1319,11 @@
 	          for (i=0;i<(d.value.skills).length;i++){
 	          	//alert(d.value.skills[i][1]);
 	          	skl = skl + "<li style='text-align:left;'><div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+d.value.skills[i][0] 
-	          	skl = skl + "<font color='#1C758A'>C: "+d.value.skills[i][4]+"</font><font color='#C30202'> I: "+d.value.skills[i][3]+"</font></li>" 
+	          	skl = skl + "<font color='#1C758A'> - C: "+d.value.skills[i][4]+"</font><font color='#C30202'>  I: "+d.value.skills[i][3]+"</font></li>" 
 	          };
 	          var algo = '<li>Nota ficticia: '+5+'</li>'
-	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño:"+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo:"+bonus_grade+"</li><li style='text-lign:left;'>Ajuste del Profesor:"+teacher_grade+"</li>"+skl+"</ul>");
-	          test = '<p>resultado:'+id_json_assesment+'</p>'
+	          tooltp =("<ul><li style='text-align:left;'>Nota por Desempeño: "+grade+"</li><li style='text-align:left;'>Bonificacion por Esfuerzo: "+bonus_grade+"</li><li style='text-lign:left;'>Ajuste del Profesor: "+teacher_grade+"</li>"+skl+"</ul>");
+	          test = '<p>resultado: '+id_json_assesment+'</p>'
 	          return tooltp}
              , 
                     
@@ -1332,8 +1340,8 @@
                     fixed: true 
                     },
                 position: { 
-                	my: 'top right',
-     				at: 'bottom center'
+                	my: 'bottom right',
+     				at: 'top left'
  				}
          });
 	    /*
@@ -1552,8 +1560,10 @@
 
     function drawSkillsBoxPlot(skill_levels,skill_names){
     	var textSkillLevels = ["No practicado","En dificultades","Practicado","Nivel 1","Nivel 2","Dominado"];
-    	console.log(skill_names);
-    	console.log(skill_levels);
+    	//console.log(skill_names);
+    	skillsCounter = skill_names.length;
+		$("#skillsCounter").html(skillsCounter);
+    	//console.log(skill_levels);
     	/*for (var i=0;i<skill_names.length;i++){
     		skill_names[i]=skill_names[i].substring(0,10);
     	}*/
@@ -1574,7 +1584,7 @@
 	        xAxis: {
 	            categories: skill_names,
 	            title: {
-	                text: 'Habilidad: '
+	                text: 'Habilidad'
 	            }
 	        },
 
@@ -1610,7 +1620,7 @@
 			// Formatters for counts and times (converting numbers to Dates).
 			var formatCount = d3.format(",.0f");
 
-			var margin = {top: 10, right: 10, bottom: 25, left: 10},
+			var margin = {top: 15, right: 10, bottom: 25, left: 10},
 			    widthg = 480 - margin.left - margin.right,
 			    heightg = 200 - margin.top - margin.bottom;
 
@@ -1651,11 +1661,18 @@
 			    .attr("height", function(d) { return heightg - y(d.y); });
 
 			bar.append("text")
-			    .attr("dy", ".75em")
+			    .attr("dy", "-0.75em")
 			    .attr("y", 6)
 			    .attr("x", (widthg/bins - 10)/2 )//x(dataHistogram[0].dx) / 2)
 			    .attr("text-anchor", "middle")
-			    .text(function(d) { return formatCount(d.y); });
+			    .text(function(d) { 
+			    	if (formatCount(d.y)==0) {
+			    		return ""
+			    	}
+			    	else{
+			    		return formatCount(d.y); 
+			    	}
+			    });
 
 			svg.append("g")
 			    .attr("class", "x axis")
@@ -2210,9 +2227,38 @@
   			$("#hover").show();
   			$("#profile-throbber2").show();
 			$(".vaciar").empty();
-			console.log("entro en loading");
+			//console.log("entro en loading");
 			location.reload();
 		}
+		var resumenFlag=false;
+		function showResumenSkills(flag){
+			if (flag==true) {
+				$("#resumenSkills").hide();
+				//$('#resumenSkills').toggle('blind',50);
+				$(".liResumenSkills").remove();
+				resumenFlag=false;
+			}
+			else{
+				resumenFlag=true;
+				$(".liResumenSkills").remove();
+				
+				$.ajax({
+					url: "{% url 'evaluations:getSkillAssesment' 1 %}",
+					async:false,
+					type: "POST",
+					data: {id_asses_config: id_assesment_confi},
+					success: function (response) {
+						skills = JSON.parse(response);
+						for(var i=0;i<skills.length;i++){
+							$("#resumenSkills").append("<li class='liResumenSkills'>"+skills[i]['fields']['name_spanish']+"</li>") + "<br>";					
+						}
+					}
+				});
+				//$('#resumenSkills').toggle('blind',50);
+				$("#resumenSkills").show();
+			};
+		};
+
 		function resumenAssesment(id_assesment){
 			$("#hover").fadeIn().css('display', '');
 		    $("#popup_resumen").fadeIn().css('display', '');
@@ -2230,6 +2276,7 @@
 					aux=i
 				}
 			}
+			nappr = assesments[aux]['approval_grade'];
 			approval_percentage = assesments[aux].approval_percentage
 			nmin = assesments[aux]['max_grade'];
 			pmin = 0;
@@ -2248,12 +2295,14 @@
 					nmax=actualGrade;
 					pmax = students[i]["assesment"+id_assesment].performance_points
 				}
-				if (actualGrade<nmedia){
+				if (actualGrade<nappr){
 					reprobados++;
 				}else{
 					aprobados++;
 				}
 			};
+
+			
 
 			//student=assesments[aux]['assesment_student']
 			$('#resumen_data').append("<p><strong> Nombre:</strong> "+assesments[aux]['name']+" </p>");
@@ -2263,42 +2312,56 @@
 			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+pmin+" </p><br>");
 			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+nmax+" </p>");
 			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+nmin+" </p><br>");
-			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br><hr>");
+			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br>");
 			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+aprobados+" </p>");
 			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+reprobados+" </p><br>");
+			
+			$('#resumen_data').append("<p><strong> Habilidades:</strong> <p id='skillsCounter' style='margin-left:5px'>0</p></p><button id='qtipSkills' class='showButton' title='Ver Habilidades' style='cursor:pointer; margin-left:5px;' onClick=JavaScript:showResumenSkills(resumenFlag)></button><br>");
+			$('#resumen_data').append("<div id='resumenSkills' style='display:none; width:100%; height:120px; overflow-y: auto; outline:none'></div><hr>")
 					
 			var grade_order = [];
 			for (var k=0; k<students.length; k++){
 				grade_order.push(students[k]['assesment'+id_assesment]['grade']);
 			}
 
-			$.ajax({
-				url: "{% url 'evaluations:getSkillAssesment' 1 %}",
-				async:false,
-				type: "POST",
-				data: {id_asses_config: id_assesment_confi},
-				success: function (response) {
-					skills = JSON.parse(response);
-					$("#resumen_skills").append("<h4>Habilidades:</p>");
-					for(var i=0;i<skills.length;i++){
-						$("#resumen_skill").append("<li>"+skills[i]['fields']['name_spanish']+"</li>");					
-					}
-				}
-			});
+			/*
+			Tooltip para las habilidades en la lupita
+
+			$("#qtipSkills").qtip({ 
+	      		content: function() {
+	      			tooltp ="";
+	      			$.ajax({
+						url: "{% url 'evaluations:getSkillAssesment' 1 %}",
+						async:false,
+						type: "POST",
+						data: {id_asses_config: id_assesment_confi},
+						success: function (response) {
+							skills = JSON.parse(response);
+							for(var i=0;i<skills.length;i++){
+								tooltp = tooltp +("<li>"+skills[i]['fields']['name_spanish']+"</li>") + "<br>";					
+							}
+						}
+					});
+			        return tooltp
+			    },
+                show: { event: 'mouseenter', delay: 10,  solo: true, effect: function(offset) {$(this).slideDown(100);} },
+                hide: { event: 'mouseleave', delay: 50, fixed: true },
+                position: { my: 'top right', at: 'bottom center' }
+			});*/
 			
 			/*for (var k=0; k<students.length; k++){
 				grade_order.push(students[k]['assesment'+id_assesment]['grade']);
 			}*/
 			skills_sample=[];
-			console.log(students);
+			//console.log(students);
 			if (students){
-				console.log(students[0]['assesment'+id_assesment]["skills"]);
+				//console.log(students[0]['assesment'+id_assesment]["skills"]);
 				skills_sample=students[0]['assesment'+id_assesment]["skills"];
 			}
 			skill_names=skills_sample.map(function(d){ 
 					return d[0];//the first attribute of each skills is its spanish name
 			});
-			console.log('assesment'+id_assesment);
+			//console.log('assesment'+id_assesment);
 			var all_skill_levels = [];
 			for (var j=0; j<skills_sample.length; j++){
 				reached_skill_levels=[]
@@ -2340,8 +2403,8 @@
 					}
 					
 				}
-				console.log("reached_skill_levels");
-				console.log(reached_skill_levels);
+				//console.log("reached_skill_levels");
+				//console.log(reached_skill_levels);
 				reached_skill_levels.sort(function(a, b){return a-b});
 				var min = reached_skill_levels[0];
 				var q1 = percentile(reached_skill_levels,0.25);
@@ -2349,10 +2412,10 @@
 				var q3 =  percentile(reached_skill_levels,0.75);
 				var max = reached_skill_levels[reached_skill_levels.length-1];
 				var quartiles = [min,q1,median,q3,max];
-				console.log(quartiles);
+				//console.log(quartiles);
 				all_skill_levels.push(quartiles);
 			}
-			console.log(all_skill_levels);
+			//console.log(all_skill_levels);
 			//console.log(student);
 			drawSkillsBoxPlot(all_skill_levels,skill_names);
 			//drawSkillsBoxPlot();
@@ -2585,7 +2648,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 <script type="text/javascript"> 
     $(document).ready(function () {
-    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -300} })
+    $("#popup_resumen").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:'16', railoffset: {top: -150, left: -308} })
     });
     $("#evCancelar").on("click",function(){
 					$('#hover').fadeOut();
