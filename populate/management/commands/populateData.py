@@ -606,13 +606,13 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    '''
+
     try:
         poblar_student_skill2(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
         #logging.debug(msg)
-
+    '''
     try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
@@ -706,8 +706,8 @@ class Command(BaseCommand):
                 #logging.debug(msg)
                 msg="ayer: " + yesterday
                 #logging.debug(msg)
-                #dates = yesterday+"&dt_end="+today
-                dates = "2016-07-05T00%3A00%3A00Z&dt_end=2016-07-07T00%3A00%3A00Z"  
+                dates = yesterday+"&dt_end="+today
+                #dates = "2016-07-04T00%3A00%3A00Z&dt_end=2016-07-07T00%3A00%3A00Z"  
 
 
 
