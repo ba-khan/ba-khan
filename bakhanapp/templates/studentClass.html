@@ -284,7 +284,6 @@
 	var students = json.students;
 	var assesments=json.assesments;
 	var averages=[]
-	console.log(json);
 	for (i=0;i<students.length;i++){
 		cont=0;
 		average=0;
@@ -293,7 +292,6 @@
 				aux= students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
 				if(aux!=null){
 					if (aux>assesments[k]['max_grade']) {aux=assesments[k]['max_grade']};
-					console.log(aux);
 					average=average+aux
 					cont=cont+1;
 				}
