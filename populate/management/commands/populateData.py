@@ -609,9 +609,10 @@ def threadPopulate(students,dates,session):
 
     try:
         poblar_student_skill2(students.name, students.kaid_student, dates, session) #listo
-    except:
+    except Exception as e:
         msg="error student_skill " + students.name
-        #logging.debug(msg)
+        logging.debug(msg)
+        logging.debug(e)
     '''
     try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
@@ -621,28 +622,28 @@ def threadPopulate(students,dates,session):
     '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
-    except:
+    except Exception as e:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
-
+        logging.debug(e)
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
-    except:
+    except Exception as e:
         msg="error student_progress "+ students.name
         logging.debug(msg)
-
+        logging.debug(e)
     try:
         poblar_student_video(students.name,students.kaid_student, dates, session) #listo
-    except:
+    except Exception as e:
         msg="error student_video "+ students.name
         logging.debug(msg)
-
+        logging.debug(e)
     try:
         poblar_video_playing(students.name,students.kaid_student, dates, session)
-    except:
+    except Exception as e:
         msg="error video_playing "+ students.name
         logging.debug(msg)
-
+        logging.debug(e)
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
