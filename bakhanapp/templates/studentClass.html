@@ -2309,12 +2309,12 @@
 			$('#resumen_data').append("<p><strong> Inicio:</strong> "+assesments[aux]['start_date']+" </p>");
 			$('#resumen_data').append("<p><strong> Término:</strong> "+assesments[aux]['end_date']+" </p><br>");
 			$('#resumen_data').append("<p><strong> Puntaje Máximo:</strong> "+pmax+" </p>");
-			$('#resumen_data').append("<p><strong> Puntaje Mínimo:</strong> "+pmin+" </p><br>");
+			$('#resumen_data').append("<p style='margin-right:25%'><strong> Puntaje Mínimo:</strong> "+pmin+" </p><br>");
 			$('#resumen_data').append("<p><strong> Nota Máxima:</strong> "+nmax+" </p>");
-			$('#resumen_data').append("<p><strong> Nota Mínima:</strong> "+nmin+" </p><br>");
-			$("#resumen_data").append("<p><strong> Alumnos Participantes:</strong> "+students.length+"</p><br>");
+			$('#resumen_data').append("<p style='margin-right:25%'><strong> Nota Mínima:</strong> "+nmin+" </p><br>");
+			$("#resumen_data").append("<p style='margin-right:50%'><strong> Alumnos Participantes:</strong> "+students.length+"</p><br>");
 			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+aprobados+" </p>");
-			$('#resumen_data').append("<p><strong> Reprobados:</strong> "+reprobados+" </p><br>");
+			$('#resumen_data').append("<p style='margin-right:50%'><strong> Reprobados:</strong> "+reprobados+" </p><br>");
 			
 			$('#resumen_data').append("<p><strong> Habilidades:</strong> <p id='skillsCounter' style='margin-left:5px'>0</p></p><button id='qtipSkills' class='showButton' title='Ver Habilidades' style='cursor:pointer; margin-left:5px;' onClick=JavaScript:showResumenSkills(resumenFlag)></button><br>");
 			$('#resumen_data').append("<div id='resumenSkills' style='display:none; width:100%; height:120px; overflow-y: auto; outline:none'></div><hr>")
