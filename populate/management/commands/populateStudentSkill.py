@@ -254,6 +254,52 @@ def poblar_skill():
         conn.commit()
     '''
 
+def poblar_student_skill2(name_student, kaid_student, dates, session):
+    llamada = "/api/v1/user/exercises?username="+name_student
+    jason = get_api_resource2(session,llamada,SERVER_URL2)
+    source = unicode(jason, 'ISO-8859-1')
+    data = simplejson.loads(source)
+    for i in range(len(data)):
+        #print i
+        #if data[i]["points"] >0 :
+        try:
+            try:
+                #print "entro al try"
+                stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data[i]["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
+                #print stdnt_skillid[0]["id_student_skill"]
+     
+                student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"],
+                                                                           total_correct = data[i]["total_correct"],
+                                                                           streak = data[i]["streak"],
+                                                                           longest_streak = data[i]["longest_streak"],
+                                                                           last_skill_progress = data[i]["exercise_progress"]["level"],
+                                                                           total_hints = data[i]["last_count_hints"],
+                                                                           struggling = data[i]["exercise_states"]["struggling"],
+                                                                           id_skill_name_id = data[i]["exercise_model"]["id"],
+                                                                           kaid_student_id = kaid_student
+                                                                           )
+                student_skill.save()
+
+            except Exception as e:
+                #print e
+                student_skill = Student_Skill(total_done = data[i]["total_done"],
+                                                   total_correct = data[i]["total_correct"],
+                                                   streak = data[i]["streak"],
+                                                   longest_streak = data[i]["longest_streak"],
+                                                   last_skill_progress = data[i]["exercise_progress"]["level"],
+                                                   total_hints = data[i]["last_count_hints"],
+                                                   struggling = data[i]["exercise_states"]["struggling"],
+                                                   id_skill_name_id = data[i]["exercise_model"]["id"],
+                                                   kaid_student_id = kaid_student
+                                                   )
+                #print "guardo except"
+                student_skill.save()
+        except Exception as e:#idsk01
+            logging.info("fallo en idsk01")
+            logging.info(e)
+
+            #print e
+
 def poblar_student_skill(name_student, kaid_student, dates, session):
     #print "entro al poblar"
     skills=Skill.objects.values('name')
@@ -379,13 +425,19 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-
+    try:
+        poblar_student_skill2(students.name, students.kaid_student, dates, session) #listo
+    except Exception as e:
+        msg="error student_skill " + students.name
+        logging.debug(msg)
+        logging.debug(e)
+    '''
     try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
         logging.debug(msg)
-
+    '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -411,9 +463,9 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
+        institution = Institution.objects.all()
 
-        institution = Institution.objects.filter(id_institution=5)
+        #institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key
