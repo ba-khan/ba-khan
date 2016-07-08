@@ -1,5 +1,6 @@
-from django.shortcuts import render
 # -*- encoding: utf-8 -*-
+from django.shortcuts import render
+
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
@@ -47,6 +48,7 @@ import codecs
 from lib2to3.fixer_util import String
 from django.core import serializers
 from django.db import connection
+import xlrd
 
 import random
 
@@ -156,8 +158,11 @@ def getRoster(request):
         #a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
         #for b in a:
             #students.append(b)
-
-    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newTeacherClass(request):
@@ -277,3 +282,157 @@ def editClass(request):
             return HttpResponse("Curso editado correctamente")
         except:
             return HttpResponse("Error al editar")
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def uploadExcel(request):
+    if request.method == 'POST':
+        try:
+            excel = request.FILES
+            wb = xlrd.open_workbook(filename=None, file_contents=excel['file-0'].read())
+            sh = wb.sheet_by_index(0)
+        except:
+            return HttpResponse(json.dumps("False"))
+        # List to hold dictionaries
+        students_list = []
+        class_list = []
+        name_class = []
+        class_splited = []
+        clas = OrderedDict()
+        # Iterate through each row in worksheet and fetch values into dict
+        for rownum in range(1, sh.nrows):
+            row_values = sh.row_values(rownum)
+            student = OrderedDict()
+            try:
+                student['name'] = row_values[0]
+                student['points'] = int(row_values[11])
+                student['class'] = row_values[12]
+                student['kaid'] = row_values[13][28:]
+
+                aux = row_values[12]
+            except:
+                return HttpResponse(json.dumps("False"))
+            aux = aux.split(', ')
+            #print len(aux2)
+            for i in range(0,len(aux)):
+                j = aux[i]
+                if j in name_class:
+                    pass
+                else:
+                    name_class.append(j)
+                    clase = splitClass(aux[i])
+                    class_splited.append(clase)
+                if j in clas:
+                    clas[j].append(student)
+                else:
+                    clas[j] = []
+                    clas[j].append(student)
+                
+
+        # Serialize the list of dicts to JSON
+        class_list.append(clas)
+        class_list.append(name_class)
+        class_list.append(class_splited)
+
+        j = json.dumps(class_list)
+
+        return HttpResponse(j)
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def saveExcelClass(request):
+    if request.method == 'POST':
+        newClass = request.POST
+        print newClass
+        level = int(newClass['excelClassJson[level]'])
+        letter = newClass["excelClassJson[letter]"]
+        year = newClass["excelClassJson[year]"]
+        additional = newClass["excelClassJson[additional]"]
+        if additional=="":
+            additional = None
+        #teacher = newClass["teacher"]
+        teacher = Teacher.objects.get(name=newClass["excelClassJson[teacher]"])
+        kaid_teacher = teacher.kaid_teacher
+        students = newClass.getlist("excelClassJson[students][]")
+
+        inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+        id_institution = int(inst.id_institution)
+        for student in students:
+            aux = Student.objects.get(name=student)
+            if aux.id_institution_id!=id_institution:
+                return HttpResponse("Estudiantes no corresponden a esta institución")
+        try:
+            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional)
+            return HttpResponse("Ya existe el curso")
+        except:
+            curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
+            id_curso = int(curso.id_class)
+            class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
+            for student in students:
+                aux = Student.objects.get(name=student)
+                student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+            return HttpResponse("Nuevo curso creado")
+        
+
+        #teachers = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
+
+        #print clase
+
+        '''for i in range(0,longitud):
+            kaid = est["student["+str(i)+"][kaid]"]
+            points = est["student["+str(i)+"][points]"]
+            name = est["student["+str(i)+"][name]"]
+
+            estudiantekaid = Student.objects.filter(kaid_student=kaid).values('kaid_student')
+
+            if not estudiantekaid:
+                newStdnt = Student(kaid_student=kaid, name=name, email='', points=points, phone='', id_institution_id=teachers[0]['id_institution_id'], nickname=name)
+                newStdnt.save()
+
+                classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id']).values('id_class')
+                newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
+                newClass.save()
+
+                newStudentClass = Student_Class(id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
+                newStudentClass.save()
+            else:
+                estudianteinst = Student.objects.filter(kaid_student=kaid, id_institution_id=teachers[0]['id_institution_id']).values('kaid_student')
+                if not estudianteinst:
+                    print "error de institucion"
+                else:
+                    print "alumno ya agregado"'''
+        return HttpResponse(est)
+
+def splitClass(className):
+    cur = className.split('-')
+    curso = cur[0]
+    longnivel = len(curso)
+    if longnivel!=3:
+        nivel = 0
+        letra = "#"
+        adicional = curso
+        try:
+            anio = cur[1]
+        except:
+            anio = 0
+    else:
+        adicional = ""
+        try:
+            nivel = int(curso[0])
+            letra = curso[2]
+            anio = cur[1]
+            if curso[1]=='M':
+                nivel = nivel +8
+            else:
+                if curso[1]!='B':
+                    nivel = 0
+        except:
+            nivel = 0
+            letra = "#"
+            anio=0
+    print nivel, letra, anio, adicional
+
+    clase = OrderedDict()
+    clase["nivel"]=nivel
+    clase["letra"]=letra
+    clase["anio"]=anio
+    clase["adicional"]=adicional
+    return clase

@@ -30,15 +30,18 @@ class Command(BaseCommand):
         
         #print lastDate
         try:#id00
+            #assesments = Assesment.objects.filter(id_assesment=89)
             assesments = Assesment.objects.all()#filter(end_date__lte=currentDate)
         except Exception as e:
             logging.error('ha fallado try:#id00 en CalculateGrade.py')
             logging.info(e)
         for assesment in assesments:
             try:#id01
-                approval_percentage = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).approval_percentage
-                importance_skill_level = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).importance_skill_level
-                importance_completed_rec = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id).importance_completed_rec
+                assesment.end_date = assesment.end_date+timedelta(days=1)
+                config = Assesment_Config.objects.get(pk=assesment.id_assesment_conf_id)
+                approval_percentage = config.approval_percentage
+                importance_skill_level = config.importance_skill_level
+                importance_completed_rec = config.importance_completed_rec
                 skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment.id_assesment_conf_id).values('id_skill_name_id')
                 totalSkills = skills.count()
                 grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
@@ -57,11 +60,11 @@ class Command(BaseCommand):
                 time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
                 levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
-                    ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date'
-                    ).order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')#,skill_progress__to_level='practiced'
+                    ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date','id_skill_name_id'
+                    ).order_by('kaid_student','id_skill_name_id','-skill_progress__date').distinct('kaid_student','id_skill_name_id')#,skill_progress__to_level='practiced'
                 struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
-                    ).values('kaid_student','id_student_skill'
-                    ).order_by('kaid_student','id_student_skill')
+                    ).values('kaid_student','id_student_skill','id_skill_name_id'
+                    ).order_by('kaid_student','id_skill_name_id','id_student_skill').distinct('kaid_student','id_skill_name_id')
             except Exception as e:
                 logging.error('ha fallado try:#id01 en CalculateGrade.py')
                 logging.info(e)

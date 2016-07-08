@@ -1,3 +1,4 @@
+from django.shortcuts import render
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
@@ -42,8 +43,6 @@ from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Institution
 
 import datetime
-import time
-from time import localtime
 
 import cgi
 import rauth
@@ -71,7 +70,7 @@ import urlparse
 
 import threading
 from threading import Semaphore
-semafaro = Semaphore(10)
+semafaro = Semaphore(50)
     
 CALLBACK_BASE = '127.0.0.1'
 SERVER_URL = 'https://www.khanacademy.org'
@@ -85,11 +84,11 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate.log',
+                    filename='populatestudentskill.log',
                     filemode='w')
-#logging.debug('A debug message')
-#logging.info('Some information')
-#logging.warning('A shot across the bows')
+logging.debug('Debug')
+logging.info('Info')
+logging.warning('Warning')
     
 
 # Create the callback server that's used to set the oauth verifier after the
@@ -98,7 +97,7 @@ def create_callback_server():
     class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         def do_GET(self):
             global VERIFIER
-            #logging.debug("kk")
+            logging.debug("kk")
             params = cgi.parse_qs(self.path.split('?', 1)[1],
                 keep_blank_values=False)
             VERIFIER = params['oauth_verifier'][0]
@@ -115,6 +114,7 @@ def create_callback_server():
 
     server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler)
     return server
+
 
 # Make an authenticated API call using the given rauth session.
 #/api/v1/user?userId=&username=javierperezferrada&email=
@@ -147,14 +147,14 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
         params={'oauth_callback': SERVER_URL +'/api/auth/default_callback'}) #'http://%s:%d/' %
             #(CALLBACK_BASE, callback_server.server_address[1])})
 
-    #logging.debug(request_token)
-    #logging.debug(secret_request_token)
+    logging.debug(request_token)
+    logging.debug(secret_request_token)
     
     noClickParams = {'oauth_token':request_token, 'identifier':identifier, 'password':passw}
     
     # 2. Authorize your request token.
     authorize_url = service.get_authorize_url(request_token)
-    #logging.debug(authorize_url)
+    logging.debug(authorize_url)
 
     #webbrowser.open(authorize_url) #Abre ventana para hacer click en aceptar y loguearse
 
@@ -179,15 +179,15 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
     #print r.status_code
 
     r = requests.post(post_url, data=noClickParams)
-    #logging.debug(r.url)
+    logging.debug(r.url)
     
-    #logging.debug(r.text)
-    #logging.debug(r.status_code)
+    logging.debug(r.text)
+    logging.debug(r.status_code)
     #print r
     access_url = urlparse.parse_qs(urlparse.urlparse(r.url).query)
     oauth_verifier_raw = access_url["oauth_verifier"][0]
     oauth_verifier = oauth_verifier_raw.encode('ascii','ignore')
-    #logging.debug(oauth_verifier)
+    logging.debug(oauth_verifier)
     #callback_server.handle_request() #Esto esperaba el click de aceptar
     callback_server.server_close()
 
@@ -199,7 +199,7 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
     #print
     #while(True):
     #    get_api_resource(session)
-    #logging.debug(session)
+    logging.debug(session)
     return session
 
 def getTopictree():
@@ -221,7 +221,7 @@ def getTopictree():
                         temp.append(topic)
                         temp.append(subtopic)
                         temp.append(skill)
-                        #logging.debug(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
+                        logging.debug(chapter.id_chapter_name+" - "+topic.id_topic_name+" + "+subtopic.id_subtopic_name+" * "+skill.name_spanish)
                         topictree.append(temp)
                         temp=[]
     return topictree
@@ -231,20 +231,15 @@ def get_api_resource2(session,llamada,server):
     url = server + llamada
     split_url = url.split('?', 1)
     params = {}
-    #logging.info(url)
 
     # Separate out the URL's parameters, if applicable.
     if len(split_url) == 2:
         url = split_url[0]
         params = cgi.parse_qs(split_url[1], keep_blank_values=False)
 
-    #logging.info(params)
-
     start = time.time()
     response = session.get(url, params=params)
     encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
-    #logging.info("el encode respinse es:")
-    #logging.info(encoded_response)
     end = time.time()
 
     #print "JASON: \n"
@@ -259,52 +254,6 @@ def poblar_skill():
         conn.commit()
     '''
 
-def poblar_student_skill2(name_student, kaid_student, dates, session):
-    llamada = "/api/v1/user/exercises?username="+name_student
-    jason = get_api_resource2(session,llamada,SERVER_URL2)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    for i in range(len(data)):
-        #print i
-        #if data[i]["points"] >0 :
-        try:
-            try:
-                #print "entro al try"
-                stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data[i]["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
-                #print stdnt_skillid[0]["id_student_skill"]
-     
-                student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"],
-                                                                           total_correct = data[i]["total_correct"],
-                                                                           streak = data[i]["streak"],
-                                                                           longest_streak = data[i]["longest_streak"],
-                                                                           last_skill_progress = data[i]["exercise_progress"]["level"],
-                                                                           total_hints = data[i]["last_count_hints"],
-                                                                           struggling = data[i]["exercise_states"]["struggling"],
-                                                                           id_skill_name_id = data[i]["exercise_model"]["id"],
-                                                                           kaid_student_id = kaid_student
-                                                                           )
-                student_skill.save()
-
-            except Exception as e:
-                #print e
-                student_skill = Student_Skill(total_done = data[i]["total_done"],
-                                                   total_correct = data[i]["total_correct"],
-                                                   streak = data[i]["streak"],
-                                                   longest_streak = data[i]["longest_streak"],
-                                                   last_skill_progress = data[i]["exercise_progress"]["level"],
-                                                   total_hints = data[i]["last_count_hints"],
-                                                   struggling = data[i]["exercise_states"]["struggling"],
-                                                   id_skill_name_id = data[i]["exercise_model"]["id"],
-                                                   kaid_student_id = kaid_student
-                                                   )
-                #print "guardo except"
-                student_skill.save()
-        except Exception as e:#idsk01
-            logging.info("fallo en idsk01")
-            logging.info(e)
-
-            #print e
-
 def poblar_student_skill(name_student, kaid_student, dates, session):
     #print "entro al poblar"
     skills=Skill.objects.values('name')
@@ -318,11 +267,11 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
         #intenta obtener el json de la llamada si existe
         try:
             #print j
-            jason = get_api_resource2(session,llamada,SERVER_URL)
+            jason = get_api_resource2(session,llamada,SERVER_URL2)
             source = unicode(jason, 'ISO-8859-1')
             data = simplejson.loads(source)
             try:
-                stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
+                stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data["exercise_model"]["id"], kaid_student_id=data["kaid"]).values("id_student_skill")
                 #print stdnt_skillid
                 if data["last_attempt_number"]>0:
                     data["last_attempt_number"]=1
@@ -339,20 +288,19 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                         total_hints = data["last_count_hints"],
                                                         struggling = data["exercise_states"]["struggling"],
                                                         id_skill_name_id = data["exercise_model"]["id"],
-                                                        kaid_student_id = kaid_student)
+                                                        kaid_student_id = data["kaid"])
                                                                                    
                     
                         student_skill.save()
-                        
-                    except Exception as e:
-                        #print "entro al except"
-                        continue
+
+                    except Exception as e:#id10
+                        logging.error('ha fallado try:#id10 en populateStudentSkill.py')
+                        logging.info(e)
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
-                        try:
                             #si el total_done es distinto de null y mayor que 0, debe insertar
-                            
+                        try:    
                             student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
                                                         total_done = data["total_done"]+data["last_attempt_number"],
                                                         total_correct = data["total_correct"],
@@ -362,13 +310,15 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                         total_hints = data["last_count_hints"],
                                                         struggling = data["exercise_states"]["struggling"],
                                                         id_skill_name_id = data["exercise_model"]["id"],
-                                                        kaid_student_id = kaid_student)
+                                                        kaid_student_id = data["kaid"])
                                                                                        
                            
                             student_skill.save()
-                            
-                        except Exception as e:
-                            continue
+
+                        except Exception as e:#id11
+                            logging.error('ha fallado try:#id11 en populateStudentSkill.py')
+                            logging.info(e)
+
 
             except Exception as e:
                 #print "error"
@@ -386,14 +336,14 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    total_hints = data["last_count_hints"],
                                                                                    struggling = data["exercise_states"]["struggling"],
                                                                                    id_skill_name_id = data["exercise_model"]["id"],
-                                                                                   kaid_student_id = kaid_student
+                                                                                   kaid_student_id = data["kaid"]
                                                                                    )
                                                                                    
                     
                         student_skill.save()
-                        
-                    except Exception as e:
-                        continue
+                    except Exception as e:#id12
+                        logging.error('ha fallado try:#id12 en populateStudentSkill.py')
+                        logging.info(e)
 
                 else:
                     if data["total_done"]!=None and data["total_done"]>0:
@@ -408,242 +358,34 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                        total_hints = data["last_count_hints"],
                                                                                        struggling = data["exercise_states"]["struggling"],
                                                                                        id_skill_name_id = data["exercise_model"]["id"],
-                                                                                       kaid_student_id = kaid_student
+                                                                                       kaid_student_id = data["kaid"]
                                                                                        )
                                                                                        
                            
                             student_skill.save()
-                            
-                        except Exception as e:                      
-                            continue
+
+                        except Exception as e:#id13
+                            logging.error('ha fallado try:#id13 en populateStudentSkill.py')
+                            logging.info(e)
+   
  
             #pregunta por el last_attempt_number de la consulta, si es mayor que 0 lo reemplaza por 1
                    
-        except Exception as e:
-            logging.info(e)
+        except Exception as e:#id01
+                logging.error('ha fallado try:#id01 en populateStudentSkill.py')
+                logging.info(e)
 
-
-def poblar_skill_attempts(name_student, kaid_student, dates, session):
-    student_skills = Student_Skill.objects.filter(kaid_student_id=kaid_student)
-    for i in range(len(student_skills)):
-        skills=Skill.objects.filter(id_skill_name=student_skills[i].id_skill_name_id).values('id_skill_name','name')
-        #print skills[0]["id_skill_name"]
-        llamada = "/api/v1/user/exercises/"+skills[0]["name"]+"/log?userId=&username="+name_student+"&email=&dt_start="+dates
-        jason = get_api_resource2(session,llamada,SERVER_URL)
-        source = unicode(jason, 'ISO-8859-1')
-        data = simplejson.loads(source)
-        try:
-            for j in range(len(data)):
-                #print data[j]["time_done"]
-                skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
-                                                                       mission = data[j]["mission"],
-                                                                       time_taken = data[j]["time_taken"],
-                                                                       count_hints = data[j]["count_hints"],
-                                                                       skipped = data[j]["skipped"],
-                                                                       points_earned = 0,
-                                                                       date = data[j]["time_done"],
-                                                                       correct = data[j]["correct"],
-                                                                       id_skill_name_id = skills[0]["id_skill_name"],
-                                                                       kaid_student_id = kaid_student,
-                                                                       problem_number = data[j]["problem_number"]
-                                                                       )
-                skill_attempts.save()
-
-        except Exception as e:
-            print e
-            #print "otra materia (?)"
-    #print "listeilors"
-
-
-def poblar_skill_progress(student_name,kaid_student,dates,session):
-#realiza la llamada a la API entregandole el username del estudiante y el rango de fechas
-    llamada = "/api/v1/user/exercises/progress_changes?userId=&username="+student_name+"&email=&dt_start="+dates
-    jason = get_api_resource2(session,llamada,SERVER_URL2)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    
-    #print len(data)
-    try:
-        for i in range(len(data)):
-            #para cada progreso lo debe guardar en la tabla skill_progress
-            #print i
-            #print data[i]["exercise_name"]
-            skill = Skill.objects.filter(name=data[i]["exercise_name"]).values('id_skill_name','name')
-            try:
-                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student,id_skill_name_id=skill[0]["id_skill_name"]).values('id_student_skill')
-                new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                    from_level=data[i]["from_progress"]["level"], 
-                    date=data[i]["date"], 
-                    id_student_skill_id=student_skill[0]["id_student_skill"])
-                new_progress.save()
-            except Exception as e:
-                print e
-            '''    
-            except:
-                student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_student_skill")
-                new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                    from_level=data[i]["from_progress"]["level"], 
-                    date=data[i]["date"], 
-                    id_student_skill_id=student_skill[0]["id_student_skill"])
-                new_progress.save()
-            '''    
-            #print student_skill[0]["id_student_skill"]
-            '''
-            new_progress = Skill_Progress(to_level=data[i]["to_progress"]["level"], 
-                        from_level=data[i]["from_progress"]["level"], 
-                        date=data[i]["date"], 
-                        id_skill_name_id=data[i]["exercise_name"],
-                        kaid_student=kaid_student,
-                        id_student_skill_id=student_skill[0]["id_student_skill"])
-            new_progress.save()
-            '''
-            #print "guardo bien"
-    except Exception as e:
-        print e
-            
-def poblar_student_video(student_name,kaid_student, dates, session):
-    llamada = "/api/v1/user/videos?userId=&username="+student_name+"&email=&dt_start="+dates
-    jason = get_api_resource2(session,llamada,SERVER_URL)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    #print "videos: ", len(data)
-    for k in range(len(data)):
-        #if data[i]["points"] >0 :
-        #Tratar de hacer una especie de update_or_create()
-        try:
-            student_video = Student_Video(total_seconds_watched = data[k]["seconds_watched"],
-                                                                       total_points_earned = data[k]["points"],
-                                                                       last_second_watched = data[k]["last_second_watched"],
-                                                                       is_video_complete = data[k]["completed"],
-                                                                       id_video_name_id = data[k]["video"]["id"],
-                                                                       kaid_student_id = kaid_student,
-                                                                       youtube_id = data[k]["video"]["youtube_id"]
-                                                                       )
-            student_video.save()
-        except Exception as e:
-            print e
-            #print "error"
-    #print "listo student_video"
-
-def poblar_video_playing(student_name,kaid_student, dates, session):   
-    student_videos = Student_Video.objects.filter(kaid_student_id=kaid_student).values('youtube_id','id_video_name_id')
-    for i in range(len(student_videos)):
-        llamada = "/api/v1/user/videos/"+student_videos[i]["youtube_id"]+"/log?userId=&username="+student_name+"&email=&dt_start="+dates
-        jason = get_api_resource2(session,llamada,SERVER_URL2)
-        source = unicode(jason, 'ISO-8859-1')
-        data = simplejson.loads(source)
-        try:
-            for j in range(len(data)):
-                try:
-                    idvideo = Video_Playing.objects.filter(date=data[j]["time_watched"], id_video_name_id=student_videos[i]["id_video_name_id"], kaid_student_id= kaid_student).values('id_video_playing')
-                    video_playing = Video_Playing(id_video_playing=idvideo[0]['id_video_playing'], seconds_watched = data[j]["seconds_watched"],
-                                                                               points_earned = data[j]["points_earned"],
-                                                                               last_second_watched = data[j]["last_second_watched"],
-                                                                               is_video_complete = data[j]["is_video_completed"],
-                                                                               date = data[j]["time_watched"],
-                                                                               id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                               kaid_student_id = kaid_student
-                                                                               )
-                    video_playing.save()
-                except:
-                    video_playing = Video_Playing(seconds_watched = data[j]["seconds_watched"],
-                                                                               points_earned = data[j]["points_earned"],
-                                                                               last_second_watched = data[j]["last_second_watched"],
-                                                                               is_video_complete = data[j]["is_video_completed"],
-                                                                               date = data[j]["time_watched"],
-                                                                               id_video_name_id = student_videos[i]["id_video_name_id"],
-                                                                               kaid_student_id = kaid_student
-                                                                               )
-                    video_playing.save()                   
-        except:
-            print e
-            #print "error"
-    #print "listo video_playing"
-
-def coach_students(session): #ver los estudiantes que tienen como coach a cierto usuario. no entrega info de cursos
-    llamada = "/api/v1/user/students"
-    jason = get_api_resource2(session,llamada,SERVER_URL2)
-    source = unicode(jason, 'ISO-8859-1')
-    data = simplejson.loads(source)
-    #with open('data.txt', 'w') as outfile:
-    #    json.dump(data, outfile)
-    #logging.debug(len(data))
-    for j in range(len(data)):
-        logging.debug(data[j]["username"])
-
-def poblar_students(session):
-    # Open the workbook and select the first worksheet
-    wb = xlrd.open_workbook('6BA-2016-Alabama.xlsx')
-    sh = wb.sheet_by_index(0)
-     
-    # List to hold dictionaries
-    students_list = []
-     
-    # Iterate through each row in worksheet and fetch values into dict
-    for rownum in range(1, sh.nrows):
-        student = OrderedDict()
-        row_values = sh.row_values(rownum)
-        student['name'] = row_values[0]
-        student['points'] = int(row_values[11])
-        student['class'] = row_values[12]
-        student['kaid'] = row_values[13][28:]
-
-        new_student = Student(kaid_student=row_values[13][28:],name=row_values[0],email=row_values[0],points=int(row_values[11]),phone=0)
-        new_student.save()
-
-        new_student_class = Student_Class(id_class_id=12,kaid_student_id=row_values[13][28:])
-
-        new_student_class.save()
-                
-     
-        students_list.append(student)
-        #logging.debug(students_list[rownum-1]['points'])
-     
-    # Serialize the list of dicts to JSON
-    j = json.dumps(students_list)
-            
 
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
 
     try:
-        poblar_student_skill2(students.name, students.kaid_student, dates, session) #listo
-    except Exception as e:
-        msg="error student_skill " + students.name
-        logging.debug(msg)
-        logging.debug(e)
-    '''
-    try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except:
         msg="error student_skill " + students.name
-        #logging.debug(msg)
-    '''
-    try:
-        poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
-    except Exception as e:
-        msg = "error student_attempts "+students.name
         logging.debug(msg)
-        logging.debug(e)
-    try:
-        poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
-    except Exception as e:
-        msg="error student_progress "+ students.name
-        logging.debug(msg)
-        logging.debug(e)
-    try:
-        poblar_student_video(students.name,students.kaid_student, dates, session) #listo
-    except Exception as e:
-        msg="error student_video "+ students.name
-        logging.debug(msg)
-        logging.debug(e)
-    try:
-        poblar_video_playing(students.name,students.kaid_student, dates, session)
-    except Exception as e:
-        msg="error video_playing "+ students.name
-        logging.debug(msg)
-        logging.debug(e)
+
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -669,8 +411,9 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        institution = Institution.objects.all()
-        #institution = Institution.objects.filter(id_institution=5)
+        #institution = Institution.objects.all()
+
+        institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key
@@ -694,21 +437,21 @@ class Command(BaseCommand):
                 #cur = conn.cursor()
                 #kaid_student = "kaid_485871758161384306203631"
 
-                today = time.strftime("%Y-%m-%dT%H:%M:%SZ", localtime())
+                today = time.strftime("%Y-%m-%dT%H:%M:%SZ")
                 today = today.replace(":","%3A")
                 yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
                 yesterday = inst.last_load
 
                 inst.last_load = today
-                inst.save()
+                #inst.save()
 
                 msg="hoy: " + today
-                #logging.debug(msg)
+                logging.debug(msg)
                 msg="ayer: " + yesterday
-                #logging.debug(msg)
+                logging.debug(msg)
                 dates = yesterday+"&dt_end="+today
-                #dates = "2016-07-04T00%3A00%3A00Z&dt_end=2016-07-07T00%3A00%3A00Z"  
+                #dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-06-25T00%3A00%3A00Z"  
 
 
 
@@ -717,9 +460,8 @@ class Command(BaseCommand):
                 #for cons in consulta:
                     #print cons["id_class"]
                 threads = []
-                #students = Student.objects.filter(student_class__id_class_id=36)
+                #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
                 students = Student.objects.filter(id_institution_id=inst.id_institution)
-
 
                 for i in students:
                     #print students[i].name

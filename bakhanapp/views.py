@@ -8,10 +8,10 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.db.models import Count,Sum
+from django.db.models import Count,Sum,Max
 from django.db.models import Q
 
-
+import unicodedata
 from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
@@ -131,8 +131,17 @@ def generateClassExcel(request, id_class):
             #create multi-sheet book with array
             arrayAssesment={}
             for a in assesment:
-                arrayAssesment[a.name+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
-                arrayAssesment[a.name+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
+                name_sheet = strip_acent(a.name)
+                if len(name_sheet) > 22:
+                    words = name_sheet.split()
+                    print len(words)
+                    length = 22/len(words)
+                    name_sheet=''
+                    for w in words:
+                        name_sheet += w[:length]
+                name_sheet = name_sheet.replace(' ','')
+                arrayAssesment[name_sheet+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
+                arrayAssesment[name_sheet+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
             book = pe.Book(arrayAssesment)
         except Exception as e:
             print '***ERROR*** problemas al crear multiples hojas excel con dataTest try id1004'
@@ -410,7 +419,11 @@ def getTeacherClasses(request):
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
-    return render_to_response('myClasses.html', {'classes': classes}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('myClasses.html', {'classes': classes,'isTeacher':isTeacher}, context_instance=RequestContext(request))
     
 
 def getClassSkills(request,id_class):
@@ -606,7 +619,7 @@ def getClassStudents(request, id_class):
             grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade','grade__teacher_grade','grade__comment').order_by('id_assesment')
             dictGrades = {}
             for g in grades:
-                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name')
+                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name', 'name')
                 name = name[0]['name']
                 skls = getSkillsCorrect(g['grade__id_grade'])
                 dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls,g['grade__teacher_grade'],g['grade__comment'])
@@ -849,23 +862,24 @@ def getTopictree(subject):
     for subject in subjects:
         subject_obj={"id": subject.id_subject_name, "parent":"#", "text": subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
         topictree.append(subject_obj)
-    subject_chapter=Chapter.objects.all()
+    subject_chapter=Chapter.objects.order_by('index')
     for chapter in subject_chapter:
         chapter_obj={"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "icon":"false"}
         topictree.append(chapter_obj)
-    chapter_topic=Topic.objects.all()
+    chapter_topic=Topic.objects.order_by('index')
     for topic in chapter_topic:
         topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
         topictree.append(topic_obj)
-    topic_subtopic=Subtopic.objects.all()
+    topic_subtopic=Subtopic.objects.exclude(index=None).order_by('index')
     for subtopic in topic_subtopic:
         subtopic_obj={"id":subtopic.id_subtopic_name, "parent": subtopic.id_topic_name_id, "text":subtopic.name_spanish, "icon":"false"}
         topictree.append(subtopic_obj)
-    subtopic_skill=Subtopic_Skill.objects.select_related('id_skill_name')
+    subtopic_skill=Subtopic_Skill.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_skill_name')
     id=0
     for skill in subtopic_skill:
         skill_id=skill.id_subtopic_skill
-        skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false"}
+        skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false", "index":skill.id_skill_name.index}
+        sorted(skill_obj, key=skill_obj.get)
         topictree.append(skill_obj)
         id=id+1
     #print("--- %s seconds ---" % (time.time() - start_time))
@@ -911,3 +925,8 @@ def dictfetchall(cursor):
         dict(zip([col[0] for col in desc], row))
         for row in cursor.fetchall()
     ]
+
+
+def strip_acent(s):
+   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+ 

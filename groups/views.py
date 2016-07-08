@@ -130,11 +130,11 @@ def getGroups(request, id_class):
         if args["student_groups"]:#si se ha seleccionado la opcion guardar agrupacion.
             tutors = eval(args['tutors'])
             #provisorio: si no ha escogido un alumno tutor, se asigna uno arbitrario. finalmente se debe asignar el kaid profesor
-            if tutors[0]['kaid_tutor_reforzamiento'] == '3':
-                tutors[0]['kaid_tutor_reforzamiento'] = request.user.user_profile.kaid
-            if tutors[0]['kaid_tutor_intermedios'] =='2':
-                tutors[0]['kaid_tutor_intermedios'] = request.user.user_profile.kaid
-            tutors[0]['kaid_tutor_avanzados'] = request.user.user_profile.kaid
+            #if tutors[0]['kaid_tutor_reforzamiento'] == '3':
+            #    tutors[0]['kaid_tutor_reforzamiento'] = request.user.user_profile.kaid
+            #if tutors[0]['kaid_tutor_intermedios'] =='2':
+            #    tutors[0]['kaid_tutor_intermedios'] = request.user.user_profile.kaid
+            #tutors[0]['kaid_tutor_avanzados'] = request.user.user_profile.kaid
             try:#id3005 
                 master = Master_Group()
                 master.name = 'test'

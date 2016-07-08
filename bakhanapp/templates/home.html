@@ -44,10 +44,12 @@
 	<!-- Inicio barra de arriba (class="selected")-->
 	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"></h3></span>
 	<a class="" href="{% url 'cursos' %}" id='inicio'><span>Inicio</span></a>
+	{% if isTeacher %}
 	<a class="" href="/inicio/pautas" onClick="loading()" id='pautas'><span>Pautas</span></a>
+	{% endif %}
 	{% if perms.bakhanapp.isAdmin %} 
-	<a class="" href="/inicio/administradores" id='administradores'><span>Administradores</span></a>
-	<a class="" href="/inicio/nomina" id='nomina'><span>Nómina</span></a>
+	<a class="" href="/inicio/administradores" id='administradores'><span>Equipo de Gestión</span></a>
+	<a class="" href="/inicio/nomina" id='nomina'><span>Nóminas</span></a>
 	{% endif %}
 	<a id="logout" class="" href="/salir"><span>Finalizar Sesión</span></a>
 	</span></nav>
@@ -57,11 +59,11 @@
 		<div class="checklist-section">
 			<div class="progress-header">
 				<div class="header-label">
-					<img class="checklist-badge" src="https://es.khanacademy.org/images/badges/moon/productive-40x40.png">
+					<img height="80" width="80" src="https://cdn.kastatic.org/images/avatars/{{ request.user.last_name}}" style="float: left">
 					{% if perms.bakhanapp.isAdmin %} 
-					<span class="header-text">Hola Administrador {{ request.user.username }}</span>
+					<span class="header-text" style="float: left;margin-top: 4%;">Hola Administrador {{ request.user.username }}</span>
 					{% else %}
-					<span class="header-text">Hola Profesor {{ request.user.username }}</span>
+					<span class="header-text" style="float: left;margin-top: 4%;">Hola Profesor {{ request.user.username }}</span>
 					{% endif %}
 				</div>
 				<div id='breadcrumb'></div>
@@ -81,7 +83,7 @@
 		
 	{% endblock %}
     <div class="container">
-        <a class="simple-button orange" id='report-problem' href='/mantisbt/login_select_proj_page.php?ref=bug_report_page.php '>Reportar problemas</a>   
+        <a class="simple-button orange" id='report-problem' href='/mantisbt/login_select_proj_page.php?ref=bug_report_page.php ' target='_blank'>Reportar problemas</a>   
     </div>
 
 {% endblock %}	
