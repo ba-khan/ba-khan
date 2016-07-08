@@ -70,7 +70,7 @@ import urlparse
 
 import threading
 from threading import Semaphore
-semafaro = Semaphore(50)
+semafaro = Semaphore(10)
     
 CALLBACK_BASE = '127.0.0.1'
 SERVER_URL = 'https://www.khanacademy.org'
