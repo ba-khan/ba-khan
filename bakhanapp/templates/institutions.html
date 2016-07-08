@@ -403,7 +403,6 @@ function confirmSave(answer,id){
         tdJson.secret = tr["context"]["children"][7].textContent;
         tdJson.identifier = tr["context"]["children"][8].textContent;
         tdJson.password = tr["context"]["children"][9].textContent;
-    console.log(tdJson)
     $.ajax({
       url: "{% url 'save_institucion' %}",
       type: "POST",
@@ -416,15 +415,11 @@ function confirmSave(answer,id){
           $("#cancelDelete").remove();
           $('.response').remove();
           $('.question').remove();
-          $("#close").fadeIn();
           $("#popup").append("<p class='response'>"+response+"</p>");
           $("#hover").fadeIn();
           $("#popup").fadeIn();
-          
-          auxResponse = response;
-          if (auxResponse == "Nuevo Administrador guardado correctamente"){
-            window.setTimeout(function(){location.reload()},2000);
-          }
+          window.setTimeout(function(){$("#hover").fadeOut();
+                                       $("#popup").fadeOut();},2000);
         }
     });
     //$("#hover").fadeOut().css('display', 'none');
