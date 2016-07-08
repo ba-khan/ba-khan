@@ -317,19 +317,19 @@ function validar(){
   nPassword = document.getElementById("newPassword").value;
 
 
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+  if(nName == null || nName.length == 0 || nName.length >=50 || /^\s+$/.test(nName)) {
     $("#newName").css('color', '#C30202');
     flag = false;
   }else{
     $("#newName").css('color', '#000000');
   }
-  if(nCity == null || nCity.length == 0 || /^\s+$/.test(nCity)) {
+  if(nCity == null || nCity.length == 0 || nCity.length >=30 || /^\s+$/.test(nCity)) {
     $("#newCity").css('color', '#C30202');
     flag = false;
   }else{
     $("#newCity").css('color', '#000000');
   }
-  if(nAddress == null || nAddress.length == 0 || /^\s+$/.test(nAddress)) {
+  if(nAddress == null || nAddress.length == 0 || nAddress.length >=100 || /^\s+$/.test(nAddress)) {
     $("#newAddress").css('color', '#C30202');
     flag = false;
   }else{
@@ -341,19 +341,19 @@ function validar(){
   }else{
     $("#newPhone").css('color', '#000000');
   }
-  if(nSecret == null || nSecret.length == 0 || /^\s+$/.test(nSecret)) {
+  if(nSecret == null || nSecret.length == 0 || nSecret.length >=20 || /^\s+$/.test(nSecret)) {
     $("#newSecret").css('color', '#C30202');
     flag = false;
   }else{
     $("#newSecret").css('color', '#000000');
   }
-  if(nIdentifier == null || nIdentifier.length == 0 || /^\s+$/.test(nIdentifier)) {
+  if(nIdentifier == null || nIdentifier.length == 0 || nIdentifier.length >=50 || /^\s+$/.test(nIdentifier)) {
     $("#newIdentifier").css('color', '#C30202');
     flag = false;
   }else{
     $("#newIdentifier").css('color', '#000000');
   }
-  if(nPassword == null || nPassword.length == 0 || /^\s+$/.test(nPassword)) {
+  if(nPassword == null || nPassword.length == 0 || nPassword.length >=20 || /^\s+$/.test(nPassword)) {
     $("#newPassword").css('color', '#C30202');
     flag = false;
   }else{
