@@ -16,7 +16,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
-from bakhanapp.models import Class
+from bakhanapp.models import Class,Institution
 from bakhanapp.models import Teacher,User_Profile
 from bakhanapp.models import Skill
 from bakhanapp.models import Skill_Progress
@@ -72,6 +72,72 @@ from django.http import HttpResponse
 import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
+
+#ultimo try:#id4004 para este archivo
+@permission_required('bakhanapp.isSuper', login_url="/")
+def saveInstitution(request):
+    request.session.set_expiry(timeSleep)
+    if request.is_ajax():
+        if request.method == 'POST':
+            json_str = json.loads(request.body)
+            try:#id4004
+                institution = Institution.objects.get(pk=json_str["pk"])
+                institution.name = json_str["name"]
+                institution.city = json_str["city"]
+                institution.address = json_str["address"]
+                institution.phone = json_str["phone"]
+                institution.last_load = json_str["last_load"]
+                institution.key = json_str["key"]
+                institution.secret = json_str["secret"]
+                institution.identifier = json_str["identifier"]
+                institution.password = json_str["password"]
+                institution.save()
+                return HttpResponse("Cambios guardados correctamente")
+            except Exception as e:
+                print '****ERROR**** en try:#id4004 bakhanapp:views.py'
+                print e
+                return HttpResponse("Error al guardar")
+    return HttpResponse("Error")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def deleteInstitution(request):
+    request.session.set_expiry(timeSleep)
+    try:#id4003 en bakhanapp:views.py
+        if request.is_ajax():
+            if request.method == 'POST':
+                json_str = json.loads(request.body)
+                institution = Institution.objects.get(pk=json_str["pk"])
+                institution.delete()
+                return HttpResponse(json_str["pk"])
+    except Exception as e:
+        print '****ERROR**** en try:#id4003 bakhanapp:views.py'
+        print e
+        return HttpResponse("Error al eliminar")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def newInstitution(request):
+    request.session.set_expiry(timeSleep)
+    if request.method == 'POST':
+        args = request.POST
+        try:#id4002
+            institution = Institution.objects.create(name=args['name'],
+                city=args['city'],
+                address=args['address'],
+                phone=args['phone'],
+                key=args['key'],
+                secret=args['secret'],
+                identifier=args['identifier'],
+                password=args['password'])
+            iterableArray = [institution]
+            data = serializers.serialize('json', iterableArray)
+            struct = json.loads(data)
+            jsonResponse = json.dumps(struct)
+            return HttpResponse(jsonResponse)
+        except Exception as e:
+            print '****ERROR**** try:#id4002'
+            print e
+            return HttpResponse("Error al guardar")
+
 
 @login_required()
 def generateClassExcel(request, id_class):
@@ -357,7 +423,18 @@ def getTeacherClasses(request):
     #funcion que es llamada con la url:/inicio
     request.session.set_expiry(timeSleep)
     #print request.user.user_profile.kaid
-    #Esta funcion entrega todos los cursos que tiene a cargo el profesor que se encuentra logueado en el sistema
+    #Esta funcion corresponde a estar logueado en el sistema
+    #Si la persona logeada es un super usario, muestra las opciones para crear, editar y eliminar instituciones.
+    if(request.user.has_perm('bakhanapp.isSuper')):
+        print '********dep**********'
+        try:#id4001
+            institutions = Institution.objects.all().order_by('pk')
+            return render_to_response('institutions.html',{'institutions':institutions}, context_instance=RequestContext(request))
+        except Exception as e:
+            print '****ERROR****'
+            print 'ha fallado try:#id4001 en bakhanapp:views.py'
+            print e
+        
     #Si la persona logeada es un administrador, muestra todos los cursos de su establecimiento.
     if(request.user.has_perm('bakhanapp.isAdmin')):
         classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')

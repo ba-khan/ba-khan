@@ -1,0 +1,438 @@
+{% extends 'home.html' %}
+{% load static %}
+{% load  smart_if %}
+
+{% block title %}
+	Instituciones
+{% endblock %}
+
+{% block body2 %}
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+<h1 style="text-align:center;">Instituciones</h1>
+<div>
+  <label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewInstitution' onclick="javascript:showNewInstitution()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Institución</button> </div>
+    <br><br>
+</div>
+
+{% if institutions %}
+<div id='tableInstiution'>
+  <table id="institutionGrid" class="testgrid">
+    <tr>
+      <th>id</th>
+      <th>Nombre</th>
+      <th>Ciudad</th>
+      <th>Dirección</th>
+      <th>Teléfono</th>
+      <th>Última carga</th>
+      <th>LLave</th>
+      <th>Secreto</th>
+      <th>Usuario</th>
+      <th>Contraseña</th>
+      <th>Acciones</th>
+    </tr>
+    {% for i in institutions %}
+    <tr id="R{{ forloop.counter }}">
+      <td>{{ i.pk }}</td>
+      <td>{{ i.name}}</td> 
+      <td>{{i.city}}</td>
+      <td>{{i.address}}</td>
+      <td>{{i.phone}}</td>
+      <td>{{i.last_load}}</td>
+      <td>{{i.key}}</td>
+      <td>{{i.secret}}</td>
+      <td>{{i.identifier}}</td>
+      <td>{{i.password}}</td>
+      <td class="editablegrid-action" data-title="action" style="width:205px">
+        <a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+        <a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
+      </td>
+    </tr>
+
+  {% endfor %}
+</table>
+</div>
+{% endif %}
+
+
+<br>
+<div class="container">
+<div class="main-content">
+
+  <br>
+  
+  
+  
+  <!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
+  <div id="newInstitution">
+    <form action="" method="post" id="form0">{% csrf_token %}
+      <h3>Nueva Institución</h3>
+      <label for='name'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='city'>Ciudad: </label><input id="newCity" onchange="validar()" onkeyup="validar()" name="city" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='address'>Dirección: </label><input id="newAddress" onchange="validar()" onkeyup="validar()" name="address" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='phone'>Teléfono: </label><input id="newPhone" onchange="validar()" onkeyup="validar()" name="phone" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='key'>Llave: </label><input id="newkey" onchange="validar()" onkeyup="validar()" name="key" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='secret'>Secreto: </label><input id="newSecret" onchange="validar()" onkeyup="validar()" name="secret" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='identifier'>Usuario: </label><input id="newIdentifier" onchange="validar()" onkeyup="validar()" name="identifier" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <label for='password'>Contraseña: </label><input id="newPassword" onchange="validar()" onkeyup="validar()" name="password" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <a onclick='javascript:cancelNewInstitution();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+      <a onclick='javascript:saveNewInstitution()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:200px; height: 35px; padding:8px; margin-top:10px">Guardar Institución</a>
+    </form>
+  </div>
+</div>
+<br>
+</div>
+
+<div id="popup" style="display:none">
+  <div id="close">X</div>
+</div>
+<br>
+
+</div> <!-- cerrar div principal del home  -->
+
+<script type="text/javascript">
+	$('#institutions').addClass('active selected');
+
+</script>
+
+<script>
+  window.onload = function () {
+        administratorGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+
+    // we build and load the metadata in Javascript
+    administratorGrid.load({ metadata: [
+      { name: "institution_pk", datatype: "string", editable: false },
+      { name: "institution_name", datatype: "string", editable: true },
+      { name: "institution_city", datatype: "string", editable: true },
+      { name: "institution_address", datatype: "string", editable: true },
+      { name: "institution_phone", datatype: "string", editable: true },
+      { name: "institution_lastLoad", datatype: "string", editable: false },
+      { name: "institution_key", datatype: "string", editable: true },
+      { name: "institution_secret", datatype: "string", editable: true },
+      { name: "institution_identifier", datatype: "string", editable: true },
+      { name: "institution_password", datatype: "string", editable: true },
+      { name: "action", datatype: "html", editable: false }
+    ]});
+
+    // then we attach to the HTML table and render it
+    administratorGrid.attachToHTMLTable('institutionGrid');
+
+    administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 100000000 && parseInt(value) < 999999999); } }));
+    
+    var searchField = document.getElementById('searchField');
+    searchField.addEventListener(
+        'keyup',
+        function (){
+          administratorGrid.filter(searchField.value);
+        }
+    );
+
+    administratorGrid.renderGrid();
+  } 
+</script>
+<script type="text/javascript">
+$(document).ready(function(){
+    //chiusura al click sulla parte scura
+    $("#hover").click(function(){
+          $(this).fadeOut();
+      $("#popup").fadeOut();
+      });
+    
+    //chiusura al click sul pulsante
+    $("#close").click(function(){
+          $("#hover").fadeOut();
+      $("#popup").fadeOut();
+      });
+    
+    $('#newInstitution').hide();
+});
+
+function deleteData(id){
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  
+  tr = document.getElementById("R"+id);
+  invalids = tr.getElementsByClassName("invalid").length;
+  if (invalids>0){
+    response = "Campos inválidos";
+    $("#popup").append("<p class='response'>"+response+"</p>");
+    $("#close").show();
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
+  }
+  else{
+    $('.response').remove();
+    $('.question').remove();
+    $("#close").hide();
+    $("#popup").append("<p class='question'>¿Desea eliminar Institucion?</p>");
+    $("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+    $("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+  }
+
+}
+
+
+function confirmDelete(answer,id){
+  if (answer==1){
+    tr = $(document.getElementById("R"+id));
+    var tdJson = new Object();
+
+        tdJson.pk= tr["context"]["children"][0].textContent;
+    
+    $.ajax({
+      url: "{% url 'delete_institution' %}",
+      type: "POST",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(tdJson),
+        success: function(response){
+          $("#acceptSave").remove();
+          $("#cancelSave").remove();
+          $("#acceptDelete").remove();
+          $("#cancelDelete").remove();
+          $('.response').remove();
+          $('.question').remove();
+          $("#hover").fadeIn().css('display', '');
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          $("#popup").fadeIn().css('display', '');
+          console.log(response);
+          if (parseInt(response)>=0){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            $('#R'+response).hide();
+            $("#hover").hide();
+            $("#popup").hide();
+          }
+        }
+    });
+    //$("#hover").fadeOut().css('display', 'none');
+    //$("#popup").fadeOut().css('display', 'none');
+  }
+  if (answer==0){
+    $("#hover").fadeOut();
+    $("#popup").fadeOut();
+  }
+}
+
+function saveNewInstitution(){
+  console.log('saving new institution');
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  console.log('start validation');
+  if(validar()){
+    console.log('passed validation')
+    $.ajax({
+    url: "{% url 'new_institution' %}",
+    type: "POST",
+    data: $("#form0").serialize(),
+      success: function(response){
+        //console.log(response)
+        jsonResponse = JSON.parse(response);
+        console.log(jsonResponse);
+        $("#close").hide();
+        $("#hover").fadeIn();
+        $("#popup").fadeIn();
+        
+        console.log(jsonResponse[0].model)
+        if (jsonResponse[0].model == "bakhanapp.institution"){
+          $("#popup").append("<p class='response'>Institución creada correctamente</p>");
+          $("#form0").trigger("reset");
+          $("#hover").css('pointer-events','none');
+          $("#close").css('pointer-events','none');
+          $("#newInstitution").hide();
+          $("#buttonNewInstitution").show()
+          $("#institutionGrid").append("<tr id='R"+jsonResponse[0].pk+"'><td>"+jsonResponse[0].pk+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].name+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].city+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].address+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].phone+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].last_load+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].key+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].secret+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].identifier+"</td>"
+                                        +"<td>"+jsonResponse[0]["fields"].password+"</td>"
+                                        +"<td class='editablegrid-action' data-title='action' style='width:205px'><a onclick='javascript:saveData("+jsonResponse[0].pk+")' style='cursor:pointer; width:100px; height: 32px; padding:8px' class='kui-button kui-button-plain kui-button-primary'>Guardar</a><a onclick='javascript:deleteData("+jsonResponse[0].pk+")' style='cursor:pointer; width:100px; height: 32px; padding:8px' class='kui-button kui-button-plain kui-button-primary'>Eliminar</a></td></tr>");
+          window.setTimeout(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+          },1500);
+        }
+      }
+    });
+  }else{
+    console.log('not passed validation');
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+  }
+}
+
+function validar(){
+  flag = true;
+  nName = document.getElementById("newName").value;
+  nCity = document.getElementById("newCity").value;
+  nAddress = document.getElementById("newAddress").value;
+  nPhone = document.getElementById("newPhone").value;
+  nSecret = document.getElementById("newSecret").value;
+  nIdentifier = document.getElementById("newIdentifier").value;
+  nPassword = document.getElementById("newPassword").value;
+
+
+  if(nName == null || nName.length == 0 || nName.length >=50 || /^\s+$/.test(nName)) {
+    $("#newName").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newName").css('color', '#000000');
+  }
+  if(nCity == null || nCity.length == 0 || nCity.length >=30 || /^\s+$/.test(nCity)) {
+    $("#newCity").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newCity").css('color', '#000000');
+  }
+  if(nAddress == null || nAddress.length == 0 || nAddress.length >=100 || /^\s+$/.test(nAddress)) {
+    $("#newAddress").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newAddress").css('color', '#000000');
+  }
+  if(nPhone.length != 9) {
+    $("#newPhone").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newPhone").css('color', '#000000');
+  }
+  if(nSecret == null || nSecret.length == 0 || nSecret.length >=20 || /^\s+$/.test(nSecret)) {
+    $("#newSecret").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newSecret").css('color', '#000000');
+  }
+  if(nIdentifier == null || nIdentifier.length == 0 || nIdentifier.length >=50 || /^\s+$/.test(nIdentifier)) {
+    $("#newIdentifier").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newIdentifier").css('color', '#000000');
+  }
+  if(nPassword == null || nPassword.length == 0 || nPassword.length >=20 || /^\s+$/.test(nPassword)) {
+    $("#newPassword").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newPassword").css('color', '#000000');
+  }
+  return flag;
+}
+
+function showNewInstitution(){
+  $('#newInstitution').toggle('blind',10);
+  $('#buttonNewInstitution').hide();
+  setTimeout(toBottom, 10);
+  }
+
+function cancelNewInstitution(){
+  $("#form0").trigger("reset");
+  $("#newInstitution").hide();
+  $("#buttonNewInstitution").show();
+  toTop();
+}
+
+function toBottom(){
+  $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+}
+
+function toTop(){
+  $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+}
+function saveData(id){
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  
+  tr = document.getElementById("R"+id);
+  invalids = tr.getElementsByClassName("invalid").length;
+  if (invalids>0){
+    response = "Campos inválidos";
+    $("#popup").append("<p class='response'>"+response+"</p>");
+    $("#close").show();
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
+  }
+  else{
+    $('.response').remove();
+    $('.question').remove();
+    $("#close").hide();
+    $("#popup").append("<p class='question'>¿Desea guardar cambios en Institución?</p>");
+    $("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
+    $("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+  }
+
+}
+
+function confirmSave(answer,id){
+  if (answer==1){
+    tr = $(document.getElementById("R"+id));
+    var tdJson = new Object();
+        tdJson.pk = tr["context"]["children"][0].textContent;
+        tdJson.name = tr["context"]["children"][1].textContent;
+        tdJson.city = tr["context"]["children"][2].textContent;
+        tdJson.address = tr["context"]["children"][3].textContent;
+        tdJson.phone = tr["context"]["children"][4].textContent;
+        tdJson.last_load = tr["context"]["children"][5].textContent;
+        tdJson.key = tr["context"]["children"][6].textContent;
+        tdJson.secret = tr["context"]["children"][7].textContent;
+        tdJson.identifier = tr["context"]["children"][8].textContent;
+        tdJson.password = tr["context"]["children"][9].textContent;
+    $.ajax({
+      url: "{% url 'save_institucion' %}",
+      type: "POST",
+      //contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(tdJson),
+        success: function(response){
+          $("#acceptSave").remove();
+          $("#cancelSave").remove();
+          $("#acceptDelete").remove();
+          $("#cancelDelete").remove();
+          $('.response').remove();
+          $('.question').remove();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          window.setTimeout(function(){$("#hover").fadeOut();
+                                       $("#popup").fadeOut();},2000);
+        }
+    });
+    //$("#hover").fadeOut().css('display', 'none');
+    //$("#popup").fadeOut().css('display', 'none');
+  }
+  if (answer==0){
+    $("#hover").fadeOut();
+    $("#popup").fadeOut();
+  }
+}
+
+</script>
+
+
+
+{% endblock %}
