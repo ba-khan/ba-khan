@@ -73,14 +73,14 @@ import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
 
-#ultimo try:#id4003 para este archivo
+#ultimo try:#id4004 para este archivo
 @permission_required('bakhanapp.isSuper', login_url="/")
 def saveInstitution(request):
     request.session.set_expiry(timeSleep)
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
-            try:
+            try:#id4004
                 institution = Institution.objects.get(pk=json_str["pk"])
                 institution.name = json_str["name"]
                 institution.city = json_str["city"]
@@ -94,7 +94,7 @@ def saveInstitution(request):
                 institution.save()
                 return HttpResponse("Cambios guardados correctamente")
             except Exception as e:
-                print '****ERROR**** en try:#id4003 bakhanapp:views.py'
+                print '****ERROR**** en try:#id4004 bakhanapp:views.py'
                 print e
                 return HttpResponse("Error al guardar")
     return HttpResponse("Error")
