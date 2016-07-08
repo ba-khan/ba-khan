@@ -84,7 +84,7 @@ now = datetime.datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populatestudentskill.log',
+                    filename='populatestudentskill'+fecha+'.log',
                     filemode='w')
 logging.debug('Debug')
 logging.info('Info')
@@ -239,7 +239,7 @@ def get_api_resource2(session,llamada,server):
 
     start = time.time()
     response = session.get(url, params=params)
-    encoded_response=response.text.encode(sys.stdout.encoding,errors='replace')
+    encoded_response=response.text.encode(encoding='UTF-8',errors='replace')
     end = time.time()
 
     #print "JASON: \n"
