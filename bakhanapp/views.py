@@ -74,8 +74,32 @@ import pyexcel as pe
 import pyexcel.ext.xls
 
 #ultimo try:#id4003 para este archivo
+@permission_required('bakhanapp.isSuper', login_url="/")
+def saveInstitution(request):
+    request.session.set_expiry(timeSleep)
+    if request.is_ajax():
+        if request.method == 'POST':
+            json_str = json.loads(request.body)
+            try:
+                institution = Institution.objects.get(pk=json_str["pk"])
+                institution.name = json_str["name"]
+                institution.city = json_str["city"]
+                institution.address = json_str["address"]
+                institution.phone = json_str["phone"]
+                institution.last_load = json_str["last_load"]
+                institution.key = json_str["key"]
+                institution.secret = json_str["secret"]
+                institution.identifier = json_str["identifier"]
+                institution.password = json_str["password"]
+                institution.save()
+                return HttpResponse("Cambios guardados correctamente")
+            except Exception as e:
+                print '****ERROR**** en try:#id4003 bakhanapp:views.py'
+                print e
+                return HttpResponse("Error al guardar")
+    return HttpResponse("Error")
 
-@permission_required('bakhanapp.isAdmin', login_url="/")
+@permission_required('bakhanapp.isSuper', login_url="/")
 def deleteInstitution(request):
     request.session.set_expiry(timeSleep)
     try:#id4003 en bakhanapp:views.py

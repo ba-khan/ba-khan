@@ -153,36 +153,6 @@ $(document).ready(function(){
     
     $('#newInstitution').hide();
 });
-function deleteData(id){
-  console.log(pk);
-  $("#acceptSave").remove();
-  $("#cancelSave").remove();
-  $("#acceptDelete").remove();
-  $("#cancelDelete").remove();
-  $('.response').remove();
-  $('.question').remove();
-  
-  tr = document.getElementById("R"+id);
-  invalids = tr.getElementsByClassName("invalid").length;
-  if (invalids>0){
-    response = "Campos inválidos";
-    $("#popup").append("<p class='response'>"+response+"</p>");
-    $("#close").show();
-    $("#hover").fadeIn();
-    $("#popup").fadeIn();
-  }
-  else{
-    $('.response').remove();
-    $('.question').remove();
-    $("#close").hide();
-    $("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
-    $("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
-    $("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-  }
-
-}
 
 function deleteData(id){
   $("#acceptSave").remove();
@@ -389,6 +359,83 @@ function toBottom(){
 function toTop(){
   $('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
 }
+function saveData(id){
+  $("#acceptSave").remove();
+  $("#cancelSave").remove();
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  
+  tr = document.getElementById("R"+id);
+  invalids = tr.getElementsByClassName("invalid").length;
+  if (invalids>0){
+    response = "Campos inválidos";
+    $("#popup").append("<p class='response'>"+response+"</p>");
+    $("#close").show();
+    $("#hover").fadeIn();
+    $("#popup").fadeIn();
+  }
+  else{
+    $('.response').remove();
+    $('.question').remove();
+    $("#close").hide();
+    $("#popup").append("<p class='question'>¿Desea guardar cambios en Institución?</p>");
+    $("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
+    $("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+  }
+
+}
+
+function confirmSave(answer,id){
+  if (answer==1){
+    tr = $(document.getElementById("R"+id));
+    var tdJson = new Object();
+        tdJson.pk = tr["context"]["children"][0].textContent;
+        tdJson.name = tr["context"]["children"][1].textContent;
+        tdJson.city = tr["context"]["children"][2].textContent;
+        tdJson.address = tr["context"]["children"][3].textContent;
+        tdJson.phone = tr["context"]["children"][4].textContent;
+        tdJson.last_load = tr["context"]["children"][5].textContent;
+        tdJson.key = tr["context"]["children"][6].textContent;
+        tdJson.secret = tr["context"]["children"][7].textContent;
+        tdJson.identifier = tr["context"]["children"][8].textContent;
+        tdJson.password = tr["context"]["children"][9].textContent;
+    console.log(tdJson)
+    $.ajax({
+      url: "{% url 'save_institucion' %}",
+      type: "POST",
+      //contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(tdJson),
+        success: function(response){
+          $("#acceptSave").remove();
+          $("#cancelSave").remove();
+          $("#acceptDelete").remove();
+          $("#cancelDelete").remove();
+          $('.response').remove();
+          $('.question').remove();
+          $("#close").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          
+          auxResponse = response;
+          if (auxResponse == "Nuevo Administrador guardado correctamente"){
+            window.setTimeout(function(){location.reload()},2000);
+          }
+        }
+    });
+    //$("#hover").fadeOut().css('display', 'none');
+    //$("#popup").fadeOut().css('display', 'none');
+  }
+  if (answer==0){
+    $("#hover").fadeOut();
+    $("#popup").fadeOut();
+  }
+}
+
 </script>
 
 
