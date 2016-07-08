@@ -2286,13 +2286,13 @@
 			aprobados = 0;
 			reprobados = 0;
 			for (var i = 0; i < students.length; i++) {
-				actualGrade = students[i]["assesment"+id_assesment].grade
+				actualGrade = students[i]["assesment"+id_assesment].grade + students[i]["assesment"+id_assesment].bonus_grade + students[i]["assesment"+id_assesment].teacher_grade;
 				if (actualGrade<nmin){
-					nmin=actualGrade;
+					nmin=Math.round(actualGrade * 10)/10;
 					pmin = students[i]["assesment"+id_assesment].performance_points
 				}
 				if (actualGrade>nmax){
-					nmax=actualGrade;
+					nmax=Math.round(actualGrade * 10)/10;
 					pmax = students[i]["assesment"+id_assesment].performance_points
 				}
 				if (actualGrade<nappr){
@@ -2316,12 +2316,13 @@
 			$('#resumen_data').append("<p><strong> Aprobados:</strong> "+aprobados+" </p>");
 			$('#resumen_data').append("<p style='margin-right:50%'><strong> Reprobados:</strong> "+reprobados+" </p><br>");
 			
-			$('#resumen_data').append("<p><strong> Habilidades:</strong> <p id='skillsCounter' style='margin-left:5px'>0</p></p><button id='qtipSkills' class='showButton' title='Ver Habilidades' style='cursor:pointer; margin-left:5px;' onClick=JavaScript:showResumenSkills(resumenFlag)></button><br>");
+			$('#resumen_data').append("<p><strong> Habilidades:</strong> <p id='skillsCounter' style='margin-left:5px'>0</p></p><button id='qtipSkills' class='showButton' title='Ver Habilidades' style='cursor:pointer; margin-left:5px; float:left;' onClick=JavaScript:showResumenSkills(resumenFlag)></button><br>");
 			$('#resumen_data').append("<div id='resumenSkills' style='display:none; width:100%; height:120px; overflow-y: auto; outline:none'></div><hr>")
 					
 			var grade_order = [];
 			for (var k=0; k<students.length; k++){
-				grade_order.push(students[k]['assesment'+id_assesment]['grade']);
+				grade_order.push(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
+				console.log(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
 			}
 
 			/*
@@ -2421,7 +2422,7 @@
 			//drawSkillsBoxPlot();
 			drawHistogram(assesments[aux]['min_grade'],assesments[aux]['max_grade'],grade_order,10);
 			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])
-			$('.highcharts-button').css('visibility','hidden');	
+			$('.highcharts-button').css('visibility','hidden');
 			$('text:contains("Highcharts.com")').css('visibility','hidden');	
 
 
