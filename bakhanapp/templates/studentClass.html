@@ -2293,6 +2293,7 @@
 				}
 				if (actualGrade>nmax){
 					nmax=Math.round(actualGrade * 10)/10;
+					if (nmax>assesments[aux]['max_grade']) { nmax=assesments[aux]['max_grade']; };
 					pmax = students[i]["assesment"+id_assesment].performance_points
 				}
 				if (actualGrade<nappr){
