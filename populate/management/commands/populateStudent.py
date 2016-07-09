@@ -257,6 +257,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                 new_student.nickname=data[j]["nickname"]
                 new_student.save()
         except Exception as e:
+            logging.warning(e)
             print e
             #logging.debug("error con estudiante "+data[j]["username"])
             #logging.debug(data[j]["username"])
