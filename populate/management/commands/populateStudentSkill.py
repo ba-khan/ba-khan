@@ -414,7 +414,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    '''
+
     try:
         poblar_student_skill2(students.name, students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -428,7 +428,7 @@ def threadPopulate(students,dates,session):
         msg="error student_skill " + students.name
         logging.debug(msg)
         logging.debug(e)
-
+    '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -454,9 +454,9 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
+        institution = Institution.objects.all()
 
-        institution = Institution.objects.filter(id_institution=1)
+        #institution = Institution.objects.filter(id_institution=1)
 
         for inst in institution:
             keys = inst.key

@@ -393,7 +393,7 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
                                                                                kaid_student_id = kaid_student
                                                                                )
                     video_playing.save()                   
-        except:
+        except Exception as e:
             print e
             #print "error"
     #print "listo video_playing"
@@ -495,7 +495,7 @@ class Command(BaseCommand):
         #meter los parametros anteriores en alguna parte de la base de datos
 
         #institution = Institution.objects.all()
-        institution = Institution.objects.filter(id_institution=5)
+        institution = Institution.objects.filter(id_institution=1)
 
         for inst in institution:
             keys = inst.key
