@@ -494,8 +494,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
-        institution = Institution.objects.filter(id_institution=1)
+        institution = Institution.objects.all()
+        #institution = Institution.objects.filter(id_institution=1)
 
         for inst in institution:
             keys = inst.key
@@ -529,11 +529,11 @@ class Command(BaseCommand):
                 inst.save()
 
                 msg="hoy: " + today
-                #logging.debug(msg)
+                logging.debug(msg)
                 msg="ayer: " + yesterday
-                #logging.debug(msg)
-                #dates = yesterday+"&dt_end="+today
-                dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-11T00%3A00%3A00Z"  
+                logging.debug(msg)
+                dates = yesterday+"&dt_end="+today
+                #dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-11T00%3A00%3A00Z"  
 
 
 
