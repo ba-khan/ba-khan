@@ -456,7 +456,7 @@ class Command(BaseCommand):
 
         #institution = Institution.objects.all()
 
-        institution = Institution.objects.filter(id_institution=5)
+        institution = Institution.objects.filter(id_institution=1)
 
         for inst in institution:
             keys = inst.key
