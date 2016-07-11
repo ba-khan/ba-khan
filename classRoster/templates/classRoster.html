@@ -710,8 +710,9 @@ function uploadExcel(){
 function showStudent(count){
 	resetExcelClass();
 	$("#confirmSaveExcelClass").remove();
+	$(".teacherExcelOption").remove();
 	$('input[type=radio]').each(function(){
-	 	$("#excelTeacher").append("<option value="+$(this).val()+">"+$(this).val()+"</option>") //opciones de profesor
+	 	$("#excelTeacher").append("<option value="+$(this).val()+" class='teacherExcelOption'>"+$(this).val()+"</option>") //opciones de profesor
 	});
 
 	excelClass = jsonResponse[1][count-1]; // el curso
@@ -834,9 +835,12 @@ function saveExcelClass(excelClassJson){
 				$(".response").remove()
 				$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
 				$(".response").fadeIn();
-				setTimeout(function(){
-					location.reload();
-				}, 750); 
+				if (response != "Estudiantes no corresponden a esta institución") {
+					setTimeout(function(){
+						location.reload();
+					}, 750); 
+				};
+				
 			}
 	});
 }

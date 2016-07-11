@@ -341,7 +341,6 @@ def uploadExcel(request):
 def saveExcelClass(request):
     if request.method == 'POST':
         newClass = request.POST
-        print newClass
         level = int(newClass['excelClassJson[level]'])
         letter = newClass["excelClassJson[letter]"]
         year = newClass["excelClassJson[year]"]
@@ -356,49 +355,49 @@ def saveExcelClass(request):
         inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
         id_institution = int(inst.id_institution)
         for student in students:
-            aux = Student.objects.get(name=student)
+            try:
+                aux = Student.objects.get(name=student)
+            except:
+                try:
+                    aux = Student.objects.get(nickname=student)
+                except Exception as e:
+                    if e=="Student matching query does not exist.":
+                        return HttpResponse("Estudiantes no encontrados en Bakhan")
             if aux.id_institution_id!=id_institution:
                 return HttpResponse("Estudiantes no corresponden a esta institución")
+        curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional, year=year)
+        print curso.id_class
+        student_class = Student_Class.objects.filter(id_class_id=curso.id_class)
+        print len(students)
+        print len(student_class)
         try:
-            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional)
-            return HttpResponse("Ya existe el curso")
+            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional, year=year)
+            student_class = Student_Class.objects.filter(id_class_id=curso.id_class)
+            if len(students)==len(student_class):
+                student_class.delete()
+                for student in students:
+                    try:
+                        aux = Student.objects.get(name=student)
+                        student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                    except:
+                        aux = Student.objects.get(nickname=student)
+                        student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                return HttpResponse("Curso editado correctamente.")
+            else:
+                return HttpResponse("Ya existe el curso.")
         except:
             curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
             id_curso = int(curso.id_class)
             class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
             for student in students:
-                aux = Student.objects.get(name=student)
-                student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+                try:
+                    aux = Student.objects.get(name=student)
+                    student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+                except:
+                    aux = Student.objects.get(nickname=student)
+                    student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
             return HttpResponse("Nuevo curso creado")
         
-
-        #teachers = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
-
-        #print clase
-
-        '''for i in range(0,longitud):
-            kaid = est["student["+str(i)+"][kaid]"]
-            points = est["student["+str(i)+"][points]"]
-            name = est["student["+str(i)+"][name]"]
-
-            estudiantekaid = Student.objects.filter(kaid_student=kaid).values('kaid_student')
-
-            if not estudiantekaid:
-                newStdnt = Student(kaid_student=kaid, name=name, email='', points=points, phone='', id_institution_id=teachers[0]['id_institution_id'], nickname=name)
-                newStdnt.save()
-
-                classe = Class.objects.filter(level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id']).values('id_class')
-                newClass = Class(id_class=classe[0]['id_class'], level=nivel, letter=letra, year=anio, id_institution_id=teachers[0]['id_institution_id'], additional=adicional)
-                newClass.save()
-
-                newStudentClass = Student_Class(id_class_id=classe[0]['id_class'], kaid_student_id=kaid)
-                newStudentClass.save()
-            else:
-                estudianteinst = Student.objects.filter(kaid_student=kaid, id_institution_id=teachers[0]['id_institution_id']).values('kaid_student')
-                if not estudianteinst:
-                    print "error de institucion"
-                else:
-                    print "alumno ya agregado"'''
         return HttpResponse(est)
 
 def splitClass(className):
