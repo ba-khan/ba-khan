@@ -82,7 +82,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate\management\commands\populate.log',
+                    filename='populatestudents.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
@@ -237,25 +237,47 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
         else:
             email = data[j]["username"]
         try:
-            if data[j]["username"]=="":
-                new_student = Student(kaid_student=data[j]["kaid"])
-                new_student.name=data[j]["nickname"]
-                new_student.email=email
-                new_student.points=data[j]["points"]
-                new_student.id_institution_id=id_institution
+            try:   
+                estd = Student.objects.filter(kaid_student=data[j]["kaid"]).values('kaid_student')
+                if data[j]["username"]=="":
+                    new_student = Student(kaid_student=estd[0]['kaid_student'])
+                    new_student.name=data[j]["nickname"]
+                    new_student.email=email
+                    new_student.points=data[j]["points"]
+                    new_student.id_institution_id=id_institution
 
-                new_student.nickname=data[j]["nickname"]
+                    new_student.nickname=data[j]["nickname"]
+                    new_student.nuevo = False
+                    new_student.save()
+                else:
+                    new_student = Student(kaid_student=estd[0]['kaid_student'])
+                    new_student.name=data[j]["username"]
+                    new_student.email=email
+                    new_student.points=data[j]["points"]
+                    new_student.id_institution_id=id_institution
+                    new_student.nuevo = False
+                    new_student.nickname=data[j]["nickname"]
+                    new_student.save()
+            except:
+                if data[j]["username"]=="":
+                    new_student = Student(kaid_student=data[j]["kaid"])
+                    new_student.name=data[j]["nickname"]
+                    new_student.email=email
+                    new_student.points=data[j]["points"]
+                    new_student.id_institution_id=id_institution
 
-                new_student.save()
-            else:
-                new_student = Student(kaid_student=data[j]["kaid"])
-                new_student.name=data[j]["username"]
-                new_student.email=email
-                new_student.points=data[j]["points"]
-                new_student.id_institution_id=id_institution
-
-                new_student.nickname=data[j]["nickname"]
-                new_student.save()
+                    new_student.nickname=data[j]["nickname"]
+                    new_student.nuevo = True
+                    new_student.save()
+                else:
+                    new_student = Student(kaid_student=data[j]["kaid"])
+                    new_student.name=data[j]["username"]
+                    new_student.email=email
+                    new_student.points=data[j]["points"]
+                    new_student.id_institution_id=id_institution
+                    new_student.nuevo = True
+                    new_student.nickname=data[j]["nickname"]
+                    new_student.save()                
         except Exception as e:
             logging.warning(e)
             print e
@@ -315,7 +337,7 @@ class Command(BaseCommand):
         #meter los parametros anteriores en alguna parte de la base de datos
 
         institution = Institution.objects.all()
-        #institution = Institution.objects.filter(id_institution=5)
+        #institution = Institution.objects.filter(id_institution=2)
 
         for inst in institution:
             keys = inst.key
@@ -323,10 +345,10 @@ class Command(BaseCommand):
             identifiers = inst.identifier
             passes = inst.password
 
-            print identifiers
-            print passes
-            print keys
-            print secrets
+            #print identifiers
+            #print passes
+            #print keys
+            #print secrets
 
             try:
                 session = run_tests(identifiers,passes,keys,secrets)

@@ -53,6 +53,7 @@ class Student(models.Model):
     points = models.IntegerField()
     id_institution = models.ForeignKey(Institution)
     nickname = models.CharField(max_length=100)
+    nuevo = models.BooleanField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name

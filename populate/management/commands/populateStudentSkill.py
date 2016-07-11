@@ -334,7 +334,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                     total_hints = data["last_count_hints"],
                                                     struggling = data["exercise_states"]["struggling"],
                                                     id_skill_name_id = data["exercise_model"]["id"],
-                                                    kaid_student_id = data["kaid"])
+                                                    kaid_student_id = kaid_student)
                                                                                
                 
                     student_skill.save()
@@ -353,7 +353,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                     total_hints = data["last_count_hints"],
                                                     struggling = data["exercise_states"]["struggling"],
                                                     id_skill_name_id = data["exercise_model"]["id"],
-                                                    kaid_student_id = data["kaid"])
+                                                    kaid_student_id = kaid_student)
                                                                                    
                        
                         student_skill.save()
@@ -376,7 +376,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                total_hints = data["last_count_hints"],
                                                                                struggling = data["exercise_states"]["struggling"],
                                                                                id_skill_name_id = data["exercise_model"]["id"],
-                                                                               kaid_student_id = data["kaid"]
+                                                                               kaid_student_id = kaid_student
                                                                                )
                                                                                
                 
@@ -396,7 +396,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                    total_hints = data["last_count_hints"],
                                                                                    struggling = data["exercise_states"]["struggling"],
                                                                                    id_skill_name_id = data["exercise_model"]["id"],
-                                                                                   kaid_student_id = data["kaid"]
+                                                                                   kaid_student_id = kaid_student
                                                                                    )
                                                                                    
                        
