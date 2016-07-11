@@ -81,7 +81,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate\management\commands\populate.log',
+                    filename='populatetree.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')
