@@ -444,19 +444,21 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
         logging.debug(e)
+    '''
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
         msg="error student_progress "+ students.name
         logging.debug(msg)
         logging.debug(e)
+    '''
     try:
         poblar_student_video(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -469,6 +471,7 @@ def threadPopulate(students,dates,session):
         msg="error video_playing "+ students.name
         logging.debug(msg)
         logging.debug(e)
+    '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -532,8 +535,8 @@ class Command(BaseCommand):
                 logging.debug(msg)
                 msg="ayer: " + yesterday
                 logging.debug(msg)
-                dates = yesterday+"&dt_end="+today
-                #dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-11T00%3A00%3A00Z"  
+                #dates = yesterday+"&dt_end="+today
+                dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-11T00%3A00%3A00Z"  
 
 
 
