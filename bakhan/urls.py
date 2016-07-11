@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^home/poblarbd/', include('populate.urls', namespace="populate")),#aplicacion para poblar la base de datos
     url(r'^inicio/curso/evaluacion/', include('evaluations.urls', namespace="evaluations")),#aplicacion para las evaluaciones
 
-    url(r'^inicio/cursos/$', 'bakhanapp.views.getTeacherClasses', name='cursos'),
+    url(r'^inicio/$', 'bakhanapp.views.getTeacherClasses', name='cursos'),
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.getClassStudents', name='getClassStudents'),
 
     url(r'^inicio/pautas/', include('AssesmentConfigs.urls', namespace="AssesmentConfigs")),

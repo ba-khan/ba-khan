@@ -725,3 +725,10 @@ padding: 5px 8px 4px 8px;
   margin: 0px;
   text-align: left;
 }
+
+#tableInstiution tr td:first-child{
+  visibility: hidden;
+}
+#tableInstiution tr th:first-child{
+  visibility: hidden;
+}
