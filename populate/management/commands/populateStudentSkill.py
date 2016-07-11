@@ -421,18 +421,29 @@ def threadPopulate(students,dates,session):
         msg="error student_skill " + students.name
         logging.debug(msg)
         logging.debug(e)
-    '''
+
+    msg = threading.currentThread().getName() + "Terminado"
+    logging.debug(msg)
+
+    semafaro.release()
+    return
+
+def threadnewPopulate(students,dates,session):
+    """thread populate function"""
+    semafaro.acquire()
+
     try:
         poblar_student_skill(students.name, students.kaid_student, dates, session) #listo
     except Exception as e:
         msg="error student_skill " + students.name
         logging.debug(msg)
         logging.debug(e)
-    '''
+
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
+
     semafaro.release()
-    return
+    return    
 
 
 class Command(BaseCommand):
@@ -494,7 +505,7 @@ class Command(BaseCommand):
                 msg="ayer: " + yesterday
                 logging.debug(msg)
                 dates = yesterday+"&dt_end="+today
-                #dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-06-25T00%3A00%3A00Z"  
+                datesnew = "2015-01-01T00%3A00%3A00Z&dt_end="+today  
 
 
 
@@ -503,14 +514,24 @@ class Command(BaseCommand):
                 #for cons in consulta:
                     #print cons["id_class"]
                 threads = []
+                threadsnew = []
                 #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
-                students = Student.objects.filter(id_institution_id=inst.id_institution)
+                students = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=False)
 
                 for i in students:
                     #print students[i].name
                     t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                     threads.append(t)
                     t.start()
+
+                studentsnew = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=True)
+
+                for j in studentsnew:
+                    #print students[i].name
+                    t2 = threading.Thread(target=threadnewPopulate,args=(j,datesnew,session))
+                    threadsnew.append(t2)
+                    t2.start()
+
 
             except Exception as e:
                 print e
