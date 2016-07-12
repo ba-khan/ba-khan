@@ -113,13 +113,13 @@
 			</select>
 				<p class="label_input"><strong>Nombre de la Calificación</strong></p>
 				<input name="input_nombre" onkeyup="validarRealizarEvaluacion()" id="input_nombre" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="text" placeholder="Nombre de la Calificación"/>
-				<p class="label_input"><strong>Nota Mínima</strong></p>
+				<p class="label_input"><strong id="nMinTooltip">Nota Mínima</strong></p>
 				<input name="nota_minima" onkeyup="validarRealizarEvaluacion()" id="nota_minima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota mínima"/>
-				<p class="label_input"><strong>Nota Máxima</strong></p>
+				<p class="label_input"><strong id="nMaxTooltip">Nota Máxima</strong></p>
 				<input name="nota_maxima" onkeyup="validarRealizarEvaluacion()" id="nota_maxima" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota máxima"/>
-				<p class="label_input"><strong>Nota de Aprobación</strong></p>
+				<p class="label_input"><strong id="nAprTooltip">Nota de Aprobación</strong></p>
 				<input name="nota_aprobacion" onkeyup="validarRealizarEvaluacion()" id="nota_aprobacion" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Nota aprobacion"/>
-				<p class="label_input"><strong>Bonificación por esfuerzo</strong></p>
+				<p class="label_input"><strong id="bEsfTooltip">Bonificación por esfuerzo</strong></p>
 				<input name="bono_esfuerzo" onkeyup="validarRealizarEvaluacion()" id="bono_esfuerzo" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="number" min="0" placeholder="Bonificación por esfuerzo"/>
 				<input name="input_id_config" id="input_id_config" style="display:none;">
 				<input name="input_kaid" id="input_kaid" style="display:none;">
@@ -141,11 +141,11 @@
 		<div class="flechas"><IMG id='flechaNinguno' style='width:55px;height:55px;cursor:pointer;cursor:hand;' SRC="{% static 'img/arrow5a.svg'%}" onClick="noEvaluarTodos()"></div>
 		<div class="cntFechas" style="margin-left:200px;margin-right: 100px;">
 				<div style="height:50px;width:200px;" class="fechas">
-					<p class="label_input"><strong>Fecha de Inicio</strong></p>
+					<p class="label_input"><strong id="fIniTooltip">Fecha de Inicio</strong></p>
 					<input name="fecha_inicio" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_inicio" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha inicio"/>
 				</div>
 				<div style="height:50px;width:200px;" class="fechas">
-					<p class="label_input"><strong>Fecha de Término</strong></p>
+					<p class="label_input"><strong id="fTerTooltip">Fecha de Término</strong></p>
 					<input name="fecha_termino" onchange="validarRealizarEvaluacion()" onkeyup="validarRealizarEvaluacion()" id="fecha_termino" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" placeholder="Fecha término"/>
 				</div>
 		</div>
@@ -2725,6 +2725,56 @@ function generateClassExcel(id_class){
 	window.location = "/inicio/cursos/generateClassExcel/"+id_class;
 	
 }
+
+$("#nMinTooltip").tipsy({ 
+	        gravity: 'w',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label>Corresponde a la nota mínima que obtendrá un estudiante. Ej. nota mínima 1</label>';
+	        }
+	      });
+$("#nMaxTooltip").tipsy({ 
+	        gravity: 'w',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label>Corresponde a la nota máxima que obtendrá un estudiante. Ej. nota máxima 7</label>';
+	        }
+	      });
+$("#nAprTooltip").tipsy({ 
+	        gravity: 'w',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label>Corresponde a la nota mínima con que el estudiante se considerará aprobado. Ej nota 4</label>';
+	        }
+	      });
+$("#bEsfTooltip").tipsy({ 
+	        gravity: 'w',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label></label>';
+	        }
+	      });
+$("#fIniTooltip").tipsy({ 
+	        gravity: 's',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label></label>';
+	        }
+	      });
+$("#fTerTooltip").tipsy({ 
+	        gravity: 's',
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label></label>';
+	        }
+	      });
+
 /*fin*/
 </script>
 

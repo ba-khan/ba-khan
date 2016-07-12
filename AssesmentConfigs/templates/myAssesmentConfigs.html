@@ -126,7 +126,7 @@ function onSlide(ui,id) {
 						<h3>Datos de la Pauta:</h3>
 						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" ><br>
 						<br>
-						<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" ><br>
+						<label id="apprPer" for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" ><br>
 						<br>
 						<input name="importance_skill_level0" value="50" type="hidden">
 				    	<input name="importance_completed_rec0" value="50" type="hidden">
@@ -650,6 +650,15 @@ $(document).ready(function(){
 }
 
 $('#pautas').addClass('active selected');
+
+$("#apprPer").tipsy({ 
+	        gravity: $.fn.tipsy.autoNS,
+	        opacity: 1,
+	        html: true, 
+	        title: function() {
+	          return '<label>Corresponde al porcentaje con que se alcanza la nota de aprobación. Ej 60%</label>';
+	        }
+	      });
 
 </script>
 {% endblock %}
