@@ -151,7 +151,7 @@ def getRoster(request):
     teachers = Teacher.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
 
     institution = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
-    students = Student.objects.filter(id_institution_id=institution).order_by('name')
+    students = Student.objects.filter(id_institution_id=institution).order_by('nickname')
 
     classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
     #for clas in classes:
@@ -219,7 +219,7 @@ def newClass(request):
             id_curso = int(curso.id_class)
             class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
             for student in students:
-                aux = Student.objects.get(name=student)
+                aux = Student.objects.get(nickname=student)
                 student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
             return HttpResponse("Nuevo curso creado")
 
@@ -228,7 +228,7 @@ def viewClass(request):
     if request.method == 'POST':
         classObj = request.POST
         clas = Class.objects.get(id_class=classObj['idClass'])
-        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id')).order_by('name')
+        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id')).order_by('nickname')
         teacher = Teacher.objects.filter(kaid_teacher=Class_Subject.objects.filter(id_class_id=classObj['idClass']).values('kaid_teacher_id'))
         data_teacher = serializers.serialize('json', teacher)
         struct_teacher = json.loads(data_teacher)
@@ -276,7 +276,7 @@ def editClass(request):
             student_class.delete()
 
             for student in students:
-                aux = Student.objects.get(name=student)
+                aux = Student.objects.get(nickname=student)
                 student_class = Student_Class.objects.create(id_class_id=id_class, kaid_student_id=aux.kaid_student)
 
             return HttpResponse("Curso editado correctamente")
@@ -391,7 +391,7 @@ def saveExcelClass(request):
             class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
             for student in students:
                 try:
-                    aux = Student.objects.get(name=student)
+                    aux = Student.objects.get(nickname=student)
                     student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
                 except:
                     aux = Student.objects.get(nickname=student)
