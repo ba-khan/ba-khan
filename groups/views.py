@@ -248,7 +248,7 @@ def makeGroups(id_class,skills_selected):
         s.type = getTypeStudent(s.kaid_student,skills_selected) #args debe contener todas las id de las skill seleccionadas para el agrupamiento.
         student={}
         student["kaid_student"] = s.kaid_student
-        student["name"] = s.name
+        student["name"] = s.nickname
         student["type"] = s.type
         data.append(student)
         
