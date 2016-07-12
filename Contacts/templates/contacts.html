@@ -45,12 +45,12 @@
 		    'keyup',
 		    function (){
 		    	editableGrid.filter(searchField.value);
-		    	resize();
+		    	resize2();
 		    }
 		);
 		
 		editableGrid.renderGrid();
-		resize();
+		resize2();
 	} 
 	
 </script>
@@ -79,16 +79,16 @@
 	</tr>
 	{% for data in datas %}
 	<tr id="R{{ forloop.counter }}">
-		<td>{{ data.0.nickname }}</td>
-		<td>{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
-		<td id="sPhone{{ forloop.counter }}">
+		<td onchange="resize2()">{{ data.0.nickname }}</td>
+		<td onchange="resize2()">{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
+		<td id="sPhone{{ forloop.counter }}" onchange="resize2()">
 			{% if not data.0.phone == 0 %}
 			{{ data.0.phone }}
 			{% endif %}
 		</td>
-		<td>{{ data.1.name }}</td>
-		<td>{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
-		<td>{% if not data.0.phone == 0 %}
+		<td onchange="resize2()">{{ data.1.name }}</td>
+		<td onchange="resize2()">{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
+		<td onchange="resize2()">{% if not data.0.phone == 0 %}
 			{{ data.1.phone }}
 			{% endif %}</td>
 		<td class="editablegrid-action" data-title="action" style="width:100px">
@@ -133,17 +133,19 @@
 </div> <!-- cerrar div principal del home  -->
 
 <script>
-function resize(){
-	var a = $("th:eq(0)").width();
-	var b = $("th:eq(1)").width();
-	var c = $("th:eq(2)").width();
-	var d = $("th:eq(3)").width();
-	var e = $("th:eq(4)").width();
-	var f = $("th:eq(5)").width();
-	var g = $("th:eq(6)").width();
-
-	$("#Alumnos").width(a+b+c+35)
-	$("#Apoderados").width(d+e+f+g+46)
+function resize2(){
+	window.setTimeout(function(){
+		var a = $("th.editablegrid-student_name").width();
+		var b = $("th.editablegrid-student_email").width();
+		var c = $("th.editablegrid-student_phone").width();
+		var d = $("th.editablegrid-tutor_name").width();
+		var e = $("th.editablegrid-tutor_email").width();
+		var f = $("th.editablegrid-tutor_phone").width();
+		var g = $("th.editablegrid-action").width();
+		$("#Alumnos").width(a+b+c+35;);
+		$("#Apoderados").width(d+e+f+g+46);
+	},50);
+	
 }
 function reloadPage(){
 	setTimeout(function(){

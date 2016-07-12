@@ -97,3 +97,7 @@ table.testgrid td {
 #cancelSave, #cancelDelete {
     margin-left: 50px;
 }
+
+th.number.editablegrid-student_phone, div#Alumnos, td.number.editablegrid-student_phone{
+  border-right-width: thick;
+}
