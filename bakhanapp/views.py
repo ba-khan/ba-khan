@@ -517,7 +517,7 @@ def parallelAssesment(assesment,students,queue):
         skills_completadas=[]
         student_json={}
         student_json["id"]=i
-        student_json["name"]=student.name
+        student_json["name"]=student.nickname
 
         try:#id2002
             #if student.kaid_student=='kaid_650486821916405105888593':
@@ -643,8 +643,8 @@ def getClassStudents(request, id_class):
             grades = Assesment.objects.filter(id_class_id=id_class).values('id_assesment','grade__kaid_student','grade__grade','grade__id_grade','grade__performance_points','grade__effort_points','grade__bonus_grade','grade__teacher_grade','grade__comment').order_by('id_assesment')
             dictGrades = {}
             for g in grades:
-                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name', 'name')
-                name = name[0]['name']
+                name = Student.objects.filter(pk=g['grade__kaid_student']).values('name', 'nickname')
+                name = name[0]['nickname']
                 skls = getSkillsCorrect(g['grade__id_grade'])
                 dictGrades[(g['id_assesment'],g['grade__kaid_student'])] = (g['grade__grade'],g['grade__id_grade'],g['grade__performance_points'],g['grade__effort_points'],g['grade__bonus_grade'],name,skls,g['grade__teacher_grade'],g['grade__comment'])
             #print dictGrades[(67,'kaid_962822484535083405338400')][1]
@@ -698,7 +698,7 @@ def getClassStudents(request, id_class):
                 student_json = {}
                 student_json["id"] = i
                 student_json['kaid'] = student.kaid_student
-                student_json["name"] = student.name
+                student_json["name"] = student.nickname
                 try:#id3002
                     #if student.kaid_student=='kaid_650486821916405105888593':
                     #print student.kaid_student
