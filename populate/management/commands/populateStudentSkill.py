@@ -334,7 +334,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                 if data["maximum_exercise_progress_dt"]!=None:
                     try:
                         #relleno de la tabla Student_Skill con los datos de esa skill para ese estudiante
-                        student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                        student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"],
                                                         total_done = data["total_done"]+data["last_attempt_number"],
                                                         total_correct = data["total_correct"],
                                                         streak = data["streak"],
@@ -356,7 +356,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                     if data["total_done"]!=None and data["total_done"]>0:
                             #si el total_done es distinto de null y mayor que 0, debe insertar
                         try:
-                            student_skill = Student_Skill(id_student_skill=stdnt_skillid["id_student_skill"],
+                            student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"],
                                                         total_done = data["total_done"]+data["last_attempt_number"],
                                                         total_correct = data["total_correct"],
                                                         streak = data["streak"],
@@ -539,15 +539,16 @@ class Command(BaseCommand):
                 threads = []
                 threadsnew = []
                 #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
-                students = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=False)
+                #students = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=False)
 
+                '''
                 for i in students:
                     #print students[i].name
                     t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                     threads.append(t)
                     t.start()
-
-                studentsnew = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=True)
+                '''
+                studentsnew = Student.objects.filter(id_institution_id=inst.id_institution)
 
                 for j in studentsnew:
                     #print students[i].name
