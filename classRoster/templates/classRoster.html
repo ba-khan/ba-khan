@@ -838,6 +838,10 @@ function saveExcelClass(excelClassJson){
 					setTimeout(function(){
 						location.reload();
 					}, 750); 
+				}
+				else{
+					$("#hover").css('pointer-events','');
+					$("#close").css('pointer-events','');
 				};
 				
 			}
