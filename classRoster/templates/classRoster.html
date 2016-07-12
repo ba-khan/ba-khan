@@ -726,7 +726,7 @@ function showStudent(count){
 	}
 
 	for(var k=0;k<jsonResponse[0][jsonResponse[1][count-1]].length;k++){ // estudiantes
-		name = (jsonResponse[0][jsonResponse[1][count-1]][k].nickname);
+		name = (jsonResponse[0][jsonResponse[1][count-1]][k].name);
 		$("#excelStudentsClass").append("<div class='excelStudent_li_div'><li class='excelStudent_li'>"+name+"</li></div>");
 	}
 	$("#excelCounter").html(jsonResponse[0][jsonResponse[1][count-1]].length);
