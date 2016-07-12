@@ -732,3 +732,15 @@ padding: 5px 8px 4px 8px;
 #tableInstiution tr th:first-child{
   visibility: hidden;
 }
+#institutionContent{
+    padding: 10px 10px;
+    background: #f7f7f7;
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+#searchContent{
+  padding-left: 2%;
+}
