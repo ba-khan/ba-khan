@@ -44,11 +44,11 @@
 				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
 				<p id="pgrade">  Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
 				<p id="pgrade"><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
-				<p id="pgrade">+ Bonificación del Profesor:
+				<p id="pgrade">+ Ajuste del Profesor:
 				{% if isTeacher %}
-					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;"/>
+					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:283px;"/>
 				{% else %}
-					<input name="input_grade_teacher" id="input_grade_teacher"  class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:246px;" disabled />
+					<input name="input_grade_teacher" id="input_grade_teacher"  class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:283px;" disabled />
 				{% endif %}
 				
 					
@@ -1256,6 +1256,8 @@
     			$('#input_grade_teacher').val(d.value.teacher_grade);
     			$("#hover").fadeIn().css('display', '');
     			$("#popup").fadeIn().css('display', '');
+    			autoCalculateGrade();
+
     		});
     	
     	
