@@ -817,7 +817,7 @@ def getClassStudents(request, id_class):
 
             json_data = json.dumps(json_dict)
             classroom = Class.objects.filter(id_class=id_class)
-            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid,id_class_id=id_class)):
+            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
                 isTeacher = True
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
             else:
