@@ -86,7 +86,6 @@ def saveInstitution(request):
                 institution.city = json_str["city"]
                 institution.address = json_str["address"]
                 institution.phone = json_str["phone"]
-                institution.last_load = json_str["last_load"]
                 institution.key = json_str["key"]
                 institution.secret = json_str["secret"]
                 institution.identifier = json_str["identifier"]
