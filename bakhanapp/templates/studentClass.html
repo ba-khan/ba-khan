@@ -30,6 +30,7 @@
     cursor:pointer;
     border-radius: 5px;
 }
+.tipsy-inner { max-width: 200px; }
 </style>
 
 	<div id="popup" class="popup" style="display:none">
@@ -2746,7 +2747,7 @@ $("#nMinTooltip").tipsy({
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return '<label>Corresponde a la nota mínima que obtendrá un estudiante. Ej. nota mínima 1</label>';
+	          return '<label>Corresponde a la nota mínima que obtendrá un estudiante. Ej: nota mínima 1</label>';
 	        }
 	      });
 $("#nMaxTooltip").tipsy({ 
@@ -2754,7 +2755,7 @@ $("#nMaxTooltip").tipsy({
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return '<label>Corresponde a la nota máxima que obtendrá un estudiante. Ej. nota máxima 7</label>';
+	          return '<label>Corresponde a la nota máxima que obtendrá un estudiante. Ej: nota máxima 7</label>';
 	        }
 	      });
 $("#nAprTooltip").tipsy({ 
@@ -2762,15 +2763,15 @@ $("#nAprTooltip").tipsy({
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return '<label>Corresponde a la nota mínima con que el estudiante se considerará aprobado. Ej nota 4</label>';
+	          return '<label>Corresponde a la nota mínima con que el estudiante se considerará aprobado. Ej: nota 4</label>';
 	        }
 	      });
-/*$("#bEsfTooltip").tipsy({ 
+$("#bEsfTooltip").tipsy({ 
 	        gravity: 'w',
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return '<label></label>';
+	          return '<label>Es la nota que se le agregará por sobre la nota obtenida en función al esfuerzo realizado por el estudiante. Ej: 0,1 </label>';
 	        }
 	      });
 $("#fIniTooltip").tipsy({ 
@@ -2778,7 +2779,7 @@ $("#fIniTooltip").tipsy({
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return '<label></label>';
+	          return '<label>Fecha en que comienza la evaluación.</label>';
 	        }
 	      });
 $("#fTerTooltip").tipsy({ 
@@ -2786,9 +2787,9 @@ $("#fTerTooltip").tipsy({
 	        opacity: 1,
 	        html: true, 
 	        title: function() {
-	          return '<label></label>';
+	          return '<label>Fecha en que termina la evaluación. (Debe ser mayor a la fecha de inicio y a la fecha de hoy)</label>';
 	        }
-	      });*/
+	      });
 
 /*fin*/
 </script>
