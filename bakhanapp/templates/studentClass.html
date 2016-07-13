@@ -283,6 +283,14 @@
 	var json = JSON.parse('{{ jason_data | escapejs }}');
 	var students = json.students;
 	var assesments=json.assesments;
+	var allSkills=[]
+	console.log(assesments)
+	for (i=0;i<assesments.length;i++){
+		id = assesments[i]['id']
+		for (k=0;k<students[0]['assesment'+id]['skills'].length;k++){
+			allSkills.push(students[0]['assesment'+id]['skills'][k]);
+		}
+	}
 	var averages=[]
 	for (i=0;i<students.length;i++){
 		cont=0;
@@ -1095,11 +1103,18 @@
 		       				//}
 				          	var x = (b.values.skills_com);
 				          	tooltp = "<ul><li style='text-align:left;'><strong>Habilidades Rec. Completadas</strong>";
-				          	for(i=0;i<x.length;i++){
-				          		tooltp = tooltp+
-				          		"<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+b.values.skills_com[i]+"</li>"
-				          		
+				          	for(k=0;k<allSkills.length;k++){
+				          		aux = $.inArray(allSkills[k][0],b.values.skills_com);
+				          		console.log(aux);
+				          		if (aux!=-1) {
+				          			tooltp = tooltp+
+				          		"<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+allSkills[k][0]+"</li>"
+					          	}
+					          	else{
+					          		tooltp = tooltp+"<li style='text-align:left;'><label style='color:red; font-weight:bold; font-size:125%; float:left;margin-right:8px; margin-left:2px'>X</label>"+allSkills[k][0]+"</li>"
+					          	}
 				          	}
+
 				          	tooltp = tooltp + '</ul>';
 
 				          return tooltp
