@@ -488,9 +488,9 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
+        institution = Institution.objects.all()
 
-        institution = Institution.objects.filter(id_institution=5)
+        #institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key
@@ -528,33 +528,27 @@ class Command(BaseCommand):
                 msg="ayer: " + yesterday
                 logging.debug(msg)
                 dates = yesterday+"&dt_end="+today
-                datesnew = "2015-01-01T00%3A00%3A00Z&dt_end="+today  
 
 
 
-                #consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+                consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
-                #for cons in consulta:
+                for cons in consulta:
                     #print cons["id_class"]
-                threads = []
-                threadsnew = []
-                #students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
-                #students = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=False)
+                    threads = []
+                    #threadsnew = []
+                    students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
+                    #students = Student.objects.filter(id_institution_id=inst.id_institution, nuevo=False)
 
-                '''
-                for i in students:
-                    #print students[i].name
-                    t = threading.Thread(target=threadPopulate,args=(i,dates,session))
-                    threads.append(t)
-                    t.start()
-                '''
-                studentsnew = Student.objects.filter(id_institution_id=inst.id_institution)
+      
+                    for i in students:
+                        #print students[i].name
+                        t = threading.Thread(target=threadPopulate,args=(i,dates,session))
+                        threads.append(t)
+                        t.start()
+        
+                    #studentsnew = Student.objects.filter(id_institution_id=inst.id_institution)
 
-                for j in studentsnew:
-                    #print students[i].name
-                    t2 = threading.Thread(target=threadnewPopulate,args=(j,datesnew,session))
-                    threadsnew.append(t2)
-                    t2.start()
 
 
             except Exception as e:
