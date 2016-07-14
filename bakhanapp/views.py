@@ -430,7 +430,8 @@ def getTeacherClasses(request):
             institutions = Institution.objects.all().order_by('pk')
             for i in institutions:
                 date_posted = i.last_load.replace('%3A',':')
-                i.last_load = datetime.strptime(date_posted, '%Y-%m-%dT%H:%M:%SZ')
+                date = datetime.strptime(date_posted, '%Y-%m-%dT%H:%M:%SZ')
+                i.last_load = date.strftime('%d/%m/%Y %H:%M:%S')
             return render_to_response('institutions.html',{'institutions':institutions}, context_instance=RequestContext(request))
         except Exception as e:
             print '****ERROR****'
