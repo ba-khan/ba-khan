@@ -21,13 +21,7 @@
 	border: 1px solid #ddd;
 	z-index: 1;
 }
-.institution-main-content{
-  padding: 15px 20px;
-  background: #f7f7f7;
-  width: 100%;
-  border: 1px solid #ddd;
-  z-index: 1;
-}
+
 /* --------- POPUP ----------- */
  #close{
   position:absolute;
