@@ -955,6 +955,12 @@ def strip_acent(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
 def deleteAssesment(request):
+    '''
     print "delete assesment"
+    delete_grades = Grade.objects.filter(id_assesment=id_assesment)
+    delete_skill_log = Skill_Log.objects.filter(id_grade__in = delete_grades)
+    delete_skill_log.delete()
+    delete_grades.delete()
+    '''
     return render_to_response('deleteAssesment.html')
  
