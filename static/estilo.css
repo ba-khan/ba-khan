@@ -743,6 +743,9 @@ padding: 5px 8px 4px 8px;
 #institutionGrid{
   width: 100%;
 }
+#institutionGrid th{
+  padding: 4px;
+}
 #searchContent{
   padding-left: 2%;
 }
