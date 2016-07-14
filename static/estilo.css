@@ -746,6 +746,32 @@ padding: 5px 8px 4px 8px;
 #institutionGrid th{
   padding: 4px;
 }
+#institutionGrid a{
+  width: 81px;
+  height: 30px;
+  text-align: center;
+  padding: 6px;
+}
 #searchContent{
   padding-left: 2%;
 }
+#content-form-institution{
+  width: 325px;
+  margin: auto;
+  border: 1px solid #ddd;
+  padding: 1%
+}
+
+#content-form-institution h3{text-align: center}
+
+#content-form-institution label{
+  width: 35%;
+}
+#content-form-institution input{
+  margin-bottom: 10px;
+}
+#buttonCancelNewInstitution{
+  margin-left: 20px;
+}
+
+
