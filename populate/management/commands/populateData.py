@@ -497,8 +497,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
-        institution = Institution.objects.filter(id_institution=5)
+        institution = Institution.objects.all()
+        #institution = Institution.objects.filter(id_institution=5)
 
         for inst in institution:
             keys = inst.key
@@ -535,25 +535,25 @@ class Command(BaseCommand):
                 logging.debug(msg)
                 msg="ayer: " + yesterday
                 logging.debug(msg)
-                #dates = yesterday+"&dt_end="+today
-                dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-14T00%3A00%3A00Z"  
+                dates = yesterday+"&dt_end="+today
+                #dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-14T00%3A00%3A00Z"  
 
 
 
-                #consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+                consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
-                #for cons in consulta:
+                for cons in consulta:
                     #print cons["id_class"]
-                threads = []
-                #students = Student.objects.filter(student_class__id_class_id=36)
-                students = Student.objects.filter(id_institution_id=inst.id_institution)
+                    threads = []
+                    students = Student.objects.filter(student_class__id_class_id=cons["id_class"])
+                    #students = Student.objects.filter(id_institution_id=inst.id_institution)
 
 
-                for i in students:
-                    #print students[i].name
-                    t = threading.Thread(target=threadPopulate,args=(i,dates,session))
-                    threads.append(t)
-                    t.start()
+                    for i in students:
+                        #print students[i].name
+                        t = threading.Thread(target=threadPopulate,args=(i,dates,session))
+                        threads.append(t)
+                        t.start()
 
             except Exception as e:
                 print e

@@ -51,5 +51,8 @@
 	</div>
 	<script type="text/javascript">
 		$('#inicio').addClass('active selected');
+		// Evitar que siga apareciendo el popup de cargando al volver atrás a esta página en firefox
+		window.onload = function() { $("#hover").hide(); $("#popup_evaluacion").hide(); };
+  		window.onunload = function(){};
 	</script>
 {% endblock %}
