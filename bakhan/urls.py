@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^inicio/cursos/generateAssesmentExcel/(?P<id_assesment>[0-9]+)/$', 'bakhanapp.views.generateAssesmentExcel', name='generateAssesmentExcel'),
     url(r'^inicio/cursos/generateClassExcel/(?P<id_class>[0-9]+)/$', 'bakhanapp.views.generateClassExcel', name='generateClassExcel'),
     
+    url(r'^delete/', 'bakhanapp.views.deleteAssesment', name='deleteAssesment'),
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]

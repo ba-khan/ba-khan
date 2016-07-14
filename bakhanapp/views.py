@@ -953,4 +953,8 @@ def dictfetchall(cursor):
 
 def strip_acent(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+
+def deleteAssesment(request):
+    print "delete assesment"
+    return render_to_response('deleteAssesment.html')
  
