@@ -68,14 +68,14 @@
       <div id="content-form-institution">
       <form action="" method="post" id="form0">{% csrf_token %}
         <h3>Nueva Institución</h3>
-        <label for='name'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='city'>Ciudad: </label><input id="newCity" onchange="validar()" onkeyup="validar()" name="city" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='address'>Dirección: </label><input id="newAddress" onchange="validar()" onkeyup="validar()" name="address" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='phone'>Teléfono: </label><input id="newPhone" onchange="validar()" onkeyup="validar()" name="phone" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='key'>Llave: </label><input id="newkey" onchange="validar()" onkeyup="validar()" name="key" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='secret'>Secreto: </label><input id="newSecret" onchange="validar()" onkeyup="validar()" name="secret" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='identifier'>Usuario: </label><input id="newIdentifier" onchange="validar()" onkeyup="validar()" name="identifier" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-        <label for='password'>Contraseña: </label><input id="newPassword" onchange="validar()" onkeyup="validar()" name="password" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='name' id="labelName">Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='city' id="labelCity">Ciudad: </label><input id="newCity" onchange="validar()" onkeyup="validar()" name="city" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='address' id="labelAddress">Dirección: </label><input id="newAddress" onchange="validar()" onkeyup="validar()" name="address" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='phone' id="labelPhone">Teléfono: </label><input id="newPhone" onchange="validar()" onkeyup="validar()" name="phone" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='key' id="labelKey">Llave: </label><input id="newkey" onchange="validar()" onkeyup="validar()" name="key" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='secret' id="labelSecret">Secreto: </label><input id="newSecret" onchange="validar()" onkeyup="validar()" name="secret" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='identifier' id="labelIdentifier">Usuario: </label><input id="newIdentifier" onchange="validar()" onkeyup="validar()" name="identifier" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+        <label for='password' id="labelPassword">Contraseña: </label><input id="newPassword" onchange="validar()" onkeyup="validar()" name="password" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
         <a onclick='javascript:cancelNewInstitution();' class="kui-button kui-button-plain kui-button-primary" id="buttonCancelNewInstitution" >Cancelar</a>
         <a onclick='javascript:saveNewInstitution()' class="kui-button kui-button-plain kui-button-primary" >Guardar Institución</a>
       </form>
@@ -133,6 +133,51 @@
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
+  $('#labelPassword').qtip({ 
+      content: {
+          text: 'Contraseña que tiene la institución en KhanAcademy'
+      }
+  })
+  $('#labelName').qtip({ 
+      content: {
+          text: 'Nombre identificador de la nueva institución'
+      }
+  })
+  $('#labelCity').qtip({ 
+      content: {
+          text: 'Ciudad donde se encuentra ubicada la nueva institución'
+      }
+  })
+  $('#labelAddress').qtip({ 
+      content: {
+          text: 'Dirección de la nueva institución'
+      }
+  })
+  $('#labelPhone').qtip({ 
+      content: {
+          text: 'Teléfono contacto de la Institución, con 9 digitos'
+      }
+  })
+  $('#labelKey').qtip({ 
+      content: {
+          text: 'LLave de seguridad generada para el usuario KhanAcademy correspondiente a la Institución'
+      }
+  })
+  $('#labelSecret').qtip({ 
+      content: {
+          text: 'LLave de seguridad secreta generada para el usuario KhanAcademy correspondiente a la Institución'
+      }
+  })
+  $('#labelIdentifier').qtip({ 
+      content: {
+          text: 'Nombre de usuario KhanAcademy correspondiente a la Institución'
+      }
+  })
+  $('#labelPassword').qtip({ 
+      content: {
+          text: 'Contraseña del usuario KhanAcademy correspondiente a la Institución'
+      }
+  })
     //chiusura al click sulla parte scura
     $("#hover").click(function(){
           $(this).fadeOut();
