@@ -225,6 +225,7 @@ class Video(models.Model):
     id_video_name = models.CharField(max_length=150,primary_key=True)
     name_spanish = models.CharField(max_length=150,null=True)
     index = models.IntegerField()
+    related_skill = models.CharField(max_length=150,null=True)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
