@@ -294,12 +294,13 @@ def poblar_topictree(session,buscar, reemplazar):
                     aux2 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["related_exercise_url"]
                     try:
                         aux3 = aux2[10:]
-                        new_video = Video(id_video_name=aux1, related_skill=aux3)
+                        skrelated = Skill.objects.filter(name=aux3).values('id_skill_name')
+                        new_video = Video(id_video_name=aux1, related_skill=skrelated[0].id_skill_name)
                         new_video.save()
                     except:
                         new_video = Video(id_video_name=aux1)
                         new_video.save()
-
+                
                 cant_videos = len(data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
                 #print cant_videos
                 
@@ -329,9 +330,13 @@ def poblar_topictree(session,buscar, reemplazar):
                         aux1 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
                         aux3 = (data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
-                        new_video = Video(id_video_name=aux1,name_spanish=aux2, index=l)
-                        new_video.save()
-
+                        videon = Video.objects.get(pk=aux1)
+                        videon.name_spanish=aux2
+                        videon.index=l
+                        videon.save()
+                        #new_video = Video(id_video_name=aux1,name_spanish=aux2, index=l)
+                        #new_video.save()
+                '''
                         aux4 = (data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
                         aux5 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         try:
@@ -340,7 +345,7 @@ def poblar_topictree(session,buscar, reemplazar):
                         except:
                             pass
                         #id_subtopic_videos+=1
-        	    '''    
+        	     
                 skills = get_api_resource2(session,"/api/v1/topic/"+data["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL2)
                 source = unicode(skills, 'ISO-8859-1')
                 data_skills = simplejson.loads(source)
@@ -353,8 +358,8 @@ def poblar_topictree(session,buscar, reemplazar):
                 data_videos = simplejson.loads(sourcevid)
                 for q in range(len(data_videos)):
                     #logging.debug(data_skills[p]["translated_title"])
-                    Video.objects.filter(id_skill_name=data_videos[q]["content_id"]).update(name_spanish=data_videos[q]["translated_title"])                    
-               
+                    Video.objects.filter(id_video_name=data_videos[q]["content_id"]).update(name_spanish=data_videos[q]["translated_title"])                    
+                              
 
 class Command(BaseCommand):
     help = 'Puebla la base de datos con al arbol'
