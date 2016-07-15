@@ -86,7 +86,6 @@ def saveInstitution(request):
                 institution.city = json_str["city"]
                 institution.address = json_str["address"]
                 institution.phone = json_str["phone"]
-                institution.last_load = json_str["last_load"]
                 institution.key = json_str["key"]
                 institution.secret = json_str["secret"]
                 institution.identifier = json_str["identifier"]
@@ -429,6 +428,10 @@ def getTeacherClasses(request):
         print '********dep**********'
         try:#id4001
             institutions = Institution.objects.all().order_by('pk')
+            for i in institutions:
+                date_posted = i.last_load.replace('%3A',':')
+                date = datetime.strptime(date_posted, '%Y-%m-%dT%H:%M:%SZ')
+                i.last_load = date.strftime('%d/%m/%Y %H:%M:%S')
             return render_to_response('institutions.html',{'institutions':institutions}, context_instance=RequestContext(request))
         except Exception as e:
             print '****ERROR****'

@@ -7,6 +7,7 @@
 	input.invalid { background: red; color: #FDFDFD; }
 
 .container {
+  max-width: 1200px;
     position: relative;
     /*height: 100%;*/
     width: 100%;
@@ -20,6 +21,7 @@
 	border: 1px solid #ddd;
 	z-index: 1;
 }
+
 /* --------- POPUP ----------- */
  #close{
   position:absolute;

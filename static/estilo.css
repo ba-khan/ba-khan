@@ -725,10 +725,59 @@ padding: 5px 8px 4px 8px;
   margin: 0px;
   text-align: left;
 }
-
+/* institution css*/
+.institution-main-content{
+  padding-right: 20px;
+  background: #f7f7f7;
+  width: 100%;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
 #tableInstiution tr td:first-child{
   visibility: hidden;
 }
 #tableInstiution tr th:first-child{
   visibility: hidden;
 }
+#institutionContent{
+    background: #f7f7f7;
+    width: 100%;
+    border: 1px solid #ddd;
+    z-index: 1;
+    width: 100%;
+}
+#institutionGrid{
+  width: 100%;
+}
+#institutionGrid th{
+}
+#institutionGrid a{
+  width: 81px;
+  height: 30px;
+  text-align: center;
+  padding: 6px;
+}
+#searchContent{
+  padding-left: 32px;
+  padding-bottom: 18px;
+}
+#content-form-institution{
+  width: 325px;
+  margin: auto;
+  border: 1px solid #ddd;
+  padding: 1%
+}
+
+#content-form-institution h3{text-align: center}
+
+#content-form-institution label{
+  width: 35%;
+}
+#content-form-institution input{
+  margin-bottom: 10px;
+}
+#buttonCancelNewInstitution{
+  margin-left: 20px;
+}
+
+
