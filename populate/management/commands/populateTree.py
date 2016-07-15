@@ -293,7 +293,7 @@ def poblar_topictree(session,buscar, reemplazar):
                     aux1 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["id"]
                     aux2 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["related_exercise_url"]
 
-                    aux3 = aux[10:]
+                    aux3 = aux2[10:]
 
                     new_video = Video(id_video_name=aux1, related_skill=aux3)
                     new_video.save()
