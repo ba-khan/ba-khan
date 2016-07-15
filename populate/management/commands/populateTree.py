@@ -295,7 +295,7 @@ def poblar_topictree(session,buscar, reemplazar):
                     try:
                         aux3 = aux2[10:]
                         skrelated = Skill.objects.filter(name=aux3).values('id_skill_name')
-                        new_video = Video(id_video_name=aux1, related_skill=skrelated[0]["id_skill_name"]])
+                        new_video = Video(id_video_name=aux1, related_skill=skrelated[0]["id_skill_name"])
                         new_video.save()
                     except:
                         new_video = Video(id_video_name=aux1)
