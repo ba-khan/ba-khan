@@ -55,7 +55,7 @@ class Command(BaseCommand):
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(nothing=Count('kaid_student_id'))
                 correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                 time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-                query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name_id')
+                query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name')
                 time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
                 levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
