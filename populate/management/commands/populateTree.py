@@ -271,13 +271,13 @@ def poblar_topictree(session,buscar, reemplazar):
         cant_topic = len(data["children"][1]["children"][i]["children"])
         
         for j in range(0,cant_topic):
-        	'''
+            '''
             aux1 = data["children"][1]["children"][i]["children"][j]["slug"]
             aux2 = data["children"][1]["children"][i]["children"][j]["translated_title"]
             aux3 = data["children"][1]["children"][i]["slug"]
             new_topic = Topic(id_topic_name=aux1,name_spanish=aux2,id_chapter_name_id=aux3, index=j)
             new_topic.save()
-        	'''
+            '''
             cant_subtopic = len(data["children"][1]["children"][i]["children"][j]["children"])
             for k in range(0,cant_subtopic):
                 '''
