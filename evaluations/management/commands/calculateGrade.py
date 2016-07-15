@@ -2,7 +2,7 @@ import time
 from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt,Skill_Log,Skill
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt,Skill_Log,Skill,Video
 from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing
 from django.db.models import Count,Sum,Max
 import logging
@@ -55,10 +55,9 @@ class Command(BaseCommand):
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(nothing=Count('kaid_student_id'))
                 correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                 time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-                #query1 = Subtopic_Skill.objects.filter(id_skill_name_id__in=skills).values('id_subtopic_name_id')
-                #query2 = Subtopic_Video.objects.filter(id_subtopic_name_id__in=query1).values('id_video_name_id')
                 query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name_id')
-                time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
+                time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
+                    date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
                 levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
                     ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date','id_skill_name_id'
                     ).order_by('kaid_student','id_skill_name_id','-skill_progress__date').distinct('kaid_student','id_skill_name_id')#,skill_progress__to_level='practiced'
@@ -68,6 +67,7 @@ class Command(BaseCommand):
             except Exception as e:
                 logging.error('ha fallado try:#id01 en CalculateGrade.py')
                 logging.info(e)
+                print e
             dictNothing = {}
             dictVideos = {}
             dictIncorrect = {}
