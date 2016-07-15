@@ -296,7 +296,10 @@ def poblar_topictree(session,buscar, reemplazar):
                         aux3 = aux2[10:]
                         new_video = Video(id_video_name=aux1, related_skill=aux3)
                         new_video.save()
-               
+                    except:
+                        new_video = Video(id_video_name=aux1)
+                        new_video.save()
+
                 cant_videos = len(data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"])
                 #print cant_videos
                 
