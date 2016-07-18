@@ -54,6 +54,7 @@ class Student(models.Model):
     id_institution = models.ForeignKey(Institution)
     nickname = models.CharField(max_length=100)
     last_update = models.DateField()
+    new_student = models.BooleanField()
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name

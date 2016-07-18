@@ -247,6 +247,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                     new_student.id_institution_id=id_institution
                     new_student.nickname=data[j]["nickname"]
                     new_student.last_update= datetime.date.today()
+                    new_student.new_student=False
                     new_student.save()
                 else:
                     new_student = Student(kaid_student=estd[0]['kaid_student'])
@@ -256,6 +257,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                     new_student.id_institution_id=id_institution
                     new_student.nickname=data[j]["nickname"]
                     new_student.last_update= datetime.date.today()
+                    new_student.new_student=False
                     new_student.save()
             except:
                 if data[j]["username"]=="":
@@ -266,6 +268,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                     new_student.id_institution_id=id_institution
                     new_student.nickname=data[j]["nickname"]
                     new_student.last_update= datetime.date.today()
+                    new_student.new_student=True
                     new_student.save()
                 else:
                     new_student = Student(kaid_student=data[j]["kaid"])
@@ -275,6 +278,7 @@ def coach_students(session, id_institution): #ver los estudiantes que tienen com
                     new_student.id_institution_id=id_institution
                     new_student.nickname=data[j]["nickname"]
                     new_student.last_update= datetime.date.today()
+                    new_student.new_student=True
                     new_student.save()                
         except Exception as e:
             logging.warning(e)
