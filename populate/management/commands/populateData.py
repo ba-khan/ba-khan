@@ -41,7 +41,8 @@ from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Institution
 
-import datetime
+from datetime import datetime
+from datetime import timedelta
 import time
 from time import localtime
 
@@ -81,7 +82,7 @@ DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
 import logging
 
-now = datetime.datetime.now()
+now = datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
@@ -497,8 +498,8 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        institution = Institution.objects.all()
-        #institution = Institution.objects.filter(id_institution=5)
+        #institution = Institution.objects.all()
+        institution = Institution.objects.filter(id_institution=1)
 
         for inst in institution:
             keys = inst.key
@@ -524,7 +525,7 @@ class Command(BaseCommand):
 
                 today = time.strftime("%Y-%m-%dT%H:%M:%SZ", localtime())
                 today = today.replace(":","%3A")
-                yesterday = datetime.datetime.strftime(datetime.datetime.now()-datetime.timedelta(1),'%Y-%m-%d')
+                yesterday = datetime.strftime(datetime.now()-timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
                 yesterday = inst.last_load
 
@@ -558,7 +559,9 @@ class Command(BaseCommand):
                         yesterday  = yesterday.replace(":", "%3A")
                         dates = yesterday+"&dt_end="+today
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
+                        print "aca"
                         Student.objects.filter(kaid_student=i.kaid_student).update(last_update=todayy)
+                        print "paso"
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                         threads.append(t)
                         t.start()
@@ -573,7 +576,7 @@ class Command(BaseCommand):
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
                         Student.objects.filter(kaid_student=j.kaid_student).update(new_student=False)
                         Student.objects.filter(kaid_student=j.kaid_student).update(last_update=todayy)
-                        t2 = threading.Thread(target=threadPopulate,args=(j,datesnew,session)) #cambiar date
+                        t2 = threading.Thread(target=threadPopulate,args=(j,datesnew,session))
                         threadsnew.append(t2)
                         t2.start()
 
