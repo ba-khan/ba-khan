@@ -1103,10 +1103,36 @@
 				          	//	console.log(c[i]);
 		       				//}
 				          	var x = (b.values.skills_com);
+				          	var y = (b.values.skills_no_com);
+				          	console.log(y);
+				          	tooltp = "<ul><li style='text-align:left;'><strong>Habilidades Practicadas o superior</strong>";
+				          	for(i=0;i<x.length;i++){
+				          		tooltp = tooltp+
+				          		"<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+b.values.skills_com[i]+"</li>"
+				          		
+				          	}
+				          	for(i=0;i<y.length;i++){
+				          		tooltp = tooltp+
+				          		"<li style='text-align:left;'><label style='color:red; font-weight:bold; font-size:125%; float:left;margin-right:8px; margin-left:2px'>X</label>"+b.values.skills_no_com[i]+"</li>"
+				          		
+				          	}
+				          	tooltp = tooltp + '</ul>';
+				          return tooltp
+				    },
+				/*
+		      	$("svg.recommendations").qtip({ 
+		      		content: function() {
+				        	var b = $(this).prop("__data__");
+				          	//var c = json["students"];
+				          	//for (i=0;i<c.length;i++){
+				          	//	console.log(c[i]);
+		       				//}
+				          	var x = (b.values.skills_com);
+				          	console.log(x);
 				          	tooltp = "<ul><li style='text-align:left;'><strong>Habilidades Rec. Completadas</strong>";
 				          	for(k=0;k<allSkills.length;k++){
 				          		aux = $.inArray(allSkills[k][0],b.values.skills_com);
-				          		console.log(aux);
+				          		//console.log(aux);
 				          		if (aux!=-1) {
 				          			tooltp = tooltp+
 				          		"<li style='text-align:left;'><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/check.svg'%}'>"+allSkills[k][0]+"</li>"
@@ -1120,7 +1146,7 @@
 
 				          return tooltp
 				    },
-                    
+                    */
 	                show: { 
 	                    event: 'mouseenter', 
 	                    delay: 10, 
