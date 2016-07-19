@@ -71,7 +71,7 @@ from django.db import connection
 import random
 import logging
 
-#last try:#id5002
+#last try:#id5006
 
 def updateGrade(request):
     request.session.set_expiry(timeSleep)
@@ -245,15 +245,15 @@ def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y
                     logging.error('ha fallado try:#id5005 send thread mail POST newAssesment3 en evaluations/views.py')
                     logging.info(e)
                     return HttpResponse({'status':500})
-            try:#id5006 send thread watsapp
-                #enviar whatsapp a todos los evaluados
-                t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
-                threads.append(t)
-                t.start()
-            except Exception as e:
-                    logging.error('ha fallado try:#id5005 send thread watsapp POST newAssesment3 en evaluations/views.py')
-                    logging.info(e)
-                    return HttpResponse({'status':500})
+            #try:#id5006 send thread watsapp
+            #    #enviar whatsapp a todos los evaluados
+            #    t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
+            #    threads.append(t)
+            #    t.start()
+            #except Exception as e:
+            #        logging.error('ha fallado try:#id5005 send thread watsapp POST newAssesment3 en evaluations/views.py')
+            #        logging.info(e)
+            #        return HttpResponse({'status':500})
             return HttpResponse({'status':201})
         except Exception as e:
             logging.error('ha fallado try:#id5001 POST newAssesment3 en evaluations/views.py')
