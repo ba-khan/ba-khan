@@ -69,6 +69,9 @@ from django.core import serializers
 from django.db import connection
 
 import random
+import logging
+
+#last try:#id5002
 
 def updateGrade(request):
     request.session.set_expiry(timeSleep)
@@ -160,70 +163,103 @@ def getStudentAssesment(request): #entrega a todos los alumnos a los que se le r
 
 def newAssesment3(request): #recibe el post y crea una evaluacion en assesment y una tupla en grade para cada student, ademas envia mails a todos
     request.session.set_expiry(timeSleep)
+    LOG_FILENAME = 'evaluationsApp.log'
+    logging.basicConfig(filename=LOG_FILENAME,level=logging.INFO)
     if request.method == 'POST':
-        args = request.POST
-        fecha1=args['fecha_inicio']
-        fecha2=args['fecha_termino']
-        nota1=eval(args['nota_minima'])
-        nota2=eval(args['nota_maxima'])
-        nota3=eval(args['nota_aprobacion'])
-        id_config=(args['input_id_config'])
-        nombre_config=args['input_nombre']
-        students=eval(args['input_kaid'])
-        id_class=eval(args['input_id_class'])
-        bono = eval(args['bono_esfuerzo'])
-        recommendations = Assesment_Config.objects.filter(pk=id_config).values('importance_completed_rec')
-        mastery = Assesment_Config.objects.filter(pk=id_config).values('importance_skill_level')
-        recommendations = recommendations[0]['importance_completed_rec']
-        mastery = mastery[0]['importance_skill_level']
-        #recommendations = "recommendations"
-        #mastery = "mastery"
-        new_assesment = Assesment(start_date=fecha1,
-                               end_date=fecha2,
-                               id_assesment_conf_id=id_config,
-                               min_grade=nota1,
-                               max_grade=nota2,
-                               approval_grade=nota3,
-                               name=nombre_config,
-                               id_class_id=id_class,
-                               max_effort_bonus=bono
-                               )
-        new_assesment.save()
-        id_new_assesment=new_assesment.pk
-        skills = Assesment_Skill.objects.filter(id_assesment_config=id_config).values('id_skill_name_id')
-        kaid = ''
-        for s in students:
-            kaid= kaid + ',' +str(s['kaid_student'])
-            new_grade = Grade(grade=0,
-                               teacher_grade=0,
-                               performance_points=0,
-                               effort_points=0.1,
-                               id_assesment_id=id_new_assesment,
-                               kaid_student_id=s['kaid_student']
-                               )
-            new_grade.save()
-            for skill in skills:
-                new_skill_log = Skill_Log(id_skill_name_id = skill['id_skill_name_id'],
-                        correct = 0,
-                        incorrect =  0,
-                        id_grade_id = new_grade.pk)
-                new_skill_log.save()
-            update_assesment_configs = Assesment_Config.objects.get(pk=id_config)
-            update_assesment_configs.applied = True
-            update_assesment_configs.save()
+        try:#id5001
+            logging.info('POST newAssesment3')
+            args = request.POST
+            fecha1=args['fecha_inicio']
+            fecha2=args['fecha_termino']
+            nota1=eval(args['nota_minima'])
+            nota2=eval(args['nota_maxima'])
+            nota3=eval(args['nota_aprobacion'])
+            id_config=(args['input_id_config'])
+            nombre_config=args['input_nombre']
+            students=eval(args['input_kaid'])
+            id_class=eval(args['input_id_class'])
+            bono = eval(args['bono_esfuerzo'])
+            recommendations = Assesment_Config.objects.filter(pk=id_config).values('importance_completed_rec')
+            mastery = Assesment_Config.objects.filter(pk=id_config).values('importance_skill_level')
+            recommendations = recommendations[0]['importance_completed_rec']
+            mastery = mastery[0]['importance_skill_level']
+            #recommendations = "recommendations"
+            #mastery = "mastery"
+            try:#id5002
+                new_assesment = Assesment(start_date=fecha1,
+                                       end_date=fecha2,
+                                       id_assesment_conf_id=id_config,
+                                       min_grade=nota1,
+                                       max_grade=nota2,
+                                       approval_grade=nota3,
+                                       name=nombre_config,
+                                       id_class_id=id_class,
+                                       max_effort_bonus=bono
+                                       )
+                new_assesment.save()
+                logging.info('saved Object Assesment ')
+            except Exception as e:
+                logging.error('ha fallado try:#id5002 POST saved Object Assesment newAssesment3 en evaluations/views.py')
+                logging.info(e)
+                return HttpResponse({'status':500})
+            try:#id5003 create grades
+                id_new_assesment=new_assesment.pk
+                skills = Assesment_Skill.objects.filter(id_assesment_config=id_config).values('id_skill_name_id')
+                kaid = ''
+                for s in students:
+                    kaid= kaid + ',' +str(s['kaid_student'])
+                    new_grade = Grade(grade=0,
+                                       teacher_grade=0,
+                                       performance_points=0,
+                                       effort_points=0.1,
+                                       id_assesment_id=id_new_assesment,
+                                       kaid_student_id=s['kaid_student']
+                                       )
+                    new_grade.save()
+                    for skill in skills:
+                        new_skill_log = Skill_Log(id_skill_name_id = skill['id_skill_name_id'],
+                                correct = 0,
+                                incorrect =  0,
+                                id_grade_id = new_grade.pk)
+                        new_skill_log.save()
+                    update_assesment_configs = Assesment_Config.objects.get(pk=id_config)
+                    update_assesment_configs.applied = True
+                    update_assesment_configs.save()
+            except Exception as e:
+                logging.error('ha fallado try:#id5003 create grades POST newAssesment3 en evaluations/views.py')
+                logging.info(e)
+                return HttpResponse({'status':500})
+            try:#id5004 calculateGrade
+                os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
+            except Exception as e:
+                    logging.error('ha fallado try:#id5004 calculateGrade POST newAssesment3 en evaluations/views.py')
+                    logging.info(e)
+                    return HttpResponse({'status':500})
+            try:#id5005 send thread mail
+                threads = []
+                #envial mail a los evaluados
+                t = threading.Thread(target=treadSendMail,args=(kaid,mastery,recommendations,fecha1,fecha2,id_config,id_class))
+                threads.append(t)
+                t.start()
+            except Exception as e:
+                    logging.error('ha fallado try:#id5005 send thread mail POST newAssesment3 en evaluations/views.py')
+                    logging.info(e)
+                    return HttpResponse({'status':500})
+            try:#id5006 send thread watsapp
+                #enviar whatsapp a todos los evaluados
+                t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
+                threads.append(t)
+                t.start()
+            except Exception as e:
+                    logging.error('ha fallado try:#id5005 send thread watsapp POST newAssesment3 en evaluations/views.py')
+                    logging.info(e)
+                    return HttpResponse({'status':500})
+            return HttpResponse({'status':201})
+        except Exception as e:
+            logging.error('ha fallado try:#id5001 POST newAssesment3 en evaluations/views.py')
+            logging.info(e)
+            return HttpResponse({'status':500})
 
-        os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
-        threads = []
-        #envial mail a los evaluados
-        t = threading.Thread(target=treadSendMail,args=(kaid,mastery,recommendations,fecha1,fecha2,id_config,id_class))
-        threads.append(t)
-        t.start()
-        
-        #enviar whatsapp a todos los evaluados
-        #t = threading.Thread(target=sendWhatsapp,args=(kaid,nota_1,nota_2,fecha_1,fecha_2,id_config))
-        #threads.append(t)
-        #t.start()
-    return HttpResponse()
 
 def strip_accents(text): #reemplaza las letras con acento por letras sin acento
     try:
@@ -316,7 +352,6 @@ def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config,id_class):
     return(contenido)
 
 def getCurso(id_class):
-    request.session.set_expiry(timeSleep)
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     curso = Class.objects.filter(pk=id_class).values('level')
     letra = Class.objects.filter(pk=id_class).values('letter')
