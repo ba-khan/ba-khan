@@ -316,7 +316,6 @@ def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config,id_class):
     return(contenido)
 
 def getCurso(id_class):
-    request.session.set_expiry(timeSleep)
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     curso = Class.objects.filter(pk=id_class).values('level')
     letra = Class.objects.filter(pk=id_class).values('letter')
