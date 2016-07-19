@@ -1,0 +1,5 @@
+INFO:root:POST newAssesment3
+INFO:root:POST newAssesment3
+INFO:root:saved Object Assesment 
+ERROR:root:ha fallado try:#id5005 send thread watsapp POST newAssesment3 en evaluations/views.py
+INFO:root:global name 'nota_1' is not defined
