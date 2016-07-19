@@ -630,7 +630,7 @@ def getClassStudents(request, id_class):
                 classes[i].level = N[int(classes[i].level)] 
             students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
             #students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-            incorrect = Skill_Attempt.objects.filter(Q(kaid_student__in=students)&Q(correct=False)&(Q(skipped=False)|(Q(skipped=True)&Q(count_attempts__gte=2)))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
+            incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False,skipped=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
             correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
             time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))    
             time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))   
