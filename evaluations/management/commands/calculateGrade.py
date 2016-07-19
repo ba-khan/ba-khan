@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 totalSkills = skills.count()
                 grades_involved = Grade.objects.filter(id_assesment_id=assesment.pk)
                 students = grades_involved.values('kaid_student_id')
-                incorrect = Skill_Attempt.objects.filter((Q(kaid_student__in=students)&Q(id_skill_name_id__in=skills)&Q(correct=False)&Q(skipped=False)&Q(date__range=(assesment.start_date,assesment.end_date)))|(Q(kaid_student__in=students)&Q(id_skill_name_id__in=skills)&Q(correct=False)&Q(skipped=True)&Q(count_attempts__gte=2)&Q(date__range=(assesment.start_date,assesment.end_date)))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+                incorrect = Skill_Attempt.objects.filter((Q(kaid_student__in=students)&Q(id_skill_name_id__in=skills)&Q(correct=False)&(Q(skipped=False)|Q(skipped=True)&Q(count_attempts__gte=2))&Q(date__range=(assesment.start_date,assesment.end_date)))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
                 hints = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(hints=Sum('count_hints'))
                 videos = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=False,skipped=False,video=True,
