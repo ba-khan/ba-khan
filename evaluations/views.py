@@ -274,33 +274,39 @@ def treadSendMail(kaid,mastery,recommendations,fecha1,fecha2,id_config,id_class)
     return
 
 def sendMail(kaidstr,contenido): #recibe los datos iniciales y envia un  mail a cada student y a cada tutor
-    kaids = kaidstr.split(',')
-    kaids.pop(0)
-    x = 0
-    for kaid in kaids:
-        x = x+1
-        if (x>6):
-            x=0
-            print "esperando 5 segundos"
-            time.sleep(5)
+    try:
+        kaids = kaidstr.split(',')
+        kaids.pop(0)
+        x = 0
+        for kaid in kaids:
+            x = x+1
+            if (x>6):
+                x=0
+                print "esperando 5 segundos"
+                time.sleep(5)
 
-        print kaid
-        student = Student.objects.get(pk=kaid)
-        tutor = Tutor.objects.get(kaid_student_child=kaid)
-        
-        contenido_html = contenido.replace("$$nombre_usuario$$",student.name) #usarPlantilla()
+            print kaid
+            student = Student.objects.get(pk=kaid)
+            tutor = Tutor.objects.get(kaid_student_child=kaid)
+            
+            contenido_html = contenido.replace("$$nombre_usuario$$",student.name) #usarPlantilla()
 
-        subject = 'Nueva Evaluacion'
-        text_content = 'habilita el html de tu correo'
-        html_content = contenido_html
-        from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
-        to = str(student.email)
-        to2 = str(tutor.email)
-        print to
-        msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
-    return ()
+            subject = 'Nueva Evaluacion'
+            text_content = 'habilita el html de tu correo'
+            html_content = contenido_html
+            from_email = '"Bakhan Academy" <bakhanacademy@gmail.com>'
+            to = str(student.email)
+            to2 = str(tutor.email)
+            to.decode().encode('utf-8')
+            to2.decode().encode('utf-8')
+            print to
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to,to2])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+        return ()
+    except Exception as e:
+        print "fallo sendmail"
+        print e
 
 def usarPlantilla(mastery,recommendations,fecha1,fecha2,id_config,id_class):
     skill_assesment = getSkillAssesment(id_config)

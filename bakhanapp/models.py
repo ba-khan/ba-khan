@@ -273,6 +273,7 @@ class Skill_Attempt(models.Model):
     date = models.DateTimeField()
     correct = models.BooleanField()
     video = models.BooleanField(default=False)
+    task_type = models.CharField(max_length=150, null=True)
     
     class Meta:
         unique_together = ('id_skill_name', 'kaid_student', 'problem_number')
