@@ -541,6 +541,7 @@ class Command(BaseCommand):
                 #dates = yesterday+"&dt_end="+today
                 dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-21T00%3A00%3A00Z"  
                 students = Student.objects.all()
+                threads = []
                 for i in students:
                     #print students[i].name
                     #yest = i.last_update
