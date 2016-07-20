@@ -289,7 +289,7 @@ def sendMail(kaidstr,contenido): #recibe los datos iniciales y envia un  mail a 
             student = Student.objects.get(pk=kaid)
             tutor = Tutor.objects.get(kaid_student_child=kaid)
             
-            contenido_html = contenido.replace("$$nombre_usuario$$",student.name) #usarPlantilla()
+            contenido_html = contenido.replace("$$nombre_usuario$$",str(student.name)) #usarPlantilla()
 
             subject = 'Nueva Evaluacion'
             text_content = 'habilita el html de tu correo'
