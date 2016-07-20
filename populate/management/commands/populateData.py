@@ -540,7 +540,7 @@ class Command(BaseCommand):
                 logging.debug(msg)
                 #dates = yesterday+"&dt_end="+today
                 dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-21T00%3A00%3A00Z"  
-                students = Student.objects.all()
+                students = Student.objects.filter(id_institution=inst.id_institution)
                 threads = []
                 for i in students:
                     #print students[i].name
