@@ -326,7 +326,7 @@
     //d3.f is a d3-jetpack function that saves code writing by replacing a line of code -> d3.f("name") = function(d){return d.name}
     var columns = [
         { head: 'Estudiantes', cl: 'name', html: d3.f('name'), type:'text'},
-        { head: 'Recomend. completadas', cl: 'recommendations', values: d3.f('recommendations'), type:'numeric'},
+        { head: 'Habilidades practicadas', cl: 'recommendations', values: d3.f('recommendations'), type:'numeric'},
         { head: 'Ejercicios desarrollados', cl: 'exercises', values: d3.f('exercises') , type:'numeric'},
         { head: 'Tiempo en ejercicios', cl: 'skills_time', value: d3.f('skills_time'), valueF : d3.f('skills_time',length()) , type:'numeric'},
         { head: 'Tiempo en videos', cl: 'videos_time', valueF: d3.f('video_time', length()), value: d3.f('video_time') , type:'numeric'},
@@ -1802,7 +1802,7 @@
 				if ({{config.id_assesment_config}}== id){
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Porcentaje de aprobación: {{ config.approval_percentage }}</div>");
 					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Nivel de Dominio Logrado: {{ config.importance_skill_level }}</div>");	
-					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Recomendaciones Completadas: {{ config.importance_completed_rec }}</div>");
+					$("#parametros").append("<div><IMG style='width:13px;height:13px;margin-right:5px' SRC='{% static 'img/leaf.png'%}'>Importancia de Habilidades practicadas: {{ config.importance_completed_rec }}</div>");
 					document.getElementById("input_id_config").value = "{{config.id_assesment_config}}";
 				}
 			{% endfor %}
