@@ -452,8 +452,6 @@ def threadPopulate(students,dates,session):
     except Exception as e:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
-        logging.debug(e)
-    '''
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -473,7 +471,6 @@ def threadPopulate(students,dates,session):
         msg="error video_playing "+ students.name
         logging.debug(msg)
         logging.debug(e)
-    '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -539,24 +536,10 @@ class Command(BaseCommand):
                 msg="ayer: " + yesterday
                 logging.debug(msg)
                 #dates = yesterday+"&dt_end="+today
-                dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-21T00%3A00%3A00Z"  
-                students = Student.objects.filter(id_institution=inst.id_institution)
-                threads = []
-                for i in students:
-                    #print students[i].name
-                    #yest = i.last_update
-                    #yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
-                    #yesterday  = yesterday.replace(":", "%3A")
-                    #dates = yesterday+"&dt_end="+today
-                    #todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
+                #dates = "2015-01-01T00%3A00%3A00Z&dt_end=2016-07-14T00%3A00%3A00Z"  
 
-                    #Student.objects.filter(kaid_student=i.kaid_student).update(last_update=todayy)
 
-                    t = threading.Thread(target=threadPopulate,args=(i,dates,session))
-                    threads.append(t)
-                    t.start()
 
-                '''
                 consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
                 for cons in consulta:
@@ -575,9 +558,7 @@ class Command(BaseCommand):
                         yesterday  = yesterday.replace(":", "%3A")
                         dates = yesterday+"&dt_end="+today
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
-                        print "aca"
                         Student.objects.filter(kaid_student=i.kaid_student).update(last_update=todayy)
-                        print "paso"
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                         threads.append(t)
                         t.start()
@@ -595,7 +576,7 @@ class Command(BaseCommand):
                         t2 = threading.Thread(target=threadPopulate,args=(j,datesnew,session))
                         threadsnew.append(t2)
                         t2.start()
-                '''
+
 
             except Exception as e:
                 print e
