@@ -441,9 +441,9 @@ def threadPopulate(students,dates,session):
     semafaro.acquire()
 
     try:
-        poblar_student_skill2('barralesherrerasimon', 'kaid_190343660796773532612822', dates, session) #listo
+        poblar_student_skill2(students.name, students.kaid_student, dates, session) #listo
     except Exception as e:
-        msg="error student_skill asds" 
+        msg="error student_skill" + students.name 
         logging.debug(msg)
         logging.debug(e)
 
