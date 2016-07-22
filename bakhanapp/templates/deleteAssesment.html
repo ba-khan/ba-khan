@@ -1,3 +1,53 @@
-<html>
-<div>Hola mundo</div>
-</html>
+{% extends 'base.html' %}
+    {% block body %}
+          
+        <div style="margin:10px"><button type="button" onClick="eliminar()">Borrar evaluaciones seleccionadas</button></div>
+        <div align="center">
+            <table id="assesment" border=1>
+                <tr><th>id</th><th>inicio</th><th>termino</th><th>id_assesment_config</th><th>nombre</th><th>eliminar</th></tr>
+                {% for data in aux %}
+                    <tr>
+                        <td>{{data.id_assesment}}</td><td>{{data.start_date}}</td><td>{{data.end_date}}</td><td>{{data.id_assesment_conf_id}}</td><td>{{data.name}}</td>
+                        <td>
+                            <input type="checkbox" name="evaluaciones[]" value="{{data.id_assesment}}">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <script type="text/javascript">
+            function eliminar(){
+                alert("eliminando!");
+                var data = [];
+                $(":checked").each(function() {
+                data.push($(this).val());
+                });
+                console.log(data)
+                for(var i=0;i<data.length;i++){
+                    alert(data[i])
+                }
+                data = JSON.stringify(data)
+                $.ajax({
+                    url: "{% url 'evaluations:deleteAssesment' %}",
+                    async:false,
+                    type: "POST",
+                    data: {assesment:data},
+                    success: function (response) {
+                        alert(data)
+                        alert("listo")
+                        }
+                });
+            }
+        </script>
+        <style type="text/css">
+        table#assesment{
+            font-size: 16px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 80%
+        }
+        table,th,td{
+            border: 1px solid black;
+        }
+        </style>
+    {% endblock %}
