@@ -147,7 +147,7 @@ def updateAssesment(request): #modifica una evaluacion
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
-def deleteAssesment(request): #modifica una evaluacion 
+def deleteAssesment(request): #borra evaluaciones
     request.session.set_expiry(timeSleep)
     if request.method =='POST':
         aux = request.body

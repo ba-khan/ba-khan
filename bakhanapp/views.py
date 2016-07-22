@@ -956,6 +956,9 @@ def strip_acent(s):
 
 def getAssesment(request):
     aux = Assesment.objects.all().order_by("id_assesment")
+    for a in aux:
+        pauta = Assesment_Config.objects.get(pk=a.id_assesment_conf_id)
+        a.id_assesment_conf_id = pauta.name
     try:
         return render_to_response('deleteAssesment.html',{'aux': aux},context_instance=RequestContext(request))
     except Exception as e:

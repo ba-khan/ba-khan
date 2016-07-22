@@ -4,7 +4,7 @@
         <div style="margin:10px"><button type="button" onClick="eliminar()">Borrar evaluaciones seleccionadas</button></div>
         <div align="center">
             <table id="assesment" border=1>
-                <tr><th>id</th><th>inicio</th><th>termino</th><th>id_assesment_config</th><th>nombre</th><th>eliminar</th></tr>
+                <tr><th>Id</th><th>Inicio</th><th>Termino</th><th>Pauta</th><th>Nombre</th><th>Eliminar</th></tr>
                 {% for data in aux %}
                     <tr>
                         <td>{{data.id_assesment}}</td><td>{{data.start_date}}</td><td>{{data.end_date}}</td><td>{{data.id_assesment_conf_id}}</td><td>{{data.name}}</td>
