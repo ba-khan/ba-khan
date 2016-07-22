@@ -271,7 +271,7 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
                 if data["last_attempt_number"]>0:
                     data["last_attempt_number"]=1
                 try:
-                    student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data["total_done"]+data["last_attempt_number"],
+                    student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"]+data[i]["last_attempt_number"],
                                                                                total_correct = data[i]["total_correct"],
                                                                                streak = data[i]["streak"],
                                                                                longest_streak = data[i]["longest_streak"],
@@ -291,7 +291,7 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
                 if data["last_attempt_number"]>0:
                     data["last_attempt_number"]=1
                 try:
-                    student_skill = Student_Skill(total_done = data["total_done"]+data["last_attempt_number"],
+                    student_skill = Student_Skill(total_done = data[i]["total_done"]+data[i]["last_attempt_number"],
                                                        total_correct = data[i]["total_correct"],
                                                        streak = data[i]["streak"],
                                                        longest_streak = data[i]["longest_streak"],
