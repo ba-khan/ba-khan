@@ -417,7 +417,7 @@ def poblar_student_skill(name_student, kaid_student, dates, session):
                                                                                            )
                                                                                                               
                            
-                            student_skill.save()
+                                student_skill.save()
                             except Exception as e:#id14
                                 logging.error('ha fallado try:#id14 en populateStudentSkill.py')
                                 logging.info(e)
