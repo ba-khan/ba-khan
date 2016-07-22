@@ -268,8 +268,8 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
                 #print "entro al try"
                 stdnt_skillid = Student_Skill.objects.filter(id_skill_name_id=data[i]["exercise_model"]["id"], kaid_student_id=kaid_student).values("id_student_skill")
                 #print stdnt_skillid[0]["id_student_skill"]
-                if data["last_attempt_number"]>0:
-                    data["last_attempt_number"]=1
+                if data[i]["last_attempt_number"]>0:
+                    data[i]["last_attempt_number"]=1
                 try:
                     student_skill = Student_Skill(id_student_skill=stdnt_skillid[0]["id_student_skill"], total_done = data[i]["total_done"]+data[i]["last_attempt_number"],
                                                                                total_correct = data[i]["total_correct"],
@@ -288,8 +288,8 @@ def poblar_student_skill2(name_student, kaid_student, dates, session):
 
             except Exception as e:
                 #print e
-                if data["last_attempt_number"]>0:
-                    data["last_attempt_number"]=1
+                if data[i]["last_attempt_number"]>0:
+                    data[i]["last_attempt_number"]=1
                 try:
                     student_skill = Student_Skill(total_done = data[i]["total_done"]+data[i]["last_attempt_number"],
                                                        total_correct = data[i]["total_correct"],
