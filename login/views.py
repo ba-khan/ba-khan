@@ -70,6 +70,8 @@ from websocket_server import WebsocketServer
 
 
 def login(request):
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/inicio')
     return render_to_response('login.html', context_instance=RequestContext(request))
 
 def rejected(request):
