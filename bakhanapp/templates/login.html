@@ -101,20 +101,23 @@
       // Connect to Web Socket
       //ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor
       ws = new WebSocket("ws://146.83.216.177:8080"); //IP del Servidor
+      console.log(ws);
       //ws = new WebSocket("ws://127.0.0.1:8080");
       //ws = new WebSocket("ws://192.168.1.139:9001");
       // Set event handlers.
       ws.onopen = function() {
         output("onopen");
         connected=true;
+        console.log('onopen');
         if (connected==true){
+          console.log(connected);
           onSubmit("login");
         }
       };
       
       ws.onmessage = function(e) {
         // e.data contains received string.
-        console.log(e.data);
+        console.log('entro en onmessage');
         var server_data = JSON.parse(e.data)
         if (server_data.url){
           var url = server_data.url
@@ -168,6 +171,7 @@
     
     function onSubmit(str) {
       ws.send(str);
+      console.log(str);
       output("send: " + str);
     }
     
