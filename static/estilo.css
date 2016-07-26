@@ -3,15 +3,21 @@
   height: 500;
   /*IMPORTANTE*/
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 640px;
+  width: 100%;
+  text-align: right;
+}
+#container-rigth{
+  float:right;
 }
 #report-problem{
-  float: right;
   margin-top: 10px;
   margin-bottom: 10px;
-  margin-right: -1000px;
+  float:right;
+}
+#report-problem-dashboard{
+  float:right;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .footer-small{
   z-index: 0;
@@ -519,7 +525,7 @@ label.sort-filter{
 }
 .btn-download{
   background:url(img/icono_descargar.png);
-  float: right;
+  float: left;
   background-size: 50px;
   cursor:pointer;
   width: 50px;
@@ -538,6 +544,8 @@ label.sort-filter{
 }
 #content-sup{
   height: 30px;
+  padding-left: 782px;
+  padding-bottom: 22px;
 }
 .counter{
 	position:absolute;

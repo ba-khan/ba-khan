@@ -226,6 +226,7 @@
 	<script type="text/javascript">
 	var evReady = 0;
 	$(document).ready(function(){
+		$('#report-problem').hide();
   		noEvaluarTodos();
   		$("#hover").click(function(){
   	        $(this).fadeOut();
@@ -391,6 +392,7 @@
     	.attr('class', 'contained-and-centered')
     	.append('div')
     	.attr('align', 'center')
+    	.attr('id','container-dashboard')
         .append('table')
         .attr('id','studentsDashboard')
         .style('width', '99%');
@@ -577,6 +579,15 @@
 	        .attr('title','Descargar Todo')
 	        .attr("onClick","generateClassExcel("+e_id_class+")"); 
     }
+    d3.select("#container-dashboard")
+    		.append("div")
+    		.attr("id",'content-inf')
+	    	.append("a")
+	        .attr("class","simple-button orange")
+	        .attr("id",'report-problem-dashboard')
+	        .attr("href","/mantisbt/login_select_proj_page.php?ref=bug_report_page.php")
+	        .attr("target","_blank")
+	        .text("Reportar problemas"); 
 
 //*******************************************************************************************************************************
 //**************** d3 end generation main ***************************************************************************************
