@@ -527,14 +527,14 @@ label.sort-filter{
 }
 .btn-download{
   background:url(img/icono_descargar.png);
-  float: left;
+  float: right;
   background-size: 50px;
   cursor:pointer;
   width: 50px;
   height: 50px;
   border: none;
   margin-left:0%;
-  margin-bottom: 5px;
+  margin-bottom: 41px;
 }
 .buttonsES{
 	position:absolute;
