@@ -87,12 +87,12 @@
 
 
   <script type="text/javascript">
-  
+    /*
     var loginButton = document.getElementById('loginButton');
     loginButton.addEventListener('click', function(){
       $(loginButton).css('pointer-events','none');
     }, false);
-
+    */
     var ws;
     var url;
     var connected=false;
@@ -122,7 +122,15 @@
         if (server_data.url){
           var url = server_data.url
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
+          $("#loginButton").hide();
         }
+
+        var pollTimer = window.setInterval(function() {
+          if (myWindow.closed !== false) { // !== is required for compatibility with Opera
+            window.clearInterval(pollTimer);
+            $("#loginButton").show();
+          }
+        }, 200);
         if (server_data.login){
           var login_data = server_data.login;
           console.log(login_data);
@@ -139,8 +147,10 @@
               if (response=="True"){
                 //window.location = window.href+"inicio";
                 window.open('/inicio','_self')
+                $("#loginButton").show();
               }else{
                 window.open('/access/rejected','_self')
+                $("#loginButton").show();
               }    
             }
           });
