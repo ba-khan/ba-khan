@@ -12,12 +12,14 @@
 #report-problem{
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-right: 10px;
   float:right;
 }
 #report-problem-dashboard{
   float:right;
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-right: 10px;
 }
 .footer-small{
   z-index: 0;
