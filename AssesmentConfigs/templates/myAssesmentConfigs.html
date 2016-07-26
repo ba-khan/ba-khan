@@ -19,6 +19,7 @@ function getTopicTree(id){
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
 		    	if (selected_skills[i].data){
+		    		//console.log(selected_skills[i].data["skill_id"])
 		    		selected_skills_id.push({'skill_id':selected_skills[i].data["skill_id"],id:selected_skills[i].id});
 		    		//selected_subtopic_skill.push(selected_skills[i].id);
 		    	}

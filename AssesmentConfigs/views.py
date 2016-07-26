@@ -40,7 +40,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         #print assesment_config.id_assesment_config
         assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
         config_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_subtopic_skill_id')
-       #print assesment_skills
+        #print config_skills
         skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
         #print skills
         config_json={}
@@ -57,9 +57,13 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["assesment_skills_spanish"]=[]
         config_json["config_skills"]=[]
         for i in range(len(assesment_skills)):
+            #print config_skills[i]
             config_json["assesment_skills"].append(assesment_skills[i])
             config_json["assesment_skills_spanish"].append(skills[i])
-            config_json["config_skills"].append(config_skills[i])
+            #config_json["config_skills"].append(config_skills[i])
+        for j in range(len(config_skills)):
+            #print config_skills[j]
+            config_json["config_skills"].append(config_skills[j])
         #print config_json["assesment_skills"]
         json_array.append(config_json)
     
@@ -77,9 +81,9 @@ def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
         args = request.POST
         aux= args['forloop']
-
         assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
         skills_selected = eval(args['skills'+aux])
+        #print skills_selected
         assesment_config.name=args['name']
         assesment_config.approval_percentage=args['approval_percentage']
         assesment_config.importance_skill_level=args['importance_skill_level'+aux]
@@ -125,7 +129,7 @@ def newAssesmentConfig(request):
                                    )
 
             for skill in skills_selected:
-                print skill['skill_id']
+                #print skill['skill_id']
                 try:
                     new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
                                                         id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
