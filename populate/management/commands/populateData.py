@@ -452,13 +452,13 @@ def threadPopulate(students,dates,session):
     except Exception as e:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
+    '''
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
         msg="error student_progress "+ students.name
         logging.debug(msg)
         logging.debug(e)
-
     try:
         poblar_student_video(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -471,6 +471,7 @@ def threadPopulate(students,dates,session):
         msg="error video_playing "+ students.name
         logging.debug(msg)
         logging.debug(e)
+    '''
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -526,7 +527,7 @@ class Command(BaseCommand):
                 today = today.replace(":","%3A")
                 yesterday = datetime.strftime(datetime.now()-timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
-                yesterday = inst.last_load
+                #yesterday = inst.last_load
 
                 inst.last_load = today
                 inst.save()
