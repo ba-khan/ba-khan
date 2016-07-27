@@ -44,6 +44,9 @@
 	<!-- Inicio barra de arriba (class="selected")-->
 	<nav id="page_sub_nav" class="clearfix athena-big-menu"><span class="breadcrumbs_nav contained-and-centered"><span class="float-left"><h3 class="children-students-title"></h3></span>
 	<a class="" href="{% url 'cursos' %}" id='inicio'><span>Inicio</span></a>
+	{% if perms.bakhanapp.isSuper %}
+	<a class="" href="/delete" onClick="loading()" id='delete'><span>Borrar Evaluaciones</span></a>
+	{% endif %}
 	{% if isTeacher %}
 	<a class="" href="/inicio/pautas" onClick="loading()" id='pautas'><span>Pautas</span></a>
 	{% endif %}
