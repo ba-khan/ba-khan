@@ -1,3 +1,62 @@
-<html>
-<div>Hola mundo</div>
-</html>
+{% extends 'home.html' %}
+    {% block body2 %}
+          
+        <div style="margin:10px"><button type="button" class="kui-button kui-button-plain kui-button-primary" onClick="eliminar()">Borrar evaluaciones seleccionadas</button></div>
+        <div align="center">
+            <table id="assesment" border=1>
+                <thead>
+                    <tr><th>Id</th><th>Inicio</th><th>Termino</th><th>Nombre Calificacion</th><th>Nombre Pauta</th><th>Curso</th><th>Institucion</th><th>Eliminar</th></tr>
+                </thead>
+                <tbody>
+                {% for data in aux %}
+                    <tr>
+                        <td>{{data.id_assesment}}</td><td>{{data.start_date}}</td><td>{{data.end_date}}</td><td>{{data.name}}</td><td>{{data.id_assesment_conf_id}}</td><td>{{data.max_grade}}</td><td>{{data.min_grade}}</td>
+                        <!-- max y min grade traen el curso y la institucion desde el views -->
+                        <td>
+                            <input type="checkbox" name="evaluaciones[]" value="{{data.id_assesment}}">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('table#assesment').tablesorter({
+                    animation: 'slide',
+                    speed: 1200
+                });
+                $('#delete').addClass('active selected');
+            });
+            function eliminar(){
+                var data = [];
+                var assesments = new Object();
+                $(":checked").each(function() {
+                data.push($(this).val());
+                });
+                assesments.pk=data
+                //console.log(data)
+                $.ajax({
+                    url: "{% url 'evaluations:deleteAssesment' %}",
+                    async:false,
+                    type: "POST",
+                    contentType: "aplication/json; charset=utf-8",
+                    data: JSON.stringify(assesments),
+                    success: function (response) {
+                        location.reload();
+                        }
+                });
+            }
+        </script>
+        <style type="text/css">
+        table#assesment{
+            font-size: 16px;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 80%
+        }
+        table,th,td{
+            border: 1px solid black;
+        }
+        </style>
+    {% endblock %}

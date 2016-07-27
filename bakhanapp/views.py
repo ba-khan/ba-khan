@@ -1000,13 +1000,21 @@ def dictfetchall(cursor):
 def strip_acent(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
-def deleteAssesment(request):
-    '''
-    print "delete assesment"
-    delete_grades = Grade.objects.filter(id_assesment=id_assesment)
-    delete_skill_log = Skill_Log.objects.filter(id_grade__in = delete_grades)
-    delete_skill_log.delete()
-    delete_grades.delete()
-    '''
-    return render_to_response('deleteAssesment.html')
+@permission_required('bakhanapp.isSuper',login_url="/")
+def getAssesment(request):
+    aux = Assesment.objects.all().order_by("id_assesment")
+    for a in aux:
+        pauta = Assesment_Config.objects.get(pk=a.id_assesment_conf_id)
+        a.id_assesment_conf_id = pauta.name
+        rClass = Class.objects.get(pk=a.id_class_id)
+        N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']       
+        nameClass= N[int(rClass.level)]  +' '+ rClass.letter
+        institucion = Institution.objects.get(pk=rClass.id_institution_id)
+        #####el max y el min grade se utilizan para pasar el nombre de la clase y la institucion#####
+        a.max_grade = nameClass
+        a.min_grade = institucion.name
+    try:
+        return render_to_response('deleteAssesment.html',{'aux': aux},context_instance=RequestContext(request))
+    except Exception as e:
+        print e
  

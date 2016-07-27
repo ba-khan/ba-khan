@@ -147,6 +147,25 @@ def updateAssesment(request): #modifica una evaluacion
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
+@permission_required('bakhanapp.isSuper',login_url="/")
+def deleteAssesment(request): #borra evaluaciones
+    request.session.set_expiry(timeSleep)
+    if request.is_ajax():
+        if request.method == "POST":
+            aux = json.loads(request.body)
+
+            for s in aux["pk"]:
+                id_assesment = int(s)
+                delete_assesment = Assesment.objects.get(pk=id_assesment)
+                delete_grades = Grade.objects.filter(id_assesment=id_assesment)
+                delete_skill_log = Skill_Log.objects.filter(id_grade__in = delete_grades)
+
+                delete_skill_log.delete()
+                delete_grades.delete()
+                delete_assesment.delete()
+      
+    return HttpResponse()
+
 def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion
     request.session.set_expiry(timeSleep)
     if request.method =='POST':
