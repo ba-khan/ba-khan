@@ -149,25 +149,20 @@ def updateAssesment(request): #modifica una evaluacion
 
 def deleteAssesment(request): #borra evaluaciones
     request.session.set_expiry(timeSleep)
-    if request.method =='POST':
-        aux = request.body
-        aux1 = aux.replace("assesment=","")
-        aux1 = aux1.replace("%5B","")
-        aux1 = aux1.replace("%5D","")
-        aux1 = aux1.replace("%22","")
-        aux1 = aux1.replace("%2C","&")
-        split = aux1.split("&")
-        for s in split:
-            id_assesment = int(s)
-            delete_assesment = Assesment.objects.get(pk=id_assesment)
+    if request.is_ajax():
+        if request.method == "POST":
+            aux = json.loads(request.body)
 
-            delete_grades = Grade.objects.filter(id_assesment=id_assesment)
-            delete_skill_log = Skill_Log.objects.filter(id_grade__in = delete_grades)
+            for s in aux["pk"]:
+                id_assesment = int(s)
+                delete_assesment = Assesment.objects.get(pk=id_assesment)
+                delete_grades = Grade.objects.filter(id_assesment=id_assesment)
+                delete_skill_log = Skill_Log.objects.filter(id_grade__in = delete_grades)
 
-            delete_skill_log.delete()
-            delete_grades.delete()
-            delete_assesment.delete()
-  
+                delete_skill_log.delete()
+                delete_grades.delete()
+                delete_assesment.delete()
+      
     return HttpResponse()
 
 def getStudentAssesment(request): #entrega a todos los alumnos a los que se le realiza una evaluacion

@@ -29,15 +29,18 @@
             });
             function eliminar(){
                 var data = [];
+                var assesments = new Object();
                 $(":checked").each(function() {
                 data.push($(this).val());
                 });
-                data = JSON.stringify(data)
+                assesments.pk=data
+                //console.log(data)
                 $.ajax({
                     url: "{% url 'evaluations:deleteAssesment' %}",
                     async:false,
                     type: "POST",
-                    data: {assesment:data},
+                    contentType: "aplication/json; charset=utf-8",
+                    data: JSON.stringify(assesments),
                     success: function (response) {
                         location.reload();
                         }
