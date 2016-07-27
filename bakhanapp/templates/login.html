@@ -80,6 +80,7 @@
             Inicia sesión con tu cuenta Khan Academy
         </h2>
         <a id="loginButton" role="button" aria-disabled="false" onClick="openPopup()" href="javascript:void(0)" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
+        <a id="loginButton2" role="button" aria-disabled="false" class="kui-button kui-button-submit kui-button-primary" style="width:100%;" data-reactid=".0.4.2" target="_top">Ingresar</a>
       </div>
     </div>
 
@@ -93,6 +94,7 @@
       $(loginButton).css('pointer-events','none');
     }, false);
     */
+    $("#loginButton2").hide();
     var ws;
     var url;
     var connected=false;
@@ -123,12 +125,14 @@
           var url = server_data.url
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
           $("#loginButton").hide();
+          $("#loginButton2").show();
         }
 
         var pollTimer = window.setInterval(function() {
           if (myWindow.closed !== false) { // !== is required for compatibility with Opera
             window.clearInterval(pollTimer);
             $("#loginButton").show();
+            $("#loginButton2").hide();
           }
         }, 200);
         if (server_data.login){
@@ -148,9 +152,11 @@
                 //window.location = window.href+"inicio";
                 window.open('/inicio','_self')
                 $("#loginButton").show();
+                $("#loginButton2").hide();
               }else{
                 window.open('/access/rejected','_self')
                 $("#loginButton").show();
+                $("#loginButton2").hide();
               }    
             }
           });
