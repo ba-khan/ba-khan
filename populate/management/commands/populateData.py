@@ -522,7 +522,7 @@ class Command(BaseCommand):
                 #cur = conn.cursor()
                 #kaid_student = "kaid_485871758161384306203631"
 
-                today = time.strftime("%Y-%m-%dT%H:%M:%SZ", localtime())
+                today = time.strftime("%Y-%m-%dT23:59:59Z", localtime())
                 today = today.replace(":","%3A")
                 yesterday = datetime.strftime(datetime.now()-timedelta(1),'%Y-%m-%d')
                 #instituto = Institution.objects.get(id_institution= i)
@@ -553,10 +553,11 @@ class Command(BaseCommand):
                     
                     for i in students:
                         #print students[i].name
-                        yest = i.last_update
-                        yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
-                        yesterday  = yesterday.replace(":", "%3A")
-                        dates = yesterday+"&dt_end="+today
+                        #yest = i.last_update
+                        dates = "2015-01-01T00%3A00%3A00Z&dt_end="+today
+                        #yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
+                        #yesterday  = yesterday.replace(":", "%3A")
+                        #dates = yesterday+"&dt_end="+today
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
                         Student.objects.filter(kaid_student=i.kaid_student).update(last_update=todayy)
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
