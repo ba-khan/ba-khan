@@ -954,6 +954,7 @@ def dictfetchall(cursor):
 def strip_acent(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
+@permission_required('bakhanapp.isSuper',login_url="/")
 def getAssesment(request):
     aux = Assesment.objects.all().order_by("id_assesment")
     for a in aux:

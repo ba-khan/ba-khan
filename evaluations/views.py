@@ -147,6 +147,7 @@ def updateAssesment(request): #modifica una evaluacion
         os.system('python /var/www/html/bakhanproyecto/manage.py calculateGrade')
     return HttpResponse()
 
+@permission_required('bakhanapp.isSuper',login_url="/")
 def deleteAssesment(request): #borra evaluaciones
     request.session.set_expiry(timeSleep)
     if request.is_ajax():
