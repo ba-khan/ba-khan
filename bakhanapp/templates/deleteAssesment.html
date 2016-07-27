@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
-    {% block body %}
+{% extends 'home.html' %}
+    {% block body2 %}
           
-        <div style="margin:10px"><button type="button" onClick="eliminar()">Borrar evaluaciones seleccionadas</button></div>
+        <div style="margin:10px"><button type="button" class="kui-button kui-button-plain kui-button-primary" onClick="eliminar()">Borrar evaluaciones seleccionadas</button></div>
         <div align="center">
             <table id="assesment" border=1>
                 <thead>
@@ -26,6 +26,7 @@
                     animation: 'slide',
                     speed: 1200
                 });
+                $('#delete').addClass('active selected');
             });
             function eliminar(){
                 var data = [];
