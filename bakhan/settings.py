@@ -27,8 +27,8 @@ SECRET_KEY = 'uy=!=x&yfcv)a_bbk19xx_4c1w@x$j)g5=i(u99)1qo$+p4)2e'
 DEBUG = TEMPLATE_DEBUG = False
 #DEBUG = True
 
-#ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = []
 
 TEMPLATE_DIRS = (
     join(BASE_DIR,  'templates'),
