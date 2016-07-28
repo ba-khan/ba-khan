@@ -373,7 +373,9 @@ def getArrayAssesmentDetail(id_assesment):
             if j==3:
                 data[i+delta][j] = grades[i]['grade__correct']
             if j==4:
-                data[i+delta][j] = grades[i]['grade__excercice_time']
+                m, s = divmod(grades[i]['grade__excercice_time'], 60)
+                print "%d:%02d:%02d" % (h, m, s)
+                data[i+delta][j] = "%02d:%02d" % (m, s)
             if j==5:
                 data[i+delta][j] = grades[i]['grade__video_time']
             if j==6:
