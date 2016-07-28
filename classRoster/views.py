@@ -357,6 +357,12 @@ def saveExcelClass(request):
         for student in students:
             try:
                 aux = Student.objects.get(name=student)
+                try:#intenta crear el estudiante
+                    if aux.id_institution==id_institution:
+                        estud = Student(kaid_student=aux.kaid_student, name=aux, new_student=True)
+                        estud.save()
+                except Exception as e:#si no puede crear el estudiante
+                    continue
             except:
                 try:
                     aux = Student.objects.get(nickname=student)
