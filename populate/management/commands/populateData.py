@@ -274,23 +274,26 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
         try:
             for j in range(len(data)):
                 #print data[j]["time_done"]
-                skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
-                                                                       mission = data[j]["mission"],
-                                                                       time_taken = data[j]["time_taken"],
-                                                                       count_hints = data[j]["count_hints"],
-                                                                       skipped = data[j]["skipped"],
-                                                                       points_earned = 0,
-                                                                       date = data[j]["time_done"],
-                                                                       correct = data[j]["correct"],
-                                                                       id_skill_name_id = skills[0]["id_skill_name"],
-                                                                       kaid_student_id = kaid_student,
-                                                                       problem_number = data[j]["problem_number"], 
-                                                                       task_type = data[j]["task_type"]
-                                                                       )
-                skill_attempts.save()
+                try:
+                    skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
+                                                                           mission = data[j]["mission"],
+                                                                           time_taken = data[j]["time_taken"],
+                                                                           count_hints = data[j]["count_hints"],
+                                                                           skipped = data[j]["skipped"],
+                                                                           points_earned = 0,
+                                                                           date = data[j]["time_done"],
+                                                                           correct = data[j]["correct"],
+                                                                           id_skill_name_id = skills[0]["id_skill_name"],
+                                                                           kaid_student_id = kaid_student,
+                                                                           problem_number = data[j]["problem_number"], 
+                                                                           task_type = data[j]["task_type"]
+                                                                           )
+                    skill_attempts.save()
+                except Exception as e:
+                    logging.info(e)
 
         except Exception as e:
-            print e
+            logging.info(e)
             #print "otra materia (?)"
     #print "listeilors"
 
@@ -317,7 +320,7 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
                     id_student_skill_id=student_skill[0]["id_student_skill"])
                 new_progress.save()
             except Exception as e:
-                print e
+                logging.info(e)
             '''    
             except:
                 student_skill=Student_Skill.objects.filter(kaid_student_id=kaid_student).values("id_student_skill")
@@ -339,7 +342,7 @@ def poblar_skill_progress(student_name,kaid_student,dates,session):
             '''
             #print "guardo bien"
     except Exception as e:
-        print e
+        logging.info(e)
             
 def poblar_student_video(student_name,kaid_student, dates, session):
     llamada = "/api/v1/user/videos?userId=&username="+student_name+"&email=&dt_start="+dates
@@ -361,7 +364,7 @@ def poblar_student_video(student_name,kaid_student, dates, session):
                                                                        )
             student_video.save()
         except Exception as e:
-            print e
+            logging.info(e)
             #print "error"
     #print "listo student_video"
 
@@ -396,7 +399,7 @@ def poblar_video_playing(student_name,kaid_student, dates, session):
                                                                                )
                     video_playing.save()                   
         except Exception as e:
-            print e
+            logging.info(e)
             #print "error"
     #print "listo video_playing"
 
@@ -452,7 +455,7 @@ def threadPopulate(students,dates,session):
     except Exception as e:
         msg = "error student_attempts "+students.name
         logging.debug(msg)
-    '''
+    
     try:
         poblar_skill_progress(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -471,7 +474,7 @@ def threadPopulate(students,dates,session):
         msg="error video_playing "+ students.name
         logging.debug(msg)
         logging.debug(e)
-    '''
+    
     msg = threading.currentThread().getName() + "Terminado"
     logging.debug(msg)
     semafaro.release()
@@ -554,11 +557,10 @@ class Command(BaseCommand):
                     
                     for i in students:
                         #print students[i].name
-                        #yest = i.last_update
-                        dates = "2015-01-01T00%3A00%3A00Z&dt_end="+today
-                        #yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
-                        #yesterday  = yesterday.replace(":", "%3A")
-                        #dates = yesterday+"&dt_end="+today
+                        yest = i.last_update
+                        yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
+                        yesterday  = yesterday.replace(":", "%3A")
+                        dates = yesterday+"&dt_end="+today
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
                         Student.objects.filter(kaid_student=i.kaid_student).update(last_update=todayy)
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
