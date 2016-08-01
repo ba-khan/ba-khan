@@ -319,7 +319,7 @@ def getArrayAssesmentDetail(id_assesment):
     viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
         'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
         'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
-        'Nota','Bonificacion por esfuerzo']
+        'Nota por desempeno','Bonificacion por esfuerzo', 'Nota Final']
     totalFields = len(viewFields)
     #carga al arreglo los datos de la evaluacion id_assesment
     try: #id01
@@ -392,6 +392,11 @@ def getArrayAssesmentDetail(id_assesment):
                 data[i+delta][j] = grades[i]['grade__grade']
             elif j==12:
                 data[i+delta][j] = grades[i]['grade__bonus_grade']
+            elif j==13:
+                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade'])>7:
+                    data[i+delta][j] = 7
+                else:
+                    data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade']
     #load skills to excel array data
     data[totalGrades+delta+1][0]='Habilidades evaluadas:'
     for l in range(totalSkills):
