@@ -425,7 +425,9 @@ def getArrayClassDetail(id_class):
         grades = Student.objects.filter(student_class__id_class_id=id_class
             ).values('name','grade__grade',
             'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
-            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').annotate(Avg('grade__grade'))
+            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').annotate(Avg('grade__grade'),
+            Sum('grade__incorrect'),Sum('grade__correct'),Avg('grade__bonus_grade'),Sum('grade__recomended_complete'),Sum('grade__excercice_time'),
+            Sum('grade__video_time'),Sum('grade__struggling'),Sum('grade__practiced'),Sum('grade__mastery1'),Sum('grade__mastery2'),Sum('grade__mastery3'))
         for g in grades:
             print g
     except Exception as e:
@@ -466,36 +468,36 @@ def getArrayClassDetail(id_class):
             if j==0:
                 data[i+delta][j] = grades[i]['name']
             if j==1:
-                data[i+delta][j] = grades[i]['grade__recomended_complete']
+                data[i+delta][j] = grades[i]['grade__recomended_complete__sum']
             if j==2:
-                data[i+delta][j] = grades[i]['grade__incorrect']
+                data[i+delta][j] = grades[i]['grade__incorrect__sum']
             if j==3:
-                data[i+delta][j] = grades[i]['grade__correct']
+                data[i+delta][j] = grades[i]['grade__correct__sum']
             if j==4:
-                m, s = divmod(grades[i]['grade__excercice_time'], 60)
+                m, s = divmod(grades[i]['grade__excercice_time__sum'], 60)
                 data[i+delta][j] = "%02d:%02d" % (m, s)
             if j==5:
-                mv, sv = divmod(grades[i]['grade__video_time'], 60)
+                mv, sv = divmod(grades[i]['grade__video_time__sum'], 60)
                 data[i+delta][j] = "%02d:%02d" % (mv, sv)
             if j==6:
-                data[i+delta][j] = grades[i]['grade__struggling']
+                data[i+delta][j] = grades[i]['grade__struggling__sum']
             if j==7:
-                data[i+delta][j] = grades[i]['grade__practiced']
+                data[i+delta][j] = grades[i]['grade__practiced__sum']
             if j==8:
-                data[i+delta][j] = grades[i]['grade__mastery1']
+                data[i+delta][j] = grades[i]['grade__mastery1__sum']
             if j==9:
-                data[i+delta][j] = grades[i]['grade__mastery2']
+                data[i+delta][j] = grades[i]['grade__mastery2__sum']
             if j==10:
-                data[i+delta][j] = grades[i]['grade__mastery3']
+                data[i+delta][j] = grades[i]['grade__mastery3__sum']
             elif j==11:
                 data[i+delta][j] = grades[i]['grade__grade__avg']
             elif j==12:
-                data[i+delta][j] = grades[i]['grade__bonus_grade']
+                data[i+delta][j] = grades[i]['grade__bonus_grade__avg']
             elif j==13:
-                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade'])>7:
+                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade__avg'])>7:
                     data[i+delta][j] = 7
                 else:
-                    data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade']
+                    data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade__avg']
     #load skills to excel array data
     #data[totalGrades+delta+1][0]='Habilidades evaluadas:'
     #for l in range(totalSkills):
