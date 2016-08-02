@@ -73,7 +73,7 @@ import django_excel as excel
 import pyexcel as pe
 import pyexcel.ext.xls
 
-#ultimo try:#id4004 para este archivo
+#ultimo try:#id4005 para este archivo
 @permission_required('bakhanapp.isSuper', login_url="/")
 def saveInstitution(request):
     request.session.set_expiry(timeSleep)
@@ -153,6 +153,7 @@ def generateClassExcel(request, id_class):
         try:#id1004
             #create multi-sheet book with array
             arrayAssesment={}
+            arrayAssesment['General'] = getArrayClassDetail(id_class)
             for a in assesment:
                 name_sheet = strip_acent(a.name)
                 if len(name_sheet) > 22:
@@ -402,6 +403,98 @@ def getArrayAssesmentDetail(id_assesment):
     data[totalGrades+delta+1][0]='Habilidades evaluadas:'
     for l in range(totalSkills):
         data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
+    return data
+
+def getArrayClassDetail(id_class):
+    #return a array with data of class in all assesments
+    #infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
+    delta = 9
+    viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
+        'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
+        'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
+        'Nota por desempeno','Bonificacion por esfuerzo', 'Nota Final']
+    totalFields = len(viewFields)
+    #carga al arreglo los datos de la evaluacion id_assesment
+    try: #id4005
+        assesments = Assesment.objects.filter(id_class_id=id_class)
+        #configs = Assesment_Config.objects.get(id_assesment_config=assesment.id_assesment_conf_id)
+        #skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id).values('name_spanish')
+        grades = Student.objects.filter(student_class__id_class_id=id_class
+            ).values('name','grade__grade',
+            'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
+            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
+    except Exception as e:
+        print '***ERROR*** try: #id4005 in getArrayClassDetail(id_class)'
+        print e
+
+    totalGrades = grades.count()
+    totalConf = 10 
+    #totalSkills = skills.count()
+    #print '***DEBUG***'
+    #print totalSkills
+
+    #crea el arreglo inicial
+    #w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
+    w, h = totalFields +10 ,totalGrades+totalConf + delta + 10
+    data = [['' for x in range(w)] for y in range(h)] 
+
+    #carga del arreglo assesment
+    #data[0][0] = 'Nombre de la calificacion'
+    #data[0][1] = assesment.name
+    #data[1][0] = 'Nota Minima'
+    #data[1][1] = assesment.min_grade
+    #data[2][0] = 'Nota Maxima'
+    #data[2][1] = assesment.max_grade
+    #data[3][0] = 'Nota de Aprobacion'
+    #data[3][1] = assesment.approval_grade
+    #data[4][0] = 'Bonificacion por Esfuerzo'
+    #data[4][1] = assesment.max_effort_bonus
+    #data[5][0] = 'Fecha de inicio'
+    #data[5][1] = assesment.start_date
+    #data[6][0] = 'Fecha de termino'
+    #data[6][1] = assesment.end_date
+    #carga las notas y las variables disponibles en grade
+    for k in range(totalFields):
+        data[delta-1][k] = viewFields[k]
+    for i in range(totalGrades):
+        for j in range(totalFields):
+            if j==0:
+                data[i+delta][j] = grades[i]['name']
+            if j==1:
+                data[i+delta][j] = grades[i]['grade__recomended_complete']
+            if j==2:
+                data[i+delta][j] = grades[i]['grade__incorrect']
+            if j==3:
+                data[i+delta][j] = grades[i]['grade__correct']
+            if j==4:
+                m, s = divmod(grades[i]['grade__excercice_time'], 60)
+                data[i+delta][j] = "%02d:%02d" % (m, s)
+            if j==5:
+                mv, sv = divmod(grades[i]['grade__video_time'], 60)
+                data[i+delta][j] = "%02d:%02d" % (mv, sv)
+            if j==6:
+                data[i+delta][j] = grades[i]['grade__struggling']
+            if j==7:
+                data[i+delta][j] = grades[i]['grade__practiced']
+            if j==8:
+                data[i+delta][j] = grades[i]['grade__mastery1']
+            if j==9:
+                data[i+delta][j] = grades[i]['grade__mastery2']
+            if j==10:
+                data[i+delta][j] = grades[i]['grade__mastery3']
+            elif j==11:
+                data[i+delta][j] = grades[i]['grade__grade']
+            elif j==12:
+                data[i+delta][j] = grades[i]['grade__bonus_grade']
+            elif j==13:
+                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade'])>7:
+                    data[i+delta][j] = 7
+                else:
+                    data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade']
+    #load skills to excel array data
+    #data[totalGrades+delta+1][0]='Habilidades evaluadas:'
+    #for l in range(totalSkills):
+    #    data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
     return data
 
 def getSkillAssesment(request,id_class):
