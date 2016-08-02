@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.db.models import Count,Sum,Max
+from django.db.models import Count,Sum,Max,Avg
 from django.db.models import Q
 
 import unicodedata
@@ -407,6 +407,7 @@ def getArrayAssesmentDetail(id_assesment):
 
 def getArrayClassDetail(id_class):
     #return a array with data of class in all assesments
+    print '***DEBUG***'
     #infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
     delta = 9
     viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
@@ -414,15 +415,19 @@ def getArrayClassDetail(id_class):
         'En Dificultad','Practicado','Nivel 1','Nivel 2','Dominado',
         'Nota por desempeno','Bonificacion por esfuerzo', 'Nota Final']
     totalFields = len(viewFields)
-    #carga al arreglo los datos de la evaluacion id_assesment
     try: #id4005
-        assesments = Assesment.objects.filter(id_class_id=id_class)
+        #make ORM query
+        #assesments = Assesment.objects.filter(id_class_id=id_class)
+        #print assesments
         #configs = Assesment_Config.objects.get(id_assesment_config=assesment.id_assesment_conf_id)
         #skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id).values('name_spanish')
+        #It considers only the notes has
         grades = Student.objects.filter(student_class__id_class_id=id_class
             ).values('name','grade__grade',
             'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
-            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').order_by('name')
+            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').annotate(Avg('grade__grade'))
+        for g in grades:
+            print g
     except Exception as e:
         print '***ERROR*** try: #id4005 in getArrayClassDetail(id_class)'
         print e
@@ -483,7 +488,7 @@ def getArrayClassDetail(id_class):
             if j==10:
                 data[i+delta][j] = grades[i]['grade__mastery3']
             elif j==11:
-                data[i+delta][j] = grades[i]['grade__grade']
+                data[i+delta][j] = grades[i]['grade__grade__avg']
             elif j==12:
                 data[i+delta][j] = grades[i]['grade__bonus_grade']
             elif j==13:
