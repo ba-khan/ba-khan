@@ -165,8 +165,8 @@ def generateClassExcel(request, id_class):
                         name_sheet += w[:length]
                 name_sheet = name_sheet.replace(' ','')
                 #print a.id_assesment
-                arrayAssesment[name_sheet+str(a.id_assesment)+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
-                arrayAssesment[name_sheet+str(a.id_assesment)+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
+                arrayAssesment[name_sheet+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
+                arrayAssesment[name_sheet+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
             book = pe.Book(arrayAssesment)
         except Exception as e:
             print '***ERROR*** problemas al crear multiples hojas excel con dataTest try id1004'
