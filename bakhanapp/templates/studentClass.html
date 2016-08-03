@@ -1953,12 +1953,36 @@
 			}
 			return flag;
 		}
+
+		var normalize = (function() {
+		  var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç", 
+		      to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
+		      mapping = {};
+		 
+		  for(var i = 0, j = from.length; i < j; i++ )
+		      mapping[ from.charAt( i ) ] = to.charAt( i );
+		 
+		  return function( str ) {
+		      var ret = [];
+		      for( var i = 0, j = str.length; i < j; i++ ) {
+		          var c = str.charAt( i );
+		          if( mapping.hasOwnProperty( str.charAt( i ) ) )
+		              ret.push( mapping[ c ] );
+		          else
+		              ret.push( c );
+		      }      
+		      return ret.join( '' );
+		  }
+		 
+		})();
+
 		function NombrePrueba(){
 			var assesmentNames = []
 	  	  	for (i=0;i<assesments.length;i++){
 	  	  		assesmentNames.push(assesments[i].name);
 	  	  	}
-			if ($.inArray($('#input_nombre').val(), assesmentNames) > -1){
+	  	  	//console.log(normalize($('#input_nombre').val()))
+			if ($.inArray(normalize($('#input_nombre').val()), assesmentNames) > -1){
 				$('#input_nombre').css('color', '#C30202');
 				return false
 			}else{
@@ -2243,7 +2267,7 @@
 			var cuadritos = openDiv.getElementsByClassName('cuadradito')
 			var kaids =[];
 			validarEvaluacion();
-			if (validarRealizarEvaluacion()||validarEvaluacion()){
+			if (NombrePrueba() && validarRealizarEvaluacion()&&validarEvaluacion()){
 				Loading();
 				$(".response").remove();
 				$("#popup_evaluacion").append("<p class='response'>Editando...</p>");
