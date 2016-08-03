@@ -917,6 +917,7 @@ function drawClasses(array, json){
 		//console.log(json[array[j]]);
 		x=array[j];
 		if (array[j]==''){
+			array[j]="Sin Curso";
 		}
 		people.push({curso:array[j], 'cantidad de estudiantes':json[x].length, 'ver estudiantes': 'Ver Estudiantes'})
 		for(var k=0;k<json[x].length;k++){
