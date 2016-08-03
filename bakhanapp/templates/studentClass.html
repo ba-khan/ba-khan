@@ -38,12 +38,12 @@
     	<div style="align:center;margin-left:6%;width:90%">
 	    	<form method="post" id='formGrade'>{% csrf_token %}
 				<div id="popup_nombre"><p id="pgrade" style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
-				<p id="pgrade">  Nota por desempeño:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:285px;" disabled/></p>
+				<p id="pgrade">  Nota por Desempeño:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:285px;" disabled/></p>
 				<p id="pgrade">+ Bonificación por Esfuerzo:
 					<input name="input_bonificacion" id="input_bonificacion" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:245px;" disabled/>
 				</p>
 				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
-				<p id="pgrade">  Nota sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
+				<p id="pgrade">  Nota Sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
 				<p id="pgrade"><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
 				<p id="pgrade">+ Ajuste del Profesor:
 				{% if isTeacher %}
@@ -2364,6 +2364,7 @@
 			nmedia = (nmin-nmax)*(approval_percentage/100) + nmax;
 			aprobados = 0;
 			reprobados = 0;
+			//console.log(assesments[aux]['max_grade']);
 			for (var i = 0; i < students.length; i++) {
 				actualGrade = students[i]["assesment"+id_assesment].grade + students[i]["assesment"+id_assesment].bonus_grade + students[i]["assesment"+id_assesment].teacher_grade;
 				if (actualGrade<nmin){
@@ -2713,6 +2714,7 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   function autoCalculateGrade(){
   	sugerida = parseFloat($('#input_grade').val()) + parseFloat($('#input_bonificacion').val());
   	sugerida = Math.round(sugerida*10)/10;
+  	console.log(nmax);
   	autoGrade = sugerida + parseFloat($('#input_grade_teacher').val());
   	autoGrade = Math.round(autoGrade*10)/10;
   	$('#sugerida').val(sugerida);
