@@ -564,7 +564,7 @@ def getTeacherClasses(request):
 def getClassSkills(request,id_class):
     request.session.set_expiry(timeSleep)
     #Funcion que entrega un arreglo con la cantidad de habilidades en cada nivel de dominio
-    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))#devuelve todos los estudiantes de una clase
+    students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student')).order_by('nickname')#devuelve todos los estudiantes de una clase
     students_skills = Student_Skill.objects.filter(kaid_student__in=students).values('last_skill_progress','kaid_student').annotate(scount=Count('kaid_student'))
     #print students_skills
     return students_skills
@@ -757,7 +757,7 @@ def getClassStudents(request, id_class):
         if (clas) and (classes.filter(id_class=id_class)):
             for i in range(len(classes)):
                 classes[i].level = N[int(classes[i].level)] 
-            students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
+            students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student')).order_by('nickname')
             #students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
             incorrect = Skill_Attempt.objects.filter(Q(kaid_student__in=students)&Q(correct=False)&(Q(skipped=False)|(Q(skipped=True)&Q(task_type__startswith='mastery.')))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
             correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
