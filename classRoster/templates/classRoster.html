@@ -915,8 +915,11 @@ function drawClasses(array, json){
 
 	for(var j=0;j<array.length;j++){
 		//console.log(json[array[j]]);
-		people.push({curso:array[j], 'cantidad de estudiantes':json[array[j]].length, 'ver estudiantes': 'Ver Estudiantes'})
-		for(var k=0;k<json[array[j]].length;k++){
+		x=array[j];
+		if (array[j]==''){
+		}
+		people.push({curso:array[j], 'cantidad de estudiantes':json[x].length, 'ver estudiantes': 'Ver Estudiantes'})
+		for(var k=0;k<json[x].length;k++){
 			//console.log(json[array[j]][k].name);
 			//people.push({curso:'', 'cantidad de estudiantes':'', 'guardar': '', 'ver estudiantes': json[array[j]][k].name})
 		}
