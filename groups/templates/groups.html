@@ -726,10 +726,10 @@ var className;
         div.find('#name').text("Fecha: "+datum.label);
       })
       .click(function (d, i, datum) {
-        $("circle").css('cy','20px'); //Chrome
-        $("#timelineItem_"+datum.id).css('cy','15px');
-        $("circle").attr('cy','20px'); //Firefox
-        $("#timelineItem_"+datum.id).attr('cy','15px');
+        $("circle").css('cy','10px'); //Chrome
+        $("#timelineItem_"+datum.id).css('cy','10px');
+        $("circle").attr('cy','10px'); //Firefox
+        $("#timelineItem_"+datum.id).attr('cy','10px');
         className = $("#timelineItem_"+datum.id).attr('class');
         /*console.log(className);
           $("#timelineItem_"+datum.id).attr('class') = "selected";
@@ -754,19 +754,25 @@ var className;
   d3.selectAll("circle").on("mouseover", 
     function(d) {
       //$("circle").css('cy','20px');
-      $(this).css('cy','15px'); //Chrome
-      $(this).attr('cy','15px'); //Firefox
+      $(this).css('cy','10px'); //Chrome
+      $(this).attr('cy','10px'); //Firefox
+      $(this).css('fill','red'); //Chrome
+      $(this).attr('fill','red'); //Firefox
     });
 
   d3.selectAll("circle").on("mouseout", 
     function(d) {
       if ($(this).attr("class")==className){
-        $(this).css('cy','15px');
-        $(this).attr('cy','15px');
+        $(this).css('cy','10px');
+        $(this).attr('cy','10px');
+        $(this).css('fill',colorScale); //Chrome
+        $(this).attr('fill',colorScale); //Firefox
       }
       else{
-        $(this).css('cy','20px');
-        $(this).attr('cy','20px');
+        $(this).css('cy','10px');
+        $(this).attr('cy','10px');
+        $(this).css('fill',colorScale); //Chrome
+        $(this).attr('fill',colorScale); //Firefox
       }
     });
 
