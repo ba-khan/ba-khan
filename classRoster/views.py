@@ -351,60 +351,112 @@ def saveExcelClass(request):
         teacher = Teacher.objects.get(name=newClass["excelClassJson[teacher]"])
         kaid_teacher = teacher.kaid_teacher
         students = newClass.getlist("excelClassJson[students][]")
+        kaid = newClass.getlist("excelClassJson[kaid][]")
 
         inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
         id_institution = int(inst.id_institution)
+        #print "antes del for"
         for student in students:
+            estudiante= student.encode('utf-8', errors='replace')
+            indice = students.index(student)
+            #print estudiante
+            #print indice
+            #print kaid[indice]
             try:
-                aux = Student.objects.get(name=student)
-                try:#intenta crear el estudiante
-                    if aux.id_institution==id_institution:
-                        estud = Student(kaid_student=aux.kaid_student, name=aux, new_student=True)
-                        estud.save()
-                except Exception as e:#si no puede crear el estudiante
+                aux = Student.objects.filter(nickname=student)
+                if not aux:
+                    newStudent=Student(kaid_student=kaid[indice], name=estudiante, nickname=estudiante, id_institution_id=id_institution)
+                    newStudent.save()
+                else:
                     continue
-            except:
-                try:
-                    aux = Student.objects.get(nickname=student)
-                except Exception as e:
-                    if e=="Student matching query does not exist.":
-                        return HttpResponse("Estudiantes no encontrados en Bakhan")
-            if aux.id_institution_id!=id_institution:
-                return HttpResponse("Estudiantes no corresponden a esta institución")
-        curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional, year=year)
-        print curso.id_class
-        student_class = Student_Class.objects.filter(id_class_id=curso.id_class)
-        print len(students)
-        print len(student_class)
+                    #print "else"
+            except Exception as e:
+                print e
+                #if e=="Student matching query does not exist.":
+                #    print "entro al try"
+                #    newStudent=Student(kaid=kaid[indice], name=estudiante, nickname=estudiante, id_institution_id=id_institution)
+                #    print "new student ok"
+                #    newStudent.save()
+                #    print "guardo newstudent"
+                #    return HttpResponse("Estudiantes nuevos creados")
+
+            #if aux.id_institution_id!=id_institution:
+            #    return HttpResponse("Estudiantes no corresponden a esta institución")
+
+        #curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional, year=year)
+        #print curso.id_class
+        #student_class = Student_Class.objects.filter(id_class_id=curso.id_class)
+        #print len(students)
+        #print len(student_class)
         try:
             curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional, year=year)
             student_class = Student_Class.objects.filter(id_class_id=curso.id_class)
-            if len(students)==len(student_class):
-                student_class.delete()
-                for student in students:
-                    try:
-                        aux = Student.objects.get(name=student)
-                        student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
-                    except:
-                        aux = Student.objects.get(nickname=student)
-                        student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
-                return HttpResponse("Curso editado correctamente.")
-            else:
-                return HttpResponse("Ya existe el curso.")
+            #print student_class
+            #print len(students)
+            #print len(student_class)
+            try:
+                if len(students)!=len(student_class):
+                    #print "try"
+                    student_class.delete()
+                    #print "delete"
+                    for k in kaid:
+                        try:
+                            aux = Student.objects.get(kaid_student=k)
+                            if not aux:
+                                aux = Student.objects.get(kaid_student=k)
+                                student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                            else:
+                                student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                        except Exception as e:
+                            print e
+                    '''
+                    for student in students:
+                        estudiante= student.encode('utf-8', errors='replace')
+                        print estudiante
+                        try:
+                            aux = Student.objects.get(name=estudiante)
+                            if not aux:
+                                aux = Student.objects.get(nickname=estudiante)
+                                student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                            else:
+                                student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                        except:
+                            continue
+                    '''
+                    return HttpResponse("Curso editado correctamente.")
+                else:
+                    return HttpResponse("Ya existe el curso.")
+            except Exception as e:
+                print e
         except:
             curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
             id_curso = int(curso.id_class)
             class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
+            for k in kaid:
+                try:
+                    aux = Student.objects.get(kaid_student=k)
+                    if not aux:
+                        aux = Student.objects.get(kaid_student=k)
+                        student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                    else:
+                        student_class = Student_Class.objects.create(id_class_id=curso.id_class, kaid_student_id=aux.kaid_student)
+                except Exception as e:
+                    print e
+                    '''
             for student in students:
                 try:
                     aux = Student.objects.get(name=student)
-                    student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+                    if not aux:
+                        aux = Student.objects.get(nickname=student)
+                        student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+                    else:
+                        student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
                 except:
-                    aux = Student.objects.get(nickname=student)
-                    student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+                    continue
             return HttpResponse("Nuevo curso creado")
+                    '''
         
-        return HttpResponse(est)
+        return HttpResponse("Curso creado correctamente")
 
 def splitClass(className):
     cur = className.split('-')
@@ -433,7 +485,7 @@ def splitClass(className):
             nivel = 0
             letra = "#"
             anio=0
-    print nivel, letra, anio, adicional
+    #print nivel, letra, anio, adicional
 
     clase = OrderedDict()
     clase["nivel"]=nivel

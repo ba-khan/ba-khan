@@ -98,7 +98,7 @@ class Class(models.Model):
     level = models.IntegerField()
     letter = models.CharField(max_length=2)
     year = models.IntegerField()
-    additional = models.CharField(max_length=15)
+    additional = models.CharField(max_length=30)
 
     class Meta:
         unique_together = ('id_institution', 'level', 'letter', 'year', 'additional')

@@ -717,7 +717,7 @@ function showStudent(count){
 
 	excelClass = jsonResponse[1][count-1]; // el curso
 
-	console.log(jsonResponse[2][count-1])
+	//console.log(jsonResponse[2][count-1])
 	$("#excelYear").val(jsonResponse[2][count-1]["anio"]);
 	$("#excelAdditional").val(jsonResponse[2][count-1]["adicional"]);
 	if(jsonResponse[2][count-1]["nivel"]!=0 || jsonResponse[2][count-1]["letra"]!="#"){
@@ -726,8 +726,9 @@ function showStudent(count){
 	}
 
 	for(var k=0;k<jsonResponse[0][jsonResponse[1][count-1]].length;k++){ // estudiantes
+		kaid = (jsonResponse[0][jsonResponse[1][count-1]][k].kaid);
 		name = (jsonResponse[0][jsonResponse[1][count-1]][k].name);
-		$("#excelStudentsClass").append("<div class='excelStudent_li_div'><li class='excelStudent_li'>"+name+"</li></div>");
+		$("#excelStudentsClass").append("<div class='excelStudent_li_div'><li class='excelStudent_li' id='"+kaid+"'>"+name+"</li></div>");
 	}
 	$("#excelCounter").html(jsonResponse[0][jsonResponse[1][count-1]].length);
 
@@ -773,6 +774,11 @@ function confirmSaveExcelClass(){
 	$(".excelStudent_li").each(function (index){ 
 		studentsArray.push($(this).html());
 	});
+	var studentsKaid = [];
+	$(".excelStudent_li").each(function (index){ 
+		studentsKaid.push($(this)[0]["id"]);
+		//console.log($(this)[0]["id"]);
+	});
 	excelClassJson.students = studentsArray;
 	if (excelClassJson.students.length == 0){
 		$('.response').remove();
@@ -781,6 +787,8 @@ function confirmSaveExcelClass(){
 		$("#popup").append("<p class='response'>Falta escoger estudiantes</p>");
 		return;
 	}
+
+	excelClassJson.kaid = studentsKaid;
 
 	var studentsLen = $(".excelStudent_li").length;
 	levels = ["","1°","2°","3°","4°","5°","6°","7°","8°","1°","2°","3°","4°"]
@@ -800,7 +808,7 @@ function confirmSaveExcelClass(){
 	$("#close").css('pointer-events','none');
 	$("#hover").fadeIn();
 	$("#popup").fadeIn();
-	console.log(excelClassJson);
+	//console.log(excelClassJson);
 }
 
 function cancelSaveExcelClass(){
