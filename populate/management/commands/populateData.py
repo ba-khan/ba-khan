@@ -557,10 +557,10 @@ class Command(BaseCommand):
                     
                     for i in students:
                         #print students[i].name
-                        yest = i.last_update
-                        yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
-                        yesterday  = yesterday.replace(":", "%3A")
-                        dates = yesterday+"&dt_end="+today
+                        #yest = i.last_update
+                        #yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
+                        #yesterday  = yesterday.replace(":", "%3A")
+                        dates = "2016-07-14T00%3A00%3A00Z&dt_end="+today
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
                         Student.objects.filter(kaid_student=i.kaid_student).update(last_update=todayy)
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
