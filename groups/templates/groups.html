@@ -725,19 +725,18 @@ var className;
         div.find('.coloredDiv').css('background-color', '#1C758A')
         div.find('#name').text("Fecha: "+datum.label);
       })
-      //.click(function (d, i, datum) {
-      //  $("circle").css('cy','10px'); //Chrome
-      //  $("#timelineItem_"+datum.id).css('cy','10px');
-      //  $("circle").attr('cy','10px'); //Firefox
-      //  $("#timelineItem_"+datum.id).attr('cy','10px');
-      //  className = $("#timelineItem_"+datum.id).attr('class');
-      //  /*console.log(className);
-      //    $("#timelineItem_"+datum.id).attr('class') = "selected";
-      //  $("#timelineItem_"+datum.id).addClass(className+" selected");
-      //  $("circle").removeClass("selected");*/
-      //  drawGroup(datum.id);
-      //	
-      //})
+      .click(function (d, i, datum) {
+        //$("circle").css('cy','10px'); //Chrome
+        //$("#timelineItem_"+datum.id).css('cy','10px');
+        //$("circle").attr('cy','10px'); //Firefox
+        //$("#timelineItem_"+datum.id).attr('cy','10px');
+        className = $("#timelineItem_"+datum.id).attr('class');
+        /*console.log(className);
+          $("#timelineItem_"+datum.id).attr('class') = "selected";
+        $("#timelineItem_"+datum.id).addClass(className+" selected");
+        $("circle").removeClass("selected");*/
+        drawGroup(datum.id);      	
+      })
       .scroll(function (x, scale) {
       })
       .display("circle")
