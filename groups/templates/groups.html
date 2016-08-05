@@ -725,19 +725,19 @@ var className;
         div.find('.coloredDiv').css('background-color', '#1C758A')
         div.find('#name').text("Fecha: "+datum.label);
       })
-      .click(function (d, i, datum) {
-        $("circle").css('cy','10px'); //Chrome
-        $("#timelineItem_"+datum.id).css('cy','10px');
-        $("circle").attr('cy','10px'); //Firefox
-        $("#timelineItem_"+datum.id).attr('cy','10px');
-        className = $("#timelineItem_"+datum.id).attr('class');
-        /*console.log(className);
-          $("#timelineItem_"+datum.id).attr('class') = "selected";
-        $("#timelineItem_"+datum.id).addClass(className+" selected");
-        $("circle").removeClass("selected");*/
-        drawGroup(datum.id);
-      	
-      })
+      //.click(function (d, i, datum) {
+      //  $("circle").css('cy','10px'); //Chrome
+      //  $("#timelineItem_"+datum.id).css('cy','10px');
+      //  $("circle").attr('cy','10px'); //Firefox
+      //  $("#timelineItem_"+datum.id).attr('cy','10px');
+      //  className = $("#timelineItem_"+datum.id).attr('class');
+      //  /*console.log(className);
+      //    $("#timelineItem_"+datum.id).attr('class') = "selected";
+      //  $("#timelineItem_"+datum.id).addClass(className+" selected");
+      //  $("circle").removeClass("selected");*/
+      //  drawGroup(datum.id);
+      //	
+      //})
       .scroll(function (x, scale) {
       })
       .display("circle")
@@ -759,21 +759,22 @@ var className;
     //  arrayCircle[i] = x;
     //}
     //console.log(arrayCircle);
-    /*
-    if(i>0){
-      if (Math.abs(arrayCircle[i]-arrayCircle[i-1])>16){
-        $(this).css('cy', '20px');
-        $(this).attr('cy', '20px');
+    var num = 10;
+    for(var j=0;j<i;j++){
+      if (Math.abs(arrayCircle[i]-arrayCircle[j])<16){
+        num = num+12;
+        $(this).css('cy', num+'px');
+        $(this).attr('cy', num+'px');
       }
-    }*/
+    }
     this.parentNode.appendChild(this);
   });
 
   d3.selectAll("circle").on("mouseover", 
     function(d) {
       //$("circle").css('cy','20px');
-      $(this).css('cy','10px'); //Chrome
-      $(this).attr('cy','10px'); //Firefox
+      //$(this).css('cy','10px'); //Chrome
+      //$(this).attr('cy','10px'); //Firefox
       $(this).css('fill','red'); //Chrome
       $(this).attr('fill','red'); //Firefox
     });
@@ -781,14 +782,14 @@ var className;
   d3.selectAll("circle").on("mouseout", 
     function(d) {
       if ($(this).attr("class")==className){
-        $(this).css('cy','10px');
-        $(this).attr('cy','10px');
+        //$(this).css('cy','10px');
+        //$(this).attr('cy','10px');
         $(this).css('fill',colorScale); //Chrome
         $(this).attr('fill',colorScale); //Firefox
       }
       else{
-        $(this).css('cy','10px');
-        $(this).attr('cy','10px');
+        //$(this).css('cy','10px');
+        //$(this).attr('cy','10px');
         $(this).css('fill',colorScale); //Chrome
         $(this).attr('fill',colorScale); //Firefox
       }
