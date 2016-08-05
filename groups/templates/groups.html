@@ -747,7 +747,25 @@ var className;
   }
   timelineHover();
   $("#timeline3").scrollLeft(width);//lleva el scrollbar al final
-  d3.selectAll("circle").each(function(d){
+  var arrayCircle=[];
+  d3.selectAll("circle").each(function(d, i){
+    var x=$(this).attr("x");
+    arrayCircle[i] = parseFloat(x);
+    console.log(arrayCircle);
+    //var size = d3.selectAll("circle").size();
+    //console.log(size);
+    //for (var i = 0; i < size; i++) {
+    //  var x=$(this).css('cx');
+    //  arrayCircle[i] = x;
+    //}
+    //console.log(arrayCircle);
+    /*
+    if(i>0){
+      if (Math.abs(arrayCircle[i]-arrayCircle[i-1])>16){
+        $(this).css('cy', '20px');
+        $(this).attr('cy', '20px');
+      }
+    }*/
     this.parentNode.appendChild(this);
   });
 

@@ -149,7 +149,7 @@ def generateClassExcel(request, id_class):
         N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
         
         nameClass= N[int(rClass.level)]  +' '+ rClass.letter
-        print nameClass
+        #print nameClass
         try:#id1004
             #create multi-sheet book with array
             arrayAssesment={}
@@ -428,8 +428,8 @@ def getArrayClassDetail(id_class):
             'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').annotate(Avg('grade__grade'),
             Sum('grade__incorrect'),Sum('grade__correct'),Avg('grade__bonus_grade'),Sum('grade__recomended_complete'),Sum('grade__excercice_time'),
             Sum('grade__video_time'),Sum('grade__struggling'),Sum('grade__practiced'),Sum('grade__mastery1'),Sum('grade__mastery2'),Sum('grade__mastery3'))
-        for g in grades:
-            print g
+        #for g in grades:
+            #print g
     except Exception as e:
         print '***ERROR*** try: #id4005 in getArrayClassDetail(id_class)'
         print e
@@ -759,7 +759,8 @@ def getClassStudents(request, id_class):
                 classes[i].level = N[int(classes[i].level)] 
             students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student')).order_by('nickname')
             #students=Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=id_class).values('kaid_student'))
-            incorrect = Skill_Attempt.objects.filter(Q(kaid_student__in=students)&Q(correct=False)&(Q(skipped=False)|(Q(skipped=True)&Q(task_type__startswith='mastery.')))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
+            #incorrect = Skill_Attempt.objects.filter(Q(kaid_student__in=students)&Q(correct=False)&(Q(skipped=False)|(Q(skipped=True)&Q(task_type__startswith='mastery.')))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+            incorrect = Skill_Attempt.objects.filter(kaid_student__in=students,correct=False).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))   
             correct = Skill_Attempt.objects.filter(kaid_student__in=students,correct=True).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
             time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))    
             time_video = Video_Playing.objects.filter(kaid_student__in=students).values('kaid_student_id').annotate(time=Sum('seconds_watched'))   
