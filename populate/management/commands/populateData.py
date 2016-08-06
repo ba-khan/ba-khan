@@ -449,7 +449,7 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-    '''
+
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -468,7 +468,6 @@ def threadPopulate(students,dates,session):
         msg="error student_video "+ students.name
         logging.debug(msg)
         logging.debug(e)
-    '''
     try:
         poblar_video_playing(students.name,students.kaid_student, dates, session)
     except Exception as e:
@@ -545,18 +544,17 @@ class Command(BaseCommand):
 
 
 
-                #consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+                consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
 
-                #for cons in consulta:
+                for cons in consulta:
                     #print cons["id_class"]
-                    #threads = []
-                threadsnew = []
-                    #students = Student.objects.filter(student_class__id_class_id=cons["id_class"], new_student=False)
+                    threads = []
+                    threadsnew = []
+                    students = Student.objects.filter(student_class__id_class_id=cons["id_class"], new_student=False)
 
-                    #studentsnew = Student.objects.filter(student_class__id_class_id=cons["id_class"],new_student=True)
-                studentsnew = Student.objects.filter(id_institution_id=inst.id_institution)
+                    studentsnew = Student.objects.filter(student_class__id_class_id=cons["id_class"],new_student=True)
 
-                '''
+                    
                     for i in students:
                         #print students[i].name
                         yest = i.last_update
@@ -568,20 +566,16 @@ class Command(BaseCommand):
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                         threads.append(t)
                         t.start()
-                '''
+                    
 
-                for j in studentsnew:
-                    datesnew = "2015-01-01T00%3A00%3A00Z&dt_end="+today
-                    #yest = j.last_update
-                    #yesterday = yest.strftime("%Y-%m-%dT%H:%M:%SZ")
-                    #yesterday  = yesterday.replace(":", "%3A")
-                    #dates = yesterday+"&dt_end="+today
-                    todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
-                    #Student.objects.filter(kaid_student=j.kaid_student).update(new_student=False)
-                    #Student.objects.filter(kaid_student=j.kaid_student).update(last_update=todayy)
-                    t2 = threading.Thread(target=threadPopulate,args=(j,datesnew,session))
-                    threadsnew.append(t2)
-                    t2.start()
+                    for j in studentsnew:
+                        datesnew = "2015-01-01T00%3A00%3A00Z&dt_end="+today
+                        todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
+                        Student.objects.filter(kaid_student=j.kaid_student).update(new_student=False)
+                        Student.objects.filter(kaid_student=j.kaid_student).update(last_update=todayy)
+                        t2 = threading.Thread(target=threadPopulate,args=(j,datesnew,session))
+                        threadsnew.append(t2)
+                        t2.start()
 
 
             except Exception as e:
