@@ -449,7 +449,7 @@ def poblar_students(session):
 def threadPopulate(students,dates,session):
     """thread populate function"""
     semafaro.acquire()
-
+    '''
     try:
         poblar_skill_attempts(students.name,students.kaid_student, dates, session) #listo
     except Exception as e:
@@ -468,6 +468,7 @@ def threadPopulate(students,dates,session):
         msg="error student_video "+ students.name
         logging.debug(msg)
         logging.debug(e)
+    '''
     try:
         poblar_video_playing(students.name,students.kaid_student, dates, session)
     except Exception as e:
@@ -550,11 +551,11 @@ class Command(BaseCommand):
                     #print cons["id_class"]
                     threads = []
                     threadsnew = []
-                    students = Student.objects.filter(student_class__id_class_id=cons["id_class"], new_student=False)
+                    #students = Student.objects.filter(student_class__id_class_id=cons["id_class"], new_student=False)
 
                     studentsnew = Student.objects.filter(student_class__id_class_id=cons["id_class"],new_student=True)
 
-                    
+                    '''
                     for i in students:
                         #print students[i].name
                         yest = i.last_update
@@ -566,10 +567,10 @@ class Command(BaseCommand):
                         t = threading.Thread(target=threadPopulate,args=(i,dates,session))
                         threads.append(t)
                         t.start()
-                    
+                    '''
 
                     for j in studentsnew:
-                        datesnew = "2015-01-01T00%3A00%3A00Z&dt_end="+today
+                        datesnew = "2016-08-06T00%3A00%3A00Z&dt_end="+today
                         todayy = datetime.strptime(today[:10], "%Y-%m-%d").date()
                         Student.objects.filter(kaid_student=j.kaid_student).update(new_student=False)
                         Student.objects.filter(kaid_student=j.kaid_student).update(last_update=todayy)
