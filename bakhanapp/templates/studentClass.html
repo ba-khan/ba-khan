@@ -286,7 +286,7 @@
 	var students = json.students;
 	var assesments=json.assesments;
 	var allSkills=[]
-	console.log(assesments)
+	//console.log(assesments)
 	for (i=0;i<assesments.length;i++){
 		id = assesments[i]['id']
 		for (k=0;k<students[0]['assesment'+id]['skills'].length;k++){
@@ -1117,7 +1117,7 @@
 		       				//}
 				          	var x = (b.values.skills_com);
 				          	var y = (b.values.skills_no_com);
-				          	console.log(y);
+				          	//console.log(y);
 				          	tooltp = "<ul><li style='text-align:left;'><strong>Habilidades Practicadas</strong>";
 				          	for(i=0;i<x.length;i++){
 				          		tooltp = tooltp+
@@ -2368,20 +2368,22 @@
 			reprobados = 0;
 			//console.log(assesments[aux]['max_grade']);
 			for (var i = 0; i < students.length; i++) {
-				actualGrade = students[i]["assesment"+id_assesment].grade + students[i]["assesment"+id_assesment].bonus_grade + students[i]["assesment"+id_assesment].teacher_grade;
-				if (actualGrade<nmin){
-					nmin=Math.round(actualGrade * 10)/10;
-					pmin = students[i]["assesment"+id_assesment].performance_points
-				}
-				if (actualGrade>nmax){
-					nmax=Math.round(actualGrade * 10)/10;
-					if (nmax>assesments[aux]['max_grade']) { nmax=assesments[aux]['max_grade']; };
-					pmax = students[i]["assesment"+id_assesment].performance_points
-				}
-				if (actualGrade<nappr){
-					reprobados++;
-				}else{
-					aprobados++;
+				if(students[i]["assesment"+id_assesment].grade!=null){
+					actualGrade = students[i]["assesment"+id_assesment].grade + students[i]["assesment"+id_assesment].bonus_grade + students[i]["assesment"+id_assesment].teacher_grade;
+					if (actualGrade<nmin){
+						nmin=Math.round(actualGrade * 10)/10;
+						pmin = students[i]["assesment"+id_assesment].performance_points
+					}
+					if (actualGrade>nmax){
+						nmax=Math.round(actualGrade * 10)/10;
+						if (nmax>assesments[aux]['max_grade']) { nmax=assesments[aux]['max_grade']; };
+						pmax = students[i]["assesment"+id_assesment].performance_points
+					}
+					if (actualGrade<nappr){
+						reprobados++;
+					}else{
+						aprobados++;
+					}
 				}
 			};
 
@@ -2404,8 +2406,10 @@
 					
 			var grade_order = [];
 			for (var k=0; k<students.length; k++){
-				grade_order.push(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
-				console.log(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
+				if(students[k]['assesment'+id_assesment]['grade']!=null){
+					grade_order.push(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
+					//console.log(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
+				}
 			}
 
 			/*
@@ -2450,40 +2454,43 @@
 			for (var j=0; j<skills_sample.length; j++){
 				reached_skill_levels=[]
 				for (var s=0; s<students.length; s++){
-					student_skill_level=students[s]['assesment'+id_assesment]["skills"][j][5];
-					//console.log(student_skill_level);
-					if (student_skill_level){
-						switch (student_skill_level){
-							case "unstarted":
-								reached_skill_levels.push(0);
-								//reached_skill_levels[0]++;
-								break;
-							case "struggling":
-								reached_skill_levels.push(1);
-								//reached_skill_levels[1]++;
-								break;
-							case "practiced":
-								reached_skill_levels.push(2);
-								//reached_skill_levels[2]++;
-								break;
-							case "mastery1":
-								reached_skill_levels.push(3);
-								//reached_skill_levels[3]++;
-								break;
-							case "mastery2":
-								reached_skill_levels.push(4);
-								//reached_skill_levels[4]++;
-								break;
-							case "mastery3":
-								reached_skill_levels.push(5);
-								//reached_skill_levels[4]++;
-								break;
-							default:
-								reached_skill_levels.push(0);
-								//reached_skill_levels[0]++;
+					//console.log(students[s]['assesment'+id_assesment]["skills"][j]);
+					if(typeof students[s]['assesment'+id_assesment]["skills"][j]!=='undefined'){
+						student_skill_level=students[s]['assesment'+id_assesment]["skills"][j][5];
+						//console.log(student_skill_level);
+						if (student_skill_level){
+							switch (student_skill_level){
+								case "unstarted":
+									reached_skill_levels.push(0);
+									//reached_skill_levels[0]++;
+									break;
+								case "struggling":
+									reached_skill_levels.push(1);
+									//reached_skill_levels[1]++;
+									break;
+								case "practiced":
+									reached_skill_levels.push(2);
+									//reached_skill_levels[2]++;
+									break;
+								case "mastery1":
+									reached_skill_levels.push(3);
+									//reached_skill_levels[3]++;
+									break;
+								case "mastery2":
+									reached_skill_levels.push(4);
+									//reached_skill_levels[4]++;
+									break;
+								case "mastery3":
+									reached_skill_levels.push(5);
+									//reached_skill_levels[4]++;
+									break;
+								default:
+									reached_skill_levels.push(0);
+									//reached_skill_levels[0]++;
+							}
+						}else{
+							reached_skill_levels.push(0);
 						}
-					}else{
-						reached_skill_levels.push(0);
 					}
 					
 				}
