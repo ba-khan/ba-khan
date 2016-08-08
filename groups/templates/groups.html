@@ -670,7 +670,6 @@ window.onload = function() {
 
       if (dates.indexOf(master_groups[i]['fields']['date']) == -1){
         dates.push(master_groups[i]['fields']['date']);
-        console.log(master_groups[i]['fields']['date']);
         dic.starting_time = date.getTime();
         dic.ending_time = dic.starting_time+20;
         arr.push(dic);
@@ -686,7 +685,6 @@ window.onload = function() {
       times.color = 'KhanBlue';
 			times.times = arr;
 			times.label = formatDate(date.getDate(),(date.getMonth()+1),date.getFullYear(),date.getHours(),date.getMinutes(),date.getSeconds());
-
 			times.id = master_groups[i]['pk'];
 			testData.push(times);
       //date = new Date(testData[i].times[0].starting_time);
@@ -706,15 +704,15 @@ var className;
       .tickFormat({
         format: d3.time.format("%d/%m/%Y"),
         tickTime: d3.time.days,
-        tickInterval: 1,
+        tickInterval: 2,
         tickSize: 20
       })
       .colors( colorScale )
       .colorProperty('color')
       //.stack()
-      .beginning(testData[0].times[0].starting_time - 86400000)
-      .ending(testData[testData.length-1].times[0].ending_time + 86400000 -7200000)
-      .rotateTicks(60)
+      .beginning(testData[0].times[0].starting_time - 86400000*2)
+      .ending(testData[testData.length-1].times[0].ending_time + 86400000 +7200000)
+      .rotateTicks(30)
       .width(width*1)
       .margin({left:0, right:0, top:0, bottom:0})
       .hover(function (d, i, datum) {
@@ -744,6 +742,7 @@ var className;
       .itemMargin(-10);
     var svg = d3.select("#timeline3").append("svg").attr("width", width)
       .datum(testData).call(chart);
+      //console.log(svg);
   }
   timelineHover();
   $("#timeline3").scrollLeft(width);//lleva el scrollbar al final
