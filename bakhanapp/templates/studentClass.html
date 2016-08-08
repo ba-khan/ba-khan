@@ -1021,7 +1021,7 @@
 	    	.attr("class","correct")
 		    .attr("x", 63)//function(d) { return 93+escalarCorrectIncorrect(d.values[0])})
 		    .attr("y", 5)
-		    .attr("dy", ".30em")
+		    .attr("dy", ".35em")
 			.attr("fill", "black")
 			//.attr("font","#1C758A")
 		    .text(function(d) { return "C:"+d.values["correct"]});
@@ -1029,17 +1029,18 @@
 		//Sorting by the total of exercises done is default
 	  		d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values["correct"]+d.values["incorrect"];});
 
+	  	//Add Total (correct + incorrect) to the table
 	  	correct_incorrect
 	    	.append("text")
 	    	.attr("class","correct")
-		    .attr("x", 53)//function(d) { return 93+escalarCorrectIncorrect(d.values[0])})
+		    .attr("x", 43)//function(d) { return 93+escalarCorrectIncorrect(d.values[0])})
 		    .attr("y", 35)
 		    .attr("dy", ".35em")
 			.attr("fill", "black")
-			//.attr("font","#1C758A")
+			.attr("font-size",10)
 		    .text(function(d) { 
 		    	total = parseInt(d.values["correct"]) + parseInt(d.values["incorrect"])
-		    	return "T:"+ total });
+		    	return "Total: "+ total });
 
 		
 		//Sorting by the total of exercises done is default
