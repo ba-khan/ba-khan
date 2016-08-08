@@ -298,9 +298,10 @@
 		cont=0;
 		average=0;
 		if(assesments.length > 0){
+			//console.log(students[i]);
 			for(k=0;k<assesments.length;k++){
 				aux= students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
-				if(aux!=null){
+				if(students[i]["assesment"+assesments[k]['id']].grade!=null){
 					if (aux>assesments[k]['max_grade']) {aux=assesments[k]['max_grade']};
 					average=average+aux
 					cont=cont+1;
