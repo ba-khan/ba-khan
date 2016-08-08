@@ -60,7 +60,7 @@ import datetime
 
 def getLastGroup(request,id_class):
     try:#id3004
-        g = Master_Group.objects.filter(id_class=id_class)
+        g = Master_Group.objects.filter(id_class=id_class).order_by('date')
         l = g.latest('date')
         data = serializers.serialize('json', [l])
         struct = json.loads(data)
@@ -120,7 +120,7 @@ def getMakedGroup(request,id_class):
 def getGroups(request, id_class):
     request.session.set_expiry(timeSleep)
     topictree=getTopictree('math')
-    g = Master_Group.objects.filter(id_class=id_class)
+    g = Master_Group.objects.filter(id_class=id_class).order_by('date')
     data = serializers.serialize('json', g)
     struct = json.loads(data)
     groups = json.dumps(struct)#arreglo en json con los master de las agrupaciones.

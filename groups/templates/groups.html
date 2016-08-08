@@ -670,6 +670,7 @@ window.onload = function() {
 
       if (dates.indexOf(master_groups[i]['fields']['date']) == -1){
         dates.push(master_groups[i]['fields']['date']);
+        console.log(master_groups[i]['fields']['date']);
         dic.starting_time = date.getTime();
         dic.ending_time = dic.starting_time+20;
         arr.push(dic);
@@ -750,7 +751,7 @@ var className;
   d3.selectAll("circle").each(function(d, i){
     var x=$(this).attr("x");
     arrayCircle[i] = parseFloat(x);
-    console.log(arrayCircle);
+    //console.log(arrayCircle);
     //var size = d3.selectAll("circle").size();
     //console.log(size);
     //for (var i = 0; i < size; i++) {
