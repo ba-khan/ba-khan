@@ -308,6 +308,7 @@
 				}
 			}
 			average=Math.round((average/cont)*10)/10;
+			if(isNaN(average)){average='---';}
 			averages.push(average);
 			students[i]['average']=(average);
 		}else{
