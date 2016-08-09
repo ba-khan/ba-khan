@@ -257,10 +257,20 @@
   	  	$("select.skills_level").on('change', function() {
   	  		var sortingCriterion = $(this).val();
   	  		if (sortingCriterion =="total"){
+  	  			d3.selectAll("text.skills_level").text(function(d){
+  	  				var tot=d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
+  	  				return tot+" de "+tot;
+  	  			})
   	  			d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
+  	  				console.log("total");
   	  				return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
   	  			});
   	  		}else{
+  	  			d3.selectAll("text.skills_level").text(function(d){
+  	  				var tot=d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
+  	  				var val = d.values[sortingCriterion];
+  	  				return val+" de "+tot;
+  	  			})
 		    	d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});
   	  		}
 		});
@@ -1213,7 +1223,9 @@
 		    .attr("y", 5)
 		    .attr("dy", ".35em")
 			.attr("fill", "black")
-		    .text(function(d) { return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"]});
+		    .text(function(d) { 
+		    	var tot = d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
+		    	return tot +" de "+tot});
 	}
 	
 	function drawSkillLevelsUpdate() {
@@ -1251,14 +1263,14 @@
 		    .text(function(d) {
 		    	var new_data = new_data=this.parentNode.__data__;
 		    	return new_data.values["mastery3"]+new_data.values["mastery2"]+new_data.values["mastery1"]+new_data.values["practiced"]+new_data.values["struggling"]});
-		
+
 	    var sortingCriterion = $("select.skills_level").val();
-	  		if (sortingCriterion =="total"){
+	  		if (sortingCriterion =="total"){	
 	  			d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
 	  				return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
 	  			});
 	  		}else{
-	    	d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});
+	    		d3.selectAll("td.skills_level").attr("data-sortAs",function(d){return d.values[sortingCriterion];});   	
 	  		}
 	
 	}
