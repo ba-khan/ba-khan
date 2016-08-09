@@ -365,7 +365,7 @@ def saveExcelClass(request):
             try:
                 aux = Student.objects.filter(nickname=student)
                 if not aux:
-                    newStudent=Student(kaid_student=kaid[indice], name=estudiante, nickname=estudiante, id_institution_id=id_institution)
+                    newStudent=Student(kaid_student=kaid[indice], name=estudiante, nickname=estudiante, id_institution_id=id_institution, new_student=True)
                     newStudent.save()
                 else:
                     continue
