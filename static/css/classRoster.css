@@ -244,9 +244,8 @@ tr:hover{
 
 #divExcelClasses {
     width: 100%;
-    height: 400px;
     margin: 2%;
-    overflow: hidden;
+    overflow-y: auto;
     outline: none;
     float: left;
 }
