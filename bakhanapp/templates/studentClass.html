@@ -40,14 +40,14 @@
 				<div id="popup_nombre"><p id="pgrade" style="margin-top:0px;"><strong>Nombre del Estudiante</strong></p></div>
 				<p id="pgrade">  Nota por Desempeño:<input name="input_grade" id="input_grade" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:285px;" disabled/></p>
 				<p id="pgrade">+ Bonificación por Esfuerzo:
-					<input name="input_bonificacion" id="input_bonificacion" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:245px;" disabled/>
+					<input name="input_bonificacion" id="input_bonificacion" class="vaciar" type="text" style="width:30px;padding:5px;margin-left:247px;" disabled/>
 				</p>
 				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
 				<p id="pgrade">  Nota Sugerida: <input id="sugerida" class="vaciar" type="text" style="align:left;width:30px;padding:5px;margin-left:324px;" disabled/></p>
 				<p id="pgrade"><input name="input_grade_id" id="input_grade_id" class="vaciar" type="text" style="display:none"/></p>
 				<p id="pgrade">+ Ajuste del Profesor:
 				{% if isTeacher %}
-					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:283px;"/>
+					<input name="input_grade_teacher" id="input_grade_teacher" onChange="autoCalculateGrade()" onkeyup="autoCalculateGrade()" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:285px;"/>
 				{% else %}
 					<input name="input_grade_teacher" id="input_grade_teacher"  class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:283px;" disabled />
 				{% endif %}
