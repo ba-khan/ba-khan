@@ -659,8 +659,8 @@ def parallelAssesment(assesment,students,queue):
             g_student=g.filter(kaid_student_id=student.kaid_student)
 
             skills_no_complete = Skill.objects.filter((Q(skill_log__skill_progress='unstarted')|Q(skill_log__skill_progress='struggling')),skill_log__id_grade=g_student).values('name_spanish')
-            #    print "len abajo"
-            #    print len(skills_complete)
+            #print "len abajo"
+            #print len(skills_complete)
             for s in skills_no_complete:
                 #print s['name_spanish']
                 skills_no_completad = s['name_spanish']
@@ -861,7 +861,7 @@ def getClassStudents(request, id_class):
                     g = Grade.objects.filter(kaid_student_id=student.kaid_student).values('id_grade')
 
                     skills_no_complete = Skill.objects.filter((Q(skill_log__skill_progress='unstarted')|Q(skill_log__skill_progress='struggling')),
-                    skill_log__id_grade=g).values('name_spanish')
+                    skill_log__id_grade=g).values('name_spanish').distinct('name_spanish')
                     #    print "len abajo"
                     #    print len(skills_complete)
                     for s in skills_no_complete:
