@@ -395,8 +395,8 @@ def getArrayAssesmentDetail(id_assesment):
             elif j==12:
                 data[i+delta][j] = grades[i]['grade__bonus_grade']
             elif j==13:
-                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade'])>7:
-                    data[i+delta][j] = 7
+                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade'])>assesment.max_grade:
+                    data[i+delta][j] = assesment.max_grade
                 else:
                     data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade']
     #load skills to excel array data
@@ -417,19 +417,17 @@ def getArrayClassDetail(id_class):
         #make ORM query
         configs = Assesment.objects.filter(id_class_id=id_class).values('id_assesment_conf_id').distinct('id_assesment_conf_id')
         skills = Skill.objects.filter(assesment_skill__id_assesment_config_id__in=configs).values('name_spanish').distinct('name_spanish')
-        #It considers only the notes has
         grades = Student.objects.filter(student_class__id_class_id=id_class
-            ).values('name','grade__grade',
-            'grade__bonus_grade','grade__recomended_complete','grade__incorrect','grade__correct','grade__excercice_time',
-            'grade__video_time','grade__struggling','grade__practiced','grade__mastery1','grade__mastery2','grade__mastery3').annotate(Avg('grade__grade'),
-            Sum('grade__incorrect'),Sum('grade__correct'),Avg('grade__bonus_grade'),Sum('grade__recomended_complete'),Sum('grade__excercice_time'),
-            Sum('grade__video_time'),Sum('grade__struggling'),Sum('grade__practiced'),Sum('grade__mastery1'),Sum('grade__mastery2'),Sum('grade__mastery3'))
-        #for g in grades:
+            ).values('name').annotate(grade=Avg('grade__grade'),
+            incorrect=Sum('grade__incorrect'),correct=Sum('grade__correct'),bonus=Avg('grade__bonus_grade'),recomend=Sum('grade__recomended_complete'),time=Sum('grade__excercice_time'),
+            video=Sum('grade__video_time'),struggling=Sum('grade__struggling'),practiced=Sum('grade__practiced'),mastery1=Sum('grade__mastery1'),mastery2=Sum('grade__mastery2'),mastery3=Sum('grade__mastery3'))
+        for g in grades:
             #print g
+            continue
+         
     except Exception as e:
         print '***ERROR*** try: #id4005 in getArrayClassDetail(id_class)'
         print e
-
     totalGrades = grades.count()
     totalConf = 10 
     totalSkills = skills.count()
@@ -461,36 +459,33 @@ def getArrayClassDetail(id_class):
             if j==0:
                 data[i+delta][j] = grades[i]['name']
             if j==1:
-                data[i+delta][j] = grades[i]['grade__recomended_complete__sum']
+                data[i+delta][j] = grades[i]['recomend']
             if j==2:
-                data[i+delta][j] = grades[i]['grade__incorrect__sum']
+                data[i+delta][j] = grades[i]['incorrect']
             if j==3:
-                data[i+delta][j] = grades[i]['grade__correct__sum']
+                data[i+delta][j] = grades[i]['correct']
             if j==4:
-                m, s = divmod(grades[i]['grade__excercice_time__sum'], 60)
+                m, s = divmod(grades[i]['time'], 60)
                 data[i+delta][j] = "%02d:%02d" % (m, s)
             if j==5:
-                mv, sv = divmod(grades[i]['grade__video_time__sum'], 60)
+                mv, sv = divmod(grades[i]['video'], 60)
                 data[i+delta][j] = "%02d:%02d" % (mv, sv)
             if j==6:
-                data[i+delta][j] = grades[i]['grade__struggling__sum']
+                data[i+delta][j] = grades[i]['struggling']
             if j==7:
-                data[i+delta][j] = grades[i]['grade__practiced__sum']
+                data[i+delta][j] = grades[i]['practiced']
             if j==8:
-                data[i+delta][j] = grades[i]['grade__mastery1__sum']
+                data[i+delta][j] = grades[i]['mastery1']
             if j==9:
-                data[i+delta][j] = grades[i]['grade__mastery2__sum']
+                data[i+delta][j] = grades[i]['mastery2']
             if j==10:
-                data[i+delta][j] = grades[i]['grade__mastery3__sum']
+                data[i+delta][j] = grades[i]['mastery3']
             elif j==11:
-                data[i+delta][j] = grades[i]['grade__grade__avg']
+                data[i+delta][j] = grades[i]['grade']
             elif j==12:
-                data[i+delta][j] = grades[i]['grade__bonus_grade__avg']
+                data[i+delta][j] = grades[i]['bonus']
             elif j==13:
-                if (grades[i]['grade__grade'] + grades[i]['grade__bonus_grade__avg'])>7:
-                    data[i+delta][j] = 7
-                else:
-                    data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade__avg']
+                data[i+delta][j] = grades[i]['grade'] + grades[i]['bonus']
     #load skills to excel array data
     data[totalGrades+delta+1][0]='Habilidades evaluadas:'
     for l in range(totalSkills):
@@ -968,11 +963,9 @@ def getClassStudents(request, id_class):
             if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid, id_class_id=id_class)):
                 isTeacher = True
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
-                print "entro en if"
             else:
                 isTeacher = False
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
-                print "entro en else"
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
             return render_to_response('studentClass.html',
