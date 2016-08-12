@@ -407,8 +407,6 @@ def getArrayAssesmentDetail(id_assesment):
 
 def getArrayClassDetail(id_class):
     #return a array with data of class in all assesments
-    print '***DEBUG***'
-    #infoAssesment = Assesment.objects.filter(id_assesment=id_assesment)
     delta = 9
     viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
         'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
@@ -417,10 +415,8 @@ def getArrayClassDetail(id_class):
     totalFields = len(viewFields)
     try: #id4005
         #make ORM query
-        #assesments = Assesment.objects.filter(id_class_id=id_class)
-        #print assesments
-        #configs = Assesment_Config.objects.get(id_assesment_config=assesment.id_assesment_conf_id)
-        #skills = Skill.objects.filter(assesment_skill__id_assesment_config_id=assesment.id_assesment_conf_id).values('name_spanish')
+        configs = Assesment.objects.filter(id_class_id=id_class).values('id_assesment_conf_id').distinct('id_assesment_conf_id')
+        skills = Skill.objects.filter(assesment_skill__id_assesment_config_id__in=configs).values('name_spanish').distinct('name_spanish')
         #It considers only the notes has
         grades = Student.objects.filter(student_class__id_class_id=id_class
             ).values('name','grade__grade',
@@ -436,13 +432,10 @@ def getArrayClassDetail(id_class):
 
     totalGrades = grades.count()
     totalConf = 10 
-    #totalSkills = skills.count()
-    #print '***DEBUG***'
-    #print totalSkills
-
+    totalSkills = skills.count()
     #crea el arreglo inicial
-    #w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
-    w, h = totalFields +10 ,totalGrades+totalConf + delta + 10
+    w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
+    #w, h = totalFields +10 ,totalGrades+totalConf + delta + 10
     data = [['' for x in range(w)] for y in range(h)] 
 
     #carga del arreglo assesment
@@ -499,9 +492,9 @@ def getArrayClassDetail(id_class):
                 else:
                     data[i+delta][j] = grades[i]['grade__grade'] + grades[i]['grade__bonus_grade__avg']
     #load skills to excel array data
-    #data[totalGrades+delta+1][0]='Habilidades evaluadas:'
-    #for l in range(totalSkills):
-    #    data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
+    data[totalGrades+delta+1][0]='Habilidades evaluadas:'
+    for l in range(totalSkills):
+        data[totalGrades+delta+2+l][0]=skills[l]['name_spanish']
     return data
 
 def getSkillAssesment(request,id_class):
