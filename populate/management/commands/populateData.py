@@ -500,9 +500,9 @@ class Command(BaseCommand):
 
         #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
+        institution = Institution.objects.all()
         
-        institution = Institution.objects.filter(id_institution=4)
+        #institution = Institution.objects.filter(id_institution=4)
 
         for inst in institution:
             keys = inst.key
@@ -544,8 +544,8 @@ class Command(BaseCommand):
 
 
 
-                #consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
-                consulta = Class.objects.filter(id_class=82).values("id_class")
+                consulta = Class.objects.filter(id_institution_id=inst.id_institution).values("id_class")
+                #consulta = Class.objects.filter(id_class=82).values("id_class")
 
                 for cons in consulta:
                     #print cons["id_class"]
