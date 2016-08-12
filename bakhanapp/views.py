@@ -972,15 +972,16 @@ def getClassStudents(request, id_class):
 
             json_data = json.dumps(json_dict)
             classroom = Class.objects.filter(id_class=id_class)
-            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid, id_class_id=id_class)):
                 isTeacher = True
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
+                print "entro en if"
             else:
                 isTeacher = False
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher_id__in=Teacher.objects.filter(id_institution_id=id_institition_request))
+                print "entro en else"
             spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
             s_skills = getClassSkills(request,id_class)
-            
             return render_to_response('studentClass.html',
                                         {'students': students, 'classroom': classroom,'jason_data': json_data, 'classes': classes,
                                         's_skills':s_skills, 'assesment_configs':assesment_configs,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher}, #'grades':grades,
