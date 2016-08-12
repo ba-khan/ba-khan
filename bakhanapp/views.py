@@ -420,7 +420,7 @@ def getArrayClassDetail(id_class):
         grades = Student.objects.filter(student_class__id_class_id=id_class
             ).values('name').annotate(grade=Avg('grade__grade'),
             incorrect=Sum('grade__incorrect'),correct=Sum('grade__correct'),bonus=Avg('grade__bonus_grade'),recomend=Sum('grade__recomended_complete'),time=Sum('grade__excercice_time'),
-            video=Sum('grade__video_time'),struggling=Sum('grade__struggling'),practiced=Sum('grade__practiced'),mastery1=Sum('grade__mastery1'),mastery2=Sum('grade__mastery2'),mastery3=Sum('grade__mastery3'))
+            video=Sum('grade__video_time'),struggling=Sum('grade__struggling'),practiced=Sum('grade__practiced'),mastery1=Sum('grade__mastery1'),mastery2=Sum('grade__mastery2'),mastery3=Sum('grade__mastery3')).order_by('name')
         for g in grades:
             #print g
             continue
