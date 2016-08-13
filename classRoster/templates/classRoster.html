@@ -35,41 +35,43 @@ Nominas
 		
 		<div id="excelClassDiv">
 			<h3>Curso</h3>
-			<label for="excelLevels">Nivel: </label>
-			<select id="excelLevels" class="ui-corner-all placeholder simple-input blur-on-esc">
-				<option value="0"></option>
-				<option value="1">1° Básico</option>
-				<option value="2">2° Básico</option>
-				<option value="3">3° Básico</option>
-				<option value="4">4° Básico</option>
-				<option value="5">5° Básico</option>
-				<option value="6">6° Básico</option>
-				<option value="7">7° Básico</option>
-				<option value="8">8° Básico</option>
-				<option value="9">1° Medio</option>
-				<option value="10">2° Medio</option>
-				<option value="11">3° Medio</option>
-				<option value="12">4° Medio</option>
-			</select>
-			<label for="excelLetter">Letra: </label>
-			<select id="excelLetter" class="ui-corner-all placeholder simple-input blur-on-esc">
-				<option value=""></option>
-				<option value="A">A</option>
-				<option value="B">B</option>
-				<option value="C">C</option>
-				<option value="D">D</option>
-				<option value="E">E</option>
-				<option value="F">F</option>
-				<option value="G">G</option>
-			</select>
-			<label for="excelYear">Año: </label>
-			<input type="number" id="excelYear" min="2016" value="2016" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
-			<br>
-			<label for="excelAdditional">Adicional: </label>
-			<input type="text" id="excelAdditional" placeholder="Opcional" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
-			<label for="excelTeacher">Profesor: </label>
-			<select id="excelTeacher" class="ui-corner-all placeholder simple-input blur-on-esc">
-			</select>
+			<div id="formExcelClassDiv">
+				<label for="excelLevels">Nivel: </label>
+				<select id="excelLevels" class="ui-corner-all placeholder simple-input blur-on-esc">
+					<option value="0"></option>
+					<option value="1">1° Básico</option>
+					<option value="2">2° Básico</option>
+					<option value="3">3° Básico</option>
+					<option value="4">4° Básico</option>
+					<option value="5">5° Básico</option>
+					<option value="6">6° Básico</option>
+					<option value="7">7° Básico</option>
+					<option value="8">8° Básico</option>
+					<option value="9">1° Medio</option>
+					<option value="10">2° Medio</option>
+					<option value="11">3° Medio</option>
+					<option value="12">4° Medio</option>
+				</select>
+				<label for="excelLetter">Letra: </label>
+				<select id="excelLetter" class="ui-corner-all placeholder simple-input blur-on-esc">
+					<option value=""></option>
+					<option value="A">A</option>
+					<option value="B">B</option>
+					<option value="C">C</option>
+					<option value="D">D</option>
+					<option value="E">E</option>
+					<option value="F">F</option>
+					<option value="G">G</option>
+				</select>
+				<label for="excelYear">Año: </label>
+				<input type="number" id="excelYear" min="2016" value="2016" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+				<br>
+				<label for="excelAdditional">Adicional: </label>
+				<input type="text" id="excelAdditional" placeholder="Opcional" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+				<label for="excelTeacher">Profesor: </label>
+				<select id="excelTeacher" class="ui-corner-all placeholder simple-input blur-on-esc">
+				</select>
+			</div>
 			<h5>Estudiantes: <p id="excelCounter">0</p></h5>
 			
 			<div id="excelStudentsClass"></div>
