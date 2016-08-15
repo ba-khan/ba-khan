@@ -1028,11 +1028,11 @@ def getTopictree(subject):
     for subject in subjects:
         subject_obj={"id": subject.id_subject_name, "parent":"#", "text": subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
         topictree.append(subject_obj)
-    subject_chapter=Chapter.objects.order_by('index')
+    subject_chapter=Chapter.objects.exclude(index=None).order_by('index')
     for chapter in subject_chapter:
         chapter_obj={"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "icon":"false"}
         topictree.append(chapter_obj)
-    chapter_topic=Topic.objects.order_by('index')
+    chapter_topic=Topic.objects.exclude(index=None).order_by('index')
     for topic in chapter_topic:
         topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
         topictree.append(topic_obj)
