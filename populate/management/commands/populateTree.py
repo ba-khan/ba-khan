@@ -261,32 +261,32 @@ def poblar_topictree(session,buscar, reemplazar):
     id_subtopic_videos = 1
     cant_chapters = len(data["children"][1]["children"])
     for i in range(0,cant_chapters):
-        '''
+
         aux1 = (data["children"][1]["children"][i]["slug"])
         aux2 = (data["children"][1]["children"][i]["translated_title"])
         aux3 = (data["children"][1]["slug"])
         new_chapter = Chapter(id_chapter_name=aux1,name_spanish=aux2,id_subject_name_id=aux3, index=i)
         new_chapter.save()
-        '''
+
         cant_topic = len(data["children"][1]["children"][i]["children"])
         
         for j in range(0,cant_topic):
-            '''
+       
             aux1 = data["children"][1]["children"][i]["children"][j]["slug"]
             aux2 = data["children"][1]["children"][i]["children"][j]["translated_title"]
             aux3 = data["children"][1]["children"][i]["slug"]
             new_topic = Topic(id_topic_name=aux1,name_spanish=aux2,id_chapter_name_id=aux3, index=j)
             new_topic.save()
-            '''
+          
             cant_subtopic = len(data["children"][1]["children"][i]["children"][j]["children"])
             for k in range(0,cant_subtopic):
-                '''
+           
                 aux1 = data["children"][1]["children"][i]["children"][j]["children"][k]["slug"]
                 aux2 = data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"]
                 aux3 = data["children"][1]["children"][i]["children"][j]["slug"]
                 new_subtopic = Subtopic(id_subtopic_name=aux1,name_spanish=aux2,id_topic_name_id=aux3, index=k)
                 new_subtopic.save()
-                '''
+           
                 videos_view = len(data["children"][1]["children"][i]["children"][j]["children"][k]["children"])
 
                 for m in range(0,videos_view):
@@ -308,7 +308,7 @@ def poblar_topictree(session,buscar, reemplazar):
                     #consulta = """UPDATE bakhanapp_video SET name_spanish = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["translated_title"].replace(buscar,reemplazar)+"""' WHERE id_video_name = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["id"]+"""';"""
                     #cur.execute(consulta)
                     #conn.commit()
-                    '''
+                  
                     if (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Exercise"):
                         aux1 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
@@ -325,7 +325,7 @@ def poblar_topictree(session,buscar, reemplazar):
                         except:
                             pass
                         #id_subtopic_skills+=1
-                    '''
+                    
                     if (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Video"):
                         aux1 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
@@ -336,7 +336,7 @@ def poblar_topictree(session,buscar, reemplazar):
                         videon.save()
                         #new_video = Video(id_video_name=aux1,name_spanish=aux2, index=l)
                         #new_video.save()
-                '''
+               
                         aux4 = (data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
                         aux5 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         try:
@@ -352,7 +352,7 @@ def poblar_topictree(session,buscar, reemplazar):
                 for p in range(len(data_skills)):
                     #logging.debug(data_skills[p]["translated_title"])
                     Skill.objects.filter(id_skill_name=data_skills[p]["content_id"]).update(name_spanish=data_skills[p]["translated_title"],name=data_skills[p]["name"])
-                '''
+                
                 videos = get_api_resource2(session,"/api/v1/topic/"+data["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/videos",SERVER_URL2)
                 sourcevid = unicode(videos, 'ISO-8859-1')
                 data_videos = simplejson.loads(sourcevid)
@@ -384,4 +384,9 @@ class Command(BaseCommand):
         session = run_tests(identifier,passw,CONSUMER_KEY,CONSUMER_SECRET)
         buscar = "'"
         reemplazar = " "
+        Chapter.objects.all().update(index=None)
+        Topic.objects.all().update(index=None)
+        Subtopic.objects.all().update(index=None)
+        Video.objects.all().update(index=None)
+        Skill.objects.all().update(index=None)
         poblar_topictree(session,buscar,reemplazar)
