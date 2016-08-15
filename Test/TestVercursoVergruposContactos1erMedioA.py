@@ -10,8 +10,8 @@ import login
 
 class TestVercursoVergruposContactos1erMedioA(unittest.TestCase):
     def setUp(self):
-        #self.driver = webdriver.Firefox() #Para ir viendo cada paso en firefox
-        self.driver = webdriver.PhantomJS()
+        self.driver = webdriver.Firefox() #Para ir viendo cada paso en firefox
+        #self.driver = webdriver.PhantomJS()
         self.driver.implicitly_wait(30)
         self.base_url = "http://146.83.216.177/"
         self.verificationErrors = []
