@@ -243,6 +243,40 @@ def get_api_resource2(session,llamada,server):
     return encoded_response
     #print "\nTime: %ss\n" % (end - start)
 
+def update_char():
+    cursor = connection.cursor()
+    cursor.execute("update bakhanapp_chapter set name_spanish = replace(name_spanish, 'Ã', 'Á') where name_spanish like '%Ã%'")
+    cursor.execute("update bakhanapp_chapter set name_spanish = replace(name_spanish, 'Ã¡', 'á') where name_spanish like '%Ã¡%'")
+    cursor.execute("update bakhanapp_chapter set name_spanish = replace(name_spanish, 'Ã©', 'é') where name_spanish like '%Ã©%'")   
+    cursor.execute("update bakhanapp_chapter set name_spanish = replace(name_spanish, 'Ã­', 'í') where name_spanish like '%Ã­%'")      
+    cursor.execute("update bakhanapp_chapter set name_spanish = replace(name_spanish, 'Ã³', 'ó') where name_spanish like '%Ã³%'") 
+    cursor.execute("update bakhanapp_chapter set name_spanish = replace(name_spanish, 'Â', '') where name_spanish like '%Â%'")  
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Ã', 'Á') where name_spanish like '%Ã%'")
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Ã¡', 'á') where name_spanish like '%Ã¡%'")
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Ã©', 'é') where name_spanish like '%Ã©%'")   
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Ã­', 'í') where name_spanish like '%Ã­%'")     
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Ã³', 'ó') where name_spanish like '%Ã³%'") 
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Ãº', 'ú') where name_spanish like '%Ãº%'") 
+    cursor.execute("update bakhanapp_topic set name_spanish = replace(name_spanish, 'Â', '') where name_spanish like '%Â%'")  
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ã', 'Á') where name_spanish like '%Ã%'")
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ã¡', 'á') where name_spanish like '%Ã¡%'")
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ã©', 'é') where name_spanish like '%Ã©%'")   
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ã­', 'í') where name_spanish like '%Ã­%'")    
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Âº', '') where name_spanish like '%Âº%'")    
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ã³', 'ó') where name_spanish like '%Ã³%'") 
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ãº', 'ú') where name_spanish like '%Ãº%'") 
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Â', '') where name_spanish like '%Â%'")
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã', 'Á') where name_spanish like '%Ã%'")
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã¡', 'á') where name_spanish like '%Ã¡%'")
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã©', 'é') where name_spanish like '%Ã©%'")   
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã­', 'í') where name_spanish like '%Ã­%'")    
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Âº', '') where name_spanish like '%Âº%'")    
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã³', 'ó') where name_spanish like '%Ã³%'") 
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ãº', 'ú') where name_spanish like '%Ãº%'") 
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Â', '') where name_spanish like '%Â%'")
+    row = cursor.fetchone()
+    return row
+
 
 def poblar_topictree(session,buscar, reemplazar):
     topictree = get_api_resource2(session,"/api/v1/topictree",SERVER_URL2)
@@ -365,28 +399,32 @@ class Command(BaseCommand):
     help = 'Puebla la base de datos con al arbol'
 
     def handle(self, *args, **options):
-        CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
-        #CONSUMER_KEY = '8Bn3UyhPHamgCvGN' #Clave para LeonardoMunoz esc Alabama
-        #keys = ['AStAffVHzEtpSFJ3','8Bn3UyhPHamgCvGN']
-        CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
-        #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
-        #secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
-        passw='clave1234'
-        identifier='utpbakhan'
-        #passw='CONTRASENA'
-        #identifier='LeonardoMunoz'
-        #identifiers = ['utpbakhan','LeonardoMunoz']
-        #passes = ['clave1234', 'CONTRASENA']
+        try:
+            CONSUMER_KEY = 'AStAffVHzEtpSFJ3' #clave generada para don UTPs
+            #CONSUMER_KEY = '8Bn3UyhPHamgCvGN' #Clave para LeonardoMunoz esc Alabama
+            #keys = ['AStAffVHzEtpSFJ3','8Bn3UyhPHamgCvGN']
+            CONSUMER_SECRET = 'UEQj2XKfGpFSMpNh' #clave generada para don UTPs
+            #CONSUMER_SECRET  = '2zcpyDHnfTd5VWz9' #secret para LeonardoMunoz esc Alabama
+            #secrets = ['UEQj2XKfGpFSMpNh','2zcpyDHnfTd5VWz9']
+            passw='clave1234'
+            identifier='utpbakhan'
+            #passw='CONTRASENA'
+            #identifier='LeonardoMunoz'
+            #identifiers = ['utpbakhan','LeonardoMunoz']
+            #passes = ['clave1234', 'CONTRASENA']
 
-        #meter los parametros anteriores en alguna parte de la base de datos
+            #meter los parametros anteriores en alguna parte de la base de datos
 
-        #institution = Institution.objects.all()
-        session = run_tests(identifier,passw,CONSUMER_KEY,CONSUMER_SECRET)
-        buscar = "'"
-        reemplazar = " "
-        Chapter.objects.all().update(index=None)
-        Topic.objects.all().update(index=None)
-        Subtopic.objects.all().update(index=None)
-        Video.objects.all().update(index=None)
-        Skill.objects.all().update(index=None)
-        poblar_topictree(session,buscar,reemplazar)
+            #institution = Institution.objects.all()
+            session = run_tests(identifier,passw,CONSUMER_KEY,CONSUMER_SECRET)
+            buscar = "'"
+            reemplazar = " "
+            Chapter.objects.all().update(index=None)
+            Topic.objects.all().update(index=None)
+            Subtopic.objects.all().update(index=None)
+            Video.objects.all().update(index=None)
+            Skill.objects.all().update(index=None)
+            poblar_topictree(session,buscar,reemplazar)
+            update_char()
+        except Exception as e:
+            print e
