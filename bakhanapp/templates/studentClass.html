@@ -1340,11 +1340,12 @@
     			$('#input_grade_teacher').val(d.value.teacher_grade);
     			if ((d.value.grade + d.value.bonus_grade)>max_grade){
     				$('#sugerida').val(max_grade);
-    				//console.log('entro en if');
+    				console.log('entro en if');
     			}
     			else{
-    				$('#sugerida').val(d.value.grade + d.value.bonus_grade);
-    				//console.log('entro en else');
+    				$('#sugerida').val(Math.round((d.value.grade + d.value.bonus_grade)*10)/10);
+    				console.log(d.value.grade + d.value.bonus_grade);
+    				console.log('entro en else');
     			}
 
     			if ((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)>max_grade){
@@ -1352,7 +1353,7 @@
     				//console.log('entro en if');
     			}
     			else{
-    				$('#final').val(d.value.grade + d.value.bonus_grade + d.value.teacher_grade);
+    				$('#final').val(Math.round((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)*10)/10);
     				//console.log('entro en else');
     			}
     			//console.log(max_grade);
