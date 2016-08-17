@@ -1,3 +1,7 @@
+## @brief Clase que representa a una Persona
+## @author Matias Aravena
+## @version 1.0
+## @date 2015
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect, HttpResponse
@@ -15,23 +19,17 @@ from bakhanapp.models import Assesment_Skill,Class_Subject
 
 register = template.Library()
 
-
 from bakhanapp.models import Skill
-
 from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile
-
-
 from bakhanapp.views import getTopictree
-
-
-
 import json
 
 
-# Create your views here.
+## Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
+# @param request Request
+# @return myAssesmentConfigs.html
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
-    #Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
     request.session.set_expiry(300)#5 minutos de inactividad
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid).order_by('-id_assesment_config')
 
@@ -77,6 +75,10 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         isTeacher = False
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
+## Esta funcion edita una pauta de un profesor
+# @param request Request
+# @param id_assesment_config Id de una pauta
+# @return "Pauta editada correctamente"
 def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
         args = request.POST
@@ -102,13 +104,18 @@ def editAssesmentConfig(request,id_assesment_config):
                                                     id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
-
+## Esta funcion elimina una pauta de un profesor
+# @param request Request
+# @param id_assesment_config Id de una pauta
+# @return "Pauta Pauta Eliminada"
 def deleteAssesmentConfig(request,id_assesment_config):
     Assesment_Config.objects.get(id_assesment_config=id_assesment_config).delete() #elimina assesment_config y assesment_skills
     return HttpResponse("Pauta Eliminada")
 
+## Esta funcion crea una nueva pauta de un profesor
+# @param request Request
+# @return HttpResponse
 def newAssesmentConfig(request):
-    
     if request.method == 'POST':
         args = request.POST
         id = args['id']
