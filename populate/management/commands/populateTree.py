@@ -266,6 +266,7 @@ def update_char():
     cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ã³', 'ó') where name_spanish like '%Ã³%'") 
     cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Ãº', 'ú') where name_spanish like '%Ãº%'") 
     cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Â', '') where name_spanish like '%Â%'")
+    cursor.execute("update bakhanapp_subtopic set name_spanish = replace(name_spanish, 'Á±', 'ñ') where name_spanish like '%Á±%'")
     cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã', 'Á') where name_spanish like '%Ã%'")
     cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã¡', 'á') where name_spanish like '%Ã¡%'")
     cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã©', 'é') where name_spanish like '%Ã©%'")   
@@ -274,6 +275,7 @@ def update_char():
     cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ã³', 'ó') where name_spanish like '%Ã³%'") 
     cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Ãº', 'ú') where name_spanish like '%Ãº%'") 
     cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Â', '') where name_spanish like '%Â%'")
+    cursor.execute("update bakhanapp_skill set name_spanish = replace(name_spanish, 'Á±', 'ñ') where name_spanish like '%Á±%'")
     row = cursor.fetchone()
     return row
 

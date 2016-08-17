@@ -1338,9 +1338,28 @@
     			$('#input_grade').val(d.value.grade);
     			$('#input_bonificacion').val(d.value.bonus_grade);
     			$('#input_grade_teacher').val(d.value.teacher_grade);
+    			if ((d.value.grade + d.value.bonus_grade)>max_grade){
+    				$('#sugerida').val(max_grade);
+    				//console.log('entro en if');
+    			}
+    			else{
+    				$('#sugerida').val(Math.round((d.value.grade + d.value.bonus_grade)*10)/10);
+    				//console.log(d.value.grade + d.value.bonus_grade);
+    				//console.log('entro en else');
+    			}
+
+    			if ((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)>max_grade){
+    				$('#final').val(max_grade);
+    				//console.log('entro en if');
+    			}
+    			else{
+    				$('#final').val(Math.round((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)*10)/10);
+    				//console.log('entro en else');
+    			}
+    			//console.log(max_grade);
     			$("#hover").fadeIn().css('display', '');
     			$("#popup").fadeIn().css('display', '');
-    			autoCalculateGrade();
+    			//autoCalculateGrade();
 
     		});
     	
@@ -2754,12 +2773,18 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   	sugerida = Math.round(sugerida*10)/10;
   	autoGrade = sugerida + parseFloat($('#input_grade_teacher').val());
   	autoGrade = Math.round(autoGrade*10)/10;
-  	$('#sugerida').val(sugerida);
-  	if (autoGrade>0){
-  		$('#final').val(autoGrade);
-  	}else{
+  	if(isNaN(autoGrade)){
   		$('#final').val(sugerida);
   	}
+  	else{
+  		$('#final').val(autoGrade);
+  	}
+  	//$('#sugerida').val(sugerida);
+  	//if (autoGrade>0){
+  	//	$('#final').val(autoGrade);
+  	//}else{
+  	//	$('#final').val(sugerida);
+  	//}
   }
 
 
