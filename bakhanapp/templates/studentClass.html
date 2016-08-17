@@ -313,6 +313,7 @@
 				aux= students[i]["assesment"+assesments[k]['id']].grade+students[i]["assesment"+assesments[k]['id']].bonus_grade+students[i]["assesment"+assesments[k]['id']].teacher_grade;
 				if(students[i]["assesment"+assesments[k]['id']].grade!=null){
 					if (aux>assesments[k]['max_grade']) {aux=assesments[k]['max_grade']};
+					if (aux<assesments[k]['min_grade']) {aux=assesments[k]['min_grade']};
 					average=average+aux
 					cont=cont+1;
 				}
@@ -1352,6 +1353,9 @@
     			if ((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)>max_grade){
     				$('#final').val(max_grade);
     				//console.log('entro en if');
+    			}
+    			else if((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)<min_grade){
+    				$('#final').val(min_grade);
     			}
     			else{
     				$('#final').val(Math.round((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)*10)/10);
