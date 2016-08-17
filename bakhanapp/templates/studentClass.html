@@ -52,6 +52,7 @@
 					<input name="input_grade_teacher" id="input_grade_teacher"  class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" type="text" style="width:19px;margin-left:283px;" disabled />
 				{% endif %}
 				<input id="hiddenMaxGrade" type="hidden" value=""></input>
+				<input id="hiddenMinGrade" type="hidden" value=""></input>
 					
 				</p>
 				<p id="pgrade">--------------------------------------------------------------------------------------------------------------</p>
@@ -1340,6 +1341,7 @@
     			$('#input_bonificacion').val(d.value.bonus_grade);
     			$('#input_grade_teacher').val(d.value.teacher_grade);
     			$("#hiddenMaxGrade").val(max_grade);
+    			$("#hiddenMinGrade").val(min_grade);
     			if ((d.value.grade + d.value.bonus_grade)>max_grade){
     				$('#sugerida').val(max_grade);
     				//console.log('entro en if');
@@ -2777,15 +2779,25 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   	sugerida = parseFloat($('#input_grade').val()) + parseFloat($('#input_bonificacion').val());
   	sugerida = Math.round(sugerida*10)/10;
   	autoGrade = sugerida + parseFloat($('#input_grade_teacher').val());
+  	//console.log(parseFloat($('#input_grade_teacher').val()));
   	hiddenMaxGrade = $('#hiddenMaxGrade').val();
+  	hiddenMinGrade = $('#hiddenMinGrade').val();
+  	console.log(hiddenMinGrade);
   	autoGrade = Math.round(autoGrade*10)/10;
   	if(isNaN(autoGrade)){
-  		$('#final').val(sugerida);
+  		if(sugerida>hiddenMaxGrade){
+  			$('#final').val(hiddenMaxGrade);
+  		}
+  		else{$('#final').val(sugerida);}		
   	}
   	else{
+  		//console.log(autoGrade);
   		if (autoGrade>hiddenMaxGrade) {
   			$('#final').val(hiddenMaxGrade);
-  			//asihfaofgasfkdksddfsafdaffdsd
+  		}
+  		else if(autoGrade<hiddenMinGrade){
+  			$('#final').val(hiddenMinGrade);
+  			//console.log('entro aca');
   		}
   		else{
   			$('#final').val(autoGrade);
