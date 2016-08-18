@@ -82,7 +82,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populatestudents.log',
+                    filename='logs/populatestudents.log',
                     filemode='w')
 logging.debug('A debug message')
 logging.info('Some information')

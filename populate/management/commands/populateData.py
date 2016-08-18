@@ -86,7 +86,7 @@ now = datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populate'+fecha+'.log',
+                    filename='logs/populate'+fecha+'.log',
                     filemode='w')
 #logging.debug('A debug message')
 #logging.info('Some information')

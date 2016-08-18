@@ -1,0 +1,16 @@
+2016-08-18 09:18:37,914 DEBUG (0.000) SELECT "bakhanapp_institution"."id_institution", "bakhanapp_institution"."name", "bakhanapp_institution"."city", "bakhanapp_institution"."address", "bakhanapp_institution"."phone", "bakhanapp_institution"."last_load", "bakhanapp_institution"."key", "bakhanapp_institution"."secret", "bakhanapp_institution"."identifier", "bakhanapp_institution"."password" FROM "bakhanapp_institution"; args=()
+2016-08-18 09:18:37,928 INFO Starting new HTTPS connection (1): www.khanacademy.org
+2016-08-18 09:18:40,861 DEBUG "GET /api/auth2/request_token?oauth_version=1.0&oauth_nonce=15c2a66ece5562d98b8431714318542d7a3d3099&oauth_timestamp=1471522717&oauth_signature=fFE6tFNDT7DC0JUjHtHa%2F8GZSGo%3D&oauth_consumer_key=C6bR2YzMh5frF2u3&oauth_signature_method=HMAC-SHA1&oauth_callback=https%3A%2F%2Fwww.khanacademy.org%2Fapi%2Fauth%2Fdefault_callback HTTP/1.1" 200 65
+2016-08-18 09:18:40,861 INFO Starting new HTTPS connection (1): www.khanacademy.org
+2016-08-18 09:18:42,700 DEBUG "POST /api/auth2/authorize HTTP/1.1" 302 331
+2016-08-18 09:18:43,091 DEBUG "GET /api/auth/authorize?legacy=0&oauth_token=t6100930331017216 HTTP/1.1" 302 513
+2016-08-18 09:18:43,325 DEBUG "GET /api/auth/default_callback?oauth_token_secret=FApn7dhSBcusQhEC&oauth_verifier=J338TQSMjN&oauth_token=t6100930331017216 HTTP/1.1" 200 2
+2016-08-18 09:18:43,325 INFO Starting new HTTPS connection (1): www.khanacademy.org
+2016-08-18 09:18:44,417 DEBUG "GET /api/auth2/access_token?oauth_nonce=c0b3c3f46c0f4ba3e581c7bbdb541657270c1f2d&oauth_timestamp=1471522723&oauth_signature_method=HMAC-SHA1&oauth_consumer_key=C6bR2YzMh5frF2u3&oauth_verifier=J338TQSMjN&oauth_version=1.0&oauth_token=t6100930331017216&oauth_signature=L6rinf5E0JsLhseErCQScgHODwg%3D HTTP/1.1" 200 65
+2016-08-18 09:18:44,447 DEBUG (0.031) UPDATE "bakhanapp_institution" SET "name" = 'Complejo Educacional Ignao', "city" = 'Ignao', "address" = 'Dirección', "phone" = '0', "last_load" = '2016-08-18T23%3A59%3A59Z', "key" = 'C6bR2YzMh5frF2u3', "secret" = '62vLHwfc5xs3e6pN', "identifier" = 'ignaokhan', "password" = 'complejo' WHERE "bakhanapp_institution"."id_institution" = 3; args=(u'Complejo Educacional Ignao', u'Ignao', u'Direcci\xf3n', u'0', '2016-08-18T23%3A59%3A59Z', u'C6bR2YzMh5frF2u3', u'62vLHwfc5xs3e6pN', u'ignaokhan', u'complejo', 3)
+2016-08-18 09:18:44,447 DEBUG hoy: 2016-08-18T23%3A59%3A59Z
+2016-08-18 09:18:44,447 DEBUG ayer: 2016-08-17
+2016-08-18 09:18:44,463 INFO Starting new HTTPS connection (1): www.khanacademy.org
+2016-08-18 09:18:45,525 DEBUG "GET /api/auth2/request_token?oauth_version=1.0&oauth_nonce=86c67b4e24a232d668c10f15f8de11f7f44386f5&oauth_timestamp=1471522724&oauth_signature=VI99F1iT%2B1Y%2BpRNj%2BhIN7jTmzUU%3D&oauth_consumer_key=7N5ntNDPJUPquCLf&oauth_signature_method=HMAC-SHA1&oauth_callback=https%3A%2F%2Fwww.khanacademy.org%2Fapi%2Fauth%2Fdefault_callback HTTP/1.1" 200 65
+2016-08-18 09:18:45,525 INFO Starting new HTTPS connection (1): www.khanacademy.org
+2016-08-18 09:18:47,272 DEBUG "POST /api/auth2/authorize HTTP/1.1" 302 331

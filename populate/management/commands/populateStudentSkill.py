@@ -85,7 +85,7 @@ now = datetime.now()
 fecha=now.strftime("%Y-%m-%d-T-%H-%M-Z")
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
-                    filename='populatestudentskill'+fecha+'.log',
+                    filename='logs/populatestudentskill'+fecha+'.log',
                     filemode='w')
 logging.debug('Debug')
 logging.info('Info')
@@ -584,7 +584,7 @@ class Command(BaseCommand):
 
                     #studentsnew = Student.objects.filter(id_institution_id=inst.id_institution)
 
-
+  
             except Exception as e:
                 #print e
                 logging.debug(e)
