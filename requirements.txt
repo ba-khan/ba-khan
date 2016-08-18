@@ -4,4 +4,4 @@ websocket-server==0.4
 django-debug-toolbar==1.4
 django-excel
 pyexcel-xls>=0.1.0
-
+nosexcover
