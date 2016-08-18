@@ -1,9 +1,4 @@
-## @brief Clase que representa a una Persona
-## @author Matias Aravena
-## @version 1.0
-## @date 2015
-# -*- encoding: utf-8 -*-
-# -*- coding: utf-8 -*-
+""" """
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
 from bakhanapp.forms import AssesmentConfigForm,AssesmentForm
@@ -25,9 +20,14 @@ from bakhanapp.views import getTopictree
 import json
 
 
-## Esta funcion entrega todas las configuraciones de evaluaciones realizadas por un profesor
-# @param request Request
-# @return myAssesmentConfigs.html
+##-------------------------------------------------------------------------------
+## Esta funcion entrega todas las configuraciones de evaluaciones realizadas por
+## un profesor
+##
+## @param      request  Request
+##
+## @return     myAssesmentConfigs.html
+##
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
     request.session.set_expiry(300)#5 minutos de inactividad
@@ -75,10 +75,14 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         isTeacher = False
     return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
+##-------------------------------------------------------------------------------
 ## Esta funcion edita una pauta de un profesor
-# @param request Request
-# @param id_assesment_config Id de una pauta
-# @return "Pauta editada correctamente"
+##
+## @param      request              Request
+## @param      id_assesment_config  Id de una pauta
+##
+## @return     "Pauta editada correctamente"
+##
 def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
         args = request.POST
@@ -104,17 +108,27 @@ def editAssesmentConfig(request,id_assesment_config):
                                                     id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
-## Esta funcion elimina una pauta de un profesor
-# @param request Request
-# @param id_assesment_config Id de una pauta
-# @return "Pauta Pauta Eliminada"
+
+##
+## @brief      Esta funcion borra una determinada pauta
+##
+## @param      request              The request
+## @param      id_assesment_config  The identifier assesment configuration
+##
+## @return     Texto Pauta Eliminada
+##
 def deleteAssesmentConfig(request,id_assesment_config):
     Assesment_Config.objects.get(id_assesment_config=id_assesment_config).delete() #elimina assesment_config y assesment_skills
     return HttpResponse("Pauta Eliminada")
 
-## Esta funcion crea una nueva pauta de un profesor
-# @param request Request
-# @return HttpResponse
+
+##
+## @brief      Esta funcion crea una nueva pauta
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
 def newAssesmentConfig(request):
     if request.method == 'POST':
         args = request.POST

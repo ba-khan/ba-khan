@@ -1,3 +1,4 @@
+""" """
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect, HttpResponse
@@ -19,6 +20,15 @@ register = template.Library()
 
 import json
 
+
+##
+## @brief      Gets the contacts.
+##
+## @param      request   The request
+## @param      id_class  The identifier class
+##
+## @return     The contacts.
+##
 @login_required()
 def getContacts(request, id_class):
     request.session.set_expiry(timeSleep)
@@ -44,6 +54,15 @@ def getContacts(request, id_class):
         isTeacher = False
     return render_to_response('contacts.html', {'datas':datas, 'id_class':id_class,'spanish_classroom':spanish_classroom,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
+
+##
+## @brief      Saves a contact.
+##
+## @param      request   The request
+## @param      id_class  The identifier class
+##
+## @return     HttpResponse
+##
 @login_required()
 def saveContact(request, id_class):
     if request.is_ajax():

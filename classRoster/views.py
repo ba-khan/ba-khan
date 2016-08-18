@@ -1,7 +1,8 @@
-# -*- encoding: utf-8 -*-
+## @package classRoster
+## This Python file uses the following encoding: utf-8
+
 from django.shortcuts import render
 
-# -*- coding: utf-8 -*-
 from django.shortcuts import render, HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
 from django.core.management.base import BaseCommand, CommandError
@@ -61,6 +62,16 @@ SERVER_URL2 = 'https://es.khanacademy.org'
 DEFAULT_API_RESOURCE = '/api/v1/playlists'
 VERIFIER = None
 
+##
+## @brief      Function to do the login
+##
+## @param      identifier       The identifier
+## @param      passw            The passw
+## @param      CONSUMER_KEY     The consumer key
+## @param      CONSUMER_SECRET  The consumer secret
+##
+## @return     Session
+##
 def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
     global SERVER_URL
     SERVER_URL = SERVER_URL
@@ -102,6 +113,16 @@ def run_tests(identifier,passw, CONSUMER_KEY, CONSUMER_SECRET):
     # Repeatedly prompt user for a resource and make authenticated API calls.
     return session
 
+
+##
+## @brief      Gets the api resource 2.
+##
+## @param      sessions  The sessions
+## @param      llamada   The llamada
+## @param      server    The server
+##
+## @return     The api resource 2.
+##
 def get_api_resource2(sessions,llamada,server):
     url = server + llamada
     split_url = url.split('?', 1)
@@ -115,6 +136,12 @@ def get_api_resource2(sessions,llamada,server):
     end = time.time()
     return encoded_response
 
+
+##
+## @brief      Creates a callback server.
+##
+## @return     Server
+##
 def create_callback_server():
     class CallbackHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         def do_GET(self):
@@ -128,7 +155,7 @@ def create_callback_server():
             self.send_header('Content-Type', 'text/plain')
             self.end_headers()
             self.wfile.write('OAuth request token fetched and authorized;' +
-                ' you can close this window. B!tch.')
+                ' you can close this window.')
             #webbrowser.open('http://www.google.cl')
 
         def log_request(self, code='-', size='-'):
@@ -137,6 +164,15 @@ def create_callback_server():
     server = SocketServer.TCPServer((CALLBACK_BASE, 0), CallbackHandler)
     return server
 
+
+##
+## @brief      Search a teacher
+##
+## @param      session     The session
+## @param      newTeacher  The new teacher
+##
+## @return     teacher's data
+##
 def searchTeacher(session,newTeacher):
     llamada = "/api/v1/user?username="+newTeacher
     jason = get_api_resource2(session,llamada,SERVER_URL)
@@ -144,6 +180,13 @@ def searchTeacher(session,newTeacher):
     return data
 
 
+##
+## @brief      Gets the roster.
+##
+## @param      request  The request
+##
+## @return     The roster.
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def getRoster(request):
     request.session.set_expiry(timeSleep)
@@ -164,6 +207,14 @@ def getRoster(request):
         isTeacher = False
     return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
+
+##
+## @brief      { function_description }
+##
+## @param      request  The request
+##
+## @return     { description_of_the_return_value }
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newTeacherClass(request):
     if request.method == 'POST':
@@ -194,6 +245,14 @@ def newTeacherClass(request):
         else:
             return HttpResponse("No se encuentra el profesor.")
 
+
+##
+## @brief      { function_description }
+##
+## @param      request  The request
+##
+## @return     { description_of_the_return_value }
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newClass(request):
     if request.method == 'POST':
@@ -223,6 +282,14 @@ def newClass(request):
                 student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
             return HttpResponse("Nuevo curso creado")
 
+
+##
+## @brief      { function_description }
+##
+## @param      request  The request
+##
+## @return     { description_of_the_return_value }
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def viewClass(request):
     if request.method == 'POST':
@@ -240,6 +307,14 @@ def viewClass(request):
 
         return HttpResponse(students)
 
+
+##
+## @brief      { function_description }
+##
+## @param      request  The request
+##
+## @return     { description_of_the_return_value }
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def editClass(request):
     if request.method == 'POST':
@@ -283,6 +358,14 @@ def editClass(request):
         except:
             return HttpResponse("Error al editar")
 
+
+##
+## @brief      Uploads an excel.
+##
+## @param      request  The request
+##
+## @return     { description_of_the_return_value }
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def uploadExcel(request):
     if request.method == 'POST':
@@ -337,6 +420,14 @@ def uploadExcel(request):
 
         return HttpResponse(j)
 
+
+##
+## @brief      Saves an excel class.
+##
+## @param      request  The request
+##
+## @return     { description_of_the_return_value }
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def saveExcelClass(request):
     if request.method == 'POST':
@@ -458,6 +549,14 @@ def saveExcelClass(request):
         
         return HttpResponse("Curso creado correctamente")
 
+
+##
+## @brief      Splits a class.
+##
+## @param      className  The class name
+##
+## @return     Splited class
+##
 def splitClass(className):
     cur = className.split('-')
     curso = cur[0]

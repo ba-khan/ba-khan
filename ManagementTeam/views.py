@@ -1,5 +1,4 @@
-# -*- encoding: utf-8 -*-
-# -*- coding: utf-8 -*-
+""" """
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
 from bakhanapp.forms import AssesmentConfigForm,AssesmentForm
@@ -24,6 +23,13 @@ from configs import timeSleep
 import json
 
 
+##
+## @brief      Gets the administrators.
+##
+## @param      request  The request
+##
+## @return     The administrators.
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def getAdministrators(request):
     request.session.set_expiry(timeSleep)
@@ -39,10 +45,18 @@ def getAdministrators(request):
         isTeacher = False
     return render_to_response('administrators.html', {'administrators': administrators,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
+
+##
+## @brief      Saves an administrator.
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def saveAdministrator(request):
     request.session.set_expiry(timeSleep)
-    user = Teacher.objects.get(email=request.user.email) #el usuario que está logueado
+    user = Teacher.objects.get(email=request.user.email) #el usuario que esta logueado
     if request.is_ajax():
         if request.method == 'POST':
             json_str = json.loads(request.body)
@@ -66,6 +80,14 @@ def saveAdministrator(request):
 
     return HttpResponse("Error")
 
+
+##
+## @brief      Deletes an administrator.
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def deleteAdministrator(request):
     request.session.set_expiry(timeSleep)
@@ -77,6 +99,14 @@ def deleteAdministrator(request):
             return HttpResponse("Administrador eliminado correctamente")
     return HttpResponse("Error al eliminar")
 
+
+##
+## @brief      Create an administrator
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newAdministrator(request):
     request.session.set_expiry(timeSleep)
