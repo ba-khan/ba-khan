@@ -52,7 +52,7 @@ class TestPautasTestUtp(unittest.TestCase):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
     
-    display.stop()
+    display.sendstop()
 
 if __name__ == "__main__":
     unittest.main()

@@ -87,7 +87,8 @@ class TestLoginUtp(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
-        display.stop()
+
+    display.sendstop()
 
 if __name__ == "__main__":
     unittest.main()
