@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
+from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
-
+display = Display(visible=0, size=(1024, 768))
+display.start()
 class TestLoginUtp(unittest.TestCase):
     def setUp(self):
+        
         self.driver = webdriver.Firefox() #Para ir viendo cada paso en firefox
         #self.driver = webdriver.PhantomJS()
         self.driver.implicitly_wait(30)
@@ -83,6 +86,7 @@ class TestLoginUtp(unittest.TestCase):
     
     def tearDown(self):
         self.driver.quit()
+        display.stop()
         self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
