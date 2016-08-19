@@ -7,7 +7,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import login
-
+display = Display(visible=0, size=(1024, 768))
+display.start()
 class TestVerCursoBonusMenor(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -57,6 +58,7 @@ class TestVerCursoBonusMenor(unittest.TestCase):
     
     def tearDown(self):
         self.driver.quit()
+        display.stop()
         self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
