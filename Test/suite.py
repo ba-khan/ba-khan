@@ -1,5 +1,4 @@
 import sys
-from pyvirtualdisplay import Display
 import unittest
 import TestLoginUtp
 import TestPautasTestUtp
@@ -12,8 +11,7 @@ import TestVerCursoEditarNotaMaxima
 import TestVerCursoEditarNotaAprobacion
 import TestVerCursoEditarFechaInicio
 import TestVerCursoEditarFechaTermino
-display = Display(visible=0, size=(1024, 768))
-display.start()
+ 
 class Test_Suite(unittest.TestCase):
 
     def test_main(self):
@@ -35,7 +33,6 @@ class Test_Suite(unittest.TestCase):
             ])
         runner = unittest.TextTestRunner()
         runner.run (self.suite)
-        display.stop()
 
 import unittest
 if __name__ == "__main__":
