@@ -6,3 +6,4 @@ django-excel
 pyexcel-xls>=0.1.0
 nosexcover
 selenium
+pyvirtualdisplay
