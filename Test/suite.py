@@ -20,16 +20,16 @@ class Test_Suite(unittest.TestCase):
         self.suite = unittest.TestSuite()
         self.suite.addTests([            
             unittest.defaultTestLoader.loadTestsFromTestCase(TestLoginUtp.TestLoginUtp),
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestPautasTestUtp.TestPautasTestUtp),
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVercursoVergruposContactos1erMedioA.TestVercursoVergruposContactos1erMedioA),
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoBonusMayor.TestVerCursoBonusMayor),
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoBonusMenor.TestVerCursoBonusMenor), 
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNombre.TestVerCursoEditarNombre),       
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNotaMinima.TestVerCursoEditarNotaMinima),   
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNotaMaxima.TestVerCursoEditarNotaMaxima),  
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNotaAprobacion.TestVerCursoEditarNotaAprobacion),    
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarFechaInicio.TestVerCursoEditarFechaInicio),  
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarFechaTermino.TestVerCursoEditarFechaTermino),                      
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestPautasTestUtp.TestPautasTestUtp),
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVercursoVergruposContactos1erMedioA.TestVercursoVergruposContactos1erMedioA),
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoBonusMayor.TestVerCursoBonusMayor),
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoBonusMenor.TestVerCursoBonusMenor), 
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNombre.TestVerCursoEditarNombre),       
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNotaMinima.TestVerCursoEditarNotaMinima),   
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNotaMaxima.TestVerCursoEditarNotaMaxima),  
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarNotaAprobacion.TestVerCursoEditarNotaAprobacion),    
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarFechaInicio.TestVerCursoEditarFechaInicio),  
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarFechaTermino.TestVerCursoEditarFechaTermino),                      
             ])
         runner = unittest.TextTestRunner()
         runner.run (self.suite)
