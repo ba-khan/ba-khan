@@ -11,7 +11,6 @@ display = Display(visible=0, size=(1024, 768))
 display.start()
 class TestLoginUtp(unittest.TestCase):
     def setUp(self):
-        
         self.driver = webdriver.Firefox() #Para ir viendo cada paso en firefox
         #self.driver = webdriver.PhantomJS()
         self.driver.implicitly_wait(30)
