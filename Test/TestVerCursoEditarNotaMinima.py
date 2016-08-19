@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -8,9 +7,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import login
-display = Display(visible=0, size=(1024, 768))
-display.start()
-class TestVerCursoEditarNombre(unittest.TestCase):
+
+class TestVerCursoEditarNotaMinima(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
@@ -18,13 +16,13 @@ class TestVerCursoEditarNombre(unittest.TestCase):
         self.verificationErrors = []
         self.accept_next_alert = True
     
-    def test_ver_curso_editar_nombre(self):
+    def test_ver_curso_editar_nota_minima(self):
         driver = login.test_login_utp(self)
         self.assertEqual("1ro basico A 2016 Test", driver.find_element_by_css_selector("font").text)
         driver.find_element_by_link_text("Ver Curso").click()
         driver.find_element_by_css_selector("button.editButton").click()
-        driver.find_element_by_id("input_nombre").clear()
-        driver.find_element_by_id("input_nombre").send_keys(u"prueba máil1")
+        driver.find_element_by_id("nota_minima").clear()
+        driver.find_element_by_id("nota_minima").send_keys("8")
         driver.find_element_by_id("button_editar").click()
         try:
             self.assertEqual("Datos mal ingresados o incompletos, revise los campos incompletos o en color rojo", driver.find_element_by_css_selector("#popupEvaluacion > p").text)
@@ -54,7 +52,6 @@ class TestVerCursoEditarNombre(unittest.TestCase):
     
     def tearDown(self):
         self.driver.quit()
-        display.stop()
         self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
