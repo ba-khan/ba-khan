@@ -8,9 +8,10 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import login
-display = Display(visible=0, size=(1024, 768))
-display.start()
+
 class TestPautasTestUtp(unittest.TestCase):
+    display = Display(visible=0, size=(1024, 768))
+    display.start()
     def setUp(self):
         self.driver = webdriver.Firefox() #Para ir viendo cada paso en firefox
         #self.driver = webdriver.PhantomJS()
