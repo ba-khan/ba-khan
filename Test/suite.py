@@ -3,7 +3,7 @@ import unittest
 import TestLoginUtp
 import TestPautasTestUtp
 import TestVercursoVergruposContactos1erMedioA
-import TestVerCursoVerCalificacion
+import TestVerCursoBonusMayor
  
 class Test_Suite(unittest.TestCase):
 
@@ -15,7 +15,7 @@ class Test_Suite(unittest.TestCase):
             unittest.defaultTestLoader.loadTestsFromTestCase(TestLoginUtp.TestLoginUtp),
             unittest.defaultTestLoader.loadTestsFromTestCase(TestPautasTestUtp.TestPautasTestUtp),
             unittest.defaultTestLoader.loadTestsFromTestCase(TestVercursoVergruposContactos1erMedioA.TestVercursoVergruposContactos1erMedioA),
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoVerCalificacion.TestVerCursoVerCalificacion),
+            unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoBonusMayor.TestVerCursoBonusMayor),
                                  
             ])
         runner = unittest.TextTestRunner()
