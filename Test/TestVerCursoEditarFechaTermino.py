@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -8,8 +8,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import login
-display = Display(visible=0, size=(1024, 768))
-display.start()
+#display = Display(visible=0, size=(1024, 768))
+#display.start()
 class TestVerCursoEditarFechaTermino(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -31,7 +31,6 @@ class TestVerCursoEditarFechaTermino(unittest.TestCase):
         except AssertionError as e:
             self.verificationErrors.append(str(e))
 
-        display.stop()
 
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
@@ -56,6 +55,7 @@ class TestVerCursoEditarFechaTermino(unittest.TestCase):
     
     def tearDown(self):
         self.driver.quit()
+        #display.stop()
         self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
