@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
+from pyvirtualdisplay import Display
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -7,7 +8,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 import login
-
+display = Display(visible=0, size=(1024, 768))
+display.start()
 class TestVerCursoEditarFechaTermino(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -28,6 +30,8 @@ class TestVerCursoEditarFechaTermino(unittest.TestCase):
             self.assertEqual("Datos mal ingresados o incompletos, revise los campos incompletos o en color rojo", driver.find_element_by_css_selector("#popupEvaluacion > p").text)
         except AssertionError as e:
             self.verificationErrors.append(str(e))
+
+        display.stop()
 
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
