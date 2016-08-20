@@ -21,7 +21,6 @@ class TestPautasTestUtp(unittest.TestCase):
     
     def test_pautas_test_utp(self):
         driver = login.test_login_utp(self)
-
         driver.find_element_by_css_selector("#pautas > span").click()
         try: self.assertEqual(u"Nueva Pauta de Evaluación", driver.find_element_by_css_selector("h2").text)
         except AssertionError as e: self.verificationErrors.append(str(e))
@@ -50,7 +49,7 @@ class TestPautasTestUtp(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
-        display.popen.terminate()
+        display.popen.kill()
 
 if __name__ == "__main__":
     unittest.main()
