@@ -19,7 +19,7 @@ class Test_Suite(unittest.TestCase):
         # suite of TestCases
         self.suite = unittest.TestSuite()
         self.suite.addTests([            
-            unittest.defaultTestLoader.loadTestsFromTestCase(TestLoginUtp.TestLoginUtp),
+            #unittest.defaultTestLoader.loadTestsFromTestCase(TestLoginUtp.TestLoginUtp),
             unittest.defaultTestLoader.loadTestsFromTestCase(TestPautasTestUtp.TestPautasTestUtp),
             #unittest.defaultTestLoader.loadTestsFromTestCase(TestVercursoVergruposContactos1erMedioA.TestVercursoVergruposContactos1erMedioA),
             #unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoBonusMayor.TestVerCursoBonusMayor),
