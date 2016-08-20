@@ -49,7 +49,8 @@ class TestPautasTestUtp(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
-        display.popen.kill()
+        #display.popen.kill()
+        display.stop()
 
 if __name__ == "__main__":
     unittest.main()
