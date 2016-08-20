@@ -20,7 +20,7 @@ class TestLoginUtp(unittest.TestCase):
     
     def test_login_utp(self):
         driver = self.driver
-        driver.get(self.base_url)
+        driver.get(self.base_url + "/")
         driver.find_element_by_id("loginButton").click()
 
         # ERROR: Caught exception [ERROR: Unsupported command [waitForPopUp | _blank | 30000]]
