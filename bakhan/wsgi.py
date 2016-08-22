@@ -12,7 +12,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-path = '/var/www/html/bakhanprueba'
+path = os.path.abspath(os.path.dirname(__name__))
 if path not in sys.path:
 	sys.path.append(path)
 	
