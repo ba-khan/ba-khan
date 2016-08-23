@@ -102,7 +102,7 @@
     function init() {
       // Connect to Web Socket
       //ws = new WebSocket("ws://146.83.216.177:9001"); //IP del Servidor
-      ws = new WebSocket("ws://146.83.216.177:8080"); //IP del Servidor
+      ws = new WebSocket("ws://146.83.216.177:8080/"); //IP del Servidor
       console.log(ws);
       //ws = new WebSocket("ws://127.0.0.1:8080");
       //ws = new WebSocket("ws://192.168.1.139:9001");
@@ -121,6 +121,7 @@
         // e.data contains received string.
         console.log('entro en onmessage');
         var server_data = JSON.parse(e.data)
+        var urrll=window.location.href
         if (server_data.url){
           var url = server_data.url
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
@@ -137,7 +138,7 @@
         }, 200);
         if (server_data.login){
           var login_data = server_data.login;
-          console.log(login_data);
+          console.log(urrll);
           $.ajax({
             url: "{% url 'login:authenticateUser' %}",
             type: "POST",
@@ -150,11 +151,12 @@
               console.log(response)
               if (response=="True"){
                 //window.location = window.href+"inicio";
-                window.open('/inicio','_self')
+                //console.log(server_data.url)
+                window.open(urrll+'inicio','_self')
                 $("#loginButton").show();
                 $("#loginButton2").hide();
               }else{
-                window.open('/access/rejected','_self')
+                window.open(urrll+'/access/rejected','_self')
                 $("#loginButton").show();
                 $("#loginButton2").hide();
               }    
