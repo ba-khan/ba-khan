@@ -181,6 +181,22 @@ def generateClassExcel(request, id_class):
         return response
 
 @login_required()
+def assesmentPautas(request):
+    return HttpResponseRedirect("/pautas")
+
+@login_required()
+def administradorTeam(request):
+    return HttpResponseRedirect("/administradores")
+
+@login_required()
+def nominaClass(request):
+    return HttpResponseRedirect("/nomina")
+
+@login_required()
+def deleteAssesment(request):
+    return HttpResponseRedirect("/delete")
+
+@login_required()
 def generateAssesmentExcel(request, id_assesment):
     request.session.set_expiry(timeSleep)
     if request.method == 'GET':
