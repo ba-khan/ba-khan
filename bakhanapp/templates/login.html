@@ -122,6 +122,7 @@
         console.log('entro en onmessage');
         var server_data = JSON.parse(e.data)
         var urrll=window.location.href
+        urrll=urrll.replace("/", "")
         if (server_data.url){
           var url = server_data.url
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
