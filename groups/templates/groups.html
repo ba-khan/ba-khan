@@ -267,14 +267,14 @@ function drop(e){
 };       
 function crearSubGrupoAvanzados() {
 
-   $("#fakeDiv1").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivAvanzados(this)'>x</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='1'>Seleccionar Tutor</OPTION><OPTION VALUE='{{ request.user.user_profile.kaid }}''>{{ request.user.nickname}}</OPTION></SELECT></div>");
+   $("#fakeDiv1").append("<div id='SubGrupoAvanzados"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoAvanzados' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivAvanzados(this)'>x</a><SELECT id='comboBoxAvanzados"+cont+"' class='comboBoxAvanzados' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='1'>Seleccionar Tutor</OPTION><OPTION VALUE='{{ request.user.user_profile.kaid }}''>{{ request.user.username}}</OPTION></SELECT></div>");
    cont+=1;
    //fillComboBox();
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
    $("#cleanButton").show();
 };
 function crearSubGrupoIntermedios() {
-   $("#fakeDiv2").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='1'>Seleccionar Tutor</OPTION><OPTION VALUE='{{ request.user.user_profile.kaid }}''>{{ request.user.nickname}}</OPTION></SELECT></div>");
+   $("#fakeDiv2").append("<div id='SubGrupoIntermedios"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)' ><h5>SubGrupo</h5><a id='SubGrupoIntermedios' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivIntermedios(this)'>x</a><SELECT id='comboBoxIntermedios"+cont+"' class='comboBoxIntermedios' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='1'>Seleccionar Tutor</OPTION><OPTION VALUE='{{ request.user.user_profile.kaid }}''>{{ request.user.username}}</OPTION></SELECT></div>");
    fillComboBoxIntermedios(cont);
    cont+=1;
    $(".scroll").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9' });
@@ -282,7 +282,7 @@ function crearSubGrupoIntermedios() {
 };
 function crearSubGrupoReforzamiento() {
 
-   $("#fakeDiv3").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='1'>Seleccionar Tutor</OPTION><OPTION VALUE='{{ request.user.user_profile.kaid }}''>{{ request.user.nickname}}</OPTION></SELECT></div>");
+   $("#fakeDiv3").append("<div id='SubGrupoReforzamiento"+cont+"' class='subGrupo scroll' name='"+cont+"' ondragover='return over(event)' ondrop='return drop(event)'><h5>SubGrupo</h5><a id='SubGrupoReforzamiento' name='"+cont+"' class='cerrar close' onclick='javascript:closeThisDivReforzamiento(this)'>x</a><SELECT id='comboBoxReforzamiento"+cont+"' class='comboBoxReforzamiento' NAME='selCombo' style='width: 90%' SIZE=1 onChange='javascript:alert('prueba');'><OPTION VALUE='1'>Seleccionar Tutor</OPTION><OPTION VALUE='{{ request.user.user_profile.kaid }}''>{{ request.user.username}}</OPTION></SELECT></div>");
    fillComboBoxReforzamiento(cont);
    cont+=1;
    //fillComboBox();
@@ -517,7 +517,7 @@ function saveGroups(){
 {% if isTeacher %}
 <SELECT id="comboBoxAvanzados" class="comboBoxAvanzados" NAME="comboBox" style="width: 90%" SIZE=1> 
 <OPTION VALUE="1">Seleccionar Tutor</OPTION>
-<OPTION VALUE="{{ request.user.user_profile.kaid }}">{{ request.user.nickname}}</OPTION>
+<OPTION VALUE="{{ request.user.user_profile.kaid }}">{{ request.user.username}}</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoAvanzados(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
 {% endif %}
@@ -528,7 +528,7 @@ function saveGroups(){
 {% if isTeacher %}       
 <SELECT id="comboBoxIntermedios" class="comboBoxIntermedios" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="1">Seleccionar Tutor</OPTION>
-<OPTION VALUE="{{ request.user.user_profile.kaid }}">{{ request.user.nickname}}</OPTION>
+<OPTION VALUE="{{ request.user.user_profile.kaid }}">{{ request.user.username}}</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoIntermedios(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
 {% endif %}
@@ -538,7 +538,7 @@ function saveGroups(){
 {% if isTeacher %}       
 <SELECT id="comboBoxReforzamiento" class="comboBoxReforzamiento" NAME="selCombo" style="width: 90%" SIZE=1 onChange=""> 
 <OPTION VALUE="1">Seleccionar Tutor</OPTION>
-<OPTION VALUE="{{ request.user.user_profile.kaid }}">{{ request.user.nickname}}</OPTION>
+<OPTION VALUE="{{ request.user.user_profile.kaid }}">{{ request.user.username}}</OPTION>
 </SELECT>
 <button onclick="crearSubGrupoReforzamiento(this);" class='nuevo_sub kui-button kui-button-plain kui-button-primary'>nuevo sub-grupo</button>
 {% endif %}
