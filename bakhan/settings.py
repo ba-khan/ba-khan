@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'Contacts',
     'ManagementTeam',
     'classRoster',
+    'configuracion',
 )
 
 MIDDLEWARE_CLASSES = (

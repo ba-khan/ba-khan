@@ -38,5 +38,7 @@ urlpatterns = [
     url(r'^delete/', 'bakhanapp.views.getAssesment', name='getAssesment'),
     url(r'^delete/','bakhanapp.views.deleteAssesment', name='deleteAssesment'),
 
+    url(r'^inicio/configuraciones/', include('SettingSchedule.urls', namespace="SettingSchedule")),
+
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]
