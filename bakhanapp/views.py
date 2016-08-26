@@ -202,7 +202,7 @@ def configuracionHorario(request):
 
 @permission_required('bakhanapp.isAdmin',login_url="/")
 def configuracionHorario(request):
-    return HttpResponse("hola")
+    return HttpResponse("Administracion de Horarios")
 
 @login_required()
 def generateAssesmentExcel(request, id_assesment):
