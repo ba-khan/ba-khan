@@ -123,6 +123,7 @@
         var server_data = JSON.parse(e.data)
         var urrll=window.location.href
         urrll=urrll.replace("desarrollo/", "desarrollo")
+         urrll=urrll.replace("8000/", "8000")
         if (server_data.url){
           var url = server_data.url
           myWindow = window.open(url, "_blank", "myWindow", "width=200, height=100");
@@ -149,7 +150,7 @@
                    avatar_url: login_data.avatar_url,
                    csrfmiddlewaretoken: '{{ csrf_token }}' },
             success: function (response) {
-              console.log(response)
+              //console.log(response)
               if (response=="True"){
                 //window.location = window.href+"inicio";
                 //console.log(server_data.url)
