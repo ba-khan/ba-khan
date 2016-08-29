@@ -22,6 +22,104 @@ from configs import timeSleep
 
 import json
 
-@permission_required('bakhanapp.isAdmin',login_url="/")
-def configuracionHorario(request):
-    return HttpResponse("hola")
+
+##
+## @brief      Gets the administrators.
+##
+## @param      request  The request
+##
+## @return     The administrators.
+##
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def getAdministrators(request):
+    request.session.set_expiry(timeSleep)
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except:
+        return render_to_response('horario.html', context_instance=RequestContext(request))
+    administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
+    #print administrators
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('horario.html', {'administrators': administrators,'isTeacher':isTeacher}, context_instance=RequestContext(request))
+
+
+##
+## @brief      Saves an administrator.
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def saveAdministrator(request):
+    request.session.set_expiry(timeSleep)
+    user = Teacher.objects.get(email=request.user.email) #el usuario que esta logueado
+    if request.is_ajax():
+        if request.method == 'POST':
+            json_str = json.loads(request.body)
+            try:
+                admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
+
+                if (json_str["adminPhone"]):
+                    admin.phone=json_str["adminPhone"]
+                else:
+                    admin.phone=None
+                if (json_str["adminEmail"]):
+                    admin.email=json_str["adminEmail"]
+                else:
+                    admin.email=""
+                admin.id_institution_id = user.id_institution_id
+                admin.save()
+                return HttpResponse("Cambios guardados correctamente")
+            except:
+                return HttpResponse("Error al guardar")
+
+
+    return HttpResponse("Error")
+
+
+##
+## @brief      Deletes an administrator.
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def deleteAdministrator(request):
+    request.session.set_expiry(timeSleep)
+    if request.is_ajax():
+        if request.method == 'POST':
+            json_str = json.loads(request.body)
+            admin = Administrator.objects.get(kaid_administrator=json_str["adminName"])
+            admin.delete()
+            return HttpResponse("Administrador eliminado correctamente")
+    return HttpResponse("Error al eliminar")
+
+
+##
+## @brief      Create an administrator
+##
+## @param      request  The request
+##
+## @return     HttpResponse
+##
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def newAdministrator(request):
+    request.session.set_expiry(timeSleep)
+    user = Teacher.objects.get(email=request.user.email)
+    if request.method == 'POST':
+        args = request.POST
+        try:
+            administrator = Administrator.objects.create(kaid_administrator=args['name'],
+                name=args['name'],
+                email=args['email'],
+                id_institution_id=user.id_institution_id,
+                phone=args['phone'])
+            return HttpResponse("Administrador guardado correctamente")
+        except:
+            return HttpResponse("Error al guardar")
+    return HttpResponse("Error al guardar")

@@ -1,0 +1,403 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Administración de Horarios{% endblock %}
+
+{% block body2 %}
+
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+
+<style>
+input{
+	z-index: 1000;
+	width: 100%;
+	height: 100%;
+}
+.ribbon {
+  position: relative;
+  left: 0px; top: -53px;
+  z-index: 1;
+  overflow: hidden;
+  width: 63px; height: 54px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 9px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 15px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 97px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 13px; left: -25px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+#newAdmin{
+	border: 1px solid #C6D1AD;
+    border-radius: 5px;
+    display:none; 
+    height:220px; 
+    padding:15px;
+    padding-left: 33%;
+    padding-right: 33%;
+    text-align: center;
+}
+label{
+	width: 65px;
+}
+input{
+	margin-bottom: 10px;
+}
+</style>
+
+
+
+<script>
+	window.onload = function () {
+        administratorGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+
+		// we build and load the metadata in Javascript
+		administratorGrid.load({ metadata: [
+			{ name: "admin_name", datatype: "string", editable: false },
+			{ name: "admin_email", datatype: "email", editable: true },
+			{ name: "admin_phone", datatype: "integer", editable: true },
+			{ name: "action", datatype: "html", editable: false }
+		]});
+
+		// then we attach to the HTML table and render it
+		administratorGrid.attachToHTMLTable('adminGrid');
+
+		administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 100000000 && parseInt(value) < 999999999); } }));
+		
+		var searchField = document.getElementById('searchField');
+		searchField.addEventListener(
+		    'keyup',
+		    function (){
+		    	administratorGrid.filter(searchField.value);
+		    }
+		);
+
+		administratorGrid.renderGrid();
+	} 
+	
+</script>
+
+
+
+<br>
+<div class="container">
+<div class="main-content">
+
+	<br>
+	<h1 style="text-align:center;">Administración de Horarios</h1>
+	<table id="adminGrid" class="testgrid">
+		<tr>
+			<th>Bloque</th>
+			<th>Hora Inicio</th>
+			<th>Hora Término</th>
+			<th>Acciones</th>
+		</tr>
+		{% for admin in administrators %}
+		<tr id="R{{ forloop.counter }}">
+			<td>{{ admin.name }}</td>
+			<td>{% if admin.email == None %}{{ "" }}{% else %}{{ admin.email }}{% endif %}</td>
+			<td id="sPhone{{ forloop.counter }}">{{ admin.phone }}</td>
+			<td class="editablegrid-action" data-title="action" style="width:205px">
+				<a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewAdmin' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
+	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
+	<div id="newAdmin">
+		<form action="" method="post" id="form0">{% csrf_token %}
+			<h3>Nuevo Bloque de horario</h3>
+			<label for='name'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='email'>Hora inicio: </label><input id="newMail" onchange="validar()" onkeyup="validar()" type="mail" name="email" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='phone'>Hora fin: </label><input id="newNumber" onchange="validar()" onkeyup="validar()" type="number" name="phone" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+			<a onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
+		</form>
+	</div>
+</div>
+<br>
+</div>
+
+<div id="popup" style="display:none">
+	<div id="close">X</div>
+</div>
+<br>
+
+</div> <!-- cerrar div principal del home  -->
+
+<script>
+function showNewAdmin(){
+	$('#newAdmin').toggle('blind',10);
+	$('#buttonNewAdmin').hide();
+	setTimeout(toBottom, 10);
+	}
+function toBottom(){
+	$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+
+}
+
+function saveNewAdmin(){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
+	if(validar()){
+		$.ajax({
+		url: "{% url 'ManagementTeam:nuevo_administrador' %}",
+		type: "POST",
+		data: $("#form0").serialize(),
+			success: function(response){
+				$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+				$("#popup").append("<p class='response'>"+response+"</p>");
+				auxResponse = response;
+				if (auxResponse == "Administrador guardado correctamente"){
+					$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+				}
+			}
+		});
+	}else{
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+	}
+}
+
+
+function saveData(id){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
+	
+	tr = document.getElementById("R"+id);
+	invalids = tr.getElementsByClassName("invalid").length;
+	if (invalids>0){
+		response = "Campos inválidos";
+		$("#popup").append("<p class='response'>"+response+"</p>");
+		$("#close").show();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+	}
+	else{
+		$('.response').remove();
+		$('.question').remove();
+		$("#close").hide();
+		$("#popup").append("<p class='question'>¿Desea guardar cambios de Administrador?</p>");
+		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
+		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+
+}
+
+function confirmSave(answer,id){
+	if (answer==1){
+		tr = $(document.getElementById("R"+id));
+		var tdJson = new Object();
+
+				tdJson.adminName= tr["context"]["children"][0].textContent;
+				tdJson.adminEmail= tr["context"]["children"][1].textContent;
+				tdJson.adminPhone= tr["context"]["children"][2].textContent;
+		
+		$.ajax({
+			url: "{% url 'ManagementTeam:guardar_administrador' %}",
+			type: "POST",
+			//contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(tdJson),
+				success: function(response){
+					$("#acceptSave").remove();
+					$("#cancelSave").remove();
+					$("#acceptDelete").remove();
+					$("#cancelDelete").remove();
+					$('.response').remove();
+					$('.question').remove();
+					$("#close").fadeIn();
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
+					
+					auxResponse = response;
+					if (auxResponse == "Nuevo Administrador guardado correctamente"){
+						window.setTimeout(function(){location.reload()},2000);
+					}
+				}
+		});
+		//$("#hover").fadeOut().css('display', 'none');
+		//$("#popup").fadeOut().css('display', 'none');
+	}
+	if (answer==0){
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+	}
+}
+
+
+function deleteData(id){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
+	
+	tr = document.getElementById("R"+id);
+	invalids = tr.getElementsByClassName("invalid").length;
+	if (invalids>0){
+		response = "Campos inválidos";
+		$("#popup").append("<p class='response'>"+response+"</p>");
+		$("#close").show();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+	}
+	else{
+		$('.response').remove();
+		$('.question').remove();
+		$("#close").hide();
+		$("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
+		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+
+}
+
+
+function confirmDelete(answer,id){
+	if (answer==1){
+		tr = $(document.getElementById("R"+id));
+		var tdJson = new Object();
+
+				tdJson.adminName= tr["context"]["children"][0].textContent;
+				tdJson.adminEmail= tr["context"]["children"][1].textContent;
+				tdJson.adminPhone= tr["context"]["children"][2].textContent;
+		
+		$.ajax({
+			url: "{% url 'ManagementTeam:eliminar_administrador' %}",
+			type: "POST",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(tdJson),
+				success: function(response){
+					$("#acceptSave").remove();
+					$("#cancelSave").remove();
+					$("#acceptDelete").remove();
+					$("#cancelDelete").remove();
+					$('.response').remove();
+					$('.question').remove();
+					$("#hover").fadeIn().css('display', '');
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					$("#popup").fadeIn().css('display', '');
+					
+					auxResponse = response;
+					if (auxResponse == "Administrador eliminado correctamente"){
+						$("#hover").css('pointer-events','none');
+						$("#close").css('pointer-events','none');
+						window.setTimeout(function(){location.reload()},1000);
+					}
+				}
+		});
+		//$("#hover").fadeOut().css('display', 'none');
+		//$("#popup").fadeOut().css('display', 'none');
+	}
+	if (answer==0){
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+	}
+}
+
+function validar(){
+	flag = true;
+	nName = document.getElementById("newName").value;
+	nMail = document.getElementById("newMail").value;
+	nNumber = document.getElementById("newNumber").value;
+
+	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+		$("#newName").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newName").css('color', '#000000');
+	}
+	if(nNumber.length != 9) {
+		$("#newNumber").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newNumber").css('color', '#000000');
+	}
+	if(/[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/.test(nMail)) {
+		$("#newMail").css('color', '#000000');
+	}else{
+		$("#newMail").css('color', '#C30202');
+		flag = false;
+	}
+	return flag;
+}
+
+$(document).ready(function(){
+	  //chiusura al click sulla parte scura
+	  $("#hover").click(function(){
+	        $(this).fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	  //chiusura al click sul pulsante
+	  $("#close").click(function(){
+	        $("#hover").fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	});
+
+	$('#configuraciones').addClass('active selected');
+
+</script>
+
+{% endblock %}
