@@ -9,8 +9,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-path = os.path.abspath(os.path.dirname(__name__))
-#path = 'var/www/html/bakhanproyecto'
+#path = os.path.abspath(os.path.dirname(__name__))
+path = 'var/www/html/bakhanprueba'
 if path not in sys.path:
   sys.path.append(path)
 
