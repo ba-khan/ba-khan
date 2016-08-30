@@ -83,6 +83,11 @@ TEMPLATES = [
     },
 ]
 
+JENKINS_TASKS = (
+    'django_jenkins.tasks.run_pep8',
+    'django_jenkins.tasks.run_pyflakes'
+)
+
 WSGI_APPLICATION = 'bakhan.wsgi.application'
 
 
