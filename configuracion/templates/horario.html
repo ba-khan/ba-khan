@@ -66,7 +66,7 @@ input{
   border-bottom: 3px solid transparent;
   border-top: 3px solid #79A70A;*/
 }
-#newAdmin{
+#newSchedule{
 	border: 1px solid #C6D1AD;
     border-radius: 5px;
     display:none; 
@@ -77,7 +77,7 @@ input{
     text-align: center;
 }
 label{
-	width: 65px;
+	width: 95px;
 }
 input{
 	margin-bottom: 10px;
@@ -142,14 +142,14 @@ input{
 		</tr>
 		{% endfor %}
 	</table>
-	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewAdmin' onclick="javascript:showNewAdmin()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
+	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewSchedule()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
 	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
-	<div id="newAdmin">
+	<div id="newSchedule">
 		<form action="" method="post" id="form0">{% csrf_token %}
 			<h3>Nuevo Bloque de horario</h3>
-			<label for='name'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-			<label for='email'>Hora inicio: </label><input id="newMail" onchange="validar()" onkeyup="validar()" type="mail" name="email" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-			<label for='phone'>Hora fin: </label><input id="newNumber" onchange="validar()" onkeyup="validar()" type="number" name="phone" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='block'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='start'>Hora inicio: </label><input id="newStart" onchange="validar()" onkeyup="validar()" type="time" name="start" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="23"><br>
+			<label for='end'>Hora fin: </label><input id="newEnd" onchange="validar()" onkeyup="validar()" type="time" name="end" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="59"><br>
 			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
 			<a onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
 		</form>
@@ -166,9 +166,9 @@ input{
 </div> <!-- cerrar div principal del home  -->
 
 <script>
-function showNewAdmin(){
-	$('#newAdmin').toggle('blind',10);
-	$('#buttonNewAdmin').hide();
+function showNewSchedule(){
+	$('#newSchedule').toggle('blind',10);
+	$('#buttonNewSchedule').hide();
 	setTimeout(toBottom, 10);
 	}
 function toBottom(){

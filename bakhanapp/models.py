@@ -127,6 +127,13 @@ class Class_Subject(models.Model):
     class Meta:
         unique_together = ('id_class', 'id_subject_name')
 
+class Class_Schedule(models.Model):
+    id_schedule = models.AutoField(primary_key=True)
+    id_class_subject = models.ForeignKey(Class_Subject)
+    day = models.CharField(max_length=10)
+    start_time = models.CharField(max_length=10)
+    end_time = models.CharField(max_length=10)
+
 class Chapter(models.Model):
     id_chapter_name = models.CharField(max_length=150,primary_key=True)
     id_subject_name = models.ForeignKey(Subject)

@@ -24,8 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'uy=!=x&yfcv)a_bbk19xx_4c1w@x$j)g5=i(u99)1qo$+p4)2e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = False
-#DEBUG = True
+#DEBUG = TEMPLATE_DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = []
@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'bakhan.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bakhanDB',
+        'NAME': 'bakhanDev',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': '146.83.216.177',

@@ -31,7 +31,7 @@ import json
 ## @return     The administrators.
 ##
 @permission_required('bakhanapp.isAdmin', login_url="/")
-def getAdministrators(request):
+def getSchedules(request):
     request.session.set_expiry(timeSleep)
     try:
         teacher = Teacher.objects.get(email=request.user.email)
