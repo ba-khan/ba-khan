@@ -10,6 +10,6 @@ urlpatterns = [
     #url(r'^eliminar$', views.deleteAdministrator, name='eliminar_horario'),
     url(r'^$', views.getSchedules, name='getSchedules'),
     url(r'^guardar$', views.saveAdministrator, name='guardar_administrador'),
-    url(r'^nuevo$', views.newAdministrator, name='nuevo_administrador'),
+    url(r'^nuevo$', views.newSchedule, name='nuevo_horario'),
     url(r'^eliminar$', views.deleteAdministrator, name='eliminar_administrador'),
 ]

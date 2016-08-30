@@ -151,7 +151,7 @@ input{
 			<label for='start'>Hora inicio: </label><input id="newStart" onchange="validar()" onkeyup="validar()" type="time" name="start" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="23"><br>
 			<label for='end'>Hora fin: </label><input id="newEnd" onchange="validar()" onkeyup="validar()" type="time" name="end" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="59"><br>
 			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-			<a onclick='javascript:saveNewAdmin()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
+			<a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
 		</form>
 	</div>
 </div>
@@ -186,6 +186,38 @@ function saveNewAdmin(){
 	if(validar()){
 		$.ajax({
 		url: "{% url 'ManagementTeam:nuevo_administrador' %}",
+		type: "POST",
+		data: $("#form0").serialize(),
+			success: function(response){
+				$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+				$("#popup").append("<p class='response'>"+response+"</p>");
+				auxResponse = response;
+				if (auxResponse == "Administrador guardado correctamente"){
+					$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+				}
+			}
+		});
+	}else{
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+	}
+}
+
+function saveNewSchedule(){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
+	if(validar()){
+		$.ajax({
+		url: "{% url 'configuracion:nuevo_horario' %}",
 		type: "POST",
 		data: $("#form0").serialize(),
 			success: function(response){
@@ -357,8 +389,8 @@ function confirmDelete(answer,id){
 function validar(){
 	flag = true;
 	nName = document.getElementById("newName").value;
-	nMail = document.getElementById("newMail").value;
-	nNumber = document.getElementById("newNumber").value;
+	nStart = document.getElementById("newStart").value;
+	nEnd = document.getElementById("newEnd").value;
 
 	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
 		$("#newName").css('color', '#C30202');
@@ -366,17 +398,17 @@ function validar(){
 	}else{
 		$("#newName").css('color', '#000000');
 	}
-	if(nNumber.length != 9) {
-		$("#newNumber").css('color', '#C30202');
+	if(nStart == null || nStart.length == 0 || /^\s+$/.test(nStart)) {
+		$("#newStart").css('color', '#C30202');
 		flag = false;
 	}else{
-		$("#newNumber").css('color', '#000000');
+		$("#newStart").css('color', '#000000');
 	}
-	if(/[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/.test(nMail)) {
-		$("#newMail").css('color', '#000000');
-	}else{
-		$("#newMail").css('color', '#C30202');
+	if(nEnd == null || nEnd.length == 0 || /^\s+$/.test(nEnd)) {
+		$("#newEnd").css('color', '#C30202');
 		flag = false;
+	}else{
+		$("#newEnd").css('color', '#000000');
 	}
 	return flag;
 }

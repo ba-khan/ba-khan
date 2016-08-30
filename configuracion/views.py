@@ -108,7 +108,7 @@ def deleteAdministrator(request):
 ## @return     HttpResponse
 ##
 @permission_required('bakhanapp.isAdmin', login_url="/")
-def newAdministrator(request):
+def newSchedule(request):
     request.session.set_expiry(timeSleep)
     user = Teacher.objects.get(email=request.user.email)
     if request.method == 'POST':
