@@ -129,13 +129,13 @@ class Class_Subject(models.Model):
 
 class Schedule(models.Model):
     id_schedule = models.AutoField(primary_key=True)
-    day = models.CharField(max_length=10)
     start_time = models.CharField(max_length=10)
     end_time = models.CharField(max_length=10)
     id_institution = models.ForeignKey(Institution)
+    name_block = models.CharField(max_length=50)
 
     class Meta:
-        unique_together = ('day', 'start_time', 'end_time', 'id_institution')
+        unique_together = ('start_time', 'end_time', 'id_institution')
 
 class Class_Schedule(models.Model):
     id_class_schedule = models.AutoField(primary_key=True)

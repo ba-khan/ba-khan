@@ -85,45 +85,25 @@ input{
 </style>
 
 
-
-<script>
-	window.onload = function () {
-        administratorGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
-
-		// we build and load the metadata in Javascript
-		administratorGrid.load({ metadata: [
-			{ name: "admin_name", datatype: "string", editable: false },
-			{ name: "admin_email", datatype: "email", editable: true },
-			{ name: "admin_phone", datatype: "integer", editable: true },
-			{ name: "action", datatype: "html", editable: false }
-		]});
-
-		// then we attach to the HTML table and render it
-		administratorGrid.attachToHTMLTable('adminGrid');
-
-		administratorGrid.addCellValidator("admin_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 100000000 && parseInt(value) < 999999999); } }));
-		
-		var searchField = document.getElementById('searchField');
-		searchField.addEventListener(
-		    'keyup',
-		    function (){
-		    	administratorGrid.filter(searchField.value);
-		    }
-		);
-
-		administratorGrid.renderGrid();
-	} 
-	
-</script>
-
-
-
 <br>
 <div class="container">
 <div class="main-content">
 
 	<br>
 	<h1 style="text-align:center;">Administración de Horarios</h1>
+	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewSchedule()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
+
+	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
+	<div id="newSchedule">
+		<form action="" method="post" id="form0">{% csrf_token %}
+			<h3>Nuevo Bloque de horario</h3>
+			<label for='block'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="block" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='start'>Hora inicio: </label><input id="newStart" onchange="validar()" onkeyup="validar()" type="time" name="start" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="23"><br>
+			<label for='end'>Hora fin: </label><input id="newEnd" onchange="validar()" onkeyup="validar()" type="time" name="end" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="59"><br>
+			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+			<a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
+		</form>
+	</div>
 	<table id="adminGrid" class="testgrid">
 		<tr>
 			<th>Bloque</th>
@@ -131,29 +111,17 @@ input{
 			<th>Hora Término</th>
 			<th>Acciones</th>
 		</tr>
-		{% for admin in administrators %}
+		{% for sch in schedules %}
 		<tr id="R{{ forloop.counter }}">
-			<td>{{ admin.name }}</td>
-			<td>{% if admin.email == None %}{{ "" }}{% else %}{{ admin.email }}{% endif %}</td>
-			<td id="sPhone{{ forloop.counter }}">{{ admin.phone }}</td>
+			<td>{% if sch.name_block == None %}{{ "" }}{% else %}{{ sch.name_block }}{% endif %}</td>
+			<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
+			<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
 			<td class="editablegrid-action" data-title="action" style="width:205px">
 				<a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
 			</td>
 		</tr>
 		{% endfor %}
 	</table>
-	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewSchedule()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:right; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
-	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
-	<div id="newSchedule">
-		<form action="" method="post" id="form0">{% csrf_token %}
-			<h3>Nuevo Bloque de horario</h3>
-			<label for='block'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-			<label for='start'>Hora inicio: </label><input id="newStart" onchange="validar()" onkeyup="validar()" type="time" name="start" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="23"><br>
-			<label for='end'>Hora fin: </label><input id="newEnd" onchange="validar()" onkeyup="validar()" type="time" name="end" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="59"><br>
-			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-			<a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
-		</form>
-	</div>
 </div>
 <br>
 </div>
@@ -176,38 +144,6 @@ function toBottom(){
 
 }
 
-function saveNewAdmin(){
-	$("#acceptSave").remove();
-	$("#cancelSave").remove();
-	$("#acceptDelete").remove();
-	$("#cancelDelete").remove();
-	$('.response').remove();
-	$('.question').remove();
-	if(validar()){
-		$.ajax({
-		url: "{% url 'ManagementTeam:nuevo_administrador' %}",
-		type: "POST",
-		data: $("#form0").serialize(),
-			success: function(response){
-				$("#close").hide();
-				$("#hover").fadeIn();
-				$("#popup").fadeIn();
-				$("#popup").append("<p class='response'>"+response+"</p>");
-				auxResponse = response;
-				if (auxResponse == "Administrador guardado correctamente"){
-					$("#hover").css('pointer-events','none');
-					$("#close").css('pointer-events','none');
-					window.setTimeout(function(){location.reload()},1000);
-				}
-			}
-		});
-	}else{
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
-		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-	}
-}
-
 function saveNewSchedule(){
 	$("#acceptSave").remove();
 	$("#cancelSave").remove();
@@ -226,7 +162,7 @@ function saveNewSchedule(){
 				$("#popup").fadeIn();
 				$("#popup").append("<p class='response'>"+response+"</p>");
 				auxResponse = response;
-				if (auxResponse == "Administrador guardado correctamente"){
+				if (auxResponse == "Bloque guardado correctamente"){
 					$("#hover").css('pointer-events','none');
 					$("#close").css('pointer-events','none');
 					window.setTimeout(function(){location.reload()},1000);
@@ -237,78 +173,6 @@ function saveNewSchedule(){
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-	}
-}
-
-
-function saveData(id){
-	$("#acceptSave").remove();
-	$("#cancelSave").remove();
-	$("#acceptDelete").remove();
-	$("#cancelDelete").remove();
-	$('.response').remove();
-	$('.question').remove();
-	
-	tr = document.getElementById("R"+id);
-	invalids = tr.getElementsByClassName("invalid").length;
-	if (invalids>0){
-		response = "Campos inválidos";
-		$("#popup").append("<p class='response'>"+response+"</p>");
-		$("#close").show();
-		$("#hover").fadeIn();
-		$("#popup").fadeIn();
-	}
-	else{
-		$('.response').remove();
-		$('.question').remove();
-		$("#close").hide();
-		$("#popup").append("<p class='question'>¿Desea guardar cambios de Administrador?</p>");
-		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
-		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
-	}
-
-}
-
-function confirmSave(answer,id){
-	if (answer==1){
-		tr = $(document.getElementById("R"+id));
-		var tdJson = new Object();
-
-				tdJson.adminName= tr["context"]["children"][0].textContent;
-				tdJson.adminEmail= tr["context"]["children"][1].textContent;
-				tdJson.adminPhone= tr["context"]["children"][2].textContent;
-		
-		$.ajax({
-			url: "{% url 'ManagementTeam:guardar_administrador' %}",
-			type: "POST",
-			//contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(tdJson),
-				success: function(response){
-					$("#acceptSave").remove();
-					$("#cancelSave").remove();
-					$("#acceptDelete").remove();
-					$("#cancelDelete").remove();
-					$('.response').remove();
-					$('.question').remove();
-					$("#close").fadeIn();
-					$("#popup").append("<p class='response'>"+response+"</p>");
-					$("#hover").fadeIn();
-					$("#popup").fadeIn();
-					
-					auxResponse = response;
-					if (auxResponse == "Nuevo Administrador guardado correctamente"){
-						window.setTimeout(function(){location.reload()},2000);
-					}
-				}
-		});
-		//$("#hover").fadeOut().css('display', 'none');
-		//$("#popup").fadeOut().css('display', 'none');
-	}
-	if (answer==0){
-		$("#hover").fadeOut();
-		$("#popup").fadeOut();
 	}
 }
 
@@ -334,7 +198,7 @@ function deleteData(id){
 		$('.response').remove();
 		$('.question').remove();
 		$("#close").hide();
-		$("#popup").append("<p class='question'>¿Desea eliminar Administrador?</p>");
+		$("#popup").append("<p class='question'>¿Desea eliminar el Bloque?</p>");
 		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
 		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
 		$("#hover").fadeIn().css('display', '');
@@ -349,12 +213,12 @@ function confirmDelete(answer,id){
 		tr = $(document.getElementById("R"+id));
 		var tdJson = new Object();
 
-				tdJson.adminName= tr["context"]["children"][0].textContent;
-				tdJson.adminEmail= tr["context"]["children"][1].textContent;
-				tdJson.adminPhone= tr["context"]["children"][2].textContent;
+				tdJson.schBlock= tr["context"]["children"][0].textContent;
+				tdJson.schStart= tr["context"]["children"][1].textContent;
+				tdJson.schEnd= tr["context"]["children"][2].textContent;
 		
 		$.ajax({
-			url: "{% url 'ManagementTeam:eliminar_administrador' %}",
+			url: "{% url 'configuracion:eliminar_horario' %}",
 			type: "POST",
 			contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify(tdJson),
@@ -370,7 +234,7 @@ function confirmDelete(answer,id){
 					$("#popup").fadeIn().css('display', '');
 					
 					auxResponse = response;
-					if (auxResponse == "Administrador eliminado correctamente"){
+					if (auxResponse == "Bloque eliminado correctamente"){
 						$("#hover").css('pointer-events','none');
 						$("#close").css('pointer-events','none');
 						window.setTimeout(function(){location.reload()},1000);
