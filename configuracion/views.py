@@ -39,7 +39,8 @@ def getSchedules(request):
     except:
         return render_to_response('horario.html', context_instance=RequestContext(request))
     schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-    return render_to_response('horario.html', {'schedules': schedules}, context_instance=RequestContext(request))
+    teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
+    return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers}, context_instance=RequestContext(request))
 
 
 ##
@@ -86,5 +87,5 @@ def newSchedule(request):
             return HttpResponse("Bloque guardado correctamente")
         except Exception as e:
         	print e
-        	return HttpResponse("Error al guardar en 1")
-    return HttpResponse("Error al guardar en 2")
+        	return HttpResponse("Error al guardar")
+    return HttpResponse("Error al guardar")
