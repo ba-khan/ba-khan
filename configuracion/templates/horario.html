@@ -236,13 +236,13 @@ input{
 				<tr>
 					<th width="15%">Hora Inicio</th>
 					<th width="15%">Hora Término</th>
-					<th width="10%">Lunes</th>
-					<th width="10%">Martes</th>
-					<th width="10%">Miércoles</th>
-					<th width="10%">Jueves</th>
-					<th width="10%">Viernes</th>
-					<th width="10%">Sábado</th>
-					<th width="10%">Domingo</th>
+					<th width="10%" id="monday">Lunes</th>
+					<th width="10%" id="tuesday">Martes</th>
+					<th width="10%" id="wednesday">Miércoles</th>
+					<th width="10%" id="thursday">Jueves</th>
+					<th width="10%" id="friday">Viernes</th>
+					<th width="10%" id="saturday">Sábado</th>
+					<th width="10%" id="sunday">Domingo</th>
 				</tr>
 			{% for sch in schedules %}
 			<tr id="R{{ forloop.counter }}">
