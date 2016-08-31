@@ -80,6 +80,7 @@ def newSchedule(request):
     if request.method == 'POST':
         args = request.POST
         try:
+            #falta validar que los bloques no se solapen
             schedule = Schedule.objects.create(name_block=args['block'],
                 start_time=args['start'],
                 end_time=args['end'],

@@ -103,8 +103,8 @@ input{
 #sidebar {
   margin-right: -1px;
   float: left;
-    width: 240px;
-    height: 100%;
+  width: 240px;
+
     box-sizing: border-box;
    -moz-box-sizing: border-box;
    z-index: 2;
@@ -160,7 +160,6 @@ input{
 	<h1 style="text-align:center;">Administración de Horarios</h1>
 	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewSchedule()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
 
-	<!--<div id="ribbon0" class="ribbon"><span>Nuevo</span></div>-->
 	<div id="newSchedule">
 		<form action="" method="post" id="form0">{% csrf_token %}
 			<h3>Nuevo Bloque de horario</h3>
@@ -263,26 +262,17 @@ input{
 		{% endfor %}
 	</div>
 </div>
-<br>
 </div>
 
 <div id="popup" style="display:none">
 	<div id="close">X</div>
 </div>
-<br>
-
-</div> <!-- cerrar div principal del home  -->
 
 <script>
 function showNewSchedule(){
 	$('#newSchedule').toggle('blind',10);
 	$('#buttonNewSchedule').hide();
-	setTimeout(toBottom, 10);
 	}
-function toBottom(){
-	$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
-
-}
 
 function saveNewSchedule(){
 	$("#acceptSave").remove();
@@ -409,6 +399,12 @@ function validar(){
 		$("#newStart").css('color', '#000000');
 	}
 	if(nEnd == null || nEnd.length == 0 || /^\s+$/.test(nEnd)) {
+		$("#newEnd").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newEnd").css('color', '#000000');
+	}
+	if(nEnd<nStart){
 		$("#newEnd").css('color', '#C30202');
 		flag = false;
 	}else{
