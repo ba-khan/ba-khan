@@ -17,6 +17,7 @@ from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject
 from bakhanapp.models import Schedule
+from django.db import connection
 
 register = template.Library()
 from configs import timeSleep
@@ -81,12 +82,24 @@ def newSchedule(request):
         args = request.POST
         try:
             #falta validar que los bloques no se solapen
-            schedule = Schedule.objects.create(name_block=args['block'],
+
+            result=validateTime(args['start'], args['end'], user.id_institution_id, args['block'])
+            if not all(result):
+                return HttpResponse("Los horarios no se pueden solapar, revise las horas")
+            else:
+                Schedule.objects.create(name_block=args['block'],
                 start_time=args['start'],
                 end_time=args['end'],
                 id_institution_id=user.id_institution_id)
-            return HttpResponse("Bloque guardado correctamente")
+                return HttpResponse("Bloque guardado correctamente")     
         except Exception as e:
         	print e
         	return HttpResponse("Error al guardar")
     return HttpResponse("Error al guardar")
+
+
+def validateTime(start_time, end_time, id_institution_id, name_block):
+    cursor = connection.cursor()
+    cursor.execute("select count(*) from (values (%s, %s, %s, %s)) as t(start_time, end_time, id_institution_id, name_block) where not exists (select 1 from bakhanapp_schedule as m where m.id_institution_id=t.id_institution_id and (t.start_time<m.end_time and t.end_time>m.start_time))", (start_time,  end_time, id_institution_id, name_block))
+    query = cursor.fetchone()
+    return query
