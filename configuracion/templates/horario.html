@@ -247,17 +247,17 @@ input{
 			<tr id="R{{ forloop.counter }}">
 				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
 				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
-				<td><input type="checkbox"></td>
-				<td><input type="checkbox"></td>
-				<td><input type="checkbox"></td>
-				<td><input type="checkbox"></td>
-				<td><input type="checkbox"></td>
-				<td><input type="checkbox"></td>
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" value="monday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="tuesday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="wednesday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="thursday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="friday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="saturday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="sunday{{sch.id_schedule}}" name="day"></td>
 			</tr>
 			{% endfor %}
 			</table>
-			<a onclick='' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
+			<a onclick="getCheckedCheckboxesFor('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
 		</div>
 		{% endfor %}
 	</div>
@@ -269,6 +269,14 @@ input{
 </div>
 
 <script>
+function getCheckedCheckboxesFor(checkboxName) {
+    var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'), values = [];
+    Array.prototype.forEach.call(checkboxes, function(el) {
+        values.push(el.value);
+    });
+    console.log(values);
+}
+
 function showNewSchedule(){
 	$('#newSchedule').toggle('blind',10);
 	$('#buttonNewSchedule').hide();
