@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'ManagementTeam',
     'classRoster',
     'configuracion',
+    'Schedule'
 )
 
 MIDDLEWARE_CLASSES = (

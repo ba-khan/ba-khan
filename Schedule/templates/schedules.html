@@ -1,0 +1,255 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Contactos{% endblock %}
+
+{% block body2 %}
+
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+
+
+
+<script>
+	window.onload = function() {
+            editableGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
+
+		// we build and load the metadata in Javascript
+		editableGrid.load({ metadata: [
+			{ name: "student_name", datatype: "string", editable: false },
+			{ name: "student_email", datatype: "email", editable: true },
+			{ name: "student_phone", datatype: "integer", editable: true },
+			
+			{ name: "tutor_name", datatype: "string", editable: true},
+			{ name: "tutor_email", datatype: "email", editable: true },
+			{ name: "tutor_phone", datatype: "integer", editable: true },
+			{ name: "action", datatype: "html", editable: false }
+		]});
+
+		// then we attach to the HTML table and render it
+		editableGrid.attachToHTMLTable('htmlgrid');
+		editableGrid.addCellValidator("student_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 400000000 && parseInt(value) < 999999999); } }));
+		editableGrid.addCellValidator("tutor_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 400000000 && parseInt(value) < 999999999); } }));
+		
+		var searchField = document.getElementById('searchField');
+		searchField.addEventListener(
+		    'keyup',
+		    function (){
+		    	editableGrid.filter(searchField.value);
+		    	resize2();
+		    }
+		);
+		
+		editableGrid.renderGrid();
+		resize2();
+	} 
+	
+</script>
+
+<br>
+<div class="container">
+<div class="main-content">
+
+<br>
+<h1 style="text-align:center;">Contactos</h1>
+<label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+<br><br>
+<div>
+	<div id="Alumnos">Estudiantes</div>
+	<div id="Apoderados">Apoderados</div>
+</div>
+<table id="htmlgrid" class="testgrid">
+	<tr>
+		<th>Nombre</th>
+		<th>E-Mail</th>
+		<th>Celular</th>
+		<th>Nombre</th>
+		<th>E-Mail</th>
+		<th>Celular</th>
+		<th>Acciones</th>
+	</tr>
+	{% for data in datas %}
+	<tr id="R{{ forloop.counter }}">
+		<td onchange="resize2()">{{ data.0.nickname }}</td>
+		<td onchange="resize2()">{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
+		<td id="sPhone{{ forloop.counter }}" onchange="resize2()">
+			{% if not data.0.phone == 0 %}
+			{{ data.0.phone }}
+			{% endif %}
+		</td>
+		<td onchange="resize2()">{{ data.1.name }}</td>
+		<td onchange="resize2()">{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
+		<td onchange="resize2()">{% if not data.0.phone == 0 %}
+			{{ data.1.phone }}
+			{% endif %}</td>
+		<td class="editablegrid-action" data-title="action" style="width:100px">
+			<a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+</div>
+<br>
+</div>
+<div id="popup" style="display:none">
+	<!--<div id="close">X</div>-->
+	
+</div>
+<br>
+
+	<div style="display: none;" id="loading" class="profile-throbber">
+		<div class="throbber-grid">   
+		    <!--[if lte IE 9]>
+		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+		    <![endif]-->
+		    
+		    <div class="throbber-row clearfix">
+		         <div class="block-0 throbber-block"></div>
+		         <div class="block-1 throbber-block"></div>
+		         <div class="block-2 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-7 throbber-block"></div>
+		         <div class="block-8 throbber-block"></div>
+		         <div class="block-3 throbber-block"></div>
+		    </div>
+		    <div class="throbber-row clearfix">
+		         <div class="block-6 throbber-block"></div>
+		         <div class="block-5 throbber-block"></div>
+		         <div class="block-4 throbber-block"></div>
+		    </div>
+		</div>
+	</div>
+
+</div> <!-- cerrar div principal del home  -->
+
+<script>
+function resize2(){
+	window.setTimeout(function(){
+		var a = $("th.editablegrid-student_name").width();
+		var b = $("th.editablegrid-student_email").width();
+		var c = $("th.editablegrid-student_phone").width();
+		var d = $("th.editablegrid-tutor_name").width();
+		var e = $("th.editablegrid-tutor_email").width();
+		var f = $("th.editablegrid-tutor_phone").width();
+		var g = $("th.editablegrid-action").width();
+		$("#Alumnos").width(a+b+c+35);
+		$("#Apoderados").width(d+e+f+g+46);
+	},50);
+	
+}
+function reloadPage(){
+	setTimeout(function(){
+		$('.response').fadeOut();
+		$("#popup").append($('#loading').css('display','none'));
+		$('#loading').fadeIn();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		document.location.reload(true);
+	}, 1000); 
+	
+}
+
+function saveData(id){
+	$("#acceptSave").remove();
+	$("#cancelSave").remove();
+	$('.response').remove();
+	$('.question').remove();
+	
+	tr = document.getElementById("R"+id);
+	invalids = tr.getElementsByClassName("invalid").length;
+	if (invalids>0){
+		response = "Campos inválidos";
+		$("#popup").append("<p class='response'>"+response+"</p>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+	else{
+		$('.response').remove();
+		$('.question').remove();
+		$("#popup").append("<p class='question'>¿Desea guardar cambios de contacto?</p>");
+		$("#popup").append("<a href='javascript:confirmSave(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptSave'>Aceptar</a>");
+		$("#popup").append("<a href='javascript:confirmSave(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelSave'>Cancelar</a>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+
+}
+
+function confirmSave(answer,id){
+	if (answer==1){
+		tr = $(document.getElementById("R"+id));
+		var tdJson = new Object();
+
+				tdJson.studentName= tr["context"]["children"][0].textContent;
+				tdJson.studentEmail= tr["context"]["children"][1].textContent;
+				tdJson.studentPhone= tr["context"]["children"][2].textContent;
+				tdJson.tutorName= tr["context"]["children"][3].textContent;
+				tdJson.tutorEmail= tr["context"]["children"][4].textContent;
+				tdJson.tutorPhone= tr["context"]["children"][5].textContent;
+		
+		$.ajax({
+			url: "{% url 'Contacts:guardar_contactos' id_class %}",
+			type: "POST",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(tdJson),
+				success: function(response){
+					$("#acceptSave").remove();
+					$("#cancelSave").remove();
+					$('.response').remove();
+					$('.question').remove();
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					auxResponse = response;
+					if (auxResponse == "Cambios guardados correctamente"){
+						reloadPage();
+					}
+				}
+		});
+	}
+	if (answer==0){
+		$("#hover").fadeOut(750);
+		$("#popup").fadeOut(750);
+	}
+}
+
+$(document).ready(function(){
+	  
+	  //chiusura al click sulla parte scura
+	  $("#hover").click(function(){
+	        $(this).fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	  //chiusura al click sul pulsante
+	  $("#close").click(function(){
+	        $("#hover").fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	});
+	$('#breadcrumb').html('Contactos / {{ spanish_classroom }}')
+</script>
+
+<style type="text/css">
+	#Alumnos, #Apoderados{
+		height: 30px;
+		border: solid 1px #C1C1C1;
+		background-color: #CCCCCC;
+		float:left;
+		text-align: center;
+	}
+
+</style>
+
+{% endblock %}

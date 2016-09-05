@@ -20,7 +20,7 @@
 									<!-- comienza grupo de estudiantes -->
 									<div class="student-list"><ul>
 										<!-- columna 1 -->
-										<div class="student-list-column" style="width:25%;">
+										<div class="student-list-column" style="width:20%;">
 											{% if class.additional %}
 											<font size="4">{{ class.level }} {{ class.letter }} {{ class.year }} {{ class.additional }}</font>		
 											{% else %}
@@ -28,16 +28,19 @@
 											{% endif %}
 										</div>
 										<!-- columna 2 -->
-										<div class="student-list-column" style="width:25%;">
+										<div class="student-list-column" style="width:20%;">
 											<font size="2"><a role="button" onClick="loading()" aria-disabled="false" href="{% url 'getClassStudents' class.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Curso</a></font>
 										</div>
 										<!-- columna 3 -->
-										<div class="student-list-column" style="width:25%;">
+										<div class="student-list-column" style="width:20%;">
 											<font size="2"><a role="button" aria-disabled="false" href="{% url 'groups:getGroups' class.id_class %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()" style="width:100%;">Ver Grupos</a></font>
 										</div>
 										<!-- columna 4 -->
-										<div class="student-list-column" style="width:25%;">
+										<div class="student-list-column" style="width:20%;">
 											<font size="2"><a role="button" aria-disabled="false" onClick="loading()" href="{% url 'Contacts:getContacts' class.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Contactos</a></font>
+										</div>
+										<div class="student-list-column" style="width:20%;">
+											<font size="2"><a role="button" aria-disabled="false" onClick="loading()" href="{% url 'Schedule:getSchedules' class.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Definir Horario</a></font>
 										</div>
 									</ul></div>
 								</div>
