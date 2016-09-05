@@ -192,9 +192,9 @@ input{
 	<h3 align="center">Definir Horario de profesores</h3>
 	<div id="sidebar">
     	<ul>
-    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"> Horario</a></li>
+    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0, "");' class="select"> Horario</a></li>
         	{% for teach in teachers %}  
-			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ teach.name }}</a></li>
+			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, "{{teach.kaid_teacher}}");' >{{ teach.name }}</a></li>
 			{% endfor %}
         </ul>		
 	</div>
@@ -247,17 +247,17 @@ input{
 			<tr id="R{{ forloop.counter }}">
 				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
 				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
-				<td><input type="checkbox" value="monday{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="tuesday{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="wednesday{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="thursday{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="friday{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="saturday{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="sunday{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Monday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Friday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
 			</tr>
 			{% endfor %}
 			</table>
-			<a onclick="getCheckedCheckboxesFor('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
+			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
 		</div>
 		{% endfor %}
 	</div>
@@ -269,12 +269,31 @@ input{
 </div>
 
 <script>
-function getCheckedCheckboxesFor(checkboxName) {
+function saveTeacherSchedule(checkboxName, kaid_teacher) {
     var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'), values = [];
     Array.prototype.forEach.call(checkboxes, function(el) {
         values.push(el.value);
     });
-    console.log(values);
+    var days=values;
+    var teacher = kaid_teacher;
+    var datos={days, teacher};
+    $.ajax({
+    	url: "{% url 'configuracion:guardar_horario' %}",
+    	type: "POST",
+    	data: datos,
+    		success: function(response){
+    			$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+    			$("#popup").append("<p class='response'>"+response+"</p>");
+    			auxResponse = response;
+    			if (auxResponse == "Horario para el profesor guardado correctamente"){
+    				$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+    			}
+    		}
+    });
 }
 
 function showNewSchedule(){
@@ -283,8 +302,6 @@ function showNewSchedule(){
 	}
 
 function saveNewSchedule(){
-	$("#acceptSave").remove();
-	$("#cancelSave").remove();
 	$("#acceptDelete").remove();
 	$("#cancelDelete").remove();
 	$('.response').remove();
@@ -316,8 +333,6 @@ function saveNewSchedule(){
 
 
 function deleteData(id){
-	$("#acceptSave").remove();
-	$("#cancelSave").remove();
 	$("#acceptDelete").remove();
 	$("#cancelDelete").remove();
 	$('.response').remove();
@@ -438,22 +453,43 @@ $(document).ready(function(){
 
 	$('#configuraciones').addClass('active selected');
 
-function cambiarPestanna(pestanna) {
+function cambiarPestanna(pestanna, kaid_teacher) {
+	$('input:checkbox').removeAttr('checked');
+	//console.log(kaid_teacher)
+	{% for csh in class_schedule %}
+	var kaid = "{{csh.kaid_teacher_id}}"
+	var day = "{{csh.day}}"
+	var id_schedule = "{{csh.id_schedule_id}}"
+	var idcheckbox=day+"_"+id_schedule
+	
+	if (kaid==kaid_teacher){
+		//console.log(idcheckbox)
+		//console.log("input[value='"+idcheckbox+"']");
+		$("input[value='"+idcheckbox+"']").prop("checked", true);
+		//$('input[name="' + idcheckbox + '"]').each(function(){
+		//	$(this).prop("checked", true);
+			//console.log(idcheckbox);
+		//});
+		//console.log("algo");
+	}
+		//console.log("{{csh.kaid_teacher_id}}")
+		//console.log(kaid_teacher)
+	{% endfor %}
 	id = (pestanna.id).substring(7);
-	 pestanna = document.getElementById(pestanna.id);
-	 cpestanna = document.getElementById('c' + pestanna.id);
-	 cpestannas = document.getElementsByClassName('cpestanna');
-	 contenidopestanas = document.getElementById('contenidopestanas');
+	pestanna = document.getElementById(pestanna.id);
+	cpestanna = document.getElementById('c' + pestanna.id);
+	cpestannas = document.getElementsByClassName('cpestanna');
+	contenidopestanas = document.getElementById('contenidopestanas');
+
+	for (i=0;i<cpestannas.length;i++){
+	 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
 	 
-	 for (i=0;i<cpestannas.length;i++){
-		 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
-		 
-	 }
-	 $(document).ready(function () {
-		 $(document.getElementsByClassName("select")).removeClass("select");
-	     $(cpestanna).css('display', '');
-	     $(pestanna.getElementsByTagName('a')).addClass("select");
-	 });
+	}
+	$(document).ready(function () {
+	 $(document.getElementsByClassName("select")).removeClass("select");
+	 $(cpestanna).css('display', '');
+	 $(pestanna.getElementsByTagName('a')).addClass("select");
+	});
 }
 
 </script>

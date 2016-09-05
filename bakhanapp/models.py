@@ -139,11 +139,13 @@ class Schedule(models.Model):
 
 class Class_Schedule(models.Model):
     id_class_schedule = models.AutoField(primary_key=True)
-    id_class_subject = models.ForeignKey(Class_Subject)
     id_schedule = models.ForeignKey(Schedule)
+    kaid_teacher = models.ForeignKey(Teacher)
+    id_class = models.ForeignKey(Class)
+    day = models.CharField(max_length=20)
 
     class Meta:
-        unique_together = ('id_class_subject', 'id_schedule')
+        unique_together = ('id_schedule', 'kaid_teacher', 'day')
 
 class Chapter(models.Model):
     id_chapter_name = models.CharField(max_length=150,primary_key=True)

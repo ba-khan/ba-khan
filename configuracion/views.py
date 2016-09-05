@@ -15,7 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -41,7 +41,9 @@ def getSchedules(request):
         return render_to_response('horario.html', context_instance=RequestContext(request))
     schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
     teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
-    return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers}, context_instance=RequestContext(request))
+    class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
+    print class_schedule
+    return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule}, context_instance=RequestContext(request))
 
 
 ##
@@ -103,3 +105,20 @@ def validateTime(start_time, end_time, id_institution_id, name_block):
     cursor.execute("select count(*) from (values (%s, %s, %s, %s)) as t(start_time, end_time, id_institution_id, name_block) where not exists (select 1 from bakhanapp_schedule as m where m.id_institution_id=t.id_institution_id and (t.start_time<m.end_time and t.end_time>m.start_time))", (start_time,  end_time, id_institution_id, name_block))
     query = cursor.fetchone()
     return query
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def saveSchedule(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		args = request.POST
+		dias = args.getlist("days[]")
+		try:
+			for dia in dias:
+				diasplit = dia.split('_')
+				newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+				newScheduleTeacher.save()
+			return HttpResponse('Horario para el profesor guardado correctamente')
+		except Exception as e:
+			print e
+			return HttpResponse('El horario para el profesor no se pudo guardar')
+	return HttpResponse('listo')
