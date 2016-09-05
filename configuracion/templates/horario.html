@@ -247,13 +247,13 @@ input{
 			<tr id="R{{ forloop.counter }}">
 				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
 				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
-				<td><input type="checkbox" value="Monday_{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="Friday_{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}" name="day"></td>
-				<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
+				<td><input type="checkbox" value="Monday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Friday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
 			</tr>
 			{% endfor %}
 			</table>
@@ -460,7 +460,7 @@ function cambiarPestanna(pestanna, kaid_teacher) {
 	var kaid = "{{csh.kaid_teacher_id}}"
 	var day = "{{csh.day}}"
 	var id_schedule = "{{csh.id_schedule_id}}"
-	var idcheckbox=day+"_"+id_schedule
+	var idcheckbox=day+"_"+id_schedule+"_"+kaid
 	
 	if (kaid==kaid_teacher){
 		//console.log(idcheckbox)
