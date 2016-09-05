@@ -74,6 +74,7 @@ input{
 	</tr>
 	{% endfor %}
 	</table>
+	<a onclick="saveTeacherSchedule('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar horario</a>
 
 </div>
 </div>
@@ -96,7 +97,33 @@ $(document).ready(function(){
 		$("input[value='"+idcheckbox+"']").prop("checked", true);
 
 	{% endfor %}
+	$("input:checkbox:not(:checked)").prop("disabled", true);
 });
+
+function saveTeacherSchedule(checkboxName) {
+    var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'), values = [];
+    Array.prototype.forEach.call(checkboxes, function(el) {
+        values.push(el.value);
+    });
+
+    $.ajax({
+    	url: "{% url 'Schedule:guardar_horario' id_class %}",
+    	type: "POST",
+    	data: {values},
+    		success: function(response){
+    			$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+    			$("#popup").append("<p class='response'>"+response+"</p>");
+    			auxResponse = response;
+    			if (auxResponse == "Horario para el profesor guardado"){
+    				$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+    			}
+    		}
+    });
+}
 </script>
 
 {% endblock %}

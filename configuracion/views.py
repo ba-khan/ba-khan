@@ -119,7 +119,7 @@ def saveSchedule(request):
 			#print profesor[0]['kaid_teacher']
 			Class_Schedule.objects.filter(kaid_teacher_id=profesor[0]['kaid_teacher']).delete()
 			for dia in dias:
-				print dia
+				#print dia
 				diasplit = dia.split('_')
 				newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
 				newScheduleTeacher.save()

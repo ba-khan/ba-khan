@@ -37,6 +37,28 @@ def getSchedules(request, id_class):
     except:
         return render_to_response('schedules.html', context_instance=RequestContext(request))
     schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-    teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
-    class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
-    return render_to_response('schedules.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule}, context_instance=RequestContext(request))
+    teacher = Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher_id')
+    class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=teacher[0]['kaid_teacher_id'])
+    return render_to_response('schedules.html', {'schedules': schedules, 'class_schedule': class_schedule, 'id_class':id_class, 'teacher':teacher}, context_instance=RequestContext(request))
+
+@login_required()
+def saveScheduleClass(request, id_class):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		try:
+			args = request.POST
+			dias = args.getlist('values[]')
+			teacher = Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher_id')
+			for dia in dias:
+				diasplit = dia.split('_')
+				class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=teacher[0]['kaid_teacher_id'], day=diasplit[0], id_schedule_id=int(diasplit[1])).update(id_class_id=id_class)
+				#print "class schedule esta abajo"
+				#print class_schedule[0]['id_class_schedule']
+				#Class_Schedule.objects.filter(pk=class_schedule[0]['id_class_schedule']).update(id_class_id=id_class)
+				#print update_schedule_class
+				#update_schedule_class.id_class_id=id_class
+			return HttpResponse('Horario para el profesor guardado')
+		except Exception as e:
+			print e
+
+	return HttpResponse('Error al guardar')
