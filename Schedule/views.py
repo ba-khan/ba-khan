@@ -12,7 +12,7 @@ from django.contrib import auth
 from django.db.models import Count
 
 from django import template
-from bakhanapp.models import Student, Class,Class_Subject
+from bakhanapp.models import Class,Class_Subject, Class_Schedule, Teacher, Schedule
 from bakhanapp.models import Student_Class
 from bakhanapp.models import Tutor
 from configs import timeSleep
@@ -31,4 +31,12 @@ import json
 ##
 @login_required()
 def getSchedules(request, id_class):
-    return HttpResponse("hola")
+    request.session.set_expiry(timeSleep)
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except:
+        return render_to_response('schedules.html', context_instance=RequestContext(request))
+    schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
+    teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
+    class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
+    return render_to_response('schedules.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule}, context_instance=RequestContext(request))

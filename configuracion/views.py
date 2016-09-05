@@ -42,7 +42,6 @@ def getSchedules(request):
     schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
     teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
     class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
-    print class_schedule
     return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule}, context_instance=RequestContext(request))
 
 
@@ -110,17 +109,17 @@ def validateTime(start_time, end_time, id_institution_id, name_block):
 def saveSchedule(request):
 	request.session.set_expiry(timeSleep)
 	if request.method == 'POST':
-		try:
-			args = request.POST
-			dias = args.getlist("days[]")
-			newScheduleTeacher = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'])
-			newScheduleTeacher.delete()
-			for dia in dias:
-				diasplit = dia.split('_')
-				newScheduleTeacher = Class_Schedule.objects.create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
-				#newScheduleTeacher.save()
-			return HttpResponse('Horario para el profesor guardado correctamente')
-		except Exception as e:
-			print e
-			return HttpResponse('El horario para el profesor no se pudo guardar')
+		args = request.POST
+		dias = args.getlist("days[]")
+		print args['teacher']
+		Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).delete()
+		for dia in dias:
+			diasplit = dia.split('_')
+			try:
+				newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+				newScheduleTeacher.save()
+			except:
+				continue
+		return HttpResponse('Horario para el profesor guardado')
+
 	return HttpResponse('listo')
