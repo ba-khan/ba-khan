@@ -110,13 +110,15 @@ def validateTime(start_time, end_time, id_institution_id, name_block):
 def saveSchedule(request):
 	request.session.set_expiry(timeSleep)
 	if request.method == 'POST':
-		args = request.POST
-		dias = args.getlist("days[]")
 		try:
+			args = request.POST
+			dias = args.getlist("days[]")
+			newScheduleTeacher = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'])
+			newScheduleTeacher.delete()
 			for dia in dias:
 				diasplit = dia.split('_')
-				newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
-				newScheduleTeacher.save()
+				newScheduleTeacher = Class_Schedule.objects.create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+				#newScheduleTeacher.save()
 			return HttpResponse('Horario para el profesor guardado correctamente')
 		except Exception as e:
 			print e

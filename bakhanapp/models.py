@@ -144,9 +144,6 @@ class Class_Schedule(models.Model):
     id_class = models.ForeignKey(Class)
     day = models.CharField(max_length=20)
 
-    class Meta:
-        unique_together = ('id_schedule', 'kaid_teacher', 'day')
-
 class Chapter(models.Model):
     id_chapter_name = models.CharField(max_length=150,primary_key=True)
     id_subject_name = models.ForeignKey(Subject)
