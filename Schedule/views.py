@@ -31,15 +31,22 @@ import json
 ##
 @login_required()
 def getSchedules(request, id_class):
-    request.session.set_expiry(timeSleep)
-    try:
-        teacher = Teacher.objects.get(email=request.user.email)
-    except:
-        return render_to_response('schedules.html', context_instance=RequestContext(request))
-    schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-    teacher = Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher_id')
-    class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=teacher[0]['kaid_teacher_id'])
-    return render_to_response('schedules.html', {'schedules': schedules, 'class_schedule': class_schedule, 'id_class':id_class, 'teacher':teacher}, context_instance=RequestContext(request))
+	request.session.set_expiry(timeSleep)
+	classroom = Class.objects.filter(id_class=id_class)
+	N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+	spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
+	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+		isTeacher = True
+	else:
+		isTeacher = False
+	try:
+		teacher = Teacher.objects.get(email=request.user.email)
+	except:
+		return render_to_response('schedules.html', context_instance=RequestContext(request))
+	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
+	teacher = Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher_id')
+	class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=teacher[0]['kaid_teacher_id'])
+	return render_to_response('schedules.html', {'spanish_classroom':spanish_classroom, 'schedules': schedules, 'class_schedule': class_schedule, 'id_class':id_class, 'teacher':teacher, 'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 @login_required()
 def saveScheduleClass(request, id_class):

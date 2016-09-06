@@ -90,8 +90,12 @@ table.testclass td {
 label{
 	width: 135px;
 }
-input{
+input[type="checkbox"]{
 	margin-bottom: 10px;
+}
+
+tr.nocolor:hover {
+  background-color: transparent;
 }
 
  
@@ -144,7 +148,7 @@ input{
     background: #f7f7f7;
     color: #56861f;
 }
-input{
+input[type="checkbox"]{
   z-index: 1000;
   width: 80%;
   height: 80%;
@@ -168,6 +172,10 @@ table.testsched th {
 }
 table.testsched td {
   text-align: left;
+}
+
+.whiteLetter{
+    color: white;  
 }
 
 </style>
@@ -204,20 +212,18 @@ table.testsched td {
     <h2 align="center">Tipo de Trabajo</h2>
     <table class="testsched">
     <tr>
-      <th width="15%">Hora Inicio</th>
-      <th width="15%">Hora Término</th>
-      <th width="10%" id="monday">Lunes</th>
-      <th width="10%" id="tuesday">Martes</th>
-      <th width="10%" id="wednesday">Miércoles</th>
-      <th width="10%" id="thursday">Jueves</th>
-      <th width="10%" id="friday">Viernes</th>
-      <th width="10%" id="saturday">Sábado</th>
-      <th width="10%" id="sunday">Domingo</th>
+      <th width="30%">Horario</th>
+      <th width="10%" id="HSE" onclick="lunes()">Lunes</th>
+      <th width="10%" id="HSE" onclick="martes()">Martes</th>
+      <th width="10%" id="HSE" onclick="miercoles()">Miércoles</th>
+      <th width="10%" id="HSE" onclick="jueves()">Jueves</th>
+      <th width="10%" id="HSE" onclick="viernes()">Viernes</th>
+      <th width="10%" id="HSE" onclick="sabado()">Sábado</th>
+      <th width="10%" id="HSE" onclick="domingo()">Domingo</th>
     </tr>
   {% for sch in schedules %}
-  <tr id="R{{ forloop.counter }}">
-    <td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
-    <td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
+  <tr id="R{{ forloop.counter }}" class="nocolor">
+    <th onclick="funciondos('{{sch.id_schedule}}')" id="HSE">{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %} - {% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</th>
     <td><input type="checkbox" value="Monday_{{sch.id_schedule}}" name="day"></td>
     <td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}" name="day"></td>
     <td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}" name="day"></td>
@@ -227,7 +233,24 @@ table.testsched td {
     <td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
   </tr>
   {% endfor %}
+  <tr class="nocolor">
+    <th onclick="funcion();" id="HSE">Horas sin especificar</th>
+    <td><input type="checkbox" value="Monday_SE" name="day"></td>
+    <td><input type="checkbox" value="Tuesday_SE" name="day"></td>
+    <td><input type="checkbox" value="Wednesday_SE" name="day"></td>
+    <td><input type="checkbox" value="Thursday_SE" name="day"></td>
+    <td><input type="checkbox" value="Friday_SE" name="day"></td>
+    <td><input type="checkbox" value="Saturday_SE" name="day"></td>
+    <td><input type="checkbox" value="Sunday_SE" name="day"></td>
+  </tr>
   </table>
+  <br>
+  <div align="left" style="margin-left:200px">
+  <input type="radio" name="seleccion">Todo <br>
+  <input type="radio" name="seleccion">Horario de clases <br>
+  <input type="radio" name="seleccion">Fuera horario de clases <br>
+  <input type="radio" name="seleccion">Personalizado <br>  
+  </div>
   </div>
 
 </div>
@@ -240,6 +263,8 @@ table.testsched td {
 <script>
 $('#estadisticas').addClass('active selected');
 
+$('input[name="day"]').prop("disabled", true);
+
 $('#check_all_none').click(function () {
     if ( $(this).is(':checked') ){
         $('.curso').prop("checked", true);
@@ -249,6 +274,51 @@ $('#check_all_none').click(function () {
     }
 
 });
+function funcion(){
+  $('input[value*="SE"]').prop("checked", !$('input[value*="SE"]').prop("checked"));
+}
+
+$("th#HSE").mouseover(function(){
+  $(this).css("background-color", "gray");
+  $(this).css("color", "white");
+});
+
+$("th#HSE").mouseout(function(){
+  $(this).css("background-color", "#ccc");
+    $(this).css("color", "#555");
+});
+
+function funciondos(id_schedule){
+  $('input[value*="'+id_schedule+'"]').prop("checked", !$('input[value*="'+id_schedule+'"]').prop("checked"));
+}
+
+function lunes(){
+  $('input[value*="Monday"]').prop("checked", !$('input[value*="Monday"]').prop("checked"));
+}
+
+function martes(){
+  $('input[value*="Tuesday"]').prop("checked", !$('input[value*="Tuesday"]').prop("checked"));
+}
+
+function miercoles(){
+  $('input[value*="Wednesday"]').prop("checked", !$('input[value*="Wednesday"]').prop("checked"));
+}
+
+function jueves(){
+  $('input[value*="Thursday"]').prop("checked", !$('input[value*="Thursday"]').prop("checked"));
+}
+
+function viernes(){
+  $('input[value*="Friday"]').prop("checked", !$('input[value*="Friday"]').prop("checked"));
+}
+
+function sabado(){
+  $('input[value*="Saturday"]').prop("checked", !$('input[value*="Saturday"]').prop("checked"));
+}
+
+function domingo(){
+  $('input[value*="Sunday"]').prop("checked", !$('input[value*="Sunday"]').prop("checked"));
+}
 
 </script>
 

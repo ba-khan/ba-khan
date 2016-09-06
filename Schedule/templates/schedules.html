@@ -94,7 +94,7 @@ input{
 <script>
 $(document).ready(function(){
 	$('#fondoverde').hide();
-	$('#breadcrumb').html('Horarios')
+	$('#breadcrumb').html('Horarios / {{spanish_classroom}}')
 	{% if class_schedule.0.kaid_teacher_id|length > 0%}
 	{% for csh in class_schedule %}
 		var kaid = "{{csh.kaid_teacher_id}}"
