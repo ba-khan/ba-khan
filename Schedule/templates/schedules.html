@@ -38,6 +38,9 @@ input{
 	width: 100%;
 	height: 100%;
 }
+.redBackground{
+    background-color: green;  
+}
 </style>
 
 
@@ -74,6 +77,7 @@ input{
 	</tr>
 	{% endfor %}
 	</table>
+	<p id="fondoverde">El color verde indica que ese bloque está disponible</p>
 	<a onclick="saveTeacherSchedule('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar horario</a>
 
 </div>
@@ -89,6 +93,8 @@ input{
 
 <script>
 $(document).ready(function(){
+	$('#fondoverde').hide();
+	$('#breadcrumb').html('Horarios')
 	{% if class_schedule.0.kaid_teacher_id|length > 0%}
 	{% for csh in class_schedule %}
 		var kaid = "{{csh.kaid_teacher_id}}"
@@ -96,8 +102,14 @@ $(document).ready(function(){
 		var id_schedule = "{{csh.id_schedule_id}}"
 		var idcheckbox=day+"_"+id_schedule
 		var id_class_id = "{{csh.id_class_id}}"
-		if (id_class_id=="None" || id_class_id=='{{id_class}}'){
+		if (id_class_id=='{{id_class}}'){
 			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
+		if(id_class_id=="None"){
+			//console.log(idcheckbox)
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+			$("input[value='"+idcheckbox+"']").parent().addClass("redBackground"); 
+			$("#fondoverde").show()
 		}
 
 	{% endfor %}

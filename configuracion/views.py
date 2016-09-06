@@ -42,7 +42,11 @@ def getSchedules(request):
     schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
     teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
     class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
-    return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule}, context_instance=RequestContext(request))
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+        isTeacher = True
+    else:
+        isTeacher = False
+    return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule, 'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 
 ##

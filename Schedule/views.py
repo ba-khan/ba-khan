@@ -49,6 +49,7 @@ def saveScheduleClass(request, id_class):
 			args = request.POST
 			dias = args.getlist('values[]')
 			teacher = Class_Subject.objects.filter(id_class_id=id_class).values('kaid_teacher_id')
+			class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=teacher[0]['kaid_teacher_id'], id_class_id=id_class).update(id_class_id=None)
 			for dia in dias:
 				diasplit = dia.split('_')
 				class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=teacher[0]['kaid_teacher_id'], day=diasplit[0], id_schedule_id=int(diasplit[1])).update(id_class_id=id_class)

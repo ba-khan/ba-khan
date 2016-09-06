@@ -43,5 +43,8 @@ urlpatterns = [
     url(r'^inicio/configuraciones/', include('configuracion.urls', namespace="configuracion")),
     url(r'^inicio/configuraciones/','bakhanapp.views.configuracionHorario', name='configuracionHorario'),
 
+    url(r'^inicio/estadisticas/', include('Statistics.urls', namespace="Statistics")),
+    url(r'^inicio/estadisticas/','bakhanapp.views.estadisticas', name='estadisticas'),
+
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]

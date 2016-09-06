@@ -49,6 +49,7 @@
 	{% endif %}
 	{% if isTeacher %}
 	<a class="" href="{% url 'assesmentPautas' %}" onClick="loading()" id='pautas'><span>Pautas</span></a>
+	<a class="" href="{% url 'estadisticas' %}" onClick="loading()" id='estadisticas'><span>Estadísticas</span></a>
 	{% endif %}
 	{% if perms.bakhanapp.isAdmin %} 
 	<a class="" href="{% url 'administradorTeam' %}" id='administradores'><span>Equipo de Gestión</span></a>

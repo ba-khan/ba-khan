@@ -200,6 +200,10 @@ def deleteAssesment(request):
 def configuracionHorario(request):
     return HttpResponseRedirect("/configuraciones")
 
+@login_required()
+def estadisticas(request):
+    return HttpResponseRedirect("/estadisticas")
+
 #@permission_required('bakhanapp.isAdmin',login_url="/")
 #def configuracionHorario(request):
 #    return HttpResponse("Administracion de Horarios")
