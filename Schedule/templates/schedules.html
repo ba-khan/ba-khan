@@ -95,8 +95,10 @@ $(document).ready(function(){
 		var day = "{{csh.day}}"
 		var id_schedule = "{{csh.id_schedule_id}}"
 		var idcheckbox=day+"_"+id_schedule
-		
-		$("input[value='"+idcheckbox+"']").prop("checked", true);
+		var id_class_id = "{{csh.id_class_id}}"
+		if (id_class_id=="None" || id_class_id=='{{id_class}}'){
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
 
 	{% endfor %}
 	$("input:checkbox:not(:checked)").prop("disabled", true);
