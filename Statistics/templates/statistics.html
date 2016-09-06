@@ -246,10 +246,10 @@ table.testsched td {
   </table>
   <br>
   <div align="left" style="margin-left:200px">
-  <input type="radio" name="seleccion">Todo <br>
-  <input type="radio" name="seleccion">Horario de clases <br>
-  <input type="radio" name="seleccion">Fuera horario de clases <br>
-  <input type="radio" name="seleccion">Personalizado <br>  
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="1">Todo <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="2">Horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="3">Fuera horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="4" disabled/>Personalizado <br>  
   </div>
   </div>
 
@@ -274,6 +274,12 @@ $('#check_all_none').click(function () {
     }
 
 });
+
+function selectSchedule(radiobutton){
+  var valor = radiobutton.value;
+  console.log(valor);
+}
+
 function funcion(){
   $('input[value*="SE"]').prop("checked", !$('input[value*="SE"]').prop("checked"));
 }
