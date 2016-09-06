@@ -43,8 +43,8 @@ input{
 
 <br>
 <div class="container">
+{% if class_schedule.0.kaid_teacher_id|length > 0%}
 <div class="main-content">
-
 <h1 style="text-align:center;">Horarios</h1>
 <br>
 <div align="center">
@@ -78,16 +78,18 @@ input{
 
 </div>
 </div>
+{% endif %}
 <br>
 </div>
 <div id="popup" style="display:none">
-	<!--<div id="close">X</div>-->
+	<div id="close">X</div>
 	
 </div>
 
 
 <script>
 $(document).ready(function(){
+	{% if class_schedule.0.kaid_teacher_id|length > 0%}
 	{% for csh in class_schedule %}
 		var kaid = "{{csh.kaid_teacher_id}}"
 		var day = "{{csh.day}}"
@@ -98,6 +100,21 @@ $(document).ready(function(){
 
 	{% endfor %}
 	$("input:checkbox:not(:checked)").prop("disabled", true);
+	{% else %}
+		$("#popup").append("<p class='response'>No hay bloques o periodos de horarios definidos.</p>");
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#hover").click(function(){
+		$(this).fadeOut();
+		$("#popup").fadeOut();
+		window.location.replace("/inicio");
+		});
+		$("#close").click(function(){
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+		window.location.replace("/inicio");
+		});
+	{% endif %}
 });
 
 function saveTeacherSchedule(checkboxName) {

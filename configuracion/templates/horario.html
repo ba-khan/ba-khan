@@ -170,6 +170,7 @@ input{
 			<a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
 		</form>
 	</div>
+	{% if schedules.0.start_time|length > 0 %}
 	<table id="adminGrid" class="testgrid">
 		<tr>
 			<th>Bloque</th>
@@ -261,6 +262,7 @@ input{
 		</div>
 		{% endfor %}
 	</div>
+	{% endif %}
 </div>
 </div>
 
