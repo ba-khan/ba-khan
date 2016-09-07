@@ -284,6 +284,7 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
     	type: "POST",
     	data: datos,
     		success: function(response){
+    			$("#popup").empty()
     			$("#close").hide();
 				$("#hover").fadeIn();
 				$("#popup").fadeIn();
@@ -314,6 +315,7 @@ function saveNewSchedule(){
 		type: "POST",
 		data: $("#form0").serialize(),
 			success: function(response){
+				$("#popup").empty()
 				$("#close").hide();
 				$("#hover").fadeIn();
 				$("#popup").fadeIn();
@@ -327,6 +329,7 @@ function saveNewSchedule(){
 			}
 		});
 	}else{
+		$("#popup").empty()
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
@@ -344,6 +347,7 @@ function deleteData(id){
 	invalids = tr.getElementsByClassName("invalid").length;
 	if (invalids>0){
 		response = "Campos inválidos";
+		$("#popup").empty()
 		$("#popup").append("<p class='response'>"+response+"</p>");
 		$("#close").show();
 		$("#hover").fadeIn();
@@ -353,6 +357,7 @@ function deleteData(id){
 		$('.response').remove();
 		$('.question').remove();
 		$("#close").hide();
+		$("#popup").empty()
 		$("#popup").append("<p class='question'>¿Desea eliminar el Bloque?</p>");
 		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
 		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
@@ -378,6 +383,7 @@ function confirmDelete(answer,id){
 			contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify(tdJson),
 				success: function(response){
+					$("#popup").empty()
 					$("#acceptSave").remove();
 					$("#cancelSave").remove();
 					$("#acceptDelete").remove();
@@ -400,6 +406,7 @@ function confirmDelete(answer,id){
 		//$("#popup").fadeOut().css('display', 'none');
 	}
 	if (answer==0){
+		$("#popup").empty()
 		$("#hover").fadeOut();
 		$("#popup").fadeOut();
 	}

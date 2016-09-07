@@ -111,24 +111,31 @@ def validateTime(start_time, end_time, id_institution_id, name_block):
 
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def saveSchedule(request):
-	request.session.set_expiry(timeSleep)
-	if request.method == 'POST':
-		try:
-			args = request.POST
-			kaid = str(args['teacher'])
-			dias = args.getlist("days[]")
-			#print args['teacher']
-			#clsch=Class_Schedule.objects.filter(kaid_teacher_id=str(args['teacher'])).delete()
-			profesor = Teacher.objects.filter(kaid_teacher=kaid).values('kaid_teacher')
-			#print profesor[0]['kaid_teacher']
-			Class_Schedule.objects.filter(kaid_teacher_id=profesor[0]['kaid_teacher']).delete()
-			for dia in dias:
-				#print dia
-				diasplit = dia.split('_')
-				newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
-				newScheduleTeacher.save()
-			return HttpResponse('Horario para el profesor guardado')
-		except Exception as e:
-			print e
+    request.session.set_expiry(timeSleep)
+    if request.method == 'POST':
+        try:
+            args = request.POST
+            kaid = str(args['teacher'])
+            dias = args.getlist("days[]")
+            #print args['teacher']
+            #clsch=Class_Schedule.objects.filter(kaid_teacher_id=str(args['teacher'])).delete()
+            profesor = Teacher.objects.filter(kaid_teacher=kaid).values('kaid_teacher')
+            #print profesor[0]['kaid_teacher']
+            #Class_Schedule.objects.filter(kaid_teacher_id=profesor[0]['kaid_teacher']).delete()
+            csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).count()
+            for dia in dias:
+                #print dia
+                diasplit = dia.split('_')
+                if csh>len(dias):
+                    print "hay mas elementos en la bd"
+                elif len(dias)>csh:
+                    print "hay mas elementos seleccionados que en la bd"
+                else:
+                    print "la cantidad de elemtnso son iguales"
 
-	return HttpResponse('Error al guardar')
+                #newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+                #newScheduleTeacher.save()
+            return HttpResponse('Horario para el profesor guardado')
+        except Exception as e:
+            print e
+            return HttpResponse('Error al guardar')
