@@ -269,7 +269,7 @@ table.testsched td {
 
 </div>
   <div align="center">
-  <input type="button" id="button_realizar" onClick="" class="kui-button kui-button-plain kui-button-primary" value="Mostrar gráficas">
+  <input type="button" id="button_realizar" onClick="crearEstadisticas" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
   </div>
 
 <div id="popup" style="display:none">
@@ -277,6 +277,12 @@ table.testsched td {
 </div>
 
 <script>
+      $("#hover").click(function(){
+          $(this).fadeOut();
+          $("#popup").fadeOut();
+
+        });
+
 $('#estadisticas').addClass('active selected');
 
 $('input[name="day"]').prop("disabled", true);
@@ -290,6 +296,10 @@ $('#check_all_none').click(function () {
     }
 
 });
+
+function crearEstadisticas(){
+  //aqui va algo
+}
 
 function validar(){
   flag = true;
@@ -319,11 +329,15 @@ function selectSchedule(radiobutton){
     $('input[name="day"]').prop("checked", true);
   }
   if (valor=="radio2"){
+    $('#popup').empty();
     var sel = $('input[name="clase"]:checked').map(function(_,el){
       return $(el).val();
     }).get();
     if (sel.length===0){
-      alert("ningun curso seleccionado");
+      $('#popup').empty();
+      $('#popup').append("<p>No existe ningún curso seleccionado</p>")
+      $('#popup').fadeIn().css('display', '');
+      $("#hover").fadeIn().css('display', '');
     }
     else{
       //console.log(sel);
@@ -343,14 +357,19 @@ function selectSchedule(radiobutton){
     
   }
   if (valor=="radio3"){
-    $('input[name="day"]').prop("checked", true);
+    $('#popup').empty();
     var sel = $('input[name="clase"]:checked').map(function(_,el){
       return $(el).val();
     }).get();
     if (sel.length===0){
-      alert("ningun curso seleccionado");
+      $('#popup').empty();
+      $('#popup').append("<p>No existe ningún curso seleccionado</p>")
+      $('#popup').fadeIn().css('display', '');
+      $("#hover").fadeIn().css('display', '');
+
     }
     else{
+      $('input[name="day"]').prop("checked", true);
       //console.log(sel);
       {% for csh in class_schedule %}
         var dia = "{{ csh.day }}"
