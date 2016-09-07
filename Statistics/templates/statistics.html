@@ -198,10 +198,10 @@ table.testsched td {
     <tr>
     {% if class.additional %}
       <td>{{ class.nivel }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
-      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso"></td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
     {% else %}
       <td>{{ class.nivel }} {{ class.letter }} {{ class.year }}</td>
-      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso"></td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
     {% endif %}
     </tr>
     {% endfor %}
@@ -269,7 +269,7 @@ table.testsched td {
 
 </div>
   <div align="center">
-  <input type="button" id="button_realizar" onClick="crearEstadisticas" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
+  <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
   </div>
 
 <div id="popup" style="display:none">
@@ -299,6 +299,19 @@ $('#check_all_none').click(function () {
 
 function crearEstadisticas(){
   //aqui va algo
+  validar();
+  var selclase = $('input[name="clase"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  var selhora = $('input[value*="radio"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  if (validar() && selclase.length>0 && selhora.length>0){
+    console.log('paso el validar');
+  }
+  else{
+    console.log('no paso validar');
+  }
 }
 
 function validar(){
@@ -319,6 +332,44 @@ function validar(){
     $('#hasta').css('color', '#000000');
   }
   return flag
+}
+
+function updateSchedule(){
+  var sel = $('input[name="clase"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  if ($("input[value='radio2']:checked")){
+    $('input[name="day"]').prop("checked", false);
+    {% for csh in class_schedule %}
+      var dia = "{{ csh.day }}"
+      var id_sched = "{{ csh.id_schedule_id }}"
+      var id_class = "{{ csh.id_class_id }}"
+      var idcheckbox = dia+"_"+id_sched;
+      for (var i = sel.length - 1; i >= 0; i--) {
+        if(sel[i]==id_class){
+          $("input[value='"+idcheckbox+"']").prop("checked", true);
+          console.log(sel[i]);
+        }      
+      }
+      //console.log(idcheckbox);
+    {% endfor %}    
+  }
+  if ($("input[value='radio3']:checked")){
+    $('input[name="day"]').prop("checked", true);
+    {% for csh in class_schedule %}
+      var dia = "{{ csh.day }}"
+      var id_sched = "{{ csh.id_schedule_id }}"
+      var id_class = "{{ csh.id_class_id }}"
+      var idcheckbox = dia+"_"+id_sched;
+      for (var j = sel.length - 1; j >= 0; i--) {
+        if(sel[j]==id_class){
+          $("input[value='"+idcheckbox+"']").prop("checked", false);
+          console.log(sel[j]);
+        }      
+      }
+      //console.log(idcheckbox);
+    {% endfor %}    
+  }
 }
 
 function selectSchedule(radiobutton){
