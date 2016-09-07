@@ -197,11 +197,11 @@ table.testsched td {
     {% for class in classes %}
     <tr>
     {% if class.additional %}
-      <td>{{ class.level }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
-      <td><input type="checkbox" value="{{ class.level }} {{ class.letter }} {{ class.year }} {{ class.additional }}" name="clase" class="curso"></td>
+      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso"></td>
     {% else %}
-      <td>{{ class.level }} {{ class.letter }} {{ class.year }}</td>
-      <td><input type="checkbox" value="{{ class.level }} {{ class.letter }} {{ class.year }}" name="clase" class="curso"></td>
+      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }}</td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso"></td>
     {% endif %}
     </tr>
     {% endfor %}
@@ -213,13 +213,13 @@ table.testsched td {
     <table class="testsched">
     <tr>
       <th width="30%">Horario</th>
-      <th width="10%" id="HSE" onclick="lunes()">Lunes</th>
-      <th width="10%" id="HSE" onclick="martes()">Martes</th>
-      <th width="10%" id="HSE" onclick="miercoles()">Miércoles</th>
-      <th width="10%" id="HSE" onclick="jueves()">Jueves</th>
-      <th width="10%" id="HSE" onclick="viernes()">Viernes</th>
-      <th width="10%" id="HSE" onclick="sabado()">Sábado</th>
-      <th width="10%" id="HSE" onclick="domingo()">Domingo</th>
+      <th width="10%" id="HSE" onclick="diaselect('Monday')">Lunes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Tuesday')">Martes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Wednesday')">Miércoles</th>
+      <th width="10%" id="HSE" onclick="diaselect('Thursday')">Jueves</th>
+      <th width="10%" id="HSE" onclick="diaselect('Friday')">Viernes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Saturday')">Sábado</th>
+      <th width="10%" id="HSE" onclick="diaselect('Sunday')">Domingo</th>
     </tr>
   {% for sch in schedules %}
   <tr id="R{{ forloop.counter }}" class="nocolor">
@@ -246,15 +246,31 @@ table.testsched td {
   </table>
   <br>
   <div align="left" style="margin-left:200px">
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="1">Todo <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="2">Horario de clases <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="3">Fuera horario de clases <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="4" disabled/>Personalizado <br>  
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio3">Fuera horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4" disabled/>Personalizado <br>  
   </div>
   </div>
 
+  <div id="fechas" style="float:left;">
+    <br>
+    <h2 align="center">Fechas</h2>
+        <div  class="fechas">
+          <p class="label_input"><strong id="fIniTooltip">Desde</strong></p>
+          <input name="desde" onchange="validar()" onkeyup="validar()" id="desde" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Desde"/>
+        </div>
+        <div  class="fechas">
+          <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
+          <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
+        </div>
+  </div>
 </div>
+
 </div>
+  <div align="center">
+  <input type="button" id="button_realizar" onClick="" class="kui-button kui-button-plain kui-button-primary" value="Mostrar gráficas">
+  </div>
 
 <div id="popup" style="display:none">
 	<div id="close">X</div>
@@ -275,13 +291,90 @@ $('#check_all_none').click(function () {
 
 });
 
+function validar(){
+  flag = true;
+  desde = document.getElementById("desde").value;
+  hasta = document.getElementById("hasta").value;
+  if(desde == null || desde.length == 0 || /^\s+$/.test(desde)) {
+    $('#desde').css('color', '#C30202');
+    flag = false;
+  }else{
+    $('#desde').css('color', '#000000');
+  }
+  //if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
+  if(hasta == null || desde > hasta || hasta.length == 0 || /^\s+$/.test(hasta)) {
+    $('#hasta').css('color', '#C30202');
+    flag = false;
+  }else{
+    $('#hasta').css('color', '#000000');
+  }
+  return flag
+}
+
 function selectSchedule(radiobutton){
+  $('input[name="day"]').prop("checked", false);
   var valor = radiobutton.value;
-  console.log(valor);
+  //console.log(valor);
+  if (valor=="radio1"){
+    $('input[name="day"]').prop("checked", true);
+  }
+  if (valor=="radio2"){
+    var sel = $('input[name="clase"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+    if (sel.length===0){
+      alert("ningun curso seleccionado");
+    }
+    else{
+      //console.log(sel);
+      {% for csh in class_schedule %}
+        var dia = "{{ csh.day }}"
+        var id_sched = "{{ csh.id_schedule_id }}"
+        var id_class = "{{ csh.id_class_id }}"
+        var idcheckbox = dia+"_"+id_sched;
+        for (var i = sel.length - 1; i >= 0; i--) {
+          if(sel[i]==id_class){
+            $("input[value='"+idcheckbox+"']").prop("checked", true);
+          }      
+        }
+        //console.log(idcheckbox);
+      {% endfor %}
+    }
+    
+  }
+  if (valor=="radio3"){
+    $('input[name="day"]').prop("checked", true);
+    var sel = $('input[name="clase"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+    if (sel.length===0){
+      alert("ningun curso seleccionado");
+    }
+    else{
+      //console.log(sel);
+      {% for csh in class_schedule %}
+        var dia = "{{ csh.day }}"
+        var id_sched = "{{ csh.id_schedule_id }}"
+        var id_class = "{{ csh.id_class_id }}"
+        var idcheckbox = dia+"_"+id_sched;
+        for (var i = sel.length - 1; i >= 0; i--) {
+          if(sel[i]==id_class){
+            $("input[value='"+idcheckbox+"']").prop("checked", false);
+          }      
+        }
+        //console.log(idcheckbox);
+      {% endfor %}
+    }
+    
+  }
 }
 
 function funcion(){
-  $('input[value*="SE"]').prop("checked", !$('input[value*="SE"]').prop("checked"));
+  $('input[value*="_SE"]').prop("checked", !$('input[value*="_SE"]').prop("checked"));
+  $('input[value="radio4"]').prop("checked", true);
+  if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+    $('input[value="radio4"]').prop("checked", false);
+  }
 }
 
 $("th#HSE").mouseover(function(){
@@ -295,37 +388,20 @@ $("th#HSE").mouseout(function(){
 });
 
 function funciondos(id_schedule){
-  $('input[value*="'+id_schedule+'"]').prop("checked", !$('input[value*="'+id_schedule+'"]').prop("checked"));
+  $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
+  $('input[value="radio4"]').prop("checked", true);
+  if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+    $('input[value="radio4"]').prop("checked", false);
+  }
 }
 
-function lunes(){
-  $('input[value*="Monday"]').prop("checked", !$('input[value*="Monday"]').prop("checked"));
+function diaselect(dia){
+  $('input[value*="'+dia+'"]').prop("checked", !$('input[value*="'+dia+'"]').prop("checked"));
+  $('input[value="radio4"]').prop("checked", true);
+  if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+    $('input[value="radio4"]').prop("checked", false);
+  }
 }
-
-function martes(){
-  $('input[value*="Tuesday"]').prop("checked", !$('input[value*="Tuesday"]').prop("checked"));
-}
-
-function miercoles(){
-  $('input[value*="Wednesday"]').prop("checked", !$('input[value*="Wednesday"]').prop("checked"));
-}
-
-function jueves(){
-  $('input[value*="Thursday"]').prop("checked", !$('input[value*="Thursday"]').prop("checked"));
-}
-
-function viernes(){
-  $('input[value*="Friday"]').prop("checked", !$('input[value*="Friday"]').prop("checked"));
-}
-
-function sabado(){
-  $('input[value*="Saturday"]').prop("checked", !$('input[value*="Saturday"]').prop("checked"));
-}
-
-function domingo(){
-  $('input[value*="Sunday"]').prop("checked", !$('input[value*="Sunday"]').prop("checked"));
-}
-
 </script>
 
 {% endblock %}

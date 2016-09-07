@@ -45,7 +45,28 @@ def getStatistics(request):
 		isTeacher = False
 	if(request.user.has_perm('bakhanapp.isAdmin')):
 		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
+		class_schedule = Class_Schedule.objects.filter(id_class_id__in=classes).exclude(id_class_id__isnull=True)
 	else:
 		classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class')).order_by('level','letter')
+		class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=request.user.user_profile.kaid).exclude(id_class_id__isnull=True)
+	N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+	for i in range(len(classes)):
+		classes[i].nivel = N[int(classes[i].level)] 
 	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules} ,context_instance=RequestContext(request))
+	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule} ,context_instance=RequestContext(request))
+
+'''
+@login_required
+def selectSchedule(request):
+	request.session.set_expiry(timeSleep)
+	try:
+		if request.method=="POST":
+			args=request.POST
+			radio = args['valor']
+			cursos = args.getlist('sel[]')
+			for curso in cursos:
+				print curso
+		return HttpResponse("algo")
+	except Exception as e:
+		print e
+'''
