@@ -184,7 +184,6 @@ table.testsched td {
 <br>
 <div class="container">
 <div class="main-content">
-
 	<br>
 	<h1 style="text-align:center;">Estadísticas</h1>
   <div id="cursos" style="width:30%;float:left;">
@@ -265,11 +264,15 @@ table.testsched td {
           <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
         </div>
   </div>
+  <div style="float:left;width:100%" align="center">
+    <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
+  </div>
 </div>
 
 </div>
   <div align="center">
-  <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
+  <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros" style="display:none">
+  
   </div>
 
 <div id="popup" style="display:none">
@@ -303,17 +306,33 @@ $('#check_all_none').click(function () {
 
 });
 
+function containerShow(){
+  $(".container").fadeIn();
+  $('#button_parameter').fadeOut();
+}
+
 function crearEstadisticas(){
   //aqui va algo
   validar();
   var selclase = $('input[name="clase"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
-  var selhora = $('input[value*="radio"]:checked').map(function(_,el){
+  var selhora = $('input[value*="day_"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
   if (validar() && selclase.length>0 && selhora.length>0){
-    console.log('paso el validar');
+    desde = document.getElementById("desde").value;
+    hasta = document.getElementById("hasta").value;
+    $('.container').fadeOut();
+    $('#button_parameter').fadeIn();
+    $.ajax({
+      url: "{% url 'Statistics:selectStatistics' %}",
+      type: "POST",
+      data: {selclase, selhora, desde, hasta},
+        success: function(response){
+          console.log(response);
+        }
+    });
   }
   else{
     $('#popup_error').empty();

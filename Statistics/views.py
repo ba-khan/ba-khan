@@ -55,18 +55,20 @@ def getStatistics(request):
 	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
 	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule} ,context_instance=RequestContext(request))
 
-'''
+
 @login_required
-def selectSchedule(request):
+def selectStatistics(request):
 	request.session.set_expiry(timeSleep)
 	try:
 		if request.method=="POST":
 			args=request.POST
-			radio = args['valor']
-			cursos = args.getlist('sel[]')
+			desde = args['desde']
+			hasta = args['hasta']
+			cursos = args.getlist('selclase[]')
+			horarios = args.getlist('selhora[]')
 			for curso in cursos:
-				print curso
+				for horario in horarios:
+					print "aqui va la consulta"
 		return HttpResponse("algo")
 	except Exception as e:
 		print e
-'''
