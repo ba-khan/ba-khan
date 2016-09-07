@@ -290,9 +290,11 @@ $('input[name="day"]').prop("disabled", true);
 $('#check_all_none').click(function () {
     if ( $(this).is(':checked') ){
         $('.curso').prop("checked", true);
+        updateSchedule();
     }
     else{
         $('.curso').removeAttr("checked");
+        updateSchedule();
     }
 
 });
@@ -338,7 +340,9 @@ function updateSchedule(){
   var sel = $('input[name="clase"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
-  if ($("input[value='radio2']:checked")){
+  //var valor = $('input[value*="radio"]:checked').val()
+  
+  if ($("input[value*='radio']:checked").val()=="radio2"){
     $('input[name="day"]').prop("checked", false);
     {% for csh in class_schedule %}
       var dia = "{{ csh.day }}"
@@ -348,27 +352,29 @@ function updateSchedule(){
       for (var i = sel.length - 1; i >= 0; i--) {
         if(sel[i]==id_class){
           $("input[value='"+idcheckbox+"']").prop("checked", true);
-          console.log(sel[i]);
+          console.log('entro en radio2');
         }      
       }
       //console.log(idcheckbox);
     {% endfor %}    
   }
-  if ($("input[value='radio3']:checked")){
-    $('input[name="day"]').prop("checked", true);
-    {% for csh in class_schedule %}
-      var dia = "{{ csh.day }}"
-      var id_sched = "{{ csh.id_schedule_id }}"
-      var id_class = "{{ csh.id_class_id }}"
-      var idcheckbox = dia+"_"+id_sched;
-      for (var j = sel.length - 1; j >= 0; i--) {
-        if(sel[j]==id_class){
-          $("input[value='"+idcheckbox+"']").prop("checked", false);
-          console.log(sel[j]);
-        }      
-      }
-      //console.log(idcheckbox);
-    {% endfor %}    
+  else{
+    if ($("input[value*='radio']:checked").val()=="radio3"){
+      $('input[name="day"]').prop("checked", true);
+      {% for csh in class_schedule %}
+        var dia = "{{ csh.day }}"
+        var id_sched = "{{ csh.id_schedule_id }}"
+        var id_class = "{{ csh.id_class_id }}"
+        var idcheckbox = dia+"_"+id_sched;
+        for (var i = sel.length - 1; i >= 0; i--) {
+          if(sel[i]==id_class){
+            $("input[value='"+idcheckbox+"']").prop("checked", false);
+            console.log('entro en radio3');
+          }      
+        }
+        //console.log(idcheckbox);
+      {% endfor %}    
+    }
   }
 }
 
