@@ -276,11 +276,15 @@ table.testsched td {
 	<div id="close">X</div>
 </div>
 
+<div id="popup_error" class="popup" style="display:none">
+  <div id="close" onClick="$('#popup_error').fadeOut();$('#hover').fadeOut();">X</div>
+</div>
+
 <script>
       $("#hover").click(function(){
           $(this).fadeOut();
           $("#popup").fadeOut();
-
+          $("#popup_error").fadeOut();
         });
 
 $('#estadisticas').addClass('active selected');
@@ -312,7 +316,10 @@ function crearEstadisticas(){
     console.log('paso el validar');
   }
   else{
-    console.log('no paso validar');
+    $('#popup_error').empty();
+    $('#popup_error').append("<p>Faltan datos por seleccionar, revise los campos.</p>")
+    $('#popup_error').fadeIn().css('display', '');
+    $("#hover").fadeIn().css('display', '');
   }
 }
 
@@ -352,7 +359,6 @@ function updateSchedule(){
       for (var i = sel.length - 1; i >= 0; i--) {
         if(sel[i]==id_class){
           $("input[value='"+idcheckbox+"']").prop("checked", true);
-          console.log('entro en radio2');
         }      
       }
       //console.log(idcheckbox);
@@ -369,7 +375,6 @@ function updateSchedule(){
         for (var i = sel.length - 1; i >= 0; i--) {
           if(sel[i]==id_class){
             $("input[value='"+idcheckbox+"']").prop("checked", false);
-            console.log('entro en radio3');
           }      
         }
         //console.log(idcheckbox);
