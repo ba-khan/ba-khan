@@ -15,7 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -46,6 +46,7 @@ def getSchedules(request):
         isTeacher = True
     else:
         isTeacher = False
+    classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
     return render_to_response('horario.html', {'schedules': schedules, 'teachers': teachers, 'class_schedule': class_schedule, 'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 

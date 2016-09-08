@@ -195,7 +195,7 @@ input{
     	<ul>
     		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0, "");' class="select"> Horario</a></li>
         	{% for teach in teachers %}  
-			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, "{{teach.kaid_teacher}}");' >{{ teach.name }}</a></li>
+			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, "{{teach.kaid_teacher}}");' >{{ teach }}</a></li>
 			{% endfor %}
         </ul>		
 	</div>
@@ -258,6 +258,7 @@ input{
 			</tr>
 			{% endfor %}
 			</table>
+
 			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
 		</div>
 		{% endfor %}

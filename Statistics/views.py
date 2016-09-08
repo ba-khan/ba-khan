@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib import auth
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
 
@@ -15,7 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -85,9 +85,21 @@ def selectStatistics(request):
 					for horario in horarios:
 						fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 						#print fechadesde.isoweekday()
-						print horario
+						sclass = Student_Class.objects.filter(id_class_id=curso).values('kaid_student_id')
+						print sclass
 			else:
-				print "solo hay un curso"
-		return HttpResponse("algo")
+				sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
+				for sc in sclass:
+					#print sc['kaid_student_id']
+					time_exercise = Skill_Attempt.objects.filter(kaid_student_id=sc['kaid_student_id']).values('kaid_student_id').annotate(time=Sum('time_taken')) 
+					print time_exercise
+				fechadesde = datetime.strptime(desde, '%Y-%m-%d')
+				#diacomienzo = fechadesde.isoweekday()
+				fechahasta = datetime.strptime(hasta, '%Y-%m-%d')
+				#fechahasta = fechahasta.isoweekday()
+					#aqui va una consulta
+		
+					#print fechadesde.isoweekday()	
+			return HttpResponse("algo")
 	except Exception as e:
 		print e

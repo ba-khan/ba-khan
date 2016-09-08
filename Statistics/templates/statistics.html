@@ -252,7 +252,7 @@ table.testsched td {
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio3">Fuera horario de clases <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4" disabled/>Personalizado <br>  
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4">Personalizado <br>  
   </div>
   </div>
 
@@ -417,11 +417,12 @@ function updateSchedule(){
 function selectSchedule(radiobutton){
   $('input[name="day"]').prop("checked", false);
   var valor = radiobutton.value;
-  //console.log(valor);
   if (valor=="radio1"){
+    $('input[name="day"]').prop("disabled", true);
     $('input[name="day"]').prop("checked", true);
   }
   if (valor=="radio2"){
+    $('input[name="day"]').prop("disabled", true);
     $('#popup').empty();
     var sel = $('input[name="clase"]:checked').map(function(_,el){
       return $(el).val();
@@ -450,6 +451,7 @@ function selectSchedule(radiobutton){
     
   }
   if (valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
     $('#popup').empty();
     var sel = $('input[name="clase"]:checked').map(function(_,el){
       return $(el).val();
@@ -477,15 +479,25 @@ function selectSchedule(radiobutton){
         //console.log(idcheckbox);
       {% endfor %}
     }
-    
+  }
+  if (valor=="radio4"){
+    //console.log("algoaca");
+    $('input[name="day"]').prop("disabled", false); 
   }
 }
 
 function funcion(counter){
-  $('input[value*="_'+counter+'_OTRO"]').prop("checked", !$('input[value*="_'+counter+'_OTRO"]').prop("checked"));
-  $('input[value="radio4"]').prop("checked", true);
-  if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
-    $('input[value="radio4"]').prop("checked", false);
+  var valor = $('input[value*="radio"]:checked').val()
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    return false;
+  }
+  else{
+    $('input[value*="_'+counter+'_OTRO"]').prop("checked", !$('input[value*="_'+counter+'_OTRO"]').prop("checked"));
+    $('input[value="radio4"]').prop("checked", true);
+    if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('input[value="radio4"]').prop("checked", false);
+    }
   }
 }
 
@@ -500,24 +512,39 @@ $("th#HSE").mouseout(function(){
 });
 
 function funciondos(id_schedule){
-  $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
-  $('input[value="radio4"]').prop("checked", true);
-  if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
-    $('input[value="radio4"]').prop("checked", false);
+  var valor = $('input[value*="radio"]:checked').val()
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    return false;
+  }
+  else{  
+    $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
+    $('input[value="radio4"]').prop("checked", true);
+    if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('input[value="radio4"]').prop("checked", false);
+    }
   }
 }
 
 function diaselect(dia){
-  $('input[value*="'+dia+'"]').prop("checked", !$('input[value*="'+dia+'"]').prop("checked"));
-  $('input[value="radio4"]').prop("checked", true);
-  if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
-    $('input[value="radio4"]').prop("checked", false);
-  }
+  var valor = $('input[value*="radio"]:checked').val()
   $('table#sort_table').tablesorter({
     animation: 'slide',
     speed: 1200,
     sortList: [[0,0]]
-});
+  });
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    return false;
+  }
+  else{
+    $('input[value*="'+dia+'"]').prop("checked", !$('input[value*="'+dia+'"]').prop("checked"));
+    $('input[value="radio4"]').prop("checked", true);
+    if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('input[value="radio4"]').prop("checked", false);
+    }
+  }
+
 }
 </script>
 
