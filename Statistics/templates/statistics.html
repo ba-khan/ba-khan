@@ -209,10 +209,11 @@ table.testsched td {
 
   <div id="trabajo" style="width:70%;float:left;">
     <h2 align="center">Tipo de Trabajo</h2>
-    <table class="testsched">
+    <table class="testsched" id="sort_table">
+    <thead>
     <tr>
       <th width="30%">Horario</th>
-      <th width="10%" id="HSE" onclick="diaselect('Monday')">Lunes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Monday')" class="sorter-false">Lunes</th>
       <th width="10%" id="HSE" onclick="diaselect('Tuesday')">Martes</th>
       <th width="10%" id="HSE" onclick="diaselect('Wednesday')">Miércoles</th>
       <th width="10%" id="HSE" onclick="diaselect('Thursday')">Jueves</th>
@@ -220,6 +221,7 @@ table.testsched td {
       <th width="10%" id="HSE" onclick="diaselect('Saturday')">Sábado</th>
       <th width="10%" id="HSE" onclick="diaselect('Sunday')">Domingo</th>
     </tr>
+    </thead>
   {% for sch in schedules %}
   <tr id="R{{ forloop.counter }}" class="nocolor">
     <th onclick="funciondos('{{sch.id_schedule}}')" id="HSE">{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %} - {% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</th>
@@ -232,16 +234,18 @@ table.testsched td {
     <td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
   </tr>
   {% endfor %}
-  <tr class="nocolor">
-    <th onclick="funcion();" id="HSE">Horas sin especificar</th>
-    <td><input type="checkbox" value="Monday_SE" name="day"></td>
-    <td><input type="checkbox" value="Tuesday_SE" name="day"></td>
-    <td><input type="checkbox" value="Wednesday_SE" name="day"></td>
-    <td><input type="checkbox" value="Thursday_SE" name="day"></td>
-    <td><input type="checkbox" value="Friday_SE" name="day"></td>
-    <td><input type="checkbox" value="Saturday_SE" name="day"></td>
-    <td><input type="checkbox" value="Sunday_SE" name="day"></td>
+  {% for hora in otrahora %}
+  <tr id="R{{ forloop.counter }}" class="nocolor">
+    <th onclick="funcion('{{ hora }}')" id="HSE">{{hora}}</th>
+    <td><input type="checkbox" value="Monday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Tuesday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Wednesday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Thursday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Friday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Saturday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Sunday_{{ hora }}_OTRO" name="day"></td>
   </tr>
+  {% endfor %}
   </table>
   <br>
   <div align="left" style="margin-left:200px">
@@ -284,6 +288,14 @@ table.testsched td {
 </div>
 
 <script>
+
+    $(document).ready(function(){
+        $('table#sort_table').tablesorter({
+            animation: 'slide',
+            speed: 1200,
+            sortList: [[0,0], [0,1]]
+        });
+    });
       $("#hover").click(function(){
           $(this).fadeOut();
           $("#popup").fadeOut();
@@ -469,8 +481,8 @@ function selectSchedule(radiobutton){
   }
 }
 
-function funcion(){
-  $('input[value*="_SE"]').prop("checked", !$('input[value*="_SE"]').prop("checked"));
+function funcion(counter){
+  $('input[value*="_'+counter+'_OTRO"]').prop("checked", !$('input[value*="_'+counter+'_OTRO"]').prop("checked"));
   $('input[value="radio4"]').prop("checked", true);
   if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
     $('input[value="radio4"]').prop("checked", false);
@@ -501,6 +513,11 @@ function diaselect(dia){
   if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
     $('input[value="radio4"]').prop("checked", false);
   }
+  $('table#sort_table').tablesorter({
+    animation: 'slide',
+    speed: 1200,
+    sortList: [[0,0]]
+});
 }
 </script>
 

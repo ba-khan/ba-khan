@@ -23,6 +23,7 @@ register = template.Library()
 from configs import timeSleep
 
 import json
+from datetime import datetime
 
 
 ##
@@ -53,7 +54,20 @@ def getStatistics(request):
 	for i in range(len(classes)):
 		classes[i].nivel = N[int(classes[i].level)] 
 	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule} ,context_instance=RequestContext(request))
+	start = "00:00"
+	end = "23:59"
+	otrahora = []
+	largo = len(schedules)
+	j=0
+	for sched in schedules:
+		j=j+1
+		if sched.start_time!=start:
+			otrahora.append(start +" - "+ sched.start_time)
+			start = sched.end_time
+		if j==largo:
+			otrahora.append(sched.end_time +" - "+end)
+	#print otrahora
+	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule, 'otrahora':otrahora} ,context_instance=RequestContext(request))
 
 
 @login_required
@@ -66,9 +80,14 @@ def selectStatistics(request):
 			hasta = args['hasta']
 			cursos = args.getlist('selclase[]')
 			horarios = args.getlist('selhora[]')
-			for curso in cursos:
-				for horario in horarios:
-					print "aqui va la consulta"
+			if len(cursos)>1:
+				for curso in cursos:
+					for horario in horarios:
+						fechadesde = datetime.strptime(desde, '%Y-%m-%d')
+						#print fechadesde.isoweekday()
+						print horario
+			else:
+				print "solo hay un curso"
 		return HttpResponse("algo")
 	except Exception as e:
 		print e
