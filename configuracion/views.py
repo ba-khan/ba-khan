@@ -117,24 +117,46 @@ def saveSchedule(request):
             args = request.POST
             kaid = str(args['teacher'])
             dias = args.getlist("days[]")
-            #print args['teacher']
-            #clsch=Class_Schedule.objects.filter(kaid_teacher_id=str(args['teacher'])).delete()
-            profesor = Teacher.objects.filter(kaid_teacher=kaid).values('kaid_teacher')
-            #print profesor[0]['kaid_teacher']
-            #Class_Schedule.objects.filter(kaid_teacher_id=profesor[0]['kaid_teacher']).delete()
-            csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).count()
-            for dia in dias:
-                #print dia
-                diasplit = dia.split('_')
-                if csh>len(dias):
-                    print "hay mas elementos en la bd"
-                elif len(dias)>csh:
-                    print "hay mas elementos seleccionados que en la bd"
-                else:
-                    print "la cantidad de elemtnso son iguales"
 
-                #newScheduleTeacher = Class_Schedule(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
-                #newScheduleTeacher.save()
+            profesor = Teacher.objects.filter(kaid_teacher=kaid).values('kaid_teacher')
+
+            csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).count()
+
+            if csh>len(dias):
+                query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
+                for query in query_cs:
+                    existe = False
+                    for dia in dias:
+                        
+                        diasplit = dia.split('_')
+                        if (query['id_schedule_id']==int(diasplit[1]) and query['day']==diasplit[0] and query['kaid_teacher_id']==args['teacher']):
+                            existe = True
+                    if existe==False:
+                        Class_Schedule.objects.get(pk=query['id_class_schedule']).delete()
+
+            elif len(dias)>csh:
+                for dia in dias:
+                    diasplit = dia.split('_')
+                    Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+                
+            else:
+                query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
+                goc = False
+                for query in query_cs:
+                    existe = False
+                    for dia in dias:
+                        #print dia
+                        diasplit = dia.split('_')
+                        if (query['id_schedule_id']==int(diasplit[1]) and query['day']==diasplit[0] and query['kaid_teacher_id']==args['teacher']):
+                            existe = True
+                    if existe==False:
+                        Class_Schedule.objects.get(pk=query['id_class_schedule']).delete()
+                        goc = True
+                if goc==True:
+                    for dia in dias:
+                        diasplit = dia.split('_')
+                        Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+
             return HttpResponse('Horario para el profesor guardado')
         except Exception as e:
             print e
