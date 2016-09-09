@@ -18,6 +18,7 @@ from bakhanapp.models import Skill
 from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile
 from bakhanapp.views import getTopictree
 import json
+from configs import timeSleep
 
 
 ##-------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ import json
 ##
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
-    request.session.set_expiry(300)#5 minutos de inactividad
+    request.session.set_expiry(timeSleep)#5 minutos de inactividad
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid).order_by('-id_assesment_config')
 
     json_array=[]

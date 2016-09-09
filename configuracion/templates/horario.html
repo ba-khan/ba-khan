@@ -464,6 +464,17 @@ $(document).ready(function(){
 	$('#configuraciones').addClass('active selected');
 
 function cambiarPestanna(pestanna, kaid_teacher) {
+	$.ajax({
+		url: "{% url 'configuracion:obtener_clase' %}",
+		type: "POST",
+		data: {kaid_teacher},
+			success: function(response){
+				//console.log(response);
+			}
+	});
+	{% for clase in classes %}
+		console.log("entro en classes")
+	{% endfor %}
 	$('input:checkbox').removeAttr('checked');
 	//console.log(kaid_teacher)
 	{% for csh in class_schedule %}

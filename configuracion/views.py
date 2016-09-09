@@ -23,6 +23,7 @@ register = template.Library()
 from configs import timeSleep
 
 import json
+from django.template.loader import render_to_string
 
 
 ##
@@ -162,3 +163,15 @@ def saveSchedule(request):
         except Exception as e:
             print e
             return HttpResponse('Error al guardar')
+
+@permission_required('bakhanapp.isAdmin', login_url="/")
+def getClass(request):
+    if request.method == 'POST':
+        request.session.set_expiry(timeSleep)
+        args = request.POST
+        classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=args['kaid_teacher']).values('id_class')).order_by('level','letter')
+        N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+        for i in range(len(classes)):
+            classes[i].nivel = N[int(classes[i].level)] 
+        html = render_to_string('horario.html', {'classes':classes})
+        return HttpResponse(html)
