@@ -72,7 +72,6 @@ from datetime import datetime
 from django.http import HttpResponse
 import django_excel as excel
 import pyexcel as pe
-import pyexcel.ext.xls
 
 #ultimo try:#id4005 para este archivo
 @permission_required('bakhanapp.isSuper', login_url="/")
