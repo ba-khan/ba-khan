@@ -38,8 +38,13 @@ input{
 	width: 100%;
 	height: 100%;
 }
-.redBackground{
+.greenBackground{
     background-color: green;  
+}
+
+.redBackground{
+
+    background-color: red;  
 }
 </style>
 
@@ -78,6 +83,7 @@ input{
 	{% endfor %}
 	</table>
 	<p id="fondoverde">El color verde indica que ese bloque no está asociado a ningún curso.</p>
+	<p id="fondorojo">El color rojo indica que ese bloque ya está asociado a algún curso.</p>
 	<a onclick="saveTeacherSchedule('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar horario</a>
 
 </div>
@@ -94,6 +100,7 @@ input{
 <script>
 $(document).ready(function(){
 	$('#fondoverde').hide();
+	$('#fondorojo').hide();
 	$('#breadcrumb').html('Horarios / {{spanish_classroom}}')
 	{% if class_schedule.0.kaid_teacher_id|length > 0%}
 	{% for csh in class_schedule %}
@@ -105,11 +112,15 @@ $(document).ready(function(){
 		if (id_class_id=='{{id_class}}'){
 			$("input[value='"+idcheckbox+"']").prop("checked", true);
 		}
-		if(id_class_id=="None"){
+		else if(id_class_id=="None"){
 			//console.log(idcheckbox)
 			$("input[value='"+idcheckbox+"']").prop("checked", true);
-			$("input[value='"+idcheckbox+"']").parent().addClass("redBackground"); 
+			$("input[value='"+idcheckbox+"']").parent().addClass("greenBackground"); 
 			$("#fondoverde").show()
+		}
+		else{
+			$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
+			$("#fondorojo").show()
 		}
 
 	{% endfor %}
