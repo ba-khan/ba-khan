@@ -23,7 +23,7 @@ register = template.Library()
 from configs import timeSleep
 
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 ##
@@ -54,7 +54,7 @@ def getStatistics(request):
 	for i in range(len(classes)):
 		classes[i].nivel = N[int(classes[i].level)] 
 	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-	start = "00:00"
+	start = "23:59"
 	end = "23:59"
 	otrahora = []
 	largo = len(schedules)
@@ -62,10 +62,16 @@ def getStatistics(request):
 	for sched in schedules:
 		j=j+1
 		if sched.start_time!=start:
-			otrahora.append(start +" - "+ sched.start_time)
+			horaini = datetime.strptime(start, "%H:%M") + timedelta(minutes=1)
+			start = horaini.strftime('%H:%M')
+			horafn= datetime.strptime(sched.start_time,"%H:%M") + timedelta(minutes=-1)
+			horafn = horafn.strftime('%H:%M')
+			otrahora.append(start +" - "+ horafn)
 			start = sched.end_time
 		if j==largo:
-			otrahora.append(sched.end_time +" - "+end)
+			horaini = datetime.strptime(sched.end_time, "%H:%M") + timedelta(minutes=1)
+			horaini = horaini.strftime('%H:%M')
+			otrahora.append(horaini +" - "+end)
 	#print otrahora
 	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule, 'otrahora':otrahora} ,context_instance=RequestContext(request))
 
