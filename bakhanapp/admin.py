@@ -1,7 +1,15 @@
+""" This file... """
+
 from django.contrib import admin
 
-from models import Student,Administrator,Teacher, Class,Institution,Group,Group_Student,Student_Class,Subject,Class_Subject,Chapter,Topic,Subtopic
-from models import Skill,Assesment_Config,Assesment_Skill,Assesment,Grade,Video,Student_Skill,Student_Video,Skill_Attempt,Video_Playing,Skill_Progress
+from bakhanapp.models import Student, Administrator
+from bakhanapp.models import Teacher, Class, Institution, Group
+from bakhanapp.models import Group_Student, Student_Class
+from bakhanapp.models import Subject, Class_Subject, Chapter
+from bakhanapp.models import Topic, Subtopic, Skill, Assesment_Config
+from bakhanapp.models import Assesment_Skill, Assesment
+from bakhanapp.models import Grade, Video, Student_Skill, Student_Video
+from bakhanapp.models import Skill_Attempt, Video_Playing, Skill_Progress
 
 admin.site.register(Skill_Progress)
 admin.site.register(Student)
