@@ -119,7 +119,18 @@ $(document).ready(function(){
 			$("#fondoverde").show()
 		}
 		else{
-			$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
+			{% for clase in classes %}
+			if ({{clase.id_class}} == id_class_id){
+				$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
+				{% if clase.additional %}
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+				{% else %}
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%'>{{ clase.nivel }} {{ clase.letter }}</label>")
+				{% endif %}
+				$("input[value='"+idcheckbox+"']").remove()
+			}
+
+			{% endfor %}
 			$("#fondorojo").show()
 		}
 
