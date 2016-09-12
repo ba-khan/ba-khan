@@ -1,74 +1,47 @@
-""" """
+""" This file... """
+
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
-from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
+from django.shortcuts import HttpResponseRedirect, render_to_response
 from django.template.context import RequestContext
-from .forms import AssesmentConfigForm,AssesmentForm
-from django.contrib.auth import  login,authenticate,logout
-from django.contrib.auth.decorators import login_required,permission_required
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
-from django.contrib import auth
-from django.db.models import Count,Sum,Max,Avg
+from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Count, Sum, Avg
 from django.db.models import Q
 
 import unicodedata
 from django import template
-from bakhanapp.models import Assesment_Skill
 register = template.Library()
 
-from bakhanapp.models import Class,Institution
-from bakhanapp.models import Teacher,User_Profile
-from bakhanapp.models import Skill
-from bakhanapp.models import Skill_Progress
+from bakhanapp.models import Class, Institution
+from bakhanapp.models import Teacher
 from bakhanapp.models import Student
 from bakhanapp.models import Student_Class
-from bakhanapp.models import Student_Video
-from bakhanapp.models import Student_Skill
-from bakhanapp.models import Video
 from bakhanapp.models import Video_Playing
 from bakhanapp.models import Skill_Attempt
-from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Class_Subject
-from bakhanapp.models import Assesment
-from bakhanapp.models import Assesment_Config
-from bakhanapp.models import Subtopic_Skill
-from bakhanapp.models import Subtopic_Video
-from bakhanapp.models import Grade,Skill
-from bakhanapp.models import Student_Skill
-from bakhanapp.models import Skill_Progress
+from bakhanapp.models import Skill
+
 from bakhanapp.models import Subject
 from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Log
+from bakhanapp.models import Grade,Assesment,Assesment_Config
+from bakhanapp.models import Assesment_Skill,Student_Skill,Skill_Log
 
-import datetime
 from configs import timeSleep
+import datetime
 
-import cgi
-import rauth
-import SimpleHTTPServer
-import SocketServer
 import time
-import webbrowser
-import psycopg2
 
 import json
-import simplejson
-import sys
-from pprint import pprint
-import codecs
-from lib2to3.fixer_util import String
+
 from django.core import serializers
-from django.db import connection
 
 import random
-import datetime
 import threading
 import Queue
-from datetime import datetime
+
 from django.http import HttpResponse
 import django_excel as excel
 import pyexcel as pe
