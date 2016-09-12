@@ -132,6 +132,7 @@ def newInstitution(request):
             data = serializers.serialize('json', iterableArray)
             struct = json.loads(data)
             jsonResponse = json.dumps(struct)
+            print jsonResponse
             return HttpResponse(jsonResponse)
         except Exception as e:
             print '****ERROR**** try:#id4002'

@@ -10,12 +10,13 @@ from django.contrib import auth
 from django.db.models import Count, Sum
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.core import serializers
 
 
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -92,13 +93,43 @@ def selectStatistics(request):
 						fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 						#print fechadesde.isoweekday()
 						sclass = Student_Class.objects.filter(id_class_id=curso).values('kaid_student_id')
-						print sclass
+						#print sclass
 			else:
 				sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
-				for sc in sclass:
+				students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
+				time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))
+				#for sc in sclass:
 					#print sc['kaid_student_id']
-					time_exercise = Skill_Attempt.objects.filter(kaid_student_id=sc['kaid_student_id']).values('kaid_student_id').annotate(time=Sum('time_taken')) 
-					print time_exercise
+				#	time_exercise = Skill_Attempt.objects.filter(kaid_student_id=sc['kaid_student_id']).values('kaid_student_id').annotate(time=Sum('time_taken'))
+					#tiempo = [time_exercise]
+				#	print time_exercise
+				dictTime = {}
+				for time in time_exercise:
+					dictTime[time['kaid_student_id']] = time['time']
+				i=0
+				json_array = []
+				for student in students:
+					student_json = {}
+					student_json["id"] = i
+					try:
+						student_json["kaid"] = student.kaid_student
+					except:
+						student_json["kaid"] = "ninguno"
+					try:
+						student_json["name"] = student.nickname
+					except:
+						student_json["name"] = "ninguno"
+					try:
+						student_json["stats"] = {"tiempo_ejecicios": dictTime[student.kaid_student]}
+					except:
+						student_json["stats"] = 0
+					i+=1
+					json_array.append(student_json)
+				json_dict={"students":json_array}
+				json_data = json.dumps(json_dict)
+				print json_data
+
+				
 				fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 				#diacomienzo = fechadesde.isoweekday()
 				fechahasta = datetime.strptime(hasta, '%Y-%m-%d')
@@ -106,6 +137,6 @@ def selectStatistics(request):
 					#aqui va una consulta
 		
 					#print fechadesde.isoweekday()	
-			return HttpResponse("algo")
+			return HttpResponse(json_data)
 	except Exception as e:
 		print e

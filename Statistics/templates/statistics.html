@@ -342,7 +342,8 @@ function crearEstadisticas(){
       type: "POST",
       data: {selclase, selhora, desde, hasta},
         success: function(response){
-          console.log(response);
+          jsonResponse = JSON.parse(response);
+          console.log(jsonResponse);
         }
     });
   }
