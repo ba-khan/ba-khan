@@ -195,7 +195,7 @@ input{
     	<ul>
     		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0, "");' class="select"> Horario</a></li>
         	{% for teach in teachers %}  
-			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, "{{teach.kaid_teacher}}");' >{{ teach }}</a></li>
+			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, "{{teach.kaid_teacher}}");' >{{ teach.name }}</a></li>
 			{% endfor %}
         </ul>		
 	</div>
@@ -232,6 +232,19 @@ input{
 		{% for teach in teachers %}
 		<div id="cpestana{{ forloop.counter }}" style="display:none" class="cpestanna"  align="center">
 			<h2 align="center">{{ teach.name }}</h2>
+			<select id="comboBox" class="skill_search" onChange="fillParameters(this.value, '{{teach.kaid_teacher}}');">
+				<OPTION VALUE=0>Todos los cursos</OPTION>
+				{% for clase in teach.classes %}
+					{% if clase.additional %}
+					<OPTION VALUE="{{ clase.id_class }}">{{ clase.nivel }} {{ clase.letter }} {{ clase.year }} {{ clase.additional }}</OPTION>
+
+				    {% else %}
+				    <OPTION VALUE="{{ clase.id_class }}">{{ clase.nivel }} {{ clase.letter }} {{ clase.year }}</OPTION>
+
+				    {% endif %}
+					
+				{% endfor %}
+			</select>
 			<table class="testsched">
 				<tr>
 					<th width="15%">Hora Inicio</th>
@@ -277,9 +290,10 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
     Array.prototype.forEach.call(checkboxes, function(el) {
         values.push(el.value);
     });
+    var curso = $('#comboBox').val()
     var days=values;
     var teacher = kaid_teacher;
-    var datos={days, teacher};
+    var datos={days, teacher, curso};
     $.ajax({
     	url: "{% url 'configuracion:guardar_horario' %}",
     	type: "POST",
@@ -367,7 +381,6 @@ function deleteData(id){
 	}
 
 }
-
 
 function confirmDelete(answer,id){
 	if (answer==1){
@@ -463,18 +476,30 @@ $(document).ready(function(){
 
 	$('#configuraciones').addClass('active selected');
 
-function cambiarPestanna(pestanna, kaid_teacher) {
-	$.ajax({
-		url: "{% url 'configuracion:obtener_clase' %}",
-		type: "POST",
-		data: {kaid_teacher},
-			success: function(response){
-				//console.log(response);
-			}
-	});
-	{% for clase in classes %}
-		console.log("entro en classes")
+
+function fillParameters(id, kaid) {
+	//console.log(kaid);
+	$('input:checkbox').removeAttr('checked');
+	{% for csh in class_schedule %}
+	var kaid_teacher = "{{csh.kaid_teacher_id}}"
+	var day = "{{csh.day}}"
+	var id_schedule = "{{csh.id_schedule_id}}"
+	var id_class = "{{csh.id_class_id}}"
+	var idcheckbox=day+"_"+id_schedule+"_"+kaid
+	if (kaid==kaid_teacher){
+		if (id==id_class){
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
+		if (id=="0"){
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
+	}
 	{% endfor %}
+};
+
+
+function cambiarPestanna(pestanna, kaid_teacher) {
+	$('#comboBox').val($("#comboBox option:first").val());
 	$('input:checkbox').removeAttr('checked');
 	//console.log(kaid_teacher)
 	{% for csh in class_schedule %}

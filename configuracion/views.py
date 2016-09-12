@@ -42,6 +42,11 @@ def getSchedules(request):
         return render_to_response('horario.html', context_instance=RequestContext(request))
     schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
     teachers = Teacher.objects.filter(id_institution_id=teacher.id_institution_id)
+    for teacher in teachers:
+        teacher.classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=teacher.kaid_teacher).values('id_class')).order_by('level','letter')
+        N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+        for i in range(len(teacher.classes)):
+            teacher.classes[i].nivel = N[int(teacher.classes[i].level)] 
     class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
     if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
@@ -119,13 +124,21 @@ def saveSchedule(request):
             args = request.POST
             kaid = str(args['teacher'])
             dias = args.getlist("days[]")
-
+            curso = args['curso']
+            #if curso=="0":
+            #    curso=None
             profesor = Teacher.objects.filter(kaid_teacher=kaid).values('kaid_teacher')
 
-            csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).count()
+            if curso=="0":
+                csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).count()
+            else:
+                csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'], id_class_id=curso).count()
 
             if csh>len(dias):
-                query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
+                if curso=="0":
+                    query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
+                else:
+                    query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'], id_class_id=curso).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
                 for query in query_cs:
                     existe = False
                     for dia in dias:
@@ -139,10 +152,15 @@ def saveSchedule(request):
             elif len(dias)>csh:
                 for dia in dias:
                     diasplit = dia.split('_')
-                    Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
-                
+                    if curso=="0":
+                        Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+                    else:
+                        Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'], id_class_id=curso)           
             else:
-                query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
+                if curso=="0":
+                    query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
+                else:
+                    query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'], id_class_id=curso).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
                 goc = False
                 for query in query_cs:
                     existe = False
@@ -157,21 +175,12 @@ def saveSchedule(request):
                 if goc==True:
                     for dia in dias:
                         diasplit = dia.split('_')
-                        Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+                        if curso=="0":
+                            Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
+                        else:
+                            Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'], id_class_id=curso)
 
             return HttpResponse('Horario para el profesor guardado')
         except Exception as e:
             print e
             return HttpResponse('Error al guardar')
-
-@permission_required('bakhanapp.isAdmin', login_url="/")
-def getClass(request):
-    if request.method == 'POST':
-        request.session.set_expiry(timeSleep)
-        args = request.POST
-        classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=args['kaid_teacher']).values('id_class')).order_by('level','letter')
-        N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
-        for i in range(len(classes)):
-            classes[i].nivel = N[int(classes[i].level)] 
-        html = render_to_string('horario.html', {'classes':classes})
-        return HttpResponse(html)

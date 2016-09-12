@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'^nuevo$', views.newSchedule, name='nuevo_horario'),
     url(r'^eliminar$', views.deleteSchedule, name='eliminar_horario'),
     url(r'^guardar$', views.saveSchedule, name='guardar_horario'),
-    url(r'^clase$', views.getClass, name='obtener_clase'),
+    #url(r'^clase$', views.getClass, name='obtener_clase'),
 ]
