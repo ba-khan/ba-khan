@@ -155,7 +155,9 @@ def saveSchedule(request):
                     if curso=="0":
                         Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
                     else:
-                        Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'], id_class_id=curso)           
+                        queryclass = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')  
+                        if queryclass:
+                            Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule').update(id_class_id=curso)
             else:
                 if curso=="0":
                     query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
@@ -178,7 +180,9 @@ def saveSchedule(request):
                         if curso=="0":
                             Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
                         else:
-                            Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'], id_class_id=curso)
+                            queryclass = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')  
+                            if queryclass:
+                                Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule').update(id_class_id=curso)
 
             return HttpResponse('Horario para el profesor guardado')
         except Exception as e:
