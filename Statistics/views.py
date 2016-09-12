@@ -87,6 +87,11 @@ def selectStatistics(request):
 			hasta = args['hasta']
 			cursos = args.getlist('selclase[]')
 			horarios = args.getlist('selhora[]')
+			radio = args['radioselect']
+			fechadesde = datetime.strptime(desde, '%Y-%m-%d')
+			#diacomienzo = fechadesde.isoweekday()
+			fechahasta = datetime.strptime(hasta, '%Y-%m-%d')+timedelta(days=1)-timedelta(seconds=1)
+			#fechahasta = fechahasta.isoweekday()
 			if len(cursos)>1:
 				for curso in cursos:
 					for horario in horarios:
@@ -97,12 +102,29 @@ def selectStatistics(request):
 			else:
 				sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
 				students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
-				time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students).values('kaid_student_id').annotate(time=Sum('time_taken'))
-				#for sc in sclass:
-					#print sc['kaid_student_id']
-				#	time_exercise = Skill_Attempt.objects.filter(kaid_student_id=sc['kaid_student_id']).values('kaid_student_id').annotate(time=Sum('time_taken'))
-					#tiempo = [time_exercise]
-				#	print time_exercise
+				if radio=="radio1":
+					time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
+				if radio=="radio2":
+					#time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
+					#eliminar el time_exercise de arriba
+					queryradiotwo = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
+					delta = timedelta(days=1)
+					time_exercise=[]
+					for qtwo in queryradiotwo:
+						horas = Schedule.objects.filter(id_schedule=qtwo['id_schedule_id']).values('start_time', 'end_time')
+						inicio = horas[0]['start_time']
+						final = horas[0]['end_time']
+						d = fechadesde
+						while d <= fechahasta:
+							if d.strftime("%A")==qtwo['day']:
+								newstart = d.strftime("%d-%m-%Y")+" "+inicio
+								newend = d.strftime("%d-%m-%Y")+" "+final
+								newstart = datetime.strptime(newstart, '%d-%m-%Y %H:%M')
+								newend = datetime.strptime(newend, '%d-%m-%Y %H:%M')
+								time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+								#print d.strftime("%A")
+								#aqui va la consulta
+							d+=delta
 				dictTime = {}
 				for time in time_exercise:
 					dictTime[time['kaid_student_id']] = time['time']
@@ -122,21 +144,12 @@ def selectStatistics(request):
 					try:
 						student_json["stats"] = {"tiempo_ejecicios": dictTime[student.kaid_student]}
 					except:
-						student_json["stats"] = 0
+						student_json["stats"] = {"tiempo_ejecicios": 0}
 					i+=1
 					json_array.append(student_json)
 				json_dict={"students":json_array}
 				json_data = json.dumps(json_dict)
-				print json_data
 
-				
-				fechadesde = datetime.strptime(desde, '%Y-%m-%d')
-				#diacomienzo = fechadesde.isoweekday()
-				fechahasta = datetime.strptime(hasta, '%Y-%m-%d')
-				#fechahasta = fechahasta.isoweekday()
-					#aqui va una consulta
-		
-					#print fechadesde.isoweekday()	
 			return HttpResponse(json_data)
 	except Exception as e:
 		print e

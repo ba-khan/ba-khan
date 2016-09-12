@@ -332,6 +332,7 @@ function crearEstadisticas(){
   var selhora = $('input[value*="day_"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
+  var radioselect = $('input[value*="radio"]:checked').val()
   if (validar() && selclase.length>0 && selhora.length>0){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
@@ -340,7 +341,7 @@ function crearEstadisticas(){
     $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",
       type: "POST",
-      data: {selclase, selhora, desde, hasta},
+      data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
           console.log(jsonResponse);
