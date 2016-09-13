@@ -41,10 +41,12 @@ def getStatistics(request):
 		teacher = Teacher.objects.get(email=request.user.email)
 	except:
 		return render_to_response('statistics.html', context_instance=RequestContext(request))
-	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+	if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid)):
+		print request.user.user_profile.kaid
 		isTeacher = True
 	else:
 		isTeacher = False
+		print request.user.user_profile.kaid
 	if(request.user.has_perm('bakhanapp.isAdmin')):
 		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
 		class_schedule = Class_Schedule.objects.filter(id_class_id__in=classes).exclude(id_class_id__isnull=True)
@@ -117,14 +119,77 @@ def selectStatistics(request):
 						d = fechadesde
 						while d <= fechahasta:
 							if d.strftime("%A")==qtwo['day']:
-								newstart = d.strftime("%d-%m-%Y")+" "+inicio
-								newend = d.strftime("%d-%m-%Y")+" "+final
-								newstart = datetime.strptime(newstart, '%d-%m-%Y %H:%M')
-								newend = datetime.strptime(newend, '%d-%m-%Y %H:%M')
-								time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
-								#print d.strftime("%A")
-								#aqui va la consulta
+								newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+								newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+								newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+								newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+								time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+	
 							d+=delta
+				if radio=="radio3":
+					time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
+					queryradiothree = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
+					delta = timedelta(days=1)
+					time_out=[]
+					for qthree in queryradiothree:
+						horas = Schedule.objects.filter(id_schedule=qthree['id_schedule_id']).values('start_time', 'end_time')
+						inicio = horas[0]['start_time']
+						final = horas[0]['end_time']
+						d = fechadesde
+						while d <= fechahasta:
+							if d.strftime("%A")==qthree['day']:
+								newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+								newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+								newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+								newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+								time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+	
+							d+=delta
+					for time in time_exercise:
+						for out in time_out:
+							if time['kaid_student_id']==out['kaid_student_id']:
+								time['time']= time['time']-out['time']
+				if radio=="radio4":
+					#time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
+					#print horarios
+					time_exercise=[]
+					for horario in horarios:
+						newhorario=horario.split('_')
+						largo = len(newhorario)
+						#print newhorario[0]
+						#print newhorario[1]
+						delta = timedelta(days=1)
+						if largo==3:
+							#print newhorario[2]
+							hours = newhorario[1].split(' - ')
+							inicio = hours[0]
+							final = hours[1]
+							d = fechadesde
+							while d <= fechahasta:
+								if d.strftime("%A")==newhorario[0]:
+									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
+									time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+		
+								d+=delta
+						else:
+							horas = Schedule.objects.filter(id_schedule=newhorario[1]).values('start_time', 'end_time')
+							inicio = horas[0]['start_time']
+							final = horas[0]['end_time']
+							d = fechadesde
+							while d <= fechahasta:
+								if d.strftime("%A")==newhorario[0]:
+									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
+									time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+		
+								d+=delta
+					#aqui va la consulta
+
 				dictTime = {}
 				for time in time_exercise:
 					dictTime[time['kaid_student_id']] = time['time']
