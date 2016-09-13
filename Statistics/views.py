@@ -16,7 +16,7 @@ from django.core import serializers
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -42,11 +42,9 @@ def getStatistics(request):
 	except:
 		return render_to_response('statistics.html', context_instance=RequestContext(request))
 	if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid)):
-		print request.user.user_profile.kaid
 		isTeacher = True
 	else:
 		isTeacher = False
-		print request.user.user_profile.kaid
 	if(request.user.has_perm('bakhanapp.isAdmin')):
 		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
 		class_schedule = Class_Schedule.objects.filter(id_class_id__in=classes).exclude(id_class_id__isnull=True)
@@ -106,12 +104,14 @@ def selectStatistics(request):
 				students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 				if radio=="radio1":
 					time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
+					time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
 				if radio=="radio2":
 					#time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 					#eliminar el time_exercise de arriba
 					queryradiotwo = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
 					delta = timedelta(days=1)
 					time_exercise=[]
+					time_video=[]
 					for qtwo in queryradiotwo:
 						horas = Schedule.objects.filter(id_schedule=qtwo['id_schedule_id']).values('start_time', 'end_time')
 						inicio = horas[0]['start_time']
@@ -124,13 +124,15 @@ def selectStatistics(request):
 								newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
-	
+								time_video.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 							d+=delta
 				if radio=="radio3":
 					time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
+					time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
 					queryradiothree = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
 					delta = timedelta(days=1)
 					time_out=[]
+					time_video_out=[]
 					for qthree in queryradiothree:
 						horas = Schedule.objects.filter(id_schedule=qthree['id_schedule_id']).values('start_time', 'end_time')
 						inicio = horas[0]['start_time']
@@ -143,56 +145,69 @@ def selectStatistics(request):
 								newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
-	
+								time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 							d+=delta
 					for time in time_exercise:
 						for out in time_out:
 							if time['kaid_student_id']==out['kaid_student_id']:
 								time['time']= time['time']-out['time']
+					for video in time_video:
+						for out_video in time_video_out:
+							if video['kaid_student_id']==out_video['kaid_student_id']:
+								video['seconds']= video['seconds']-out_video['seconds']
+
 				if radio=="radio4":
-					#time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
-					#print horarios
-					time_exercise=[]
-					for horario in horarios:
-						newhorario=horario.split('_')
-						largo = len(newhorario)
-						#print newhorario[0]
-						#print newhorario[1]
-						delta = timedelta(days=1)
-						if largo==3:
-							#print newhorario[2]
-							hours = newhorario[1].split(' - ')
-							inicio = hours[0]
-							final = hours[1]
-							d = fechadesde
-							while d <= fechahasta:
-								if d.strftime("%A")==newhorario[0]:
-									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
-									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
-									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
-									time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
-		
-								d+=delta
-						else:
-							horas = Schedule.objects.filter(id_schedule=newhorario[1]).values('start_time', 'end_time')
-							inicio = horas[0]['start_time']
-							final = horas[0]['end_time']
-							d = fechadesde
-							while d <= fechahasta:
-								if d.strftime("%A")==newhorario[0]:
-									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
-									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
-									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
-									time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
-		
-								d+=delta
-					#aqui va la consulta
+					try:
+						#time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
+						time_exercise=[]
+						time_video=[]
+						for horario in horarios:
+							newhorario=horario.split('_')
+							largo = len(newhorario)
+							#print newhorario[1]
+							delta = timedelta(days=1)
+							if largo==3:
+								#print newhorario[2]
+								hours = newhorario[1].split(' - ')
+								inicio = hours[0]
+								final = hours[1]
+								d = fechadesde
+								while d <= fechahasta:
+									if d.strftime("%A")==newhorario[0]:
+										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+										newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+										print time_exercise
+										time_video.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
+									d+=delta
+							else:
+								horas = Schedule.objects.filter(id_schedule=newhorario[1]).values('start_time', 'end_time')
+								inicio = horas[0]['start_time']
+								final = horas[0]['end_time']
+								d = fechadesde
+								while d <= fechahasta:
+									if d.strftime("%A")==newhorario[0]:
+										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+										newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
+										time_video.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
+									d+=delta
+						#aqui va la consulta
+						#print "llego hasta aca sdasf"
+						#print time_exercise
+					except Exception as e:
+						print "hubo un error"
 
 				dictTime = {}
+				dictVideo = {}
 				for time in time_exercise:
 					dictTime[time['kaid_student_id']] = time['time']
+				for video in time_video:
+					dictVideo[video['kaid_student_id']] = video['seconds']
 				i=0
 				json_array = []
 				for student in students:
@@ -207,9 +222,9 @@ def selectStatistics(request):
 					except:
 						student_json["name"] = "ninguno"
 					try:
-						student_json["stats"] = {"tiempo_ejecicios": dictTime[student.kaid_student]}
+						student_json["stats"] = {"tiempo_ejecicios": dictTime[student.kaid_student], "tiempo_videos":dictVideo[student.kaid_student]}
 					except:
-						student_json["stats"] = {"tiempo_ejecicios": 0}
+						student_json["stats"] = {"tiempo_ejecicios": 0, "tiempo_videos": 0}
 					i+=1
 					json_array.append(student_json)
 				json_dict={"students":json_array}
