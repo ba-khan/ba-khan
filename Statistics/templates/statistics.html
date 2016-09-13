@@ -344,7 +344,7 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
-          console.log(jsonResponse);
+          graficar(jsonResponse);
         }
     });
   }
@@ -353,6 +353,22 @@ function crearEstadisticas(){
     $('#popup_error').append("<p>Faltan datos por seleccionar, revise los campos.</p>")
     $('#popup_error').fadeIn().css('display', '');
     $("#hover").fadeIn().css('display', '');
+  }
+}
+
+function graficar(json){
+  if(json["clases"]){
+    var clase = json["clases"]
+    for (var i=0;i<clase.length;i++){
+      var curso=clase[i]["curso"];
+      var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
+      var tpo_videos = clase[i]["tiempo_videos_clase"]
+      var cantidad = clase[i]["total_ejercicios_clase"]
+      console.log(cantidad);
+    }
+  }
+  else{
+    console.log('no existe')
   }
 }
 

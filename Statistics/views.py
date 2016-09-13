@@ -165,10 +165,8 @@ def selectStatistics(request):
 						for horario in horarios:
 							newhorario=horario.split('_')
 							largo = len(newhorario)
-							#print newhorario[1]
 							delta = timedelta(days=1)
 							if largo==3:
-								#print newhorario[2]
 								hours = newhorario[1].split(' - ')
 								inicio = hours[0]
 								final = hours[1]
@@ -208,8 +206,7 @@ def selectStatistics(request):
 					class_json["tiempo_videos_clase"] = 0
 					class_json["total_ejercicios_clase"] = 0
 					class_json["curso"] = curso
-					#json_array.append(class_json)
-					#j+=1
+
 					
 					for time in time_exercise:
 						dictTime[time['kaid_student_id']] = time['time']
@@ -237,9 +234,7 @@ def selectStatistics(request):
 					json_array.append(class_json)
 				json_dict={"clases":json_array}
 				json_data = json.dumps(json_dict)
-					#for horario in horarios:
-					#	fechadesde = datetime.strptime(desde, '%Y-%m-%d')
-					#	sclass = Student_Class.objects.filter(id_class_id=curso).values('kaid_student_id')
+
 			else:
 				sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
 				students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
@@ -312,10 +307,8 @@ def selectStatistics(request):
 					for horario in horarios:
 						newhorario=horario.split('_')
 						largo = len(newhorario)
-						#print newhorario[1]
 						delta = timedelta(days=1)
 						if largo==3:
-							#print newhorario[2]
 							hours = newhorario[1].split(' - ')
 							inicio = hours[0]
 							final = hours[1]
