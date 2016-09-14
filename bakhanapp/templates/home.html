@@ -48,11 +48,11 @@
 	<a class="" href=/inicio/delete onClick="loading()" id='delete'><span>Borrar Evaluaciones</span></a>
 	{% endif %}
 	{% if isTeacher %}
-	<a class="" href="/inicio/pautas" onClick="loading()" id='pautas'><span>Pautas</span></a>
+	<a class="" href="{% url 'assesmentPautas' %}" onClick="loading()" id='pautas'><span>Pautas</span></a>
 	{% endif %}
 	{% if perms.bakhanapp.isAdmin %} 
-	<a class="" href="/inicio/administradores" id='administradores'><span>Equipo de Gestión</span></a>
-	<a class="" href="/inicio/nomina" id='nomina'><span>Nóminas</span></a>
+	<a class="" href="{% url 'administradorTeam' %}" id='administradores'><span>Equipo de Gestión</span></a>
+	<a class="" href="{% url 'nominaClass' %}" id='nomina'><span>Nóminas</span></a>
 	{% endif %}
 	<a id="logout" class="" href="/salir"><span>Finalizar Sesión</span></a>
 	</span></nav>
