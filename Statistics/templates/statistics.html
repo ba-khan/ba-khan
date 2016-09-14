@@ -292,6 +292,26 @@ table.testsched td {
   <div id="close" onClick="$('#popup_error').fadeOut();$('#hover').fadeOut();">X</div>
 </div>
 
+  <div id="loading" class="profile-throbber">
+    <div class="throbber-grid">   
+            <div class="throbber-row clearfix">
+             <div class="block-0 throbber-block"></div>
+             <div class="block-1 throbber-block"></div>
+             <div class="block-2 throbber-block"></div>
+        </div>
+        <div class="throbber-row clearfix">
+             <div class="block-7 throbber-block"></div>
+             <div class="block-8 throbber-block"></div>
+             <div class="block-3 throbber-block"></div>
+        </div>
+        <div class="throbber-row clearfix">
+             <div class="block-6 throbber-block"></div>
+             <div class="block-5 throbber-block"></div>
+             <div class="block-4 throbber-block"></div>
+        </div>
+    </div>
+  </div>
+
 <script>
 
     $(document).ready(function(){
@@ -302,6 +322,7 @@ table.testsched td {
         });
     });
     $('.graphics').hide()
+    $('#loading').hide()
       $("#hover").click(function(){
           $(this).fadeOut();
           $("#popup").fadeOut();
@@ -330,6 +351,7 @@ function containerShow(){
 }
 
 function crearEstadisticas(){
+  //$('#loading').fadeIn();
   //aqui va algo
   validar();
   var selclase = $('input[name="clase"]:checked').map(function(_,el){
@@ -549,6 +571,7 @@ function graficar(json, clase){
         }]
     });
   });
+  //$('#loading').fadeOut();
 }
 
 function validar(){
