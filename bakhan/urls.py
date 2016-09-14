@@ -46,5 +46,8 @@ urlpatterns = [
     url(r'^inicio/estadisticas/', include('Statistics.urls', namespace="Statistics")),
     url(r'^inicio/estadisticas/','bakhanapp.views.estadisticas', name='estadisticas'),
 
+    url(r'^superestadisticas/', include('SuperStats.urls', namespace="SuperStats")),
+    url(r'^superestadisticas/','bakhanapp.views.superestad', name='superestad'),
+
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]

@@ -35,17 +35,17 @@ from datetime import datetime, timedelta
 ## @return     The schedules.
 ##
 @login_required()
-def getStatistics(request):
+def getSuperStats(request):
 	request.session.set_expiry(timeSleep)
 	try:
 		teacher = Teacher.objects.get(email=request.user.email)
 	except:
-		return render_to_response('statistics.html', context_instance=RequestContext(request))
-	if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+		return render_to_response('superstats.html', context_instance=RequestContext(request))
+	if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid)):
 		isTeacher = True
 	else:
 		isTeacher = False
-	if(request.user.has_perm('bakhanapp.isAdmin')):
+	if(request.user.has_perm('bakhanapp.isSuper')):
 		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
 		class_schedule = Class_Schedule.objects.filter(id_class_id__in=classes).exclude(id_class_id__isnull=True)
 	else:
@@ -74,11 +74,11 @@ def getStatistics(request):
 			horaini = horaini.strftime('%H:%M')
 			otrahora.append(horaini +" - "+end)
 	#print otrahora
-	return render_to_response('statistics.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule, 'otrahora':otrahora} ,context_instance=RequestContext(request))
+	return render_to_response('superstats.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule, 'otrahora':otrahora} ,context_instance=RequestContext(request))
 
 
 @login_required
-def selectStatistics(request):
+def selectSuperStats(request):
 	request.session.set_expiry(timeSleep)
 	try:
 		if request.method=="POST":

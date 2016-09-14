@@ -1,0 +1,748 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Estadísticas{% endblock %}
+
+{% block body2 %}
+
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+
+<style>
+table.testclass { border-collapse: collapse; border: 1px solid #CCB; width:250px;}
+table.testclass td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
+table.testclass th { background: #E5E5E5; text-align: left;}
+table.testclass th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table.testclass td {
+  text-align: left;
+}
+
+.ribbon {
+  position: relative;
+  left: 0px; top: -53px;
+  z-index: 1;
+  overflow: hidden;
+  width: 63px; height: 54px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 9px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 15px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 97px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 13px; left: -25px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+#newSchedule{
+	border: 1px solid #C6D1AD;
+    border-radius: 5px;
+    display:none; 
+    height:220px; 
+    padding:15px;
+    padding-left: 33%;
+    padding-right: 33%;
+    text-align: center;
+}
+label{
+	width: 135px;
+}
+input[type="checkbox"]{
+	margin-bottom: 10px;
+}
+
+tr.nocolor:hover {
+  background-color: transparent;
+}
+
+ 
+#sidebar {
+  margin-right: -1px;
+  float: left;
+  width: 240px;
+
+    box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   z-index: 2;
+   margin-right: -1px;
+}
+#sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+#sidebar ul li {
+    margin: 0;
+}
+#sidebar ul li a {
+  margin: 1px 0px 1px 1px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 100;
+    background: #EEEEEE;
+    text-decoration: none;
+    display: block;
+    border-radius: 10px 1px 1px 10px;
+    border: 1px solid #ddd;
+    -webkit-transition:  background 0.3s ease-in-out;
+    -moz-transition:  background 0.3s ease-in-out;
+    -ms-transition:  background 0.3s ease-in-out;
+    -o-transition:  background 0.3s ease-in-out;
+    transition:  background 0.3s ease-in-out;
+    
+}
+#sidebar ul li a.select{
+  border-right: 1px solid #f7f7f7;
+  background: #f7f7f7;
+  color: #56861f;
+  
+}
+#sidebar ul li:hover a {
+    background: #f7f7f7;
+    color: #56861f;
+}
+#sidebar ul li:visited a {
+    background: #f7f7f7;
+    color: #56861f;
+}
+input[type="checkbox"]{
+  z-index: 1000;
+  width: 80%;
+  height: 80%;
+  margin-bottom:5px;
+}
+
+td{
+  margin: auto;
+}
+table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
+table.testsched td, table.testsched th { padding: 5px; border: 1px solid #E0E0E0;}
+table.testsched th { background: #E5E5E5; text-align: left;}
+table.testsched th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table.testsched td {
+  text-align: left;
+}
+
+.whiteLetter{
+    color: white;  
+}
+
+</style>
+
+
+<br>
+<div class="container">
+<div class="main-content">
+	<br>
+	<h1 style="text-align:center;">Estadísticas</h1>
+  <div id="cursos" style="width:30%;float:left;">
+    <h2 align="center">Cursos</h2>
+    <table class="testclass">
+    <tr>
+      <th>Todos los cursos</th>
+      <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
+    </tr>
+    {% for class in classes %}
+    <tr>
+    {% if class.additional %}
+      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
+    {% else %}
+      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }}</td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+    </table>
+  </div>
+
+  <div id="trabajo" style="width:70%;float:left;">
+    <h2 align="center">Tipo de Trabajo</h2>
+    <table class="testsched" id="sort_table">
+    <thead>
+    <tr>
+      <th width="30%">Horario</th>
+      <th width="10%" id="HSE" onclick="diaselect('Monday')" class="sorter-false">Lunes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Tuesday')">Martes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Wednesday')">Miércoles</th>
+      <th width="10%" id="HSE" onclick="diaselect('Thursday')">Jueves</th>
+      <th width="10%" id="HSE" onclick="diaselect('Friday')">Viernes</th>
+      <th width="10%" id="HSE" onclick="diaselect('Saturday')">Sábado</th>
+      <th width="10%" id="HSE" onclick="diaselect('Sunday')">Domingo</th>
+    </tr>
+    </thead>
+  {% for sch in schedules %}
+  <tr id="R{{ forloop.counter }}" class="nocolor">
+    <th onclick="funciondos('{{sch.id_schedule}}')" id="HSE">{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %} - {% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</th>
+    <td><input type="checkbox" value="Monday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Thursday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Friday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Saturday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
+  </tr>
+  {% endfor %}
+  {% for hora in otrahora %}
+  <tr id="R{{ forloop.counter }}" class="nocolor">
+    <th onclick="funcion('{{ hora }}')" id="HSE">{{hora}}</th>
+    <td><input type="checkbox" value="Monday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Tuesday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Wednesday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Thursday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Friday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Saturday_{{ hora }}_OTRO" name="day"></td>
+    <td><input type="checkbox" value="Sunday_{{ hora }}_OTRO" name="day"></td>
+  </tr>
+  {% endfor %}
+  </table>
+  <br>
+  <div align="left" style="margin-left:200px">
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio3">Fuera horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4">Personalizado <br>  
+  </div>
+  </div>
+
+  <div id="fechas" style="float:left;">
+    <br>
+    <h2 align="center">Fechas</h2>
+        <div  class="fechas">
+          <p class="label_input"><strong id="fIniTooltip">Desde</strong></p>
+          <input name="desde" onchange="validar()" onkeyup="validar()" id="desde" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Desde"/>
+        </div>
+        <div  class="fechas">
+          <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
+          <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
+        </div>
+  </div>
+  <div style="float:left;width:100%" align="center">
+    <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
+  </div>
+</div>
+
+</div>
+<div class="graphics" id="graph" align="center">
+<input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
+<hr>
+<div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<hr>
+<div id="containervid" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<hr>
+<div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+</div>
+
+<div id="popup" style="display:none">
+	<div id="close">X</div>
+</div>
+
+<div id="popup_error" class="popup" style="display:none">
+  <div id="close" onClick="$('#popup_error').fadeOut();$('#hover').fadeOut();">X</div>
+</div>
+
+<script>
+
+    $(document).ready(function(){
+        $('table#sort_table').tablesorter({
+            animation: 'slide',
+            speed: 1200,
+            sortList: [[0,0], [0,1]]
+        });
+    });
+    $('.graphics').hide()
+      $("#hover").click(function(){
+          $(this).fadeOut();
+          $("#popup").fadeOut();
+          $("#popup_error").fadeOut();
+        });
+
+$('#estadisticas').addClass('active selected');
+
+$('input[name="day"]').prop("disabled", true);
+
+$('#check_all_none').click(function () {
+    if ( $(this).is(':checked') ){
+        $('.curso').prop("checked", true);
+        updateSchedule();
+    }
+    else{
+        $('.curso').removeAttr("checked");
+        updateSchedule();
+    }
+
+});
+
+function containerShow(){
+  $(".container").fadeIn();
+  $('.graphics').fadeOut();
+}
+
+function crearEstadisticas(){
+  //aqui va algo
+  validar();
+  var selclase = $('input[name="clase"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  var selhora = $('input[value*="day_"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  var radioselect = $('input[value*="radio"]:checked').val()
+  if (validar() && selclase.length>0 && selhora.length>0){
+    desde = document.getElementById("desde").value;
+    hasta = document.getElementById("hasta").value;
+    $('.container').fadeOut();
+    $('.graphics').fadeIn();
+    $.ajax({
+      url: "{% url 'Statistics:selectStatistics' %}",
+      type: "POST",
+      data: {selclase, selhora, desde, hasta, radioselect},
+        success: function(response){
+          jsonResponse = JSON.parse(response);
+          //console.log(jsonResponse);
+          graficar(jsonResponse, selclase);
+        }
+    });
+  }
+  else{
+    $('#popup_error').empty();
+    $('#popup_error').append("<p>Faltan datos por seleccionar, revise los campos.</p>")
+    $('#popup_error').fadeIn().css('display', '');
+    $("#hover").fadeIn().css('display', '');
+  }
+}
+
+function graficar(json, clase){
+  var arrayte=[];
+  var arraytv=[];
+  var arraycant=[];
+  if(json["clases"]){
+    var clase = json["clases"]
+    for (var i=0;i<clase.length;i++){
+      var curso=clase[i]["nombre"];
+      var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
+      var tpo_videos = clase[i]["tiempo_videos_clase"]
+      var cantidad = clase[i]["total_ejercicios_clase"]
+      arrayte[i]=[curso, tpo_ejercicios]
+      arraytv[i]=[curso, tpo_videos]
+      arraycant[i]=[curso, cantidad]
+    }
+  }
+  else{
+    if(json["students"]){
+      var student = json["students"]
+      for (var j=0;j<student.length;j++){
+        var name=student[j]["name"]
+        var tpo_ejercicios = student[j]["tiempo_ejercicios"]
+        var tpo_videos = student[j]["tiempo_videos"]
+        var cantidad = student[j]["total_ejercicios"]
+        arrayte[j]=[name, tpo_ejercicios]
+        arraytv[j]=[name, tpo_videos]
+        arraycant[j]=[name, cantidad]
+      }
+    }
+  }
+  //console.log(arraycant)
+  $(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de ejercicios'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Tiempo de ejercicios: <b>{point.y} segundos</b>'
+        },
+        series: [{
+            name: 'Tiempo',
+            data: arrayte,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+  });
+
+  $(function () {
+    $('#containervid').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de videos'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Tiempo de videos: <b>{point.y} segundos</b>'
+        },
+        series: [{
+            name: 'Tiempo',
+            data: arraytv,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+  });
+
+  $(function () {
+    $('#containertot').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de ejercicios'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad (ejercicios)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>'
+        },
+        series: [{
+            name: 'Cantidad',
+            data: arraycant,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+  });
+}
+
+function validar(){
+  flag = true;
+  desde = document.getElementById("desde").value;
+  hasta = document.getElementById("hasta").value;
+  if(desde == null || desde.length == 0 || /^\s+$/.test(desde)) {
+    $('#desde').css('color', '#C30202');
+    flag = false;
+  }else{
+    $('#desde').css('color', '#000000');
+  }
+  //if(date_end == null || startDate > endDate || endDate < todayDate || date_end.length == 0 || /^\s+$/.test(date_end)) {
+  if(hasta == null || desde > hasta || hasta.length == 0 || /^\s+$/.test(hasta)) {
+    $('#hasta').css('color', '#C30202');
+    flag = false;
+  }else{
+    $('#hasta').css('color', '#000000');
+  }
+  return flag
+}
+
+function updateSchedule(){
+  var sel = $('input[name="clase"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  //var valor = $('input[value*="radio"]:checked').val()
+  
+  if ($("input[value*='radio']:checked").val()=="radio2"){
+    $('input[name="day"]').prop("checked", false);
+    {% for csh in class_schedule %}
+      var dia = "{{ csh.day }}"
+      var id_sched = "{{ csh.id_schedule_id }}"
+      var id_class = "{{ csh.id_class_id }}"
+      var idcheckbox = dia+"_"+id_sched;
+      for (var i = sel.length - 1; i >= 0; i--) {
+        if(sel[i]==id_class){
+          $("input[value='"+idcheckbox+"']").prop("checked", true);
+        }      
+      }
+      //console.log(idcheckbox);
+    {% endfor %}    
+  }
+  else{
+    if ($("input[value*='radio']:checked").val()=="radio3"){
+      $('input[name="day"]').prop("checked", true);
+      {% for csh in class_schedule %}
+        var dia = "{{ csh.day }}"
+        var id_sched = "{{ csh.id_schedule_id }}"
+        var id_class = "{{ csh.id_class_id }}"
+        var idcheckbox = dia+"_"+id_sched;
+        for (var i = sel.length - 1; i >= 0; i--) {
+          if(sel[i]==id_class){
+            $("input[value='"+idcheckbox+"']").prop("checked", false);
+          }      
+        }
+        //console.log(idcheckbox);
+      {% endfor %}    
+    }
+  }
+}
+
+function selectSchedule(radiobutton){
+  $('input[name="day"]').prop("checked", false);
+  var valor = radiobutton.value;
+  if (valor=="radio1"){
+    $('input[name="day"]').prop("disabled", true);
+    $('input[name="day"]').prop("checked", true);
+  }
+  if (valor=="radio2"){
+    $('input[name="day"]').prop("disabled", true);
+    $('#popup').empty();
+    var sel = $('input[name="clase"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+    if (sel.length===0){
+      $('#popup').empty();
+      $('#popup').append("<p>No existe ningún curso seleccionado</p>")
+      $('#popup').fadeIn().css('display', '');
+      $("#hover").fadeIn().css('display', '');
+    }
+    else{
+      //console.log(sel);
+      {% for csh in class_schedule %}
+        var dia = "{{ csh.day }}"
+        var id_sched = "{{ csh.id_schedule_id }}"
+        var id_class = "{{ csh.id_class_id }}"
+        var idcheckbox = dia+"_"+id_sched;
+        for (var i = sel.length - 1; i >= 0; i--) {
+          if(sel[i]==id_class){
+            $("input[value='"+idcheckbox+"']").prop("checked", true);
+          }      
+        }
+        //console.log(idcheckbox);
+      {% endfor %}
+    }
+    
+  }
+  if (valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    $('#popup').empty();
+    var sel = $('input[name="clase"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+    if (sel.length===0){
+      $('#popup').empty();
+      $('#popup').append("<p>No existe ningún curso seleccionado</p>")
+      $('#popup').fadeIn().css('display', '');
+      $("#hover").fadeIn().css('display', '');
+
+    }
+    else{
+      $('input[name="day"]').prop("checked", true);
+      //console.log(sel);
+      {% for csh in class_schedule %}
+        var dia = "{{ csh.day }}"
+        var id_sched = "{{ csh.id_schedule_id }}"
+        var id_class = "{{ csh.id_class_id }}"
+        var idcheckbox = dia+"_"+id_sched;
+        for (var i = sel.length - 1; i >= 0; i--) {
+          if(sel[i]==id_class){
+            $("input[value='"+idcheckbox+"']").prop("checked", false);
+          }      
+        }
+        //console.log(idcheckbox);
+      {% endfor %}
+    }
+  }
+  if (valor=="radio4"){
+    //console.log("algoaca");
+    $('input[name="day"]').prop("disabled", false); 
+  }
+}
+
+function funcion(counter){
+  var valor = $('input[value*="radio"]:checked').val()
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    return false;
+  }
+  else{
+    $('input[value*="_'+counter+'_OTRO"]').prop("checked", !$('input[value*="_'+counter+'_OTRO"]').prop("checked"));
+    $('input[value="radio4"]').prop("checked", true);
+    if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('input[value="radio4"]').prop("checked", false);
+    }
+  }
+}
+
+$("th#HSE").mouseover(function(){
+  $(this).css("background-color", "gray");
+  $(this).css("color", "white");
+});
+
+$("th#HSE").mouseout(function(){
+  $(this).css("background-color", "#ccc");
+    $(this).css("color", "#555");
+});
+
+function funciondos(id_schedule){
+  var valor = $('input[value*="radio"]:checked').val()
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    return false;
+  }
+  else{  
+    $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
+    $('input[value="radio4"]').prop("checked", true);
+    if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('input[value="radio4"]').prop("checked", false);
+    }
+  }
+}
+
+function diaselect(dia){
+  var valor = $('input[value*="radio"]:checked').val()
+  $('table#sort_table').tablesorter({
+    animation: 'slide',
+    speed: 1200,
+    sortList: [[0,0]]
+  });
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('input[name="day"]').prop("disabled", true);
+    return false;
+  }
+  else{
+    $('input[value*="'+dia+'"]').prop("checked", !$('input[value*="'+dia+'"]').prop("checked"));
+    $('input[value="radio4"]').prop("checked", true);
+    if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('input[value="radio4"]').prop("checked", false);
+    }
+  }
+
+}
+</script>
+
+{% endblock %}

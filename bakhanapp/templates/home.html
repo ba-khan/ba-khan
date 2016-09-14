@@ -46,6 +46,7 @@
 	<a class="" href="{% url 'cursos' %}" id='inicio'><span>Inicio</span></a>
 	{% if perms.bakhanapp.isSuper %}
 	<a class="" href=/delete onClick="loading()" id='delete'><span>Borrar Evaluaciones</span></a>
+	<a class="" href=/superestadisticas onClick="loading()" id='superstats'><span>Estadísticas</span></a>
 	{% endif %}
 	{% if isTeacher %}
 	<a class="" href="{% url 'assesmentPautas' %}" onClick="loading()" id='pautas'><span>Pautas</span></a>
