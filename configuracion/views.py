@@ -65,18 +65,18 @@ def getSchedules(request):
 ##
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def deleteSchedule(request):
-	try:
-	    request.session.set_expiry(timeSleep)
-	    user = Teacher.objects.get(email=request.user.email)
-	    if request.is_ajax():
-	        if request.method == 'POST':
-	            json_str = json.loads(request.body)
-	            sched = Schedule.objects.filter(name_block=json_str["schBlock"], start_time=json_str["schStart"], end_time=json_str["schEnd"],id_institution_id=user.id_institution_id).delete()
-	            return HttpResponse("Bloque eliminado correctamente")
+    try:
+        request.session.set_expiry(timeSleep)
+        user = Teacher.objects.get(email=request.user.email)
+        if request.is_ajax():
+            if request.method == 'POST':
+                json_str = json.loads(request.body)
+                sched = Schedule.objects.filter(name_block=json_str["schBlock"], start_time=json_str["schStart"], end_time=json_str["schEnd"],id_institution_id=user.id_institution_id).delete()
+                return HttpResponse("Bloque eliminado correctamente")
 
-	    return HttpResponse("Error al eliminar")
-	except Exception as e:
-		print e
+        return HttpResponse("Error al eliminar")
+    except Exception as e:
+        print e
 
 
 ##
@@ -105,8 +105,8 @@ def newSchedule(request):
                 id_institution_id=user.id_institution_id)
                 return HttpResponse("Bloque guardado correctamente")     
         except Exception as e:
-        	print e
-        	return HttpResponse("Error al guardar")
+            print e
+            return HttpResponse("Error al guardar")
     return HttpResponse("Error al guardar")
 
 
@@ -158,6 +158,8 @@ def saveSchedule(request):
                         queryclass = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')  
                         if queryclass:
                             Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule').update(id_class_id=curso)
+                        else:
+                            Class_Schedule.objects.get_or_create(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0], id_class_id=curso)
             else:
                 if curso=="0":
                     query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
@@ -183,6 +185,8 @@ def saveSchedule(request):
                             queryclass = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')  
                             if queryclass:
                                 Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule').update(id_class_id=curso)
+                            else:
+                                Class_Schedule.objects.get_or_create(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0], id_class_id=curso)
 
             return HttpResponse('Horario para el profesor guardado')
         except Exception as e:

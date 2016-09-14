@@ -33,7 +33,6 @@ table.testsched th {
 table.testsched td {
   text-align: left;
 }
-
 input{
 	z-index: 1000;
 	width: 100%;
@@ -98,13 +97,11 @@ label{
 input{
 	margin-bottom: 10px;
 }
-
  
 #sidebar {
   margin-right: -1px;
   float: left;
   width: 240px;
-
     box-sizing: border-box;
    -moz-box-sizing: border-box;
    z-index: 2;
@@ -232,7 +229,7 @@ input{
 		{% for teach in teachers %}
 		<div id="cpestana{{ forloop.counter }}" style="display:none" class="cpestanna"  align="center">
 			<h2 align="center">{{ teach.name }}</h2>
-			<select id="comboBox" class="skill_search" onChange="fillParameters(this.value, '{{teach.kaid_teacher}}');">
+			<select id="comboBox{{teach.kaid_teacher}}" class="skill_search" onChange="fillParameters(this.value, '{{teach.kaid_teacher}}');">
 				<OPTION VALUE=0>Todos los cursos</OPTION>
 				{% for clase in teach.classes %}
 					{% if clase.additional %}
@@ -290,7 +287,7 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
     Array.prototype.forEach.call(checkboxes, function(el) {
         values.push(el.value);
     });
-    var curso = $('#comboBox').val()
+    var curso = $('#comboBox'+kaid_teacher).val()
     var days=values;
     var teacher = kaid_teacher;
     var datos={days, teacher, curso};
@@ -313,12 +310,10 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
     		}
     });
 }
-
 function showNewSchedule(){
 	$('#newSchedule').toggle('blind',10);
 	$('#buttonNewSchedule').hide();
 	}
-
 function saveNewSchedule(){
 	$("#acceptDelete").remove();
 	$("#cancelDelete").remove();
@@ -350,8 +345,6 @@ function saveNewSchedule(){
 		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
 	}
 }
-
-
 function deleteData(id){
 	$("#acceptDelete").remove();
 	$("#cancelDelete").remove();
@@ -379,14 +372,11 @@ function deleteData(id){
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 	}
-
 }
-
 function confirmDelete(answer,id){
 	if (answer==1){
 		tr = $(document.getElementById("R"+id));
 		var tdJson = new Object();
-
 				tdJson.schBlock= tr["context"]["children"][0].textContent;
 				tdJson.schStart= tr["context"]["children"][1].textContent;
 				tdJson.schEnd= tr["context"]["children"][2].textContent;
@@ -425,13 +415,11 @@ function confirmDelete(answer,id){
 		$("#popup").fadeOut();
 	}
 }
-
 function validar(){
 	flag = true;
 	nName = document.getElementById("newName").value;
 	nStart = document.getElementById("newStart").value;
 	nEnd = document.getElementById("newEnd").value;
-
 	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
 		$("#newName").css('color', '#C30202');
 		flag = false;
@@ -458,7 +446,6 @@ function validar(){
 	}
 	return flag;
 }
-
 $(document).ready(function(){
 	  //chiusura al click sulla parte scura
 	  $("#hover").click(function(){
@@ -473,10 +460,7 @@ $(document).ready(function(){
 	    });
 	  
 	});
-
 	$('#configuraciones').addClass('active selected');
-
-
 function fillParameters(id, kaid) {
 	//console.log(kaid);
 	$('input:checkbox').removeAttr('checked');
@@ -496,10 +480,8 @@ function fillParameters(id, kaid) {
 	}
 	{% endfor %}
 };
-
-
 function cambiarPestanna(pestanna, kaid_teacher) {
-	$('#comboBox').val($("#comboBox option:first").val());
+	$('#comboBox'+kaid_teacher).val($("#comboBox"+kaid_teacher+" option:first").val());
 	$('input:checkbox').removeAttr('checked');
 	//console.log(kaid_teacher)
 	{% for csh in class_schedule %}
@@ -526,7 +508,6 @@ function cambiarPestanna(pestanna, kaid_teacher) {
 	cpestanna = document.getElementById('c' + pestanna.id);
 	cpestannas = document.getElementsByClassName('cpestanna');
 	contenidopestanas = document.getElementById('contenidopestanas');
-
 	for (i=0;i<cpestannas.length;i++){
 	 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
 	 
@@ -537,7 +518,6 @@ function cambiarPestanna(pestanna, kaid_teacher) {
 	 $(pestanna.getElementsByTagName('a')).addClass("select");
 	});
 }
-
 </script>
 
 {% endblock %}
