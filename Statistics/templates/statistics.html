@@ -276,8 +276,12 @@ table.testsched td {
 </div>
 <div class="graphics" id="graph" align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
-<br>
+<hr>
 <div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<hr>
+<div id="containervid" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<hr>
+<div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
 </div>
 
 <div id="popup" style="display:none">
@@ -346,7 +350,7 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
-          console.log(jsonResponse);
+          //console.log(jsonResponse);
           graficar(jsonResponse, selclase);
         }
     });
@@ -360,7 +364,9 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
-  var array=[];
+  var arrayte=[];
+  var arraytv=[];
+  var arraycant=[];
   if(json["clases"]){
     var clase = json["clases"]
     for (var i=0;i<clase.length;i++){
@@ -368,8 +374,9 @@ function graficar(json, clase){
       var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
       var tpo_videos = clase[i]["tiempo_videos_clase"]
       var cantidad = clase[i]["total_ejercicios_clase"]
-      array[i]=[curso, tpo_ejercicios]
-      //console.log(clase[i]);
+      arrayte[i]=[curso, tpo_ejercicios]
+      arraytv[i]=[curso, tpo_videos]
+      arraycant[i]=[curso, cantidad]
     }
   }
   else{
@@ -379,12 +386,14 @@ function graficar(json, clase){
         var name=student[j]["name"]
         var tpo_ejercicios = student[j]["tiempo_ejercicios"]
         var tpo_videos = student[j]["tiempo_videos"]
-        var cantidad = student[j]["cantidad"]
-        array[j]=[name, tpo_ejercicios]
+        var cantidad = student[j]["total_ejercicios"]
+        arrayte[j]=[name, tpo_ejercicios]
+        arraytv[j]=[name, tpo_videos]
+        arraycant[j]=[name, cantidad]
       }
     }
   }
-  //console.log(array)
+  //console.log(arraycant)
   $(function () {
     $('#container').highcharts({
         chart: {
@@ -420,7 +429,111 @@ function graficar(json, clase){
         },
         series: [{
             name: 'Tiempo',
-            data: array,
+            data: arrayte,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+  });
+
+  $(function () {
+    $('#containervid').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de videos'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Tiempo de videos: <b>{point.y} segundos</b>'
+        },
+        series: [{
+            name: 'Tiempo',
+            data: arraytv,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+  });
+
+  $(function () {
+    $('#containertot').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de ejercicios'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad (ejercicios)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>'
+        },
+        series: [{
+            name: 'Cantidad',
+            data: arraycant,
             dataLabels: {
                 enabled: true,
                 rotation: -90,
