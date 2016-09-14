@@ -101,7 +101,7 @@ def selectStatistics(request):
 						time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
 						total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
 					if radio=="radio2":
-						queryradiotwo = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
+						queryradiotwo = Class_Schedule.objects.filter(id_class_id=curso).values('day', 'id_schedule_id')
 						delta = timedelta(days=1)
 						time_exercise=[]
 						time_video=[]
@@ -125,7 +125,7 @@ def selectStatistics(request):
 						time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 						time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
 						total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
-						queryradiothree = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
+						queryradiothree = Class_Schedule.objects.filter(id_class_id=curso).values('day', 'id_schedule_id')
 						delta = timedelta(days=1)
 						time_out=[]
 						time_video_out=[]

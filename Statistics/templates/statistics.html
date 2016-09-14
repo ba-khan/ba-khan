@@ -274,10 +274,11 @@ table.testsched td {
 </div>
 
 </div>
-  <div align="center">
-  <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros" style="display:none">
-  
-  </div>
+<div class="graphics" id="graph" align="center">
+<input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
+<br>
+<div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+</div>
 
 <div id="popup" style="display:none">
 	<div id="close">X</div>
@@ -296,6 +297,7 @@ table.testsched td {
             sortList: [[0,0], [0,1]]
         });
     });
+    $('.graphics').hide()
       $("#hover").click(function(){
           $(this).fadeOut();
           $("#popup").fadeOut();
@@ -320,7 +322,7 @@ $('#check_all_none').click(function () {
 
 function containerShow(){
   $(".container").fadeIn();
-  $('#button_parameter').fadeOut();
+  $('.graphics').fadeOut();
 }
 
 function crearEstadisticas(){
@@ -337,14 +339,15 @@ function crearEstadisticas(){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
     $('.container').fadeOut();
-    $('#button_parameter').fadeIn();
+    $('.graphics').fadeIn();
     $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",
       type: "POST",
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
-          graficar(jsonResponse);
+          console.log(jsonResponse);
+          graficar(jsonResponse, selclase);
         }
     });
   }
@@ -356,7 +359,8 @@ function crearEstadisticas(){
   }
 }
 
-function graficar(json){
+function graficar(json, clase){
+  var array=[];
   if(json["clases"]){
     var clase = json["clases"]
     for (var i=0;i<clase.length;i++){
@@ -364,12 +368,74 @@ function graficar(json){
       var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
       var tpo_videos = clase[i]["tiempo_videos_clase"]
       var cantidad = clase[i]["total_ejercicios_clase"]
-      console.log(cantidad);
+      array[i]=[curso, tpo_ejercicios]
+      //console.log(clase[i]);
     }
   }
   else{
-    console.log('no existe')
+    if(json["students"]){
+      var student = json["students"]
+      for (var j=0;j<student.length;j++){
+        var name=student[j]["name"]
+        var tpo_ejercicios = student[j]["tiempo_ejercicios"]
+        var tpo_videos = student[j]["tiempo_videos"]
+        var cantidad = student[j]["cantidad"]
+        array[j]=[name, tpo_ejercicios]
+      }
+    }
   }
+  //console.log(array)
+  $(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de ejercicios'
+        },
+        subtitle: {
+            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Tiempo de ejercicios: <b>{point.y} segundos</b>'
+        },
+        series: [{
+            name: 'Tiempo',
+            data: array,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
+  });
 }
 
 function validar(){
