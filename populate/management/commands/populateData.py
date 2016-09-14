@@ -54,7 +54,7 @@ import time
 import webbrowser
 import psycopg2
 import requests
-#import xlrd
+import xlrd
 from collections import OrderedDict
 
 import json
