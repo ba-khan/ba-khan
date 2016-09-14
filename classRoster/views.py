@@ -31,7 +31,7 @@ from bakhanapp.models import Institution
 
 register = template.Library()
 from configs import timeSleep
-import logging
+#import logging
 import datetime
 import cgi
 import rauth
