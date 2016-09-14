@@ -94,6 +94,10 @@ def selectStatistics(request):
 				j=0
 				json_array = []
 				for curso in cursos:
+					classes = Class.objects.filter(id_class=curso).order_by('level','letter')
+					N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+					for i in range(len(classes)):
+						classes[i].nivel = N[int(classes[i].level)] 
 					sclass = Student_Class.objects.filter(id_class_id=curso).values('kaid_student_id')
 					students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 					if radio=="radio1":
@@ -206,6 +210,14 @@ def selectStatistics(request):
 					class_json["tiempo_videos_clase"] = 0
 					class_json["total_ejercicios_clase"] = 0
 					class_json["curso"] = curso
+					try:
+						for clase in classes:
+							if clase.additional:
+								class_json["nombre"]=str(clase.nivel)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
+							else:
+								class_json["nombre"]=str(clase.nivel)+" "+str(clase.letter)+" "+str(clase.year)
+					except Exception as e:
+						print e
 
 					
 					for time in time_exercise:
