@@ -16,7 +16,7 @@ from django.core import serializers
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -34,7 +34,7 @@ from datetime import datetime, timedelta
 ##
 ## @return     The schedules.
 ##
-@login_required()
+@permission_required('bakhanapp.isSuper', login_url="/")
 def getSuperStats(request):
 	request.session.set_expiry(timeSleep)
 	try:
@@ -45,6 +45,7 @@ def getSuperStats(request):
 		isTeacher = True
 	else:
 		isTeacher = False
+	institutions = Institution.objects.all().order_by('id_institution')
 	if(request.user.has_perm('bakhanapp.isSuper')):
 		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
 		class_schedule = Class_Schedule.objects.filter(id_class_id__in=classes).exclude(id_class_id__isnull=True)
@@ -77,7 +78,7 @@ def getSuperStats(request):
 	return render_to_response('superstats.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule, 'otrahora':otrahora} ,context_instance=RequestContext(request))
 
 
-@login_required
+@permission_required('bakhanapp.isSuper', login_url="/")
 def selectSuperStats(request):
 	request.session.set_expiry(timeSleep)
 	try:
