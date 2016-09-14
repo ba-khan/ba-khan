@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'configuracion',
     'Schedule', 
     'Statistics', 
-    'SuperStats'
+    'SuperStats',
 )
 
 MIDDLEWARE_CLASSES = (
