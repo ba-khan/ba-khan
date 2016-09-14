@@ -20,6 +20,7 @@ from bakhanapp.views import getTopictree
 import json
 from configs import timeSleep
 
+
 ##-------------------------------------------------------------------------------
 ## Esta funcion entrega todas las configuraciones de evaluaciones realizadas por
 ## un profesor

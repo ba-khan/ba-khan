@@ -127,6 +127,26 @@ class Class_Subject(models.Model):
     class Meta:
         unique_together = ('id_class', 'id_subject_name')
 
+class Schedule(models.Model):
+    id_schedule = models.AutoField(primary_key=True)
+    start_time = models.CharField(max_length=10)
+    end_time = models.CharField(max_length=10)
+    id_institution = models.ForeignKey(Institution)
+    name_block = models.CharField(max_length=50)
+
+    class Meta:
+        unique_together = ('start_time', 'end_time', 'id_institution')
+
+class Class_Schedule(models.Model):
+    id_class_schedule = models.AutoField(primary_key=True)
+    id_schedule = models.ForeignKey(Schedule)
+    kaid_teacher = models.ForeignKey(Teacher)
+    id_class = models.ForeignKey(Class)
+    day = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ('id_schedule', 'day', 'kaid_teacher')
+
 class Chapter(models.Model):
     id_chapter_name = models.CharField(max_length=150,primary_key=True)
     id_subject_name = models.ForeignKey(Subject)

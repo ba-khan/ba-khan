@@ -24,8 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'uy=!=x&yfcv)a_bbk19xx_4c1w@x$j)g5=i(u99)1qo$+p4)2e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = False
-#DEBUG = True
+#DEBUG = TEMPLATE_DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = []
@@ -52,6 +52,10 @@ INSTALLED_APPS = (
     'Contacts',
     'ManagementTeam',
     'classRoster',
+    'configuracion',
+    'Schedule', 
+    'Statistics', 
+    'SuperStats'
 )
 
 MIDDLEWARE_CLASSES = (

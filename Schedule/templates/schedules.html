@@ -1,0 +1,182 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Horarios{% endblock %}
+
+{% block body2 %}
+
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+
+<style>
+table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
+table.testsched td, table.testsched th { padding: 5px; border: 1px solid #E0E0E0;}
+table.testsched th { background: #E5E5E5; text-align: left;}
+table.testsched th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table.testsched td {
+  text-align: left;
+}
+input{
+	z-index: 1000;
+	width: 100%;
+	height: 100%;
+}
+.greenBackground{
+    background-color: green;  
+}
+
+.redBackground{
+
+    background-color: red;  
+}
+</style>
+
+
+<br>
+<div class="container">
+{% if class_schedule.0.kaid_teacher_id|length > 0%}
+<div class="main-content">
+<h1 style="text-align:center;">Horarios</h1>
+<br>
+<div align="center">
+	<table class="testsched">
+		<tr>
+			<th width="15%">Hora Inicio</th>
+			<th width="15%">Hora Término</th>
+			<th width="10%" id="monday">Lunes</th>
+			<th width="10%" id="tuesday">Martes</th>
+			<th width="10%" id="wednesday">Miércoles</th>
+			<th width="10%" id="thursday">Jueves</th>
+			<th width="10%" id="friday">Viernes</th>
+			<th width="10%" id="saturday">Sábado</th>
+			<th width="10%" id="sunday">Domingo</th>
+		</tr>
+	{% for sch in schedules %}
+	<tr id="R{{ forloop.counter }}">
+		<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
+		<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
+		<td><input type="checkbox" value="Monday_{{sch.id_schedule}}" name="day"></td>
+		<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}" name="day"></td>
+		<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}" name="day"></td>
+		<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}" name="day"></td>
+		<td><input type="checkbox" value="Friday_{{sch.id_schedule}}" name="day"></td>
+		<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}" name="day"></td>
+		<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
+	</tr>
+	{% endfor %}
+	</table>
+	<p id="fondoverde">El color verde indica que ese bloque no está asociado a ningún curso.</p>
+	<p id="fondorojo">El color rojo indica que ese bloque ya está asociado a algún curso.</p>
+	<a onclick="saveTeacherSchedule('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar horario</a>
+
+</div>
+</div>
+{% endif %}
+<br>
+</div>
+<div id="popup" style="display:none">
+	<div id="close">X</div>
+	
+</div>
+
+
+<script>
+$(document).ready(function(){
+	$('#fondoverde').hide();
+	$('#fondorojo').hide();
+	$('#breadcrumb').html('Horarios / {{spanish_classroom}}')
+	{% if class_schedule.0.kaid_teacher_id|length > 0%}
+	{% for csh in class_schedule %}
+		var kaid = "{{csh.kaid_teacher_id}}"
+		var day = "{{csh.day}}"
+		var id_schedule = "{{csh.id_schedule_id}}"
+		var idcheckbox=day+"_"+id_schedule
+		var id_class_id = "{{csh.id_class_id}}"
+		if (id_class_id=='{{id_class}}'){
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
+		else if(id_class_id=="None"){
+			//console.log(idcheckbox)
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+			$("input[value='"+idcheckbox+"']").parent().addClass("greenBackground"); 
+			$("#fondoverde").show()
+		}
+		else{
+			{% for clase in classes %}
+			if ({{clase.id_class}} == id_class_id){
+				$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
+				{% if clase.additional %}
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+				{% else %}
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%'>{{ clase.nivel }} {{ clase.letter }}</label>")
+				{% endif %}
+				$("input[value='"+idcheckbox+"']").remove()
+			}
+
+			{% endfor %}
+			$("#fondorojo").show()
+		}
+
+	{% endfor %}
+	$("input:checkbox:not(:checked)").prop("disabled", true);
+	{% else %}
+		$("#popup").append("<p class='response'>No hay bloques o periodos de horarios definidos.</p>");
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+		$("#hover").click(function(){
+		$(this).fadeOut();
+		$("#popup").fadeOut();
+		window.location.replace("/inicio");
+		});
+		$("#close").click(function(){
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+		window.location.replace("/inicio");
+		});
+	{% endif %}
+});
+
+function saveTeacherSchedule(checkboxName) {
+    var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'), values = [];
+    Array.prototype.forEach.call(checkboxes, function(el) {
+        values.push(el.value);
+    });
+
+    $.ajax({
+    	url: "{% url 'Schedule:guardar_horario' id_class %}",
+    	type: "POST",
+    	data: {values},
+    		success: function(response){
+    			$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+    			$("#popup").append("<p class='response'>"+response+"</p>");
+    			auxResponse = response;
+    			if (auxResponse == "Horario para el profesor guardado"){
+    				$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+    			}
+    		}
+    });
+}
+</script>
+
+{% endblock %}

@@ -28,6 +28,8 @@ urlpatterns = [
     
     url(r'^inicio/cursos/(?P<id_class>[0-9]+)/contactos/', include('Contacts.urls', namespace="Contacts")), 
 
+    url(r'^inicio/cursos/(?P<id_class>[0-9]+)/horarios/', include('Schedule.urls', namespace="Schedule")), 
+
     url(r'^inicio/administradores/', include('ManagementTeam.urls', namespace="ManagementTeam")),
     url(r'^inicio/administradores/','bakhanapp.views.administradorTeam', name='administradorTeam'),
     url(r'^inicio/nomina/', include('classRoster.urls', namespace="classRoster")),
@@ -37,6 +39,15 @@ urlpatterns = [
     
     url(r'^delete/', 'bakhanapp.views.getAssesment', name='getAssesment'),
     url(r'^delete/','bakhanapp.views.deleteAssesment', name='deleteAssesment'),
+
+    url(r'^inicio/configuraciones/', include('configuracion.urls', namespace="configuracion")),
+    url(r'^inicio/configuraciones/','bakhanapp.views.configuracionHorario', name='configuracionHorario'),
+
+    url(r'^inicio/estadisticas/', include('Statistics.urls', namespace="Statistics")),
+    url(r'^inicio/estadisticas/','bakhanapp.views.estadisticas', name='estadisticas'),
+
+    url(r'^superestadisticas/', include('SuperStats.urls', namespace="SuperStats")),
+    url(r'^superestadisticas/','bakhanapp.views.superestad', name='superestad'),
 
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]

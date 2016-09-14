@@ -42,7 +42,7 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Log
+from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Log, Administrator
 
 import datetime
 from configs import timeSleep
@@ -132,6 +132,7 @@ def newInstitution(request):
             data = serializers.serialize('json', iterableArray)
             struct = json.loads(data)
             jsonResponse = json.dumps(struct)
+            print jsonResponse
             return HttpResponse(jsonResponse)
         except Exception as e:
             print '****ERROR**** try:#id4002'
@@ -195,6 +196,22 @@ def nominaClass(request):
 @login_required()
 def deleteAssesment(request):
     return HttpResponseRedirect("/delete")
+
+@login_required()
+def configuracionHorario(request):
+    return HttpResponseRedirect("/configuraciones")
+
+@login_required()
+def estadisticas(request):
+    return HttpResponseRedirect("/estadisticas")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def superestad(request):
+    return HttpResponseRedirect("/superestadisticas")
+
+#@permission_required('bakhanapp.isAdmin',login_url="/")
+#def configuracionHorario(request):
+#    return HttpResponse("Administracion de Horarios")
 
 @login_required()
 def generateAssesmentExcel(request, id_assesment):
@@ -559,7 +576,7 @@ def getTeacherClasses(request):
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     for i in range(len(classes)):
         classes[i].level = N[int(classes[i].level)] 
-    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False

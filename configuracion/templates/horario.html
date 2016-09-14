@@ -1,0 +1,543 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Administración de Horarios{% endblock %}
+
+{% block body2 %}
+
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+
+<style>
+table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
+table.testsched td, table.testsched th { padding: 5px; border: 1px solid #E0E0E0;}
+table.testsched th { background: #E5E5E5; text-align: left;}
+table.testsched th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table.testsched td {
+  text-align: left;
+}
+
+input{
+	z-index: 1000;
+	width: 100%;
+	height: 100%;
+}
+.ribbon {
+  position: relative;
+  left: 0px; top: -53px;
+  z-index: 1;
+  overflow: hidden;
+  width: 63px; height: 54px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 9px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 15px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  width: 97px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 13px; left: -25px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  /*border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;*/
+}
+#newSchedule{
+	border: 1px solid #C6D1AD;
+    border-radius: 5px;
+    display:none; 
+    height:220px; 
+    padding:15px;
+    padding-left: 33%;
+    padding-right: 33%;
+    text-align: center;
+}
+label{
+	width: 95px;
+}
+input{
+	margin-bottom: 10px;
+}
+
+ 
+#sidebar {
+  margin-right: -1px;
+  float: left;
+  width: 240px;
+
+    box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   z-index: 2;
+   margin-right: -1px;
+}
+#sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+#sidebar ul li {
+    margin: 0;
+}
+#sidebar ul li a {
+  margin: 1px 0px 1px 1px;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 100;
+    background: #EEEEEE;
+    text-decoration: none;
+    display: block;
+    border-radius: 10px 1px 1px 10px;
+    border: 1px solid #ddd;
+    -webkit-transition:  background 0.3s ease-in-out;
+    -moz-transition:  background 0.3s ease-in-out;
+    -ms-transition:  background 0.3s ease-in-out;
+    -o-transition:  background 0.3s ease-in-out;
+    transition:  background 0.3s ease-in-out;
+    
+}
+#sidebar ul li a.select{
+  border-right: 1px solid #f7f7f7;
+  background: #f7f7f7;
+  color: #56861f;
+  
+}
+#sidebar ul li:hover a {
+    background: #f7f7f7;
+    color: #56861f;
+}
+#sidebar ul li:visited a {
+    background: #f7f7f7;
+    color: #56861f;
+}
+</style>
+
+
+<br>
+<div class="container">
+<div class="main-content">
+
+	<br>
+	<h1 style="text-align:center;">Administración de Horarios</h1>
+	<div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewSchedule()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Bloque</button> </div>
+
+	<div id="newSchedule">
+		<form action="" method="post" id="form0">{% csrf_token %}
+			<h3>Nuevo Bloque de horario</h3>
+			<label for='block'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="block" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+			<label for='start'>Hora inicio: </label><input id="newStart" onchange="validar()" onkeyup="validar()" type="time" name="start" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="23"><br>
+			<label for='end'>Hora fin: </label><input id="newEnd" onchange="validar()" onkeyup="validar()" type="time" name="end" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="59"><br>
+			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+			<a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
+		</form>
+	</div>
+	{% if schedules.0.start_time|length > 0 %}
+	<table id="adminGrid" class="testgrid">
+		<tr>
+			<th>Bloque</th>
+			<th>Hora Inicio</th>
+			<th>Hora Término</th>
+			<th>Acciones</th>
+		</tr>
+		{% for sch in schedules %}
+		<tr id="R{{ forloop.counter }}">
+			<td>{% if sch.name_block == None %}{{ "" }}{% else %}{{ sch.name_block }}{% endif %}</td>
+			<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
+			<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
+			<td class="editablegrid-action" data-title="action" style="width:205px">
+				<a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+	<br>
+	<h3 align="center">Definir Horario de profesores</h3>
+	<div id="sidebar">
+    	<ul>
+    		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0, "");' class="select"> Horario</a></li>
+        	{% for teach in teachers %}  
+			<li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, "{{teach.kaid_teacher}}");' >{{ teach.name }}</a></li>
+			{% endfor %}
+        </ul>		
+	</div>
+	<div id="contenidopestanas">
+		<div id="cpestana0" class="cpestanna" align="center">
+		<h2 align="center">Horario profesores</h2>
+			<table class="testsched">
+				<tr>
+					<th width="15%">Hora Inicio</th>
+					<th width="15%">Hora Término</th>
+					<th width="10%">Lunes</th>
+					<th width="10%">Martes</th>
+					<th width="10%">Miércoles</th>
+					<th width="10%">Jueves</th>
+					<th width="10%">Viernes</th>
+					<th width="10%">Sábado</th>
+					<th width="10%">Domingo</th>
+				</tr>
+			{% for sch in schedules %}
+			<tr id="R{{ forloop.counter }}">
+				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
+				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			{% endfor %}
+			</table>
+		</div>
+		{% for teach in teachers %}
+		<div id="cpestana{{ forloop.counter }}" style="display:none" class="cpestanna"  align="center">
+			<h2 align="center">{{ teach.name }}</h2>
+			<select id="comboBox" class="skill_search" onChange="fillParameters(this.value, '{{teach.kaid_teacher}}');">
+				<OPTION VALUE=0>Todos los cursos</OPTION>
+				{% for clase in teach.classes %}
+					{% if clase.additional %}
+					<OPTION VALUE="{{ clase.id_class }}">{{ clase.nivel }} {{ clase.letter }} {{ clase.year }} {{ clase.additional }}</OPTION>
+
+				    {% else %}
+				    <OPTION VALUE="{{ clase.id_class }}">{{ clase.nivel }} {{ clase.letter }} {{ clase.year }}</OPTION>
+
+				    {% endif %}
+					
+				{% endfor %}
+			</select>
+			<table class="testsched">
+				<tr>
+					<th width="15%">Hora Inicio</th>
+					<th width="15%">Hora Término</th>
+					<th width="10%" id="monday">Lunes</th>
+					<th width="10%" id="tuesday">Martes</th>
+					<th width="10%" id="wednesday">Miércoles</th>
+					<th width="10%" id="thursday">Jueves</th>
+					<th width="10%" id="friday">Viernes</th>
+					<th width="10%" id="saturday">Sábado</th>
+					<th width="10%" id="sunday">Domingo</th>
+				</tr>
+			{% for sch in schedules %}
+			<tr id="R{{ forloop.counter }}">
+				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
+				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
+				<td><input type="checkbox" value="Monday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Friday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+				<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}_{{teach.kaid_teacher}}" name="day"></td>
+			</tr>
+			{% endfor %}
+			</table>
+
+			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
+		</div>
+		{% endfor %}
+	</div>
+	{% endif %}
+</div>
+</div>
+
+<div id="popup" style="display:none">
+	<div id="close">X</div>
+</div>
+
+<script>
+function saveTeacherSchedule(checkboxName, kaid_teacher) {
+    var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'), values = [];
+    Array.prototype.forEach.call(checkboxes, function(el) {
+        values.push(el.value);
+    });
+    var curso = $('#comboBox').val()
+    var days=values;
+    var teacher = kaid_teacher;
+    var datos={days, teacher, curso};
+    $.ajax({
+    	url: "{% url 'configuracion:guardar_horario' %}",
+    	type: "POST",
+    	data: datos,
+    		success: function(response){
+    			$("#popup").empty()
+    			$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+    			$("#popup").append("<p class='response'>"+response+"</p>");
+    			auxResponse = response;
+    			if (auxResponse == "Horario para el profesor guardado"){
+    				$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+    			}
+    		}
+    });
+}
+
+function showNewSchedule(){
+	$('#newSchedule').toggle('blind',10);
+	$('#buttonNewSchedule').hide();
+	}
+
+function saveNewSchedule(){
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
+	if(validar()){
+		$.ajax({
+		url: "{% url 'configuracion:nuevo_horario' %}",
+		type: "POST",
+		data: $("#form0").serialize(),
+			success: function(response){
+				$("#popup").empty()
+				$("#close").hide();
+				$("#hover").fadeIn();
+				$("#popup").fadeIn();
+				$("#popup").append("<p class='response'>"+response+"</p>");
+				auxResponse = response;
+				if (auxResponse == "Bloque guardado correctamente"){
+					$("#hover").css('pointer-events','none');
+					$("#close").css('pointer-events','none');
+					window.setTimeout(function(){location.reload()},1000);
+				}
+			}
+		});
+	}else{
+		$("#popup").empty()
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+	}
+}
+
+
+function deleteData(id){
+	$("#acceptDelete").remove();
+	$("#cancelDelete").remove();
+	$('.response').remove();
+	$('.question').remove();
+	
+	tr = document.getElementById("R"+id);
+	invalids = tr.getElementsByClassName("invalid").length;
+	if (invalids>0){
+		response = "Campos inválidos";
+		$("#popup").empty()
+		$("#popup").append("<p class='response'>"+response+"</p>");
+		$("#close").show();
+		$("#hover").fadeIn();
+		$("#popup").fadeIn();
+	}
+	else{
+		$('.response').remove();
+		$('.question').remove();
+		$("#close").hide();
+		$("#popup").empty()
+		$("#popup").append("<p class='question'>¿Desea eliminar el Bloque?</p>");
+		$("#popup").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+		$("#popup").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+		$("#hover").fadeIn().css('display', '');
+		$("#popup").fadeIn().css('display', '');
+	}
+
+}
+
+function confirmDelete(answer,id){
+	if (answer==1){
+		tr = $(document.getElementById("R"+id));
+		var tdJson = new Object();
+
+				tdJson.schBlock= tr["context"]["children"][0].textContent;
+				tdJson.schStart= tr["context"]["children"][1].textContent;
+				tdJson.schEnd= tr["context"]["children"][2].textContent;
+		
+		$.ajax({
+			url: "{% url 'configuracion:eliminar_horario' %}",
+			type: "POST",
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(tdJson),
+				success: function(response){
+					$("#popup").empty()
+					$("#acceptSave").remove();
+					$("#cancelSave").remove();
+					$("#acceptDelete").remove();
+					$("#cancelDelete").remove();
+					$('.response').remove();
+					$('.question').remove();
+					$("#hover").fadeIn().css('display', '');
+					$("#popup").append("<p class='response'>"+response+"</p>");
+					$("#popup").fadeIn().css('display', '');
+					
+					auxResponse = response;
+					if (auxResponse == "Bloque eliminado correctamente"){
+						$("#hover").css('pointer-events','none');
+						$("#close").css('pointer-events','none');
+						window.setTimeout(function(){location.reload()},1000);
+					}
+				}
+		});
+		//$("#hover").fadeOut().css('display', 'none');
+		//$("#popup").fadeOut().css('display', 'none');
+	}
+	if (answer==0){
+		$("#popup").empty()
+		$("#hover").fadeOut();
+		$("#popup").fadeOut();
+	}
+}
+
+function validar(){
+	flag = true;
+	nName = document.getElementById("newName").value;
+	nStart = document.getElementById("newStart").value;
+	nEnd = document.getElementById("newEnd").value;
+
+	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+		$("#newName").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newName").css('color', '#000000');
+	}
+	if(nStart == null || nStart.length == 0 || /^\s+$/.test(nStart)) {
+		$("#newStart").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newStart").css('color', '#000000');
+	}
+	if(nEnd == null || nEnd.length == 0 || /^\s+$/.test(nEnd)) {
+		$("#newEnd").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newEnd").css('color', '#000000');
+	}
+	if(nEnd<nStart){
+		$("#newEnd").css('color', '#C30202');
+		flag = false;
+	}else{
+		$("#newEnd").css('color', '#000000');
+	}
+	return flag;
+}
+
+$(document).ready(function(){
+	  //chiusura al click sulla parte scura
+	  $("#hover").click(function(){
+	        $(this).fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	  //chiusura al click sul pulsante
+	  $("#close").click(function(){
+	        $("#hover").fadeOut();
+	    $("#popup").fadeOut();
+	    });
+	  
+	});
+
+	$('#configuraciones').addClass('active selected');
+
+
+function fillParameters(id, kaid) {
+	//console.log(kaid);
+	$('input:checkbox').removeAttr('checked');
+	{% for csh in class_schedule %}
+	var kaid_teacher = "{{csh.kaid_teacher_id}}"
+	var day = "{{csh.day}}"
+	var id_schedule = "{{csh.id_schedule_id}}"
+	var id_class = "{{csh.id_class_id}}"
+	var idcheckbox=day+"_"+id_schedule+"_"+kaid
+	if (kaid==kaid_teacher){
+		if (id==id_class){
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
+		if (id=="0"){
+			$("input[value='"+idcheckbox+"']").prop("checked", true);
+		}
+	}
+	{% endfor %}
+};
+
+
+function cambiarPestanna(pestanna, kaid_teacher) {
+	$('#comboBox').val($("#comboBox option:first").val());
+	$('input:checkbox').removeAttr('checked');
+	//console.log(kaid_teacher)
+	{% for csh in class_schedule %}
+	var kaid = "{{csh.kaid_teacher_id}}"
+	var day = "{{csh.day}}"
+	var id_schedule = "{{csh.id_schedule_id}}"
+	var idcheckbox=day+"_"+id_schedule+"_"+kaid
+	
+	if (kaid==kaid_teacher){
+		//console.log(idcheckbox)
+		//console.log("input[value='"+idcheckbox+"']");
+		$("input[value='"+idcheckbox+"']").prop("checked", true);
+		//$('input[name="' + idcheckbox + '"]').each(function(){
+		//	$(this).prop("checked", true);
+			//console.log(idcheckbox);
+		//});
+		//console.log("algo");
+	}
+		//console.log("{{csh.kaid_teacher_id}}")
+		//console.log(kaid_teacher)
+	{% endfor %}
+	id = (pestanna.id).substring(7);
+	pestanna = document.getElementById(pestanna.id);
+	cpestanna = document.getElementById('c' + pestanna.id);
+	cpestannas = document.getElementsByClassName('cpestanna');
+	contenidopestanas = document.getElementById('contenidopestanas');
+
+	for (i=0;i<cpestannas.length;i++){
+	 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
+	 
+	}
+	$(document).ready(function () {
+	 $(document.getElementsByClassName("select")).removeClass("select");
+	 $(cpestanna).css('display', '');
+	 $(pestanna.getElementsByTagName('a')).addClass("select");
+	});
+}
+
+</script>
+
+{% endblock %}
