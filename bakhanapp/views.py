@@ -26,10 +26,11 @@ from bakhanapp.models import Chapter
 from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
-from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Log, Administrator
+from bakhanapp.models import Grade,Assesment,Assesment_Config
+from bakhanapp.models import Assesment_Skill,Student_Skill,Skill_Log
 
 from configs import timeSleep
-import datetime
+from datetime import datetime
 
 import time
 
