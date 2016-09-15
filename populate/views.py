@@ -51,6 +51,9 @@ import webbrowser
 import psycopg2
 import requests
 
+import xlrd
+from collections import OrderedDict
+
 import json
 import simplejson
 import sys
