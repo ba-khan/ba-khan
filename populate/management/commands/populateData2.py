@@ -1,5 +1,4 @@
-# teste merge
-rom django.shortcuts import render
+from django.shortcuts import render
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect,HttpResponse
