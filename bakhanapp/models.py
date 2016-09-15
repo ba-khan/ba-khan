@@ -77,7 +77,7 @@ class Group(models.Model):
     master = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
-        return self.name
+        return self.type
     
 class Group_Student(models.Model):
     id_group = models.ForeignKey(Group)
