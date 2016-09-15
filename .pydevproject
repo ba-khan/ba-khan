@@ -6,9 +6,20 @@
 <key>DJANGO_SETTINGS_MODULE</key>
 <value>bakhan.settings</value>
 </pydev_variables_property>
+
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">python2.7</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
 <path>/${PROJECT_DIR_NAME}</path>
+<path>/${PROJECT_DIR_NAME}/bakhanapp</path>
+<path>/${PROJECT_DIR_NAME}/classRoster</path>
+<path>/${PROJECT_DIR_NAME}/Contacts</path>
+<path>/${PROJECT_DIR_NAME}/evaluations</path>
+<path>/${PROJECT_DIR_NAME}/groups</path>
+<path>/${PROJECT_DIR_NAME}/login</path>
+<path>/${PROJECT_DIR_NAME}/ManagementTeam</path>
+<path>/${PROJECT_DIR_NAME}/ModelosDatos</path>
+<path>/${PROJECT_DIR_NAME}/populate</path>
+<path>/${PROJECT_DIR_NAME}/bakhanapp/simplejson</path>
 </pydev_pathproperty>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
-<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">python</pydev_property>
 </pydev_project>

@@ -10,10 +10,11 @@ import os
 from django.core.wsgi import get_wsgi_application
 
 path = '/var/www/html/bakhanproyecto'
->>>>>>> desarrollo-bakhan
+
 if path not in sys.path:
   sys.path.append(path)
 
 os.environ["DJANGO_SETTINGS_MODULE"]="bakhan.settings"
 
 application = get_wsgi_application()
+
