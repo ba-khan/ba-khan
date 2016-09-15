@@ -75,6 +75,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Class_Schedule',
+            fields=[
+                ('id_class_schedule', models.AutoField(serialize=False, primary_key=True)),
+                ('day', models.CharField(max_length=20)),
+                ('id_class', models.ForeignKey(to='bakhanapp.Class')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Class_Subject',
             fields=[
                 ('id_class_subject', models.AutoField(serialize=False, primary_key=True)),
@@ -138,6 +146,16 @@ class Migration(migrations.Migration):
                 ('secret', models.CharField(max_length=20)),
                 ('identifier', models.CharField(max_length=50)),
                 ('password', models.CharField(max_length=20)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Schedule',
+            fields=[
+                ('id_schedule', models.AutoField(serialize=False, primary_key=True)),
+                ('start_time', models.CharField(max_length=10)),
+                ('end_time', models.CharField(max_length=10)),
+                ('name_block', models.CharField(max_length=50)),
+                ('id_institution', models.ForeignKey(to='bakhanapp.Institution')),
             ],
         ),
         migrations.CreateModel(
@@ -381,6 +399,16 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(to='bakhanapp.Teacher'),
         ),
         migrations.AddField(
+            model_name='class_schedule',
+            name='id_schedule',
+            field=models.ForeignKey(to='bakhanapp.Schedule'),
+        ),
+        migrations.AddField(
+            model_name='class_schedule',
+            name='kaid_teacher',
+            field=models.ForeignKey(to='bakhanapp.Teacher'),
+        ),
+        migrations.AddField(
             model_name='class',
             name='id_institution',
             field=models.ForeignKey(related_name='id_institution_class', to='bakhanapp.Institution'),
@@ -450,12 +478,20 @@ class Migration(migrations.Migration):
             unique_together=set([('id_skill_name', 'kaid_student', 'problem_number')]),
         ),
         migrations.AlterUniqueTogether(
+            name='schedule',
+            unique_together=set([('start_time', 'end_time', 'id_institution')]),
+        ),
+        migrations.AlterUniqueTogether(
             name='grade',
             unique_together=set([('kaid_student', 'id_assesment')]),
         ),
         migrations.AlterUniqueTogether(
             name='class_subject',
             unique_together=set([('id_class', 'id_subject_name')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='class_schedule',
+            unique_together=set([('id_schedule', 'day', 'kaid_teacher')]),
         ),
         migrations.AlterUniqueTogether(
             name='class',

@@ -3,6 +3,7 @@ from django.db import models
 from bakhanapp.models import Group,Skill,Student
 
 class Master_Group(models.Model):
+	id_group = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)
 	date = models.DateTimeField()
 	date_int = models.IntegerField()
