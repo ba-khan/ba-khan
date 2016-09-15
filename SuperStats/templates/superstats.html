@@ -202,7 +202,7 @@ table.testsched td {
 <div class="main-content">
 	<br>
 	<h1 style="text-align:center;">Estadísticas</h1>
-  <div id="instituciones" style="width:40%;float:left;">
+  <div id="instituciones" style="width:50%;float:left;">
   <h2 align="center">Establecimientos</h2>
   <table class="testinst">
   <tr>
@@ -212,14 +212,33 @@ table.testsched td {
   {% for institution in institutions %}
   <tr>
     <td>{{institution.name}}</td>
-    <td><input type="checkbox" value="{{ institution.id_institution }}" name="institution" class="institution" onclick="updateSchedule();" onchange="updateSchedule();"></td>
+    <td><input type="checkbox" value="{{ institution.id_institution }}" name="institution" class="institution" onclick="updateClass();" onchange="updateClass();"></td>
   </tr>
   {% endfor %}
   </table>
 </div>
+  <div id="cursos" style="width:50%;float:left;">
+    <h2 align="center">Cursos</h2>
+    <table class="testclass">
+    <tr>
+      <th>Todos los cursos</th>
+      <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
+    </tr>
+    {% for class in classes %}
+    <tr>
+    {% if class.additional %}
+      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
+    {% else %}
+      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }}</td>
+      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+    </table>
+  </div>
 
-
-  <div id="trabajo" style="width:60%;float:left;">
+  <div id="trabajo" style="width:100%;float:left;">
     <h2 align="center">Tipo de Trabajo</h2>
     <table class="testsched" id="sort_table">
     <thead>
@@ -267,27 +286,8 @@ table.testsched td {
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4">Personalizado <br>  
   </div>
   </div>
-  <div id="cursos" style="width:30%;float:left;">
-    <h2 align="center">Cursos</h2>
-    <table class="testclass">
-    <tr>
-      <th>Todos los cursos</th>
-      <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
-    </tr>
-    {% for class in classes %}
-    <tr>
-    {% if class.additional %}
-      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
-      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
-    {% else %}
-      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }}</td>
-      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
-    {% endif %}
-    </tr>
-    {% endfor %}
-    </table>
-  </div>
-  <div id="fechas" style="width:70%;float:left;">
+
+  <div id="fechas" style="width:100%;float:left;">
     <br>
     <h2 align="center">Fechas</h2>
         <div  class="fechas">
@@ -358,14 +358,28 @@ $('#check_all_none').click(function () {
 $('#check_all_none_inst').click(function () {
     if ( $(this).is(':checked') ){
         $('.institution').prop("checked", true);
-        updateSchedule();
+        updateClass();
     }
     else{
         $('.institution').removeAttr("checked");
-        updateSchedule();
+        updateClass();
     }
 
 });
+
+function updateClass(){
+  var sel = $('input[name="institution"]:checked').map(function(_,el){
+    return $(el).val();
+  }).get();
+  $.ajax({
+    url: "{% url 'SuperStats:selectClass' %}",
+    type: "POST",
+    data: {sel},
+      success: function(response){
+        console.log(response);
+      }
+  });
+}
 
 function containerShow(){
   $(".container").fadeIn();
