@@ -37,45 +37,9 @@ from datetime import datetime, timedelta
 @permission_required('bakhanapp.isSuper', login_url="/")
 def getSuperStats(request):
 	request.session.set_expiry(timeSleep)
-	try:
-		teacher = Teacher.objects.get(email=request.user.email)
-	except:
-		return render_to_response('superstats.html', context_instance=RequestContext(request))
-	if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid)):
-		isTeacher = True
-	else:
-		isTeacher = False
 	institutions = Institution.objects.all().order_by('id_institution')
-	if(request.user.has_perm('bakhanapp.isSuper')):
-		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
-		class_schedule = Class_Schedule.objects.filter(id_class_id__in=classes).exclude(id_class_id__isnull=True)
-	else:
-		classes = Class.objects.filter(id_class__in=Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_class')).order_by('level','letter')
-		class_schedule = Class_Schedule.objects.filter(kaid_teacher_id=request.user.user_profile.kaid).exclude(id_class_id__isnull=True)
-	N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
-	for i in range(len(classes)):
-		classes[i].nivel = N[int(classes[i].level)] 
-	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-	start = "23:59"
-	end = "23:59"
-	otrahora = []
-	largo = len(schedules)
-	j=0
-	for sched in schedules:
-		j=j+1
-		if sched.start_time!=start:
-			horaini = datetime.strptime(start, "%H:%M") + timedelta(minutes=1)
-			start = horaini.strftime('%H:%M')
-			horafn= datetime.strptime(sched.start_time,"%H:%M") + timedelta(minutes=-1)
-			horafn = horafn.strftime('%H:%M')
-			otrahora.append(start +" - "+ horafn)
-			start = sched.end_time
-		if j==largo:
-			horaini = datetime.strptime(sched.end_time, "%H:%M") + timedelta(minutes=1)
-			horaini = horaini.strftime('%H:%M')
-			otrahora.append(horaini +" - "+end)
-	#print otrahora
-	return render_to_response('superstats.html', {'isTeacher': isTeacher, 'classes':classes, 'schedules':schedules, 'class_schedule':class_schedule, 'otrahora':otrahora} ,context_instance=RequestContext(request))
+
+	return render_to_response('superstats.html', { 'institutions':institutions} ,context_instance=RequestContext(request))
 
 
 @permission_required('bakhanapp.isSuper', login_url="/")
