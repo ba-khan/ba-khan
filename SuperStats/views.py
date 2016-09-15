@@ -41,6 +41,19 @@ def getSuperStats(request):
 
 	return render_to_response('superstats.html', { 'institutions':institutions} ,context_instance=RequestContext(request))
 
+@permission_required('bakhanapp.isSuper', login_url="/")
+def selectClass(request):
+	request.session.set_expiry(timeSleep)
+	if request.method=="POST":
+		args=request.POST
+		instituciones = args.getlist('sel[]')
+		for institucion in instituciones:
+			clases = Class.objects.filter(id_institution_id=institucion).order_by('level','letter')
+			N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+			for i in range(len(classes)):
+				classes[i].level = N[int(classes[i].level)] 
+		return HttpResponse("hola")
+
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def selectSuperStats(request):
