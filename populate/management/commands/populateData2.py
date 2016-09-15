@@ -1,4 +1,4 @@
-# teste merge
+# teste merged
 rom django.shortcuts import render
 # -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*-
