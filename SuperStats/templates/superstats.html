@@ -212,30 +212,13 @@ table.testsched td {
   {% for institution in institutions %}
   <tr>
     <td>{{institution.name}}</td>
-    <td><input type="checkbox" value="{{ institution.id_institution }}" name="institution" class="institution" onclick="updateClass();" onchange="updateClass();"></td>
+    <td><input type="checkbox" value="{{ institution.id_institution }}" name="institution" class="institution" onclick="updateClass();"></td>
   </tr>
   {% endfor %}
   </table>
 </div>
   <div id="cursos" style="width:50%;float:left;">
-    <h2 align="center">Cursos</h2>
-    <table class="testclass">
-    <tr>
-      <th>Todos los cursos</th>
-      <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
-    </tr>
-    {% for class in classes %}
-    <tr>
-    {% if class.additional %}
-      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }} {{ class.additional }}</td>
-      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
-    {% else %}
-      <td>{{ class.nivel }} {{ class.letter }} {{ class.year }}</td>
-      <td><input type="checkbox" value="{{ class.id_class }}" name="clase" class="curso" onclick="updateSchedule();" onchange="updateSchedule();"></td>
-    {% endif %}
-    </tr>
-    {% endfor %}
-    </table>
+  <h2 align="center">Cursos</h2>
   </div>
 
   <div id="trabajo" style="width:100%;float:left;">
@@ -376,10 +359,41 @@ function updateClass(){
     type: "POST",
     data: {sel},
       success: function(response){
-        console.log(response);
+        jsonResponse = JSON.parse(response);
+        drawTableClass(jsonResponse);
       }
   });
 }
+
+function drawTableClass(json){
+  console.log(json);
+  var myArray    = new Array();
+    myArray[0] = 1;
+    myArray[1] = 2.218;
+    myArray[2] = 33;
+    myArray[3] = 114.94;
+    myArray[4] = 5;
+    myArray[5] = 33;
+    myArray[6] = 114.980;
+    myArray[7] = 5;
+    var myTable ='<h2 align="center">Cursos</h2>';
+    myTable+= "<table class='testclass'><tr><th>Todos los cursos</th>";
+    myTable+= "<th style='align-content:center;'><input type='checkbox' id='check_all_none'></th></tr>";
+
+    myTable+="<tr><td style='width: 100px;                   '>---------------</td>";
+    myTable+="<td     style='width: 100px; text-align: right;'>---------------</td></tr>";
+
+  for (var i=0; i<8; i++) {
+    myTable+="<tr><td style='width: 100px;'>Number " + i + " is:</td>";
+    myArray[i] = myArray[i].toFixed(3);
+    myTable+="<td style='width: 100px; text-align: right;'>" + myArray[i] + "</td>";
+  }  
+   myTable+="</table>";
+
+ //document.write( myTable);
+ document.getElementById('cursos').innerHTML = myTable;
+}
+
 
 function containerShow(){
   $(".container").fadeIn();
