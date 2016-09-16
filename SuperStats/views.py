@@ -50,20 +50,34 @@ def selectClass(request):
 			args=request.POST
 			instituciones = args.getlist('sel[]')
 			for institucion in instituciones:
+				otro=[]
 				dictInst = {}
+				dictCole={}
 				nameInst = Institution.objects.filter(id_institution=institucion).values('name')
 				classes = Class.objects.filter(id_institution_id=institucion).order_by('level','letter')
 				N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
 				for i in range(len(classes)):
 					classes[i].level = N[int(classes[i].level)] 
-				dictInst["institucion"] = institucion
-				dictInst["nombreinst"] = nameInst[0]['name']
+				dictCole["institucion"] = institucion
+				dictCole["nombreinst"] = nameInst[0]['name']
+				i=0
 				for clase in classes:
+					dictClase={}
+					dictIdClase={}
 					if clase.additional:
-						dictInst[clase.id_class]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
+						dictClase[i]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
+						dictIdClase[i]=clase.id_class
+						#dictInst[clase.id_class]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
 					else:
-						dictInst[clase.id_class]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)
-				json_array.append(dictInst)
+						dictClase[i]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)
+						dictIdClase[i]=clase.id_class
+						#dictInst[clase.id_class]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)
+					dictInst[i]={"nombrecurso":dictClase, "idcurso":dictIdClase}
+					i+=1
+				otro.append(dictInst)
+				otro.append(dictCole)
+				json_array.append(otro)
+				
 			json_dict={"instituciones":json_array}
 			json_data = json.dumps(json_dict)
 			return HttpResponse(json_data)
