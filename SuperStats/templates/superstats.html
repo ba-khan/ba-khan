@@ -14,7 +14,7 @@
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
-
+<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
 
 <style>
@@ -219,6 +219,7 @@ table.testsched td {
 </div>
   <div id="cursos" style="width:50%;float:left;">
   <h2 align="center">Cursos</h2>
+  <div id="cursoclass" style="overflow-y: auto;outline: none; height:500px"></div>
   </div>
 
   <div id="trabajo" style="width:70%;float:left;">
@@ -280,6 +281,7 @@ table.testsched td {
         });
 
     });
+    drawNiceScrolls();
     $('.graphics').hide();
     $('#testsched').hide();
       $("#hover").click(function(){
@@ -306,6 +308,10 @@ $('#check_all_none_inst').click(function () {
 
 });
 
+function drawNiceScrolls(){
+  $("#cursoclass").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
+}
+
 function drawTableSchedule(){
   var tableSchedule='<h2 align="center">Tipo de Trabajo</h2>';
   tableSchedule+='<table class="testsched" id="sort_table">';
@@ -325,13 +331,13 @@ function drawTableSchedule(){
     else{
       tableSchedule+="<th id='HSE' onclick='funciondos("+i+")'>"+parseInt(0+i)+":00 - "+parseInt(0+i)+":59</th>"
     }
-    tableSchedule+="<td><input type='checkbox' value='Monday_"+i+"' name='day'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Tuesday_"+i+"' name='day'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Wednesday_"+i+"' name='day'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Thursday_"+i+"' name='day'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Friday_"+i+"' name='day'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Saturday_"+i+"' name='day'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Sunday_"+i+"' name='day'></td></tr>";
+    tableSchedule+="<td><input type='checkbox' value='Monday_"+i+"' name='day"+i+"'></td>";
+    tableSchedule+="<td><input type='checkbox' value='Tuesday_"+i+"' name='day"+i+"'></td>";
+    tableSchedule+="<td><input type='checkbox' value='Wednesday_"+i+"' name='day"+i+"'></td>";
+    tableSchedule+="<td><input type='checkbox' value='Thursday_"+i+"' name='day"+i+"'></td>";
+    tableSchedule+="<td><input type='checkbox' value='Friday_"+i+"' name='day"+i+"'></td>";
+    tableSchedule+="<td><input type='checkbox' value='Saturday_"+i+"' name='day"+i+"'></td>";
+    tableSchedule+="<td><input type='checkbox' value='Sunday_"+i+"' name='day"+i+"'></td></tr>";
   }
   tableSchedule+="</table>";
   document.getElementById('testsched').innerHTML = tableSchedule;
@@ -362,11 +368,9 @@ function updateClass(){
 }
 
 function drawTableClass(json){
-  console.log(json);
   var establecimientos=json["instituciones"];
 
-  var myTable ='<h2 align="center">Cursos</h2>';
-  myTable+= "<table class='testclass'><tr><th>Todos los cursos</th>";
+  var myTable= "<table class='testclass'><tr><th>Todos los cursos</th>";
   myTable+= "<th style='align-content:center;'><input type='checkbox' id='check_all_none'></th></tr>";
   for (var i=0;i<establecimientos.length;i++){
     var colegio = establecimientos[i]["nombreinst"];
@@ -383,7 +387,7 @@ function drawTableClass(json){
   }
  myTable+="</table>";
 
- document.getElementById('cursos').innerHTML = myTable;
+ document.getElementById('cursoclass').innerHTML = myTable;
  $('#check_all_none').click(function () {
     if ( $(this).is(':checked') ){
         $('*[class^="curso"]').prop("checked", true);
@@ -418,6 +422,7 @@ function containerShow(){
 function crearEstadisticas(){
   //aqui va algo
   validar();
+  var selhorario=[];
   var selinst = $('input[name="institution"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
@@ -425,19 +430,24 @@ function crearEstadisticas(){
     return $(el).val();
   }).get();
   var radioselect = $('input[value*="radio"]:checked').val();
-  if (validar() && selclase.length>0 && selhora.length>0 && radioselect){
+  if (radioselect=="radio4"){
+    selhorario = $('input[name*="day"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+  }
+  if (validar() && selinst.length>0 && selcurso.length>0 && radioselect){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
     $('.container').fadeOut();
     $('.graphics').fadeIn();
     $.ajax({
-      url: "{% url 'Statistics:selectStatistics' %}",
+      url: "{% url 'SuperStats:selectSuperStats' %}",
       type: "POST",
-      data: {selinst, selcurso, desde, hasta, radioselect},
+      data: {selinst, selcurso, desde, hasta, radioselect, selhorario},
         success: function(response){
-          jsonResponse = JSON.parse(response);
-          //console.log(jsonResponse);
-          graficar(jsonResponse, selclase);
+          //jsonResponse = JSON.parse(response);
+          console.log(response);
+          //graficar(jsonResponse, selinst);
         }
     });
   }
@@ -664,6 +674,7 @@ function updateSchedule(){
   //var valor = $('input[value*="radio"]:checked').val()
   
   if ($("input[value*='radio']:checked").val()=="radio2"){
+    $('#testsched').hide();
     $('input[name="day"]').prop("checked", false);
     {% for csh in class_schedule %}
       var dia = "{{ csh.day }}"
@@ -680,6 +691,7 @@ function updateSchedule(){
   }
   else{
     if ($("input[value*='radio']:checked").val()=="radio3"){
+      $('#testsched').hide();
       $('input[name="day"]').prop("checked", true);
       {% for csh in class_schedule %}
         var dia = "{{ csh.day }}"
@@ -701,10 +713,12 @@ function selectSchedule(radiobutton){
   $('input[name="day"]').prop("checked", false);
   var valor = radiobutton.value;
   if (valor=="radio1"){
+    $('#testsched').hide();
     $('input[name="day"]').prop("disabled", true);
     $('input[name="day"]').prop("checked", true);
   }
   if (valor=="radio2"){
+    $('#testsched').hide();
     $('input[name="day"]').prop("disabled", true);
     $('#popup').empty();
     var sel = $('input[name*="curso"]:checked').map(function(_,el){
@@ -734,6 +748,7 @@ function selectSchedule(radiobutton){
     
   }
   if (valor=="radio3"){
+    $('#testsched').hide();
     $('input[name="day"]').prop("disabled", true);
     $('#popup').empty();
     var sel = $('input[name*="curso"]:checked').map(function(_,el){
@@ -779,13 +794,16 @@ function selectSchedule(radiobutton){
 function funciondos(id_schedule){
   var valor = $('input[value*="radio"]:checked').val()
   if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('#testsched').hide();
     $('input[name="day"]').prop("disabled", true);
     return false;
   }
   else{  
+    drawTableSchedule();
     $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
     $('input[value="radio4"]').prop("checked", true);
     if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('#testsched').hide();
       $('input[value="radio4"]').prop("checked", false);
     }
   }
@@ -799,13 +817,16 @@ function diaselect(dia){
     sortList: [[0,0]]
   });
   if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+    $('#testsched').hide();
     $('input[name="day"]').prop("disabled", true);
     return false;
   }
   else{
+    drawTableSchedule();
     $('input[value*="'+dia+'"]').prop("checked", !$('input[value*="'+dia+'"]').prop("checked"));
     $('input[value="radio4"]').prop("checked", true);
     if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
+      $('#testsched').hide();
       $('input[value="radio4"]').prop("checked", false);
     }
   }

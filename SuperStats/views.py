@@ -93,11 +93,14 @@ def selectSuperStats(request):
 			args=request.POST
 			desde = args['desde']
 			hasta = args['hasta']
-			cursos = args.getlist('selclase[]')
-			horarios = args.getlist('selhora[]')
+			establecimientos = args.getlist('selinst[]')
+			cursos = args.getlist('selcurso[]')
+			horario = args.getlist('selhorario[]')
 			radio = args['radioselect']
 			fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 			fechahasta = datetime.strptime(hasta, '%Y-%m-%d')+timedelta(days=1)-timedelta(seconds=1)
+			print horario
+			'''
 			if len(cursos)>1:
 				j=0
 				json_array = []
@@ -397,7 +400,7 @@ def selectSuperStats(request):
 					json_array.append(student_json)
 				json_dict={"students":json_array}
 				json_data = json.dumps(json_dict)
-
-			return HttpResponse(json_data)
+			'''
+			return HttpResponse("json_data")
 	except Exception as e:
 		print e
