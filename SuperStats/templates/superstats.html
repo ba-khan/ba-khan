@@ -362,20 +362,21 @@ function updateClass(){
 }
 
 function drawTableClass(json){
+  console.log(json);
   var establecimientos=json["instituciones"];
 
   var myTable ='<h2 align="center">Cursos</h2>';
   myTable+= "<table class='testclass'><tr><th>Todos los cursos</th>";
   myTable+= "<th style='align-content:center;'><input type='checkbox' id='check_all_none'></th></tr>";
   for (var i=0;i<establecimientos.length;i++){
-    var colegio = establecimientos[i][1]["nombreinst"];
-    var id = establecimientos[i][1]["institucion"];
+    var colegio = establecimientos[i]["nombreinst"];
+    var id = establecimientos[i]["institucion"];
     myTable+="<tr><td style='width: 100px;'>"+colegio+"</td>";
-    myTable+="<td><input type='checkbox' value="+id+" name='curso"+id+"' class='curso' id='check_all_none_classes'></td></tr>";
-    var lencursos = Object.keys(establecimientos[i][0]).length
+    myTable+="<td><input type='checkbox' value="+id+" name='curso"+id+"' class='curso' onclick='check_all_none_classes("+id+")' id='idcurso"+id+"'></td></tr>";
+    var lencursos = Object.keys(establecimientos[i]["cursos"]).length
     for (var j=0;j<lencursos;j++){
-      var idcurso = establecimientos[i][0][j]["idcurso"][j]
-      var nombrecurso = establecimientos[i][0][j]["nombrecurso"][j]
+      var idcurso = establecimientos[i]["cursos"][j]["idcurso"][j]
+      var nombrecurso = establecimientos[i]["cursos"][j]["nombrecurso"][j]
       myTable+="<tr><td style='font-size:75%'>"+nombrecurso+"</td>";
       myTable+="<td><input type='checkbox' value="+idcurso+" name='curso"+idcurso+"' class='curso"+id+"'></td></tr>";
     }
@@ -394,18 +395,18 @@ function drawTableClass(json){
     }
 
   });
-  $('#check_all_none_classes').click(function () {
-    var valor = $(this).val();
-    if ( $(this).is(':checked') ){
-        $('.curso'+valor).prop("checked", true);
-        //updateSchedule();
-    }
-    else{
-        $('.curso'+valor).removeAttr("checked");
-        //updateSchedule();
-    }
 
-  });
+}
+
+function check_all_none_classes(id){
+  var idc = $('#idcurso'+id).val();
+  console.log(idc)
+  if ($('#idcurso'+id).is(':checked')){
+    $('.curso'+idc).prop("checked", true);
+  }
+  else{
+    $('.curso'+idc).removeAttr("checked");
+  }
 }
 
 
@@ -417,14 +418,14 @@ function containerShow(){
 function crearEstadisticas(){
   //aqui va algo
   validar();
-  var selclase = $('input[name="clase"]:checked').map(function(_,el){
+  var selinst = $('input[name="institution"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
-  var selhora = $('input[value*="day_"]:checked').map(function(_,el){
+  var selcurso = $('input[name*="curso"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
-  var radioselect = $('input[value*="radio"]:checked').val()
-  if (validar() && selclase.length>0 && selhora.length>0){
+  var radioselect = $('input[value*="radio"]:checked').val();
+  if (validar() && selclase.length>0 && selhora.length>0 && radioselect){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
     $('.container').fadeOut();
@@ -432,7 +433,7 @@ function crearEstadisticas(){
     $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",
       type: "POST",
-      data: {selclase, selhora, desde, hasta, radioselect},
+      data: {selinst, selcurso, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
           //console.log(jsonResponse);
