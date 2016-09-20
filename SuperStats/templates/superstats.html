@@ -326,18 +326,26 @@ function drawTableSchedule(){
   for(var i=0;i<24;i++){
     tableSchedule+="<tr id='"+i+"' class='nocolor'>";
     if(i<10){
-      tableSchedule+="<th id='HSE' onclick='funciondos("+i+")'>0"+parseInt(0+i)+":00 - 0"+parseInt(0+i)+":59</th>"
+      tableSchedule+="<th id='HSE' onclick='funciondos(0"+i+")'>0"+parseInt(0+i)+":00 - 0"+parseInt(0+i)+":59</th>"
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Monday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Tuesday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Wednesday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Thursday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Friday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Saturday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Sunday' name='day"+i+"'></td></tr>";
     }
     else{
       tableSchedule+="<th id='HSE' onclick='funciondos("+i+")'>"+parseInt(0+i)+":00 - "+parseInt(0+i)+":59</th>"
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Monday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Tuesday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Wednesday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Thursday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Friday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Saturday' name='day"+i+"'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Sunday' name='day"+i+"'></td></tr>";
     }
-    tableSchedule+="<td><input type='checkbox' value='Monday_"+i+"' name='day"+i+"'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Tuesday_"+i+"' name='day"+i+"'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Wednesday_"+i+"' name='day"+i+"'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Thursday_"+i+"' name='day"+i+"'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Friday_"+i+"' name='day"+i+"'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Saturday_"+i+"' name='day"+i+"'></td>";
-    tableSchedule+="<td><input type='checkbox' value='Sunday_"+i+"' name='day"+i+"'></td></tr>";
+
   }
   tableSchedule+="</table>";
   document.getElementById('testsched').innerHTML = tableSchedule;
@@ -445,9 +453,9 @@ function crearEstadisticas(){
       type: "POST",
       data: {selinst, selcurso, desde, hasta, radioselect, selhorario},
         success: function(response){
-          //jsonResponse = JSON.parse(response);
-          console.log(response);
-          //graficar(jsonResponse, selinst);
+          jsonResponse = JSON.parse(response);
+          //console.log(response);
+          graficar(jsonResponse, selinst);
         }
     });
   }
@@ -460,6 +468,8 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
+  $("#cursoclass").getNiceScroll().remove();
+  console.log(json);
   var arrayte=[];
   var arraytv=[];
   var arraycant=[];
@@ -467,12 +477,14 @@ function graficar(json, clase){
     var clase = json["clases"]
     for (var i=0;i<clase.length;i++){
       var curso=clase[i]["nombre"];
+      var ee=clase[i]["establecimiento"]
       var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
       var tpo_videos = clase[i]["tiempo_videos_clase"]
       var cantidad = clase[i]["total_ejercicios_clase"]
-      arrayte[i]=[curso, tpo_ejercicios]
-      arraytv[i]=[curso, tpo_videos]
-      arraycant[i]=[curso, cantidad]
+      var nombre = curso +" - "+ee
+      arrayte[i]=[nombre, tpo_ejercicios]
+      arraytv[i]=[nombre, tpo_videos]
+      arraycant[i]=[nombre, cantidad]
     }
   }
   else{
@@ -786,11 +798,6 @@ function selectSchedule(radiobutton){
   }
 }
 
-
-
-
-
-
 function funciondos(id_schedule){
   var valor = $('input[value*="radio"]:checked').val()
   if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
@@ -799,8 +806,14 @@ function funciondos(id_schedule){
     return false;
   }
   else{  
-    drawTableSchedule();
-    $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
+    //drawTableSchedule();
+    if(id_schedule<10){
+      $('input[value*="0'+id_schedule+'_"]').prop("checked", !$('input[value*="'+id_schedule+'_"]').prop("checked"));
+    }
+    else{
+      $('input[value*="'+id_schedule+'_"]').prop("checked", !$('input[value*="'+id_schedule+'_"]').prop("checked"));
+    }
+    
     $('input[value="radio4"]').prop("checked", true);
     if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
       $('#testsched').hide();
@@ -822,7 +835,7 @@ function diaselect(dia){
     return false;
   }
   else{
-    drawTableSchedule();
+    //drawTableSchedule();
     $('input[value*="'+dia+'"]').prop("checked", !$('input[value*="'+dia+'"]').prop("checked"));
     $('input[value="radio4"]').prop("checked", true);
     if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
