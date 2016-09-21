@@ -8,8 +8,8 @@ from django.test import Client
 class LoginTest(TestCase):
 
     def test_authenticateUser(self):
-
         client = Client()
         response = self.client.post('/authenticate/', {'username': 'fred', 'email': 'secret', 'kaid': '12121', 'avatar_url':'asdafs'})
         self.assertEqual(response.content, 'True')
-
+        response = self.client.get('/authenticate/', {'username': 'fred', 'email': 'secret', 'kaid': '12121', 'avatar_url':'asdafs'})
+        self.assertEqual(response.content, 'False')
