@@ -106,9 +106,6 @@ table.testinst td {
 label{
 	width: 135px;
 }
-input[type="checkbox"]{
-	margin-bottom: 10px;
-}
 
 tr.nocolor:hover {
   background-color: transparent;
@@ -164,11 +161,23 @@ tr.nocolor:hover {
     background: #f7f7f7;
     color: #56861f;
 }
-input[type="checkbox"]{
+input[type="checkbox"].institution{
   z-index: 1000;
   width: 80%;
   height: 80%;
-  margin-bottom:5px;
+  margin-bottom:10px;
+}
+
+input[type="checkbox"].all_inst{
+  z-index: 1000;
+  width: 80%;
+  height: 80%;
+  margin-bottom:10px;
+}
+
+input[type="checkbox"]#checkschedule{
+  width: 100%;
+  height: 100%;
 }
 
 td{
@@ -207,7 +216,7 @@ table.testsched td {
   <table class="testinst">
   <tr>
     <th>Todos los establecimientos</th>
-    <th style="align-content:center;"><input type="checkbox" id="check_all_none_inst"></th>
+    <th style="align-content:center;"><input type="checkbox" id="check_all_none_inst" class="all_inst"></th>
   </tr>
   {% for institution in institutions %}
   <tr>
@@ -327,23 +336,23 @@ function drawTableSchedule(){
     tableSchedule+="<tr id='"+i+"' class='nocolor'>";
     if(i<10){
       tableSchedule+="<th id='HSE' onclick='funciondos(0"+i+")'>0"+parseInt(0+i)+":00 - 0"+parseInt(0+i)+":59</th>"
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Monday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Tuesday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Wednesday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Thursday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Friday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Saturday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Sunday' name='day"+i+"'></td></tr>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Monday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Tuesday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Wednesday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Thursday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Friday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Saturday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='0"+i+"_Sunday' name='day"+i+"' id='checkschedule'></td></tr>";
     }
     else{
       tableSchedule+="<th id='HSE' onclick='funciondos("+i+")'>"+parseInt(0+i)+":00 - "+parseInt(0+i)+":59</th>"
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Monday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Tuesday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Wednesday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Thursday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Friday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Saturday' name='day"+i+"'></td>";
-      tableSchedule+="<td><input type='checkbox' value='"+i+"_Sunday' name='day"+i+"'></td></tr>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Monday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Tuesday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Wednesday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Thursday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Friday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Saturday' name='day"+i+"' id='checkschedule'></td>";
+      tableSchedule+="<td><input type='checkbox' value='"+i+"_Sunday' name='day"+i+"' id='checkschedule'></td></tr>";
     }
 
   }
@@ -378,8 +387,8 @@ function updateClass(){
 function drawTableClass(json){
   var establecimientos=json["instituciones"];
 
-  var myTable= "<table class='testclass'><tr><th>Todos los cursos</th>";
-  myTable+= "<th style='align-content:center;'><input type='checkbox' id='check_all_none'></th></tr>";
+  var myTable= "<table class='testclass'><tr><th width='80%'>Todos los cursos</th>";
+  myTable+= "<th style='align-content:center;' width='20%'><input type='checkbox' id='check_all_none'></th></tr>";
   for (var i=0;i<establecimientos.length;i++){
     var colegio = establecimientos[i]["nombreinst"];
     var id = establecimientos[i]["institucion"];
@@ -425,6 +434,7 @@ function check_all_none_classes(id){
 function containerShow(){
   $(".container").fadeIn();
   $('.graphics').fadeOut();
+  drawNiceScrolls();
 }
 
 function crearEstadisticas(){
