@@ -434,6 +434,7 @@ function drawTableSchedule(){
   });
 }
 
+var tree;
 function updateClass(){
   var sel = $('input[name="institution"]:checked').map(function(_,el){
     return $(el).val();
@@ -444,74 +445,15 @@ function updateClass(){
     data: {sel},
       success: function(response){
         jsonResponse = JSON.parse(response);
-        //$('#contenedor').jstree(jsonResponse);
-        //console.log(jsonResponse);
-        drawTableClass(jsonResponse);
-        //$('#contenedor').jstree(true).settings.core.data=jsonResponse;
-        //$('#contenedor').jstree(true).refresh();
+        try{
+          tree.jstree("destroy");
+          tree = $('#contenedor').jstree(jsonResponse);
+        }
+        catch(err){
+          tree = $('#contenedor').jstree(jsonResponse);
+        }
       }
   });
-}
-
-function drawTableClass(json){
-  //console.log(json);
-  //$('#contenedor').jstree(json);
-  /*$('#contenedor').jstree({
-    core : {
-      data : function (node, cb) {cb(json);},
-    }
-  })*/
-  //$('#contenedor').jstree().refresh();
-  $('#contenedor').jstree(json);
-  //$('#contenedor').jstree(true).settings.core.data=json;
-  //$('#contenedor').jstree(true).refresh();
-  //var tree = jQuery.jstree._reference("#contenedor");
-  //var tree = $('#contenedor').jstree(true);
-  //tree.jstree("destroy");
-  //tree.deselect_all();
-  //tree.refresh();
-  //console.log(json);
-  //$('#contenedor').jstree(json);
-  //tree.refresh();
-  //console.log(json);
-  //$('#contenedor').empty();
-  //$('#contenedor').jstree(json);
-  //$('#contenedor').jstree(true).settings.core.data=json;
-  //$('#contenedor').jstree(json).refresh();
-  //console.log(json)
-  /*
-  var establecimientos=json["instituciones"];
-
-  var myTable= "<table class='testclass'><tr><th width='80%'>Todos los cursos</th>";
-  myTable+= "<th style='align-content:center;' width='20%'><input type='checkbox' id='check_all_none'></th></tr>";
-  for (var i=0;i<establecimientos.length;i++){
-    var colegio = establecimientos[i]["nombreinst"];
-    var id = establecimientos[i]["institucion"];
-    myTable+="<tr><td style='width: 100px;'>"+colegio+"</td>";
-    myTable+="<td><input type='checkbox' value="+id+" name='curso"+id+"' class='curso' onclick='check_all_none_classes("+id+")' id='idcurso"+id+"'></td></tr>";
-    var lencursos = Object.keys(establecimientos[i]["cursos"]).length
-    for (var j=0;j<lencursos;j++){
-      var idcurso = establecimientos[i]["cursos"][j]["idcurso"][j]
-      var nombrecurso = establecimientos[i]["cursos"][j]["nombrecurso"][j]
-      myTable+="<tr><td style='font-size:75%'>"+nombrecurso+"</td>";
-      myTable+="<td><input type='checkbox' value="+idcurso+" name='curso"+idcurso+"' class='curso"+id+"'></td></tr>";
-    }
-  }
- myTable+="</table>";
-
- document.getElementById('cursoclass').innerHTML = myTable;
- $('#check_all_none').click(function () {
-    if ( $(this).is(':checked') ){
-        $('*[class^="curso"]').prop("checked", true);
-        //updateSchedule();
-    }
-    else{
-        $('*[class^="curso"]').removeAttr("checked");
-        //updateSchedule();
-    }
-
-  });
-*/
 }
 
 function check_all_none_classes(id){
