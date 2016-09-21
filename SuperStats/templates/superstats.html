@@ -203,7 +203,7 @@ table.testsched td {
 }
 
 .container{
-  max-width: 700px;
+  max-width: 1000px;
     /*position: relative;*/
     /*height: 100%;*/
     /*width: 100%;*/
@@ -239,7 +239,7 @@ table.testsched td {
 <div class="allcontent">
   <br>
   <h1 style="text-align:center;">Estadísticas</h1>
-<div class="container" style="float:left;width:50%;">
+<div class="container" style="float:left;width:60%;">
 <div class="main-content">
 
   <div id="instituciones" style="width:100%;float:left;">
@@ -297,7 +297,7 @@ table.testsched td {
 
 </div>
 
-  <div class="contenedor" style="width:28%;float:left;">
+  <div class="contenedor" style="width:15%;float:left;">
   <br>
 <h2 align="center">Cursos</h2>
 <div id="contenedor">
@@ -343,18 +343,7 @@ table.testsched td {
         });
 
     });
-    //$('#contenedor').jstree('core':{'data':{"id": 0, "parent":"#", "text":'Todos los Cursos', "state":{"opened":"true"}, "icon":"false"}} );
-    /*$('#contenedor').jstree({
-                    'core': {
-                        'check_callback' : true,
-                        'data': {"id": 0, "parent":"#", "text":'Todos los Cursos', "state":{"opened":"true"}, "icon":"false"}
-                    },
-                    "checkbox": {
-                        'visible': true,
-                        'keep_selected_style': false
-                    },
-                    "plugins": ["wholerow", "checkbox"]
-                });*/
+    setHeightContent();
     drawNiceScrolls();
     $('.graphics').hide();
     $('#testsched').hide();
@@ -454,6 +443,12 @@ function updateClass(){
         }
       }
   });
+}
+
+function setHeightContent(){
+  var altura = $('.main-content').height();
+  $('#contenedor').height(altura-69);
+  console.log(altura);
 }
 
 function check_all_none_classes(id){
@@ -843,6 +838,7 @@ function selectSchedule(radiobutton){
     $('#testsched').show();
     $('input[name="day"]').prop("disabled", false); 
   }
+  setHeightContent();
 }
 
 function funciondos(id_schedule){
