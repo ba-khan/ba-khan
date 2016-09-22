@@ -44,7 +44,7 @@ input{
 
 .redBackground{
 
-    background-color: red;  
+    background-color: gray;  
 }
 </style>
 
@@ -83,7 +83,7 @@ input{
 	{% endfor %}
 	</table>
 	<p id="fondoverde">El color verde indica que ese bloque no está asociado a ningún curso.</p>
-	<p id="fondorojo">El color rojo indica que ese bloque ya está asociado a algún curso.</p>
+	<p id="fondorojo">El color gris indica que ese bloque ya está asociado a algún curso.</p>
 	<a onclick="saveTeacherSchedule('day')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar horario</a>
 
 </div>
@@ -114,7 +114,7 @@ $(document).ready(function(){
 		}
 		else if(id_class_id=="None"){
 			//console.log(idcheckbox)
-			$("input[value='"+idcheckbox+"']").prop("checked", true);
+			$("input[value='"+idcheckbox+"']").prop("checked", false);
 			$("input[value='"+idcheckbox+"']").parent().addClass("greenBackground"); 
 			$("#fondoverde").show()
 		}
@@ -123,9 +123,9 @@ $(document).ready(function(){
 			if ({{clase.id_class}} == id_class_id){
 				$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
 				{% if clase.additional %}
-				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
 				{% else %}
-				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%'>{{ clase.nivel }} {{ clase.letter }}</label>")
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }}</label>")
 				{% endif %}
 				$("input[value='"+idcheckbox+"']").remove()
 			}
@@ -136,6 +136,10 @@ $(document).ready(function(){
 
 	{% endfor %}
 	$("input:checkbox:not(:checked)").prop("disabled", true);
+	$("input[value*='day_']").parent(".greenBackground").addClass(function(){
+		var ide = ($(this).find('input').val());
+		$("input[value*="+ide+"]").prop("disabled", false);
+	});
 	{% else %}
 		$("#popup").append("<p class='response'>No hay bloques o periodos de horarios definidos.</p>");
 		$("#hover").fadeIn();

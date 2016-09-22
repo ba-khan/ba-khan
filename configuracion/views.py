@@ -129,13 +129,13 @@ def saveSchedule(request):
             #    curso=None
             profesor = Teacher.objects.filter(kaid_teacher=kaid).values('kaid_teacher')
 
-            if curso=="0":
+            if curso=="-1":
                 csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).count()
             else:
                 csh = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'], id_class_id=curso).count()
 
             if csh>len(dias):
-                if curso=="0":
+                if curso=="-1":
                     query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
                 else:
                     query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'], id_class_id=curso).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
@@ -152,7 +152,7 @@ def saveSchedule(request):
             elif len(dias)>csh:
                 for dia in dias:
                     diasplit = dia.split('_')
-                    if curso=="0":
+                    if curso=="-1":
                         Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
                     else:
                         queryclass = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')  
@@ -161,7 +161,7 @@ def saveSchedule(request):
                         else:
                             Class_Schedule.objects.get_or_create(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0], id_class_id=curso)
             else:
-                if curso=="0":
+                if curso=="-1":
                     query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher']).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
                 else:
                     query_cs = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'], id_class_id=curso).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')
@@ -179,7 +179,7 @@ def saveSchedule(request):
                 if goc==True:
                     for dia in dias:
                         diasplit = dia.split('_')
-                        if curso=="0":
+                        if curso=="-1":
                             Class_Schedule.objects.get_or_create(id_schedule_id=int(diasplit[1]), day=diasplit[0], kaid_teacher_id=args['teacher'])
                         else:
                             queryclass = Class_Schedule.objects.filter(kaid_teacher_id=args['teacher'],id_schedule_id=int(diasplit[1]), day=diasplit[0]).values('id_schedule_id', 'day', 'kaid_teacher_id','id_class_schedule')  

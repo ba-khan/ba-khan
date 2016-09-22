@@ -146,6 +146,10 @@ input{
     background: #f7f7f7;
     color: #56861f;
 }
+
+.redBackground{
+    background-color: gray;  
+}
 </style>
 
 
@@ -187,7 +191,8 @@ input{
 		{% endfor %}
 	</table>
 	<br>
-	<h3 align="center">Definir Horario de profesores</h3>
+	<br>
+	<h2 align="center">Definir Horario de profesores</h2>
 	<div id="sidebar">
     	<ul>
     		<li id="pestana0"><a href='javascript:cambiarPestanna(pestana0, "");' class="select"> Horario</a></li>
@@ -198,7 +203,7 @@ input{
 	</div>
 	<div id="contenidopestanas">
 		<div id="cpestana0" class="cpestanna" align="center">
-		<h2 align="center">Horario profesores</h2>
+		<h3 align="center">Horario profesores</h3>
 			<table class="testsched">
 				<tr>
 					<th width="15%">Hora Inicio</th>
@@ -228,8 +233,12 @@ input{
 		</div>
 		{% for teach in teachers %}
 		<div id="cpestana{{ forloop.counter }}" style="display:none" class="cpestanna"  align="center">
-			<h2 align="center">{{ teach.name }}</h2>
+			<div style="float:left;width:10%;margin-left: 200px;">
+			<h3 align="center">{{ teach.name }}</h3>
+			</div>
+			<div style="float:left;width:30%;">
 			<select id="comboBox{{teach.kaid_teacher}}" class="skill_search" onChange="fillParameters(this.value, '{{teach.kaid_teacher}}');">
+				<OPTION VALUE=-1>Horario de Trabajo</OPTION>
 				<OPTION VALUE=0>Todos los cursos</OPTION>
 				{% for clase in teach.classes %}
 					{% if clase.additional %}
@@ -242,7 +251,8 @@ input{
 					
 				{% endfor %}
 			</select>
-			<table class="testsched">
+			</div>
+			<table class="testsched" width="650px">
 				<tr>
 					<th width="15%">Hora Inicio</th>
 					<th width="15%">Hora Término</th>
@@ -269,7 +279,7 @@ input{
 			{% endfor %}
 			</table>
 
-			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px">Guardar edición</a>
+			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px" id="guardared">Guardar edición</a>
 		</div>
 		{% endfor %}
 	</div>
@@ -288,32 +298,41 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
         values.push(el.value);
     });
     var curso = $('#comboBox'+kaid_teacher).val()
-    var days=values;
-    var teacher = kaid_teacher;
-    var datos={days, teacher, curso};
-    $.ajax({
-    	url: "{% url 'configuracion:guardar_horario' %}",
-    	type: "POST",
-    	data: datos,
-    		success: function(response){
-    			$("#popup").empty()
-    			$("#close").hide();
-				$("#hover").fadeIn();
-				$("#popup").fadeIn();
-    			$("#popup").append("<p class='response'>"+response+"</p>");
-    			auxResponse = response;
-    			if (auxResponse == "Horario para el profesor guardado"){
-    				$("#hover").css('pointer-events','none');
-					$("#close").css('pointer-events','none');
-					window.setTimeout(function(){location.reload()},1000);
-    			}
-    		}
-    });
+    console.log(curso);
+    if (curso=="0"){
+    	//$("#guardared").hide();
+    	console.log('aca no se puede guardar');
+    }
+    else{
+	    var days=values;
+	    var teacher = kaid_teacher;
+	    var datos={days, teacher, curso};
+	    $.ajax({
+	    	url: "{% url 'configuracion:guardar_horario' %}",
+	    	type: "POST",
+	    	data: datos,
+	    		success: function(response){
+	    			$("#popup").empty()
+	    			$("#close").hide();
+					$("#hover").fadeIn();
+					$("#popup").fadeIn();
+	    			$("#popup").append("<p class='response'>"+response+"</p>");
+	    			auxResponse = response;
+	    			if (auxResponse == "Horario para el profesor guardado"){
+	    				$("#hover").css('pointer-events','none');
+						$("#close").css('pointer-events','none');
+						window.setTimeout(function(){location.reload()},1000);
+	    			}
+	    		}
+	    });
+    }
 }
+
 function showNewSchedule(){
 	$('#newSchedule').toggle('blind',10);
 	$('#buttonNewSchedule').hide();
 	}
+
 function saveNewSchedule(){
 	$("#acceptDelete").remove();
 	$("#cancelDelete").remove();
@@ -461,8 +480,9 @@ $(document).ready(function(){
 	  
 	});
 	$('#configuraciones').addClass('active selected');
+
+
 function fillParameters(id, kaid) {
-	//console.log(kaid);
 	$('input:checkbox').removeAttr('checked');
 	{% for csh in class_schedule %}
 	var kaid_teacher = "{{csh.kaid_teacher_id}}"
@@ -470,12 +490,40 @@ function fillParameters(id, kaid) {
 	var id_schedule = "{{csh.id_schedule_id}}"
 	var id_class = "{{csh.id_class_id}}"
 	var idcheckbox=day+"_"+id_schedule+"_"+kaid
+
 	if (kaid==kaid_teacher){
 		if (id==id_class){
 			$("input[value='"+idcheckbox+"']").prop("checked", true);
+			$('input[value*="day_"]').prop("disabled", false);
 		}
 		if (id=="0"){
-			$("input[value='"+idcheckbox+"']").prop("checked", true);
+			//$("input[value='"+idcheckbox+"']").prop("checked", true);
+			$('input[value*="day_"]').prop("disabled", true);
+			//aqui van los nombres de los cursos
+			/*
+			{% for teach in teachers %}
+			{% for clase in teach.classes %}
+			//console.log('algo')
+			var idc = "{{clase.id_class}}"
+			//console.log(idc)
+			if (idc == id_class){
+				$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
+				{% if clase.additional %}
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+				{% else %}
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }}</label>")
+				{% endif %}
+				$("input[value='"+idcheckbox+"']").hide()
+			}
+			{% endfor %}
+			{% endfor %}
+			*/
+		}
+		if (id=="-1"){
+			$('input[value*="day_"]').prop("disabled", false);
+			$("input[value*='day_']").prop("checked", true);
+			$("input[value*='Saturday_']").prop("checked", false);
+			$("input[value*='Sunday_']").prop("checked", false);
 		}
 	}
 	{% endfor %}
@@ -483,7 +531,6 @@ function fillParameters(id, kaid) {
 function cambiarPestanna(pestanna, kaid_teacher) {
 	$('#comboBox'+kaid_teacher).val($("#comboBox"+kaid_teacher+" option:first").val());
 	$('input:checkbox').removeAttr('checked');
-	//console.log(kaid_teacher)
 	{% for csh in class_schedule %}
 	var kaid = "{{csh.kaid_teacher_id}}"
 	var day = "{{csh.day}}"
@@ -491,17 +538,12 @@ function cambiarPestanna(pestanna, kaid_teacher) {
 	var idcheckbox=day+"_"+id_schedule+"_"+kaid
 	
 	if (kaid==kaid_teacher){
-		//console.log(idcheckbox)
-		//console.log("input[value='"+idcheckbox+"']");
-		$("input[value='"+idcheckbox+"']").prop("checked", true);
-		//$('input[name="' + idcheckbox + '"]').each(function(){
-		//	$(this).prop("checked", true);
-			//console.log(idcheckbox);
-		//});
-		//console.log("algo");
+		$('input[value*="day_"]').prop("disabled", false);
+		$("input[value*='day_']").prop("checked", true);
+		$("input[value*='Saturday_']").prop("checked", false);
+		$("input[value*='Sunday_']").prop("checked", false);
 	}
-		//console.log("{{csh.kaid_teacher_id}}")
-		//console.log(kaid_teacher)
+
 	{% endfor %}
 	id = (pestanna.id).substring(7);
 	pestanna = document.getElementById(pestanna.id);
