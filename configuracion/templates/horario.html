@@ -200,8 +200,8 @@ input{
 			<td>{% if sch.name_block == None %}{{ "" }}{% else %}{{ sch.name_block }}{% endif %}</td>
 			<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
 			<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
-			<td class="editablegrid-action" data-title="action" style="width:205px">
-				<a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
+			<td class="editablegrid-action" data-title="action" style="width:205px;">
+				<a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
 			</td>
 		</tr>
 		{% endfor %}

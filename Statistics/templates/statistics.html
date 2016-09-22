@@ -386,6 +386,8 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
+  var colorScale = d3.scale.ordinal().range(['#1c758a'])
+    .domain(['KhanBlue']);
   var arrayte=[];
   var arraytv=[];
   var arraycant=[];
@@ -417,7 +419,20 @@ function graficar(json, clase){
   }
   //console.log(arraycant)
   $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          
+        }
+      });
     $('#container').highcharts({
+
         chart: {
             type: 'column'
         },
@@ -425,7 +440,7 @@ function graficar(json, clase){
             text: 'Tiempo de ejercicios'
         },
         subtitle: {
-            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
         },
         xAxis: {
             type: 'category',
@@ -447,7 +462,7 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Tiempo de ejercicios: <b>{point.y} segundos</b>'
+            pointFormat: 'Tiempo de ejercicios: <b>{point.y} segundos; {(point.y)/60} minutos</b>'
         },
         series: [{
             name: 'Tiempo',
@@ -455,9 +470,9 @@ function graficar(json, clase){
             dataLabels: {
                 enabled: true,
                 rotation: -90,
-                color: '#FFFFFF',
+                color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y}', // one decimal
+                format: '{point.y:,.0f}', // one decimal
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
@@ -469,7 +484,20 @@ function graficar(json, clase){
   });
 
   $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          
+        }
+      });
     $('#containervid').highcharts({
+
         chart: {
             type: 'column'
         },
@@ -477,7 +505,7 @@ function graficar(json, clase){
             text: 'Tiempo de videos'
         },
         subtitle: {
-            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
         },
         xAxis: {
             type: 'category',
@@ -499,7 +527,7 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Tiempo de videos: <b>{point.y} segundos</b>'
+            pointFormat: 'Tiempo de videos: <b>{point.y} segundos; {(point.y)/60} minutos</b>'
         },
         series: [{
             name: 'Tiempo',
@@ -507,9 +535,9 @@ function graficar(json, clase){
             dataLabels: {
                 enabled: true,
                 rotation: -90,
-                color: '#FFFFFF',
+                color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y}', // one decimal
+                format: '{point.y:,.0f}', // one decimal
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
@@ -521,6 +549,18 @@ function graficar(json, clase){
   });
 
   $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          
+        }
+      });
     $('#containertot').highcharts({
         chart: {
             type: 'column'
@@ -529,7 +569,7 @@ function graficar(json, clase){
             text: 'Cantidad de ejercicios'
         },
         subtitle: {
-            text: 'Source: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
         },
         xAxis: {
             type: 'category',
@@ -559,9 +599,9 @@ function graficar(json, clase){
             dataLabels: {
                 enabled: true,
                 rotation: -90,
-                color: '#FFFFFF',
+                color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y}', // one decimal
+                format: '{point.y:,.0f}', // one decimal
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
