@@ -33,6 +33,22 @@ table.testsched th {
 table.testsched td {
   text-align: left;
 }
+
+table.testschedos { border-collapse: collapse; border: 1px solid #CCB; width:650px;table-layout: fixed;}
+table.testschedos td, table.testschedos th { padding: 5px; border: 1px solid #E0E0E0;overflow: hidden;}
+table.testschedos th { background: #E5E5E5; text-align: left;}
+table.testschedos th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table.testschedos td {
+  text-align: left;
+}
 input{
 	z-index: 1000;
 	width: 100%;
@@ -252,7 +268,7 @@ input{
 				{% endfor %}
 			</select>
 			</div>
-			<table class="testsched" width="650px">
+			<table class="testsched">
 				<tr>
 					<th width="15%">Hora Inicio</th>
 					<th width="15%">Hora Término</th>
@@ -278,6 +294,32 @@ input{
 			</tr>
 			{% endfor %}
 			</table>
+			<table class="testschedos">
+				<tr>
+					<th width="11.5%">Hora Inicio</th>
+					<th width="11.5%">Hora Término</th>
+					<th width="11%" id="monday">Lunes</th>
+					<th width="11%" id="tuesday">Martes</th>
+					<th width="11%" id="wednesday">Miércoles</th>
+					<th width="11%" id="thursday">Jueves</th>
+					<th width="11%" id="friday">Viernes</th>
+					<th width="11%" id="saturday">Sábado</th>
+					<th width="11%" id="sunday">Domingo</th>
+				</tr>
+			{% for sch in schedules %}
+			<tr id="R{{ forloop.counter }}">
+				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
+				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
+				<td><input type="checkbox" value="Monday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+				<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+				<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+				<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+				<td><input type="checkbox" value="Friday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+				<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+				<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
+			</tr>
+			{% endfor %}
+			</table>
 
 			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px" id="guardared">Guardar edición</a>
 		</div>
@@ -292,6 +334,10 @@ input{
 </div>
 
 <script>
+$(document).ready(function(){
+	$('.testschedos').hide();
+});
+
 function saveTeacherSchedule(checkboxName, kaid_teacher) {
     var checkboxes = document.querySelectorAll('input[name="' + checkboxName + '"]:checked'), values = [];
     Array.prototype.forEach.call(checkboxes, function(el) {
@@ -490,36 +536,45 @@ function fillParameters(id, kaid) {
 	var id_schedule = "{{csh.id_schedule_id}}"
 	var id_class = "{{csh.id_class_id}}"
 	var idcheckbox=day+"_"+id_schedule+"_"+kaid
+	var idcheckboxdos=day+"_"+id_schedule+"_"+kaid+"_D"
 
 	if (kaid==kaid_teacher){
 		if (id==id_class){
 			$("input[value='"+idcheckbox+"']").prop("checked", true);
 			$('input[value*="day_"]').prop("disabled", false);
+			$('.testsched').show();
+			$('.testschedos').hide();
 		}
 		if (id=="0"){
+			$('.testschedos').show();
+			$('.testsched').hide();
+			
 			//$("input[value='"+idcheckbox+"']").prop("checked", true);
-			$('input[value*="day_"]').prop("disabled", true);
+			//$('input[value*="day_"]').prop("disabled", true);
 			//aqui van los nombres de los cursos
-			/*
+			
 			{% for teach in teachers %}
 			{% for clase in teach.classes %}
 			//console.log('algo')
 			var idc = "{{clase.id_class}}"
 			//console.log(idc)
 			if (idc == id_class){
-				$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
+				$("input[value='"+idcheckboxdos+"']").parent().addClass("redBackground")
 				{% if clase.additional %}
-				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+				$("input[value='"+idcheckboxdos+"']").parent().append("<label style='color:white; font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
 				{% else %}
-				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }}</label>")
+				$("input[value='"+idcheckboxdos+"']").parent().append("<label style='color:white; font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }}</label>")
 				{% endif %}
-				$("input[value='"+idcheckbox+"']").hide()
+				$("input[value='"+idcheckboxdos+"']").remove()
+				$("input[value*='"+kaid+"_D']").prop("disabled", true);
 			}
 			{% endfor %}
 			{% endfor %}
-			*/
+			
 		}
 		if (id=="-1"){
+			$('.testsched').show();
+			$('.testschedos').hide();
 			$('input[value*="day_"]').prop("disabled", false);
 			$("input[value*='day_']").prop("checked", true);
 			$("input[value*='Saturday_']").prop("checked", false);
@@ -529,6 +584,8 @@ function fillParameters(id, kaid) {
 	{% endfor %}
 };
 function cambiarPestanna(pestanna, kaid_teacher) {
+	$('.testschedos').hide();
+	$('.testsched').show();
 	$('#comboBox'+kaid_teacher).val($("#comboBox"+kaid_teacher+" option:first").val());
 	$('input:checkbox').removeAttr('checked');
 	{% for csh in class_schedule %}
