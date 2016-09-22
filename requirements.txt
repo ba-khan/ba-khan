@@ -7,3 +7,6 @@ pyexcel-xls>=0.1.0
 nosexcover
 selenium
 pyvirtualdisplay
+django_jenkins
+pep8
+pyflakes
