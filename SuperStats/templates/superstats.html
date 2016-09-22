@@ -343,7 +343,7 @@ table.testsched td {
         });
 
     });
-    setHeightContent();
+    //setHeightContent();
     drawNiceScrolls();
     $('.graphics').hide();
     $('#testsched').hide();
@@ -448,12 +448,12 @@ function updateClass(){
 function setHeightContent(){
   var altura = $('.main-content').height();
   $('#contenedor').height(altura-69);
-  console.log(altura);
+  //console.log(altura);
 }
 
 function check_all_none_classes(id){
   var idc = $('#idcurso'+id).val();
-  console.log(idc)
+  //console.log(idc)
   if ($('#idcurso'+id).is(':checked')){
     $('.curso'+idc).prop("checked", true);
   }
@@ -464,7 +464,7 @@ function check_all_none_classes(id){
 
 
 function containerShow(){
-  $(".container").fadeIn();
+  $(".allcontent").fadeIn();
   $('.graphics').fadeOut();
   drawNiceScrolls();
 }
@@ -476,9 +476,20 @@ function crearEstadisticas(){
   var selinst = $('input[name="institution"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
-  var selcurso = $('input[name*="curso"]:checked').map(function(_,el){
+  /*var selcurso = $('input[name*="curso"]:checked').map(function(_,el){
     return $(el).val();
-  }).get();
+  }).get();*/
+  //var checked_ids = [];
+  var selcurso=[];
+  var curso = $("#contenedor").jstree("get_selected");
+  //selcurso = (curso.indexOf("id_")>-1);
+  for (var i=0;i<curso.length;i++){
+    if (curso[i].indexOf("id_")==false){
+      selcurso.push(curso[i]);
+    }
+  }
+  //console.log(checkedids);
+  
   var radioselect = $('input[value*="radio"]:checked').val();
   if (radioselect=="radio4"){
     selhorario = $('input[name*="day"]:checked').map(function(_,el){
@@ -488,7 +499,7 @@ function crearEstadisticas(){
   if (validar() && selinst.length>0 && selcurso.length>0 && radioselect){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
-    $('.container').fadeOut();
+    $('.allcontent').fadeOut();
     $('.graphics').fadeIn();
     $.ajax({
       url: "{% url 'SuperStats:selectSuperStats' %}",
@@ -507,11 +518,11 @@ function crearEstadisticas(){
     $('#popup_error').fadeIn().css('display', '');
     $("#hover").fadeIn().css('display', '');
   }
+  
 }
 
 function graficar(json, clase){
   $("#cursoclass").getNiceScroll().remove();
-  console.log(json);
   var arrayte=[];
   var arraytv=[];
   var arraycant=[];
@@ -838,7 +849,7 @@ function selectSchedule(radiobutton){
     $('#testsched').show();
     $('input[name="day"]').prop("disabled", false); 
   }
-  setHeightContent();
+  //setHeightContent();
 }
 
 function funciondos(id_schedule){

@@ -72,44 +72,7 @@ def selectClass(request):
 					jtree.append(class_obj)
 			json_tree['core']={'data':jtree}
 			json_data = json.dumps(json_tree)
-			'''
-			json_array=[]
-			args=request.POST
-			instituciones = args.getlist('sel[]')
-			for institucion in instituciones:
-				#otro=[]
-				dictInst = {}
-				dictCole={}
-				nameInst = Institution.objects.filter(id_institution=institucion).values('name')
-				classes = Class.objects.filter(id_institution_id=institucion).order_by('level','letter')
-				N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
-				for i in range(len(classes)):
-					classes[i].level = N[int(classes[i].level)] 
-				#dictCole["institucion"] = institucion
-				#dictCole["nombreinst"] = nameInst[0]['name']
-				i=0
-				for clase in classes:
-					dictClase={}
-					dictIdClase={}
-					if clase.additional:
-						dictClase[i]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
-						dictIdClase[i]=clase.id_class
-						#dictInst[clase.id_class]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
-					else:
-						dictClase[i]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)
-						dictIdClase[i]=clase.id_class
-						#dictInst[clase.id_class]=str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)
-					dictInst[i]={"nombrecurso":dictClase, "idcurso":dictIdClase}
-					i+=1
-				dictCole={"cursos":dictInst, "institucion":institucion, "nombreinst":nameInst[0]["name"]}
-				#otro.append(dictInst)
-				json_array.append(dictCole)
-				#json_array.append(otro)
-				
-			json_dict={"instituciones":json_array}
-			json_data = json.dumps(json_dict)
-			return HttpResponse(json_data)
-			'''
+			
 			return HttpResponse(json_data)
 	except Exception as e:
 		print e
@@ -135,7 +98,8 @@ def selectSuperStats(request):
 				if len(cursos)>1:
 					j=0
 					for curso in cursos:
-						classes = Class.objects.filter(id_class=curso, id_institution_id=establecimiento).order_by('level','letter')
+						newcurso=curso.split('_')
+						classes = Class.objects.filter(id_class=newcurso[1], id_institution_id=establecimiento).order_by('level','letter')
 						if classes:
 							N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
 							for i in range(len(classes)):
@@ -243,7 +207,7 @@ def selectSuperStats(request):
 							class_json["tiempo_ejercicios_clase"] = 0
 							class_json["tiempo_videos_clase"] = 0
 							class_json["total_ejercicios_clase"] = 0
-							class_json["curso"] = curso
+							class_json["curso"] = newcurso[1]
 							try:
 								for clase in classes:
 									if clase.additional:
@@ -294,16 +258,17 @@ def selectSuperStats(request):
 						json_data = json.dumps(json_dict)
 					
 				else:
-					classes = Class.objects.filter(id_class=cursos[0], id_institution_id=establecimiento).order_by('level','letter')
+					newcurso = cursos[0].split("_")
+					classes = Class.objects.filter(id_class=newcurso[1], id_institution_id=establecimiento).order_by('level','letter')
 					if classes:
-						sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
+						sclass = Student_Class.objects.filter(id_class_id=newcurso[1]).values('kaid_student_id')
 						students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 						if radio=="radio1":
 							time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 							time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
 							total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
 						if radio=="radio2":
-							queryradiotwo = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
+							queryradiotwo = Class_Schedule.objects.filter(id_class_id=newcurso[1]).values('day', 'id_schedule_id')
 							delta = timedelta(days=1)
 							time_exercise=[]
 							time_video=[]
@@ -327,7 +292,7 @@ def selectSuperStats(request):
 							time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 							time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
 							total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
-							queryradiothree = Class_Schedule.objects.filter(id_class_id=cursos[0]).values('day', 'id_schedule_id')
+							queryradiothree = Class_Schedule.objects.filter(id_class_id=newcurso[1]).values('day', 'id_schedule_id')
 							delta = timedelta(days=1)
 							time_out=[]
 							time_video_out=[]
