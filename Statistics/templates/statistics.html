@@ -12,6 +12,8 @@
 <script src="{% static 'js/editablegrid_validators.js' %}"></script>
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 
@@ -248,11 +250,16 @@ table.testsched td {
   {% endfor %}
   </table>
   <br>
-  <div align="left" style="margin-left:200px">
+  <div align="left" style="margin-left:100px;float: left;width: 30%;">
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio3">Fuera horario de clases <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4">Personalizado <br>  
+  </div>
+  <div align="left" style="margin-right:100px;float: left;width: 40%;">
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio5">Todo vs Horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio6">Todo vs Fuera horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio7">Horario de clases vs Fuera horario de clases <br>
   </div>
   </div>
 
@@ -390,19 +397,41 @@ function graficar(json, clase){
     .domain(['KhanBlue']);
   var arrayte=[];
   var arraytv=[];
-  var arraycant=[];
+  var arraycant=[]; 
+  var serie=[];
+  var serietpo=[];
+  var serievid=[];
+  var j;
   if(json["clases"]){
     var clase = json["clases"]
     for (var i=0;i<clase.length;i++){
+      var datosest=[];
+      var tpoest=[];
+      var videst=[];
       var curso=clase[i]["nombre"];
-      var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
-      var tpo_videos = clase[i]["tiempo_videos_clase"]
-      var cantidad = clase[i]["total_ejercicios_clase"]
-      arrayte[i]=[curso, tpo_ejercicios]
-      arraytv[i]=[curso, tpo_videos]
-      arraycant[i]=[curso, cantidad]
+      var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"];
+      var tpo_videos = clase[i]["tiempo_videos_clase"];
+      var cantidad = clase[i]["total_ejercicios_clase"];
+      var estudiantes = clase[i]["students"];
+      for (j=0;j<estudiantes.length;j++){
+        datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
+        tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
+        videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
+      }
+
+      arrayte[i]={"name":curso, "y": tpo_ejercicios, "drilldown":curso};
+      serietpo[i]={"name":curso, "id":curso, "data":tpoest};
+
+      arraytv[i]={"name":curso, "y": tpo_videos, "drilldown":curso};
+      serievid[i]={"name":curso, "id":curso, "data":videst};
+
+      arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso}
+      serie[i]={"name":curso, "id":curso, "data":datosest};
+
     }
+
   }
+
   else{
     if(json["students"]){
       var student = json["students"]
@@ -417,7 +446,63 @@ function graficar(json, clase){
       }
     }
   }
-  //console.log(arraycant)
+  /*
+  var maxte=0;
+  for (var j=0;j<arrayte.length;j++){
+    if (arrayte[j]["y"]>maxte){
+      maxte = arrayte[j]["y"];
+    }
+  }
+  if (maxte>=3600){
+    for (var j=0;j<arrayte.length;j++){
+      arrayte[j]["y"]=arrayte[j]["y"]/3600;
+    }
+    var ejerText= 'Tiempo (horas)';
+    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} horas</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else if(maxte<3600 && maxte>=60){
+    for (var j=0;j<arrayte.length;j++){
+      arrayte[j]["y"]=arrayte[j]["y"]/60;
+    }
+    var ejerText= 'Tiempo (minutos)';
+    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} minutos</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else{
+    var ejerText= 'Tiempo (segundos)';
+    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y} segundos</b>';
+    var formato = '{point.y:,.0f}';
+  }
+
+  var maxtv=0;
+  for (var j=0;j<arraytv.length;j++){
+    if (arraytv[j]["y"]>maxtv){
+      maxtv = arraytv[j]["y"];
+    }
+  }
+  if (maxtv>=3600){
+    for (var j=0;j<arraytv.length;j++){
+      arraytv[j]["y"]=arraytv[j]["y"]/3600;
+    }
+    var vidText= 'Tiempo (horas)';
+    var vidPoint = 'Tiempo de videos: <b>{point.y:,.2f} horas</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else if(maxtv<3600 && maxtv>=60){
+    for (var j=0;j<arraytv.length;j++){
+      arraytv[j]["y"]=arraytv[j]["y"]/60;
+    }
+    var vidText= 'Tiempo (minutos)';
+    var vidPoint = 'Tiempo de videos: <b>{point.y:,.2f} minutos</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else{
+    var vidText= 'Tiempo (segundos)';
+    var vidPoint = 'Tiempo de videos: <b>{point.y} segundos</b>';
+    var formato = '{point.y:,.0f}';
+  }
+  */
   $(function () {
       Highcharts.setOptions({
           lang:{
@@ -428,7 +513,7 @@ function graficar(json, clase){
           downloadPNG: "Descargar imagen PNG",
           downloadSVG: "Descargar imagen vectorial SVG",
           printChart: "Imprimir gráfico",
-          
+          drillUpText: "Volver a {series.name}" 
         }
       });
     $('#container').highcharts({
@@ -462,10 +547,10 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Tiempo de ejercicios: <b>{point.y} segundos</b>'
+            pointFormat: 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'
         },
         series: [{
-            name: 'Tiempo',
+            name: 'Cursos',
             data: arrayte,
             dataLabels: {
                 enabled: true,
@@ -479,10 +564,12 @@ function graficar(json, clase){
                     fontFamily: 'Verdana, sans-serif'
                 }
             }
-        }]
+        }],
+        drilldown: {
+            series: serietpo
+          }
     });
   });
-
   $(function () {
     Highcharts.setOptions({
           lang:{
@@ -493,7 +580,7 @@ function graficar(json, clase){
           downloadPNG: "Descargar imagen PNG",
           downloadSVG: "Descargar imagen vectorial SVG",
           printChart: "Imprimir gráfico",
-          
+          drillUpText: "Volver a {series.name}" 
         }
       });
     $('#containervid').highcharts({
@@ -527,10 +614,10 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Tiempo de videos: <b>{point.y} segundos</b>'
+            pointFormat: 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'
         },
         series: [{
-            name: 'Tiempo',
+            name: 'Cursos',
             data: arraytv,
             dataLabels: {
                 enabled: true,
@@ -544,7 +631,10 @@ function graficar(json, clase){
                     fontFamily: 'Verdana, sans-serif'
                 }
             }
-        }]
+        }],
+        drilldown: {
+            series: serievid
+          }
     });
   });
 
@@ -558,7 +648,7 @@ function graficar(json, clase){
           downloadPNG: "Descargar imagen PNG",
           downloadSVG: "Descargar imagen vectorial SVG",
           printChart: "Imprimir gráfico",
-          
+          drillUpText: "Volver a {series.name}" 
         }
       });
     $('#containertot').highcharts({
@@ -594,8 +684,7 @@ function graficar(json, clase){
             pointFormat: 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>'
         },
         series: [{
-            name: 'Cantidad',
-            data: arraycant,
+            name: 'Cursos',
             dataLabels: {
                 enabled: true,
                 rotation: -90,
@@ -607,8 +696,12 @@ function graficar(json, clase){
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
                 }
-            }
-        }]
+            },
+            data: arraycant
+        }],
+        drilldown: {
+            series: serie
+          }
     });
   });
   //$('#loading').fadeOut();

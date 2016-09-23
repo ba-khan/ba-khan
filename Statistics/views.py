@@ -55,22 +55,22 @@ def getStatistics(request):
 	for i in range(len(classes)):
 		classes[i].nivel = N[int(classes[i].level)] 
 	schedules = Schedule.objects.filter(id_institution_id=teacher.id_institution_id).order_by('start_time')
-	start = "23:59"
-	end = "23:59"
+	start = "00:00"
+	end = "00:00"
 	otrahora = []
 	largo = len(schedules)
 	j=0
 	for sched in schedules:
 		j=j+1
 		if sched.start_time!=start:
-			horaini = datetime.strptime(start, "%H:%M") + timedelta(minutes=1)
+			horaini = datetime.strptime(start, "%H:%M")
 			start = horaini.strftime('%H:%M')
-			horafn= datetime.strptime(sched.start_time,"%H:%M") + timedelta(minutes=-1)
+			horafn= datetime.strptime(sched.start_time,"%H:%M")
 			horafn = horafn.strftime('%H:%M')
 			otrahora.append(start +" - "+ horafn)
 			start = sched.end_time
 		if j==largo:
-			horaini = datetime.strptime(sched.end_time, "%H:%M") + timedelta(minutes=1)
+			horaini = datetime.strptime(sched.end_time, "%H:%M")
 			horaini = horaini.strftime('%H:%M')
 			otrahora.append(horaini +" - "+end)
 	#print otrahora
@@ -118,7 +118,7 @@ def selectStatistics(request):
 							while d <= fechahasta:
 								if d.strftime("%A")==qtwo['day']:
 									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+									newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 									time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
@@ -142,7 +142,7 @@ def selectStatistics(request):
 							while d <= fechahasta:
 								if d.strftime("%A")==qthree['day']:
 									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+									newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 									time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
@@ -174,6 +174,8 @@ def selectStatistics(request):
 								hours = newhorario[1].split(' - ')
 								inicio = hours[0]
 								final = hours[1]
+								if final=="00:00":
+									final = "23:59"
 								d = fechadesde
 								while d <= fechahasta:
 									if d.strftime("%A")==newhorario[0]:
@@ -193,7 +195,7 @@ def selectStatistics(request):
 								while d <= fechahasta:
 									if d.strftime("%A")==newhorario[0]:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-										newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 										time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
@@ -204,6 +206,7 @@ def selectStatistics(request):
 					dictTime = {}
 					dictVideo = {}
 					dictTotal = {}
+					
 					class_json={}
 					class_json["id"] = j
 					class_json["tiempo_ejercicios_clase"] = 0
@@ -227,7 +230,9 @@ def selectStatistics(request):
 					for total in total_exercise:
 						dictTotal[total['kaid_student_id']] = total['total']
 					i=0
+					student_array=[]
 					for student in students:
+						student_json={}
 						try:
 							class_json["tiempo_ejercicios_clase"] = class_json["tiempo_ejercicios_clase"] + dictTime[student.kaid_student]
 						except:
@@ -240,8 +245,29 @@ def selectStatistics(request):
 							class_json["total_ejercicios_clase"] = class_json["total_ejercicios_clase"] + dictTotal[student.kaid_student]
 						except:
 							class_json["total_ejercicios_clase"] = class_json["total_ejercicios_clase"] + 0
+						try:
+							student_json["kaid"]=student.kaid_student
+						except:
+							student_json["kaid"]="ninguno"
+						try:
+							student_json["name"] = student.nickname
+						except:
+							student_json["name"] = "ninguno"
+						try:
+							student_json["tiempo_ejercicios"] = dictTime[student.kaid_student]
+						except:
+							student_json["tiempo_ejercicios"] =  0
+						try:
+							student_json["tiempo_videos"] = dictVideo[student.kaid_student]
+						except:
+							student_json["tiempo_videos"] = 0
+						try:
+							student_json["total_ejercicios"] = dictTotal[student.kaid_student]
+						except:
+							student_json["total_ejercicios"] = 0
 						i+=1
-					
+						student_array.append(student_json)
+					class_json["students"]=student_array
 					j+=1
 					json_array.append(class_json)
 				json_dict={"clases":json_array}
@@ -268,7 +294,7 @@ def selectStatistics(request):
 						while d <= fechahasta:
 							if d.strftime("%A")==qtwo['day']:
 								newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-								newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+								newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 								newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
@@ -292,7 +318,7 @@ def selectStatistics(request):
 						while d <= fechahasta:
 							if d.strftime("%A")==qthree['day']:
 								newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-								newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+								newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 								newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 								time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
@@ -324,6 +350,8 @@ def selectStatistics(request):
 							hours = newhorario[1].split(' - ')
 							inicio = hours[0]
 							final = hours[1]
+							if final=="00:00":
+								final="23:59"
 							d = fechadesde
 							while d <= fechahasta:
 								if d.strftime("%A")==newhorario[0]:
@@ -343,7 +371,7 @@ def selectStatistics(request):
 							while d <= fechahasta:
 								if d.strftime("%A")==newhorario[0]:
 									newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-									newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+									newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 									newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 									newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 									time_exercise.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
