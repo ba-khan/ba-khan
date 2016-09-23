@@ -36,6 +36,7 @@ TEMPLATE_DIRS = (
 # Application definition
 
 INSTALLED_APPS = (
+    'evaluations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,7 +47,6 @@ INSTALLED_APPS = (
     'groups',
     'login',
     'populate',
-    'evaluations',
     'django_jenkins',
     'AssesmentConfigs',
     'Contacts',
