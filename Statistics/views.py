@@ -204,6 +204,7 @@ def selectStatistics(request):
 					dictTime = {}
 					dictVideo = {}
 					dictTotal = {}
+					
 					class_json={}
 					class_json["id"] = j
 					class_json["tiempo_ejercicios_clase"] = 0
@@ -227,7 +228,9 @@ def selectStatistics(request):
 					for total in total_exercise:
 						dictTotal[total['kaid_student_id']] = total['total']
 					i=0
+					student_array=[]
 					for student in students:
+						student_json={}
 						try:
 							class_json["tiempo_ejercicios_clase"] = class_json["tiempo_ejercicios_clase"] + dictTime[student.kaid_student]
 						except:
@@ -240,8 +243,29 @@ def selectStatistics(request):
 							class_json["total_ejercicios_clase"] = class_json["total_ejercicios_clase"] + dictTotal[student.kaid_student]
 						except:
 							class_json["total_ejercicios_clase"] = class_json["total_ejercicios_clase"] + 0
+						try:
+							student_json["kaid"]=student.kaid_student
+						except:
+							student_json["kaid"]="ninguno"
+						try:
+							student_json["name"] = student.nickname
+						except:
+							student_json["name"] = "ninguno"
+						try:
+							student_json["tiempo_ejercicios"] = dictTime[student.kaid_student]
+						except:
+							student_json["tiempo_ejercicios"] =  0
+						try:
+							student_json["tiempo_videos"] = dictVideo[student.kaid_student]
+						except:
+							student_json["tiempo_videos"] = 0
+						try:
+							student_json["total_ejercicios"] = dictTotal[student.kaid_student]
+						except:
+							student_json["total_ejercicios"] = 0
 						i+=1
-					
+						student_array.append(student_json)
+					class_json["students"]=student_array
 					j+=1
 					json_array.append(class_json)
 				json_dict={"clases":json_array}
