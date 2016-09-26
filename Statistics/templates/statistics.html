@@ -749,18 +749,13 @@ function graficarcompara(json, clase){
   var tpovideos2=[];
   var cantidad1=[];
   var cantidad2=[];
-  //var serie=[];
-  //var serietpo=[];
-  //var serievid=[];
+
   var j;
   if(json["clases"]){
     var clase = json["clases"]
     var tipo1 = clase[0]["tipo1"]
     var tipo2 = clase[0]["tipo2"]
     for (var i=0;i<clase.length;i++){
-      //var datosest=[];
-      //var tpoest=[];
-      //var videst=[];
       categorias[i]=clase[i]["nombre"];
       tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
       tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
@@ -768,46 +763,28 @@ function graficarcompara(json, clase){
       tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
       cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
       cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
-      //var curso=clase[i]["nombre"];
-      //var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase_1"];
-      //var tpo_videos = clase[i]["tiempo_videos_clase_1"];
-      //var cantidad = clase[i]["total_ejercicios_clase_1"];
-      /*var estudiantes = clase[i]["students"];
-      for (j=0;j<estudiantes.length;j++){
-        datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
-        tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
-        videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
-      }*/
-
-      //arrayte[i]={"name":curso, "y": tpo_ejercicios, "drilldown":curso};
-      //serietpo[i]={"name":curso, "id":curso, "data":tpoest};
-
-      //arraytv[i]={"name":curso, "y": tpo_videos, "drilldown":curso};
-      //serievid[i]={"name":curso, "id":curso, "data":videst};
-
-      //arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso}
-      //serie[i]={"name":curso, "id":curso, "data":datosest};
-
     }
 
   }
-/*
+
   else{
     if(json["students"]){
       var student = json["students"]
+      var tipo1 = student[0]["tipo1"]
+      var tipo2 = student[0]["tipo2"]
       for (var j=0;j<student.length;j++){
-        var name=student[j]["name"]
-        var tpo_ejercicios = student[j]["tiempo_ejercicios"]
-        var tpo_videos = student[j]["tiempo_videos"]
-        var cantidad = student[j]["total_ejercicios"]
-        arrayte[j]=[name, tpo_ejercicios]
-        arraytv[j]=[name, tpo_videos]
-        arraycant[j]=[name, cantidad]
+        categorias[j]=student[j]["name"];
+        tpoejercicios1[j] = student[j]["tiempo_ejercicios_1"]
+        tpoejercicios2[j] = student[j]["tiempo_ejercicios_2"]
+        tpovideos1[j] = student[j]["tiempo_videos_1"]
+        tpovideos2[j] = student[j]["tiempo_videos_2"]
+        cantidad1[j] = student[j]["total_ejercicios_1"]
+        cantidad2[j] = student[j]["total_ejercicios_2"]
+
       }
     }
   }
-
-
+/*
 
   arrayte.sort(function(a,b){
     return parseInt(a.y) - parseInt(b.y);
@@ -920,7 +897,7 @@ function graficarcompara(json, clase){
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.0f} segundos</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:,.0f} segundos</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -980,7 +957,7 @@ function graficarcompara(json, clase){
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.0f} segundos</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:,.0f} segundos</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -1040,7 +1017,7 @@ function graficarcompara(json, clase){
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.0f} ejercicios</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:,.0f} ejercicios</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
