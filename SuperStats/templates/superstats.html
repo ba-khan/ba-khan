@@ -224,18 +224,53 @@ table.testsched td {
 }
 .contenedor{
   padding: 15px 20px;
-  background: #f7f7f7;
   width: 100%;
   padding-left:10%;
   padding-right:10%;
   border: 1px solid #ddd;
   z-index: 1;
 }
+.trabajo{
+  border: 1px solid #ddd;
+}
+.dates{
+  border: 1px solid #ddd;
+}
 
 </style>
 
-
+<div>
 <br>
+  <br>
+  <h1 style="text-align:center;">Estadísticas</h1>
+  <div class="contenedor" style="width:20%;float:left;">
+  <br>
+  <h2 align="center">Cursos</h2>
+  <div id="contenedor">
+  </div>
+  </div>
+  <div id="trabajo" style="width:50%;float:left;" class="trabajo">
+    <br>
+  <h2 align="center">Tipo de Trabajo</h2>
+  <div id="testsched">
+
+  </div>
+
+</div>
+  <div id="fechas" style="width:100%;float:left;" class="dates">
+    <br>
+    <h2 align="left" style="margin-left:200px;">Fechas</h2>
+        <div  class="fechas">
+          <p class="label_input"><strong id="fIniTooltip">Desde</strong></p>
+          <input name="desde" onchange="validar()" onkeyup="validar()" id="desde" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Desde"/>
+        </div>
+        <div  class="fechas">
+          <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
+          <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
+        </div>
+  </div>
+</div>
+<!--
 <div class="allcontent">
   <br>
   <h1 style="text-align:center;">Estadísticas</h1>
@@ -256,12 +291,12 @@ table.testsched td {
   </tr>
   {% endfor %}
   </table>
-</div>
+</div>!-->
   <!--<div id="cursos" style="width:100%;float:left;">
   <h2 align="center">Cursos</h2>
 
   <div id="cursoclass" style="overflow-y: auto;outline: none; height:500px"></div>
-  </div>!-->
+  </div>
 
   <div id="trabajo" style="width:100%;float:left;">
     <br>
@@ -290,27 +325,11 @@ table.testsched td {
         </div>
   </div>
 
-
-
-
 </div>
 
-</div>
+</div>!-->
 
-  <div class="contenedor" style="width:15%;float:left;">
-  <br>
-<h2 align="center">Cursos</h2>
-<div id="contenedor">
-  <!--<ul>
-    <li data-jstree='{"opened":true}'>Root node
-      <ul>
-        <li>Child node 1</li>
-        <li>Child node 2</li>
-      </ul>
-    </li>
-  </ul>!-->
-  </div>
-</div>
+
   <div style="float:left;width:100%" align="center">
     <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
   </div>
@@ -343,6 +362,9 @@ table.testsched td {
         });
 
     });
+    var tree = JSON.parse('{{ json_data | escapejs }}');
+    //console.log(tree);
+    $('#contenedor').jstree(tree);
     //setHeightContent();
     drawNiceScrolls();
     $('.graphics').hide();

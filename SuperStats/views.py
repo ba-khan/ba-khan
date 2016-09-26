@@ -38,8 +38,37 @@ from datetime import datetime, timedelta
 def getSuperStats(request):
 	request.session.set_expiry(timeSleep)
 	institutions = Institution.objects.all().order_by('id_institution')
+	json_tree={}
+	json_tree['checkbox']={'keep_selected_style':False}
+	json_tree['plugins']=['checkbox']
+	jtree=[]
+	objeto={"id": 0, "parent":"#", "text":'Todos los Cursos', "state":{"opened":"true"}, "icon":"false"}
+	jtree.append(objeto)
+	#args=request.POST
+	#instituciones = args.getlist('sel[]')
+	for institucion in institutions:
+		nameInst = Institution.objects.filter(id_institution=int(institucion.id_institution)).values('name')
+		nombreinst = str(nameInst[0]['name'])
+		
+		inst_obj={"id":institucion.id_institution, "parent":0, "text":nombreinst, "icon":"false"}
+		jtree.append(inst_obj)
+		
+		classes = Class.objects.filter(id_institution_id=institucion).order_by('level','letter')
+		N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+		for i in range(len(classes)):
+			classes[i].level = N[int(classes[i].level)] 
 
-	return render_to_response('superstats.html', { 'institutions':institutions} ,context_instance=RequestContext(request))
+		for clase in classes:
+			if clase.additional:
+				class_obj={"id":"id_"+str(clase.id_class), "parent":clase.id_institution_id, "text":str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional), "icon":"false"}
+			else:
+				class_obj={"id":"id_"+str(clase.id_class), "parent":clase.id_institution_id, "text":str(clase.level)+" "+str(clase.letter)+" "+str(clase.year), "icon":"false"}
+			jtree.append(class_obj)
+		
+	json_tree['core']={'data':jtree}
+	json_data = json.dumps(json_tree)
+
+	return render_to_response('superstats.html', { 'json_data':json_data} ,context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def selectClass(request):
