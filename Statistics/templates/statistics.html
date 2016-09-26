@@ -227,13 +227,13 @@ table.testsched td {
   {% for sch in schedules %}
   <tr id="R{{ forloop.counter }}" class="nocolor">
     <th onclick="funciondos('{{sch.id_schedule}}')" id="HSE">{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %} - {% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</th>
-    <td><input type="checkbox" value="Monday_{{sch.id_schedule}}" name="day"></td>
-    <td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}" name="day"></td>
-    <td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}" name="day"></td>
-    <td><input type="checkbox" value="Thursday_{{sch.id_schedule}}" name="day"></td>
-    <td><input type="checkbox" value="Friday_{{sch.id_schedule}}" name="day"></td>
-    <td><input type="checkbox" value="Saturday_{{sch.id_schedule}}" name="day"></td>
-    <td><input type="checkbox" value="Sunday_{{sch.id_schedule}}" name="day"></td>
+    <td><input type="checkbox" value="Monday_{{sch.id_schedule}}_D" name="day"></td>
+    <td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}_D" name="day"></td>
+    <td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}_D" name="day"></td>
+    <td><input type="checkbox" value="Thursday_{{sch.id_schedule}}_D" name="day"></td>
+    <td><input type="checkbox" value="Friday_{{sch.id_schedule}}_D" name="day"></td>
+    <td><input type="checkbox" value="Saturday_{{sch.id_schedule}}_D" name="day"></td>
+    <td><input type="checkbox" value="Sunday_{{sch.id_schedule}}_D" name="day"></td>
   </tr>
   {% endfor %}
   {% for hora in otrahora %}
@@ -264,6 +264,7 @@ table.testsched td {
   </div>
 
   <div id="fechas" style="float:left;">
+    <br>
     <br>
     <h2 align="center">Fechas</h2>
         <div  class="fechas">
@@ -358,8 +359,6 @@ function containerShow(){
 }
 
 function crearEstadisticas(){
-  //$('#loading').fadeIn();
-  //aqui va algo
   validar();
   var selclase = $('input[name="clase"]:checked').map(function(_,el){
     return $(el).val();
@@ -373,7 +372,8 @@ function crearEstadisticas(){
     hasta = document.getElementById("hasta").value;
     $('.container').fadeOut();
     $('.graphics').fadeIn();
-    $.ajax({
+    if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
+      $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",
       type: "POST",
       data: {selclase, selhora, desde, hasta, radioselect},
@@ -382,7 +382,20 @@ function crearEstadisticas(){
           //console.log(jsonResponse);
           graficar(jsonResponse, selclase);
         }
-    });
+    }); 
+    }
+    else{
+      $.ajax({
+      url: "{% url 'Statistics:compareStatistics' %}",
+      type: "POST",
+      data: {selclase, selhora, desde, hasta, radioselect},
+        success: function(response){
+          jsonResponse = JSON.parse(response);
+          //console.log(jsonResponse);
+          graficarcompara(jsonResponse, selclase);
+        }
+    }); 
+    }
   }
   else{
     $('#popup_error').empty();
@@ -446,6 +459,22 @@ function graficar(json, clase){
       }
     }
   }
+
+
+
+  arrayte.sort(function(a,b){
+    return parseInt(a.y) - parseInt(b.y);
+  });
+
+  arraytv.sort(function(a,b){
+    return parseInt(a.y) - parseInt(b.y);
+  });
+
+  arraycant.sort(function(a,b){
+    return parseInt(a.y) - parseInt(b.y);
+  });
+  
+  //console.log(arrayte);
   /*
   var maxte=0;
   for (var j=0;j<arrayte.length;j++){
@@ -503,6 +532,7 @@ function graficar(json, clase){
     var formato = '{point.y:,.0f}';
   }
   */
+
   $(function () {
       Highcharts.setOptions({
           lang:{
@@ -704,7 +734,466 @@ function graficar(json, clase){
           }
     });
   });
-  //$('#loading').fadeOut();
+}
+
+function graficarcompara(json, clase){
+  var colorScale = d3.scale.ordinal().range(['#1c758a'])
+    .domain(['KhanBlue']);
+  var arrayte=[];
+  var arraytv=[];
+  var arraycant=[]; 
+  var categorias=[];
+  var tpoejercicios1=[];
+  var tpoejercicios2=[];
+  var tpovideos1=[];
+  var tpovideos2=[];
+  var cantidad1=[];
+  var cantidad2=[];
+  //var serie=[];
+  //var serietpo=[];
+  //var serievid=[];
+  var j;
+  if(json["clases"]){
+    var clase = json["clases"]
+    var tipo1 = clase[0]["tipo1"]
+    var tipo2 = clase[0]["tipo2"]
+    for (var i=0;i<clase.length;i++){
+      //var datosest=[];
+      //var tpoest=[];
+      //var videst=[];
+      categorias[i]=clase[i]["nombre"];
+      tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
+      tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
+      tpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
+      tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
+      cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
+      cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
+      //var curso=clase[i]["nombre"];
+      //var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase_1"];
+      //var tpo_videos = clase[i]["tiempo_videos_clase_1"];
+      //var cantidad = clase[i]["total_ejercicios_clase_1"];
+      /*var estudiantes = clase[i]["students"];
+      for (j=0;j<estudiantes.length;j++){
+        datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
+        tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
+        videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
+      }*/
+
+      //arrayte[i]={"name":curso, "y": tpo_ejercicios, "drilldown":curso};
+      //serietpo[i]={"name":curso, "id":curso, "data":tpoest};
+
+      //arraytv[i]={"name":curso, "y": tpo_videos, "drilldown":curso};
+      //serievid[i]={"name":curso, "id":curso, "data":videst};
+
+      //arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso}
+      //serie[i]={"name":curso, "id":curso, "data":datosest};
+
+    }
+
+  }
+/*
+  else{
+    if(json["students"]){
+      var student = json["students"]
+      for (var j=0;j<student.length;j++){
+        var name=student[j]["name"]
+        var tpo_ejercicios = student[j]["tiempo_ejercicios"]
+        var tpo_videos = student[j]["tiempo_videos"]
+        var cantidad = student[j]["total_ejercicios"]
+        arrayte[j]=[name, tpo_ejercicios]
+        arraytv[j]=[name, tpo_videos]
+        arraycant[j]=[name, cantidad]
+      }
+    }
+  }
+
+
+
+  arrayte.sort(function(a,b){
+    return parseInt(a.y) - parseInt(b.y);
+  });
+
+  arraytv.sort(function(a,b){
+    return parseInt(a.y) - parseInt(b.y);
+  });
+
+  arraycant.sort(function(a,b){
+    return parseInt(a.y) - parseInt(b.y);
+  });
+  */
+  //console.log(arrayte);
+  /*
+  var maxte=0;
+  for (var j=0;j<arrayte.length;j++){
+    if (arrayte[j]["y"]>maxte){
+      maxte = arrayte[j]["y"];
+    }
+  }
+  if (maxte>=3600){
+    for (var j=0;j<arrayte.length;j++){
+      arrayte[j]["y"]=arrayte[j]["y"]/3600;
+    }
+    var ejerText= 'Tiempo (horas)';
+    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} horas</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else if(maxte<3600 && maxte>=60){
+    for (var j=0;j<arrayte.length;j++){
+      arrayte[j]["y"]=arrayte[j]["y"]/60;
+    }
+    var ejerText= 'Tiempo (minutos)';
+    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} minutos</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else{
+    var ejerText= 'Tiempo (segundos)';
+    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y} segundos</b>';
+    var formato = '{point.y:,.0f}';
+  }
+
+  var maxtv=0;
+  for (var j=0;j<arraytv.length;j++){
+    if (arraytv[j]["y"]>maxtv){
+      maxtv = arraytv[j]["y"];
+    }
+  }
+  if (maxtv>=3600){
+    for (var j=0;j<arraytv.length;j++){
+      arraytv[j]["y"]=arraytv[j]["y"]/3600;
+    }
+    var vidText= 'Tiempo (horas)';
+    var vidPoint = 'Tiempo de videos: <b>{point.y:,.2f} horas</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else if(maxtv<3600 && maxtv>=60){
+    for (var j=0;j<arraytv.length;j++){
+      arraytv[j]["y"]=arraytv[j]["y"]/60;
+    }
+    var vidText= 'Tiempo (minutos)';
+    var vidPoint = 'Tiempo de videos: <b>{point.y:,.2f} minutos</b>';
+    var formato = '{point.y:,.2f}';
+  }
+  else{
+    var vidText= 'Tiempo (segundos)';
+    var vidPoint = 'Tiempo de videos: <b>{point.y} segundos</b>';
+    var formato = '{point.y:,.0f}';
+  }
+  */
+
+  $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#container').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            categories: categorias,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.0f} segundos</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: tipo1,
+            data: tpoejercicios1
+            },{
+            name: tipo2,
+            data: tpoejercicios2
+        }]
+    });
+  });
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#containervid').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de videos'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            categories: categorias,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.0f} segundos</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: tipo1,
+            data: tpovideos1
+            },{
+            name: tipo2,
+            data: tpovideos2
+        }]
+    });
+  });
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#containertot').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            categories: categorias,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad (ejercicios)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.0f} ejercicios</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: tipo1,
+            data: cantidad1
+            },{
+            name: tipo2,
+            data: cantidad2
+        }]
+    });
+  });/*
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#containervid').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de videos'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'
+        },
+        series: [{
+            name: 'Cursos',
+            data: arraytv,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: 'KhanBlue',
+                align: 'right',
+                format: '{point.y:,.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }],
+        drilldown: {
+            series: serievid
+          }
+    });
+  });
+
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#containertot').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad (ejercicios)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>'
+        },
+        series: [{
+            name: 'Cursos',
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: 'KhanBlue',
+                align: 'right',
+                format: '{point.y:,.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            },
+            data: arraycant
+        }],
+        drilldown: {
+            series: serie
+          }
+    });
+  });*/
 }
 
 function validar(){
@@ -770,7 +1259,7 @@ function updateSchedule(){
 function selectSchedule(radiobutton){
   $('input[name="day"]').prop("checked", false);
   var valor = radiobutton.value;
-  if (valor=="radio1"){
+  if (valor=="radio1" || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('input[name="day"]').prop("disabled", true);
     $('input[name="day"]').prop("checked", true);
   }
@@ -834,14 +1323,13 @@ function selectSchedule(radiobutton){
     }
   }
   if (valor=="radio4"){
-    //console.log("algoaca");
     $('input[name="day"]').prop("disabled", false); 
   }
 }
 
 function funcion(counter){
-  var valor = $('input[value*="radio"]:checked').val()
-  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+  var valor = $('input[value*="radio"]:checked').val();
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3" || valor==null || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('input[name="day"]').prop("disabled", true);
     return false;
   }
@@ -866,12 +1354,12 @@ $("th#HSE").mouseout(function(){
 
 function funciondos(id_schedule){
   var valor = $('input[value*="radio"]:checked').val()
-  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3" || valor==null || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('input[name="day"]').prop("disabled", true);
     return false;
   }
   else{  
-    $('input[value*="_'+id_schedule+'"]').prop("checked", !$('input[value*="_'+id_schedule+'"]').prop("checked"));
+    $('input[value*="_'+id_schedule+'_D"]').prop("checked", !$('input[value*="_'+id_schedule+'_D"]').prop("checked"));
     $('input[value="radio4"]').prop("checked", true);
     if($('input[value="radio1"]').checked  || $('input[value="radio2"]').checked || $('input[value="radio3"]').checked){
       $('input[value="radio4"]').prop("checked", false);
@@ -886,7 +1374,7 @@ function diaselect(dia){
     speed: 1200,
     sortList: [[0,0]]
   });
-  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3" || valor==null || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('input[name="day"]').prop("disabled", true);
     return false;
   }
