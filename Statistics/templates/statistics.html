@@ -353,9 +353,33 @@ $('#check_all_none').click(function () {
 
 });
 
+function showDiv(){
+  if( !($('.graphics').is(":visible")) ){
+    $('.graphics').toggle('blind',1500)
+}
+}
+
+function hideDiv(){
+  if( $('.graphics').is(":visible") ){
+    $('.graphics').toggle('blind',1500)
+}
+}
+
+function showDivMain(){
+  if( !($('.principal').is(":visible")) ){
+    $('.principal').toggle('blind',1500)
+}
+}
+
+function hideDivMain(){
+  if( $('.principal').is(":visible") ){
+    $('.principal').toggle('blind',1500)
+}
+}
+
 function containerShow(){
-  $(".container").fadeIn();
-  $('.graphics').fadeOut();
+  showDivMain();
+  hideDiv();
 }
 
 function crearEstadisticas(){
@@ -370,8 +394,8 @@ function crearEstadisticas(){
   if (validar() && selclase.length>0 && selhora.length>0){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
-    $('.container').fadeOut();
-    $('.graphics').fadeIn();
+    hideDivMain();
+    showDiv();
     if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
       $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",

@@ -282,65 +282,6 @@ table.testsched td {
   </div>
 </div>
 
-<!--
-<div class="allcontent">
-  <br>
-  <h1 style="text-align:center;">Estadísticas</h1>
-<div class="container" style="float:left;width:60%;">
-<div class="main-content">
-
-  <div id="instituciones" style="width:100%;float:left;">
-  <h2 align="center">Establecimientos</h2>
-  <table class="testinst">
-  <tr>
-    <th>Todos los establecimientos</th>
-    <th style="align-content:center;"><input type="checkbox" id="check_all_none_inst" class="all_inst"></th>
-  </tr>
-  {% for institution in institutions %}
-  <tr>
-    <td>{{institution.name}}</td>
-    <td><input type="checkbox" value="{{ institution.id_institution }}" name="institution" class="institution" onclick="updateClass();"></td>
-  </tr>
-  {% endfor %}
-  </table>
-</div>!-->
-  <!--<div id="cursos" style="width:100%;float:left;">
-  <h2 align="center">Cursos</h2>
-
-  <div id="cursoclass" style="overflow-y: auto;outline: none; height:500px"></div>
-  </div>
-
-  <div id="trabajo" style="width:100%;float:left;">
-    <br>
-  <h2 align="center">Tipo de Trabajo</h2>
-  <div id="testsched">
-
-  </div>
-  <br>
-  <div align="left" style="margin-left:200px">
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio3">Fuera horario de clases <br>
-  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4">Personalizado <br>  
-  </div>
-  </div>
-  <div id="fechas" style="width:100%;float:left;">
-    <br>
-    <h2 align="left" style="margin-left:200px;">Fechas</h2>
-        <div  class="fechas">
-          <p class="label_input"><strong id="fIniTooltip">Desde</strong></p>
-          <input name="desde" onchange="validar()" onkeyup="validar()" id="desde" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Desde"/>
-        </div>
-        <div  class="fechas">
-          <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
-          <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
-        </div>
-  </div>
-
-</div>
-
-</div>!-->
-
 
 
 </div>
@@ -391,25 +332,6 @@ $('#estadisticas').addClass('active selected');
 $('input[name="day"]').prop("disabled", true);
 
 
-/*
-$('#check_all_none_inst').click(function () {
-    if ( $(this).is(':checked') ){
-        $('.institution').prop("checked", true);
-        updateClass();
-    }
-    else{
-        $('.institution').removeAttr("checked");
-        updateClass();
-    }
-
-});
-
-
-function drawNiceScrolls(){
-  $("#cursoclass").niceScroll({ cursorwidth:'10px', autohidemode: false, cursorcolor:'#D9D9D9', zindex:10, railoffset: { left: 12} });
-}
-*/
-
 function drawTableSchedule(){
   var tableSchedule='<table class="testsched" id="sort_table">';
   tableSchedule+="<thead><tr><th width='30%'>Horario</th><th width='10%' id='HSE' onclick='diaselect(\x22Monday\x22);'>Lunes</th>";
@@ -457,74 +379,42 @@ function drawTableSchedule(){
   });
 }
 
-/*
-
-
-
-function setHeightContent(){
-  var altura = $('.main-content').height();
-  $('#contenedor').height(altura-69);
-  //console.log(altura);
+function showDiv(){
+  if( !($('.graphics').is(":visible")) ){
+    $('.graphics').toggle('blind',1500)
+}
 }
 
-
-function check_all_none_classes(id){
-  var idc = $('#idcurso'+id).val();
-  //console.log(idc)
-  if ($('#idcurso'+id).is(':checked')){
-    $('.curso'+idc).prop("checked", true);
-  }
-  else{
-    $('.curso'+idc).removeAttr("checked");
-  }
+function hideDiv(){
+  if( $('.graphics').is(":visible") ){
+    $('.graphics').toggle('blind',1500)
 }
-*/
+}
 
+function showDivMain(){
+  if( !($('.principal').is(":visible")) ){
+    $('.principal').toggle('blind',1500)
+}
+}
+
+function hideDivMain(){
+  if( $('.principal').is(":visible") ){
+    $('.principal').toggle('blind',1500)
+}
+}
 
 function containerShow(){
-  $(".principal").fadeIn();
-  $('.graphics').fadeOut();
+  //$(".principal").fadeIn();
+  showDivMain();
+  hideDiv();
+  //$('.graphics').fadeOut();
   //drawNiceScrolls();
 }
-/*
-  $('#contenedor').on('select_node.jstree', function (e, data) {
-      var loMainSelected = data;
-      uiGetParents(loMainSelected);
-  });
 
-  function uiGetParents(loSelectedNode) {
-      try {
-          var lnLevel = loSelectedNode.node.parents.length;
-          var lsSelectedID = loSelectedNode.node.id;
-          var loParent = $("#" + lsSelectedID);
-          var lsParents =  loSelectedNode.node.text + ' >';
-          for (var ln = 0; ln <= lnLevel -1 ; ln++) {
-              var loParent = loParent.parent().parent();
-              if (loParent.children()[1] != undefined) {
-                  lsParents += loParent.children()[1].text + " > ";
-              }
-          }
-          if (lsParents.length > 0) {
-              lsParents = lsParents.substring(0, lsParents.length - 1);
-          }
-          alert(lsParents);
-      }
-      catch (err) {
-          alert('Error in uiGetParents');
-      }
-  }
-*/
 function crearEstadisticas(){
-  //aqui va algo
   validar();
   var selhorario=[];
-  /*var selinst = $('input[name="institution"]:checked').map(function(_,el){
-    return $(el).val();
-  }).get();
-  /*var selcurso = $('input[name*="curso"]:checked').map(function(_,el){
-    return $(el).val();
-  }).get();*/
-  //var checked_ids = [];
+
   var selinst=[];
   var selcurso=[];
   var curso = $("#contenedor").jstree("get_selected", true);
@@ -542,7 +432,6 @@ function crearEstadisticas(){
     }
 
   }
-
   
   var radioselect = $('input[value*="radio"]:checked').val();
   if (radioselect=="radio4"){
@@ -553,8 +442,10 @@ function crearEstadisticas(){
   if (validar() && selcurso.length>0 && radioselect){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
-    $('.principal').fadeOut();
-    $('.graphics').fadeIn();
+    //$('.principal').fadeOut();
+    hideDivMain();
+    //$('.graphics').fadeIn();
+    showDiv();
     $.ajax({
       url: "{% url 'SuperStats:selectSuperStats' %}",
       type: "POST",
@@ -576,12 +467,15 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
-  //$("#cursoclass").getNiceScroll().remove();
+  var colorScale = d3.scale.ordinal().range(['#1c758a'])
+    .domain(['KhanBlue']);
   var arrayte=[];
   var arraytv=[];
   var arraycant=[];
+  var colors=['blue', 'red', 'green', 'yellow', 'orange', 'brown', 'gray'];
   if(json["clases"]){
     var clase = json["clases"]
+    var colorcolumn=[];
     for (var i=0;i<clase.length;i++){
       var curso=clase[i]["nombre"];
       var ee=clase[i]["establecimiento"]
@@ -589,6 +483,28 @@ function graficar(json, clase){
       var tpo_videos = clase[i]["tiempo_videos_clase"]
       var cantidad = clase[i]["total_ejercicios_clase"]
       var nombre = curso +" - "+ee
+      //var colorcolumn={"color":colors[i]};
+      if (ee=="LSMB"){
+        colorcolumn[i]='#3399FF';
+      }
+      if (ee=="E.A."){
+        colorcolumn[i]='#FF0000';
+      }
+      if (ee=="C.E.I."){
+        colorcolumn[i]='#009900';
+      }
+      if (ee=="L.A.V."){
+        colorcolumn[i]='#CCCC00';
+      }
+      if (ee=="R.A.P."){
+        colorcolumn[i]='#FF8000';
+      }
+      if (ee=="G.M."){
+        colorcolumn[i]='#663300';
+      }
+      if (ee=="BA-Khan"){
+        colorcolumn[i]='#808080';
+      }
       arrayte[i]=[nombre, tpo_ejercicios]
       arraytv[i]=[nombre, tpo_videos]
       arraycant[i]=[nombre, cantidad]
@@ -608,8 +524,20 @@ function graficar(json, clase){
       }
     }
   }
-  //console.log(arraycant)
+  //console.log(colorcolumn);
   $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}"
+        }
+      });
     $('#containerej').highcharts({
         chart: {
             type: 'column'
@@ -640,7 +568,13 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Tiempo de ejercicios: <b>{point.y} segundos</b>'
+            pointFormat: 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'
+        },
+        colors: colorcolumn,
+        plotOptions:{
+          column: {
+            colorByPoint: true
+          }
         },
         series: [{
             name: 'Tiempo',
@@ -648,9 +582,9 @@ function graficar(json, clase){
             dataLabels: {
                 enabled: true,
                 rotation: -90,
-                color: '#FFFFFF',
+                //color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y}', // one decimal
+                format: '{point.y:,.0f}', // one decimal
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
@@ -662,6 +596,18 @@ function graficar(json, clase){
   });
 
   $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
     $('#containervid').highcharts({
         chart: {
             type: 'column'
@@ -692,7 +638,13 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Tiempo de videos: <b>{point.y} segundos</b>'
+            pointFormat: 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'
+        },
+        colors: colorcolumn,
+        plotOptions:{
+          column: {
+            colorByPoint: true
+          }
         },
         series: [{
             name: 'Tiempo',
@@ -700,9 +652,9 @@ function graficar(json, clase){
             dataLabels: {
                 enabled: true,
                 rotation: -90,
-                color: '#FFFFFF',
+                //color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y}', // one decimal
+                format: '{point.y:,.0f}', // one decimal
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
@@ -714,6 +666,18 @@ function graficar(json, clase){
   });
 
   $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
     $('#containertot').highcharts({
         chart: {
             type: 'column'
@@ -744,7 +708,13 @@ function graficar(json, clase){
             enabled: false
         },
         tooltip: {
-            pointFormat: 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>'
+            pointFormat: 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'
+        },
+        colors: colorcolumn,
+        plotOptions:{
+          column: {
+            colorByPoint: true
+          }
         },
         series: [{
             name: 'Cantidad',
@@ -752,9 +722,9 @@ function graficar(json, clase){
             dataLabels: {
                 enabled: true,
                 rotation: -90,
-                color: '#FFFFFF',
+                //color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y}', // one decimal
+                format: '{point.y:,.0f}', // one decimal
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
@@ -795,39 +765,11 @@ function updateSchedule(){
   if ($("input[value*='radio']:checked").val()=="radio2"){
     $('#testsched').hide();
     $('input[name="day"]').prop("checked", false);
-    /*
-    {% for csh in class_schedule %}
-      var dia = "{{ csh.day }}"
-      var id_sched = "{{ csh.id_schedule_id }}"
-      var id_class = "{{ csh.id_class_id }}"
-      var idcheckbox = dia+"_"+id_sched;
-      for (var i = sel.length - 1; i >= 0; i--) {
-        if(sel[i]==id_class){
-          $("input[value='"+idcheckbox+"']").prop("checked", true);
-        }      
-      }
-      //console.log(idcheckbox);
-    {% endfor %}    
-    */
   }
   else{
     if ($("input[value*='radio']:checked").val()=="radio3"){
       $('#testsched').hide();
       $('input[name="day"]').prop("checked", true);
-      /*
-      {% for csh in class_schedule %}
-        var dia = "{{ csh.day }}"
-        var id_sched = "{{ csh.id_schedule_id }}"
-        var id_class = "{{ csh.id_class_id }}"
-        var idcheckbox = dia+"_"+id_sched;
-        for (var i = sel.length - 1; i >= 0; i--) {
-          if(sel[i]==id_class){
-            $("input[value='"+idcheckbox+"']").prop("checked", false);
-          }      
-        }
-        //console.log(idcheckbox);
-      {% endfor %}   
-      */ 
     }
   }
 }
@@ -837,18 +779,9 @@ function selectSchedule(radiobutton){
   var valor = radiobutton.value;
   if (valor=="radio1"){
     $('#testsched').hide();
-    //$('input[name="day"]').prop("disabled", true);
-    //$('input[name="day"]').prop("checked", true);
   }
   if (valor=="radio2"){
     $('#testsched').hide();
-    /*
-    $('input[name="day"]').prop("disabled", true);
-    $('#popup').empty();
-    var sel = $('input[name*="curso"]:checked').map(function(_,el){
-      return $(el).val();
-    }).get();
-    */
     var selcurso=[];
     var curso = $("#contenedor").jstree("get_selected");
     //selcurso = (curso.indexOf("id_")>-1);
@@ -863,34 +796,12 @@ function selectSchedule(radiobutton){
       $('#popup').fadeIn().css('display', '');
       $("#hover").fadeIn().css('display', '');
     }
-    /*
-    else{
-      //console.log(sel);
-      {% for csh in class_schedule %}
-        var dia = "{{ csh.day }}"
-        var id_sched = "{{ csh.id_schedule_id }}"
-        var id_class = "{{ csh.id_class_id }}"
-        var idcheckbox = dia+"_"+id_sched;
-        for (var i = sel.length - 1; i >= 0; i--) {
-          if(sel[i]==id_class){
-            $("input[value='"+idcheckbox+"']").prop("checked", true);
-          }      
-        }
-        //console.log(idcheckbox);
-      {% endfor %}
-    }
-    */
     
   }
   if (valor=="radio3"){
     $('#testsched').hide();
     //$('input[name="day"]').prop("disabled", true);
     $('#popup').empty();
-    /*
-    var sel = $('input[name*="curso"]:checked').map(function(_,el){
-      return $(el).val();
-    }).get();
-    */
     var selcurso=[];
     var curso = $("#contenedor").jstree("get_selected");
     //selcurso = (curso.indexOf("id_")>-1);
@@ -906,24 +817,6 @@ function selectSchedule(radiobutton){
       $("#hover").fadeIn().css('display', '');
 
     }
-    /*
-    else{
-      $('input[name="day"]').prop("checked", true);
-      //console.log(sel);
-      {% for csh in class_schedule %}
-        var dia = "{{ csh.day }}"
-        var id_sched = "{{ csh.id_schedule_id }}"
-        var id_class = "{{ csh.id_class_id }}"
-        var idcheckbox = dia+"_"+id_sched;
-        for (var i = sel.length - 1; i >= 0; i--) {
-          if(sel[i]==id_class){
-            $("input[value='"+idcheckbox+"']").prop("checked", false);
-          }      
-        }
-        //console.log(idcheckbox);
-      {% endfor %}
-    }
-    */
   }
   if (valor=="radio4"){
     //console.log("algoaca");
