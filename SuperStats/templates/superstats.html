@@ -255,12 +255,17 @@ table.testsched td {
   <div id="testsched">
   
   </div>
-  <br>
-  <div align="left" style="margin-left:200px">
+
+  <div align="left" style="margin-left:50px;float: left;width: 40%;">
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio3">Fuera horario de clases <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio4">Personalizado <br>  
+  </div>
+  <div align="left" style="margin-right:50px;float: left;width: 40%;">
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio5">Todo vs Horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio6">Todo vs Fuera horario de clases <br>
+  <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio7">Horario de clases vs Fuera horario de clases <br>
   </div>
 
 </div>
@@ -287,6 +292,8 @@ table.testsched td {
 </div>
 <div class="graphics" id="graph" align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
+<br>
+<p>La carga de datos puede demorar unos minutos.</p>
 <hr>
 <div id="containerej" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
 <hr>
@@ -428,9 +435,7 @@ function crearEstadisticas(){
         selinst.push(curso[i]['parent']);
       
       }
-
     }
-
   }
   
   var radioselect = $('input[value*="radio"]:checked').val();
@@ -446,16 +451,30 @@ function crearEstadisticas(){
     hideDivMain();
     //$('.graphics').fadeIn();
     showDiv();
-    $.ajax({
-      url: "{% url 'SuperStats:selectSuperStats' %}",
-      type: "POST",
-      data: {selcurso, selinst, desde, hasta, radioselect, selhorario},
-        success: function(response){
-          jsonResponse = JSON.parse(response);
-          //console.log(response);
-          graficar(jsonResponse, selinst);
-        }
-    });
+    if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
+      $.ajax({
+        url: "{% url 'SuperStats:selectSuperStats' %}",
+        type: "POST",
+        data: {selcurso, selinst, desde, hasta, radioselect, selhorario},
+          success: function(response){
+            jsonResponse = JSON.parse(response);
+            //console.log(response);
+            graficar(jsonResponse, selinst);
+          }
+      });
+    }
+    else{
+      $.ajax({
+        url: "{% url 'SuperStats:compareSuperStats' %}",
+        type: "POST",
+        data: {selcurso, selinst, desde, hasta, radioselect},
+          success: function(response){
+            //jsonResponse = JSON.parse(response);
+            console.log(response);
+            //graficarcompara(jsonResponse, selinst);
+          }
+      });
+    }
   }
   else{
     $('#popup_error').empty();
@@ -731,6 +750,237 @@ function graficar(json, clase){
                     fontFamily: 'Verdana, sans-serif'
                 }
             }
+        }]
+    });
+  });
+}
+
+function graficarcompara(json, clase){
+  var colorScale = d3.scale.ordinal().range(['#1c758a'])
+    .domain(['KhanBlue']);
+  var arrayte=[];
+  var arraytv=[];
+  var arraycant=[]; 
+  var categorias=[];
+  var tpoejercicios1=[];
+  var tpoejercicios2=[];
+  var tpovideos1=[];
+  var tpovideos2=[];
+  var cantidad1=[];
+  var cantidad2=[];
+
+  var j;
+  if(json["clases"]){
+    var clase = json["clases"]
+    var tipo1 = clase[0]["tipo1"]
+    var tipo2 = clase[0]["tipo2"]
+    for (var i=0;i<clase.length;i++){
+      categorias[i]=clase[i]["nombre"];
+      tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
+      tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
+      tpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
+      tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
+      cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
+      cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
+    }
+
+  }
+
+  else{
+    if(json["students"]){
+      var student = json["students"]
+      var tipo1 = student[0]["tipo1"]
+      var tipo2 = student[0]["tipo2"]
+      for (var j=0;j<student.length;j++){
+        categorias[j]=student[j]["name"];
+        tpoejercicios1[j] = student[j]["tiempo_ejercicios_1"]
+        tpoejercicios2[j] = student[j]["tiempo_ejercicios_2"]
+        tpovideos1[j] = student[j]["tiempo_videos_1"]
+        tpovideos2[j] = student[j]["tiempo_videos_2"]
+        cantidad1[j] = student[j]["total_ejercicios_1"]
+        cantidad2[j] = student[j]["total_ejercicios_2"]
+
+      }
+    }
+  }
+
+  $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#container').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            categories: categorias,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:,.0f} segundos</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: tipo1,
+            data: tpoejercicios1
+            },{
+            name: tipo2,
+            data: tpoejercicios2
+        }]
+    });
+  });
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#containervid').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Tiempo de videos'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            categories: categorias,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:,.0f} segundos</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: tipo1,
+            data: tpovideos1
+            },{
+            name: tipo2,
+            data: tpovideos2
+        }]
+    });
+  });
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}" 
+        }
+      });
+    $('#containertot').highcharts({
+
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            categories: categorias,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad (ejercicios)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:,.0f} ejercicios</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: tipo1,
+            data: cantidad1
+            },{
+            name: tipo2,
+            data: cantidad2
         }]
     });
   });

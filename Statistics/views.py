@@ -432,7 +432,6 @@ def compareStatistics(request):
 			desde = args['desde']
 			hasta = args['hasta']
 			cursos = args.getlist('selclase[]')
-			horarios = args.getlist('selhora[]')
 			radio = args['radioselect']
 			fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 			fechahasta = datetime.strptime(hasta, '%Y-%m-%d')+timedelta(days=1)-timedelta(seconds=1)
