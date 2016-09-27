@@ -70,6 +70,7 @@ def getSuperStats(request):
 
 	return render_to_response('superstats.html', { 'json_data':json_data} ,context_instance=RequestContext(request))
 
+'''
 @permission_required('bakhanapp.isSuper', login_url="/")
 def selectClass(request):
 	try:
@@ -105,6 +106,7 @@ def selectClass(request):
 			return HttpResponse(json_data)
 	except Exception as e:
 		print e
+'''
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def selectSuperStats(request):
