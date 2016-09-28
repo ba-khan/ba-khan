@@ -839,7 +839,7 @@ function graficarcompara(json, clase){
             }
         },
         legend: {
-            enabled: false
+            enabled: true
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -899,7 +899,7 @@ function graficarcompara(json, clase){
             }
         },
         legend: {
-            enabled: false
+            enabled: true
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -959,7 +959,7 @@ function graficarcompara(json, clase){
             }
         },
         legend: {
-            enabled: false
+            enabled: true
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -987,6 +987,20 @@ function graficarcompara(json, clase){
 }
 
 function validar(){
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
+
+  if(dd<10) {
+      dd='0'+dd
+  } 
+
+  if(mm<10) {
+      mm='0'+mm
+  } 
+
+  today = yyyy+'-'+mm+'-'+dd;
   flag = true;
   desde = document.getElementById("desde").value;
   hasta = document.getElementById("hasta").value;
@@ -1002,6 +1016,10 @@ function validar(){
     flag = false;
   }else{
     $('#hasta').css('color', '#000000');
+  }
+  if(hasta>today){
+    $('#hasta').css('color', '#C30202');
+    flag = false;
   }
   return flag
 }
