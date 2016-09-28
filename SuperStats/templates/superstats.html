@@ -12,6 +12,8 @@
 <script src="{% static 'js/editablegrid_validators.js' %}"></script>
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 <!--<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>!-->
@@ -492,16 +494,29 @@ function graficar(json, clase){
   var arraytv=[];
   var arraycant=[];
   var colors=['blue', 'red', 'green', 'yellow', 'orange', 'brown', 'gray'];
+  var serie=[];
+  var serietpo=[];
+  var serievid=[];
+  var j;
   if(json["clases"]){
     var clase = json["clases"]
     var colorcolumn=[];
     for (var i=0;i<clase.length;i++){
+      var datosest=[];
+      var tpoest=[];
+      var videst=[];
       var curso=clase[i]["nombre"];
       var ee=clase[i]["establecimiento"]
       var tpo_ejercicios = clase[i]["tiempo_ejercicios_clase"]
       var tpo_videos = clase[i]["tiempo_videos_clase"]
       var cantidad = clase[i]["total_ejercicios_clase"]
       var nombre = curso +" - "+ee
+      var estudiantes = clase[i]["students"];
+      for (j=0;j<estudiantes.length;j++){
+        datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
+        tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
+        videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
+      }
       //var colorcolumn={"color":colors[i]};
       if (ee=="LSMB"){
         colorcolumn[i]='#3399FF';
@@ -524,9 +539,18 @@ function graficar(json, clase){
       if (ee=="BA-Khan"){
         colorcolumn[i]='#808080';
       }
-      arrayte[i]=[nombre, tpo_ejercicios]
+      /*arrayte[i]=[nombre, tpo_ejercicios]
       arraytv[i]=[nombre, tpo_videos]
-      arraycant[i]=[nombre, cantidad]
+      arraycant[i]=[nombre, cantidad]*/
+
+      arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre};
+      serietpo[i]={"name":nombre, "id":nombre, "data":tpoest};
+
+      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre};
+      serievid[i]={"name":nombre, "id":nombre, "data":videst};
+
+      arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre}
+      serie[i]={"name":nombre, "id":nombre, "data":datosest};
     }
   }
   else{
@@ -543,7 +567,7 @@ function graficar(json, clase){
       }
     }
   }
-  //console.log(colorcolumn);
+  console.log(serievid);
   $(function () {
     Highcharts.setOptions({
           lang:{
@@ -590,14 +614,10 @@ function graficar(json, clase){
             pointFormat: 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'
         },
         colors: colorcolumn,
-        plotOptions:{
-          column: {
-            colorByPoint: true
-          }
-        },
         series: [{
             name: 'Tiempo',
             data: arrayte,
+            colorByPoint: true,
             dataLabels: {
                 enabled: true,
                 rotation: -90,
@@ -610,7 +630,10 @@ function graficar(json, clase){
                     fontFamily: 'Verdana, sans-serif'
                 }
             }
-        }]
+        }],
+        drilldown: {
+            series: serietpo
+        }
     });
   });
 
@@ -660,14 +683,10 @@ function graficar(json, clase){
             pointFormat: 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'
         },
         colors: colorcolumn,
-        plotOptions:{
-          column: {
-            colorByPoint: true
-          }
-        },
         series: [{
             name: 'Tiempo',
             data: arraytv,
+            colorByPoint: true,
             dataLabels: {
                 enabled: true,
                 rotation: -90,
@@ -680,7 +699,10 @@ function graficar(json, clase){
                     fontFamily: 'Verdana, sans-serif'
                 }
             }
-        }]
+        }],
+        drilldown: {
+            series: serievid
+          }
     });
   });
 
@@ -730,14 +752,10 @@ function graficar(json, clase){
             pointFormat: 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'
         },
         colors: colorcolumn,
-        plotOptions:{
-          column: {
-            colorByPoint: true
-          }
-        },
         series: [{
             name: 'Cantidad',
             data: arraycant,
+            colorByPoint: true,
             dataLabels: {
                 enabled: true,
                 rotation: -90,
@@ -750,7 +768,10 @@ function graficar(json, clase){
                     fontFamily: 'Verdana, sans-serif'
                 }
             }
-        }]
+        }],
+        drilldown: {
+            series: serie
+          }
     });
   });
 }

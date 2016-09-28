@@ -70,43 +70,6 @@ def getSuperStats(request):
 
 	return render_to_response('superstats.html', { 'json_data':json_data} ,context_instance=RequestContext(request))
 
-'''
-@permission_required('bakhanapp.isSuper', login_url="/")
-def selectClass(request):
-	try:
-		request.session.set_expiry(timeSleep)
-		if request.method=="POST":
-			json_tree={}
-			json_tree['checkbox']={'keep_selected_style':False}
-			json_tree['plugins']=['checkbox']
-			jtree=[]
-			objeto={"id": 0, "parent":"#", "text":'Todos los Cursos', "state":{"opened":"true"}, "icon":"false"}
-			jtree.append(objeto)
-			args=request.POST
-			instituciones = args.getlist('sel[]')
-			for institucion in instituciones:
-				nameInst = Institution.objects.filter(id_institution=institucion).values('name')
-				inst_obj={"id":institucion, "parent":0, "text":nameInst[0]['name'], "icon":"false"}
-				jtree.append(inst_obj)
-
-				classes = Class.objects.filter(id_institution_id=institucion).order_by('level','letter')
-				N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
-				for i in range(len(classes)):
-					classes[i].level = N[int(classes[i].level)] 
-
-				for clase in classes:
-					if clase.additional:
-						class_obj={"id":"id_"+str(clase.id_class), "parent":clase.id_institution_id, "text":str(clase.level)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional), "icon":"false"}
-					else:
-						class_obj={"id":"id_"+str(clase.id_class), "parent":clase.id_institution_id, "text":str(clase.level)+" "+str(clase.letter)+" "+str(clase.year), "icon":"false"}
-					jtree.append(class_obj)
-			json_tree['core']={'data':jtree}
-			json_data = json.dumps(json_tree)
-			
-			return HttpResponse(json_data)
-	except Exception as e:
-		print e
-'''
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def selectSuperStats(request):
@@ -268,7 +231,9 @@ def selectSuperStats(request):
 							for total in total_exercise:
 								dictTotal[total['kaid_student_id']] = total['total']
 							i=0
+							student_array=[]
 							for student in students:
+								student_json={}
 								try:
 									class_json["tiempo_ejercicios_clase"] = class_json["tiempo_ejercicios_clase"] + dictTime[student.kaid_student]
 								except:
@@ -281,8 +246,29 @@ def selectSuperStats(request):
 									class_json["total_ejercicios_clase"] = class_json["total_ejercicios_clase"] + dictTotal[student.kaid_student]
 								except:
 									class_json["total_ejercicios_clase"] = class_json["total_ejercicios_clase"] + 0
+								try:
+									student_json["kaid"]=student.kaid_student
+								except:
+									student_json["kaid"]="ninguno"
+								try:
+									student_json["name"] = student.nickname
+								except:
+									student_json["name"] = "ninguno"
+								try:
+									student_json["tiempo_ejercicios"] = dictTime[student.kaid_student]
+								except:
+									student_json["tiempo_ejercicios"] =  0
+								try:
+									student_json["tiempo_videos"] = dictVideo[student.kaid_student]
+								except:
+									student_json["tiempo_videos"] = 0
+								try:
+									student_json["total_ejercicios"] = dictTotal[student.kaid_student]
+								except:
+									student_json["total_ejercicios"] = 0
 								i+=1
-							
+								student_array.append(student_json)
+							class_json["students"]=student_array
 							j+=1
 							json_array.append(class_json)
 						json_dict={"clases":json_array}
