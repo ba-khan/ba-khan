@@ -446,12 +446,12 @@ function crearEstadisticas(){
       return $(el).val();
     }).get();
   }
+  $('#loading').show()
   if (validar() && selcurso.length>0 && radioselect){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
     //$('.principal').fadeOut();
     hideDivMain();
-    //$('.graphics').fadeIn();
     showDiv();
     if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
       $.ajax({
@@ -460,7 +460,10 @@ function crearEstadisticas(){
         data: {selcurso, selinst, desde, hasta, radioselect, selhorario},
           success: function(response){
             jsonResponse = JSON.parse(response);
+            hideDivMain();
+            showDiv();
             //console.log(response);
+            $('#loading').hide()
             graficar(jsonResponse, selinst);
           }
       });
@@ -472,8 +475,10 @@ function crearEstadisticas(){
         data: {selcurso, selinst, desde, hasta, radioselect},
           success: function(response){
             //jsonResponse = JSON.parse(response);
-            console.log(response);
-            //graficarcompara(jsonResponse, selinst);
+            hideDivMain();
+            showDiv();
+            $('#loading').hide()
+            graficarcompara(jsonResponse, selinst);
           }
       });
     }

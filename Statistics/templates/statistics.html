@@ -393,11 +393,10 @@ function crearEstadisticas(){
     return $(el).val();
   }).get();
   var radioselect = $('input[value*="radio"]:checked').val()
+  $('#loading').show()
   if (validar() && selclase.length>0 && selhora.length>0){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
-    hideDivMain();
-    showDiv();
     if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
       $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",
@@ -406,7 +405,11 @@ function crearEstadisticas(){
         success: function(response){
           jsonResponse = JSON.parse(response);
           //console.log(jsonResponse);
+          hideDivMain();
+          showDiv();
+          $('#loading').hide()
           graficar(jsonResponse, selclase);
+
         }
     }); 
     }
@@ -418,6 +421,9 @@ function crearEstadisticas(){
         success: function(response){
           jsonResponse = JSON.parse(response);
           //console.log(jsonResponse);
+          hideDivMain();
+          showDiv();
+          $('#loading').hide()
           graficarcompara(jsonResponse, selclase);
         }
     }); 
@@ -479,9 +485,9 @@ function graficar(json, clase){
         var tpo_ejercicios = student[j]["tiempo_ejercicios"]
         var tpo_videos = student[j]["tiempo_videos"]
         var cantidad = student[j]["total_ejercicios"]
-        arrayte[j]=[name, tpo_ejercicios]
-        arraytv[j]=[name, tpo_videos]
-        arraycant[j]=[name, cantidad]
+        arrayte[j]={"name":name, "y": tpo_ejercicios};
+        arraytv[j]={"name":name, "y": tpo_videos};
+        arraycant[j]={"name":name, "y": cantidad}
       }
     }
   }
@@ -498,6 +504,7 @@ function graficar(json, clase){
   arraycant.sort(function(a,b){
     return parseInt(a.y) - parseInt(b.y);
   });
+
   
   //console.log(arrayte);
   /*
