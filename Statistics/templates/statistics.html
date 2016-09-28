@@ -20,7 +20,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
 
 <style>
-table.testclass { border-collapse: collapse; border: 1px solid #CCB; width:250px;}
+table.testclass { border-collapse: collapse; border: 1px solid #CCB; width:100%;}
 table.testclass td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
 table.testclass th { background: #E5E5E5; text-align: left;}
 table.testclass th {
@@ -160,7 +160,7 @@ input[type="checkbox"]{
 td{
   margin: auto;
 }
-table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
+table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:100%;margin-left: 50px;}
 table.testsched td, table.testsched th { padding: 5px; border: 1px solid #E0E0E0;}
 table.testsched th { background: #E5E5E5; text-align: left;}
 table.testsched th {
@@ -284,6 +284,8 @@ table.testsched td {
 </div>
 <div class="graphics" id="graph" align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
+<br>
+<p>La carga de datos puede demorar unos minutos.</p>
 <hr>
 <div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
 <hr>
@@ -366,14 +368,14 @@ function hideDiv(){
 }
 
 function showDivMain(){
-  if( !($('.principal').is(":visible")) ){
-    $('.principal').toggle('blind',1500)
+  if( !($('.main-content').is(":visible")) ){
+    $('.main-content').toggle('blind',1500)
 }
 }
 
 function hideDivMain(){
-  if( $('.principal').is(":visible") ){
-    $('.principal').toggle('blind',1500)
+  if( $('.main-content').is(":visible") ){
+    $('.main-content').toggle('blind',1500)
 }
 }
 
@@ -423,7 +425,7 @@ function crearEstadisticas(){
   }
   else{
     $('#popup_error').empty();
-    $('#popup_error').append("<p>Faltan datos por seleccionar, revise los campos.</p>")
+    $('#popup_error').append("<p>Revise que todos los campos estén completos o que sean válidos.</p>")
     $('#popup_error').fadeIn().css('display', '');
     $("#hover").fadeIn().css('display', '');
   }
@@ -1060,144 +1062,24 @@ function graficarcompara(json, clase){
             data: cantidad2
         }]
     });
-  });/*
-  $(function () {
-    Highcharts.setOptions({
-          lang:{
-          decimalPoint: ",",
-          thousandsSep: ".",
-          downloadJPEG: "Descargar imagen JPEG",
-          downloadPDF: "Descargar documento PDF",
-          downloadPNG: "Descargar imagen PNG",
-          downloadSVG: "Descargar imagen vectorial SVG",
-          printChart: "Imprimir gráfico",
-          drillUpText: "Volver a {series.name}" 
-        }
-      });
-    $('#containervid').highcharts({
-
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Tiempo de videos'
-        },
-        subtitle: {
-            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
-        },
-        xAxis: {
-            type: 'category',
-            labels: {
-                rotation: -45,
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Tiempo (segundos)'
-            }
-        },
-        legend: {
-            enabled: false
-        },
-        tooltip: {
-            pointFormat: 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'
-        },
-        series: [{
-            name: 'Cursos',
-            data: arraytv,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
-        }],
-        drilldown: {
-            series: serievid
-          }
-    });
   });
-
-  $(function () {
-    Highcharts.setOptions({
-          lang:{
-          decimalPoint: ",",
-          thousandsSep: ".",
-          downloadJPEG: "Descargar imagen JPEG",
-          downloadPDF: "Descargar documento PDF",
-          downloadPNG: "Descargar imagen PNG",
-          downloadSVG: "Descargar imagen vectorial SVG",
-          printChart: "Imprimir gráfico",
-          drillUpText: "Volver a {series.name}" 
-        }
-      });
-    $('#containertot').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Cantidad de ejercicios'
-        },
-        subtitle: {
-            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
-        },
-        xAxis: {
-            type: 'category',
-            labels: {
-                rotation: -45,
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Cantidad (ejercicios)'
-            }
-        },
-        legend: {
-            enabled: false
-        },
-        tooltip: {
-            pointFormat: 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>'
-        },
-        series: [{
-            name: 'Cursos',
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            },
-            data: arraycant
-        }],
-        drilldown: {
-            series: serie
-          }
-    });
-  });*/
 }
 
 function validar(){
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
+
+  if(dd<10) {
+      dd='0'+dd
+  } 
+
+  if(mm<10) {
+      mm='0'+mm
+  } 
+
+  today = yyyy+'-'+mm+'-'+dd;
   flag = true;
   desde = document.getElementById("desde").value;
   hasta = document.getElementById("hasta").value;
@@ -1213,6 +1095,10 @@ function validar(){
     flag = false;
   }else{
     $('#hasta').css('color', '#000000');
+  }
+  if(hasta>today){
+    $('#hasta').css('color', '#C30202');
+    flag = false;
   }
   return flag
 }
@@ -1232,7 +1118,7 @@ function updateSchedule(){
       var idcheckbox = dia+"_"+id_sched;
       for (var i = sel.length - 1; i >= 0; i--) {
         if(sel[i]==id_class){
-          $("input[value='"+idcheckbox+"']").prop("checked", true);
+          $("input[value='"+idcheckbox+"_D']").prop("checked", true);
         }      
       }
       //console.log(idcheckbox);
@@ -1248,7 +1134,7 @@ function updateSchedule(){
         var idcheckbox = dia+"_"+id_sched;
         for (var i = sel.length - 1; i >= 0; i--) {
           if(sel[i]==id_class){
-            $("input[value='"+idcheckbox+"']").prop("checked", false);
+            $("input[value='"+idcheckbox+"_D']").prop("checked", false);
           }      
         }
         //console.log(idcheckbox);
@@ -1285,7 +1171,7 @@ function selectSchedule(radiobutton){
         var idcheckbox = dia+"_"+id_sched;
         for (var i = sel.length - 1; i >= 0; i--) {
           if(sel[i]==id_class){
-            $("input[value='"+idcheckbox+"']").prop("checked", true);
+            $("input[value='"+idcheckbox+"_D']").prop("checked", true);
           }      
         }
         //console.log(idcheckbox);
@@ -1316,7 +1202,7 @@ function selectSchedule(radiobutton){
         var idcheckbox = dia+"_"+id_sched;
         for (var i = sel.length - 1; i >= 0; i--) {
           if(sel[i]==id_class){
-            $("input[value='"+idcheckbox+"']").prop("checked", false);
+            $("input[value='"+idcheckbox+"_D']").prop("checked", false);
           }      
         }
         //console.log(idcheckbox);
