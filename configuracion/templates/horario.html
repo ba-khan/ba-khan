@@ -530,6 +530,8 @@ $(document).ready(function(){
 
 function fillParameters(id, kaid) {
 	if(id=="-1"){
+		$('.testsched').show();
+		$('.testschedos').hide();
 		$('input:checkbox').removeAttr('checked');
 		$('input[value*="day_"]').prop("disabled", false);
 		$("input[value*='day_']").prop("checked", true);
@@ -537,10 +539,14 @@ function fillParameters(id, kaid) {
 		$("input[value*='Sunday_']").prop("checked", false);
 	}
 	else if(id=="0"){
+		$('.testsched').hide();
+		$('.testschedos').show();
 		$('input[value*="day_"]').prop("disabled", true);
 		$('input:checkbox').removeAttr('checked');
 	}
 	else{
+		$('.testsched').show();
+		$('.testschedos').hide();
 		$('input[value*="day_"]').prop("disabled", false);
 		$('input:checkbox').removeAttr('checked');
 	}
