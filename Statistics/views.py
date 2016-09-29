@@ -347,7 +347,7 @@ def selectStatistics(request):
 						newhorario=horario.split('_')
 						largo = len(newhorario)
 						delta = timedelta(days=1)
-						if largo==3:
+						if newhorario[2]=="OTRO":
 							hours = newhorario[1].split(' - ')
 							inicio = hours[0]
 							final = hours[1]
