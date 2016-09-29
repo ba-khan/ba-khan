@@ -529,7 +529,22 @@ $(document).ready(function(){
 
 
 function fillParameters(id, kaid) {
-	$('input:checkbox').removeAttr('checked');
+	if(id=="-1"){
+		$('input:checkbox').removeAttr('checked');
+		$('input[value*="day_"]').prop("disabled", false);
+		$("input[value*='day_']").prop("checked", true);
+		$("input[value*='Saturday_']").prop("checked", false);
+		$("input[value*='Sunday_']").prop("checked", false);
+	}
+	else if(id=="0"){
+		$('input[value*="day_"]').prop("disabled", true);
+		$('input:checkbox').removeAttr('checked');
+	}
+	else{
+		$('input[value*="day_"]').prop("disabled", false);
+		$('input:checkbox').removeAttr('checked');
+	}
+
 	{% for csh in class_schedule %}
 	var kaid_teacher = "{{csh.kaid_teacher_id}}"
 	var day = "{{csh.day}}"
@@ -588,6 +603,12 @@ function cambiarPestanna(pestanna, kaid_teacher) {
 	$('.testsched').show();
 	$('#comboBox'+kaid_teacher).val($("#comboBox"+kaid_teacher+" option:first").val());
 	$('input:checkbox').removeAttr('checked');
+
+	$('input[value*="day_"]').prop("disabled", false);
+	$("input[value*='day_']").prop("checked", true);
+	$("input[value*='Saturday_']").prop("checked", false);
+	$("input[value*='Sunday_']").prop("checked", false);
+
 	{% for csh in class_schedule %}
 	var kaid = "{{csh.kaid_teacher_id}}"
 	var day = "{{csh.day}}"
