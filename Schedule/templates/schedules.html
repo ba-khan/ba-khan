@@ -39,12 +39,12 @@ input{
 	height: 100%;
 }
 .greenBackground{
-    background-color: green;  
+    background-color: transparent;  
 }
 
 .redBackground{
 
-    background-color: gray;  
+    background-color: #ccc;  
 }
 </style>
 
@@ -123,9 +123,9 @@ $(document).ready(function(){
 			if ({{clase.id_class}} == id_class_id){
 				$("input[value='"+idcheckbox+"']").parent().addClass("redBackground")
 				{% if clase.additional %}
-				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:black; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
 				{% else %}
-				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:white; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }}</label>")
+				$("input[value='"+idcheckbox+"']").parent().append("<label style='color:black; font-size:75%;text-align:center'>{{ clase.nivel }} {{ clase.letter }}</label>")
 				{% endif %}
 				$("input[value='"+idcheckbox+"']").remove()
 			}
