@@ -69,6 +69,26 @@
   </div>
 </div>
 
+  <div id="loading" class="profile-throbber">
+    <div class="throbber-grid">   
+            <div class="throbber-row clearfix">
+             <div class="block-0 throbber-block"></div>
+             <div class="block-1 throbber-block"></div>
+             <div class="block-2 throbber-block"></div>
+        </div>
+        <div class="throbber-row clearfix">
+             <div class="block-7 throbber-block"></div>
+             <div class="block-8 throbber-block"></div>
+             <div class="block-3 throbber-block"></div>
+        </div>
+        <div class="throbber-row clearfix">
+             <div class="block-6 throbber-block"></div>
+             <div class="block-5 throbber-block"></div>
+             <div class="block-4 throbber-block"></div>
+        </div>
+    </div>
+  </div>
+
 
 
 </div>
@@ -107,6 +127,7 @@
     $('#contenedor').jstree(tree);
     //setHeightContent();
     //drawNiceScrolls();
+    $('#loading').hide()
     $('.graphics').hide();
     $('#testsched').hide();
       $("#hover").click(function(){
@@ -231,8 +252,6 @@ function crearEstadisticas(){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
     //$('.principal').fadeOut();
-    hideDivMain();
-    showDiv();
     if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
       $.ajax({
         url: "{% url 'SuperStats:selectSuperStats' %}",
@@ -400,7 +419,7 @@ function graficar(json, clase){
         },
         colors: colorcolumn,
         series: [{
-            name: 'Tiempo',
+            name: 'Cursos',
             data: arrayte,
             colorByPoint: true,
             dataLabels: {
@@ -469,7 +488,7 @@ function graficar(json, clase){
         },
         colors: colorcolumn,
         series: [{
-            name: 'Tiempo',
+            name: 'Cursos',
             data: arraytv,
             colorByPoint: true,
             dataLabels: {
@@ -538,7 +557,7 @@ function graficar(json, clase){
         },
         colors: colorcolumn,
         series: [{
-            name: 'Cantidad',
+            name: 'Cursos',
             data: arraycant,
             colorByPoint: true,
             dataLabels: {
