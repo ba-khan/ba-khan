@@ -37,7 +37,7 @@
   <div id="testsched">
   
   </div>
-
+  <br>
   <div align="left" style="margin-left:50px;float: left;width: 40%;">
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio1">Todo <br>
   <input type="radio" name="seleccion" onclick="selectSchedule(this)" value="radio2">Horario de clases <br>
@@ -125,7 +125,6 @@
     var tree = JSON.parse('{{ json_data | escapejs }}');
     //console.log(tree);
     $('#contenedor').jstree(tree);
-    //setHeightContent();
     //drawNiceScrolls();
     $('#loading').hide()
     $('.graphics').hide();
@@ -135,6 +134,8 @@
           $("#popup").fadeOut();
           $("#popup_error").fadeOut();
         });
+
+
 
 
 $('#estadisticas').addClass('active selected');
@@ -273,7 +274,7 @@ function crearEstadisticas(){
         type: "POST",
         data: {selcurso, selinst, desde, hasta, radioselect},
           success: function(response){
-            //jsonResponse = JSON.parse(response);
+            jsonResponse = JSON.parse(response);
             hideDivMain();
             showDiv();
             $('#loading').hide()
@@ -371,7 +372,6 @@ function graficar(json, clase){
       }
     }
   }
-  console.log(serievid);
   $(function () {
     Highcharts.setOptions({
           lang:{
@@ -616,7 +616,7 @@ function graficarcompara(json, clase){
       var student = json["students"]
       var tipo1 = student[0]["tipo1"]
       var tipo2 = student[0]["tipo2"]
-      for (var j=0;j<student.length;j++){
+      for (j=0;j<student.length;j++){
         categorias[j]=student[j]["name"];
         tpoejercicios1[j] = student[j]["tiempo_ejercicios_1"]
         tpoejercicios2[j] = student[j]["tiempo_ejercicios_2"]
@@ -642,7 +642,7 @@ function graficarcompara(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#container').highcharts({
+    $('#containerej').highcharts({
 
         chart: {
             type: 'column'
@@ -860,8 +860,8 @@ function updateSchedule(){
     $('input[name="day"]').prop("checked", false);
   }
   else{
+    $('#testsched').hide();
     if ($("input[value*='radio']:checked").val()=="radio3"){
-      $('#testsched').hide();
       $('input[name="day"]').prop("checked", true);
     }
   }
@@ -870,7 +870,7 @@ function updateSchedule(){
 function selectSchedule(radiobutton){
   $('input[name="day"]').prop("checked", false);
   var valor = radiobutton.value;
-  if (valor=="radio1"){
+  if (valor=="radio1" || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('#testsched').hide();
   }
   if (valor=="radio2"){
@@ -922,7 +922,7 @@ function selectSchedule(radiobutton){
 
 function funciondos(id_schedule){
   var valor = $('input[value*="radio"]:checked').val()
-  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3" || valor==null || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('#testsched').hide();
     //$('input[name="day"]').prop("disabled", true);
     return false;
@@ -951,7 +951,7 @@ function diaselect(dia){
     speed: 1200,
     sortList: [[0,0]]
   });
-  if (valor=="radio1" || valor=="radio2" || valor=="radio3"){
+  if (valor=="radio1" || valor=="radio2" || valor=="radio3" || valor==null || valor=="radio5" || valor=="radio6" || valor=="radio7"){
     $('#testsched').hide();
     //$('input[name="day"]').prop("disabled", true);
     return false;

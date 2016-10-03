@@ -119,7 +119,7 @@ def selectSuperStats(request):
 									while d <= fechahasta:
 										if d.strftime("%A")==qtwo['day']:
 											newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-											newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+											newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 											if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
 												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
@@ -163,7 +163,7 @@ def selectSuperStats(request):
 									while d <= fechahasta:
 										if d.strftime("%A")==qthree['day']:
 											newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-											newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+											newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 											if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
 												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
@@ -345,7 +345,7 @@ def selectSuperStats(request):
 								while d <= fechahasta:
 									if d.strftime("%A")==qtwo['day']:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-										newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 										if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
 											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
@@ -389,7 +389,7 @@ def selectSuperStats(request):
 								while d <= fechahasta:
 									if d.strftime("%A")==qthree['day']:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
-										newend = d.strftime("%Y-%m-%d")+" "+final+":59"
+										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
 										if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
 											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
@@ -540,9 +540,9 @@ def compareSuperStats(request):
 							students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 
 							if radio=="radio5":
-								time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
-								time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
-								total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
+								time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
+								time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
+								total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
 
 								queryradiofive = Class_Schedule.objects.filter(id_class_id__in=classes).values('day', 'id_schedule_id')
 								delta = timedelta(days=1)
@@ -558,19 +558,39 @@ def compareSuperStats(request):
 										if d.strftime("%A")==qfive['day']:
 											newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 											newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											else:
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 											time_exercise_2.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 											time_video_2.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 											total_exercise_2.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 										d+=delta	
 								class_json["tipo1"] = "Todos"
 								class_json["tipo2"] = "Horario de clases"
+								for student in students:
+									timee = 0
+									timev = 0
+									totalt =0
+									for time in time_exercise_2:
+										if time['kaid_student_id']==student.kaid_student:
+											timee=timee+time['time']
+											time['total_time']=timee
+									for video in time_video_2:
+										if video['kaid_student_id']==student.kaid_student:
+											timev=timev+video['seconds']
+											video['total_seconds']=timev
+									for total in total_exercise_2:
+										if total['kaid_student_id']==student.kaid_student:
+											totalt=totalt+total['total']
+											total['total_total']=totalt		
 
 							if radio=="radio6":
-								time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
-								time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
-								total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
+								time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
+								time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
+								total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
 
 								time_exercise_2 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 								time_video_2 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
@@ -589,8 +609,12 @@ def compareSuperStats(request):
 										if d.strftime("%A")==qsix['day']:
 											newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 											newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											else:
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 											time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 											time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 											total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
@@ -599,14 +623,17 @@ def compareSuperStats(request):
 									for out in time_out:
 										if time['kaid_student_id']==out['kaid_student_id']:
 											time['time']= time['time']-out['time']
+									time['total_time']=time['time']
 								for video in time_video_2:
 									for out_video in time_video_out:
 										if video['kaid_student_id']==out_video['kaid_student_id']:
 											video['seconds']= video['seconds']-out_video['seconds']
+									video['total_seconds']=video['seconds']
 								for total in total_exercise_2:
 									for outt in total_out:
 										if total['kaid_student_id']==outt['kaid_student_id']:
 											total['total']= total['total']-outt['total']
+									total['total_total']=total['total']
 								class_json["tipo1"] = "Todos"
 								class_json["tipo2"] = "Fuera horario de clases"
 
@@ -625,12 +652,32 @@ def compareSuperStats(request):
 										if d.strftime("%A")==qfive['day']:
 											newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 											newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											else:
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 											time_exercise_1.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 											time_video_1.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 											total_exercise_1.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 										d+=delta
+								for student in students:
+									timee = 0
+									timev = 0
+									totalt =0
+									for time in time_exercise_1:
+										if time['kaid_student_id']==student.kaid_student:
+											timee=timee+time['time']
+											time['total_time']=timee
+									for video in time_video_1:
+										if video['kaid_student_id']==student.kaid_student:
+											timev=timev+video['seconds']
+											video['total_seconds']=timev
+									for total in total_exercise_1:
+										if total['kaid_student_id']==student.kaid_student:
+											totalt=totalt+total['total']
+											total['total_total']=totalt	
 
 								time_exercise_2 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 								time_video_2 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
@@ -649,8 +696,12 @@ def compareSuperStats(request):
 										if d.strftime("%A")==qsix['day']:
 											newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 											newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											else:
+												newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+												newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 											time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 											time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 											total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
@@ -659,14 +710,17 @@ def compareSuperStats(request):
 									for out in time_out:
 										if time['kaid_student_id']==out['kaid_student_id']:
 											time['time']= time['time']-out['time']
+									time['total_time']=time['time']
 								for video in time_video_2:
 									for out_video in time_video_out:
 										if video['kaid_student_id']==out_video['kaid_student_id']:
 											video['seconds']= video['seconds']-out_video['seconds']
+									video['total_seconds']=video['seconds']
 								for total in total_exercise_2:
 									for outt in total_out:
 										if total['kaid_student_id']==outt['kaid_student_id']:
 											total['total']= total['total']-outt['total']
+									total['total_total']=total['total']
 
 								class_json["tipo1"] = "Horario de clases"
 								class_json["tipo2"] = "Fuera horario de clases"
@@ -709,17 +763,17 @@ def compareSuperStats(request):
 								class_json["establecimiento"]='G.M.'
 
 							for time_1 in time_exercise_1:
-								dictTime_1[time_1['kaid_student_id']] = time_1['time']
+								dictTime_1[time_1['kaid_student_id']] = time_1['total_time']
 							for video_1 in time_video_1:
-								dictVideo_1[video_1['kaid_student_id']] = video_1['seconds']
+								dictVideo_1[video_1['kaid_student_id']] = video_1['total_seconds']
 							for total_1 in total_exercise_1:
-								dictTotal_1[total_1['kaid_student_id']] = total_1['total']
+								dictTotal_1[total_1['kaid_student_id']] = total_1['total_total']
 							for time_2 in time_exercise_2:
-								dictTime_2[time_2['kaid_student_id']] = time_2['time']
+								dictTime_2[time_2['kaid_student_id']] = time_2['total_time']
 							for video_2 in time_video_2:
-								dictVideo_2[video_2['kaid_student_id']] = video_2['seconds']
+								dictVideo_2[video_2['kaid_student_id']] = video_2['total_seconds']
 							for total_2 in total_exercise_2:
-								dictTotal_2[total_2['kaid_student_id']] = total_2['total']
+								dictTotal_2[total_2['kaid_student_id']] = total_2['total_total']
 
 							i=0
 							for student in students:
@@ -764,9 +818,9 @@ def compareSuperStats(request):
 						if radio=="radio5":
 							tipo1 = "Todo"
 							tipo2 = "Horario de clases"
-							time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
-							time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
-							total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
+							time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
+							time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
+							total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
 
 							queryradiofive = Class_Schedule.objects.filter(id_class_id=newcurso[1]).values('day', 'id_schedule_id')
 							delta = timedelta(days=1)
@@ -782,18 +836,38 @@ def compareSuperStats(request):
 									if d.strftime("%A")==qfive['day']:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										else:
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 										time_exercise_2.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 										time_video_2.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 										total_exercise_2.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 									d+=delta
+							for student in students:
+								timee = 0
+								timev = 0
+								totalt =0
+								for time in time_exercise_2:
+									if time['kaid_student_id']==student.kaid_student:
+										timee=timee+time['time']
+										time['total_time']=timee
+								for video in time_video_2:
+									if video['kaid_student_id']==student.kaid_student:
+										timev=timev+video['seconds']
+										video['total_seconds']=timev
+								for total in total_exercise_2:
+									if total['kaid_student_id']==student.kaid_student:
+										totalt=totalt+total['total']
+										total['total_total']=totalt	
 						if radio=="radio6":
 							tipo1 = "Todo"
 							tipo2 = "Fuera horario de clases"
-							time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
-							time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
-							total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))
+							time_exercise_1 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
+							time_video_1 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
+							total_exercise_1 = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
 
 							time_exercise_2 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 							time_video_2 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
@@ -812,8 +886,12 @@ def compareSuperStats(request):
 									if d.strftime("%A")==qsix['day']:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										else:
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 										time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 										time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 										total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
@@ -822,14 +900,17 @@ def compareSuperStats(request):
 								for out in time_out:
 									if time['kaid_student_id']==out['kaid_student_id']:
 										time['time']= time['time']-out['time']
+								time['total_time']=time['time']
 							for video in time_video_2:
 								for out_video in time_video_out:
 									if video['kaid_student_id']==out_video['kaid_student_id']:
 										video['seconds']= video['seconds']-out_video['seconds']
+								video['total_seconds']=video['seconds']
 							for total in total_exercise_2:
 								for outt in total_out:
 									if total['kaid_student_id']==outt['kaid_student_id']:
 										total['total']= total['total']-outt['total']
+								total['total_total']=total['total']
 
 						if radio=="radio7":
 							tipo1 = "Horario de clases"
@@ -848,12 +929,32 @@ def compareSuperStats(request):
 									if d.strftime("%A")==qfive['day']:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										else:
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 										time_exercise_1.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 										time_video_1.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 										total_exercise_1.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 									d+=delta
+							for student in students:
+								timee = 0
+								timev = 0
+								totalt =0
+								for time in time_exercise_1:
+									if time['kaid_student_id']==student.kaid_student:
+										timee=timee+time['time']
+										time['total_time']=timee
+								for video in time_video_1:
+									if video['kaid_student_id']==student.kaid_student:
+										timev=timev+video['seconds']
+										video['total_seconds']=timev
+								for total in total_exercise_1:
+									if total['kaid_student_id']==student.kaid_student:
+										totalt=totalt+total['total']
+										total['total_total']=totalt	
 
 							time_exercise_2 = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(time=Sum('time_taken'))
 							time_video_2 = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))
@@ -872,8 +973,12 @@ def compareSuperStats(request):
 									if d.strftime("%A")==qsix['day']:
 										newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
 										newend = d.strftime("%Y-%m-%d")+" "+final+":00"
-										newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
-										newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+										else:
+											newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+											newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
 										time_out.extend(list(Skill_Attempt.objects.filter(kaid_student_id__in=students,date__range=[newstart, newend]).values('kaid_student_id').annotate(time=Sum('time_taken'))))
 										time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 										total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
@@ -882,14 +987,17 @@ def compareSuperStats(request):
 								for out in time_out:
 									if time['kaid_student_id']==out['kaid_student_id']:
 										time['time']= time['time']-out['time']
+								time['total_time']=time['time']
 							for video in time_video_2:
 								for out_video in time_video_out:
 									if video['kaid_student_id']==out_video['kaid_student_id']:
 										video['seconds']= video['seconds']-out_video['seconds']
+								video['total_seconds']=video['seconds']
 							for total in total_exercise_2:
 								for outt in total_out:
 									if total['kaid_student_id']==outt['kaid_student_id']:
 										total['total']= total['total']-outt['total']
+								total['total_total']=total['total']
 
 						dictTime_1 = {}
 						dictVideo_1 = {}
@@ -898,18 +1006,18 @@ def compareSuperStats(request):
 						dictVideo_2 = {}
 						dictTotal_2 = {}
 						for time in time_exercise_1:
-							dictTime_1[time['kaid_student_id']] = time['time']
+							dictTime_1[time['kaid_student_id']] = time['total_time']
 						for video in time_video_1:
-							dictVideo_1[video['kaid_student_id']] = video['seconds']
+							dictVideo_1[video['kaid_student_id']] = video['total_seconds']
 						for total in total_exercise_1:
-							dictTotal_1[total['kaid_student_id']] = total['total']
+							dictTotal_1[total['kaid_student_id']] = total['total_total']
 
 						for time in time_exercise_2:
-							dictTime_2[time['kaid_student_id']] = time['time']
+							dictTime_2[time['kaid_student_id']] = time['total_time']
 						for video in time_video_2:
-							dictVideo_2[video['kaid_student_id']] = video['seconds']
+							dictVideo_2[video['kaid_student_id']] = video['total_seconds']
 						for total in total_exercise_2:
-							dictTotal_2[total['kaid_student_id']] = total['total']
+							dictTotal_2[total['kaid_student_id']] = total['total_total']
 
 						i=0
 						json_array = []
@@ -954,6 +1062,6 @@ def compareSuperStats(request):
 							json_array.append(student_json)
 						json_dict={"students":json_array}
 						json_data = json.dumps(json_dict)
-			return HttpResponse('json_data')
+			return HttpResponse(json_data)
 	except Exception as e:
 		print e
