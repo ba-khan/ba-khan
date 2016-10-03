@@ -377,6 +377,7 @@ function cancelSaveClass(){
 }
 
 function saveClass(classJson){
+	console.log(classJson);
 	$(".response").remove();
 	$("#saveButton").remove();
 	$("#cancelSaveButton").remove();
@@ -389,7 +390,7 @@ function saveClass(classJson){
 	$.ajax({
 		url: "{% url 'classRoster:newClass' %}",
 		type: "POST",
-		data: {classJson},
+		data: classJson,
 			success: function(response){
 				$(".response").fadeOut();
 				$('#loading').fadeOut();
