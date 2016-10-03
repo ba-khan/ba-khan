@@ -127,11 +127,19 @@
 <br>
 <p>La carga de datos puede demorar unos minutos.</p>
 <hr>
+<div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<hr>
 <div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<!--<br>
+<div id="ordentot">
+<select id="ordenartot" class="skill_search">
+      <OPTION VALUE=0>Ordenar por Nombre</OPTION>
+      <OPTION VALUE=1>Ordenar por Tiempo (ascendente)</OPTION>
+      <OPTION VALUE=2>Ordenar por Tiempo (descendente)</OPTION>
+</select>
+</div>!-->
 <hr>
 <div id="containervid" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
-<hr>
-<div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
 </div>
 
 <div id="popup" style="display:none">
@@ -417,9 +425,10 @@ function graficar(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#container').highcharts({
+    var chart = new Highcharts.Chart({
 
         chart: {
+            renderTo: 'container',
             type: 'column'
         },
         title: {
@@ -470,6 +479,38 @@ function graficar(json, clase){
             series: serietpo
           }
     });
+/*
+    function sortTotal(valor){
+      //aqui va algo
+      if (valor=="0"){
+        arraycant.sort(function(a,b){
+          if(a.name<b.name) return -1;
+          if(a.name>b.name) return 1;
+          return 0;
+        });
+      }
+      if (valor=="1"){
+        arraycant.sort(function(a,b){
+          return parseInt(a.y) - parseInt(b.y);
+        });
+      }
+      if (valor=="2"){
+        arraycant.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+      }
+      
+    }
+
+    $('#ordenartot').change(function(){
+      sortTotal($('select#ordenartot option:selected').val())
+      chart.series[0].setData(arraycant,true);
+    })*/
+
+    /*$('#ordentot select').on('select change', function(){
+      sortTotal(this.value);
+      chart.redraw(true);
+    });*/
   });
   $(function () {
     Highcharts.setOptions({
