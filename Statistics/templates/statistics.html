@@ -32,8 +32,8 @@
     <h2 align="center">Cursos</h2>
     <table class="testclass">
     <tr>
-      <th style="width: 85%;">Todos los cursos</th>
-      <th style="align-content:center;width: 15%;"><input type="checkbox" id="check_all_none"></th>
+      <th>Todos los cursos</th>
+      <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
     </tr>
     {% for class in classes %}
     <tr>
@@ -128,18 +128,34 @@
 <p>La carga de datos puede demorar unos minutos.</p>
 <hr>
 <div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<br>
+<div id="ordencant">
+<select id="ordenarcant" class="skill_search">
+      <OPTION VALUE="0">Nombre</OPTION>
+      <OPTION VALUE="1">Cantidad (ascendente)</OPTION>
+      <OPTION VALUE="2">Cantidad (descendente)</OPTION>
+</select>
+</div>
 <hr>
 <div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
-<!--<br>
+<br>
 <div id="ordentot">
 <select id="ordenartot" class="skill_search">
-      <OPTION VALUE=0>Ordenar por Nombre</OPTION>
-      <OPTION VALUE=1>Ordenar por Tiempo (ascendente)</OPTION>
-      <OPTION VALUE=2>Ordenar por Tiempo (descendente)</OPTION>
+      <OPTION VALUE="0">Nombre</OPTION>
+      <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
+      <OPTION VALUE="2">Tiempo (descendente)</OPTION>
 </select>
-</div>!-->
+</div>
 <hr>
 <div id="containervid" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<br>
+<div id="ordenvid">
+<select id="ordenarvid" class="skill_search">
+      <OPTION VALUE="0">Nombre</OPTION>
+      <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
+      <OPTION VALUE="2">Tiempo (descendente)</OPTION>
+</select>
+</div>
 </div>
 
 <div id="popup" style="display:none">
@@ -429,7 +445,15 @@ function graficar(json, clase){
 
         chart: {
             renderTo: 'container',
-            type: 'column'
+            type: 'column',
+            events: {
+              drilldown: function(e){
+                $('#ordenartot').hide();
+              },
+              drillup: function(e){
+                $('#ordenartot').show();
+              }
+            }
         },
         title: {
             text: 'Tiempo de ejercicios'
@@ -479,35 +503,39 @@ function graficar(json, clase){
             series: serietpo
           }
     });
-/*
+
     function sortTotal(valor){
       //aqui va algo
       if (valor=="0"){
-        arraycant.sort(function(a,b){
-          if(a.name<b.name) return -1;
-          if(a.name>b.name) return 1;
-          return 0;
+        arrayte.sort(function(a,b){
+          return parseInt(a.name) - parseInt(b.name);
         });
       }
       if (valor=="1"){
-        arraycant.sort(function(a,b){
+        arrayte.sort(function(a,b){
           return parseInt(a.y) - parseInt(b.y);
         });
       }
       if (valor=="2"){
-        arraycant.sort(function(a,b){
+        arrayte.sort(function(a,b){
           return parseInt(b.y) - parseInt(a.y);
         });
       }
-      
+      /*arrayte.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+        */
+      return arrayte;
     }
 
     $('#ordenartot').change(function(){
-      sortTotal($('select#ordenartot option:selected').val())
-      chart.series[0].setData(arraycant,true);
-    })*/
+      var retorno = sortTotal($('select#ordenartot option:selected').val());
+      //console.log(retorno);
+      chart.series[0].update(retorno);
+    })
 
     /*$('#ordentot select').on('select change', function(){
+      console.log('entro aca');
       sortTotal(this.value);
       chart.redraw(true);
     });*/
@@ -525,10 +553,19 @@ function graficar(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#containervid').highcharts({
+    var chart = new Highcharts.Chart({
 
         chart: {
-            type: 'column'
+            renderTo: 'containervid',
+            type: 'column',
+            events: {
+              drilldown: function(e){
+                $('#ordenarvid').hide();
+              },
+              drillup: function(e){
+                $('#ordenarvid').show();
+              }
+            }
         },
         title: {
             text: 'Tiempo de videos'
@@ -578,6 +615,35 @@ function graficar(json, clase){
             series: serievid
           }
     });
+    function sortTotal(valor){
+      //aqui va algo
+      if (valor=="0"){
+        arraytv.sort(function(a,b){
+          return parseInt(a.name) - parseInt(b.name);
+        });
+      }
+      if (valor=="1"){
+        arraytv.sort(function(a,b){
+          return parseInt(a.y) - parseInt(b.y);
+        });
+      }
+      if (valor=="2"){
+        arraytv.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+      }
+      /*arrayte.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+        */
+      return arraytv;
+    }
+
+    $('#ordenarvid').change(function(){
+      var retorno = sortTotal($('select#ordenarvid option:selected').val());
+      //console.log(retorno);
+      chart.series[0].update(retorno);
+    })
   });
 
   $(function () {
@@ -593,9 +659,18 @@ function graficar(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#containertot').highcharts({
+    var chart = new Highcharts.Chart({
         chart: {
-            type: 'column'
+            renderTo: 'containertot',
+            type: 'column',
+            events: {
+              drilldown: function(e){
+                $('#ordenarcant').hide();
+              },
+              drillup: function(e){
+                $('#ordenarcant').show();
+              }
+            }
         },
         title: {
             text: 'Cantidad de ejercicios'
@@ -645,6 +720,36 @@ function graficar(json, clase){
             series: serie
           }
     });
+
+    function sortTotal(valor){
+      //aqui va algo
+      if (valor=="0"){
+        arraycant.sort(function(a,b){
+          return parseInt(a.name) - parseInt(b.name);
+        });
+      }
+      if (valor=="1"){
+        arraycant.sort(function(a,b){
+          return parseInt(a.y) - parseInt(b.y);
+        });
+      }
+      if (valor=="2"){
+        arraycant.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+      }
+      /*arrayte.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+        */
+      return arraycant;
+    }
+
+    $('#ordenarcant').change(function(){
+      var retorno = sortTotal($('select#ordenarcant option:selected').val());
+      //console.log(retorno);
+      chart.series[0].update(retorno);
+    })
   });
   
 }
@@ -823,34 +928,10 @@ function graficarcompara(json, clase){
         },
         series: [{
             name: tipo1,
-            data: tpoejercicios1,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
+            data: tpoejercicios1
             },{
             name: tipo2,
-            data: tpoejercicios2,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
+            data: tpoejercicios2
         }]
     });
   });
@@ -907,34 +988,10 @@ function graficarcompara(json, clase){
         },
         series: [{
             name: tipo1,
-            data: tpovideos1,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
+            data: tpovideos1
             },{
             name: tipo2,
-            data: tpovideos2,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
+            data: tpovideos2
         }]
     });
   });
@@ -991,34 +1048,10 @@ function graficarcompara(json, clase){
         },
         series: [{
             name: tipo1,
-            data: cantidad1,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
+            data: cantidad1
             },{
             name: tipo2,
-            data: cantidad2,
-            dataLabels: {
-                enabled: true,
-                rotation: -90,
-                color: 'KhanBlue',
-                align: 'right',
-                format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
-                style: {
-                    fontSize: '11px',
-                    fontFamily: 'Verdana, sans-serif'
-                }
-            }
+            data: cantidad2
         }]
     });
   });
