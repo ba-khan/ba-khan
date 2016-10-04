@@ -114,7 +114,6 @@ def deleteInstitution(request):
         print e
         return HttpResponse("Error al eliminar")
 
-#asdf
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newInstitution(request):
     request.session.set_expiry(timeSleep)
