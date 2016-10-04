@@ -46,7 +46,7 @@ from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,St
 
 import datetime
 from configs import timeSleep
-#blah	
+
 import cgi
 import rauth
 import SimpleHTTPServer
