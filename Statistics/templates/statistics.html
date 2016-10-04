@@ -400,8 +400,8 @@ function graficar(json, clase){
     var ejerText= 'Tiempo (segundos)';
     var ejerPoint = 'Tiempo de ejercicios: <b>{point.y} segundos</b>';
     var formato = '{point.y:,.0f}';
-  }
-
+  }*/
+/*
   var maxtv=0;
   for (var j=0;j<arraytv.length;j++){
     if (arraytv[j]["y"]>maxtv){
@@ -452,9 +452,27 @@ function graficar(json, clase){
             events: {
               drilldown: function(e){
                 $('#ordenartot').hide();
+                //chart.setTitle({text:'aqui va algo'})
+                /*chart.yAxis[0].setTitle({text:'Tiempo (segundos)'})
+                chart.tooltip.options.formatter = function(){
+                  var xyArr=[];
+                  xyArr.push('Tiempo de ejercicios: <b> '+this.y +' segundos</b>');
+                  return xyArr.join('<br/>');
+                }*/
+                //chart.tooltip({pointFormat: 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'})
+                //chart.setTooltip({pointFormat: 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'})
+                //chart.series[0].setdataLabels({format: '{point.y:,.0f}'})
               },
               drillup: function(e){
                 $('#ordenartot').show();
+                /*chart.yAxis[0].setTitle({text:ejerText})
+                chart.tooltip.options.formatter = function(){
+                  var xyArr=[];
+                  xyArr.push('Tiempo de ejercicios: <b> '+this.y +' horas</b>');
+                  return xyArr.join('<br/>');
+                }*/
+                //chart.tooltip({pointFormat: ejerPoint})
+                //chart.series[0].setdataLabels({format: formato})
               }
             }
         },
