@@ -452,12 +452,12 @@ class Command(BaseCommand):
             session = run_tests(identifier,passw,CONSUMER_KEY,CONSUMER_SECRET)
             buscar = "'"
             reemplazar = " "
-            Chapter.objects.all().update(index=None)
-            Topic.objects.all().update(index=None)
-            Subtopic.objects.all().update(index=None)
-            Video.objects.all().update(index=None)
-            Skill.objects.all().update(index=None)
-            poblar_topictree(session,buscar,reemplazar)
+            #Chapter.objects.all().update(index=None)
+            #Topic.objects.all().update(index=None)
+            #Subtopic.objects.all().update(index=None)
+            #Video.objects.all().update(index=None)
+            #Skill.objects.all().update(index=None)
+            #poblar_topictree(session,buscar,reemplazar)
             update_char()
         except Exception as e:
             print e
