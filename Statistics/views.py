@@ -16,7 +16,7 @@ from django.core import serializers
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Student_Skill, Skill_Progress
 from bakhanapp.models import Schedule
 from django.db import connection
 
@@ -328,7 +328,13 @@ def selectStatistics(request):
 							dictSkill = {}
 							k=0
 							if skill['kaid_student_id']==student.kaid_student:
+								studentskill = Student_Skill.objects.filter(kaid_student_id=student.kaid_student, id_skill_name_id=skill['id_skill_name_id']).values('id_student_skill')
+								progreso = Skill_Progress.objects.filter(id_student_skill_id=studentskill[0]["id_student_skill"]).values('to_level')
 								dictSkill[k] = skill['id_skill_name_id']
+								try:
+									dictSkill["skill_progress"] = progreso[0]["to_level"]
+								except:
+									dictSkill["skill_progress"] = "unstarted"
 								skill_array.append(dictSkill)
 								k+=1
 						student_json["habilidades"] = skill_array
