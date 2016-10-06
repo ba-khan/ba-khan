@@ -328,13 +328,19 @@ def selectStatistics(request):
 							dictSkill = {}
 							k=0
 							if skill['kaid_student_id']==student.kaid_student:
-								studentskill = Student_Skill.objects.filter(kaid_student_id=student.kaid_student, id_skill_name_id=skill['id_skill_name_id']).values('id_student_skill')
-								progreso = Skill_Progress.objects.filter(id_student_skill_id=studentskill[0]["id_student_skill"]).values('to_level')
+								studentskill = Student_Skill.objects.filter(kaid_student_id=student.kaid_student, id_skill_name_id=skill['id_skill_name_id']).values('id_student_skill', 'last_skill_progress', 'struggling')
+								progreso = Skill_Progress.objects.filter(id_student_skill_id=studentskill[0]["id_student_skill"], date__lte=fechahasta).values('to_level')
 								dictSkill[k] = skill['id_skill_name_id']
 								try:
-									dictSkill["skill_progress"] = progreso[0]["to_level"]
+									if studentskill[0]["struggling"] == True:
+										dictSkill["skill_progress"] = "struggling"
+									else:
+										dictSkill["skill_progress"] = progreso[0]["to_level"]
 								except:
-									dictSkill["skill_progress"] = "unstarted"
+									if studentskill[0]["struggling"] == True:
+										dictSkill["skill_progress"] = "struggling"
+									else:
+										dictSkill["skill_progress"] = studentskill[0]["last_skill_progress"]
 								skill_array.append(dictSkill)
 								k+=1
 						student_json["habilidades"] = skill_array
