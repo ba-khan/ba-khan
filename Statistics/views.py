@@ -105,6 +105,7 @@ def selectStatistics(request):
 						time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
 						time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
 						total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
+						skills = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id', 'id_skill_name_id').annotate(total_skills=Count('id_skill_name_id'))
 					if radio=="radio2":
 						queryradiotwo = Class_Schedule.objects.filter(id_class_id=curso).values('day', 'id_schedule_id')
 						delta = timedelta(days=1)
@@ -261,6 +262,7 @@ def selectStatistics(request):
 					dictVideo = {}
 					dictTotal = {}
 					
+					
 					class_json={}
 					class_json["id"] = j
 					class_json["tiempo_ejercicios_clase"] = 0
@@ -283,7 +285,9 @@ def selectStatistics(request):
 						dictVideo[video['kaid_student_id']] = video['total_seconds']
 					for total in total_exercise:
 						dictTotal[total['kaid_student_id']] = total['total_total']
+
 					i=0
+					
 					student_array=[]
 					for student in students:
 						student_json={}
@@ -319,6 +323,21 @@ def selectStatistics(request):
 							student_json["total_ejercicios"] = dictTotal[student.kaid_student]
 						except:
 							student_json["total_ejercicios"] = 0
+						skill_array=[]
+						for skill in skills:
+							dictSkill = {}
+							k=0
+							if skill['kaid_student_id']==student.kaid_student:
+								dictSkill[k] = skill['id_skill_name_id']
+								skill_array.append(dictSkill)
+								k+=1
+						student_json["habilidades"] = skill_array
+						'''
+						try:
+							student_json["habilidades"] = dictSkill[student.kaid_student]
+						except:
+							student_json["habilidades"] = "ninguno"
+						'''
 						i+=1
 						student_array.append(student_json)
 					class_json["students"]=student_array
