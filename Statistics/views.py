@@ -16,8 +16,8 @@ from django.core import serializers
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Student_Skill, Skill_Progress
-from bakhanapp.models import Schedule
+from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Student_Skill
+from bakhanapp.models import Schedule, Chapter, Skill_Progress, Topic, Subtopic, Subtopic_Skill
 from django.db import connection
 
 register = template.Library()
@@ -258,6 +258,8 @@ def selectStatistics(request):
 									totalt=totalt+total['total']
 									total['total_total']=totalt
 
+
+
 					dictTime = {}
 					dictVideo = {}
 					dictTotal = {}
@@ -278,6 +280,30 @@ def selectStatistics(request):
 					except Exception as e:
 						print e
 
+					misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+					dictChapter={}
+					dictSkill={}
+					chapts=[]
+					skills=[]
+					m=0
+					for mision in misiones:
+						#print mision['name_spanish']
+						n=0
+						#dictChapter[m] = mision['name_spanish']
+						topicos=Topic.objects.filter(id_chapter_name_id=mision['id_chapter_name']).exclude(index=None).values('id_topic_name')
+						for topico in topicos:
+							subtopicos=Subtopic.objects.filter(id_topic_name_id=topico['id_topic_name']).exclude(index=None).values('id_subtopic_name')
+							for subtopico in subtopicos:
+								subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopico['id_subtopic_name']).values('id_skill_name_id')
+								for sub_skill in subtopic_skills:
+									dictSkill[n]=sub_skill['id_skill_name_id']
+									n+=1
+						skills.append(dictSkill)
+						dictChapter[mision['name_spanish']]=skills
+						m+=1
+						
+					chapts.append(dictChapter)
+					class_json["misiones"]=chapts
 					
 					for time in time_exercise:
 						dictTime[time['kaid_student_id']] = time['total_time']
@@ -323,6 +349,7 @@ def selectStatistics(request):
 							student_json["total_ejercicios"] = dictTotal[student.kaid_student]
 						except:
 							student_json["total_ejercicios"] = 0
+						'''
 						skill_array=[]
 						for skill in skills:
 							dictSkill = {}
@@ -343,8 +370,9 @@ def selectStatistics(request):
 										dictSkill["skill_progress"] = studentskill[0]["last_skill_progress"]
 								skill_array.append(dictSkill)
 								k+=1
-						student_json["habilidades"] = skill_array
-						'''
+
+						#student_json["habilidades"] = skill_array
+						
 						try:
 							student_json["habilidades"] = dictSkill[student.kaid_student]
 						except:
