@@ -289,7 +289,8 @@ def selectStatistics(request):
 					m=0
 					for mision in misiones:
 						dictSkill={}
-						skills=[]
+						skill_mis={}
+						#skills=[]
 						dictSkill["mision"]=mision['name_spanish']
 						topicos=Topic.objects.filter(id_chapter_name_id=mision['id_chapter_name']).exclude(index=None).values('id_topic_name')
 						n=0
@@ -298,8 +299,13 @@ def selectStatistics(request):
 							for subtopico in subtopicos:
 								subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopico['id_subtopic_name']).values('id_skill_name_id')
 								for sub_skill in subtopic_skills:
-									dictSkill[n]=sub_skill['id_skill_name_id']
+									#skill[n]=sub_skill['id_skill_name_id']
+									#print skills_mis
+									skill_mis[n]={'id': sub_skill['id_skill_name_id'], 'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
 									n+=1
+						#print skill_mis
+						#skills.append(skill)
+						dictSkill["habilidades"]=skill_mis
 						dictChapter[m]=dictSkill
 						m+=1
 						
@@ -349,35 +355,43 @@ def selectStatistics(request):
 							student_json["total_ejercicios"] = dictTotal[student.kaid_student]
 						except:
 							student_json["total_ejercicios"] = 0
-						'''
-						skill_array=[]
+						
+						#skill_array=[]
+						
 						for skill in skills:
-							dictSkill = {}
+							#dictSkill = {}
 							k=0
 							if skill['kaid_student_id']==student.kaid_student:
 								studentskill = Student_Skill.objects.filter(kaid_student_id=student.kaid_student, id_skill_name_id=skill['id_skill_name_id']).values('id_student_skill', 'last_skill_progress', 'struggling')
 								progreso = Skill_Progress.objects.filter(id_student_skill_id=studentskill[0]["id_student_skill"], date__lte=fechahasta).values('to_level')
-								dictSkill[k] = skill['id_skill_name_id']
+								
+								dictSkillName = skill['id_skill_name_id']
 								try:
 									if studentskill[0]["struggling"] == True:
-										dictSkill["skill_progress"] = "struggling"
+										dictSkill = "struggling"
 									else:
-										dictSkill["skill_progress"] = progreso[0]["to_level"]
+										dictSkill = progreso[0]["to_level"]
 								except:
 									if studentskill[0]["struggling"] == True:
-										dictSkill["skill_progress"] = "struggling"
+										dictSkill = "struggling"
 									else:
-										dictSkill["skill_progress"] = studentskill[0]["last_skill_progress"]
-								skill_array.append(dictSkill)
+										dictSkill = studentskill[0]["last_skill_progress"]										
+								#skill_array.append(dictSkill)
+								longitud=len(class_json["misiones"])
+								for x in range(0,longitud-1):
+									longskill = len(class_json["misiones"][x]["habilidades"])
+									for y in range(0,longskill-1):
+										if class_json["misiones"][x]["habilidades"][y]["id"]==dictSkillName:
+											class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]=class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]+1
 								k+=1
-
+						
 						#student_json["habilidades"] = skill_array
 						
 						try:
 							student_json["habilidades"] = dictSkill[student.kaid_student]
 						except:
 							student_json["habilidades"] = "ninguno"
-						'''
+						
 						i+=1
 						student_array.append(student_json)
 					class_json["students"]=student_array
