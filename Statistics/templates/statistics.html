@@ -268,7 +268,6 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
-          console.log(jsonResponse);
           hideDivMain();
           showDiv();
           $('#loading').hide()
@@ -339,6 +338,17 @@ function graficar(json, clase){
 
       arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso}
       serie[i]={"name":curso, "id":curso, "data":datosest};
+
+      var misiones = clase[i]["misiones"];
+      //console.log(Object.keys(misiones).length);
+      for (var k=0;Object.keys(misiones).length;k++){
+        console.log(k)
+        //console.log(misiones[k])
+        /*var skills = misiones[k]["habilidades"];
+        for (var l=0;skills.length;l++){
+          console.log(skills[l]["nivel"]["mastery3"]);
+        }*/
+      }
 
     }
 
