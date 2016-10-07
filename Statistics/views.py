@@ -282,15 +282,17 @@ def selectStatistics(request):
 
 					misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
 					dictChapter={}
-					dictSkill={}
+					
+					dictHab={}
 					chapts=[]
-					skills=[]
+					
 					m=0
 					for mision in misiones:
-						#print mision['name_spanish']
-						n=0
-						#dictChapter[m] = mision['name_spanish']
+						dictSkill={}
+						skills=[]
+						dictSkill["mision"]=mision['name_spanish']
 						topicos=Topic.objects.filter(id_chapter_name_id=mision['id_chapter_name']).exclude(index=None).values('id_topic_name')
+						n=0
 						for topico in topicos:
 							subtopicos=Subtopic.objects.filter(id_topic_name_id=topico['id_topic_name']).exclude(index=None).values('id_subtopic_name')
 							for subtopico in subtopicos:
@@ -298,12 +300,10 @@ def selectStatistics(request):
 								for sub_skill in subtopic_skills:
 									dictSkill[n]=sub_skill['id_skill_name_id']
 									n+=1
-						skills.append(dictSkill)
-						dictChapter[mision['name_spanish']]=skills
+						dictChapter[m]=dictSkill
 						m+=1
 						
-					chapts.append(dictChapter)
-					class_json["misiones"]=chapts
+					class_json["misiones"]=dictChapter
 					
 					for time in time_exercise:
 						dictTime[time['kaid_student_id']] = time['total_time']
