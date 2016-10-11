@@ -22,7 +22,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/statistics.css'%}">
 
-
+<style type="text/css">
+  .chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 13px;
+  margin: 1px;
+  color: white;
+}
+</style>
 <br>
 <div class="container">
 <div class="main-content">
@@ -122,40 +131,41 @@
 </div>
 
 </div>
-<div class="graphics" id="graph" align="center">
+<div class="graphics" id="graph">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
 <br>
-<p>La carga de datos puede demorar unos minutos.</p>
+<p  align="center">La carga de datos puede demorar unos minutos.</p>
 <hr>
-<div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto;"  align="center"></div>
 <br>
-<div id="ordencant">
-<select id="ordenarcant" class="skill_search">
+<div id="ordencant"  align="center">
+<select id="ordenarcant" class="skill_search" >
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Cantidad (ascendente)</OPTION>
       <OPTION VALUE="2">Cantidad (descendente)</OPTION>
 </select>
 </div>
 <hr>
-<div id="container" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<div id="container" style="min-width: 300px; height: 500px; margin: 0 auto;"  align="center"></div>
 <br>
-<div id="ordentot">
-<select id="ordenartot" class="skill_search">
+<div id="ordentot"  align="center">
+<select id="ordenartot" class="skill_search" >
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
 </select>
 </div>
 <hr>
-<div id="containervid" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
+<div id="containervid" style="min-width: 300px; height: 500px; margin: 0 auto;"  align="center"></div>
 <br>
-<div id="ordenvid">
+<div id="ordenvid"  align="center">
 <select id="ordenarvid" class="skill_search">
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
 </select>
 </div>
+<div class="chart"></div>
 </div>
 
 <div id="popup" style="display:none">
@@ -314,6 +324,8 @@ function graficar(json, clase){
   var serietpo=[];
   var serievid=[];
   var j;
+  var data;
+  var datos=[[],[]];
   if(json["clases"]){
     var clase = json["clases"]
     for (var i=0;i<clase.length;i++){
@@ -341,6 +353,8 @@ function graficar(json, clase){
       serie[i]={"name":curso, "id":curso, "data":datosest};
       var arrayskill;
       var misiones = clase[i]["misiones"];
+      //data=[];
+      
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -357,10 +371,32 @@ function graficar(json, clase){
         }
         if (arrayskill===false){
           delete misiones[k];
+          //misiones.splice(k,1);
         }
       }
-      console.log(misiones);
+      /*for (var m=0;m<misiones.length;m++){
+        console.log(misiones[m]["habilidades"].length);
+      }*/
+      //console.log(misiones);
+      var n=0;
+      for (var m=0;m<misiones.length;m++){
+        try{
+          var largo=misiones[m]["habilidades"].length
+          datos[i][n]=largo
+          //console.log(datos[i][n])
+          n++;
+        }
+        catch(e){
+          //datos[i][n]=0
+          continue;
+        }
+      }
+      //console.log(i);
+      //console.log(data);
+      //datos.push(data);
+      //console.log(datos[i])
     }
+    //console.log(datos);
   }
 
   else{
@@ -377,6 +413,24 @@ function graficar(json, clase){
       }
     }
   }
+  //console.log(datos);
+  //console.log(datos.length);
+  for (var z=0;z<datos.length;z++){
+    var data = datos[z];
+
+    var x = d3.scale.linear()
+        .domain([0, d3.max(data)])
+        .range([0, 1000]);
+
+    d3.select(".chart")
+      .selectAll("div")
+        .data(data)
+      .enter().append("div")
+        .style("width", function(d) { return x(d) + "px"; })
+        .text(function(d) { return d; });
+  }
+
+  
 
 /*
   arrayte.sort(function(a,b){
