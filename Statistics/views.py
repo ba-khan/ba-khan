@@ -281,19 +281,19 @@ def selectStatistics(request):
 						print e
 
 					misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
-					dictChapter={}
+					dictChapter=[]
 					
 					dictHab={}
 					chapts=[]
 					
-					m=0
+					#m=0
 					for mision in misiones:
 						dictSkill={}
 						skill_mis={}
-						#skills=[]
+						skills_array=[]
 						dictSkill["mision"]=mision['name_spanish']
 						topicos=Topic.objects.filter(id_chapter_name_id=mision['id_chapter_name']).exclude(index=None).values('id_topic_name')
-						n=0
+						#n=0
 						for topico in topicos:
 							subtopicos=Subtopic.objects.filter(id_topic_name_id=topico['id_topic_name']).exclude(index=None).values('id_subtopic_name')
 							for subtopico in subtopicos:
@@ -301,13 +301,14 @@ def selectStatistics(request):
 								for sub_skill in subtopic_skills:
 									#skill[n]=sub_skill['id_skill_name_id']
 									#print skills_mis
-									skill_mis[n]={'id': sub_skill['id_skill_name_id'], 'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
-									n+=1
+									skill_mis={'id': sub_skill['id_skill_name_id'], 'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
+									skills_array.append(skill_mis)
+									#n+=1
 						#print skill_mis
 						#skills.append(skill)
-						dictSkill["habilidades"]=skill_mis
-						dictChapter[m]=dictSkill
-						m+=1
+						dictSkill["habilidades"]=skills_array
+						dictChapter.append(dictSkill)
+						#m+=1
 						
 					class_json["misiones"]=dictChapter
 					

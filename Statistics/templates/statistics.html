@@ -301,6 +301,7 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
+  //console.log(json);
   $('#ordenartot').show();
   $('#ordenarvid').show();
   $('#ordenarcant').show();
@@ -338,20 +339,24 @@ function graficar(json, clase){
 
       arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso}
       serie[i]={"name":curso, "id":curso, "data":datosest};
-
+      var arrayskill;
       var misiones = clase[i]["misiones"];
-      //console.log(Object.keys(misiones).length);
-      for (var k=0;Object.keys(misiones).length;k++){
-        console.log(k)
-        //console.log(misiones[k])
-        /*var skills = misiones[k]["habilidades"];
-        for (var l=0;skills.length;l++){
-          console.log(skills[l]["nivel"]["mastery3"]);
-        }*/
+      for (var k=0;k<misiones.length;k++){
+        arrayskill = false;
+        var habilidades=misiones[k]["habilidades"]
+        for (var l=0;l<habilidades.length;l++){
+          var maestria1=habilidades[l]["nivel"]["mastery1"];
+          //console.log(maestria1);
+          if (maestria1>0){
+            //console.log(maestria1);
+            arrayskill=true;
+          }
+
+        }
+        console.log(arrayskill);
+        //console.log(misiones[k]);
       }
-
     }
-
   }
 
   else{
