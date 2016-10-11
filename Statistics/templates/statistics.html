@@ -346,16 +346,20 @@ function graficar(json, clase){
         var habilidades=misiones[k]["habilidades"]
         for (var l=0;l<habilidades.length;l++){
           var maestria1=habilidades[l]["nivel"]["mastery1"];
-          //console.log(maestria1);
-          if (maestria1>0){
-            //console.log(maestria1);
+          var maestria2=habilidades[l]["nivel"]["mastery2"];
+          var dominado=habilidades[l]["nivel"]["mastery3"];
+          var practicado=habilidades[l]["nivel"]["practiced"];
+          var noempezado=habilidades[l]["nivel"]["unstarted"];
+          var enproblemas=habilidades[l]["nivel"]["struggling"];
+          if (maestria1>0 || maestria2>0 || dominado>0 || practicado>0 || noempezado>0 || enproblemas>0){
             arrayskill=true;
           }
-
         }
-        console.log(arrayskill);
-        //console.log(misiones[k]);
+        if (arrayskill===false){
+          delete misiones[k];
+        }
       }
+      console.log(misiones);
     }
   }
 
