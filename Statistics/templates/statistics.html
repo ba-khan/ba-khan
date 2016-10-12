@@ -31,6 +31,44 @@
   margin: 1px;
   color: white;
 }
+
+.widget {
+    margin: 0 auto;
+    width:1200px;
+    margin-top:50px;
+    background-color:#fff;
+    -background-color: #222D3A;
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px 0px rgba(0,0,0,0.3);
+
+}
+
+.header{
+    background-color: #eee;
+    height:40px;
+    color:#555;
+    text-align: center;
+    line-height: 40px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    font-weight: 400;
+    font-size: 1.5em;
+    text-shadow: 1px 1px #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.chart-container{
+    padding:25px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+}
+
 </style>
 <br>
 <div class="container">
@@ -132,7 +170,9 @@
 
 </div>
 <div class="graphics" id="graph">
+<div align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
+</div>
 <br>
 <p  align="center">La carga de datos puede demorar unos minutos.</p>
 <hr>
@@ -166,6 +206,12 @@
 </select>
 </div>
 <div class="chart"></div>
+<div class="widget">
+    <div class="header">barra con stack</div>
+    <div id="chart" class="chart-container">
+
+    </div>
+</div>
 </div>
 
 <div id="popup" style="display:none">
@@ -278,6 +324,7 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
+          //console.log(jsonResponse);
           hideDivMain();
           showDiv();
           $('#loading').hide()
@@ -325,9 +372,11 @@ function graficar(json, clase){
   var serievid=[];
   var j;
   var data;
-  var datos=[[],[]];
+  var datos=[[],[],[]];
+  var datap=[]
   if(json["clases"]){
     var clase = json["clases"]
+    var n=0;
     for (var i=0;i<clase.length;i++){
       var datosest=[];
       var tpoest=[];
@@ -371,32 +420,41 @@ function graficar(json, clase){
         }
         if (arrayskill===false){
           delete misiones[k];
-          //misiones.splice(k,1);
         }
+        /*else{
+          console.log(misiones[k]["mision"])
+        }*/
       }
-      /*for (var m=0;m<misiones.length;m++){
-        console.log(misiones[m]["habilidades"].length);
-      }*/
-      //console.log(misiones);
-      var n=0;
+
+      
       for (var m=0;m<misiones.length;m++){
         try{
           var largo=misiones[m]["habilidades"].length
-          datos[i][n]=largo
-          //console.log(datos[i][n])
+          //datos[0][n]=largo;
+          //datos[1][n]=curso;
+          //console.log(misiones[m]["mision"])
+          //datos[2][n]=misiones[m]["mision"];
           n++;
+          if (m==2 && i==0){
+            for (var p=0;p<largo;p++){
+              var id = misiones[m]["habilidades"][p]["id"]
+              var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
+              var M2 = misiones[m]["habilidades"][p]["nivel"]["mastery2"]
+              var M3 = misiones[m]["habilidades"][p]["nivel"]["mastery3"]
+              var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
+              var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
+              var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
+              datap[p]={"month":id, "A":parseInt(M1*100/32), "B":parseInt(M2*100/32), "C":parseInt(M3*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32)};
+            }
+            //console.log(datap)
+          }
         }
         catch(e){
-          //datos[i][n]=0
           continue;
         }
       }
-      //console.log(i);
-      //console.log(data);
-      //datos.push(data);
-      //console.log(datos[i])
+
     }
-    //console.log(datos);
   }
 
   else{
@@ -413,22 +471,111 @@ function graficar(json, clase){
       }
     }
   }
-  //console.log(datos);
-  //console.log(datos.length);
-  for (var z=0;z<datos.length;z++){
-    var data = datos[z];
+  var data=datap;
+  //console.log(data);
 
+  /*var data = [
+        {month: 'hab1', A: 20, B: 5, C: 35},
+        {month: 'hab2', A: 30, B: 10, C: 20}
+    ];*/
+
+
+    var xData = ["A", "B", "C", "D", "E", "F", "G"];
+
+    var margin = {top: 20, right: 50, bottom: 30, left: 0},
+            width = 1200 - margin.left - margin.right,
+            height = 100 - margin.top - margin.bottom;
+
+    var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .05);
+
+    var y = d3.scale.linear()
+            .rangeRound([height, 0]);
+
+    var color = d3.scale.category20();
+
+    /*var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");*/
+
+    var svg = d3.select("#chart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    var dataIntermediate = xData.map(function (c) {
+        return data.map(function (d) {
+            return {x: d.month, y: d[c]};
+        });
+    });
+
+    var dataStackLayout = d3.layout.stack()(dataIntermediate);
+
+    x.domain(dataStackLayout[0].map(function (d) {
+        return d.x;
+    }));
+
+    y.domain([0,
+        d3.max(dataStackLayout[dataStackLayout.length - 1],
+                function (d) { return d.y0 + d.y;})
+        ])
+      .nice();
+
+    var layer = svg.selectAll(".stack")
+            .data(dataStackLayout)
+            .enter().append("g")
+            .attr("class", "stack")
+            .style("fill", function (d, i) {
+                return color(i);
+            });
+
+    layer.selectAll("rect")
+            .data(function (d) {
+                return d;
+            })
+            .enter().append("rect")
+            .attr("x", function (d) {
+                return x(d.x);
+            })
+            .attr("y", function (d) {
+                return y(d.y + d.y0);
+            })
+            .attr("height", function (d) {
+                return y(d.y0) - y(d.y + d.y0);
+            })
+            .attr("width", x.rangeBand());
+
+    svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + height + ")");
+            //.call(xAxis);
+  //for (var z=0;z<datos.length;z++){
+  /*  var data = datos;
+    //console.log(data);
     var x = d3.scale.linear()
-        .domain([0, d3.max(data)])
-        .range([0, 1000]);
+        .domain([0, d3.max(data[0])])
+        .range([0, d3.max(data[0])*6]);
 
     d3.select(".chart")
       .selectAll("div")
-        .data(data)
+        .data(data[0])
       .enter().append("div")
-        .style("width", function(d) { return x(d) + "px"; })
-        .text(function(d) { return d; });
-  }
+        .style("width", function(d) { return x(d) + "px"; })*/
+        //.text(function(d, i) { return data[2][i] + " "+data[1][i]; });
+
+    /*var y = d3.scale.linear()
+    .domain([0, d3.max(datos[1])])
+    .range([0, d3.max(datos[1])*6]);
+
+    d3.select(".chart2")
+      .selectAll("div")
+        .data(datos[1])
+      .enter().append("div")
+        .style("width", function(d) { return y(d) + "px"; })
+        .text(function(d, i) { return d; });*/
+  //}
 
   
 
