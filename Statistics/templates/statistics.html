@@ -426,7 +426,7 @@ function graficar(json, clase){
         }*/
       }
 
-      
+      /*
       for (var m=0;m<misiones.length;m++){
         try{
           var largo=misiones[m]["habilidades"].length
@@ -453,7 +453,7 @@ function graficar(json, clase){
           continue;
         }
       }
-
+    */
     }
   }
 
@@ -471,7 +471,8 @@ function graficar(json, clase){
       }
     }
   }
-  var data=datap;
+
+  //var data=datap;
   //console.log(data);
 
   /*var data = [
@@ -479,7 +480,7 @@ function graficar(json, clase){
         {month: 'hab2', A: 30, B: 10, C: 20}
     ];*/
 
-
+    /*
     var xData = ["A", "B", "C", "D", "E", "F", "G"];
 
     var margin = {top: 20, right: 50, bottom: 30, left: 0},
@@ -494,9 +495,9 @@ function graficar(json, clase){
 
     var color = d3.scale.category20();
 
-    /*var xAxis = d3.svg.axis()
+    var xAxis = d3.svg.axis()
             .scale(x)
-            .orient("bottom");*/
+            .orient("bottom");
 
     var svg = d3.select("#chart").append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -550,6 +551,7 @@ function graficar(json, clase){
     svg.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(0," + height + ")");
+            */
             //.call(xAxis);
   //for (var z=0;z<datos.length;z++){
   /*  var data = datos;

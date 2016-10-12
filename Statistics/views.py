@@ -285,8 +285,12 @@ def selectStatistics(request):
 					
 					dictHab={}
 					chapts=[]
+
+					selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
+					print selectskills
 					
 					#m=0
+					'''
 					for mision in misiones:
 						dictSkill={}
 						skill_mis={}
@@ -309,7 +313,7 @@ def selectStatistics(request):
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
 						#m+=1
-						
+					'''
 					class_json["misiones"]=dictChapter
 					
 					for time in time_exercise:
@@ -358,7 +362,7 @@ def selectStatistics(request):
 							student_json["total_ejercicios"] = 0
 						
 						#skill_array=[]
-						
+						'''
 						for skill in skills:
 							#dictSkill = {}
 							k=0
@@ -387,7 +391,7 @@ def selectStatistics(request):
 								k+=1
 						
 						#student_json["habilidades"] = skill_array
-						
+						'''
 						try:
 							student_json["habilidades"] = dictSkill[student.kaid_student]
 						except:
