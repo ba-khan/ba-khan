@@ -25,6 +25,7 @@ from configs import timeSleep
 
 import json
 from datetime import datetime, timedelta
+import collections
 
 
 ##
@@ -286,16 +287,54 @@ def selectStatistics(request):
 					dictHab={}
 					chapts=[]
 
+					for mision in misiones:
+						dictSkill={}
+						skills_mis={}
+						skills_array=[]
+						dictSkill["mision"]=mision['name_spanish']
+						seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id=mision['id_chapter_name']).values('id_skill_name_id')
+						for selec in seleccion:
+							skills_mis={'id': selec['id_skill_name_id'], 'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
+							skills_array.append(skills_mis)
+						dictSkill["habilidades"]=skills_array
+						dictChapter.append(dictSkill)
 					#selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
 					#print selectskills
 					
 					#seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id='arithmetic').values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id')
-					seleccion = Subtopic_Skill.objects.all().values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id').order_by('id_subtopic_name_id__id_topic_name_id__id_chapter_name_id')
+					seleccion = Subtopic_Skill.objects.all().values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id').order_by('id_subtopic_name_id__id_topic_name_id__id_chapter_name_id' )
+					'''
+					try:
+						set([x for x in seleccion['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'] if seleccion['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'].count(x)>1])
 
-					for selec in seleccion:
-						print selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id']
-
-					progress = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__id_skill_name_id=13179375).values('to_level', 'id_student_skill_id__kaid_student_id', 'id_student_skill_id__id_skill_name_id').annotate(total=Count('id_student_skill_id'))
+						for selec in seleccion:
+							print selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id']
+					except Exception as e:
+						print "fallo"
+						print e
+					'''
+					#dictSelect=[]
+					#n=0
+					
+					#for selec in seleccion:
+					#	dictSelect.append(selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'])
+						#n+=1
+					#print dictSelect
+					
+					#print [item for item, count in collections.Counter(dictSelect).items() if count>1]
+					#seen = set()
+					#uniq=[]
+					#for x in dictSelect:
+					#	if x not in seen:
+					#		uniq.append(x)
+					#		seen.add(x)
+					#uniq = [x for x in dictSelect not in seen and not seen.add(x)]
+					#print uniq
+					#print dictSelect
+					
+							#print selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id']
+					
+					#progress = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__id_skill_name_id=13179375).values('to_level', 'id_student_skill_id__kaid_student_id', 'id_student_skill_id__id_skill_name_id').annotate(total=Count('id_student_skill_id'))
 					#print progress
 					#m=0
 					'''

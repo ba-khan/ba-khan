@@ -324,11 +324,11 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
-          //console.log(jsonResponse);
+          console.log(jsonResponse);
           hideDivMain();
           showDiv();
           $('#loading').hide()
-          graficar(jsonResponse, selclase);
+          //graficar(jsonResponse, selclase);
 
         }
     }); 
