@@ -286,9 +286,17 @@ def selectStatistics(request):
 					dictHab={}
 					chapts=[]
 
-					selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
-					print selectskills
+					#selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
+					#print selectskills
 					
+					#seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id='arithmetic').values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id')
+					seleccion = Subtopic_Skill.objects.all().values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id').order_by('id_subtopic_name_id__id_topic_name_id__id_chapter_name_id')
+
+					for selec in seleccion:
+						print selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id']
+
+					progress = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__id_skill_name_id=13179375).values('to_level', 'id_student_skill_id__kaid_student_id', 'id_student_skill_id__id_skill_name_id').annotate(total=Count('id_student_skill_id'))
+					#print progress
 					#m=0
 					'''
 					for mision in misiones:
