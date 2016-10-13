@@ -106,7 +106,7 @@ def selectStatistics(request):
 						time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
 						time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
 						total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
-						skills = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id', 'id_skill_name_id').annotate(total_skills=Count('id_skill_name_id'))
+						skills = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('id_skill_name_id')
 					if radio=="radio2":
 						queryradiotwo = Class_Schedule.objects.filter(id_class_id=curso).values('day', 'id_schedule_id')
 						delta = timedelta(days=1)
@@ -298,11 +298,16 @@ def selectStatistics(request):
 							skills_array.append(skills_mis)
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
+
+					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id__in=skills).values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
+					#print habilidad
+					for hab in habilidad:
+						print hab
 					#selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
 					#print selectskills
 					
 					#seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id='arithmetic').values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id')
-					seleccion = Subtopic_Skill.objects.all().values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id').order_by('id_subtopic_name_id__id_topic_name_id__id_chapter_name_id' )
+					#seleccion = Subtopic_Skill.objects.all().values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id').order_by('id_subtopic_name_id__id_topic_name_id__id_chapter_name_id' )
 					'''
 					try:
 						set([x for x in seleccion['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'] if seleccion['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'].count(x)>1])
