@@ -207,7 +207,7 @@
 </div>
 <div class="chart"></div>
 <div class="widget">
-    <div class="header">barra con stack</div>
+    <div class="header">Habilidades</div>
     <div id="chart" class="chart-container">
 
     </div>
@@ -324,11 +324,11 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
-          console.log(jsonResponse);
+          //console.log(jsonResponse);
           hideDivMain();
           showDiv();
           $('#loading').hide()
-          //graficar(jsonResponse, selclase);
+          graficar(jsonResponse, selclase);
 
         }
     }); 
@@ -426,7 +426,7 @@ function graficar(json, clase){
         }*/
       }
 
-      /*
+      
       for (var m=0;m<misiones.length;m++){
         try{
           var largo=misiones[m]["habilidades"].length
@@ -444,6 +444,14 @@ function graficar(json, clase){
               var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
               var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
               var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
+              if (id=="3003"){
+                console.log(M1);
+                console.log(M2);
+                console.log(M3);
+                console.log(PR);
+                console.log(UN);
+                console.log(ST);
+              }
               datap[p]={"month":id, "A":parseInt(M1*100/32), "B":parseInt(M2*100/32), "C":parseInt(M3*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32)};
             }
             //console.log(datap)
@@ -453,7 +461,7 @@ function graficar(json, clase){
           continue;
         }
       }
-    */
+    
     }
   }
 
@@ -472,7 +480,7 @@ function graficar(json, clase){
     }
   }
 
-  //var data=datap;
+  var data=datap;
   //console.log(data);
 
   /*var data = [
