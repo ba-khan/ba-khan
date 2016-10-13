@@ -112,7 +112,7 @@ def newSchedule(request):
 
 def validateTime(start_time, end_time, id_institution_id, name_block):
     cursor = connection.cursor()
-    cursor.execute("select count(*) from (values (%s, %s, %s, %s)) as t(start_time, end_time, id_institution_id, name_block) where not exists (select 1 from bakhanapp_schedule as m where m.id_institution_id=t.id_institution_id and (t.start_time<m.end_time and t.end_time>m.start_time))", (start_time,  end_time, id_institution_id, name_block))
+    cursor.callproc("validar", [start_time, end_time, id_institution_id, name_block])
     query = cursor.fetchone()
     return query
 
