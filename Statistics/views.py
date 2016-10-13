@@ -298,11 +298,18 @@ def selectStatistics(request):
 							skills_array.append(skills_mis)
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
-
+					class_json["misiones"]=dictChapter
 					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id__in=skills).values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
 					#print habilidad
 					for hab in habilidad:
-						print hab
+						longitud=len(class_json["misiones"])
+						for x in range(0,longitud-1):
+							longskill = len(class_json["misiones"][x]["habilidades"])
+							for y in range(0,longskill-1):
+								if class_json["misiones"][x]["habilidades"][y]["id"]==hab['id_student_skill_id__id_skill_name_id']:
+									class_json["misiones"][x]["habilidades"][y]["nivel"][hab["to_level"]]=hab['total']
+						#			class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]=class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]+1
+						#print hab
 					#selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
 					#print selectskills
 					
@@ -366,7 +373,7 @@ def selectStatistics(request):
 						dictChapter.append(dictSkill)
 						#m+=1
 					'''
-					class_json["misiones"]=dictChapter
+					
 					
 					for time in time_exercise:
 						dictTime[time['kaid_student_id']] = time['total_time']
