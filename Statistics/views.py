@@ -19,6 +19,7 @@ from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Student_Skill
 from bakhanapp.models import Schedule, Chapter, Skill_Progress, Topic, Subtopic, Subtopic_Skill
 from django.db import connection
+from django.db.models import Max
 
 register = template.Library()
 from configs import timeSleep
@@ -299,7 +300,9 @@ def selectStatistics(request):
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
 					class_json["misiones"]=dictChapter
-					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id__in=skills).values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
+					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id="3003").values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'), fecha=Max('date'))
+					#for st in students:
+					#	print st
 					#print habilidad
 					for hab in habilidad:
 						longitud=len(class_json["misiones"])

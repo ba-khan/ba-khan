@@ -435,7 +435,7 @@ function graficar(json, clase){
           //console.log(misiones[m]["mision"])
           //datos[2][n]=misiones[m]["mision"];
           n++;
-          if (m==2 && i==0){
+          if (m==21 && i==0){
             for (var p=0;p<largo;p++){
               var id = misiones[m]["habilidades"][p]["id"]
               var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
@@ -444,14 +444,15 @@ function graficar(json, clase){
               var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
               var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
               var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
-              if (id=="3003"){
-                console.log(M1);
-                console.log(M2);
-                console.log(M3);
-                console.log(PR);
-                console.log(UN);
-                console.log(ST);
-              }
+              /*if (id=="3003"){
+                console.log(misiones[m])
+                //console.log(M1);
+                //console.log(M2);
+                //console.log(M3);
+                //console.log(PR);
+                //console.log(UN);
+                //console.log(ST);
+              }*/
               datap[p]={"month":id, "A":parseInt(M1*100/32), "B":parseInt(M2*100/32), "C":parseInt(M3*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32)};
             }
             //console.log(datap)
@@ -481,14 +482,14 @@ function graficar(json, clase){
   }
 
   var data=datap;
-  //console.log(data);
+  console.log(data);
 
   /*var data = [
         {month: 'hab1', A: 20, B: 5, C: 35},
         {month: 'hab2', A: 30, B: 10, C: 20}
     ];*/
 
-    /*
+    
     var xData = ["A", "B", "C", "D", "E", "F", "G"];
 
     var margin = {top: 20, right: 50, bottom: 30, left: 0},
@@ -559,10 +560,10 @@ function graficar(json, clase){
     svg.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(0," + height + ")");
-            */
+            
             //.call(xAxis);
   //for (var z=0;z<datos.length;z++){
-  /*  var data = datos;
+    var data = datos;
     //console.log(data);
     var x = d3.scale.linear()
         .domain([0, d3.max(data[0])])
@@ -572,10 +573,10 @@ function graficar(json, clase){
       .selectAll("div")
         .data(data[0])
       .enter().append("div")
-        .style("width", function(d) { return x(d) + "px"; })*/
+        .style("width", function(d) { return x(d) + "px"; })
         //.text(function(d, i) { return data[2][i] + " "+data[1][i]; });
 
-    /*var y = d3.scale.linear()
+    var y = d3.scale.linear()
     .domain([0, d3.max(datos[1])])
     .range([0, d3.max(datos[1])*6]);
 
@@ -584,7 +585,7 @@ function graficar(json, clase){
         .data(datos[1])
       .enter().append("div")
         .style("width", function(d) { return y(d) + "px"; })
-        .text(function(d, i) { return d; });*/
+        .text(function(d, i) { return d; });
   //}
 
   
