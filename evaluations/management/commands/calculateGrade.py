@@ -231,9 +231,11 @@ class Command(BaseCommand):
                         inc_aux = 0
                         skill_progress_aux = 'unstarted'
                         try:#id04
-                            incorrect = Skill_Attempt.objects.filter(Q(kaid_student=grade.kaid_student_id)&Q(id_skill_name_id=sk_lg.id_skill_name_id)&Q(correct=False)&Q(task_type__startswith="mastery")&(Q(skipped=False)|Q(skipped=True))&Q(date__range=(assesment.start_date,assesment.end_date))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
-                            #incorrect = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
-                            print incorrect
+                            #incorrect = Skill_Attempt.objects.filter(Q(kaid_student=grade.kaid_student_id)&Q(id_skill_name_id=sk_lg.id_skill_name_id)&Q(correct=False)&Q(task_type__startswith="mastery")&(Q(skipped=False)|Q(skipped=True))&Q(date__range=(assesment.start_date,assesment.end_date))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+                            incorrect = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+                            if grade.kaid_student_id=='kaid_974809915570475873716473':
+                                print "aca abajo va el incorrect"
+                                print incorrect
                             correct = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                             sklprgrs = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,skill_progress__date__range=(assesment.start_date,assesment.end_date)).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date').order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')
                             is_struggling = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id).values('struggling')
@@ -263,7 +265,9 @@ class Command(BaseCommand):
                         except:
                             cor_aux = 0
                         try:#id05
-                            print inc_aux
+                            if grade.kaid_student_id=='kaid_974809915570475873716473':
+                                print "aca abajo va el inc aux"
+                                print inc_aux
                             update_skill_log = Skill_Log(id_skill_log = sk_lg.id_skill_log,
                                     id_skill_name_id = sk_lg.id_skill_name_id,
                                     correct = cor_aux,
