@@ -300,7 +300,7 @@ def selectStatistics(request):
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
 					class_json["misiones"]=dictChapter
-					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id="3003").values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'), fecha=Max('date'))
+					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id="3003").values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
 					#for st in students:
 					#	print st
 					#print habilidad
@@ -309,8 +309,11 @@ def selectStatistics(request):
 						for x in range(0,longitud-1):
 							longskill = len(class_json["misiones"][x]["habilidades"])
 							for y in range(0,longskill-1):
-								if class_json["misiones"][x]["habilidades"][y]["id"]==hab['id_student_skill_id__id_skill_name_id']:
-									class_json["misiones"][x]["habilidades"][y]["nivel"][hab["to_level"]]=hab['total']
+								print hab
+								#print hab['id_student_skill_id__id_skill_name_id']
+								#if class_json["misiones"][x]["habilidades"][y]["id"]==hab['id_student_skill_id__id_skill_name_id']:
+									#print hab['id_student_skill_id__id_skill_name_id']
+									#class_json["misiones"][x]["habilidades"][y]["nivel"][hab["to_level"]]=hab['total']
 						#			class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]=class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]+1
 						#print hab
 					#selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
@@ -453,12 +456,12 @@ def selectStatistics(request):
 								k+=1
 						
 						#student_json["habilidades"] = skill_array
-						'''
+						
 						try:
 							student_json["habilidades"] = dictSkill[student.kaid_student]
 						except:
 							student_json["habilidades"] = "ninguno"
-						
+						'''
 						i+=1
 						student_array.append(student_json)
 					class_json["students"]=student_array
