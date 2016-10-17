@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name')
                 time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-                levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
+                levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__lte=assesment.end_date
                     ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date','id_skill_name_id'
                     ).order_by('kaid_student','id_skill_name_id','-skill_progress__date').distinct('kaid_student','id_skill_name_id')#,skill_progress__to_level='practiced'
                 struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
@@ -166,6 +166,9 @@ class Command(BaseCommand):
                     except:
                         grade.unstarted = 0
                     grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)*(importance_skill_level/float(100))
+                    if grade.kaid_student_id=='kaid_974809915570475873716473':
+                        print "el perfoimrance points es"
+                        print grade.performance_points
                     grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
                     grade.total_recomended = totalSkills
                     try:
@@ -233,9 +236,6 @@ class Command(BaseCommand):
                         try:#id04
                             #incorrect = Skill_Attempt.objects.filter(Q(kaid_student=grade.kaid_student_id)&Q(id_skill_name_id=sk_lg.id_skill_name_id)&Q(correct=False)&Q(task_type__startswith="mastery")&(Q(skipped=False)|Q(skipped=True))&Q(date__range=(assesment.start_date,assesment.end_date))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
                             incorrect = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
-                            if grade.kaid_student_id=='kaid_974809915570475873716473':
-                                print "aca abajo va el incorrect"
-                                print incorrect
                             correct = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                             sklprgrs = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,skill_progress__date__range=(assesment.start_date,assesment.end_date)).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date').order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')
                             is_struggling = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id).values('struggling')
@@ -265,9 +265,6 @@ class Command(BaseCommand):
                         except:
                             cor_aux = 0
                         try:#id05
-                            if grade.kaid_student_id=='kaid_974809915570475873716473':
-                                print "aca abajo va el inc aux"
-                                print inc_aux
                             update_skill_log = Skill_Log(id_skill_log = sk_lg.id_skill_log,
                                     id_skill_name_id = sk_lg.id_skill_name_id,
                                     correct = cor_aux,
@@ -299,6 +296,8 @@ def getGrade(percentage,points,min_grade,max_grade,approval_grade):
     return grade
 
 def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
+    print "abajo va el el length"
+    print len(configured_skills)
     #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
     #y un rango de fechas.
     scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
@@ -310,15 +309,31 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
             id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_name_id'],kaid_student_id=kaid_student)#.values('id_student_skill')
             for id_student_skill in id_student_skills:
                 id_student_skill = id_student_skill.id_student_skill
+            if kaid_student=='kaid_974809915570475873716473':
+                print "aca abajo va el id student skill"
+                print id_student_skill
         except: 
             print "no data id_student_skills"
         try: 
-            last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
+            try:
+                last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
+            except:
+                last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
+            #if not last_level:
+            #    print "paso aca"
+            #    last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
             points = points + scores[last_level['to_level']]
-        except: 
-            pass
+            if kaid_student=='kaid_974809915570475873716473':
+                print "aca abajo va el last level"
+                print scores[last_level['to_level']]
+        except Exception as e:
+            print e
     try:
         points = points / len(configured_skills)
-    except:
+        if kaid_student=='kaid_974809915570475873716473':
+            print points
+    except Exception as e:
         points = 0
+        print e
+        
     return points
