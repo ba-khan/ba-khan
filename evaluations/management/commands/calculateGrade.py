@@ -126,20 +126,26 @@ class Command(BaseCommand):
                     except:
                         grade.struggling = 0
                     try:
-                        lev = levels.filter(kaid_student=grade.kaid_student_id)
-                        studentPracticed = 0
-                        studentMastery1 = 0
-                        studentMastery2 = 0
-                        studentMastery3 = 0
-                        for l in lev:
-                            if l['skill_progress__to_level']=='practiced':
-                                studentPracticed += 1
-                            if l['skill_progress__to_level']=='mastery1':
-                                studentMastery1 += 1
-                            if l['skill_progress__to_level']=='mastery2':
-                                studentMastery2 += 1
-                            if l['skill_progress__to_level']=='mastery3':
-                                studentMastery3 += 1
+                        if dictTimeExcercice[grade.kaid_student_id]>0:
+                            lev = levels.filter(kaid_student=grade.kaid_student_id)
+                            studentPracticed = 0
+                            studentMastery1 = 0
+                            studentMastery2 = 0
+                            studentMastery3 = 0
+                            for l in lev:
+                                if l['skill_progress__to_level']=='practiced':
+                                    studentPracticed += 1
+                                if l['skill_progress__to_level']=='mastery1':
+                                    studentMastery1 += 1
+                                if l['skill_progress__to_level']=='mastery2':
+                                    studentMastery2 += 1
+                                if l['skill_progress__to_level']=='mastery3':
+                                    studentMastery3 += 1
+                        else:
+                            studentPracticed = 0
+                            studentMastery1 = 0
+                            studentMastery2 = 0
+                            studentMastery3 = 0
                     except:
                         studentPracticed = 0
                         studentMastery1 = 0
@@ -166,9 +172,6 @@ class Command(BaseCommand):
                     except:
                         grade.unstarted = 0
                     grade.performance_points = getSkillPoints(grade.kaid_student_id,skills,assesment.start_date,assesment.end_date)*(importance_skill_level/float(100))
-                    if grade.kaid_student_id=='kaid_974809915570475873716473':
-                        print "el perfoimrance points es"
-                        print grade.performance_points
                     grade.recomended_complete = grade.practiced + grade.mastery1 + grade.mastery2 + grade.mastery3
                     grade.total_recomended = totalSkills
                     try:
@@ -309,9 +312,6 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
             id_student_skills = Student_Skill.objects.filter(id_skill_name_id=skill['id_skill_name_id'],kaid_student_id=kaid_student)#.values('id_student_skill')
             for id_student_skill in id_student_skills:
                 id_student_skill = id_student_skill.id_student_skill
-            if kaid_student=='kaid_974809915570475873716473':
-                print "aca abajo va el id student skill"
-                print id_student_skill
         except: 
             print "no data id_student_skills"
         try: 
@@ -323,15 +323,10 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
             #    print "paso aca"
             #    last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
             points = points + scores[last_level['to_level']]
-            if kaid_student=='kaid_974809915570475873716473':
-                print "aca abajo va el last level"
-                print scores[last_level['to_level']]
         except Exception as e:
             print e
     try:
         points = points / len(configured_skills)
-        if kaid_student=='kaid_974809915570475873716473':
-            print points
     except Exception as e:
         points = 0
         print e
