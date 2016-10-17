@@ -299,8 +299,6 @@ def getGrade(percentage,points,min_grade,max_grade,approval_grade):
     return grade
 
 def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
-    print "abajo va el el length"
-    print len(configured_skills)
     #Funcion que entrega el puntaje promedio de un estudiante, segun una configuracion de evaluacion 
     #y un rango de fechas.
     scores={'unstarted':0,'struggling':20,'practiced':40,'mastery1':60,'mastery2':80,'mastery3':100}
