@@ -417,9 +417,9 @@ function graficar(json, clase){
             arrayskill=true;
           }
         }
-        /*if (arrayskill===false){
+        if (arrayskill===false){
           delete misiones[k];
-        }*/
+        }
         /*else{
           console.log(misiones[k]["mision"])
         }*/
@@ -434,12 +434,12 @@ function graficar(json, clase){
           //console.log(misiones[m]["mision"])
           //datos[2][n]=misiones[m]["mision"];
           n++;
-          if (m==21 && i==0){
+          if (m==2 && i==0){
             for (var p=0;p<largo;p++){
               var id = misiones[m]["habilidades"][p]["id"]
-              var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
-              var M2 = misiones[m]["habilidades"][p]["nivel"]["mastery2"]
               var M3 = misiones[m]["habilidades"][p]["nivel"]["mastery3"]
+              var M2 = misiones[m]["habilidades"][p]["nivel"]["mastery2"]
+              var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
               var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
               var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
               var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
@@ -452,7 +452,7 @@ function graficar(json, clase){
                 //console.log(UN);
                 //console.log(ST);
               }*/
-              datap[p]={"month":id, "A":parseInt(M1*100/32), "B":parseInt(M2*100/32), "C":parseInt(M3*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32)};
+              datap[p]={"id":id, "A":parseInt(M3*100/32), "B":parseInt(M2*100/32), "C":parseInt(M1*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32)};
             }
             //console.log(datap)
           }
@@ -481,7 +481,7 @@ function graficar(json, clase){
   }
 
   var data=datap;
-  //console.log(data);
+  console.log(data);
 
   /*var data = [
         {month: 'hab1', A: 20, B: 5, C: 35},
@@ -491,17 +491,19 @@ function graficar(json, clase){
     
     var xData = ["A", "B", "C", "D", "E", "F", "G"];
 
-    var margin = {top: 20, right: 50, bottom: 30, left: 0},
+    var margin = {top: 10, right: 25, bottom: 15, left: 0},
             width = 1200 - margin.left - margin.right,
-            height = 100 - margin.top - margin.bottom;
+            height = 50 - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
-            .rangeRoundBands([0, width], .05);
+            .rangeRoundBands([0, width], 0.02);
 
     var y = d3.scale.linear()
             .rangeRound([height, 0]);
 
-    var color = d3.scale.category20();
+    var color = d3.scale.ordinal()
+             // .range(["#1C758A", "#29ABCA, #58C4DD", "#9CDCEB", "#808080", "#C30202", "#808080"]);
+            .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#808080"]);
 
     var xAxis = d3.svg.axis()
             .scale(x)
@@ -516,7 +518,7 @@ function graficar(json, clase){
 
     var dataIntermediate = xData.map(function (c) {
         return data.map(function (d) {
-            return {x: d.month, y: d[c]};
+            return {x: d.id, y: d[c]};
         });
     });
 
@@ -562,29 +564,6 @@ function graficar(json, clase){
             
             //.call(xAxis);
   //for (var z=0;z<datos.length;z++){
-    var data = datos;
-    //console.log(data);
-    var x = d3.scale.linear()
-        .domain([0, d3.max(data[0])])
-        .range([0, d3.max(data[0])*6]);
-
-    d3.select(".chart")
-      .selectAll("div")
-        .data(data[0])
-      .enter().append("div")
-        .style("width", function(d) { return x(d) + "px"; })
-        //.text(function(d, i) { return data[2][i] + " "+data[1][i]; });
-
-    var y = d3.scale.linear()
-    .domain([0, d3.max(datos[1])])
-    .range([0, d3.max(datos[1])*6]);
-
-    d3.select(".chart2")
-      .selectAll("div")
-        .data(datos[1])
-      .enter().append("div")
-        .style("width", function(d) { return y(d) + "px"; })
-        .text(function(d, i) { return d; });
   //}
 
   

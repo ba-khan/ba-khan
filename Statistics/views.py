@@ -308,13 +308,20 @@ def selectStatistics(request):
 					#sskill = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__kaid_student_id__in=sattempt).values('id_student_skill_id').annotate(fecha=Max('date')).order_by('id_student_skill_id')
 
 					cursor = connection.cursor()
-					print fechadesde
-					print fechahasta
 					cursor.callproc("niveles", [int(curso), fechadesde, fechahasta])
 					query = cursor.fetchall()
 
 					for q in query:
-						print q[1]
+						longitud=len(class_json["misiones"])
+						for x in range(0, longitud-1):
+							longskill=len(class_json["misiones"][x]["habilidades"])
+							for y in range(0,longskill-1):
+								if class_json["misiones"][x]["habilidades"][y]["id"]==q[2]:
+									if q[3]==True:
+										class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]=q[1]
+									else:
+										class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
+						#print q[2]
 
 					#for st in students:
 					#	print st
