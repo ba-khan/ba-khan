@@ -107,7 +107,7 @@ def selectStatistics(request):
 						time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
 						time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
 						total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
-						skills = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('id_skill_name_id')
+						#skills = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('id_skill_name_id')
 					if radio=="radio2":
 						queryradiotwo = Class_Schedule.objects.filter(id_class_id=curso).values('day', 'id_schedule_id')
 						delta = timedelta(days=1)
@@ -300,16 +300,31 @@ def selectStatistics(request):
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
 					class_json["misiones"]=dictChapter
-					habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id="3003").values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
+					#habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id="3003").values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
+					
+					#sskill = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__kaid_student_id__in=students).values('id_student_skill_id')
+
+					#sattempt = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta], id_skill_name_id='3003').values('kaid_student_id').distinct('kaid_student_id')
+					#sskill = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__kaid_student_id__in=sattempt).values('id_student_skill_id').annotate(fecha=Max('date')).order_by('id_student_skill_id')
+
+					cursor = connection.cursor()
+					print fechadesde
+					print fechahasta
+					cursor.callproc("niveles", [int(curso), fechadesde, fechahasta])
+					query = cursor.fetchall()
+
+					for q in query:
+						print q[1]
+
 					#for st in students:
 					#	print st
 					#print habilidad
-					for hab in habilidad:
-						longitud=len(class_json["misiones"])
-						for x in range(0,longitud-1):
-							longskill = len(class_json["misiones"][x]["habilidades"])
-							for y in range(0,longskill-1):
-								print hab
+					#for hab in habilidad:
+					#	longitud=len(class_json["misiones"])
+					#	for x in range(0,longitud-1):
+					#		longskill = len(class_json["misiones"][x]["habilidades"])
+					#		for y in range(0,longskill-1):
+					#			print hab
 								#print hab['id_student_skill_id__id_skill_name_id']
 								#if class_json["misiones"][x]["habilidades"][y]["id"]==hab['id_student_skill_id__id_skill_name_id']:
 									#print hab['id_student_skill_id__id_skill_name_id']
