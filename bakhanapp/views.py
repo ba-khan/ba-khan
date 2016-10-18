@@ -961,11 +961,10 @@ def getClassStudents(request, id_class):
                 json_array.append(student_json)
             json_dict={"students":json_array, "assesments":assesment_array}
             
-            #json_dict = json.dumps(json_dict, sort_keys=True)
 
             json_data = json.dumps(json_dict)
             classroom = Class.objects.filter(id_class=id_class)
-            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid, id_class_id=id_class)):
+            if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid, id_class_id=id_class) or Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid)):
                 isTeacher = True
                 assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid)
             else:
