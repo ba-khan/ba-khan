@@ -493,7 +493,7 @@ function graficar(json, clase){
 
     var margin = {top: 10, right: 25, bottom: 15, left: 0},
             width = 1200 - margin.left - margin.right,
-            height = 50 - margin.top - margin.bottom;
+            height = 60 - margin.top - margin.bottom;
 
     var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], 0.02);
@@ -560,7 +560,9 @@ function graficar(json, clase){
 
     svg.append("g")
             .attr("class", "axis")
-            .attr("transform", "translate(0," + height + ")");
+            .attr("transform", "translate(0," + height + ")")
+            .style("font-size", "6px")
+            .call(xAxis);
             
             //.call(xAxis);
   //for (var z=0;z<datos.length;z++){
