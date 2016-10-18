@@ -372,10 +372,11 @@ function graficar(json, clase){
   var j;
   var data;
   var datos=[[],[],[]];
-  var datap=[]
+  
   if(json["clases"]){
     var clase = json["clases"]
     var n=0;
+    var arregloclase=[];
     for (var i=0;i<clase.length;i++){
       var datosest=[];
       var tpoest=[];
@@ -425,7 +426,8 @@ function graficar(json, clase){
         }*/
       }
 
-      
+      var valormision=0;
+      var arreglocurso=[];
       for (var m=0;m<misiones.length;m++){
         try{
           var largo=misiones[m]["habilidades"].length
@@ -433,36 +435,43 @@ function graficar(json, clase){
           //datos[1][n]=curso;
           //console.log(misiones[m]["mision"])
           //datos[2][n]=misiones[m]["mision"];
-          n++;
-          if (m==2 && i==0){
-            for (var p=0;p<largo;p++){
-              var id = misiones[m]["habilidades"][p]["id"]
-              var M3 = misiones[m]["habilidades"][p]["nivel"]["mastery3"]
-              var M2 = misiones[m]["habilidades"][p]["nivel"]["mastery2"]
-              var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
-              var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
-              var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
-              var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
-              /*if (id=="3003"){
-                console.log(misiones[m])
-                //console.log(M1);
-                //console.log(M2);
-                //console.log(M3);
-                //console.log(PR);
-                //console.log(UN);
-                //console.log(ST);
-              }*/
-              datap[p]={"id":id, "A":parseInt(M3*100/32), "B":parseInt(M2*100/32), "C":parseInt(M1*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32)};
-            }
-            //console.log(datap)
+          //n++;
+          var datap=[];
+          for (var p=0;p<largo;p++){
+            var id = misiones[m]["habilidades"][p]["id"]
+            var M3 = misiones[m]["habilidades"][p]["nivel"]["mastery3"]
+            var M2 = misiones[m]["habilidades"][p]["nivel"]["mastery2"]
+            var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
+            var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
+            var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
+            var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
+            /*if (id=="3003"){
+              console.log(misiones[m])
+              //console.log(M1);
+              //console.log(M2);
+              //console.log(M3);
+              //console.log(PR);
+              //console.log(UN);
+              //console.log(ST);
+            }*/
+            //datap=[[1,2,3],[4,5,6]];
+            datap[p]={"id":id, "A":parseInt(M3*100/32), "B":parseInt(M2*100/32), "C":parseInt(M1*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"]};
+            //n++;
           }
+          //console.log(valormision);
+          arreglocurso[valormision]=datap;
+          //console.log(arreglocurso)
+          valormision++;
+            //console.log(datap)
+          
         }
         catch(e){
           continue;
         }
       }
-    
+      arregloclase[i]=arreglocurso;
     }
+
   }
 
   else{
@@ -480,7 +489,7 @@ function graficar(json, clase){
     }
   }
 
-  var data=datap;
+  var data=arregloclase;
   console.log(data);
 
   /*var data = [
@@ -488,7 +497,7 @@ function graficar(json, clase){
         {month: 'hab2', A: 30, B: 10, C: 20}
     ];*/
 
-    
+    /*
     var xData = ["A", "B", "C", "D", "E", "F", "G"];
 
     var margin = {top: 10, right: 25, bottom: 15, left: 0},
@@ -561,7 +570,7 @@ function graficar(json, clase){
             .attr("class", "axis")
             .attr("transform", "translate(0," + height + ")")
             .style("font-size", "6px")
-            .call(xAxis);
+            .call(xAxis);*/
             
             //.call(xAxis);
   //for (var z=0;z<datos.length;z++){
