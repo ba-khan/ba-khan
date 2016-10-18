@@ -893,6 +893,8 @@
        svg.select("text.incorrect");
        svg.select("rect.correct");
        svg.select("text.correct");
+       svg.select("rect.totalskill");
+       svg.select("text.totalskill");
        
        //Update data of skill level d3 bars
        //svg.select("rect.skills_level");
@@ -1066,7 +1068,8 @@
 		      .attr("width", function(d){return escalarCorrectIncorrect(d.values["incorrect"]); });
 
 	    var incorrect_texts = tbody.selectAll("text.incorrect")//correct_incorrect
-	    	.text(function(d) { return "I:"+d.values["incorrect"] })
+	    	.text(function(d) { 
+	    		return "I:"+d.values["incorrect"] })
 		    .transition().duration(750)
 	    	.attr("transform",function(d){
 				var textWidth = d3.select(this).node().getBBox().width;
@@ -1086,6 +1089,11 @@
 	  		}else{
 	    	d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values[sortingCriterion];})
 	  		}
+	  	var correct_incorrect = tbody.selectAll("text.totalskill")
+		    .text(function(d) { 
+		    	total = parseInt(d.values["correct"]) + parseInt(d.values["incorrect"])
+		    	//console.log(total);
+		    	return "Total: "+ total });
 	}
     
     
