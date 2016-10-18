@@ -357,7 +357,7 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
-  console.log(json);
+  //console.log(json);
   $('#ordenartot').show();
   $('#ordenarvid').show();
   $('#ordenarcant').show();
@@ -455,7 +455,7 @@ function graficar(json, clase){
               //console.log(ST);
             }*/
             //datap=[[1,2,3],[4,5,6]];
-            datap[p]={"id":id, "A":parseInt(M3*100/32), "B":parseInt(M2*100/32), "C":parseInt(M1*100/32), "D":parseInt(PR*100/32), "E":parseInt(UN*100/32), "F":parseInt(ST*100/32), "G":100-parseInt(M1*100/32)-parseInt(M2*100/32)-parseInt(M3*100/32)-parseInt(PR*100/32)-parseInt(UN*100/32)-parseInt(ST*100/32), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"]};
+            datap[p]={"id":id, "A":parseInt(M3*100/estudiantes.length), "B":parseInt(M2*100/estudiantes.length), "C":parseInt(M1*100/estudiantes.length), "D":parseInt(PR*100/estudiantes.length), "E":parseInt(UN*100/estudiantes.length), "F":parseInt(ST*100/estudiantes.length), "G":100-parseInt(M1*100/estudiantes.length)-parseInt(M2*100/estudiantes.length)-parseInt(M3*100/estudiantes.length)-parseInt(PR*100/estudiantes.length)-parseInt(UN*100/estudiantes.length)-parseInt(ST*100/estudiantes.length), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"]};
             //n++;
           }
           //console.log(valormision);
@@ -489,8 +489,100 @@ function graficar(json, clase){
     }
   }
 
-  var data=arregloclase;
-  console.log(data);
+  var dataq=arregloclase;
+  //console.log(data.length);
+
+  for (var i = 0; i < dataq.length; i++) {
+    //console.log(curso=data[i][0][0]["curso"]); //nombre curso
+    var misiones = dataq[i];
+    for (var j = 0; j < misiones.length; j++) {
+      //console.log(misiones[j][0]["mision"]); //nombre mision
+      var habilidades = misiones[j];
+      var data=[];
+      for (var k = 0; k < habilidades.length; k++) {
+        var id = habilidades[k]["id"];
+        var A = habilidades[k]["A"];
+        var B = habilidades[k]["B"];
+        var C = habilidades[k]["C"];
+        var D = habilidades[k]["D"];
+        var E = habilidades[k]["E"];
+        var F = habilidades[k]["F"];
+        var G = habilidades[k]["G"];
+        //console.log(habilidades[k]["id"]); //nombre habilidad
+        //console.log(habilidades[k]["A"]); //total mastery 1 en habilidad
+        data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G}
+      }
+      //console.log(data);
+      var xData = ["A", "B", "C", "D", "E", "F", "G"];
+      var margin = {top: 10, right: 25, bottom: 15, left: 0},
+            width = 1200 - margin.left - margin.right,
+            height = 60 - margin.top - margin.bottom;
+      var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], 0.02);
+      var y = d3.scale.linear()
+            .rangeRound([height, 0]);
+      var color = d3.scale.ordinal()
+            .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#808080"]);
+      var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+      var svg = d3.select("#chart").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+      var dataIntermediate = xData.map(function (c) {
+          return data.map(function (d) {
+              return {x: d.id, y: d[c]};
+          });
+      });
+
+      var dataStackLayout = d3.layout.stack()(dataIntermediate);
+
+      x.domain(dataStackLayout[0].map(function (d) {
+          return d.x;
+      }));
+
+      y.domain([0,
+          d3.max(dataStackLayout[dataStackLayout.length - 1],
+                  function (d) { return d.y0 + d.y;})
+          ])
+        .nice();
+
+      var layer = svg.selectAll(".stack")
+              .data(dataStackLayout)
+              .enter().append("g")
+              .attr("class", "stack")
+              .style("fill", function (d, i) {
+                  return color(i);
+              });
+
+      layer.selectAll("rect")
+              .data(function (d) {
+                  return d;
+              })
+              .enter().append("rect")
+              .attr("x", function (d) {
+                  return x(d.x);
+              })
+              .attr("y", function (d) {
+                  return y(d.y + d.y0);
+              })
+              .attr("height", function (d) {
+                  return y(d.y0) - y(d.y + d.y0);
+              })
+              .attr("width", x.rangeBand());
+
+      svg.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(0," + height + ")")
+              .style("font-size", "6px")
+              .call(xAxis);
+    }
+  }
 
   /*var data = [
         {month: 'hab1', A: 20, B: 5, C: 35},
