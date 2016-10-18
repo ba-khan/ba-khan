@@ -205,7 +205,6 @@
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
 </select>
 </div>
-<div class="chart"></div>
 <div class="widget">
     <div class="header">Habilidades</div>
     <div id="chart" class="chart-container">
@@ -327,6 +326,7 @@ function crearEstadisticas(){
           hideDivMain();
           showDiv();
           $('#loading').hide()
+          $('#chart').empty();
           graficar(jsonResponse, selclase);
 
         }
@@ -358,6 +358,7 @@ function crearEstadisticas(){
 
 function graficar(json, clase){
   //console.log(json);
+  //$('.chart').empty();
   $('#ordenartot').show();
   $('#ordenarvid').show();
   $('#ordenarcant').show();
