@@ -480,7 +480,7 @@ function graficar(json, clase){
       //aqui va algo
       if (valor=="0"){
         arrayte.sort(function(a,b){
-          return parseInt(a.name) - parseInt(b.name);
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         });
       }
       if (valor=="1"){
@@ -587,7 +587,7 @@ function graficar(json, clase){
       //aqui va algo
       if (valor=="0"){
         arraytv.sort(function(a,b){
-          return parseInt(a.name) - parseInt(b.name);
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         });
       }
       if (valor=="1"){
@@ -691,7 +691,7 @@ function graficar(json, clase){
       //aqui va algo
       if (valor=="0"){
         arraycant.sort(function(a,b){
-          return parseInt(a.name) - parseInt(b.name);
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         });
       }
       if (valor=="1"){

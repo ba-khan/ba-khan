@@ -34,7 +34,7 @@
 
 .widget {
     margin: 0 auto;
-    width:1200px;
+    width:1250px;
     margin-top:50px;
     background-color:#fff;
     -background-color: #222D3A;
@@ -52,7 +52,7 @@
     border-top-left-radius: 7px;
     border-top-right-radius: 7px;
     font-weight: 400;
-    font-size: 1.5em;
+    font-size: 1.2em;
     text-shadow: 1px 1px #fff;
     border-bottom: 1px solid #eaeaea;
 }
@@ -79,7 +79,7 @@
     <h2 align="center">Cursos</h2>
     <table class="testclass">
     <tr>
-      <th>Todos los cursos</th>
+      <th style="font-size: 1.2em;">Todos los cursos</th>
       <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
     </tr>
     {% for class in classes %}
@@ -491,6 +491,7 @@ function graficar(json, clase){
   }
 
   var dataq=arregloclase;
+  //console.log(dataq);
   //console.log(data.length);
 
   for (var i = 0; i < dataq.length; i++) {
@@ -517,7 +518,8 @@ function graficar(json, clase){
       var xData = ["A", "B", "C", "D", "E", "F", "G"];
       var margin = {top: 10, right: 25, bottom: 15, left: 0},
             width = 1200 - margin.left - margin.right,
-            height = 60 - margin.top - margin.bottom;
+            height = 15;
+            //height = 60 - margin.top - margin.bottom;
       var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], 0.09);
       var y = d3.scale.linear()
@@ -566,8 +568,8 @@ function graficar(json, clase){
                   return d;
               })
               .enter().append("rect")
-              .attr("x", function (d) {
-                  return x(d.x);
+              .attr("x", function (d, i) {
+                  return 6*i;
               })
               .attr("y", function (d) {
                   return y(d.y + d.y0);
@@ -575,13 +577,13 @@ function graficar(json, clase){
               .attr("height", function (d) {
                   return y(d.y0) - y(d.y + d.y0);
               })
-              .attr("width", x.rangeBand());
+              .attr("width", 5);
 
       svg.append("g")
               .attr("class", "axis")
-              .attr("transform", "translate(0," + height + ")")
-              .style("font-size", "6px")
-              .call(xAxis);
+              .attr("transform", "translate(0," + height + ")");
+              //.style("font-size", "6px")
+              //.call(xAxis);
     }
   }
 
@@ -752,10 +754,10 @@ function graficar(json, clase){
     });
 
     function sortTotal(valor){
-      //aqui va algo
       if (valor=="0"){
         arrayte.sort(function(a,b){
-          return parseInt(a.name) - parseInt(b.name);
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
+          //return a.name - b.name;
         });
       }
       if (valor=="1"){
@@ -863,10 +865,10 @@ function graficar(json, clase){
           }
     });
     function sortTotal(valor){
-      //aqui va algo
       if (valor=="0"){
         arraytv.sort(function(a,b){
-          return parseInt(a.name) - parseInt(b.name);
+          //return a.name - b.name;
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         });
       }
       if (valor=="1"){
@@ -969,10 +971,10 @@ function graficar(json, clase){
     });
 
     function sortTotal(valor){
-      //aqui va algo
       if (valor=="0"){
         arraycant.sort(function(a,b){
-          return parseInt(a.name) - parseInt(b.name);
+          //return a.name - b.name;
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         });
       }
       if (valor=="1"){
