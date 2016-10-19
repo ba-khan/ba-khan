@@ -34,7 +34,7 @@
 
 .widget {
     margin: 0 auto;
-    width:1250px;
+    width:1200px;
     margin-top:50px;
     background-color:#fff;
     -background-color: #222D3A;
@@ -489,8 +489,8 @@ function graficar(json, clase){
       }
     }
   }
-
-  var dataq=arregloclase;
+  try{
+   var dataq=arregloclase;
   //console.log(dataq);
   //console.log(data.length);
 
@@ -569,7 +569,7 @@ function graficar(json, clase){
               })
               .enter().append("rect")
               .attr("x", function (d, i) {
-                  return 6*i;
+                  return 5*i;
               })
               .attr("y", function (d) {
                   return y(d.y + d.y0);
@@ -585,6 +585,10 @@ function graficar(json, clase){
               //.style("font-size", "6px")
               //.call(xAxis);
     }
+  }   
+  }
+  catch(e){
+    console.log('no existe dataq')
   }
 
 /*
