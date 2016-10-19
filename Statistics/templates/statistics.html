@@ -79,8 +79,8 @@
     <h2 align="center">Cursos</h2>
     <table class="testclass">
     <tr>
-      <th style="font-size: 1.2em;">Todos los cursos</th>
-      <th style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
+      <th width="85%" style="font-size: 1.2em;">Todos los cursos</th>
+      <th width="15%" style="align-content:center;"><input type="checkbox" id="check_all_none"></th>
     </tr>
     {% for class in classes %}
     <tr>
@@ -173,8 +173,7 @@
 <div align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
 </div>
-<br>
-<p  align="center">La carga de datos puede demorar unos minutos.</p>
+
 <hr>
 <div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto;"  align="center"></div>
 <br>
@@ -206,7 +205,7 @@
 </select>
 </div>
 <div class="widget">
-    <div class="header">Habilidades</div>
+    <div class="header">Misiones</div>
     <div id="chart" class="chart-container">
 
     </div>
@@ -222,6 +221,8 @@
 </div>
 
   <div id="loading" class="profile-throbber">
+  <br>
+  <p align="center">La carga de datos puede demorar unos minutos.</p>
     <div class="throbber-grid">   
             <div class="throbber-row clearfix">
              <div class="block-0 throbber-block"></div>
