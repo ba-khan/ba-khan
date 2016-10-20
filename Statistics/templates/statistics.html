@@ -496,7 +496,7 @@ function graficar(json, clase){
   //console.log(data.length);
 
   for (var i = 0; i < dataq.length; i++) {
-    //console.log(curso=data[i][0][0]["curso"]); //nombre curso
+    //console.log(curso=dataq[i][0][0]["curso"]); //nombre curso
     var misiones = dataq[i];
     for (var j = 0; j < misiones.length; j++) {
       //console.log(misiones[j][0]["mision"]); //nombre mision
@@ -512,30 +512,31 @@ function graficar(json, clase){
         var F = habilidades[k]["F"];
         var G = habilidades[k]["G"];
         var mision = misiones[j][0]["mision"];
-        var curso = curso=data[i][0][0]["curso"];
+        var curso = dataq[i][0][0]["curso"]
         //console.log(habilidades[k]["id"]); //nombre habilidad
         //console.log(habilidades[k]["A"]); //total mastery 1 en habilidad
-        data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision}
+        data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso}
       }
       //console.log(data);
       var xData = ["A", "B", "C", "D", "E", "F", "G"];
-      var margin = {top: 10, right: 25, bottom: 15, left: 0},
+      var margin = {top: 0, right: 0, bottom: 0, left: 0},
             width = 1200 - margin.left - margin.right,
-            height = 15;
+            height = 20;
             //height = 60 - margin.top - margin.bottom;
       var x = d3.scale.ordinal()
             .rangeRoundBands([0, width], 0.09);
       var y = d3.scale.linear()
             .rangeRound([height, 0]);
       var color = d3.scale.ordinal()
-            .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#808080"]);
+            .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#B0B0B0"]);
       var xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom");
 
       var svg = d3.select("#chart").append("svg")
               .attr("width", width + margin.left + margin.right)
-              .attr("height", height + margin.top + margin.bottom)
+              //.attr("height", height + margin.top + margin.bottom)
+              .attr("height", height)
               .append("g")
               .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -565,11 +566,11 @@ function graficar(json, clase){
               .style("fill", function (d, i) {
                   return color(i);
               });
-      layer.append("text")
-              .text(mision)
+      /*layer.append("text")
+              .text(mision+" - "+curso)
               .style("font-size", "12px")
               .style("font-family", "Super Sans")
-              .style('fill', 'black');
+              .style('fill', 'black');*/
 
       layer.selectAll("rect")
               .data(function (d) {
