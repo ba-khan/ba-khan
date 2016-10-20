@@ -511,9 +511,11 @@ function graficar(json, clase){
         var E = habilidades[k]["E"];
         var F = habilidades[k]["F"];
         var G = habilidades[k]["G"];
+        var mision = misiones[j][0]["mision"];
+        var curso = curso=data[i][0][0]["curso"];
         //console.log(habilidades[k]["id"]); //nombre habilidad
         //console.log(habilidades[k]["A"]); //total mastery 1 en habilidad
-        data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G}
+        data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision}
       }
       //console.log(data);
       var xData = ["A", "B", "C", "D", "E", "F", "G"];
@@ -563,6 +565,11 @@ function graficar(json, clase){
               .style("fill", function (d, i) {
                   return color(i);
               });
+      layer.append("text")
+              .text(mision)
+              .style("font-size", "12px")
+              .style("font-family", "Super Sans")
+              .style('fill', 'black');
 
       layer.selectAll("rect")
               .data(function (d) {
