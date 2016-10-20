@@ -202,7 +202,7 @@ def getRoster(request):
         #a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
         #for b in a:
             #students.append(b)
-    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False

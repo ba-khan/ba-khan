@@ -39,7 +39,7 @@ def getAdministrators(request):
         return render_to_response('administrators.html', context_instance=RequestContext(request))
     administrators = Administrator.objects.filter(id_institution=teacher.id_institution_id).order_by('name')
     #print administrators
-    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False

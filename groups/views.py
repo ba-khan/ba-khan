@@ -30,7 +30,7 @@ from bakhanapp.models import Assesment_Config
 from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Subtopic_Video
 from bakhanapp.models import Grade,Skill,Student_Skill,Skill_Progress
-from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill,Group_Student
+from bakhanapp.models import Subject,Chapter,Topic,Subtopic,Subtopic_Skill,Group_Student, Administrator
 from groups.models import Group_Skill,Master_Group
 
 from configs import timeSleep

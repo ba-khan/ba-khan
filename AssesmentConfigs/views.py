@@ -15,7 +15,7 @@ from bakhanapp.models import Assesment_Skill,Class_Subject
 register = template.Library()
 
 from bakhanapp.models import Skill
-from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile
+from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile, Administrator
 from bakhanapp.views import getTopictree
 import json
 from configs import timeSleep
@@ -70,7 +70,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_data = json.dumps(json_dict)
     #print (json_data)
     topictree= getTopictree('math')
-    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False

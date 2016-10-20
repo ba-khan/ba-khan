@@ -12,7 +12,7 @@ from django.contrib import auth
 from django.db.models import Count
 
 from django import template
-from bakhanapp.models import Student, Class,Class_Subject
+from bakhanapp.models import Student, Class,Class_Subject, Administrator
 from bakhanapp.models import Student_Class
 from bakhanapp.models import Tutor
 from configs import timeSleep
@@ -48,7 +48,7 @@ def getContacts(request, id_class):
     classroom = Class.objects.filter(id_class=id_class)
     N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
     spanish_classroom = N[int(classroom[0].level)] +' '+ classroom[0].letter
-    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid,id_class_id=id_class)):
+    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid,id_class_id=id_class)):
         isTeacher = True
     else:
         isTeacher = False

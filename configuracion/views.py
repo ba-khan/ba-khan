@@ -48,7 +48,7 @@ def getSchedules(request):
         for i in range(len(teacher.classes)):
             teacher.classes[i].nivel = N[int(teacher.classes[i].level)] 
     class_schedule = Class_Schedule.objects.filter(kaid_teacher_id__in=teachers)
-    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False
