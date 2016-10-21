@@ -321,87 +321,7 @@ def selectStatistics(request):
 										class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]=q[1]
 									else:
 										class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
-						#print q[2]
-
-					#for st in students:
-					#	print st
-					#print habilidad
-					#for hab in habilidad:
-					#	longitud=len(class_json["misiones"])
-					#	for x in range(0,longitud-1):
-					#		longskill = len(class_json["misiones"][x]["habilidades"])
-					#		for y in range(0,longskill-1):
-					#			print hab
-								#print hab['id_student_skill_id__id_skill_name_id']
-								#if class_json["misiones"][x]["habilidades"][y]["id"]==hab['id_student_skill_id__id_skill_name_id']:
-									#print hab['id_student_skill_id__id_skill_name_id']
-									#class_json["misiones"][x]["habilidades"][y]["nivel"][hab["to_level"]]=hab['total']
-						#			class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]=class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]+1
-						#print hab
-					#selectskills = Subtopic_Skill.objects.filter(id_subtopic_name='abs-value-tutorial').values('id_skill_name_id')
-					#print selectskills
-					
-					#seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id='arithmetic').values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id')
-					#seleccion = Subtopic_Skill.objects.all().values('id_skill_name_id', 'id_subtopic_name_id__id_topic_name_id__id_chapter_name_id').order_by('id_subtopic_name_id__id_topic_name_id__id_chapter_name_id' )
-					'''
-					try:
-						set([x for x in seleccion['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'] if seleccion['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'].count(x)>1])
-
-						for selec in seleccion:
-							print selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id']
-					except Exception as e:
-						print "fallo"
-						print e
-					'''
-					#dictSelect=[]
-					#n=0
-					
-					#for selec in seleccion:
-					#	dictSelect.append(selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id'])
-						#n+=1
-					#print dictSelect
-					
-					#print [item for item, count in collections.Counter(dictSelect).items() if count>1]
-					#seen = set()
-					#uniq=[]
-					#for x in dictSelect:
-					#	if x not in seen:
-					#		uniq.append(x)
-					#		seen.add(x)
-					#uniq = [x for x in dictSelect not in seen and not seen.add(x)]
-					#print uniq
-					#print dictSelect
-					
-							#print selec['id_subtopic_name_id__id_topic_name_id__id_chapter_name_id']
-					
-					#progress = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__id_skill_name_id=13179375).values('to_level', 'id_student_skill_id__kaid_student_id', 'id_student_skill_id__id_skill_name_id').annotate(total=Count('id_student_skill_id'))
-					#print progress
-					#m=0
-					'''
-					for mision in misiones:
-						dictSkill={}
-						skill_mis={}
-						skills_array=[]
-						dictSkill["mision"]=mision['name_spanish']
-						topicos=Topic.objects.filter(id_chapter_name_id=mision['id_chapter_name']).exclude(index=None).values('id_topic_name')
-						#n=0
-						for topico in topicos:
-							subtopicos=Subtopic.objects.filter(id_topic_name_id=topico['id_topic_name']).exclude(index=None).values('id_subtopic_name')
-							for subtopico in subtopicos:
-								subtopic_skills=Subtopic_Skill.objects.filter(id_subtopic_name_id=subtopico['id_subtopic_name']).values('id_skill_name_id')
-								for sub_skill in subtopic_skills:
-									#skill[n]=sub_skill['id_skill_name_id']
-									#print skills_mis
-									skill_mis={'id': sub_skill['id_skill_name_id'], 'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
-									skills_array.append(skill_mis)
-									#n+=1
-						#print skill_mis
-						#skills.append(skill)
-						dictSkill["habilidades"]=skills_array
-						dictChapter.append(dictSkill)
-						#m+=1
-					'''
-					
+				
 					
 					for time in time_exercise:
 						dictTime[time['kaid_student_id']] = time['total_time']
@@ -448,42 +368,6 @@ def selectStatistics(request):
 						except:
 							student_json["total_ejercicios"] = 0
 						
-						#skill_array=[]
-						'''
-						for skill in skills:
-							#dictSkill = {}
-							k=0
-							if skill['kaid_student_id']==student.kaid_student:
-								studentskill = Student_Skill.objects.filter(kaid_student_id=student.kaid_student, id_skill_name_id=skill['id_skill_name_id']).values('id_student_skill', 'last_skill_progress', 'struggling')
-								progreso = Skill_Progress.objects.filter(id_student_skill_id=studentskill[0]["id_student_skill"], date__lte=fechahasta).values('to_level')
-								
-								dictSkillName = skill['id_skill_name_id']
-								try:
-									if studentskill[0]["struggling"] == True:
-										dictSkill = "struggling"
-									else:
-										dictSkill = progreso[0]["to_level"]
-								except:
-									if studentskill[0]["struggling"] == True:
-										dictSkill = "struggling"
-									else:
-										dictSkill = studentskill[0]["last_skill_progress"]										
-								#skill_array.append(dictSkill)
-								longitud=len(class_json["misiones"])
-								for x in range(0,longitud-1):
-									longskill = len(class_json["misiones"][x]["habilidades"])
-									for y in range(0,longskill-1):
-										if class_json["misiones"][x]["habilidades"][y]["id"]==dictSkillName:
-											class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]=class_json["misiones"][x]["habilidades"][y]["nivel"][dictSkill]+1
-								k+=1
-						
-						#student_json["habilidades"] = skill_array
-						
-						try:
-							student_json["habilidades"] = dictSkill[student.kaid_student]
-						except:
-							student_json["habilidades"] = "ninguno"
-						'''
 						i+=1
 						student_array.append(student_json)
 					class_json["students"]=student_array
