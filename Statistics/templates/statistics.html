@@ -207,7 +207,7 @@
 <div class="widget">
     <div class="header">Misiones</div>
     <div id="chart" class="chart-container">
-
+    
     </div>
 </div>
 </div>
@@ -465,10 +465,10 @@ function graficar(json, clase){
           }
           //console.log(valormision);
           arreglocurso[valormision]=datap;
+
           //console.log(arreglocurso)
           valormision++;
             //console.log(datap)
-          
         }
         catch(e){
           continue;
@@ -523,9 +523,9 @@ function graficar(json, clase){
             }
             //console.log(data);
             var xData = ["A", "B", "C", "D", "E", "F", "G"];
-            var margin = {top: 0, right: 0, bottom: 0, left: 0},
-                  width = 1200 - margin.left - margin.right,
-                  height = 20;
+            var margin = {top: 10, right: 0, bottom: 10, left: 0},
+            width = 1200 - margin.left - margin.right,
+            height = 15;
                   //height = 60 - margin.top - margin.bottom;
             var x = d3.scale.ordinal()
                   .rangeRoundBands([0, width], 0.09);
@@ -540,10 +540,9 @@ function graficar(json, clase){
             var svg = d3.select("#chart").append("svg")
                     .attr("width", width + margin.left + margin.right)
                     //.attr("height", height + margin.top + margin.bottom)
-                    .attr("height", height)
+                    .attr("height", height + margin.top + margin.bottom)
                     .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");       
 
             var dataIntermediate = xData.map(function (c) {
                 return data.map(function (d) {
@@ -570,6 +569,7 @@ function graficar(json, clase){
                     .style("fill", function (d, i) {
                         return color(i);
                     });
+
             layer.append("text")
                     .text(mision+" - "+curso)
                     .style("font-size", "12px")
@@ -597,6 +597,7 @@ function graficar(json, clase){
                     .attr("transform", "translate(0," + height + ")");
                     //.style("font-size", "6px")
                     //.call(xAxis);
+
           }
           
         }
