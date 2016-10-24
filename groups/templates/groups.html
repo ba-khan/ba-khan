@@ -67,7 +67,9 @@ function fillComboBox(){
 $(".comboBoxAvanzados").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 $(".comboBoxIntermedios").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
 $(".comboBoxReforzamiento").append("<OPTION VALUE=1>Seleccionar Tutor</OPTION>");
-$(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.nickname }}</OPTION>");
+$(".comboBoxAvanzados").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
+$(".comboBoxIntermedios").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
+$(".comboBoxReforzamiento").append("<OPTION VALUE=1>{{ request.user.username }}</OPTION>");
 var divs = document.querySelectorAll('.cuadradito');
    for (var i = 0; i < divs.length; i++) {
        var id1 = divs[i].getAttribute('id');
@@ -570,20 +572,20 @@ function initGroups(){
   {% if students %}
   {% for student in students %}
   {% if student.type == 'SinGrupo' %}
-  $("#SinGrupo").append("<div title='{{ student.nickname }}'  class='cuadradito' name='SinGrupo' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.nickname }}</div>");
+  $("#SinGrupo").append("<div title='{{ student.name }}'  class='cuadradito' name='SinGrupo' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
   {% endif%}
   {% if student.type == 'Reforzamiento' %}
-  $("#Reforzamiento").append("<div title='{{ student.nickname }}' class='cuadradito' name='Reforzamiento' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.nickname }}</div>");
+  $("#Reforzamiento").append("<div title='{{ student.name }}' class='cuadradito' name='Reforzamiento' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
   {% endif%}
   {% if student.type == 'Intermedios' %}
-  $("#Intermedios").append("<div title='{{ student.nickname }}' class='cuadradito' name='Intermedios' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.nickname }}</div>");
+  $("#Intermedios").append("<div title='{{ student.name }}' class='cuadradito' name='Intermedios' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
   {% endif%}
   {% if student.type == 'Avanzados' %}
-  $("#Avanzados").append("<div title='{{ student.nickname }}' class='cuadradito' name='Avanzados' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.nickname }}</div>");
+  $("#Avanzados").append("<div title='{{ student.name }}' class='cuadradito' name='Avanzados' id='{{ student.kaid_student }}' draggable='true' ondragstart='start(event)' ondragend='end(event)'>{{ student.name }}</div>");
   {% endif%}
   {% endfor %}
   {% endif %}
-  $("#SinGrupo").append("<div title='{{ request.user.nickname }}' id='{{ kaid_teacher }}' style='visibility: hidden;'></div>");
+  $("#SinGrupo").append("<div title='{{ request.user.username }}' id='{{ kaid_teacher }}' style='visibility: hidden;'></div>");
   $("#SinGrupo").append("<div title='Sin tutor' id='1' style='visibility: hidden;'></div>");
 
 };
