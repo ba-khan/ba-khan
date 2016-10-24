@@ -494,6 +494,7 @@ function graficar(json, clase){
     }
   }
   try{
+    var nombremision = 'sin nombre';
     var dataq=arregloclase;
     //console.log(mission);
     for (var t = 0; t < mission.length; t++) {
@@ -503,6 +504,7 @@ function graficar(json, clase){
         var misiones = dataq[i];
         for (var j = 0; j < misiones.length; j++) {
           //console.log(misiones[j][0]["mision"]); //nombre mision
+          
           if (mission[t]==misiones[j][0]["mision"]){
             var habilidades = misiones[j];
             var data=[];
@@ -521,9 +523,9 @@ function graficar(json, clase){
               //console.log(habilidades[k]["A"]); //total mastery 1 en habilidad
               data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso}
             }
-            //console.log(data);
+            //console.log(nombremision);
             var xData = ["A", "B", "C", "D", "E", "F", "G"];
-            var margin = {top: 10, right: 0, bottom: 10, left: 0},
+            var margin = {top: 10, right: 0, bottom: 0, left: 0},
             width = 1200 - margin.left - margin.right,
             height = 15;
                   //height = 60 - margin.top - margin.bottom;
@@ -569,12 +571,36 @@ function graficar(json, clase){
                     .style("fill", function (d, i) {
                         return color(i);
                     });
-
-            layer.append("text")
-                    .text(mision+" - "+curso)
+            /*console.log(nombremision);
+            console.log(misiones[j][0]["mision"]);
+            var comparacion = nombremision.localeCompare(misiones[j][0]["mision"]);
+            //console.log(comparacion);
+            if (comparacion==0){
+              //console.log(comparacion);
+              var nombremision = misiones[j][0]["mision"]+"";
+              layer.append("text")
+                    .text(mission[t])
                     .style("font-size", "12px")
                     .style("font-family", "Super Sans")
                     .style('fill', 'black');
+            }
+            else{
+
+            }*/
+            
+            if (nombremision==misiones[j][0]["mision"]){
+              //console.log(misiones[j][0]["mision"]);
+              nombremision = misiones[j][0]["mision"];
+            }
+            else{
+              //console.log(misiones[j][0]["mision"]);
+              layer.append("text")
+                    .text(mission[t])
+                    .style("font-size", "12px")
+                    .style("font-family", "Super Sans")
+                    .style('fill', 'black');
+              nombremision = misiones[j][0]["mision"];
+            }
 
             layer.selectAll("rect")
                     .data(function (d) {
