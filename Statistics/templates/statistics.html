@@ -523,10 +523,10 @@ function graficar(json, clase){
               //console.log(habilidades[k]["A"]); //total mastery 1 en habilidad
               data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso}
             }
-            //console.log(nombremision);
+
             var xData = ["A", "B", "C", "D", "E", "F", "G"];
             var margin = {top: 10, right: 0, bottom: 0, left: 0},
-            width = 1200 - margin.left - margin.right,
+            width = 1100 - margin.left - margin.right,
             height = 15;
                   //height = 60 - margin.top - margin.bottom;
             var x = d3.scale.ordinal()
@@ -564,6 +564,8 @@ function graficar(json, clase){
                 ])
               .nice();
 
+            //var texto = svg.selectAll('.bartext')
+
             var layer = svg.selectAll(".stack")
                     .data(dataStackLayout)
                     .enter().append("g")
@@ -571,34 +573,20 @@ function graficar(json, clase){
                     .style("fill", function (d, i) {
                         return color(i);
                     });
-            /*console.log(nombremision);
-            console.log(misiones[j][0]["mision"]);
-            var comparacion = nombremision.localeCompare(misiones[j][0]["mision"]);
-            //console.log(comparacion);
-            if (comparacion==0){
-              //console.log(comparacion);
-              var nombremision = misiones[j][0]["mision"]+"";
-              layer.append("text")
-                    .text(mission[t])
-                    .style("font-size", "12px")
-                    .style("font-family", "Super Sans")
-                    .style('fill', 'black');
-            }
-            else{
 
-            }*/
-            
             if (nombremision==misiones[j][0]["mision"]){
-              //console.log(misiones[j][0]["mision"]);
               nombremision = misiones[j][0]["mision"];
             }
             else{
-              //console.log(misiones[j][0]["mision"]);
-              layer.append("text")
+              var text = layer
+                    .append('text')
                     .text(mission[t])
-                    .style("font-size", "12px")
-                    .style("font-family", "Super Sans")
-                    .style('fill', 'black');
+                    //.style("font-size", "12px")
+                    //.style("font-family", "Super Sans")
+                    /*.attr("y", function(d,i){
+                      return (height*i);
+                    })*/
+                    .style('fill', 'black')
               nombremision = misiones[j][0]["mision"];
             }
 
@@ -608,7 +596,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 5*i;
+                        return 5*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -623,7 +611,7 @@ function graficar(json, clase){
                     .attr("transform", "translate(0," + height + ")");
                     //.style("font-size", "6px")
                     //.call(xAxis);
-
+                    
           }
           
         }
