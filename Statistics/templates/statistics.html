@@ -581,11 +581,7 @@ function graficar(json, clase){
               var text = layer
                     .append('text')
                     .text(mission[t])
-                    //.style("font-size", "12px")
-                    //.style("font-family", "Super Sans")
-                    /*.attr("y", function(d,i){
-                      return (height*i);
-                    })*/
+                    .attr("y", height)
                     .style('fill', 'black')
               nombremision = misiones[j][0]["mision"];
             }
@@ -610,12 +606,10 @@ function graficar(json, clase){
                     .append('text')
                     .text(curso)
                     .attr("x", 1050)
+                    .attr("y", height/2)
                     .style("font-size", "12px")
-                    .style("font-family", "Super Sans")
-                    /*.attr("y", function(d,i){
-                      return (height*i);
-                    })*/
-                    .style('fill', 'black')
+                    .style("font-family", "sans-serif")
+                    .style('fill', 'black');
 
             svg.append("g")
                     .attr("class", "axis")
