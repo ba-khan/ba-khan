@@ -525,8 +525,8 @@ function graficar(json, clase){
             }
 
             var xData = ["A", "B", "C", "D", "E", "F", "G"];
-            var margin = {top: 10, right: 0, bottom: 0, left: 0},
-            width = 1100 - margin.left - margin.right,
+            var margin = {top: 10, right: 200, bottom: 0, left: 0},
+            width = 1200 - margin.left - margin.right,
             height = 15;
                   //height = 60 - margin.top - margin.bottom;
             var x = d3.scale.ordinal()
@@ -596,7 +596,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 5*i+200;
+                        return 4*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -604,7 +604,18 @@ function graficar(json, clase){
                     .attr("height", function (d) {
                         return y(d.y0) - y(d.y + d.y0);
                     })
-                    .attr("width", 5);
+                    .attr("width", 4);
+
+            var textcurso = layer
+                    .append('text')
+                    .text(curso)
+                    .attr("x", 1050)
+                    .style("font-size", "12px")
+                    .style("font-family", "Super Sans")
+                    /*.attr("y", function(d,i){
+                      return (height*i);
+                    })*/
+                    .style('fill', 'black')
 
             svg.append("g")
                     .attr("class", "axis")
