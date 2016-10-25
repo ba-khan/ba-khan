@@ -17,7 +17,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Student_Skill
-from bakhanapp.models import Schedule, Chapter, Skill_Progress, Topic, Subtopic, Subtopic_Skill
+from bakhanapp.models import Schedule, Chapter, Skill_Progress, Topic, Subtopic, Subtopic_Skill, Skill
 from django.db import connection
 from django.db.models import Max
 
@@ -295,17 +295,13 @@ def selectStatistics(request):
 						dictSkill["mision"]=mision['name_spanish']
 						seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id=mision['id_chapter_name']).values('id_skill_name_id')
 						for selec in seleccion:
-							skills_mis={'id': selec['id_skill_name_id'], 'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
+							spanish_name = Skill.objects.filter(id_skill_name=selec['id_skill_name_id']).values('name_spanish')
+							#print spanish_name[0]['name_spanish']
+							skills_mis={'id': selec['id_skill_name_id'], 'nombre_skill':spanish_name[0]['name_spanish'],'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
 							skills_array.append(skills_mis)
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
 					class_json["misiones"]=dictChapter
-					#habilidad = Skill_Progress.objects.filter(id_student_skill_id__kaid_student_id__in=students, date__lte=fechahasta, id_student_skill_id__id_skill_name_id="3003").values('to_level', 'id_student_skill_id__id_skill_name_id').order_by('id_student_skill_id__id_skill_name_id').annotate(total=Count('to_level'))
-					
-					#sskill = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__kaid_student_id__in=students).values('id_student_skill_id')
-
-					#sattempt = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta], id_skill_name_id='3003').values('kaid_student_id').distinct('kaid_student_id')
-					#sskill = Skill_Progress.objects.filter(date__lte=fechahasta, id_student_skill_id__kaid_student_id__in=sattempt).values('id_student_skill_id').annotate(fecha=Max('date')).order_by('id_student_skill_id')
 
 					cursor = connection.cursor()
 					cursor.callproc("niveles", [int(curso), fechadesde, fechahasta])

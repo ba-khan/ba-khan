@@ -324,6 +324,7 @@ function crearEstadisticas(){
       data: {selclase, selhora, desde, hasta, radioselect},
         success: function(response){
           jsonResponse = JSON.parse(response);
+          //console.log(jsonResponse);
           hideDivMain();
           showDiv();
           $('#loading').hide()
@@ -450,7 +451,9 @@ function graficar(json, clase){
             var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
             var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
             var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
-            datap[p]={"id":id, "A":parseInt(M3*100/estudiantes.length), "B":parseInt(M2*100/estudiantes.length), "C":parseInt(M1*100/estudiantes.length), "D":parseInt(PR*100/estudiantes.length), "E":parseInt(UN*100/estudiantes.length), "F":parseInt(ST*100/estudiantes.length), "G":100-parseInt(M1*100/estudiantes.length)-parseInt(M2*100/estudiantes.length)-parseInt(M3*100/estudiantes.length)-parseInt(PR*100/estudiantes.length)-parseInt(UN*100/estudiantes.length)-parseInt(ST*100/estudiantes.length), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"]};
+            var nombre = misiones[m]["habilidades"][p]["nombre_skill"]
+            //console.log(nombre)
+            datap[p]={"id":id, "A":parseInt(M3*100/estudiantes.length), "B":parseInt(M2*100/estudiantes.length), "C":parseInt(M1*100/estudiantes.length), "D":parseInt(PR*100/estudiantes.length), "E":parseInt(UN*100/estudiantes.length), "F":parseInt(ST*100/estudiantes.length), "G":100-parseInt(M1*100/estudiantes.length)-parseInt(M2*100/estudiantes.length)-parseInt(M3*100/estudiantes.length)-parseInt(PR*100/estudiantes.length)-parseInt(UN*100/estudiantes.length)-parseInt(ST*100/estudiantes.length), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"], "nombre":nombre};
             //n++;
           }
           arreglocurso[valormision]=datap;
@@ -483,7 +486,6 @@ function graficar(json, clase){
   try{
     var nombremision = 'sin nombre';
     var dataq=arregloclase;
-    //console.log(mission);
     for (var t = 0; t < mission.length; t++) {
       //mission[i]
       for (var i = 0; i < dataq.length; i++) {
@@ -505,8 +507,10 @@ function graficar(json, clase){
               var F = habilidades[k]["F"];
               var G = habilidades[k]["G"];
               var mision = misiones[j][0]["mision"];
-              var curso = dataq[i][0][0]["curso"]
-              data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso}
+              var curso = dataq[i][0][0]["curso"];
+              var nombre = habilidades[k]["nombre"]
+              //console.log(nombre)
+              data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso, "nombre":nombre}
             }
 
             var xData = ["A", "B", "C", "D", "E", "F", "G"];
@@ -532,7 +536,7 @@ function graficar(json, clase){
 
             var dataIntermediate = xData.map(function (c) {
                 return data.map(function (d) {
-                    return {x: d.id, y: d[c]};
+                    return {x: d.id, y: d[c], nombre:d.nombre, A: d.A, B: d.B, C: d.C, D: d.D, E: d.E, F: d.F, G: d.G};
                 });
             });
 
@@ -570,6 +574,7 @@ function graficar(json, clase){
 
             layer.selectAll("rect")
                     .data(function (d) {
+                      //console.log(d);
                         return d;
                     })
                     .enter().append("rect")
@@ -582,8 +587,17 @@ function graficar(json, clase){
                     .attr("height", function (d) {
                         return y(d.y0) - y(d.y + d.y0);
                     })
-                    .attr("width", 4)
-                    .attr('class', 'layer');
+                    .attr("width", 4);
+            $('rect').tipsy({
+              gravity: $.fn.tipsy.autoNS,
+              opacity: 1,
+              html: true, 
+              title: function(){
+                var d = this.__data__;
+                tooltp =("<ul><li style='text-align:left;'><strong><font color='#000000'>Habilidad: </font>"+d.nombre+"</li><li style='text-align:left;'><strong><font color='#1C758A'>Dominado: </font>"+d.A+"%</li><li style='text-align:left;'><strong><font color='#29ABCA'>Nivel 2: </font>"+d.B+"%</li><li style='text-align:left;'><strong><font color='#58C4DD'>Nivel 1: </font>"+d.C+"%</li><li style='text-align:left;'><strong><font color='#9CDCEB'>Practicado: </font>"+d.D+"%</li><li style='text-align:left;'><strong><font color='#808080'>Necesita práctica: </font>"+d.E+"%</li><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>"+d.F+"%</li><li style='text-align:left;'><strong><font color='#B0B0B0'>Sin datos: </font>"+d.G+"%</li></strong></ul>");
+                return tooltp
+              }
+            });
 
             var textcurso = layer
                     .append('text')
