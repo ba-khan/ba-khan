@@ -180,6 +180,10 @@ def estadisticas(request):
 def superestad(request):
     return HttpResponseRedirect("/superestadisticas")
 
+@permission_required('bakhanapp.isSuper', login_url="/")
+def curriculum(request):
+    return HttpResponseRedirect("/curriculum")
+
 #@permission_required('bakhanapp.isAdmin',login_url="/")
 #def configuracionHorario(request):
 #    return HttpResponse("Administracion de Horarios")
