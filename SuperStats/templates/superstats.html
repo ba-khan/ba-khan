@@ -574,7 +574,7 @@ function graficar(json, clase){
 
             var dataIntermediate = xData.map(function (c) {
                 return data.map(function (d) {
-                    return {x: d.id, y: d[c], nombre:d.nombre, A: d.A, B: d.B, C: d.C, D: d.D, E: d.E, F: d.F, G: d.G};
+                    return {x: d.id, y: d[c], nombre:d.nombre, A: d.A, B: d.B, C: d.C, D: d.D, E: d.E, F: d.F, G: d.G, cur: d.cur};
                 });
             });
 
@@ -617,7 +617,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 5*i+200;
+                        return 4*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -625,14 +625,14 @@ function graficar(json, clase){
                     .attr("height", function (d) {
                         return y(d.y0) - y(d.y + d.y0);
                     })
-                    .attr("width", 5);
+                    .attr("width", 4);
             $('rect').tipsy({
               gravity: $.fn.tipsy.autoNS,
               opacity: 1,
               html: true, 
               title: function(){
                 var d = this.__data__;
-                tooltp =("<ul><li style='text-align:left;'><strong><font color='#000000'>Habilidad: </font>"+d.nombre+"</li><li style='text-align:left;'><strong><font color='#1C758A'>Dominado: </font>"+d.A+"%</li><li style='text-align:left;'><strong><font color='#29ABCA'>Nivel 2: </font>"+d.B+"%</li><li style='text-align:left;'><strong><font color='#58C4DD'>Nivel 1: </font>"+d.C+"%</li><li style='text-align:left;'><strong><font color='#9CDCEB'>Practicado: </font>"+d.D+"%</li><li style='text-align:left;'><strong><font color='#808080'>Necesita práctica: </font>"+d.E+"%</li><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>"+d.F+"%</li><li style='text-align:left;'><strong><font color='#B0B0B0'>Sin datos: </font>"+d.G+"%</li></strong></ul>");
+                tooltp =("<ul><li style='text-align:center;'><font color='#000000'>Curso: </font>"+d.cur+"</li><li style='text-align:left;'><strong><font color='#000000'>Habilidad: </font>"+d.nombre+"</li><li style='text-align:left;'><strong><font color='#1C758A'>Dominado: </font>"+d.A+"%</li><li style='text-align:left;'><strong><font color='#29ABCA'>Nivel 2: </font>"+d.B+"%</li><li style='text-align:left;'><strong><font color='#58C4DD'>Nivel 1: </font>"+d.C+"%</li><li style='text-align:left;'><strong><font color='#9CDCEB'>Practicado: </font>"+d.D+"%</li><li style='text-align:left;'><strong><font color='#808080'>Necesita práctica: </font>"+d.E+"%</li><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>"+d.F+"%</li><li style='text-align:left;'><strong><font color='#B0B0B0'>Sin datos: </font>"+d.G+"%</li></strong></ul>");
                 return tooltp
               }
             });
