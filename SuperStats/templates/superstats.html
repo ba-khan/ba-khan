@@ -492,7 +492,7 @@ function graficar(json, clase){
             var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
             var nombre = misiones[m]["habilidades"][p]["nombre_skill"]
             //console.log(nombre)
-            datap[p]={"id":id, "A":parseInt(M3*100/estudiantes.length), "B":parseInt(M2*100/estudiantes.length), "C":parseInt(M1*100/estudiantes.length), "D":parseInt(PR*100/estudiantes.length), "E":parseInt(UN*100/estudiantes.length), "F":parseInt(ST*100/estudiantes.length), "G":100-parseInt(M1*100/estudiantes.length)-parseInt(M2*100/estudiantes.length)-parseInt(M3*100/estudiantes.length)-parseInt(PR*100/estudiantes.length)-parseInt(UN*100/estudiantes.length)-parseInt(ST*100/estudiantes.length), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"], "nombre":nombre};
+            datap[p]={"id":id, "A":parseInt(M3*100/estudiantes.length), "B":parseInt(M2*100/estudiantes.length), "C":parseInt(M1*100/estudiantes.length), "D":parseInt(PR*100/estudiantes.length), "E":parseInt(UN*100/estudiantes.length), "F":parseInt(ST*100/estudiantes.length), "G":100-parseInt(M1*100/estudiantes.length)-parseInt(M2*100/estudiantes.length)-parseInt(M3*100/estudiantes.length)-parseInt(PR*100/estudiantes.length)-parseInt(UN*100/estudiantes.length)-parseInt(ST*100/estudiantes.length), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"], "establecimiento":clase[i]["establecimiento"],"nombre":nombre};
             //n++;
           }
           arreglocurso[valormision]=datap;
@@ -546,9 +546,10 @@ function graficar(json, clase){
               var G = habilidades[k]["G"];
               var mision = misiones[j][0]["mision"];
               var curso = dataq[i][0][0]["curso"];
-              var nombre = habilidades[k]["nombre"]
+              var nombre = habilidades[k]["nombre"];
+              var establecimiento = dataq[i][0][0]["establecimiento"];
               //console.log(nombre)
-              data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso, "nombre":nombre}
+              data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso+" - "+establecimiento, "nombre":nombre}
             }
 
             var xData = ["A", "B", "C", "D", "E", "F", "G"];
