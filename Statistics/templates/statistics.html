@@ -579,7 +579,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 4*i+200;
+                        return 5*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -587,7 +587,7 @@ function graficar(json, clase){
                     .attr("height", function (d) {
                         return y(d.y0) - y(d.y + d.y0);
                     })
-                    .attr("width", 4);
+                    .attr("width", 5);
             $('rect').tipsy({
               gravity: $.fn.tipsy.autoNS,
               opacity: 1,

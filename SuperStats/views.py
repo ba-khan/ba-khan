@@ -17,7 +17,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
-from bakhanapp.models import Schedule
+from bakhanapp.models import Schedule, Chapter, Skill_Progress, Topic, Subtopic, Subtopic_Skill, Skill
 from django.db import connection
 
 register = template.Library()
@@ -270,6 +270,43 @@ def selectSuperStats(request):
 								class_json["establecimiento"]='R.A.P.'
 							if idinst[0]['name']=="Liceo Gabriela Mistral":
 								class_json["establecimiento"]='G.M.'
+
+							
+							misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+							dictChapter=[]
+							
+							dictHab={}
+							chapts=[]
+
+							for mision in misiones:
+								dictSkill={}
+								skills_mis={}
+								skills_array=[]
+								dictSkill["mision"]=mision['name_spanish']
+								seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id=mision['id_chapter_name']).values('id_skill_name_id')
+								spanish_name = Skill.objects.filter(id_skill_name__in=seleccion)
+								for selec in spanish_name:
+									#spanish_name = Skill.objects.filter(id_skill_name=selec['id_skill_name_id']).values('name_spanish')
+									skills_mis={'id': selec.id_skill_name, 'nombre_skill':selec.name_spanish,'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
+									skills_array.append(skills_mis)
+								dictSkill["habilidades"]=skills_array
+								dictChapter.append(dictSkill)
+							class_json["misiones"]=dictChapter
+							
+							cursor = connection.cursor()
+							cursor.callproc("niveles", [int(newcurso[1]), fechadesde, fechahasta])
+							query = cursor.fetchall()
+
+							for q in query:
+								longitud=len(class_json["misiones"])
+								for x in range(0, longitud-1):
+									longskill=len(class_json["misiones"][x]["habilidades"])
+									for y in range(0,longskill-1):
+										if class_json["misiones"][x]["habilidades"][y]["id"]==q[2]:
+											if q[3]==True:
+												class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]=q[1]
+											else:
+												class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
 							
 							for time in time_exercise:
 								dictTime[time['kaid_student_id']] = time['total_time']

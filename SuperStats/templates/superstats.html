@@ -20,6 +20,55 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
 <!--<script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>!-->
 
+<style type="text/css">
+  .chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 13px;
+  margin: 1px;
+  color: white;
+}
+
+.widget {
+    margin: 0 auto;
+    width:1200px;
+    margin-top:50px;
+    background-color:#fff;
+    -background-color: #222D3A;
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px 0px rgba(0,0,0,0.3);
+
+}
+
+.header{
+    background-color: #eee;
+    height:40px;
+    color:#555;
+    text-align: center;
+    line-height: 40px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    font-weight: 400;
+    font-size: 1.2em;
+    text-shadow: 1px 1px #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.chart-container{
+    padding:25px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+}
+
+</style>
+
 <br>
 <div class="principal" style="background-color: #f7f7f7;height: 500px;">
 <br>
@@ -125,6 +174,12 @@
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
 </select>
+</div>
+<div class="widget">
+    <div class="header">Misiones</div>
+    <div id="chart" class="chart-container">
+    
+    </div>
 </div>
 </div>
 
@@ -331,9 +386,11 @@ function graficar(json, clase){
   var serietpo=[];
   var serievid=[];
   var j;
+  var mission=[];
   if(json["clases"]){
     var clase = json["clases"]
     var colorcolumn=[];
+    var arregloclase=[];
     for (var i=0;i<clase.length;i++){
       var datosest=[];
       var tpoest=[];
@@ -384,6 +441,69 @@ function graficar(json, clase){
 
       arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre}
       serie[i]={"name":nombre, "id":nombre, "data":datosest};
+
+      var arrayskill;
+      var misiones = clase[i]["misiones"];
+      //data=[];
+      
+      for (var k=0;k<misiones.length;k++){
+        arrayskill = false;
+        var habilidades=misiones[k]["habilidades"]
+        for (var l=0;l<habilidades.length;l++){
+          var maestria1=habilidades[l]["nivel"]["mastery1"];
+          var maestria2=habilidades[l]["nivel"]["mastery2"];
+          var dominado=habilidades[l]["nivel"]["mastery3"];
+          var practicado=habilidades[l]["nivel"]["practiced"];
+          var noempezado=habilidades[l]["nivel"]["unstarted"];
+          var enproblemas=habilidades[l]["nivel"]["struggling"];
+          if (maestria1>0 || maestria2>0 || dominado>0 || practicado>0 || noempezado>0 || enproblemas>0){
+            arrayskill=true;
+          }
+        }
+        if (arrayskill===false){
+          delete misiones[k];
+        }
+        /*else{
+          console.log(misiones[k]["mision"])
+        }*/
+      }
+
+      var valormision=0;
+      var arreglocurso=[];
+      for (var m=0;m<misiones.length;m++){
+        try{
+          var largo=misiones[m]["habilidades"].length
+          //datos[0][n]=largo;
+          //datos[1][n]=curso;
+          //console.log(misiones[m]["mision"])
+          if (mission.indexOf(misiones[m]["mision"])===-1){
+            mission.push(misiones[m]["mision"])
+          }
+          //datos[2][n]=misiones[m]["mision"];
+          //n++;
+          var datap=[];
+          for (var p=0;p<largo;p++){
+            var id = misiones[m]["habilidades"][p]["id"]
+            var M3 = misiones[m]["habilidades"][p]["nivel"]["mastery3"]
+            var M2 = misiones[m]["habilidades"][p]["nivel"]["mastery2"]
+            var M1 = misiones[m]["habilidades"][p]["nivel"]["mastery1"]
+            var PR = misiones[m]["habilidades"][p]["nivel"]["practiced"]
+            var UN = misiones[m]["habilidades"][p]["nivel"]["unstarted"]
+            var ST = misiones[m]["habilidades"][p]["nivel"]["struggling"]
+            var nombre = misiones[m]["habilidades"][p]["nombre_skill"]
+            //console.log(nombre)
+            datap[p]={"id":id, "A":parseInt(M3*100/estudiantes.length), "B":parseInt(M2*100/estudiantes.length), "C":parseInt(M1*100/estudiantes.length), "D":parseInt(PR*100/estudiantes.length), "E":parseInt(UN*100/estudiantes.length), "F":parseInt(ST*100/estudiantes.length), "G":100-parseInt(M1*100/estudiantes.length)-parseInt(M2*100/estudiantes.length)-parseInt(M3*100/estudiantes.length)-parseInt(PR*100/estudiantes.length)-parseInt(UN*100/estudiantes.length)-parseInt(ST*100/estudiantes.length), "mision":misiones[m]["mision"], "curso":clase[i]["nombre"], "nombre":nombre};
+            //n++;
+          }
+          arreglocurso[valormision]=datap;
+
+          valormision++;
+        }
+        catch(e){
+          continue;
+        }
+      }
+      arregloclase[i]=arreglocurso;
     }
   }
   else{
@@ -399,6 +519,144 @@ function graficar(json, clase){
         arraycant[j]=[name, cantidad]
       }
     }
+  }
+  
+  try{
+    var nombremision = 'sin nombre';
+    var dataq=arregloclase;
+    for (var t = 0; t < mission.length; t++) {
+      //mission[i]
+      for (var i = 0; i < dataq.length; i++) {
+        //console.log(curso=dataq[i][0][0]["curso"]); //nombre curso
+        var misiones = dataq[i];
+        for (var j = 0; j < misiones.length; j++) {
+          //console.log(misiones[j][0]["mision"]); //nombre mision
+          
+          if (mission[t]==misiones[j][0]["mision"]){
+            var habilidades = misiones[j];
+            var data=[];
+            for (var k = 0; k < habilidades.length; k++) {
+              var id = habilidades[k]["id"];
+              var A = habilidades[k]["A"];
+              var B = habilidades[k]["B"];
+              var C = habilidades[k]["C"];
+              var D = habilidades[k]["D"];
+              var E = habilidades[k]["E"];
+              var F = habilidades[k]["F"];
+              var G = habilidades[k]["G"];
+              var mision = misiones[j][0]["mision"];
+              var curso = dataq[i][0][0]["curso"];
+              var nombre = habilidades[k]["nombre"]
+              //console.log(nombre)
+              data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso, "nombre":nombre}
+            }
+
+            var xData = ["A", "B", "C", "D", "E", "F", "G"];
+            var margin = {top: 10, right: 200, bottom: 0, left: 0},
+            width = 1200 - margin.left - margin.right,
+            height = 15;
+                  //height = 60 - margin.top - margin.bottom;
+            var x = d3.scale.ordinal()
+                  .rangeRoundBands([0, width], 0.09);
+            var y = d3.scale.linear()
+                  .rangeRound([height, 0]);
+            var color = d3.scale.ordinal()
+                  .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#B0B0B0"]);
+            var xAxis = d3.svg.axis()
+                  .scale(x)
+                  .orient("bottom");
+
+            var svg = d3.select("#chart").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");       
+
+            var dataIntermediate = xData.map(function (c) {
+                return data.map(function (d) {
+                    return {x: d.id, y: d[c], nombre:d.nombre, A: d.A, B: d.B, C: d.C, D: d.D, E: d.E, F: d.F, G: d.G};
+                });
+            });
+
+            var dataStackLayout = d3.layout.stack()(dataIntermediate);
+
+            x.domain(dataStackLayout[0].map(function (d) {
+                return d.x;
+            }));
+
+            y.domain([0,
+                d3.max(dataStackLayout[dataStackLayout.length - 1],
+                        function (d) { return d.y0 + d.y;})
+                ])
+              .nice();
+
+            var layer = svg.selectAll(".stack")
+                    .data(dataStackLayout)
+                    .enter().append("g")
+                    .attr("class", "stack")
+                    .style("fill", function (d, i) {
+                        return color(i);
+                    });
+
+            if (nombremision==misiones[j][0]["mision"]){
+              nombremision = misiones[j][0]["mision"];
+            }
+            else{
+              var text = layer
+                    .append('text')
+                    .text(mission[t])
+                    .attr("y", height)
+                    .style('fill', 'black')
+              nombremision = misiones[j][0]["mision"];
+            }
+
+            layer.selectAll("rect")
+                    .data(function (d) {
+                      //console.log(d);
+                        return d;
+                    })
+                    .enter().append("rect")
+                    .attr("x", function (d, i) {
+                        return 5*i+200;
+                    })
+                    .attr("y", function (d) {
+                        return y(d.y + d.y0);
+                    })
+                    .attr("height", function (d) {
+                        return y(d.y0) - y(d.y + d.y0);
+                    })
+                    .attr("width", 5);
+            $('rect').tipsy({
+              gravity: $.fn.tipsy.autoNS,
+              opacity: 1,
+              html: true, 
+              title: function(){
+                var d = this.__data__;
+                tooltp =("<ul><li style='text-align:left;'><strong><font color='#000000'>Habilidad: </font>"+d.nombre+"</li><li style='text-align:left;'><strong><font color='#1C758A'>Dominado: </font>"+d.A+"%</li><li style='text-align:left;'><strong><font color='#29ABCA'>Nivel 2: </font>"+d.B+"%</li><li style='text-align:left;'><strong><font color='#58C4DD'>Nivel 1: </font>"+d.C+"%</li><li style='text-align:left;'><strong><font color='#9CDCEB'>Practicado: </font>"+d.D+"%</li><li style='text-align:left;'><strong><font color='#808080'>Necesita práctica: </font>"+d.E+"%</li><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>"+d.F+"%</li><li style='text-align:left;'><strong><font color='#B0B0B0'>Sin datos: </font>"+d.G+"%</li></strong></ul>");
+                return tooltp
+              }
+            });
+
+            var textcurso = layer
+                    .append('text')
+                    .text(curso)
+                    .attr("x", 1050)
+                    .attr("y", height/2)
+                    .style("font-size", "12px")
+                    .style("font-family", "sans-serif")
+                    .style('fill', 'black');
+
+            svg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(0," + height + ")");
+
+          }
+        }
+      }
+    }
+}
+  catch(e){
+    console.log(e);
   }
   $(function () {
     Highcharts.setOptions({

@@ -294,9 +294,10 @@ def selectStatistics(request):
 						skills_array=[]
 						dictSkill["mision"]=mision['name_spanish']
 						seleccion = Subtopic_Skill.objects.filter(id_subtopic_name_id__id_topic_name_id__id_chapter_name_id=mision['id_chapter_name']).values('id_skill_name_id')
-						for selec in seleccion:
-							spanish_name = Skill.objects.filter(id_skill_name=selec['id_skill_name_id']).values('name_spanish')
-							skills_mis={'id': selec['id_skill_name_id'], 'nombre_skill':spanish_name[0]['name_spanish'],'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
+						spanish_name = Skill.objects.filter(id_skill_name__in=seleccion)
+						for selec in spanish_name:
+							#spanish_name = Skill.objects.filter(id_skill_name=selec['id_skill_name_id']).values('name_spanish')
+							skills_mis={'id': selec.id_skill_name, 'nombre_skill':selec.name_spanish,'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
 							skills_array.append(skills_mis)
 						dictSkill["habilidades"]=skills_array
 						dictChapter.append(dictSkill)
