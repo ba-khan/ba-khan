@@ -115,28 +115,36 @@
 <br>
     <div style="float:left;width:100%" align="center">
     <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
+    <input type="button" id="button_last" onClick="mostrarLastChart()" class="kui-button kui-button-plain kui-button-primary" value="Volver a última búsqueda">
   </div>
 </div>
-
-  <div id="loading" class="profile-throbber">
-    <div class="throbber-grid">   
+  <div id="loading" class="popup" style="display:none">
+      <div style="align:left;">
+        <p class="response">Cargando los gráficos, esto puede demorar unos minutos</p>
+        <div style="display: none;" id="profile-throbber2" class="profile-throbber">
+        <div class="throbber-grid">   
+            <!--[if lte IE 9]>
+            <img class="throbber-fallback" src="/images/throbber-full.gif" />
+            <![endif]-->
             <div class="throbber-row clearfix">
-             <div class="block-0 throbber-block"></div>
-             <div class="block-1 throbber-block"></div>
-             <div class="block-2 throbber-block"></div>
+                 <div class="block-0 throbber-block"></div>
+                 <div class="block-1 throbber-block"></div>
+                 <div class="block-2 throbber-block"></div>
+            </div>
+            <div class="throbber-row clearfix">
+                 <div class="block-7 throbber-block"></div>
+                 <div class="block-8 throbber-block"></div>
+                 <div class="block-3 throbber-block"></div>
+            </div>
+            <div class="throbber-row clearfix">
+                 <div class="block-6 throbber-block"></div>
+                 <div class="block-5 throbber-block"></div>
+                 <div class="block-4 throbber-block"></div>
+            </div>
         </div>
-        <div class="throbber-row clearfix">
-             <div class="block-7 throbber-block"></div>
-             <div class="block-8 throbber-block"></div>
-             <div class="block-3 throbber-block"></div>
-        </div>
-        <div class="throbber-row clearfix">
-             <div class="block-6 throbber-block"></div>
-             <div class="block-5 throbber-block"></div>
-             <div class="block-4 throbber-block"></div>
-        </div>
+      </div>
+      </div>
     </div>
-  </div>
 
 
 
@@ -206,9 +214,11 @@
     //console.log(tree);
     $('#contenedor').jstree(tree);
     //drawNiceScrolls();
-    $('#loading').hide()
+    //$('#loading').hide()
+    stoploading();
     $('.graphics').hide();
     $('#testsched').hide();
+    $('#button_last').hide();
       $("#hover").click(function(){
           $(this).fadeOut();
           $("#popup").fadeOut();
@@ -216,7 +226,17 @@
         });
 
 
+function loading(){
+      $('#popup_evaluacion').show();
+      $('#hover').show();
+      $('#profile-throbber2').show();
+    }
 
+function stoploading(){
+      $('#popup_evaluacion').hide();
+      $('#hover').hide();
+      $('#profile-throbber2').hide();
+}
 
 $('#estadisticas').addClass('active selected');
 
@@ -302,6 +322,11 @@ function containerShow(){
   //drawNiceScrolls();
 }
 
+function mostrarLastChart(){
+  hideDivMain();
+  showDiv();
+}
+
 function crearEstadisticas(){
   validar();
   var selhorario=[];
@@ -328,7 +353,8 @@ function crearEstadisticas(){
       return $(el).val();
     }).get();
   }
-  $('#loading').show()
+  //$('#loading').show()
+  loading();
   if (validar() && selcurso.length>0 && radioselect){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
@@ -343,7 +369,8 @@ function crearEstadisticas(){
             hideDivMain();
             showDiv();
             //console.log(response);
-            $('#loading').hide()
+            //$('#loading').hide()
+            stoploading();
             graficar(jsonResponse, selinst);
           }
       });
@@ -357,7 +384,8 @@ function crearEstadisticas(){
             jsonResponse = JSON.parse(response);
             hideDivMain();
             showDiv();
-            $('#loading').hide()
+            //$('#loading').hide()
+            stoploading();
             graficarcompara(jsonResponse, selinst);
           }
       });
