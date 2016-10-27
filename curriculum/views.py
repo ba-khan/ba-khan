@@ -37,8 +37,8 @@ from datetime import datetime, timedelta
 @permission_required('bakhanapp.isSuper', login_url="/")
 def getCurriculum(request):
 	request.session.set_expiry(timeSleep)
-	#chapter = Chapter_Mineduc.objects.all()
-	return render_to_response('curriculum.html')
+	chapter = Chapter_Mineduc.objects.all()
+	return render_to_response('curriculum.html', { 'chapter':chapter} ,context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newChapter(request):
