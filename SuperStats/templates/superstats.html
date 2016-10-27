@@ -646,7 +646,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 4*i+200;
+                        return 5*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -668,11 +668,11 @@ function graficar(json, clase){
 
             var textcurso = layer
                     .append('text')
-                    .text(curso)
-                    .attr("x", 1050)
+                    .text(curso+' - '+establecimiento)
+                    .attr("x", 1000)
                     .attr("y", height/2)
                     .style("font-size", "12px")
-                    .style("font-family", "sans-serif")
+                    //.style("font-family", "sans-serif")
                     .style('fill', 'black');
 
             svg.append("g")
