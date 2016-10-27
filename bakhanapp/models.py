@@ -351,3 +351,38 @@ class Skill_Log(models.Model):
     incorrect =  models.IntegerField(null=True)
     id_grade = models.ForeignKey(Grade)
     skill_progress = models.CharField(max_length=20)
+
+class Chapter_Mineduc(models.Model):
+    id_chapter_mineduc = models.AutoField(primary_key=True)
+    index = models.IntegerField()
+    name = models.CharField(max_length=50)
+       
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
+class Topic_Mineduc(models.Model):
+    id_topic_mineduc = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    id_chapter = models.ForeignKey(Chapter_Mineduc)
+    index = models.IntegerField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
+class Subtopic_Mineduc(models.Model):
+    id_subtopic_mineduc = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    id_topic = models.ForeignKey(Topic_Mineduc)
+    AE_OE = models.CharField(max_length=200)
+    index = models.IntegerField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
+class Subtopic_Skill_Mineduc(models.Model):
+    id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
+    id_skill_name = models.ForeignKey(Skill)
+    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    
+    class Meta:
+        unique_together = ('id_skill_name', 'id_subtopic_mineduc')

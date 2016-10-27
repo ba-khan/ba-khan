@@ -183,7 +183,7 @@ input{
 			<label for='block'>Bloque: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="block" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
 			<label for='start'>Hora inicio: </label><input id="newStart" onchange="validar()" onkeyup="validar()" type="time" name="start" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="23"><br>
 			<label for='end'>Hora fin: </label><input id="newEnd" onchange="validar()" onkeyup="validar()" type="time" name="end" class="ui-corner-all placeholder simple-input search-input blur-on-esc" min="0" max="59"><br>
-			<a onclick='javascript:location.reload();' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+			<a onclick='javascript:hideNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
 			<a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
 		</form>
 	</div>
@@ -378,6 +378,11 @@ function showNewSchedule(){
 	$('#newSchedule').toggle('blind',10);
 	$('#buttonNewSchedule').hide();
 	}
+
+function hideNewSchedule(){
+  $('#newSchedule').toggle('blind',10);
+  $('#buttonNewSchedule').show();
+  }
 
 function saveNewSchedule(){
 	$("#acceptDelete").remove();
