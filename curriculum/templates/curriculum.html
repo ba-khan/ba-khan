@@ -6,6 +6,13 @@
 
 {% block body2 %}
 
+<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
@@ -167,29 +174,78 @@ input{
 
   <br>
   <h1 style="text-align:center;">Curriculum MINEDUC</h1>
-  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewSchedule()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Misión o Capítulo</button> </div>
+  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewSchedule' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Misión o Capítulo</button> </div>
 
   <div id="newSchedule">
     <form action="" method="post" id="form0">{% csrf_token %}
       <h3>Nueva Misión  o Capítulo</h3>
-      <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="block" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-      <a onclick='javascript:hideNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-      <a onclick='javascript:saveNewSchedule()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
+      <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <a onclick='javascript:hideNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+      <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
     </form>
   </div>
 </div>
 </div>
 
+<div id="popup" style="display:none">
+  <div id="close">X</div>
+</div>
+
 <script type="text/javascript">
-  function showNewSchedule(){
+  function showNewChapter(){
   $('#newSchedule').toggle('blind',10);
   $('#buttonNewSchedule').hide();
   }
 
-  function hideNewSchedule(){
+  function hideNewChapter(){
   $('#newSchedule').toggle('blind',10);
   $('#buttonNewSchedule').show();
   }
+
+  function saveNewChapter(){
+  $("#acceptDelete").remove();
+  $("#cancelDelete").remove();
+  $('.response').remove();
+  $('.question').remove();
+  if(validar()){
+    $.ajax({
+    url: "{% url 'curriculum:nuevo_chapter' %}",
+    type: "POST",
+    data: $("#form0").serialize(),
+      success: function(response){
+        $("#popup").empty()
+        $("#close").hide();
+        $("#hover").fadeIn();
+        $("#popup").fadeIn();
+        $("#popup").append("<p class='response'>"+response+"</p>");
+        auxResponse = response;
+        console.log(auxResponse)
+        if (auxResponse == "Chapter guardado correctamente"){
+          $("#hover").css('pointer-events','none');
+          $("#close").css('pointer-events','none');
+          window.setTimeout(function(){location.reload()},1000);
+        }
+      }
+    });
+  }else{
+    $("#popup").empty()
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+  }
+}
+
+function validar(){
+  flag = true;
+  nName = document.getElementById("newName").value;
+  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+    $("#newName").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newName").css('color', '#000000');
+  }
+  return flag;
+}
 </script>
 
 {% endblock %}

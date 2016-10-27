@@ -93,8 +93,6 @@ def newSchedule(request):
     if request.method == 'POST':
         args = request.POST
         try:
-            #falta validar que los bloques no se solapen
-
             result=validateTime(args['start'], args['end'], user.id_institution_id, args['block'])
             if not all(result):
                 return HttpResponse("Los horarios no se pueden solapar, revise las horas")
