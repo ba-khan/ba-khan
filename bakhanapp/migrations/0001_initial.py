@@ -65,6 +65,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Chapter_Mineduc',
+            fields=[
+                ('id_chapter_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('index', models.IntegerField()),
+                ('name', models.CharField(max_length=50)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Class',
             fields=[
                 ('id_class', models.AutoField(serialize=False, primary_key=True)),
@@ -272,11 +280,28 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Subtopic_Mineduc',
+            fields=[
+                ('id_subtopic_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+                ('AE_OE', models.CharField(max_length=200)),
+                ('index', models.IntegerField()),
+            ],
+        ),
+        migrations.CreateModel(
             name='Subtopic_Skill',
             fields=[
                 ('id_subtopic_skill', models.AutoField(serialize=False, primary_key=True)),
                 ('id_skill_name', models.ForeignKey(to='bakhanapp.Skill')),
                 ('id_subtopic_name', models.ForeignKey(to='bakhanapp.Subtopic')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Subtopic_Skill_Mineduc',
+            fields=[
+                ('id_subtopic_skill_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('id_skill_name', models.ForeignKey(to='bakhanapp.Skill')),
+                ('id_subtopic_mineduc', models.ForeignKey(to='bakhanapp.Subtopic_Mineduc')),
             ],
         ),
         migrations.CreateModel(
@@ -302,6 +327,15 @@ class Migration(migrations.Migration):
                 ('name_spanish', models.CharField(max_length=150)),
                 ('index', models.IntegerField()),
                 ('id_chapter_name', models.ForeignKey(to='bakhanapp.Chapter')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Topic_Mineduc',
+            fields=[
+                ('id_topic_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('name', models.CharField(max_length=50)),
+                ('index', models.IntegerField()),
+                ('id_chapter', models.ForeignKey(to='bakhanapp.Chapter_Mineduc')),
             ],
         ),
         migrations.CreateModel(
@@ -347,6 +381,11 @@ class Migration(migrations.Migration):
             model_name='subtopic_video',
             name='id_video_name',
             field=models.ForeignKey(to='bakhanapp.Video'),
+        ),
+        migrations.AddField(
+            model_name='subtopic_mineduc',
+            name='id_topic',
+            field=models.ForeignKey(to='bakhanapp.Topic_Mineduc'),
         ),
         migrations.AddField(
             model_name='subtopic',
@@ -456,6 +495,10 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='subtopic_video',
             unique_together=set([('id_video_name', 'id_subtopic_name')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='subtopic_skill_mineduc',
+            unique_together=set([('id_skill_name', 'id_subtopic_mineduc')]),
         ),
         migrations.AlterUniqueTogether(
             name='subtopic_skill',
