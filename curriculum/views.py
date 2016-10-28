@@ -38,31 +38,32 @@ from datetime import datetime, timedelta
 def getCurriculum(request):
 	request.session.set_expiry(timeSleep)
 	chapter = Chapter_Mineduc.objects.all()
-	return render_to_response('curriculum.html', { 'chapter':chapter} ,context_instance=RequestContext(request))
+	topic = Topic_Mineduc.objects.all()
+	return render_to_response('curriculum.html', { 'chapter':chapter, 'topic':topic} ,context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newChapter(request):
-	#print "entro a newchapter"
 	request.session.set_expiry(timeSleep)
-	#user = Teacher.objects.get(email=request.user.email)
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			#print args['name']
 			Chapter_Mineduc.objects.create(name=args['name'])
 			return HttpResponse('Chapter guardado correctamente')
-			#falta validar que los bloques no se solapen
-			'''
-			result=validateTime(args['start'], args['end'], user.id_institution_id, args['block'])
-			if not all(result):
-			return HttpResponse("Los horarios no se pueden solapar, revise las horas")
-			else:
-			Schedule.objects.create(name_block=args['block'],
-			start_time=args['start'],
-			end_time=args['end'],
-			id_institution_id=user.id_institution_id)
-			return HttpResponse("Bloque guardado correctamente")    
-			''' 
+
+		except Exception as e:
+			print e
+			return HttpResponse("Error al guardar")
+	return HttpResponse("Error al guardar")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def newTopic(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		args = request.POST
+		try:
+			print args
+			#Topic_Mineduc.objects.create(name=args['name'])
+			return HttpResponse('Topic guardado correctamente')
 		except Exception as e:
 			print e
 			return HttpResponse("Error al guardar")
