@@ -219,9 +219,9 @@ input{
     </tr>
     {% for chap in chapter %}
     <tr id="R{{ forloop.counter }}">
-      <td rowspan="{{chap|length}}" id="CH{{ forloop.counter}}">{% if chap.name == None %}{{ "" }}{% else %}{{ chap.name }}{% endif %}</td>
+      <td rowspan="{{chap|length}}" id="CH{{ chap.id_chapter_mineduc }}">{% if chap.name == None %}{{ "" }}{% else %}{{ chap.name }}{% endif %}</td>
       <td class="editablegrid-action" data-title="action" style="width:100px;">
-        <a onclick="javascript:addTopic({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>
+        <a onclick="javascript:addTopic({{ chap.id_chapter_mineduc }})" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>
       </td>
     </tr>
     {% endfor %}
@@ -307,8 +307,17 @@ function saveNewTopic(t){
       type: "POST",
       data: {form:$('#form1').serialize(), curso: t},
         success: function(response){
-          console.log(response);
-        }
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+          if (auxResponse == "Topic guardado correctamente"){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            window.setTimeout(function(){location.reload()},1000);
+          }        }
     });
   }
   else{
@@ -320,11 +329,11 @@ function saveNewTopic(t){
 }
 
 function addTopic(id){
-  var t = $('#CH'+id).text();
+  //var t = $('#CH'+id).text();
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nuevo Tópico o Unidad</h3><label for='block'>Nombre: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + t + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
+  $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nuevo Tópico o Unidad</h3><label for='block'>Nombre: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
 }
 
 function validar(){

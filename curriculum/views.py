@@ -61,8 +61,12 @@ def newTopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			print args
-			#Topic_Mineduc.objects.create(name=args['name'])
+			#print args['curso'] #id chapter correcto
+			formulario = args['form']
+			curso = formulario.split('nameTopic=')
+			#print curso[1] #nombre topico correcto
+			topico = curso[1].replace('+', ' ')
+			Topic_Mineduc.objects.create(name=topico, id_chapter_id=args['curso'])
 			return HttpResponse('Topic guardado correctamente')
 		except Exception as e:
 			print e
