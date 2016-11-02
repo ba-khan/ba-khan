@@ -272,11 +272,42 @@ $(document).ready(function(){
       var rowspan = topicos.length+1;
       newtable += '<tr><td rowspan='+rowspan+'>'+chapters[i]["nombre"]+'</td>';
       for (var j = 0; j < topicos.length; j++) {
+        var subtopicos = topicos[j]["subtopico"]
+        var rowspandos = subtopicos.length+1;
         if (j==0){
-          newtable+='<td>'+topicos[j]["nombre"]+'</td><td>algo va aca</td></tr>';
+          newtable+='<td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
+          for (var k = 0; k < subtopicos.length; k++) {
+            if (k==0){
+              newtable+='<td>'+subtopicos[k]['nombre']+'</td></tr>';
+            }
+            else{
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td></tr>';
+            }
+          }
+          if (rowspandos==1){
+        newtable+='<td><a onclick="\"(addSubtopic("'+topicos[j]['id']+'"))\" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+          }
+          else{
+            newtable+='<tr><td><a onclick="\"(addSubtopic("'+topicos[j]['id']+'"))\" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+          }
         }
         else{
-          newtable+='<tr><td>'+topicos[j]["nombre"]+'</td><td>algo va aca</td></tr>';
+          newtable+='<tr><td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
+          for (var k = 0; k < subtopicos.length; k++) {
+            //subtopicos[k]
+            if (k==0){
+              newtable+='<td>'+subtopicos[k]['nombre']+'</td></tr>';
+            }
+            else{
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td></tr>';
+            }
+          }
+          if (rowspandos==1){
+        newtable+='<td><a onclick="\"(addSubtopic("'+topicos[j]['id']+'"))\" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+          }
+          else{
+            newtable+='<tr><td><a onclick="\"(addSubtopic("'+topicos[j]['id']+'"))\" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+          }
         }
       }
       if (rowspan==1){
@@ -308,6 +339,16 @@ $(document).ready(function(){
   }
 
   function hideNewTopic(){
+  $('#popup').hide();
+  $('#hover').hide();
+  }
+
+  function showNewSubtopic(){
+  $('#newSubtopic').toggle('blind',10);
+  $('#buttonNewSubtopic').hide();
+  }
+
+  function hideNewSubtopic(){
   $('#popup').hide();
   $('#hover').hide();
   }
@@ -368,13 +409,47 @@ function saveNewTopic(t){
   }
 }
 
+
+function saveNewSubtopic(t){
+  if(validarSubtopic()){
+    $.ajax({
+      url: "{% url 'curriculum:nuevo_subtopic' %}",
+      type: "POST",
+      data: {form:$('#form2').serialize(), curso: t},
+        success: function(response){
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+          if (auxResponse == "Subtopic guardado correctamente"){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            window.setTimeout(function(){location.reload()},1000);
+          }        }
+    });
+  }
+  else{
+    $("#popup").empty()
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+  }
+}
+
 function addTopic(id){
-  //var t = $('#CH'+id).text();
-  console.log(id);
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
   $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nuevo Tópico o Unidad</h3><label for='block'>Nombre: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
+}
+
+function addSubTopic(id){
+  $('#popup').empty();
+  $('#hover').fadeIn();
+  $('#popup').fadeIn();
+  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Subtópico, Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Nombre: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
 }
 
 function validar(){
@@ -397,6 +472,18 @@ function validarTopic(){
     flag = false;
   }else{
     $("#newNameTopic").css('color', '#000000');
+  }
+  return flag;
+}
+
+function validarSubtopic(){
+  flag = true;
+  nName = document.getElementById("newNameSubtopic").value;
+  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+    $("#newNameSubtopic").css('color', '#C30202');
+    flag = false;
+  }else{
+    $("#newNameSubtopic").css('color', '#000000');
   }
   return flag;
 }

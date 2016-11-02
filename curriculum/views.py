@@ -96,3 +96,19 @@ def newTopic(request):
 			print e
 			return HttpResponse("Error al guardar")
 	return HttpResponse("Error al guardar")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def newSubtopic(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		args = request.POST
+		try:
+			formulario = args['form']
+			curso = formulario.split('nameSubtopic=')
+			#topico = curso[1].replace('+', ' ')
+			#Topic_Mineduc.objects.create(name=topico, id_chapter_id=args['curso'])
+			return HttpResponse('Subtopic guardado correctamente')
+		except Exception as e:
+			print e
+			return HttpResponse("Error al guardar")
+	return HttpResponse("Error al guardar")
