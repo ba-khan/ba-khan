@@ -55,7 +55,7 @@ def getCurriculum(request):
 			for sub in subtopic:
 				subtopico={}
 				subtopico["id"]=sub.id_subtopic_mineduc
-				subtopico["nombre"]=sub.AE_OE
+				subtopico["nombre"]=sub.name
 				aprendizaje.append(subtopico)
 			topico["subtopico"]=aprendizaje
 			unidad.append(topico)
@@ -85,12 +85,10 @@ def newTopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			#print args['curso'] #id chapter correcto
-			formulario = args['form']
-			curso = formulario.split('nameTopic=')
-			#print curso[1] #nombre topico correcto
-			topico = curso[1].replace('+', ' ')
-			Topic_Mineduc.objects.create(name=topico, id_chapter_id=args['curso'])
+			#topico = args['nombre']
+			#curso = formulario.split('nameTopic=')
+			#topico = curso[1].replace('+', ' ')
+			Topic_Mineduc.objects.create(name=args['nombre'], id_chapter_id=args['curso'])
 			return HttpResponse('Topic guardado correctamente')
 		except Exception as e:
 			print e
@@ -103,10 +101,10 @@ def newSubtopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			formulario = args['form']
-			curso = formulario.split('nameSubtopic=')
+			#formulario = args['form']
+			#curso = formulario.split('nameSubtopic=')
 			#topico = curso[1].replace('+', ' ')
-			#Topic_Mineduc.objects.create(name=topico, id_chapter_id=args['curso'])
+			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'])
 			return HttpResponse('Subtopic guardado correctamente')
 		except Exception as e:
 			print e
