@@ -159,29 +159,29 @@ def getGroups(request, id_class):
                     new_Avanzados = Group()
                     new_Avanzados.type = 'Avanzados'
                     new_Avanzados.kaid_student_tutor_id = tutors[0]['kaid_tutor_avanzados']
-                    new_Avanzados.master = master.id
+                    new_Avanzados.master = master.id_group
                     new_Avanzados.save()
                     new_Intermedios = Group()
                     new_Intermedios.type = 'Intermedios'
                     new_Intermedios.kaid_student_tutor_id = tutors[0]['kaid_tutor_intermedios']
-                    new_Intermedios.master = master.id
+                    new_Intermedios.master = master.id_group
                     new_Intermedios.save()
                     new_Reforzamiento = Group()
                     new_Reforzamiento.type = 'Reforzamiento'
                     new_Reforzamiento.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
-                    new_Reforzamiento.master = master.id
+                    new_Reforzamiento.master = master.id_group
                     new_Reforzamiento.save()
                     new_SinGrupo = Group()
                     new_SinGrupo.type = 'SinGrupo'
                     new_SinGrupo.kaid_student_tutor_id = tutors[0]['kaid_tutor_reforzamiento']
-                    new_SinGrupo.master = master.id
+                    new_SinGrupo.master = master.id_group
                     new_SinGrupo.save()
                 except Exception as e:
                     print '***ERROR*** en Groups:views.py try:#id3006'
                     print e
                 for skills in skills_selected:
                     try:#id3001
-                        Group_Skill(id_group_id=master.id,
+                        Group_Skill(id_group_id=master.id_group,
                             id_skill_id=skills).save()
                     except Exception as e:
                         print '***ERROR*** en Groups:views.py try:#id3001'
@@ -201,9 +201,9 @@ def getGroups(request, id_class):
                 for sub in subGroups:
                     try:#id3002
                         if "kaid_" not in sub['tutor']: 
-                            new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=request.user.user_profile.kaid)
+                            new_group = Group(type=sub['name'],master=master.id_group,kaid_student_tutor_id=request.user.user_profile.kaid)
                         else:
-                            new_group = Group(type=sub['name'],master=master.id,kaid_student_tutor_id=sub['tutor'])
+                            new_group = Group(type=sub['name'],master=master.id_group,kaid_student_tutor_id=sub['tutor'])
                         new_group.save()
                     except Exception as e:
                         print '***ERROR*** en Groups:views.py try:#id3002'
