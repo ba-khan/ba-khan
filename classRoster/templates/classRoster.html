@@ -389,7 +389,7 @@ function saveClass(classJson){
 	$.ajax({
 		url: "{% url 'classRoster:newClass' %}",
 		type: "POST",
-		data: {classJson},
+		data: classJson,
 			success: function(response){
 				$(".response").fadeOut();
 				$('#loading').fadeOut();

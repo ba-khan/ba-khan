@@ -257,32 +257,34 @@ def newTeacherClass(request):
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def newClass(request):
     if request.method == 'POST':
-        newClass = request.POST
-        level = int(newClass["level"])
-        letter = newClass["letter"]
-        year = newClass["year"]
-        additional = newClass["additional"]
-        if additional=="":
-            additional = None
-        #teacher = newClass["teacher"]
-        teacher = Teacher.objects.get(name=newClass["teacher"])
-        kaid_teacher = teacher.kaid_teacher
-        students = newClass.getlist("students[]")
-
-        inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
-        id_institution = int(inst.id_institution)
         try:
-            curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional)
-            return HttpResponse("Ya existe el curso")
-        except:
-            curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
-            id_curso = int(curso.id_class)
-            class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
-            for student in students:
-                aux = Student.objects.get(name=student)
-                student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
-            return HttpResponse("Nuevo curso creado")
+            newClass = request.POST
+            level = int(newClass["level"])
+            letter = newClass["letter"]
+            year = newClass["year"]
+            additional = newClass["additional"]
+            if additional=="":
+                additional = None
+            #teacher = newClass["teacher"]
+            teacher = Teacher.objects.get(name=newClass["teacher"])
+            kaid_teacher = teacher.kaid_teacher
+            students = newClass.getlist("students[]")
 
+            inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+            id_institution = int(inst.id_institution)
+            try:
+                curso = Class.objects.get(level=level,letter=letter,id_institution_id=id_institution, additional=additional)
+                return HttpResponse("Ya existe el curso")
+            except:
+                curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
+                id_curso = int(curso.id_class)
+                class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
+                for student in students:
+                    aux = Student.objects.get(name=student)
+                    student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
+                return HttpResponse("Nuevo curso creado")
+        except Exception as e:
+            print e
 
 ##
 ## @brief      { function_description }
