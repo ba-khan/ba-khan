@@ -15,7 +15,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
 
 <style>
 table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
@@ -195,6 +195,8 @@ input{
       <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
     </form>
   </div>
+  <div id="newtable">
+  </div>
   <!--<div id="newTopic">
   <form action="" method="post" id="form1">{% csrf_token %}
     <h3>Nuevo Tópico o Unidad</h3>
@@ -211,7 +213,7 @@ input{
     <a onclick='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
   </form>
 </div>!-->
-  {% if chapter.0.name|length > 0 %}
+  <!--{% if chapter.0.name|length > 0 %}
     <table id="adminGrid" class="testgrid" style="margin: left;width: 50%;">
     <tr>
       <th>Capítulo</th>
@@ -221,7 +223,7 @@ input{
     {% for top in topic %}
     {% if top.id_chapter_id == chap.id_chapter_mineduc %}
     <tr id="R{{ forloop.counter }}">
-      <td rowspan="{{top.id_chapter_id|length}}" id="CH{{ chap.id_chapter_mineduc }}">{% if chap.name == None %}{{ "" }}{% else %}{{ chap.name }}{% endif %}</td>        
+      <td rowspan="{{top.id_chapter_id.count}}" id="CH{{ chap.id_chapter_mineduc }}">{% if chap.name == None %}{{ "" }}{% else %}{{ chap.name }}{% endif %}</td>        
       <td>{{top.name}}</td>
     </tr>
     {% endif %}
@@ -234,7 +236,7 @@ input{
     </tr>
     {% endfor %}
   </table>
-  {% endif %}
+  {% endif %}!-->
 </div>
 </div>
 
@@ -254,8 +256,40 @@ $(document).ready(function(){
           $("#hover").fadeOut();
       $("#popup").fadeOut();
       });
-    
+    treeMineduc();
   });
+  
+
+  
+
+  function treeMineduc(){
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    var newtable;
+    newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 50%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th></tr>';
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]["topico"]
+      var rowspan = topicos.length+1;
+      newtable += '<tr><td rowspan='+rowspan+'>'+chapters[i]["nombre"]+'</td>';
+      for (var j = 0; j < topicos.length; j++) {
+        if (j==0){
+          newtable+='<td>'+topicos[j]["nombre"]+'</td><td>algo va aca</td></tr>';
+        }
+        else{
+          newtable+='<tr><td>'+topicos[j]["nombre"]+'</td><td>algo va aca</td></tr>';
+        }
+      }
+      if (rowspan==1){
+        newtable+='<td><a onclick="\"(addTopic("'+chapters[i]['id']+'"))\" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td></tr>';
+      }
+      else{
+        newtable+='<tr><td><a onclick="\"(addTopic("'+chapters[i]['id']+'"))\" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td></tr>';
+      }
+    }
+    newtable += '</table>';
+    $('#newtable').append(newtable)
+  }
+
   $('#curriculum').addClass('active selected');
 
   function showNewChapter(){
@@ -274,8 +308,6 @@ $(document).ready(function(){
   }
 
   function hideNewTopic(){
-  //$('#newTopic').toggle('blind',10);
-  //$('#buttonNewTopic').show();
   $('#popup').hide();
   $('#hover').hide();
   }
@@ -338,6 +370,7 @@ function saveNewTopic(t){
 
 function addTopic(id){
   //var t = $('#CH'+id).text();
+  console.log(id);
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();

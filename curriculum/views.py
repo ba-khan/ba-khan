@@ -38,8 +38,32 @@ from datetime import datetime, timedelta
 def getCurriculum(request):
 	request.session.set_expiry(timeSleep)
 	chapter = Chapter_Mineduc.objects.all()
-	topic = Topic_Mineduc.objects.all()
-	return render_to_response('curriculum.html', { 'chapter':chapter, 'topic':topic} ,context_instance=RequestContext(request))
+	#topic = Topic_Mineduc.objects.all()
+	mision=[]
+	for chap in chapter:
+		capitulo={}
+		capitulo["id"]=chap.id_chapter_mineduc
+		capitulo["nombre"]=chap.name
+		unidad=[]
+		topic = Topic_Mineduc.objects.filter(id_chapter_id=chap.id_chapter_mineduc)
+		for top in topic:
+			topico={}
+			topico["id"]=top.id_topic_mineduc
+			topico["nombre"]=top.name
+			aprendizaje=[]
+			subtopic = Subtopic_Mineduc.objects.filter(id_topic_id=top.id_topic_mineduc)
+			for sub in subtopic:
+				subtopico={}
+				subtopico["id"]=sub.id_subtopic_mineduc
+				subtopico["nombre"]=sub.AE_OE
+				aprendizaje.append(subtopico)
+			topico["subtopico"]=aprendizaje
+			unidad.append(topico)
+		capitulo["topico"]=unidad
+		mision.append(capitulo)
+	json_dict={"capitulos":mision}
+	json_data = json.dumps(json_dict)
+	return render_to_response('curriculum.html', { 'json_data':json_data} ,context_instance=RequestContext(request))
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newChapter(request):
