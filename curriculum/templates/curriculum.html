@@ -196,7 +196,7 @@ input{
 .topictree{
   overflow: hidden;
   overflow-y:scroll;
-  height: 620px;
+  height: 600px;
   width: 570px;
   font-size: 12px;
   padding: 5px 10px 10px 0px;
@@ -353,6 +353,11 @@ $(document).ready(function(){
   $('#hover').hide();
   }
 
+  function hideNewSubtopic(){
+  $('#popuptree').hide();
+  $('#hover').hide();
+  }
+
   function saveNewChapter(){
   if(validar()){
     $.ajax({
@@ -429,7 +434,8 @@ function saveNewSubtopic(t){
             $("#hover").css('pointer-events','none');
             $("#close").css('pointer-events','none');
             window.setTimeout(function(){location.reload()},1000);
-          }        }
+          }        
+        }
     });
   }
   else{
@@ -438,6 +444,72 @@ function saveNewSubtopic(t){
     $("#popup").fadeIn().css('display', '');
     $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
   }
+}
+
+function saveVideoExercise(t){
+  var select = $("#newTree").jstree("get_selected", true);
+  //console.log(select);
+  var contador=0;
+  var datos={};
+  for (var i = 0; i < select.length; i++) {
+    if (select[i]["children"].length==0){
+      //console.log(select[i]);
+      datos[select[i]["data"]["skill_id"]]=select[i]["icon"]
+      contador++;
+    }
+  }
+  //console.log(datos);
+  if (select.length>0){
+    $.ajax({
+    url: "{% url 'curriculum:save_videoexercise' %}",
+    type: "POST",
+    data: {datos, subtopic:t},
+      success: function(response){
+        $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+          if (auxResponse == "Skills guardado correctamente"){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            window.setTimeout(function(){location.reload()},1000);
+          }    
+      }
+    });
+  }
+  else{
+    console.log('faltan datos por elegir');
+  }
+
+  //aqui va el codigo para guardar skills y videos
+  /*var nombresubtopic = $('#newNameSubtopic').val()
+  if(validarSubtopic()){
+    $.ajax({
+      url: "{% url 'curriculum:nuevo_subtopic' %}",
+      type: "POST",
+      data: {nombre: nombresubtopic, curso: t},
+        success: function(response){
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+          if (auxResponse == "Subtopic guardado correctamente"){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            window.setTimeout(function(){location.reload()},1000);
+          }        }
+    });
+  }
+  else{
+    $("#popup").empty()
+    $("#hover").fadeIn().css('display', '');
+    $("#popup").fadeIn().css('display', '');
+    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+  }*/
 }
 
 function addTopic(id){
@@ -462,6 +534,7 @@ function addVideoExercise(id){
     $('#popuptree').fadeIn();
     $('#popuptree').append("<div id='newTree' class='topictree'></div>")
     $('#newTree').jstree(tree);
+    $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>")
 }
 
 function validar(){

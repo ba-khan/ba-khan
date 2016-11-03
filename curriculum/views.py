@@ -95,7 +95,7 @@ def getCurriculum(request):
 	subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
 	for video in subtopic_video:
 		video_id=video.id_subtopic_video
-		video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "icon":"false", "index":video.id_video_name.index}
+		video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name},"index":video.id_video_name.index}
 		sorted(video_obj, key=video_obj.get)
 		topictree.append(video_obj)
 	topictree_json['core']={'data':topictree}
@@ -137,6 +137,38 @@ def newSubtopic(request):
 		try:
 			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'])
 			return HttpResponse('Subtopic guardado correctamente')
+		except Exception as e:
+			print e
+			return HttpResponse("Error al guardar")
+	return HttpResponse("Error al guardar")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def saveVideoExercise(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		args = request.POST
+		try:
+			subtopic_id = args['subtopic'] #id del subtopic
+			for arg in args:
+				#print arg
+				if arg=="subtopic":
+					idsubtopic = arg
+					#print idsubtopic
+				else:
+					idskill = arg
+					if args[idskill]=="false":
+						Subtopic_Skill_Mineduc.objects.create(id_skill_name_id=idskill[6:-1], id_subtopic_mineduc_id=subtopic_id)
+					#print idskill[6:-1] #id del skill o video
+					#print args[idskill] #booleano de skill/video, false es skill, true es video
+			#print args
+			#print args
+			#for arg in args:
+				#print args #id skill o video
+				#print arg[1] #indica si es video o no, si es 1 es skill, si es 2 es video
+				#if args[1]=="1":
+					#Subtopic_Skill_Mineduc.objects.create()
+			#Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'])
+			return HttpResponse('Skills guardado correctamente')
 		except Exception as e:
 			print e
 			return HttpResponse("Error al guardar")
