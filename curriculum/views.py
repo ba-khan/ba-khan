@@ -56,6 +56,13 @@ def getCurriculum(request):
 				subtopico={}
 				subtopico["id"]=sub.id_subtopic_mineduc
 				subtopico["nombre"]=sub.name
+				skills=[]
+				subtopicskill = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopico["id"])
+				for subskill in subtopicskill:
+					subtskillmin={}
+					subtskillmin["skill"]=subskill.id_skill_name_id
+					skills.append(subtskillmin)
+				subtopico["skills"]=skills
 				aprendizaje.append(subtopico)
 			topico["subtopico"]=aprendizaje
 			unidad.append(topico)

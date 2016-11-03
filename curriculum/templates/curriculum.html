@@ -258,6 +258,7 @@ $(document).ready(function(){
 
   function treeMineduc(){
     var arbol = JSON.parse('{{ json_data | escapejs }}');
+    console.log(arbol);
     var newtable;
     newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 100%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th><th>Videos</th><th>Ejercicios</th><th>Agregar Ejercicios</th></tr>';
     var chapters=arbol["capitulos"];
@@ -465,17 +466,18 @@ function saveVideoExercise(t){
     type: "POST",
     data: {datos, subtopic:t},
       success: function(response){
+        $('#popuptree').hide();
         $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Skills guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }    
+        $("#close").hide();
+        $("#hover").fadeIn();
+        $("#popup").fadeIn();
+        $("#popup").append("<p class='response'>"+response+"</p>");
+        auxResponse = response;
+        if (auxResponse == "Skills guardado correctamente"){
+          $("#hover").css('pointer-events','none');
+          $("#close").css('pointer-events','none');
+          window.setTimeout(function(){location.reload()},1000);
+        }    
       }
     });
   }
