@@ -428,10 +428,26 @@ label.sort-filter{
   box-shadow:0 0 10px 0 #9DB63B;
   z-index: 11;
 }
-#popup{
+#popuptree{
+  position:fixed;
+  width:600px;
+  height:0px;
+  background:#fff;
+  left:50%;
+  top:1%;
+  border-radius:5px;
+  padding:60px 0;
+  margin-left:-320px; /* width/2 + padding-left */
+  margin-top:0px; /* height/2 + padding-top */
+  text-align:center;
+  box-shadow:0 0 10px 0 #9DB63B;
+  z-index: 11; 
+}
+
+#popup, #popuptree{
   height:380px;
 }
-#popup p{
+#popup p, #popuptree p{
   text-align: center;
 }
 

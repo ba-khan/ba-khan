@@ -57,6 +57,9 @@ input{
 #popup{
   height:200px;
 }
+#popuptree{
+  height:650px;
+}
 .ribbon {
   position: relative;
   left: 0px; top: -53px;
@@ -189,6 +192,18 @@ input{
 .redBackground{
     background-color: gray;  
 }
+
+.topictree{
+  overflow: hidden;
+  overflow-y:scroll;
+  height: 620px;
+  width: 570px;
+  font-size: 12px;
+  padding: 5px 10px 10px 0px;
+  text-align: left;
+  margin: 10px;
+  border: 1px solid #ddd;
+}
 </style>
 
 <br>
@@ -210,50 +225,14 @@ input{
   </div>
   <div id="newtable">
   </div>
-  <!--<div id="newTopic">
-  <form action="" method="post" id="form1">{% csrf_token %}
-    <h3>Nuevo Tópico o Unidad</h3>
-    <label for='block'>Nombre: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="nameTopic" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-    <a onclick='javascript:hideNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-    <a onclick='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
-  </form>
-</div>!-->
-<!--<div id="newTopic">
-  <form action="" method="post" id="form1">{% csrf_token %}
-    <h3>Nuevo Tópico o Unidad</h3>
-    <label for='block'>Nombre: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="nameTopic" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-    <a onclick='javascript:hideNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-    <a onclick='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
-  </form>
-</div>!-->
-  <!--{% if chapter.0.name|length > 0 %}
-    <table id="adminGrid" class="testgrid" style="margin: left;width: 50%;">
-    <tr>
-      <th>Capítulo</th>
-      <th>Tópico</th>
-    </tr>
-    {% for chap in chapter %}
-    {% for top in topic %}
-    {% if top.id_chapter_id == chap.id_chapter_mineduc %}
-    <tr id="R{{ forloop.counter }}">
-      <td rowspan="{{top.id_chapter_id.count}}" id="CH{{ chap.id_chapter_mineduc }}">{% if chap.name == None %}{{ "" }}{% else %}{{ chap.name }}{% endif %}</td>        
-      <td>{{top.name}}</td>
-    </tr>
-    {% endif %}
-    {% endfor %}
-    <tr id="R{{ forloop.counter }}">
-      <td rowspan="{{chap|length}}" id="CH{{ chap.id_chapter_mineduc }}">{% if chap.name == None %}{{ "" }}{% else %}{{ chap.name }}{% endif %}</td>
-      <td class="editablegrid-action" data-title="action" style="width:100px;">
-        <a onclick="javascript:addTopic({{ chap.id_chapter_mineduc }})" style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% endif %}!-->
 </div>
 </div>
 
 <div id="popup" style="display:none">
+  
+</div>
+
+<div id="popuptree" style="display:none">
   
 </div>
 
@@ -263,11 +242,13 @@ $(document).ready(function(){
     $("#hover").click(function(){
           $(this).fadeOut();
       $("#popup").fadeOut();
+      $("#popuptree").fadeOut();
       });
     
     $("#close").click(function(){
           $("#hover").fadeOut();
       $("#popup").fadeOut();
+      $("#popuptree").fadeOut();
       });
     treeMineduc();
   });
@@ -278,7 +259,7 @@ $(document).ready(function(){
   function treeMineduc(){
     var arbol = JSON.parse('{{ json_data | escapejs }}');
     var newtable;
-    newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 50%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th></tr>';
+    newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 100%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th><th>Videos</th><th>Ejercicios</th><th>Agregar Ejercicios</th></tr>';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       var topicos = chapters[i]["topico"]
@@ -298,43 +279,42 @@ $(document).ready(function(){
           newtable+='<td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
           for (var k = 0; k < subtopicos.length; k++) {
             if (k==0){
-              newtable+='<td>'+subtopicos[k]['nombre']+'</td></tr>';
+              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
             }
             else{
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td></tr>';
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
             }
           }
           if (rowspandos==1){
-        newtable+='<td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+        newtable+='<td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
           }
           else{
-            newtable+='<tr><td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+            newtable+='<tr><td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
           }
         }
         else{
           newtable+='<tr><td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
           for (var k = 0; k < subtopicos.length; k++) {
-            //subtopicos[k]
             if (k==0){
-              newtable+='<td>'+subtopicos[k]['nombre']+'</td></tr>';
+              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
             }
             else{
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td></tr>';
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
             }
           }
           if (rowspandos==1){
-        newtable+='<td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+        newtable+='<td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
           }
           else{
-            newtable+='<tr><td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td></tr>';
+            newtable+='<tr><td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
           }
         }
       }
       if (rowspan==1){
-        newtable+='<td><a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td></tr>';
+        newtable+='<td><a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td><td></td><td></td><td></td></tr>';
       }
       else{
-        newtable+='<tr><td><a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td></tr>';
+        newtable+='<tr><td><a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td><td></td><td></td><td></td></tr>';
       }
     }
     newtable += '</table>';
@@ -472,6 +452,16 @@ function addSubtopic(id){
   $('#hover').fadeIn();
   $('#popup').fadeIn();
   $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Subtópico, Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
+}
+
+function addVideoExercise(id){
+    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
+    //console.log(tree);
+    $('#popuptree').empty();
+    $('#hover').fadeIn();
+    $('#popuptree').fadeIn();
+    $('#popuptree').append("<div id='newTree' class='topictree'></div>")
+    $('#newTree').jstree(tree);
 }
 
 function validar(){
