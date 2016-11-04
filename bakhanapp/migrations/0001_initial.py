@@ -312,6 +312,13 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Subtopic_Video_Mineduc',
+            fields=[
+                ('id_subtopic_video_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('id_subtopic_name_mineduc', models.ForeignKey(to='bakhanapp.Subtopic_Mineduc')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Teacher',
             fields=[
                 ('kaid_teacher', models.CharField(max_length=40, serialize=False, primary_key=True)),
@@ -376,6 +383,11 @@ class Migration(migrations.Migration):
                 ('id_video_name', models.ForeignKey(to='bakhanapp.Video')),
                 ('kaid_student', models.ForeignKey(to='bakhanapp.Student')),
             ],
+        ),
+        migrations.AddField(
+            model_name='subtopic_video_mineduc',
+            name='id_video_name',
+            field=models.ForeignKey(to='bakhanapp.Video'),
         ),
         migrations.AddField(
             model_name='subtopic_video',
@@ -491,6 +503,10 @@ class Migration(migrations.Migration):
             model_name='administrator',
             name='id_institution',
             field=models.ForeignKey(to='bakhanapp.Institution'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='subtopic_video_mineduc',
+            unique_together=set([('id_video_name', 'id_subtopic_name_mineduc')]),
         ),
         migrations.AlterUniqueTogether(
             name='subtopic_video',

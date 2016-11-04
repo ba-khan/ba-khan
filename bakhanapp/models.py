@@ -376,7 +376,7 @@ class Subtopic_Mineduc(models.Model):
     AE_OE = models.CharField(max_length=200)
     index = models.IntegerField()
     
-    def __unicode__(self): # __unicode__ on Python 2
+    def __unicode__(self):
         return self.name
 
 class Subtopic_Skill_Mineduc(models.Model):
@@ -386,3 +386,11 @@ class Subtopic_Skill_Mineduc(models.Model):
     
     class Meta:
         unique_together = ('id_skill_name', 'id_subtopic_mineduc')
+
+class Subtopic_Video_Mineduc(models.Model):
+    id_subtopic_video_mineduc = models.AutoField(primary_key=True)
+    id_video_name = models.ForeignKey(Video)
+    id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    
+    class Meta:
+        unique_together = ('id_video_name', 'id_subtopic_name_mineduc')
