@@ -213,7 +213,6 @@ input{
   <br>
   <h1 style="text-align:center;">Curriculum MINEDUC</h1>
   <div style="width:100%; height:55px;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Misión</button> </div>
-  <!--<div style="width:100%; height:55px;"> <button type='input' id='buttonNewTopic' onclick="javascript:showNewTopic()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Tópico o Unidad</button> </div>1-->
 
   <div id="newChapter">
     <form action="" method="post" id="form0">{% csrf_token %}
@@ -252,15 +251,12 @@ $(document).ready(function(){
       });
     treeMineduc();
   });
-  
-
-  
 
   function treeMineduc(){
     var arbol = JSON.parse('{{ json_data | escapejs }}');
     console.log(arbol);
     var newtable;
-    newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 100%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th><th>Videos</th><th>Ejercicios</th><th>Agregar Ejercicios</th></tr>';
+    newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 100%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th><th>Videos</th><th>Ejercicios</th><th>Agregar Ejercicios/Videos</th></tr>';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       var topicos = chapters[i]["topico"]
@@ -280,10 +276,32 @@ $(document).ready(function(){
           newtable+='<td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
           for (var k = 0; k < subtopicos.length; k++) {
             if (k==0){
-              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
+              var vid = subtopicos[k]["videos"]
+              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td><ul>';
+              for (var l = 0; l < vid.length; l++) {
+                //console.log(vid[l]["video"])
+                newtable+='<li>'+vid[l]["video"]+'</li>'
+              }
+              newtable+='</ul></td><td><ul>';
+              var ejer = subtopicos[k]["skills"]
+              for (var m = 0; m < ejer.length; m++) {
+                newtable+='<li>'+ejer[m]["skill"]+'</li>'
+              }
+              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
             }
             else{
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
+              var vid = subtopicos[k]["videos"]
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul>';
+              for (var l = 0; l < vid.length; l++) {
+                //console.log(vid[l]["video"])
+                newtable+='<li>'+vid[l]["video"]+'</li>'
+              }
+              newtable+='</ul></td><td><ul>';
+              var ejer = subtopicos[k]["skills"]
+              for (var m = 0; m < ejer.length; m++) {
+                newtable+='<li>'+ejer[m]["skill"]+'</li>'
+              }
+              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
             }
           }
           if (rowspandos==1){
@@ -297,10 +315,32 @@ $(document).ready(function(){
           newtable+='<tr><td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
           for (var k = 0; k < subtopicos.length; k++) {
             if (k==0){
-              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
+              var vid = subtopicos[k]["videos"]
+              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td><ul>';
+              for (var l = 0; l < vid.length; l++) {
+                //console.log(vid[l]["video"])
+                newtable+='<li>'+vid[l]["video"]+'</li>'
+              }
+              newtable+='</ul></td><td><ul>';
+              var ejer = subtopicos[k]["skills"]
+              for (var m = 0; m < ejer.length; m++) {
+                newtable+='<li>'+ejer[m]["skill"]+'</li>'
+              }
+              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
             }
             else{
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td></td><td></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios</a></td></tr>';
+              var vid = subtopicos[k]["videos"]
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul>';
+              for (var l = 0; l < vid.length; l++) {
+                //console.log(vid[l]["video"])
+                newtable+='<li>'+vid[l]["video"]+'</li>'
+              }
+              newtable+='</ul></td><td><ul>';
+              var ejer = subtopicos[k]["skills"]
+              for (var m = 0; m < ejer.length; m++) {
+                newtable+='<li>'+ejer[m]["skill"]+'</li>'
+              }
+              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
             }
           }
           if (rowspandos==1){
@@ -454,8 +494,14 @@ function saveVideoExercise(t){
   var datos={};
   for (var i = 0; i < select.length; i++) {
     if (select[i]["children"].length==0){
-      //console.log(select[i]);
-      datos[select[i]["data"]["skill_id"]]=select[i]["icon"]
+      console.log(select[i]);
+      if(select[i]["data"]["skill_id"]){
+        datos[select[i]["data"]["skill_id"]]=select[i]["icon"]
+      }
+      else{
+        datos[select[i]["data"]["video_id"]]=select[i]["icon"]
+      }
+      
       contador++;
     }
   }
@@ -484,34 +530,6 @@ function saveVideoExercise(t){
   else{
     console.log('faltan datos por elegir');
   }
-
-  //aqui va el codigo para guardar skills y videos
-  /*var nombresubtopic = $('#newNameSubtopic').val()
-  if(validarSubtopic()){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_subtopic' %}",
-      type: "POST",
-      data: {nombre: nombresubtopic, curso: t},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Subtopic guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        }
-    });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }*/
 }
 
 function addTopic(id){

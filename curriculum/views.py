@@ -17,7 +17,7 @@ from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
-from bakhanapp.models import Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc 
+from bakhanapp.models import Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc
 from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject
 from django.db import connection
 
@@ -57,12 +57,19 @@ def getCurriculum(request):
 				subtopico["id"]=sub.id_subtopic_mineduc
 				subtopico["nombre"]=sub.name
 				skills=[]
+				videos=[]
 				subtopicskill = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopico["id"])
 				for subskill in subtopicskill:
 					subtskillmin={}
 					subtskillmin["skill"]=subskill.id_skill_name_id
 					skills.append(subtskillmin)
 				subtopico["skills"]=skills
+				subtopicvideo = Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopico["id"])
+				for subvideo in subtopicvideo:
+					subtvideomin={}
+					subtvideomin["video"]=subvideo.id_video_name_id
+					videos.append(subtvideomin)
+				subtopico["videos"]=videos
 				aprendizaje.append(subtopico)
 			topico["subtopico"]=aprendizaje
 			unidad.append(topico)
@@ -155,26 +162,17 @@ def saveVideoExercise(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			subtopic_id = args['subtopic'] #id del subtopic
+			subtopic_id = args['subtopic']
 			for arg in args:
-				#print arg
 				if arg=="subtopic":
 					idsubtopic = arg
-					#print idsubtopic
 				else:
 					idskill = arg
+					print idskill
 					if args[idskill]=="false":
 						Subtopic_Skill_Mineduc.objects.create(id_skill_name_id=idskill[6:-1], id_subtopic_mineduc_id=subtopic_id)
-					#print idskill[6:-1] #id del skill o video
-					#print args[idskill] #booleano de skill/video, false es skill, true es video
-			#print args
-			#print args
-			#for arg in args:
-				#print args #id skill o video
-				#print arg[1] #indica si es video o no, si es 1 es skill, si es 2 es video
-				#if args[1]=="1":
-					#Subtopic_Skill_Mineduc.objects.create()
-			#Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'])
+					else:
+						Subtopic_Video_Mineduc.objects.create(id_video_name_id=idskill[6:-1], id_subtopic_name_mineduc_id=subtopic_id)
 			return HttpResponse('Skills guardado correctamente')
 		except Exception as e:
 			print e
