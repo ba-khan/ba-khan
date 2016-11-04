@@ -60,14 +60,18 @@ def getCurriculum(request):
 				videos=[]
 				subtopicskill = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopico["id"])
 				for subskill in subtopicskill:
+					nameskill = Skill.objects.filter(id_skill_name=subskill.id_skill_name_id).values('name_spanish')
 					subtskillmin={}
 					subtskillmin["skill"]=subskill.id_skill_name_id
+					subtskillmin["nombre"]=nameskill[0]['name_spanish']
 					skills.append(subtskillmin)
 				subtopico["skills"]=skills
 				subtopicvideo = Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopico["id"])
 				for subvideo in subtopicvideo:
+					namevideo=Video.objects.filter(id_video_name=subvideo.id_video_name_id).values('name_spanish')
 					subtvideomin={}
 					subtvideomin["video"]=subvideo.id_video_name_id
+					subtvideomin["nombre"]=namevideo[0]['name_spanish']
 					videos.append(subtvideomin)
 				subtopico["videos"]=videos
 				aprendizaje.append(subtopico)
