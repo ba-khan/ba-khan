@@ -196,7 +196,7 @@ input{
 .topictree{
   overflow: hidden;
   overflow-y:scroll;
-  height: 600px;
+  height: 550px;
   width: 570px;
   font-size: 12px;
   padding: 5px 10px 10px 0px;
@@ -251,6 +251,17 @@ $(document).ready(function(){
       });
     treeMineduc();
   });
+
+  function buscar(){
+    var to=false;
+    $('#skill_search').keyup(function () {
+      if(to) { clearTimeout(to); }
+      to = setTimeout(function () {
+        var v = $('#skill_search').val();
+        $('#newTree').jstree(true).search(v);
+      }, 250);
+    });
+  }
 
   function treeMineduc(){
     var arbol = JSON.parse('{{ json_data | escapejs }}');
@@ -552,6 +563,7 @@ function addVideoExercise(id){
     $('#popuptree').empty();
     $('#hover').fadeIn();
     $('#popuptree').fadeIn();
+    $('#popuptree').append("<div id='search'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
     $('#popuptree').append("<div id='newTree' class='topictree'></div>")
     $('#newTree').jstree(tree);
     $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>")

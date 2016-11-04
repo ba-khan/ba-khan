@@ -35,6 +35,7 @@ function getTopicTree(id){
 		
 		var to=false;
 	    $('#skill_search'+id).keyup(function () {
+	    	console.log('entro');
 		    if(to) { clearTimeout(to); }
 		    to = setTimeout(function () {
 		      var v = $('#skill_search'+id).val();
