@@ -180,6 +180,7 @@ class Skill(models.Model):
     name_spanish = models.CharField(max_length=150,null=True)
     name = models.CharField(max_length=150,null=True)
     index = models.IntegerField()
+    url_skill = models.CharField(max_length=200)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -247,6 +248,7 @@ class Video(models.Model):
     name_spanish = models.CharField(max_length=150,null=True)
     index = models.IntegerField()
     related_skill = models.CharField(max_length=150,null=True)
+    url_video = models.CharField(max_length=200)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish

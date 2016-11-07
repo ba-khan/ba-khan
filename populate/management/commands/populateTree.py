@@ -267,43 +267,45 @@ def poblar_topictree(session,buscar, reemplazar):
     id_subtopic_videos = 1
     cant_chapters = len(data["children"][1]["children"])
     for i in range(0,cant_chapters):
-
+        
         aux1 = (data["children"][1]["children"][i]["slug"])
         aux2 = (data["children"][1]["children"][i]["translated_title"])
         aux3 = (data["children"][1]["slug"])
         new_chapter = Chapter(id_chapter_name=aux1,name_spanish=aux2,id_subject_name_id=aux3, index=i)
         new_chapter.save()
-
+        
         cant_topic = len(data["children"][1]["children"][i]["children"])
         
         for j in range(0,cant_topic):
-       
+            
             aux1 = data["children"][1]["children"][i]["children"][j]["slug"]
             aux2 = data["children"][1]["children"][i]["children"][j]["translated_title"]
             aux3 = data["children"][1]["children"][i]["slug"]
             new_topic = Topic(id_topic_name=aux1,name_spanish=aux2,id_chapter_name_id=aux3, index=j)
             new_topic.save()
-          
+            
             cant_subtopic = len(data["children"][1]["children"][i]["children"][j]["children"])
             for k in range(0,cant_subtopic):
-           
+                
                 aux1 = data["children"][1]["children"][i]["children"][j]["children"][k]["slug"]
                 aux2 = data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"]
                 aux3 = data["children"][1]["children"][i]["children"][j]["slug"]
                 new_subtopic = Subtopic(id_subtopic_name=aux1,name_spanish=aux2,id_topic_name_id=aux3, index=k)
                 new_subtopic.save()
-           
+                
                 videos_view = len(data["children"][1]["children"][i]["children"][j]["children"][k]["children"])
 
                 for m in range(0,videos_view):
                     aux1 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["id"]
-                    aux2 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["related_exercise_url"]
+                    #aux2 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["related_exercise_url"]
+                    aux4 = data["children"][1]["children"][i]["children"][j]["children"][k]["children"][m]["ka_url"]
                     try:
-                        aux3 = aux2[10:]
-                        skrelated = Skill.objects.filter(name=aux3).values('id_skill_name')
-                        new_video = Video(id_video_name=aux1, related_skill=skrelated[0]["id_skill_name"])
+                        #aux3 = aux2[10:]
+                        #skrelated = Skill.objects.filter(name=aux3).values('id_skill_name')
+                        new_video = Video(id_video_name=aux1, url_video=aux4)
                         new_video.save()
-                    except:
+                    except Exception as e:
+                        print e
                         new_video = Video(id_video_name=aux1)
                         new_video.save()
                 
@@ -314,7 +316,7 @@ def poblar_topictree(session,buscar, reemplazar):
                     #consulta = """UPDATE bakhanapp_video SET name_spanish = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["translated_title"].replace(buscar,reemplazar)+"""' WHERE id_video_name = '"""+data_topictree["children"][1]["children"][i]["children"][j]["children"][k]["children"][l]["id"]+"""';"""
                     #cur.execute(consulta)
                     #conn.commit()
-                  
+                    
                     if (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["kind"]=="Exercise"):
                         aux1 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
@@ -336,13 +338,15 @@ def poblar_topictree(session,buscar, reemplazar):
                         aux1 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         aux2 = (data["children"][1]["children"][i]["children"][j]["children"][k]["translated_title"])
                         aux3 = (data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
+                        #aux6 = (data["children"][1]["children"][i]["children"][j]["children"][k]["ka_url"])
                         videon = Video.objects.get(pk=aux1)
                         videon.name_spanish=aux2
                         videon.index=l
+                        #videon.url_video=aux6
                         videon.save()
                         #new_video = Video(id_video_name=aux1,name_spanish=aux2, index=l)
                         #new_video.save()
-               
+                        
                         aux4 = (data["children"][1]["children"][i]["children"][j]["children"][k]["slug"])
                         aux5 = (data["children"][1]["children"][i]["children"][j]["children"][k]["child_data"][l]["id"])
                         try:
@@ -351,7 +355,7 @@ def poblar_topictree(session,buscar, reemplazar):
                         except:
                             pass
                         #id_subtopic_videos+=1
-        	     
+        	    
                 skills = get_api_resource2(session,"/api/v1/topic/"+data["children"][1]["children"][i]["children"][j]["children"][k]["slug"]+"/exercises",SERVER_URL2)
                 source = unicode(skills, 'ISO-8859-1')
                 data_skills = simplejson.loads(source)
@@ -365,7 +369,21 @@ def poblar_topictree(session,buscar, reemplazar):
                 for q in range(len(data_videos)):
                     #logging.debug(data_skills[p]["translated_title"])
                     Video.objects.filter(id_video_name=data_videos[q]["content_id"]).update(name_spanish=data_videos[q]["translated_title"])                    
-                              
+                             
+
+def urlExercise(session):
+    skills = Skill.objects.exclude(index__isnull=True)
+    for skill in skills:
+        query = get_api_resource2(session,"/api/v1/exercises/"+skill.name,SERVER_URL2)
+        source = unicode(query, 'ISO-8859-1')
+        data = simplejson.loads(source)
+        try:
+            #print data
+            #print "."
+            Skill.objects.filter(id_skill_name=skill.id_skill_name).update(url_skill=data["ka_url"])
+        except Exception as e:
+            print e
+            continue
 
 class Command(BaseCommand):
     help = 'Puebla la base de datos con al arbol'
@@ -391,12 +409,13 @@ class Command(BaseCommand):
             session = run_tests(identifier,passw,CONSUMER_KEY,CONSUMER_SECRET)
             buscar = "'"
             reemplazar = " "
-            Chapter.objects.all().update(index=None)
-            Topic.objects.all().update(index=None)
-            Subtopic.objects.all().update(index=None)
-            Video.objects.all().update(index=None)
-            Skill.objects.all().update(index=None)
-            poblar_topictree(session,buscar,reemplazar)
-            update_char()
+            #Chapter.objects.all().update(index=None)
+            #Topic.objects.all().update(index=None)
+            #Subtopic.objects.all().update(index=None)
+            #Video.objects.all().update(index=None)
+            #Skill.objects.all().update(index=None)
+            #poblar_topictree(session,buscar,reemplazar)
+            #update_char()
+            urlExercise(session)
         except Exception as e:
             print e

@@ -173,6 +173,7 @@ class Migration(migrations.Migration):
                 ('name_spanish', models.CharField(max_length=150, null=True)),
                 ('name', models.CharField(max_length=150, null=True)),
                 ('index', models.IntegerField()),
+                ('url_skill', models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
@@ -369,6 +370,7 @@ class Migration(migrations.Migration):
                 ('name_spanish', models.CharField(max_length=150, null=True)),
                 ('index', models.IntegerField()),
                 ('related_skill', models.CharField(max_length=150, null=True)),
+                ('url_video', models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
