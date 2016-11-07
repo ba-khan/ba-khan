@@ -115,7 +115,7 @@ def getCurriculum(request):
 	subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
 	for video in subtopic_video:
 		video_id=video.id_subtopic_video
-		video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name},"index":video.id_video_name.index}
+		video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "index":video.id_video_name.index}
 		sorted(video_obj, key=video_obj.get)
 		topictree.append(video_obj)
 	topictree_json['core']={'data':topictree}

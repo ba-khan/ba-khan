@@ -502,6 +502,16 @@ label.sort-filter{
   shape-rendering: crispEdges;
 }
 
+.playIcon {
+    background:url(img/play.png);
+    background-size: 24px;
+    cursor:pointer;
+    width: 24px;
+    height: 24px;
+    border: none;
+    margin-left:0%;
+}
+
 .editButton {
     background:url(img/editButton.png);
     background-size: 25px;
