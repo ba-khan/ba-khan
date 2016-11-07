@@ -629,7 +629,7 @@ function graficar(json, clase){
               var text = layer
                     .append('text')
                     .text(mission[t])
-                    .attr("y", height)
+                    .attr("y", height-5)
                     .style('fill', 'black')
               nombremision = misiones[j][0]["mision"];
             }
@@ -641,7 +641,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 5*i+200;
+                        return 4.5*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -649,7 +649,7 @@ function graficar(json, clase){
                     .attr("height", function (d) {
                         return y(d.y0) - y(d.y + d.y0);
                     })
-                    .attr("width", 4);
+                    .attr("width", 3.5);
             $('rect').tipsy({
               gravity: $.fn.tipsy.autoNS,
               opacity: 1,

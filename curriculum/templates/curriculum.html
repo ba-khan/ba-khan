@@ -290,7 +290,6 @@ $(document).ready(function(){
               var vid = subtopicos[k]["videos"]
               newtable+='<td>'+subtopicos[k]['nombre']+'</td><td><ul>';
               for (var l = 0; l < vid.length; l++) {
-                //console.log(vid[l]["video"])
                 newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li>'
               }
               newtable+='</ul></td><td><ul>';
@@ -304,7 +303,6 @@ $(document).ready(function(){
               var vid = subtopicos[k]["videos"]
               newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul>';
               for (var l = 0; l < vid.length; l++) {
-                //console.log(vid[l]["video"])
                 newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li>'
               }
               newtable+='</ul></td><td><ul>';
@@ -329,7 +327,6 @@ $(document).ready(function(){
               var vid = subtopicos[k]["videos"]
               newtable+='<td>'+subtopicos[k]['nombre']+'</td><td><ul>';
               for (var l = 0; l < vid.length; l++) {
-                //console.log(vid[l]["video"])
                 newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li>'
               }
               newtable+='</ul></td><td><ul>';
@@ -341,12 +338,11 @@ $(document).ready(function(){
             }
             else{
               var vid = subtopicos[k]["videos"]
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul style="list-style-type:disc">';
+              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul>';
               for (var l = 0; l < vid.length; l++) {
-                //console.log(vid[l]["video"])
                 newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li>'
               }
-              newtable+='</ul></td><td><ul style="list-style-type:disc">';
+              newtable+='</ul></td><td><ul>';
               var ejer = subtopicos[k]["skills"]
               for (var m = 0; m < ejer.length; m++) {
                 newtable+='<li><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a></li>'
