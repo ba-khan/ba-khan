@@ -430,10 +430,34 @@ function graficar(json, clase){
       var cantidad = clase[i]["total_ejercicios_clase"]
       var nombre = curso +" - "+ee
       var estudiantes = clase[i]["students"];
+      var maxtpoejer=0;
+      var maxtpovid=0;
+      var maxtotejer=0;
+      var mintpoejer=99999999;
+      var mintpovid=99999999;
+      var mintotejer=99999999;
       for (j=0;j<estudiantes.length;j++){
         datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
         tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
         videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
+        if (estudiantes[j]["total_ejercicios"]>maxtotejer){
+          maxtotejer=estudiantes[j]["total_ejercicios"];
+        }
+        if (estudiantes[j]["tiempo_ejercicios"]>maxtpoejer){
+          maxtpoejer=estudiantes[j]["tiempo_ejercicios"];
+        }
+        if (estudiantes[j]["tiempo_videos"]>maxtpovid){
+          maxtpovid=estudiantes[j]["tiempo_videos"];
+        }
+        if (estudiantes[j]["total_ejercicios"]<mintotejer){
+          mintotejer=estudiantes[j]["total_ejercicios"];
+        }
+        if (estudiantes[j]["tiempo_ejercicios"]<mintpoejer){
+          mintpoejer=estudiantes[j]["tiempo_ejercicios"];
+        }
+        if (estudiantes[j]["tiempo_videos"]<mintpovid){
+          mintpovid=estudiantes[j]["tiempo_videos"];
+        }
       }
       //var colorcolumn={"color":colors[i]};
       if (ee=="LSMB"){
@@ -461,17 +485,20 @@ function graficar(json, clase){
       arraytv[i]=[nombre, tpo_videos]
       arraycant[i]=[nombre, cantidad]*/
 
-      arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre};
-      serietpo[i]={"name":nombre, "id":nombre, "data":tpoest};
+      arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre, "cantidad":estudiantes.length, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudiantes.length};
+      serietpo[i]={"name":nombre, "id":nombre, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'}};
 
-      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre};
-      serievid[i]={"name":nombre, "id":nombre, "data":videst};
+      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre, "cantidad":estudiantes.length, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudiantes.length};
+      serievid[i]={"name":nombre, "id":nombre, "data":videst, "tooltip":{"pointFormat": 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'}};
 
-      arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre}
-      serie[i]={"name":nombre, "id":nombre, "data":datosest};
+      arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre, "cantidad":estudiantes.length, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudiantes.length}
+      serie[i]={"name":nombre, "id":nombre, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'}};
 
       var arrayskill;
       var misiones = clase[i]["misiones"];
+      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b>';
+      var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b>';
+      var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b>';
       //data=[];
       
       for (var k=0;k<misiones.length;k++){
@@ -547,6 +574,9 @@ function graficar(json, clase){
         arraycant[j]=[name, cantidad]
       }
     }
+    var pointarrayte='Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>';
+    var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
+    var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
   
   try{
@@ -738,9 +768,6 @@ function graficar(json, clase){
         legend: {
             enabled: false
         },
-        tooltip: {
-            pointFormat: 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'
-        },
         colors: colorcolumn,
         series: [{
             name: 'Cursos',
@@ -757,6 +784,9 @@ function graficar(json, clase){
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
                 }
+            },
+            tooltip: {
+            pointFormat: pointarrayte
             }
         }],
         drilldown: {
@@ -845,9 +875,6 @@ function graficar(json, clase){
         legend: {
             enabled: false
         },
-        tooltip: {
-            pointFormat: 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'
-        },
         colors: colorcolumn,
         series: [{
             name: 'Cursos',
@@ -864,6 +891,9 @@ function graficar(json, clase){
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
                 }
+            },
+            tooltip: {
+            pointFormat: pointarraytv
             }
         }],
         drilldown: {
@@ -949,9 +979,6 @@ function graficar(json, clase){
         legend: {
             enabled: false
         },
-        tooltip: {
-            pointFormat: 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'
-        },
         colors: colorcolumn,
         series: [{
             name: 'Cursos',
@@ -968,7 +995,10 @@ function graficar(json, clase){
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
                 }
-            }
+            },
+            tooltip: {
+              pointFormat: pointarraycant
+            },
         }],
         drilldown: {
             series: serie
