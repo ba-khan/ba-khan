@@ -181,7 +181,7 @@ def saveVideoExercise(request):
 						Subtopic_Skill_Mineduc.objects.create(id_skill_name_id=idskill[6:-1], id_subtopic_mineduc_id=subtopic_id)
 					else:
 						Subtopic_Video_Mineduc.objects.create(id_video_name_id=idskill[6:-1], id_subtopic_name_mineduc_id=subtopic_id)
-			return HttpResponse('Skills guardado correctamente')
+			return HttpResponse('Ejercicios y/o Videos guardados correctamente')
 		except Exception as e:
 			print e
 			return HttpResponse("Error al guardar")
