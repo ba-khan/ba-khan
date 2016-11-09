@@ -47,8 +47,8 @@
     color:#555;
     text-align: center;
     line-height: 40px;
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
+    /*border-top-left-radius: 7px;
+    border-top-right-radius: 7px;*/
     font-weight: 400;
     font-size: 1.2em;
     text-shadow: 1px 1px #fff;
@@ -112,14 +112,13 @@
           <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
         </div>
   </div>
-  <div id="tipochapter" style="width:35%;float:left;">
+  <div id="tipochapter" style="width:35%;float:left;" class="typechapt">
     <br>
     <br>
     <h2 align="left">Tipo de Currículum</h2>
     <select id="selectchapter" class="skill_search" style="margin-right: 150px">
       <OPTION VALUE="MK">Misiones Khan</OPTION>
       <OPTION VALUE="CK">Currículum Khan</OPTION>
-      <OPTION VALUE="CCH">Currículum Chile</OPTION>
     </select>
   </div>
 <br>
@@ -447,6 +446,9 @@ function graficar(json, clase){
       var mintpoejer=99999999;
       var mintpovid=99999999;
       var mintotejer=99999999;
+      var estudtrabtpoejer=0;
+      var estudtrabtpovid=0;
+      var estudtrabcantejer=0;
       for (j=0;j<estudiantes.length;j++){
         datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
         tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
@@ -460,14 +462,23 @@ function graficar(json, clase){
         if (estudiantes[j]["tiempo_videos"]>maxtpovid){
           maxtpovid=estudiantes[j]["tiempo_videos"];
         }
-        if (estudiantes[j]["total_ejercicios"]<mintotejer){
+        if (estudiantes[j]["total_ejercicios"]<mintotejer && estudiantes[j]["total_ejercicios"]!=0){
           mintotejer=estudiantes[j]["total_ejercicios"];
         }
-        if (estudiantes[j]["tiempo_ejercicios"]<mintpoejer){
+        if (estudiantes[j]["tiempo_ejercicios"]<mintpoejer && estudiantes[j]["tiempo_ejercicios"]!=0){
           mintpoejer=estudiantes[j]["tiempo_ejercicios"];
         }
-        if (estudiantes[j]["tiempo_videos"]<mintpovid){
+        if (estudiantes[j]["tiempo_videos"]<mintpovid && estudiantes[j]["tiempo_videos"]!=0){
           mintpovid=estudiantes[j]["tiempo_videos"];
+        }
+        if (estudiantes[j]["total_ejercicios"]>0){
+          estudtrabcantejer++;
+        }
+        if (estudiantes[j]["tiempo_ejercicios"]>0){
+          estudtrabtpoejer++;
+        }
+        if (estudiantes[j]["tiempo_videos"]>0){
+          estudtrabtpovid++;
         }
       }
       //var colorcolumn={"color":colors[i]};
@@ -496,20 +507,20 @@ function graficar(json, clase){
       arraytv[i]=[nombre, tpo_videos]
       arraycant[i]=[nombre, cantidad]*/
 
-      arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre, "cantidad":estudiantes.length, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudiantes.length};
+      arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudiantes.length};
       serietpo[i]={"name":nombre, "id":nombre, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'}};
 
-      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre, "cantidad":estudiantes.length, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudiantes.length};
+      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudiantes.length};
       serievid[i]={"name":nombre, "id":nombre, "data":videst, "tooltip":{"pointFormat": 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'}};
 
-      arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre, "cantidad":estudiantes.length, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudiantes.length}
+      arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudiantes.length}
       serie[i]={"name":nombre, "id":nombre, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'}};
 
       var arrayskill;
       var misiones = clase[i]["misiones"];
-      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b>';
-      var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b>';
-      var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b>';
+      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b>';
+      var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b>';
+      var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b>';
       //data=[];
       
       for (var k=0;k<misiones.length;k++){

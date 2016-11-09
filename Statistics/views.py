@@ -259,9 +259,25 @@ def selectStatistics(request):
 								if total['kaid_student_id']==student.kaid_student:
 									totalt=totalt+total['total']
 									total['total_total']=totalt
-
-
-
+					
+					delta = timedelta(days=1)
+					cantidadclase=0
+					diferencia=0
+					queryclass = Class_Schedule.objects.filter(id_class_id=curso).values('day', 'id_schedule_id')
+					d=fechadesde
+					while d<= fechahasta:
+						for qclass in queryclass:
+							if d.strftime("%A")==qclass['day']:
+								cantidadclase+=1
+								horas = Schedule.objects.filter(id_schedule=qclass['id_schedule_id']).values('start_time', 'end_time')
+								inicio = horas[0]['start_time']
+								final = horas[0]['end_time']
+								date_inicio = datetime.strptime(inicio, '%H:%M')
+								date_final = datetime.strptime(final, '%H:%M')
+								diferencia = diferencia+abs((date_final-date_inicio).seconds)
+								#print abs((date_final-date_inicio).seconds)
+						d+=delta
+					
 					dictTime = {}
 					dictVideo = {}
 					dictTotal = {}
@@ -273,6 +289,8 @@ def selectStatistics(request):
 					class_json["tiempo_videos_clase"] = 0
 					class_json["total_ejercicios_clase"] = 0
 					class_json["curso"] = curso
+					class_json["cantidad_clases"]=cantidadclase
+					class_json["tiempo_esperado"]=diferencia #tiempo esperado de trabajo para 1 estudiante
 					try:
 						for clase in classes:
 							if clase.additional:
