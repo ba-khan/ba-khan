@@ -62,6 +62,7 @@ class Migration(migrations.Migration):
                 ('id_chapter_name', models.CharField(max_length=150, serialize=False, primary_key=True)),
                 ('name_spanish', models.CharField(max_length=150)),
                 ('index', models.IntegerField()),
+                ('type_chapter', models.CharField(max_length=10)),
             ],
         ),
         migrations.CreateModel(

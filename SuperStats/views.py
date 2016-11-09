@@ -83,6 +83,7 @@ def selectSuperStats(request):
 			cursos = args.getlist('selcurso[]')
 			horarios = args.getlist('selhorario[]')
 			radio = args['radioselect']
+			tipochapter = args['typechapter']
 			fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 			fechahasta = datetime.strptime(hasta, '%Y-%m-%d')+timedelta(days=1)-timedelta(seconds=1)
 
@@ -272,7 +273,8 @@ def selectSuperStats(request):
 								class_json["establecimiento"]='G.M.'
 
 							
-							misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+							#misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+							misiones = Chapter.objects.filter(type_chapter=tipochapter).values('name_spanish', 'id_chapter_name')
 							dictChapter=[]
 							
 							dictHab={}

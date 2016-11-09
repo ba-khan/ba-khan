@@ -100,7 +100,7 @@
   </div>
 
 </div>
-  <div id="fechas" style="width:100%;float:left;" class="dates">
+  <div id="fechas" style="width:65%;float:left;" class="dates">
     <br>
     <h2 align="left" style="margin-left:200px;">Fechas</h2>
         <div  class="fechas" style="margin-left: 50px;">
@@ -111,6 +111,16 @@
           <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
           <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
         </div>
+  </div>
+  <div id="tipochapter" style="width:35%;float:left;">
+    <br>
+    <br>
+    <h2 align="left">Tipo de Currículum</h2>
+    <select id="selectchapter" class="skill_search" style="margin-right: 150px">
+      <OPTION VALUE="MK">Misiones Khan</OPTION>
+      <OPTION VALUE="CK">Currículum Khan</OPTION>
+      <OPTION VALUE="CCH">Currículum Chile</OPTION>
+    </select>
   </div>
 <br>
     <div style="float:left;width:100%" align="center">
@@ -353,6 +363,7 @@ function crearEstadisticas(){
       return $(el).val();
     }).get();
   }
+  var typechapter = $('#selectchapter').val();
   //$('#loading').show()
   loading();
   if (validar() && selcurso.length>0 && radioselect){
@@ -363,7 +374,7 @@ function crearEstadisticas(){
       $.ajax({
         url: "{% url 'SuperStats:selectSuperStats' %}",
         type: "POST",
-        data: {selcurso, selinst, desde, hasta, radioselect, selhorario},
+        data: {selcurso, selinst, desde, hasta, radioselect, selhorario, typechapter},
           success: function(response){
             jsonResponse = JSON.parse(response);
             hideDivMain();
@@ -676,7 +687,7 @@ function graficar(json, clase){
                     })
                     .enter().append("rect")
                     .attr("x", function (d, i) {
-                        return 5*i+200;
+                        return 4.2*i+200;
                     })
                     .attr("y", function (d) {
                         return y(d.y + d.y0);
@@ -684,7 +695,7 @@ function graficar(json, clase){
                     .attr("height", function (d) {
                         return y(d.y0) - y(d.y + d.y0);
                     })
-                    .attr("width", 4);
+                    .attr("width", 3.2);
             $('rect').tipsy({
               gravity: $.fn.tipsy.autoNS,
               opacity: 1,

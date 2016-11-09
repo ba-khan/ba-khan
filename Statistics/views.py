@@ -91,6 +91,7 @@ def selectStatistics(request):
 			cursos = args.getlist('selclase[]')
 			horarios = args.getlist('selhora[]')
 			radio = args['radioselect']
+			tipochapter = args['typechapter']
 			fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 			fechahasta = datetime.strptime(hasta, '%Y-%m-%d')+timedelta(days=1)-timedelta(seconds=1)
 			if len(cursos)>1:
@@ -280,8 +281,9 @@ def selectStatistics(request):
 								class_json["nombre"]=str(clase.nivel)+" "+str(clase.letter)+" "+str(clase.year)
 					except Exception as e:
 						print e
-
-					misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+					
+					#misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+					misiones = Chapter.objects.filter(type_chapter=tipochapter).values('name_spanish', 'id_chapter_name')
 					dictChapter=[]
 					
 					dictHab={}
@@ -586,6 +588,7 @@ def selectChapter(request):
 			desde = args['desde']
 			hasta = args['hasta']
 			cursos = args.getlist('selclase[]')
+			tipochapter = args['typechapter']
 			fechadesde = datetime.strptime(desde, '%Y-%m-%d')
 			fechahasta = datetime.strptime(hasta, '%Y-%m-%d')+timedelta(days=1)-timedelta(seconds=1)
 			if len(cursos)>1:
@@ -610,7 +613,8 @@ def selectChapter(request):
 					except Exception as e:
 						print e
 
-					misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+					#misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+					misiones = Chapter.objects.filter(type_chapter=tipochapter).values('name_spanish', 'id_chapter_name')
 					dictChapter=[]
 					
 					dictHab={}

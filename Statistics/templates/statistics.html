@@ -150,7 +150,7 @@
   </div>
   </div>
 
-  <div id="fechas" style="float:left;">
+  <div id="fechas" style="width:50%;float:left;">
     <br>
     <br>
     <h2 align="center">Fechas</h2>
@@ -162,6 +162,16 @@
           <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
           <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
         </div>
+  </div>
+  <div id="tipochapter" style="width:50%;float:left;">
+    <br>
+    <br>
+    <h2 align="center">Tipo de Currículum</h2>
+    <select id="selectchapter" class="skill_search" style="margin-right: 150px">
+      <OPTION VALUE="MK">Misiones Khan</OPTION>
+      <OPTION VALUE="CK">Currículum Khan</OPTION>
+      <OPTION VALUE="CCH">Currículum Chile</OPTION>
+    </select>
   </div>
   <div style="float:left;width:100%" align="center">
     <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
@@ -340,15 +350,16 @@ function crearEstadisticas(){
   }).get();
   var radioselect = $('input[value*="radio"]:checked').val()
   //$('#loading').show()
+  var typechapter = $('#selectchapter').val();
   loading();
   if (validar() && selclase.length>0 && selhora.length>0){
     desde = document.getElementById("desde").value;
     hasta = document.getElementById("hasta").value;
     if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
-      /*$.ajax({
+      $.ajax({
       url: "{% url 'Statistics:selectStatistics' %}",
       type: "POST",
-      data: {selclase, selhora, desde, hasta, radioselect},
+      data: {selclase, selhora, desde, hasta, radioselect, typechapter},
         success: function(response){
           jsonResponse = JSON.parse(response);
           //console.log(jsonResponse);
@@ -363,11 +374,11 @@ function crearEstadisticas(){
           graficar(jsonResponse, selclase);
 
         }
-    }); */
-    $.ajax({
+    }); 
+    /*$.ajax({
       url: "{% url 'Statistics:selectChapter' %}",
       type: "POST",
-      data: {selclase, desde, hasta},
+      data: {selclase, desde, hasta, typechapter},
         success: function(response){
           jsonResponse = JSON.parse(response);
           hideDivMain();
@@ -375,9 +386,10 @@ function crearEstadisticas(){
           $('.widget').show();
           $('#button_last').show();
           stoploading();
+          $('#chart').empty();
           graficarMision(jsonResponse, selclase);
         }
-    });
+    });*/
     }
     else{
       $.ajax({
