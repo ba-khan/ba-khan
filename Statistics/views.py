@@ -675,7 +675,6 @@ def selectChapter(request):
 	except Exception as e:
 		print e
 
-
 @login_required
 def compareStatistics(request):
 	request.session.set_expiry(timeSleep)
@@ -928,6 +927,7 @@ def compareStatistics(request):
 					for total_2 in total_exercise_2:
 						dictTotal_2[total_2['kaid_student_id']] = total_2['total_total']
 
+					student_array=[]
 					i=0
 					for student in students:
 						try:
@@ -954,7 +954,50 @@ def compareStatistics(request):
 							class_json["total_ejercicios_clase_2"] = class_json["total_ejercicios_clase_2"] + dictTotal_2[student.kaid_student]
 						except:
 							class_json["total_ejercicios_clase_2"] = class_json["total_ejercicios_clase_2"] + 0
+						
+						student_json = {}
+						student_json["id"] = i
+						try:
+							student_json["kaid"] = student.kaid_student
+						except:
+							student_json["kaid"] = "ninguno"
+						
+						try:
+							student_json["name"] = student.nickname
+						except:
+							student_json["name"] = "ninguno"
+						try:
+							student_json["tiempo_ejercicios_1"] = dictTime_1[student.kaid_student]
+						except:
+							student_json["tiempo_ejercicios_1"] =  0
+						try:
+							student_json["tiempo_videos_1"] = dictVideo_1[student.kaid_student]
+						except:
+							student_json["tiempo_videos_1"] = 0
+						try:
+							student_json["total_ejercicios_1"] = dictTotal_1[student.kaid_student]
+						except:
+							student_json["total_ejercicios_1"] = 0
+						try:
+							student_json["tiempo_ejercicios_2"] = dictTime_2[student.kaid_student]
+						except:
+							student_json["tiempo_ejercicios_2"] =  0
+						try:
+							student_json["tiempo_videos_2"] = dictVideo_2[student.kaid_student]
+						except:
+							student_json["tiempo_videos_2"] = 0
+						try:
+							student_json["total_ejercicios_2"] = dictTotal_2[student.kaid_student]
+						except:
+							student_json["total_ejercicios_2"] = 0
+						#student_json["tipo1"] = tipo1
+						#student_json["tipo2"] = tipo2
+	 					#i+=1
+	 					
+						#json_array.append(student_json)
 						i+=1
+						student_array.append(student_json)
+					class_json["students"]=student_array
 					j+=1
 					json_array.append(class_json)
 				json_dict={"clases":json_array}
