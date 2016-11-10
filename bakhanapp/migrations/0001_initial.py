@@ -158,6 +158,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Related_Video_Exercise',
+            fields=[
+                ('id_related', models.AutoField(serialize=False, primary_key=True)),
+                ('id_video', models.CharField(max_length=150)),
+                ('id_exercise', models.CharField(max_length=150)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Schedule',
             fields=[
                 ('id_schedule', models.AutoField(serialize=False, primary_key=True)),
@@ -370,7 +378,6 @@ class Migration(migrations.Migration):
                 ('id_video_name', models.CharField(max_length=150, serialize=False, primary_key=True)),
                 ('name_spanish', models.CharField(max_length=150, null=True)),
                 ('index', models.IntegerField()),
-                ('related_skill', models.CharField(max_length=150, null=True)),
                 ('url_video', models.CharField(max_length=200)),
             ],
         ),

@@ -40,6 +40,7 @@ from bakhanapp.models import Topic
 from bakhanapp.models import Subtopic
 from bakhanapp.models import Subtopic_Skill
 from bakhanapp.models import Institution
+from bakhanapp.models import Related_Video_Exercise
 
 import datetime
 
@@ -380,7 +381,14 @@ def urlExercise(session):
         try:
             #print data
             #print "."
-            Skill.objects.filter(id_skill_name=skill.id_skill_name).update(url_skill=data["ka_url"])
+            #Skill.objects.filter(id_skill_name=skill.id_skill_name).update(url_skill=data["ka_url"])
+            relacionado = data["curated_related_videos"]
+            #print len(relacionado)
+            for i in xrange(0,len(relacionado)):
+                queryvid = Video.objects.filter(id_video_name=relacionado[i]).values('id_video_name')
+                #print queryvid[0]['id_video_name']
+                Related_Video_Exercise.objects.create(id_video=queryvid[0]['id_video_name'], id_exercise=skill.id_skill_name)
+                #print relacionado[i]
         except Exception as e:
             print e
             continue

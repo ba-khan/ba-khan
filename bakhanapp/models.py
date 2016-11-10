@@ -248,7 +248,6 @@ class Video(models.Model):
     id_video_name = models.CharField(max_length=150,primary_key=True)
     name_spanish = models.CharField(max_length=150,null=True)
     index = models.IntegerField()
-    related_skill = models.CharField(max_length=150,null=True)
     url_video = models.CharField(max_length=200)
     
     def __unicode__(self): # __unicode__ on Python 2
@@ -397,3 +396,8 @@ class Subtopic_Video_Mineduc(models.Model):
     
     class Meta:
         unique_together = ('id_video_name', 'id_subtopic_name_mineduc')
+
+class Related_Video_Exercise(models.Model):
+    id_related = models.AutoField(primary_key=True)
+    id_video = models.CharField(max_length=150)
+    id_exercise = models.CharField(max_length=150)
