@@ -271,11 +271,11 @@
     //$('#loading').hide();
     stoploading();
     $('#button_last').hide();
-      $("#hover").click(function(){
-          $(this).fadeOut();
-          $("#popup").fadeOut();
-          $("#popup_error").fadeOut();
-        });
+    $("#hover").click(function(){
+        $(this).fadeOut();
+        $("#popup").fadeOut();
+        $("#popup_error").fadeOut();
+      });
 
 $('#estadisticas').addClass('active selected');
 
@@ -400,6 +400,7 @@ function crearEstadisticas(){
           //console.log(jsonResponse);
           hideDivMain();
           showDiv();
+          $('#button_last').show();
           $('.widget').hide();
           //$('#loading').hide()
           stoploading();
@@ -1364,7 +1365,7 @@ function graficar(json, clase){
 }
 
 function graficarcompara(json, clase){
-  console.log(json)
+  //console.log(json)
   $('#ordenarcant').hide();
   $('#ordenarvid').hide();
   $('#ordenartot').hide();
@@ -1638,7 +1639,7 @@ function graficarcompara(json, clase){
                 '<span style="padding:0"><b>{point.minimo:,.0f} segundos</b></span><br>'+
                 '<span style="color:{series.color};padding:0">Total de estudiantes: </span>'+
                 '<span style="padding:0"><b>{point.cantidad} estudiantes</b></span><br>'+
-                '<span style="color:{series.color};padding:0">Estudiantes que trabajaron: </span>'+
+                '<span style="color:{series.color};padding:0">Est. que trabajaron: </span>'+
                 '<span style="padding:0"><b>{point.trabajaron} estudiantes</b></span><br>',
             //footerFormat: '<br>',
             shared: true,
@@ -1732,7 +1733,7 @@ function graficarcompara(json, clase){
                 '<span style="padding:0"><b>{point.minimo:,.0f} segundos</b></span><br>'+
                 '<span style="color:{series.color};padding:0">Total de estudiantes: </span>'+
                 '<span style="padding:0"><b>{point.cantidad} estudiantes</b></span><br>'+
-                '<span style="color:{series.color};padding:0">Estudiantes que trabajaron: </span>'+
+                '<span style="color:{series.color};padding:0">Est. que trabajaron: </span>'+
                 '<span style="padding:0"><b>{point.trabajaron} estudiantes</b></span><br>',
             //footerFormat: '</table>',
             shared: true,
@@ -1826,7 +1827,7 @@ function graficarcompara(json, clase){
                 '<span style="padding:0"><b>{point.minimo:,.0f} ejercicios</b></span><br>'+
                 '<span style="color:{series.color};padding:0">Total de estudiantes: </span>'+
                 '<span style="padding:0"><b>{point.cantidad} estudiantes</b></span><br>'+
-                '<span style="color:{series.color};padding:0">Estudiantes que trabajaron: </span>'+
+                '<span style="color:{series.color};padding:0">Est. que trabajaron: </span>'+
                 '<span style="padding:0"><b>{point.trabajaron} estudiantes</b></span><br>',
             //footerFormat: '</table>',
             shared: true,

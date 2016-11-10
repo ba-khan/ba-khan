@@ -160,8 +160,7 @@
 </div>
 <div class="graphics" id="graph" align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
-<br>
-<p>La carga de datos puede demorar unos minutos.</p>
+
 <hr>
 <div id="containertot" style="min-width: 300px; height: 500px; margin: 0 auto"></div>
 <br>
@@ -394,6 +393,8 @@ function crearEstadisticas(){
             jsonResponse = JSON.parse(response);
             hideDivMain();
             showDiv();
+            $('#button_last').show();
+            $('.widget').hide();
             //$('#loading').hide()
             stoploading();
             graficarcompara(jsonResponse, selinst);
@@ -1081,13 +1082,121 @@ function graficarcompara(json, clase){
     var tipo1 = clase[0]["tipo1"]
     var tipo2 = clase[0]["tipo2"]
     for (var i=0;i<clase.length;i++){
-      categorias[i]=clase[i]["nombre"];
+      /*categorias[i]=clase[i]["nombre"];
       tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
       tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
       tpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
       tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
       cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
-      cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
+      cantidad2[i]=clase[i]["total_ejercicios_clase_2"];*/
+      var estudiantes = clase[i]["students"];
+      var maxtpoejer1=0;
+      var maxtpovid1=0;
+      var maxtotejer1=0;
+      var mintpoejer1=99999999;
+      var mintpovid1=99999999;
+      var mintotejer1=99999999;
+      var estudtrabtpoejer1=0;
+      var estudtrabtpovid1=0;
+      var estudtrabcantejer1=0;
+      var maxtpoejer2=0;
+      var maxtpovid2=0;
+      var maxtotejer2=0;
+      var mintpoejer2=99999999;
+      var mintpovid2=99999999;
+      var mintotejer2=99999999;
+      var estudtrabtpoejer2=0;
+      var estudtrabtpovid2=0;
+      var estudtrabcantejer2=0;
+      for (j=0;j<estudiantes.length;j++){
+        if (estudiantes[j]["total_ejercicios_1"]>maxtotejer1){
+          maxtotejer1=estudiantes[j]["total_ejercicios_1"];
+        }
+        if (estudiantes[j]["tiempo_ejercicios_1"]>maxtpoejer1){
+          maxtpoejer1=estudiantes[j]["tiempo_ejercicios_1"];
+        }
+        if (estudiantes[j]["tiempo_videos_1"]>maxtpovid1){
+          maxtpovid1=estudiantes[j]["tiempo_videos_1"];
+        }
+        if (estudiantes[j]["total_ejercicios_1"]<mintotejer1 && estudiantes[j]["total_ejercicios_1"]!=0){
+          mintotejer1=estudiantes[j]["total_ejercicios_1"];
+        }
+        if (estudiantes[j]["tiempo_ejercicios_1"]<mintpoejer1 && estudiantes[j]["tiempo_ejercicios_1"]!=0){
+          mintpoejer1=estudiantes[j]["tiempo_ejercicios_1"];
+        }
+        if (estudiantes[j]["tiempo_videos_1"]<mintpovid1 && estudiantes[j]["tiempo_videos_1"]!=0){
+          mintpovid1=estudiantes[j]["tiempo_videos_1"];
+        }
+        if (estudiantes[j]["total_ejercicios_1"]>0){
+          estudtrabcantejer1++;
+        }
+        if (estudiantes[j]["tiempo_ejercicios_1"]>0){
+          estudtrabtpoejer1++;
+        }
+        if (estudiantes[j]["tiempo_videos_1"]>0){
+          estudtrabtpovid1++;
+        }
+
+        if (estudiantes[j]["total_ejercicios_2"]>maxtotejer2){
+          maxtotejer2=estudiantes[j]["total_ejercicios_2"];
+        }
+        if (estudiantes[j]["tiempo_ejercicios_2"]>maxtpoejer2){
+          maxtpoejer2=estudiantes[j]["tiempo_ejercicios_2"];
+        }
+        if (estudiantes[j]["tiempo_videos_2"]>maxtpovid2){
+          maxtpovid2=estudiantes[j]["tiempo_videos_2"];
+        }
+        if (estudiantes[j]["total_ejercicios_2"]<mintotejer2 && estudiantes[j]["total_ejercicios_2"]!=0){
+          mintotejer2=estudiantes[j]["total_ejercicios_2"];
+        }
+        if (estudiantes[j]["tiempo_ejercicios_2"]<mintpoejer2 && estudiantes[j]["tiempo_ejercicios_2"]!=0){
+          mintpoejer2=estudiantes[j]["tiempo_ejercicios_2"];
+        }
+        if (estudiantes[j]["tiempo_videos_2"]<mintpovid1 && estudiantes[j]["tiempo_videos_2"]!=0){
+          mintpovid2=estudiantes[j]["tiempo_videos_2"];
+        }
+        if (estudiantes[j]["total_ejercicios_2"]>0){
+          estudtrabcantejer2++;
+        }
+        if (estudiantes[j]["tiempo_ejercicios_2"]>0){
+          estudtrabtpoejer2++;
+        }
+        if (estudiantes[j]["tiempo_videos_2"]>0){
+          estudtrabtpovid2++;
+        }
+      }
+      if (mintpoejer1==99999999){
+        mintpoejer1=0
+      }
+       if (mintpovid1==99999999){
+        mintpovid1=0
+      }
+       if (mintotejer1==99999999){
+        mintotejer1=0
+      }
+      if (mintpoejer2==99999999){
+        mintpoejer2=0
+      }
+       if (mintpovid2==99999999){
+        mintpovid2=0
+      }
+       if (mintotejer2==99999999){
+        mintotejer2=0
+      }
+
+      categorias[i]=clase[i]["nombre"];
+      //tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
+      tpoejercicios1[i]={"y":clase[i]["tiempo_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer1, "maximo":maxtpoejer1, "minimo":mintpoejer1, "promedio":clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1};
+      //tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
+      tpoejercicios2[i]={"y":clase[i]["tiempo_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer2, "maximo":maxtpoejer2, "minimo":mintpoejer2, "promedio":clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2};
+      //tpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
+      tpovideos1[i]={"y":clase[i]["tiempo_videos_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid1, "maximo":maxtpovid1, "minimo":mintpovid1, "promedio":clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1}
+      //tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
+      tpovideos2[i]={"y":clase[i]["tiempo_videos_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid2, "maximo":maxtpovid2, "minimo":mintpovid2, "promedio":clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2}
+      //cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
+      cantidad1[i]={"y":clase[i]["total_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer1, "maximo":maxtotejer1, "minimo":mintotejer1, "promedio":clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1}
+      //cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
+      cantidad2[i]={"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2}
     }
 
   }
@@ -1148,10 +1257,20 @@ function graficarcompara(json, clase){
             enabled: true
         },
         tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:,.0f} segundos</b></td></tr>',
-            footerFormat: '</table>',
+            headerFormat: '<span style="font-size:10px">{point.key}</span><br>',
+            pointFormat: '<span style="color:{series.color};padding:0">{series.name}: </span>' +
+                '<span style="padding:0"><b>{point.y:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Promedio: </span>'+
+                '<span style="padding:0"><b>{point.promedio:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Máximo: </span>'+
+                '<span style="padding:0"><b>{point.maximo:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Mínimo: </span>'+
+                '<span style="padding:0"><b>{point.minimo:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Total de estudiantes: </span>'+
+                '<span style="padding:0"><b>{point.cantidad} estudiantes</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Est. que trabajaron: </span>'+
+                '<span style="padding:0"><b>{point.trabajaron} estudiantes</b></span><br>',
+            //footerFormat: '<br>',
             shared: true,
             useHTML: true
         },
@@ -1232,10 +1351,20 @@ function graficarcompara(json, clase){
             enabled: true
         },
         tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:,.0f} segundos</b></td></tr>',
-            footerFormat: '</table>',
+            headerFormat: '<span style="font-size:10px">{point.key}</span><br>',
+            pointFormat: '<span style="color:{series.color};padding:0">{series.name}: </span>' +
+                '<span style="padding:0"><b>{point.y:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Promedio: </span>'+
+                '<span style="padding:0"><b>{point.promedio:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Máximo: </span>'+
+                '<span style="padding:0"><b>{point.maximo:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Mínimo: </span>'+
+                '<span style="padding:0"><b>{point.minimo:,.0f} segundos</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Total de estudiantes: </span>'+
+                '<span style="padding:0"><b>{point.cantidad} estudiantes</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Est. que trabajaron: </span>'+
+                '<span style="padding:0"><b>{point.trabajaron} estudiantes</b></span><br>',
+            //footerFormat: '</table>',
             shared: true,
             useHTML: true
         },
@@ -1316,10 +1445,20 @@ function graficarcompara(json, clase){
             enabled: true
         },
         tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:,.0f} ejercicios</b></td></tr>',
-            footerFormat: '</table>',
+            headerFormat: '<span style="font-size:10px">{point.key}</span><br>',
+            pointFormat: '<span style="color:{series.color};padding:0">{series.name}: </span>' +
+                '<span style="padding:0"><b>{point.y:,.0f} ejercicios</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Promedio: </span>'+
+                '<span style="padding:0"><b>{point.promedio:,.0f} ejercicios</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Máximo: </span>'+
+                '<span style="padding:0"><b>{point.maximo:,.0f} ejercicios</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Mínimo: </span>'+
+                '<span style="padding:0"><b>{point.minimo:,.0f} ejercicios</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Total de estudiantes: </span>'+
+                '<span style="padding:0"><b>{point.cantidad} estudiantes</b></span><br>'+
+                '<span style="color:{series.color};padding:0">Est. que trabajaron: </span>'+
+                '<span style="padding:0"><b>{point.trabajaron} estudiantes</b></span><br>',
+            //footerFormat: '</table>',
             shared: true,
             useHTML: true
         },
