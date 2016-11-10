@@ -254,13 +254,13 @@ $(document).ready(function(){
 
   function buscar(){
     var to=false;
-    $('#skill_search').keyup(function () {
+    //$('#skill_search').keyup(function () {
       if(to) { clearTimeout(to); }
       to = setTimeout(function () {
         var v = $('#skill_search').val();
         $('#newTree').jstree(true).search(v);
       }, 250);
-    });
+    //});
   }
 
   function treeMineduc(){
