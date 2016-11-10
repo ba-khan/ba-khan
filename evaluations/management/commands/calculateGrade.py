@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt,Skill_Log,Skill,Video
-from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing
+from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing, Related_Video_Exercise
 from django.db.models import Count,Sum,Max
 from django.db.models import Q
 import logging
@@ -57,7 +57,8 @@ class Command(BaseCommand):
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(nothing=Count('kaid_student_id'))
                 correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                 time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-                query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name')
+                #query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name')
+                query2 = Related_Video_Exercise.objects.filter(id_exercise__in=skills).values('id_video')
                 time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
                 levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
@@ -90,7 +91,10 @@ class Command(BaseCommand):
             for te in time_excercice:
                 dictTimeExcercice[te['kaid_student_id']] = te['time']
             for vid in time_video:
-                dictTimeVideo[vid['kaid_student_id']] = vid['time']
+                if dictTimeExcercice[te['kaid_student_id']]==0:
+                    dictTimeVideo[vid['kaid_student_id']]=0
+                else:
+                    dictTimeVideo[vid['kaid_student_id']] = vid['time']
             for grade in grades_involved:
                 if grade.evaluated == False:
                     try:
