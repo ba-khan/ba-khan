@@ -91,10 +91,7 @@ class Command(BaseCommand):
             for te in time_excercice:
                 dictTimeExcercice[te['kaid_student_id']] = te['time']
             for vid in time_video:
-                if dictTimeExcercice[te['kaid_student_id']]==0:
-                    dictTimeVideo[vid['kaid_student_id']]=0
-                else:
-                    dictTimeVideo[vid['kaid_student_id']] = vid['time']
+                dictTimeVideo[vid['kaid_student_id']] = vid['time']
             for grade in grades_involved:
                 if grade.evaluated == False:
                     try:
@@ -102,7 +99,10 @@ class Command(BaseCommand):
                     except:
                         grade.excercice_time = 0
                     try:
-                        grade.video_time = dictTimeVideo[grade.kaid_student_id]
+                        if grade.excercice_time == 0:
+                            grade.video_time = 0
+                        else:
+                            grade.video_time = dictTimeVideo[grade.kaid_student_id]
                     except:
                         grade.video_time = 0
                     try:
