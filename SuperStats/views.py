@@ -102,10 +102,42 @@ def selectSuperStats(request):
 							sclass = Student_Class.objects.filter(id_class_id__in=classes).values('kaid_student_id')
 							students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 							if radio=="radio1":
+								contador_est=0
 								time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
 								time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
 								total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
-							
+								try:
+									queryradiothree = Class_Schedule.objects.filter(id_class_id__in=classes).values('day', 'id_schedule_id')
+									delta = timedelta(days=1)
+									total_out=[]
+									for qthree in queryradiothree:
+										horas = Schedule.objects.filter(id_schedule=qthree['id_schedule_id']).values('start_time', 'end_time')
+										inicio = horas[0]['start_time']
+										final = horas[0]['end_time']
+										d = fechadesde
+										while d <= fechahasta:
+											if d.strftime("%A")==qthree['day']:
+												newstart = d.strftime("%Y-%m-%d")+" "+inicio +":00"
+												newend = d.strftime("%Y-%m-%d")+" "+final+":00"
+												if d.strftime("%Y-%m-%d")>'2016-05-14' and d.strftime("%Y-%m-%d")<'2016-08-14':
+													newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+													newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
+												else:
+													newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
+													newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
+													total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
+											d+=delta
+									for total2 in total_exercise:
+										for outt in total_out:
+											if total2['kaid_student_id']==outt['kaid_student_id']:
+												total2['total_total']= total2['total_total']-outt['total']
+										#total2['total_total']=total2['total']
+									for total3 in total_exercise:
+											#dictTotal[total['kaid_student_id']] = total['total_total']
+										contador_est+=1
+								except Exception as e:
+									print e
+								
 							if radio=="radio2":
 								queryradiotwo = Class_Schedule.objects.filter(id_class_id__in=classes).values('day', 'id_schedule_id')
 								delta = timedelta(days=1)
@@ -241,6 +273,24 @@ def selectSuperStats(request):
 											totalt=totalt+total['total']
 											total['total_total']=totalt
 							
+							delta = timedelta(days=1)
+							cantidadclase=0
+							diferencia=0
+							queryclass = Class_Schedule.objects.filter(id_class_id=newcurso[1]).values('day', 'id_schedule_id')
+							d=fechadesde
+							while d<= fechahasta:
+								for qclass in queryclass:
+									if d.strftime("%A")==qclass['day']:
+										cantidadclase+=1
+										horas = Schedule.objects.filter(id_schedule=qclass['id_schedule_id']).values('start_time', 'end_time')
+										inicio = horas[0]['start_time']
+										final = horas[0]['end_time']
+										date_inicio = datetime.strptime(inicio, '%H:%M')
+										date_final = datetime.strptime(final, '%H:%M')
+										diferencia = diferencia+abs((date_final-date_inicio).seconds)
+										#print abs((date_final-date_inicio).seconds)
+								d+=delta
+
 							dictTime = {}
 							dictVideo = {}
 							dictTotal = {}
@@ -250,6 +300,12 @@ def selectSuperStats(request):
 							class_json["tiempo_videos_clase"] = 0
 							class_json["total_ejercicios_clase"] = 0
 							class_json["curso"] = newcurso[1]
+							class_json["cantidad_clases"]=cantidadclase
+							class_json["tiempo_esperado"]=diferencia #tiempo esperado de trabajo para 1 estudiante
+							try:
+								class_json["estudiantes_out"]=contador_est
+							except:
+								class_json["estudiantes_out"]=0
 							try:
 								for clase in classes:
 									if clase.additional:
