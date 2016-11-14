@@ -222,6 +222,18 @@ button.accordion.active, button.accordion:hover {
     background-color: #ddd;
 }
 
+button.accordion:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+}
+
+button.accordion.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
 /* Style the accordion panel. Note: hidden by default */
 div.panel {
     padding: 0 18px;
@@ -237,7 +249,7 @@ div.panel.show {
 div.panel {
     padding: 0 18px;
     background-color: white;
-    max-height: 0;
+    /*max-height: 0;*/
     overflow: hidden;
     transition: 0.6s ease-in-out;
     opacity: 0;
@@ -245,7 +257,7 @@ div.panel {
 
 div.panel.show {
     opacity: 1;
-    max-height: 500px; /* Whatever you like, as long as its more than the height of the content (on all screen sizes) */
+    /*max-height: 1000px; /* Whatever you like, as long as its more than the height of the content (on all screen sizes) */
 }
 </style>
 
@@ -265,18 +277,30 @@ div.panel.show {
       <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
     </form>
   </div>
-  <div id="newtable">
+  <!--<div id="newtable">
+  </div>!-->
+  <div id="newaccordion">
   </div>
 </div>
 </div>
-<button class="accordion">Nivel 1</button>
+<!--<button class="accordion">Nivel 1</button>
 <div class="panel">
   <button class="accordion">Unidad 1</button>
   <div class="panel">
-    <p>aqui van los objetivos</p>
+    <button class="accordion">Objetivo 1</button>
+    <div class="panel">
+      <p>aqui va la descripcion del objetivo</p>
+      <button class="accordion">Videos</button>
+      <div class="panel">
+        <p>aqui va la lista de videos</p>
+      </div>
+      <button class="accordion">Ejercicios</button>
+      <div class="panel">
+        <p>aqui va la lista de ejercicios</p>
+      </div>
+    </div>
   </div>
-  <!--<p>aqui van las unidades, objetivos, videos y ejercicios</p>!-->
-</div>
+
 
 <button class="accordion">Nivel 2</button>
 <div class="panel">
@@ -286,7 +310,7 @@ div.panel.show {
 <button class="accordion">Nivel 3</button>
 <div class="panel">
   <p>aqui van las unidades, objetivos, videos y ejercicios</p>
-</div>
+</div></div>!-->
 
 <div id="popup" style="display:none">
   
@@ -310,7 +334,17 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       $("#popuptree").fadeOut();
       });
-    treeMineduc();
+    //treeMineduc();
+    accordionMineduc();
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].onclick = function(){
+            this.classList.toggle("active");
+            this.nextElementSibling.classList.toggle("show");
+        }
+    }
   });
 
   function buscar(){
@@ -324,15 +358,33 @@ $(document).ready(function(){
     //});
   }
 
-  var acc = document.getElementsByClassName("accordion");
-  var i;
-
-  for (i = 0; i < acc.length; i++) {
-      acc[i].onclick = function(){
-          this.classList.toggle("active");
-          this.nextElementSibling.classList.toggle("show");
+  function accordionMineduc(){
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    console.log(arbol);
+    var newaccordion='';
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      //console.log(chapters[i]["nombre"])
+      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'</button><div class="panel">';
+      newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>';
+      var topicos = chapters[i]["topico"];
+      for (var j = 0; j < topicos.length; j++) {
+        newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
+        newaccordion += '<a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a>'
+        var subtopicos = topicos[j]["subtopico"];
+        for (var k = 0; k < subtopicos.length; k++) {
+          //subtopicos[i]
+          newaccordion += '<button class="accordion">'+subtopicos[k]["nombre"]+'</button>'
+          newaccordion += '<div class="panel"><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></div>'
+        }
+        newaccordion += '</div>'
       }
+      newaccordion+='</div>';
+    }
+    $('#newaccordion').append(newaccordion);
   }
+
+
 
   function treeMineduc(){
     var arbol = JSON.parse('{{ json_data | escapejs }}');
