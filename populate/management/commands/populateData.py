@@ -275,6 +275,8 @@ def poblar_skill_attempts(name_student, kaid_student, dates, session):
             for j in range(len(data)):
                 #print data[j]["time_done"]
                 try:
+                    if data[j]["time_taken"]<0:
+                        data[j]["time_taken"]=0
                     skill_attempts = Skill_Attempt(count_attempts = data[j]["count_attempts"],
                                                                            mission = data[j]["mission"],
                                                                            time_taken = data[j]["time_taken"],
