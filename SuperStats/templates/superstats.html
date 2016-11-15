@@ -513,7 +513,7 @@ function graficar(json, clase){
       arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudiantes.length, "cantclase":cantidad_clase, "tpo_esperado":tiempo_esperado};
       serietpo[i]={"name":nombre, "id":nombre, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'}};
 
-      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudiantes.length, "cantclase":cantidad_clase};
+      arraytv[i]={"name":nombre, "y": tpo_videos, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudiantes.length, "cantclase":cantidad_clase, "est_vid_out":clase[i]["estudiantes_out_vid"]};
       serievid[i]={"name":nombre, "id":nombre, "data":videst, "tooltip":{"pointFormat": 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'}};
 
       arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudiantes.length, "cantclase":cantidad_clase, "est_out": clase[i]["estudiantes_out"]}
@@ -522,7 +522,14 @@ function graficar(json, clase){
       var arrayskill;
       var misiones = clase[i]["misiones"];
       var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
-      var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
+
+      if (clase[i]["estudiantes_out_vid"]==0){
+        var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
+      }
+      else{
+        var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
+      }
+      
       if (clase[i]["estudiantes_out"]==0){
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
       }
