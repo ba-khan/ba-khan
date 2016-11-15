@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import json
 from django.core.management.base import BaseCommand, CommandError
 from bakhanapp.models import Grade,Assesment,Assesment_Config,Assesment_Skill,Student_Skill,Skill_Progress,Skill_Attempt,Skill_Log,Skill,Video
-from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing, Related_Video_Exercise
+from bakhanapp.models import Subtopic_Skill,Subtopic_Video,Video_Playing
 from django.db.models import Count,Sum,Max
 from django.db.models import Q
 import logging
@@ -57,11 +57,10 @@ class Command(BaseCommand):
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(nothing=Count('kaid_student_id'))
                 correct = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                 time_excercice = Skill_Attempt.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('time_taken'))
-                #query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name')
-                query2 = Related_Video_Exercise.objects.filter(id_exercise__in=skills).values('id_video')
+                query2 = Video.objects.filter(related_skill__in=skills).values('id_video_name')
                 time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-                levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
+                levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__lte=assesment.end_date
                     ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date','id_skill_name_id'
                     ).order_by('kaid_student','id_skill_name_id','-skill_progress__date').distinct('kaid_student','id_skill_name_id')#,skill_progress__to_level='practiced'
                 struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
@@ -99,10 +98,7 @@ class Command(BaseCommand):
                     except:
                         grade.excercice_time = 0
                     try:
-                        if grade.excercice_time == 0:
-                            grade.video_time = 0
-                        else:
-                            grade.video_time = dictTimeVideo[grade.kaid_student_id]
+                        grade.video_time = dictTimeVideo[grade.kaid_student_id]
                     except:
                         grade.video_time = 0
                     try:
@@ -130,20 +126,26 @@ class Command(BaseCommand):
                     except:
                         grade.struggling = 0
                     try:
-                        lev = levels.filter(kaid_student=grade.kaid_student_id)
-                        studentPracticed = 0
-                        studentMastery1 = 0
-                        studentMastery2 = 0
-                        studentMastery3 = 0
-                        for l in lev:
-                            if l['skill_progress__to_level']=='practiced':
-                                studentPracticed += 1
-                            if l['skill_progress__to_level']=='mastery1':
-                                studentMastery1 += 1
-                            if l['skill_progress__to_level']=='mastery2':
-                                studentMastery2 += 1
-                            if l['skill_progress__to_level']=='mastery3':
-                                studentMastery3 += 1
+                        if dictTimeExcercice[grade.kaid_student_id]>0:
+                            lev = levels.filter(kaid_student=grade.kaid_student_id)
+                            studentPracticed = 0
+                            studentMastery1 = 0
+                            studentMastery2 = 0
+                            studentMastery3 = 0
+                            for l in lev:
+                                if l['skill_progress__to_level']=='practiced':
+                                    studentPracticed += 1
+                                if l['skill_progress__to_level']=='mastery1':
+                                    studentMastery1 += 1
+                                if l['skill_progress__to_level']=='mastery2':
+                                    studentMastery2 += 1
+                                if l['skill_progress__to_level']=='mastery3':
+                                    studentMastery3 += 1
+                        else:
+                            studentPracticed = 0
+                            studentMastery1 = 0
+                            studentMastery2 = 0
+                            studentMastery3 = 0
                     except:
                         studentPracticed = 0
                         studentMastery1 = 0
@@ -241,7 +243,7 @@ class Command(BaseCommand):
                             sklprgrs = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,skill_progress__date__range=(assesment.start_date,assesment.end_date)).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date').order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')
                             is_struggling = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id).values('struggling')
                         except Exception as e:
-                            #print e
+                            print e
                             logging.error('ha fallado try:#id04 en CalculateGrade.py')
                             logging.info(e)
                         try:
@@ -259,15 +261,13 @@ class Command(BaseCommand):
                             cor_aux = cor['correct']
                         try:
                             inc_aux = inc_aux + 0
-                        except Exception as e:
-                            #print e
+                        except:
                             inc_aux = 0
                         try:
                             cor_aux = cor_aux + 0
                         except:
                             cor_aux = 0
                         try:#id05
-                            #print inc_aux
                             update_skill_log = Skill_Log(id_skill_log = sk_lg.id_skill_log,
                                     id_skill_name_id = sk_lg.id_skill_name_id,
                                     correct = cor_aux,
@@ -276,6 +276,7 @@ class Command(BaseCommand):
                                     id_grade_id = sk_lg.id_grade.id_grade)
                             update_skill_log.save()
                         except Exception as e:
+                            print e
                             logging.error('ha fallado try:#id05 en CalculateGrade.py')
                             logging.info(e)
 
@@ -312,12 +313,20 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
         except: 
             print "no data id_student_skills"
         try: 
-            last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
+            try:
+                last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
+            except:
+                last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
+            #if not last_level:
+            #    print "paso aca"
+            #    last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
             points = points + scores[last_level['to_level']]
-        except: 
-            pass
+        except Exception as e:
+            print e
     try:
         points = points / len(configured_skills)
-    except:
+    except Exception as e:
         points = 0
+        print e
+        
     return points
