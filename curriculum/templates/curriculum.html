@@ -55,7 +55,7 @@ input{
   height: 100%;
 }
 #popup{
-  height:200px;
+  height:350px;
 }
 #popuptree{
   height:650px;
@@ -376,6 +376,7 @@ $(document).ready(function(){
           //subtopicos[i]
           newaccordion += '<button class="accordion">'+subtopicos[k]["nombre"]+'</button><div class="panel">'
           newaccordion += '<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a>';
+          newaccordion += '<p>'+subtopicos[k]['aeoe']+'</p>'
           var ejer = subtopicos[k]["skills"];
           newaccordion += '<button class="accordion">Ejercicios</button><div class="panel">';
           for (var m = 0; m < ejer.length; m++) {
@@ -608,11 +609,13 @@ function saveNewTopic(t){
 
 function saveNewSubtopic(t){
   var nombresubtopic = $('#newNameSubtopic').val()
+  var descripcionsubtopic = $('#textarea_coment').val()
+  //console.log(descripcionsubtopic);
   if(validarSubtopic()){
     $.ajax({
       url: "{% url 'curriculum:nuevo_subtopic' %}",
       type: "POST",
-      data: {nombre: nombresubtopic, curso: t},
+      data: {nombre: nombresubtopic, curso: t, descripcion: descripcionsubtopic},
         success: function(response){
           $("#popup").empty()
           $("#close").hide();
@@ -692,7 +695,7 @@ function addSubtopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Subtópico, Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><input id='newDescSubtopic' name='descSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
+  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Subtópico, Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><textarea id='textarea_coment' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:220px;height:50px;padding-top:5px'></textarea><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
 }
 
 function addVideoExercise(id){

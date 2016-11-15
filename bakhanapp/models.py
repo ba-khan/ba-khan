@@ -375,7 +375,7 @@ class Subtopic_Mineduc(models.Model):
     id_subtopic_mineduc = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     id_topic = models.ForeignKey(Topic_Mineduc)
-    AE_OE = models.CharField(max_length=200)
+    AE_OE = models.CharField(max_length=500)
     index = models.IntegerField()
     
     def __unicode__(self):

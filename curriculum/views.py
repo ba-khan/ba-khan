@@ -51,11 +51,12 @@ def getCurriculum(request):
 			topico["id"]=top.id_topic_mineduc
 			topico["nombre"]=top.name
 			aprendizaje=[]
-			subtopic = Subtopic_Mineduc.objects.filter(id_topic_id=top.id_topic_mineduc)
+			subtopic = Subtopic_Mineduc.objects.filter(id_topic_id=top.id_topic_mineduc).order_by('name')
 			for sub in subtopic:
 				subtopico={}
 				subtopico["id"]=sub.id_subtopic_mineduc
 				subtopico["nombre"]=sub.name
+				subtopico["aeoe"]=sub.AE_OE
 				skills=[]
 				videos=[]
 				subtopicskill = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopico["id"])
@@ -155,7 +156,7 @@ def newSubtopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'])
+			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'], AE_OE=args['descripcion'])
 			return HttpResponse('Subtopic guardado correctamente')
 		except Exception as e:
 			print e
