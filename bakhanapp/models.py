@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -77,7 +76,7 @@ class Group(models.Model):
     master = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
-        return self.name
+        return self.type
     
 class Group_Student(models.Model):
     id_group = models.ForeignKey(Group)
@@ -127,11 +126,32 @@ class Class_Subject(models.Model):
     class Meta:
         unique_together = ('id_class', 'id_subject_name')
 
+class Schedule(models.Model):
+    id_schedule = models.AutoField(primary_key=True)
+    start_time = models.CharField(max_length=10)
+    end_time = models.CharField(max_length=10)
+    id_institution = models.ForeignKey(Institution)
+    name_block = models.CharField(max_length=50)
+
+    class Meta:
+        unique_together = ('start_time', 'end_time', 'id_institution')
+
+class Class_Schedule(models.Model):
+    id_class_schedule = models.AutoField(primary_key=True)
+    id_schedule = models.ForeignKey(Schedule)
+    kaid_teacher = models.ForeignKey(Teacher)
+    id_class = models.ForeignKey(Class)
+    day = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ('id_schedule', 'day', 'kaid_teacher')
+
 class Chapter(models.Model):
     id_chapter_name = models.CharField(max_length=150,primary_key=True)
     id_subject_name = models.ForeignKey(Subject)
     name_spanish = models.CharField(max_length=150)
     index = models.IntegerField()
+    type_chapter = models.CharField(max_length=10)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -160,6 +180,7 @@ class Skill(models.Model):
     name_spanish = models.CharField(max_length=150,null=True)
     name = models.CharField(max_length=150,null=True)
     index = models.IntegerField()
+    url_skill = models.CharField(max_length=200)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -226,7 +247,7 @@ class Video(models.Model):
     id_video_name = models.CharField(max_length=150,primary_key=True)
     name_spanish = models.CharField(max_length=150,null=True)
     index = models.IntegerField()
-    related_skill = models.CharField(max_length=150,null=True)
+    url_video = models.CharField(max_length=200)
     
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
@@ -331,3 +352,51 @@ class Skill_Log(models.Model):
     incorrect =  models.IntegerField(null=True)
     id_grade = models.ForeignKey(Grade)
     skill_progress = models.CharField(max_length=20)
+
+class Chapter_Mineduc(models.Model):
+    id_chapter_mineduc = models.AutoField(primary_key=True)
+    index = models.IntegerField()
+    name = models.CharField(max_length=50)
+       
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
+class Topic_Mineduc(models.Model):
+    id_topic_mineduc = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    id_chapter = models.ForeignKey(Chapter_Mineduc)
+    index = models.IntegerField()
+    
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
+class Subtopic_Mineduc(models.Model):
+    id_subtopic_mineduc = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    id_topic = models.ForeignKey(Topic_Mineduc)
+    AE_OE = models.CharField(max_length=200)
+    index = models.IntegerField()
+    
+    def __unicode__(self):
+        return self.name
+
+class Subtopic_Skill_Mineduc(models.Model):
+    id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
+    id_skill_name = models.ForeignKey(Skill)
+    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    
+    class Meta:
+        unique_together = ('id_skill_name', 'id_subtopic_mineduc')
+
+class Subtopic_Video_Mineduc(models.Model):
+    id_subtopic_video_mineduc = models.AutoField(primary_key=True)
+    id_video_name = models.ForeignKey(Video)
+    id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    
+    class Meta:
+        unique_together = ('id_video_name', 'id_subtopic_name_mineduc')
+
+class Related_Video_Exercise(models.Model):
+    id_related = models.AutoField(primary_key=True)
+    id_video = models.CharField(max_length=150)
+    id_exercise = models.CharField(max_length=150)
