@@ -238,6 +238,7 @@ class Command(BaseCommand):
                         skill_progress_aux = 'unstarted'
                         try:#id04
                             #incorrect = Skill_Attempt.objects.filter(Q(kaid_student=grade.kaid_student_id)&Q(id_skill_name_id=sk_lg.id_skill_name_id)&Q(correct=False)&Q(task_type__startswith="mastery")&(Q(skipped=False)|Q(skipped=True))&Q(date__range=(assesment.start_date,assesment.end_date))).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
+                            #incorrect
                             incorrect = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=False,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(incorrect=Count('kaid_student_id'))
                             correct = Skill_Attempt.objects.filter(kaid_student=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,correct=True,date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(correct=Count('kaid_student_id'))
                             sklprgrs = Student_Skill.objects.filter(kaid_student_id=grade.kaid_student_id,id_skill_name_id=sk_lg.id_skill_name_id,skill_progress__date__range=(assesment.start_date,assesment.end_date)).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date').order_by('kaid_student','id_student_skill','-skill_progress__date').distinct('kaid_student','id_student_skill')
