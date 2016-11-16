@@ -393,7 +393,7 @@ $(document).ready(function(){
           for (var m = 0; m < ejer.length; m++) {
             //vid[l]
             
-            newaccordion += '<a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>';
+            newaccordion += '<img src={% static "img/ejercicios.png" %} alt="ejercicios"><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>';
             //newaccordion += '<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
           }
           newaccordion += '</div>';
@@ -402,7 +402,7 @@ $(document).ready(function(){
           for (var l = 0; l < vid.length; l++) {
             //vid[l]
             
-            newaccordion += '<a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>';
+            newaccordion += '<img src={% static "img/videos.png" %} alt="videos"><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>';
             //newaccordion += '<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
           }
           newaccordion += '</div>';

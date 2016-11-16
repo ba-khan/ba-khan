@@ -551,6 +551,16 @@ label.sort-filter{
     margin-right:20px;
     margin-left:-5%;
 }
+.khanExercise {
+    background:url(img/ejercicios.png);
+    background-size: 23px;
+    cursor:pointer;
+    width: 23px;
+    height: 23px;
+    border: none;
+    margin-right:20px;
+    margin-left:-5%;
+}
 .btn-download{
   background:url(img/icono_descargar.png);
   float: right;
