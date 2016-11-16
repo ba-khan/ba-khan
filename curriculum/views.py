@@ -171,9 +171,13 @@ def saveVideoExercise(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			subtopic_id = args['subtopic']
-			Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopic_id).delete()
-			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopic_id).delete()
+			#subtopic_id = args['subtopic']
+			print args
+			for arg in args:
+				print args[arg]
+			#Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopic_id).delete()
+			#Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopic_id).delete()
+			'''
 			for arg in args:
 				if arg=="subtopic":
 					idsubtopic = arg
@@ -184,6 +188,7 @@ def saveVideoExercise(request):
 						Subtopic_Skill_Mineduc.objects.create(id_skill_name_id=idskill[6:-1], id_subtopic_mineduc_id=subtopic_id)
 					else:
 						Subtopic_Video_Mineduc.objects.create(id_video_name_id=idskill[6:-1], id_subtopic_name_mineduc_id=subtopic_id)
+			'''
 			return HttpResponse('Ejercicios y/o Videos guardados correctamente')
 		except Exception as e:
 			print e

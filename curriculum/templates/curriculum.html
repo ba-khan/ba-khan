@@ -333,6 +333,7 @@ div.panel {
 <script type="text/javascript">
 
 $(document).ready(function(){
+    
     $("#hover").click(function(){
           $(this).fadeOut();
       $("#popup").fadeOut();
@@ -344,7 +345,18 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       $("#popuptree").fadeOut();
       });
+    /*$('#popuptree').empty();
+    $('#hover').fadeIn();
+    $('#popuptree').fadeIn();
+    $('#popuptree').append("<div id='search'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
+    $('#popuptree').append("<div id='newTree1' class='topictree'></div>")
+    $('#newTree1').jstree(tree);
+    $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a>");
     //treeMineduc();
+    setTimeout(function(){
+      $('#newTree1').jstree('select_node', '#21938');
+    },1000);*/
+    
     accordionMineduc();
     var acc = document.getElementsByClassName("accordion");
     var i;
@@ -370,8 +382,7 @@ $(document).ready(function(){
   }
 var arbol = JSON.parse('{{ json_data | escapejs }}');
   function accordionMineduc(){
-    
-    console.log(arbol);
+    //console.log(arbol);
     var newaccordion='';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
@@ -652,9 +663,34 @@ function saveNewSubtopic(t){
 }
 
 function saveVideoExercise(t){
+  var infodata=[]
+  var cont=0;
   var select = $("#newTree"+t).jstree("get_selected", true);
   //console.log(select);
-  var contador=0;
+  for (var i = 0; i < select.length; i++) {
+    if (typeof select[i]["data"] != "undefined"){
+      //infodata[cont]={}
+      if(select[i]["data"]["skill_id"]){
+        //datos[select[i]["data"]["skill_id"]]=select[i]["icon"]
+        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["skill_id"], "icon":select[i]["icon"]}
+      }
+      else{
+        //datos[select[i]["data"]["video_id"]]=select[i]["icon"]
+        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
+      }
+      //console.log(select[i]["id"]);
+      //a
+    }
+    /*if (select[i]["children"].length==0){
+      //console.log(select[i]);
+
+      
+      //contador++;
+    }*/
+    cont++;
+  }
+  //console.log(select);
+  /*var contador=0;
   var datos={};
   for (var i = 0; i < select.length; i++) {
     if (select[i]["children"].length==0){
@@ -668,13 +704,13 @@ function saveVideoExercise(t){
       
       contador++;
     }
-  }
-  console.log(datos);
+  }*/
+  //console.log(infodata);
   if (select.length>0){
     $.ajax({
     url: "{% url 'curriculum:save_videoexercise' %}",
     type: "POST",
-    data: {datos, subtopic:t},
+    data: {infodata, subtopic:t},
       success: function(response){
         $('#popuptree').hide();
         $("#popup").empty()
@@ -711,22 +747,49 @@ function addSubtopic(id){
 }
 
 function addVideoExercise(id){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
     //desclickear las habilidade sy vide3os clickeados
-
+    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
     $('#popuptree').empty();
     $('#hover').fadeIn();
     $('#popuptree').fadeIn();
     $('#popuptree').append("<div id='search'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
     $('#popuptree').append("<div id='newTree"+id+"' class='topictree'></div>")
-    $('#newTree'+id).jstree(tree);
-    $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>")
-
+    $('#newTree'+id+'').jstree(tree);
+    $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
+    
+    //window.setTimeout(selectTree(id), 484184848);
+    setTimeout(function(){
+      $('#newTree'+id+'').jstree('select_node', '#21938');
+    },1000);
     //pasar las habilidades y videos de "arbol" con id "id"$(topictreeId).jstree('select_node', skill); <-- agregar eso y voilà
 
     //
     
     //console.log(tree);
+}
+
+function selectTree(id){
+  //$('#newTree'+id).jstree('select_node', '#21938');
+  //console.log(id);
+  //console.log(select);
+  /*var chapters=arbol["capitulos"];
+  //console.log(arbol);
+  for (var i = 0; i < chapters.length; i++) {
+    //chapters[i]
+    var topicos = chapters[i]["topico"];
+    for (var j = 0; j < topicos.length; j++) {
+      var subtopicos = topicos[j]["subtopico"];
+      for (var k = 0; k < subtopicos.length; k++) {
+        if (subtopicos[k]["id"]==id){
+          var ejer = subtopicos[k]["skills"];
+          for (var l = 0; l < ejer.length; l++) {
+            //console.log(ejer[l]["skill"]);
+            $('#newTree'+id).jstree('select_node', ejer[l]["skill"]);
+          }
+        }
+      }
+    }
+  }*/
 }
 
 function validar(){
