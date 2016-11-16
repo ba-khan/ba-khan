@@ -368,10 +368,10 @@ $(document).ready(function(){
       }, 250);
     //});
   }
-
+var arbol = JSON.parse('{{ json_data | escapejs }}');
   function accordionMineduc(){
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    //console.log(arbol);
+    
+    console.log(arbol);
     var newaccordion='';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
@@ -392,7 +392,7 @@ $(document).ready(function(){
           newaccordion += '<button class="accordion">Ejercicios</button><div class="panel">';
           for (var m = 0; m < ejer.length; m++) {
             //vid[l]
-            
+           // console.log(ejer[m]["skill"])
             newaccordion += '<img src={% static "img/ejercicios.png" %} alt="ejercicios"><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>';
             //newaccordion += '<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
           }
@@ -401,9 +401,10 @@ $(document).ready(function(){
           newaccordion += '<button class="accordion">Videos</button><div class="panel">';
           for (var l = 0; l < vid.length; l++) {
             //vid[l]
-            
+           // console.log(vid[l]["video"])
             newaccordion += '<img src={% static "img/videos.png" %} alt="videos"><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>';
             //newaccordion += '<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
+            $('#newTree'+subtopicos[k]["id"]).jstree('select_node', vid[l]["video"]);
           }
           newaccordion += '</div>';
           newaccordion += '</div>';
@@ -668,7 +669,7 @@ function saveVideoExercise(t){
       contador++;
     }
   }
-  //console.log(datos);
+  console.log(datos);
   if (select.length>0){
     $.ajax({
     url: "{% url 'curriculum:save_videoexercise' %}",
@@ -711,6 +712,8 @@ function addSubtopic(id){
 
 function addVideoExercise(id){
     var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
+    //desclickear las habilidade sy vide3os clickeados
+
     $('#popuptree').empty();
     $('#hover').fadeIn();
     $('#popuptree').fadeIn();
@@ -718,6 +721,10 @@ function addVideoExercise(id){
     $('#popuptree').append("<div id='newTree"+id+"' class='topictree'></div>")
     $('#newTree'+id).jstree(tree);
     $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>")
+
+    //pasar las habilidades y videos de "arbol" con id "id"$(topictreeId).jstree('select_node', skill); <-- agregar eso y voilà
+
+    //
     
     //console.log(tree);
 }
