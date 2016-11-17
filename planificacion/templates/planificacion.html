@@ -13,9 +13,82 @@
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
 
-<!--<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">-->
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
+
+<style>
+#popup{
+  height:350px;
+}
+#popuptree{
+  height:650px;
+}
+
+#newaccordion{
+  border: 1px solid #C6D1AD;
+  border-radius: 5px;
+  padding:15px;
+  padding-left: 10%;
+  padding-right: 10%;
+  text-align: left;
+}
+
+.topictree{
+  overflow: hidden;
+  overflow-y:scroll;
+  height: 550px;
+  width: 570px;
+  font-size: 12px;
+  padding: 5px 10px 10px 0px;
+  text-align: left;
+  margin: 10px;
+  border: 1px solid #ddd;
+}
+
+button.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+button.accordion.active, button.accordion:hover {
+    background-color: #ddd;
+}
+
+button.accordion:after {
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    color: #777;
+    float: right;
+    margin-left: 5px;
+}
+
+button.accordion.active:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+/* Style the accordion panel. Note: hidden by default */
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    display: none;
+    overflow: hidden;
+    transition: 0.6s ease-in-out;
+    opacity: 0;
+}
+
+/* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
+div.panel.show {
+    display: block;
+    opacity: 1;
+}
+</style>
 
 <br>
 <div class="container">
@@ -23,9 +96,102 @@
 
   <br>
   <h1 style="text-align:center;">Planificación Curriculum</h1>
+  <div id="newaccordion">
+    <h2 style="text-align:center;">Curriculum Propuesto</h2>
+  </div>
+  <div id="newplanning">
+    
+  </div>
 
 </div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#newplanning').hide();
+    accordionMineduc();
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].onclick = function(){
+            this.classList.toggle("active");
+            this.nextElementSibling.classList.toggle("show");
+        }
+    }
+  });
+  var arbol = JSON.parse('{{ json_data | escapejs }}');
+  //console.log(arbol);
+
+  function accordionMineduc(){
+    var newaccordion='';
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'</button><div class="panel">';
+      newaccordion += '<a onclick=\'(setPlanning("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Generar Planificación</a>';
+      var topicos = chapters[i]["topico"];
+      for (var j = 0; j < topicos.length; j++) {
+        newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
+        var subtopicos = topicos[j]["subtopico"];
+        for (var k = 0; k < subtopicos.length; k++) {
+          newaccordion += '<button class="accordion">'+subtopicos[k]["nombre"]+'</button><div class="panel">'
+          newaccordion += '<p>'+subtopicos[k]['aeoe']+'</p>'
+          var ejer = subtopicos[k]["skills"];
+          newaccordion += '<button class="accordion">Ejercicios</button><div class="panel">';
+          for (var m = 0; m < ejer.length; m++) {
+            newaccordion += '<img src={% static "img/ejercicios.png" %} alt="ejercicios"><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>';
+          }
+          newaccordion += '</div>';
+          var vid = subtopicos[k]["videos"];
+          newaccordion += '<button class="accordion">Videos</button><div class="panel">';
+          for (var l = 0; l < vid.length; l++) {
+            newaccordion += '<img src={% static "img/videos.png" %} alt="videos"><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>';
+            $('#newTree'+subtopicos[k]["id"]).jstree('select_node', vid[l]["video"]);
+          }
+          newaccordion += '</div>';
+          newaccordion += '</div>';
+        }
+        newaccordion += '</div>'
+      }
+      newaccordion+='</div>';
+    }
+    $('#newaccordion').append(newaccordion);
+  }
+
+  function setPlanning(id){
+    //console.log(id);
+    $('#newplanning').empty();
+    $('#newaccordion').hide();
+    $('#newplanning').show();
+    var newplanning='<h2 style="text-align:center;">Mis Planificaciones</h2>'
+    newplanning+='<a onclick="cargaAcordeon()" style="cursor:pointer; width:250px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Volver a Curriculum Propuesto</a>'
+    newplanning+='<div id="planif"><table><tr><th>OA</th><th>Clase</th><th>Objetivo de la clase</th><th>Inicio de la clase</th><th>Videos Khan</th><th>Ejercicios Khan</th><th>Descripción Material</th><th>Cierre de la clase</th></tr>';
+    newplanning+='<tr><td><a onclick=\'(selectOA("'+id+'"))\' style="cursor:pointer; width:100px; height: 20px; padding:0px; " class="kui-button kui-button-plain kui-button-primary">Seleccionar</a></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table></div>'
+
+    $('#newplanning').append(newplanning);
+  }
+
+  function cargaAcordeon(){
+    $('#newaccordion').show();
+    $('#newplanning').hide();
+  }
+
+  function selectOA(id){
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      if(chapters[i]['id']==id){
+        var topicos = chapters[i]["topico"];
+        for (var k = 0; k < topicos.length; k++) {
+          var subtopicos = topicos[k]["subtopico"];
+          for (var j = 0; j < subtopicos.length; j++) {
+            console.log(subtopicos[j]["nombre"]);
+            //mostrar los oa para que el usuario pueda seleccionar uno
+          }
+        }
+      }
+    }
+  }
+</script>
 
 
 {% endblock %}
