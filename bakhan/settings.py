@@ -56,7 +56,8 @@ INSTALLED_APPS = (
     'Schedule', 
     'Statistics', 
     'SuperStats',
-    'curriculum'
+    'curriculum',
+    'planificacion'
 )
 
 MIDDLEWARE_CLASSES = (

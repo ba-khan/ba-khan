@@ -184,6 +184,10 @@ def superestad(request):
 def curriculum(request):
     return HttpResponseRedirect("/curriculum")
 
+@login_required()
+def planificacion(request):
+    return HttpResponseRedirect("/planificacion")
+
 #@permission_required('bakhanapp.isAdmin',login_url="/")
 #def configuracionHorario(request):
 #    return HttpResponse("Administracion de Horarios")

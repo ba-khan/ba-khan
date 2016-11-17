@@ -52,5 +52,8 @@ urlpatterns = [
     url(r'^curriculum/', include('curriculum.urls', namespace="curriculum")),
     url(r'^curriculum/','bakhanapp.views.curriculum', name='curriculum'),
 
+    url(r'^planificacion/', include('planificacion.urls', namespace="planificacion")),
+    url(r'^planificacion/','bakhanapp.views.planificacion', name='planificacion'),
+
     #url(r'^home/teacher/classes/', 'bakhanapp.views.getTeacherClasses', name='getTeacherClasses'),
 ]
