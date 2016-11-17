@@ -345,18 +345,7 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       $("#popuptree").fadeOut();
       });
-    /*$('#popuptree').empty();
-    $('#hover').fadeIn();
-    $('#popuptree').fadeIn();
-    $('#popuptree').append("<div id='search'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-    $('#popuptree').append("<div id='newTree1' class='topictree'></div>")
-    $('#newTree1').jstree(tree);
-    $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a>");
-    //treeMineduc();
-    setTimeout(function(){
-      $('#newTree1').jstree('select_node', '#21938');
-    },1000);*/
-    
+
     accordionMineduc();
     var acc = document.getElementsByClassName("accordion");
     var i;
@@ -427,113 +416,6 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     $('#newaccordion').append(newaccordion);
   }
 
-
-
-  /*function treeMineduc(){
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    //console.log(arbol);
-    var newtable;
-    newtable = '<table id="adminGrid" class="testsched" style="margin: left;width: 100%;"><tr><th>Capítulo</th><th>Tópico</th><th>Subtópico</th><th>Videos</th><th>Ejercicios</th><th>Agregar Ejercicios/Videos</th></tr>';
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"]
-      var rowspan = topicos.length+1;
-      var rowspandos=0;
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos = topicos[j]["subtopico"]
-        var longitud = subtopicos.length+1;
-        rowspandos = rowspandos+longitud;
-      }
-      var valorrows=rowspandos+1;
-      newtable += '<tr><td rowspan='+valorrows+'>'+chapters[i]["nombre"]+'</td>';
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos = topicos[j]["subtopico"]
-        var rowspandos = subtopicos.length+1;
-        if (j==0){
-          newtable+='<td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (k==0){
-              var vid = subtopicos[k]["videos"]
-              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td><ul>';
-              for (var l = 0; l < vid.length; l++) {
-                newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><ul>';
-              var ejer = subtopicos[k]["skills"]
-              for (var m = 0; m < ejer.length; m++) {
-                newtable+='<li><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
-            }
-            else{
-              var vid = subtopicos[k]["videos"]
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul>';
-              for (var l = 0; l < vid.length; l++) {
-                newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><ul>';
-              var ejer = subtopicos[k]["skills"]
-              for (var m = 0; m < ejer.length; m++) {
-                newtable+='<li><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
-            }
-          }
-          if (rowspandos==1){
-        newtable+='<td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
-          }
-          else{
-            newtable+='<tr><td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
-          }
-        }
-        else{
-          newtable+='<tr><td rowspan='+rowspandos+'>'+topicos[j]["nombre"]+'</td>';
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (k==0){
-              var vid = subtopicos[k]["videos"]
-              newtable+='<td>'+subtopicos[k]['nombre']+'</td><td><ul>';
-              for (var l = 0; l < vid.length; l++) {
-                newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><ul>';
-              var ejer = subtopicos[k]["skills"]
-              for (var m = 0; m < ejer.length; m++) {
-                newtable+='<li><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
-            }
-            else{
-              var vid = subtopicos[k]["videos"]
-              newtable+='<tr><td>'+subtopicos[k]['nombre']+'</td><td><ul>';
-              for (var l = 0; l < vid.length; l++) {
-                newtable+='<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><ul>';
-              var ejer = subtopicos[k]["skills"]
-              for (var m = 0; m < ejer.length; m++) {
-                newtable+='<li><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a></li><br>'
-              }
-              newtable+='</ul></td><td><a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:130px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a></td></tr>';
-            }
-          }
-          if (rowspandos==1){
-        newtable+='<td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
-          }
-          else{
-            newtable+='<tr><td><a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a></td><td></td><td></td><td></td></tr>';
-          }
-        }
-      }
-      if (rowspan==1){
-        newtable+='<td><a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td><td></td><td></td><td></td></tr>';
-      }
-      else{
-        newtable+='<tr><td><a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a></td><td></td><td></td><td></td><td></td></tr>';
-      }
-    }
-    newtable += '</table>';
-    $('#newtable').append(newtable)
-  }*/
 
   $('#curriculum').addClass('active selected');
 
@@ -666,46 +548,20 @@ function saveVideoExercise(t){
   var infodata=[]
   var cont=0;
   var select = $("#newTree"+t).jstree("get_selected", true);
-  //console.log(select);
   for (var i = 0; i < select.length; i++) {
     if (typeof select[i]["data"] != "undefined"){
-      //infodata[cont]={}
       if(select[i]["data"]["skill_id"]){
-        //datos[select[i]["data"]["skill_id"]]=select[i]["icon"]
         infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["skill_id"], "icon":select[i]["icon"]}
       }
       else{
-        //datos[select[i]["data"]["video_id"]]=select[i]["icon"]
         infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
       }
-      //console.log(select[i]["id"]);
-      //a
-    }
-    /*if (select[i]["children"].length==0){
-      //console.log(select[i]);
 
-      
-      //contador++;
-    }*/
+    }
+
     cont++;
   }
-  //console.log(select);
-  /*var contador=0;
-  var datos={};
-  for (var i = 0; i < select.length; i++) {
-    if (select[i]["children"].length==0){
-      //console.log(select[i]);
-      if(select[i]["data"]["skill_id"]){
-        datos[select[i]["data"]["skill_id"]]=select[i]["icon"]
-      }
-      else{
-        datos[select[i]["data"]["video_id"]]=select[i]["icon"]
-      }
-      
-      contador++;
-    }
-  }*/
-  //console.log(infodata);
+
   if (select.length>0){
     $.ajax({
     url: "{% url 'curriculum:save_videoexercise' %}",
@@ -747,7 +603,6 @@ function addSubtopic(id){
 }
 
 function addVideoExercise(id){
-    //desclickear las habilidade sy vide3os clickeados
     var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
     $('#popuptree').empty();
     $('#hover').fadeIn();
@@ -757,39 +612,27 @@ function addVideoExercise(id){
     $('#newTree'+id+'').jstree(tree);
     $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
     
-    //window.setTimeout(selectTree(id), 484184848);
     setTimeout(function(){
-      $('#newTree'+id+'').jstree('select_node', '#21938');
-    },1000);
-    //pasar las habilidades y videos de "arbol" con id "id"$(topictreeId).jstree('select_node', skill); <-- agregar eso y voilà
-
-    //
-    
-    //console.log(tree);
-}
-
-function selectTree(id){
-  //$('#newTree'+id).jstree('select_node', '#21938');
-  //console.log(id);
-  //console.log(select);
-  /*var chapters=arbol["capitulos"];
-  //console.log(arbol);
-  for (var i = 0; i < chapters.length; i++) {
-    //chapters[i]
-    var topicos = chapters[i]["topico"];
-    for (var j = 0; j < topicos.length; j++) {
-      var subtopicos = topicos[j]["subtopico"];
-      for (var k = 0; k < subtopicos.length; k++) {
-        if (subtopicos[k]["id"]==id){
-          var ejer = subtopicos[k]["skills"];
-          for (var l = 0; l < ejer.length; l++) {
-            //console.log(ejer[l]["skill"]);
-            $('#newTree'+id).jstree('select_node', ejer[l]["skill"]);
+      var chapters=arbol["capitulos"];
+      for (var i = 0; i < chapters.length; i++) {
+        var topicos = chapters[i]["topico"];
+        for (var j = 0; j < topicos.length; j++) {
+          var subtopicos = topicos[j]["subtopico"];
+          for (var k = 0; k < subtopicos.length; k++) {
+            if (subtopicos[k]['id']==id){
+              var ejer = subtopicos[k]["skills"];
+              for (var l = 0; l < ejer.length; l++) {
+                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
+              }
+              var vid = subtopicos[k]["videos"];
+              for (var m = 0; m < vid.length; m++) {
+                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
+              }
+            }
           }
         }
       }
-    }
-  }*/
+    },1000);
 }
 
 function validar(){

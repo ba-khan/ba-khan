@@ -294,7 +294,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_subtopic_mineduc', models.AutoField(serialize=False, primary_key=True)),
                 ('name', models.CharField(max_length=50)),
-                ('AE_OE', models.CharField(max_length=200)),
+                ('AE_OE', models.CharField(max_length=500)),
                 ('index', models.IntegerField()),
             ],
         ),
@@ -310,6 +310,7 @@ class Migration(migrations.Migration):
             name='Subtopic_Skill_Mineduc',
             fields=[
                 ('id_subtopic_skill_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('id_tree', models.CharField(max_length=50)),
                 ('id_skill_name', models.ForeignKey(to='bakhanapp.Skill')),
                 ('id_subtopic_mineduc', models.ForeignKey(to='bakhanapp.Subtopic_Mineduc')),
             ],
@@ -325,6 +326,7 @@ class Migration(migrations.Migration):
             name='Subtopic_Video_Mineduc',
             fields=[
                 ('id_subtopic_video_mineduc', models.AutoField(serialize=False, primary_key=True)),
+                ('id_tree', models.CharField(max_length=50)),
                 ('id_subtopic_name_mineduc', models.ForeignKey(to='bakhanapp.Subtopic_Mineduc')),
             ],
         ),

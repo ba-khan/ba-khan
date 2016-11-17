@@ -68,6 +68,7 @@ def getCurriculum(request):
 					subtskillmin["skill"]=subskill.id_skill_name_id
 					subtskillmin["nombre"]=nameskill[0]['name_spanish']
 					subtskillmin["url"]=nameskill[0]['url_skill']
+					subtskillmin["idtree"]=subskill.id_tree
 					skills.append(subtskillmin)
 				subtopico["skills"]=skills
 				subtopicvideo = Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopico["id"])
@@ -77,6 +78,7 @@ def getCurriculum(request):
 					subtvideomin["video"]=subvideo.id_video_name_id
 					subtvideomin["nombre"]=namevideo[0]['name_spanish']
 					subtvideomin["url"]=namevideo[0]['url_video']
+					subtvideomin["idtree"]=subvideo.id_tree
 					videos.append(subtvideomin)
 				subtopico["videos"]=videos
 				aprendizaje.append(subtopico)
@@ -171,24 +173,15 @@ def saveVideoExercise(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			#subtopic_id = args['subtopic']
-			print args
-			for arg in args:
-				print args[arg]
-			#Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopic_id).delete()
-			#Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopic_id).delete()
-			'''
-			for arg in args:
-				if arg=="subtopic":
-					idsubtopic = arg
+			subtopic_id = args['subtopic']
+			Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopic_id).delete()
+			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopic_id).delete()
+			cantidad = (len(args)-1)/3
+			for x in range(0,cantidad):
+				if args['infodata['+str(x)+'][icon]']=="false":
+					Subtopic_Skill_Mineduc.objects.create(id_skill_name_id=args['infodata['+str(x)+'][id_sv]'], id_tree=args['infodata['+str(x)+'][id]'], id_subtopic_mineduc_id=subtopic_id)
 				else:
-					idskill = arg
-					#print idskill
-					if args[idskill]=="false":
-						Subtopic_Skill_Mineduc.objects.create(id_skill_name_id=idskill[6:-1], id_subtopic_mineduc_id=subtopic_id)
-					else:
-						Subtopic_Video_Mineduc.objects.create(id_video_name_id=idskill[6:-1], id_subtopic_name_mineduc_id=subtopic_id)
-			'''
+					Subtopic_Video_Mineduc.objects.create(id_video_name_id=args['infodata['+str(x)+'][id_sv]'], id_tree=args['infodata['+str(x)+'][id]'], id_subtopic_name_mineduc_id=subtopic_id)
 			return HttpResponse('Ejercicios y/o Videos guardados correctamente')
 		except Exception as e:
 			print e

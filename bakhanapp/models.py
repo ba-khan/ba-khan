@@ -385,6 +385,7 @@ class Subtopic_Skill_Mineduc(models.Model):
     id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
     id_skill_name = models.ForeignKey(Skill)
     id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    id_tree = models.CharField(max_length=50)
     
     class Meta:
         unique_together = ('id_skill_name', 'id_subtopic_mineduc')
@@ -393,6 +394,7 @@ class Subtopic_Video_Mineduc(models.Model):
     id_subtopic_video_mineduc = models.AutoField(primary_key=True)
     id_video_name = models.ForeignKey(Video)
     id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    id_tree = models.CharField(max_length=50)
     
     class Meta:
         unique_together = ('id_video_name', 'id_subtopic_name_mineduc')
