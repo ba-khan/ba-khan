@@ -18,7 +18,7 @@ from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
 from bakhanapp.models import Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc
-from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject
+from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning
 from django.db import connection
 
 register = template.Library()
@@ -40,6 +40,13 @@ import sys, os
 @login_required()
 def getCurriculumProposed(request):
 	request.session.set_expiry(timeSleep)
+	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+		isTeacher = True
+	else:
+		isTeacher = False
+
+	miplanificacion = Planning.objects.filter(teacher=request.user.user_profile.kaid)
+
 	chapter = Chapter_Mineduc.objects.all()
 	mision=[]
 	for chap in chapter:
@@ -58,7 +65,7 @@ def getCurriculumProposed(request):
 				subtopico={}
 				subtopico["id"]=sub.id_subtopic_mineduc
 				subtopico["nombre"]=sub.name
-				subtopico["aeoe"]=sub.AE_OE
+				subtopico["aeoa"]=sub.AE_OE
 				skills=[]
 				videos=[]
 				subtopicskill = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopico["id"])
@@ -125,4 +132,17 @@ def getCurriculumProposed(request):
 		topictree.append(video_obj)
 	topictree_json['core']={'data':topictree}
 	topictree_json_string=json.dumps(topictree_json)
-	return render_to_response('planificacion.html', { 'json_data':json_data, 'topictree_json_string':topictree_json_string} ,context_instance=RequestContext(request))
+	return render_to_response('planificacion.html', { 'json_data':json_data, 'topictree_json_string':topictree_json_string, 'isTeacher':isTeacher, 'miplanificacion': miplanificacion} ,context_instance=RequestContext(request))
+
+@login_required()
+def savePlanning(request):
+	if request.method=="POST":
+		try:
+			teacher = request.user.user_profile.kaid
+			args = request.POST
+			#print args['nombre']
+			Planning.objects.create(curso=args['nombre'], oa=args['oa'], clase=args['clase'], objetivo=args['objetivo'], inicio=args['inicio'], descripcion=args['descripcion'], cierre=args['cierre'], ejerciciokhan=args['ejercicio'], videokhan=args['video'], teacher_id=teacher)
+			return HttpResponse('Planificacion guardada correctamente')
+		except Exception as e:
+			print e
+			return HttpResponse('no guardando')

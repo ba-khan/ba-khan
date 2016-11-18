@@ -158,6 +158,21 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Planning',
+            fields=[
+                ('id_planning', models.AutoField(serialize=False, primary_key=True)),
+                ('curso', models.CharField(max_length=50)),
+                ('oa', models.CharField(max_length=500)),
+                ('clase', models.CharField(max_length=50)),
+                ('objetivo', models.CharField(max_length=500)),
+                ('inicio', models.CharField(max_length=500)),
+                ('ejerciciokhan', models.CharField(max_length=500)),
+                ('videokhan', models.CharField(max_length=500)),
+                ('descripcion', models.CharField(max_length=500)),
+                ('cierre', models.CharField(max_length=500)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Related_Video_Exercise',
             fields=[
                 ('id_related', models.AutoField(serialize=False, primary_key=True)),
@@ -435,6 +450,11 @@ class Migration(migrations.Migration):
             model_name='skill_attempt',
             name='kaid_student',
             field=models.ForeignKey(to='bakhanapp.Student'),
+        ),
+        migrations.AddField(
+            model_name='planning',
+            name='teacher',
+            field=models.ForeignKey(to='bakhanapp.Teacher'),
         ),
         migrations.AddField(
             model_name='group_student',

@@ -403,3 +403,16 @@ class Related_Video_Exercise(models.Model):
     id_related = models.AutoField(primary_key=True)
     id_video = models.CharField(max_length=150)
     id_exercise = models.CharField(max_length=150)
+
+class Planning(models.Model):
+    id_planning = models.AutoField(primary_key=True)
+    curso = models.CharField(max_length=50)
+    oa = models.CharField(max_length=500)
+    clase = models.CharField(max_length=50)
+    objetivo = models.CharField(max_length=500)
+    inicio = models.CharField(max_length=500)
+    ejerciciokhan = models.CharField(max_length=500)
+    videokhan = models.CharField(max_length=500)
+    descripcion = models.CharField(max_length=500)
+    cierre = models.CharField(max_length=500)
+    teacher = models.ForeignKey(Teacher)
