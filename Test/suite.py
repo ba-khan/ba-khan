@@ -32,10 +32,11 @@ class Test_Suite(unittest.TestCase):
             unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarFechaInicio.TestVerCursoEditarFechaInicio),  
             unittest.defaultTestLoader.loadTestsFromTestCase(TestVerCursoEditarFechaTermino.TestVerCursoEditarFechaTermino),                      
             ])
-        dateTimeStamp = time.strftime('%Y%m%d_%H_%M_%S')
         if not os.path.exists("reports"): os.makedirs("reports")
         os.chdir("reports")
-        buf = file("TestReport" + "_" + dateTimeStamp + ".html", 'wb')
+        #dateTimeStamp = time.strftime('%Y%m%d_%H_%M_%S')
+        #buf = file("TestReport" + "_" + dateTimeStamp + ".html", 'wb') // guardar reporte con fecha!
+        buf = file("SeleniumTestReport"+".html", 'wb')
         runner = HTMLTestRunner.HTMLTestRunner(
                 stream=buf,
                 title='Test the Report',
