@@ -34,10 +34,7 @@ table#tablaplan td {
 }
 
 #popup{
-  height:350px;
-}
-#popuptree{
-  height:650px;
+  height:200px;
 }
 
 #newaccordion{
@@ -166,8 +163,8 @@ div.panel.show {
       <td id="clase" contenteditable="true"></td>
       <td id="objetivo" contenteditable="true"></td>
       <td id="inicio" contenteditable="true"></td>
-      <td id="videokhan"></td>
-      <td id="ejerciciokhan"></td>
+      <td id="videokhan"><div id="videodiv"></td>
+      <td id="ejerciciokhan"><div id="ejerciciodiv"></td>
       <td id="descripcion" contenteditable="true"></td>
       <td id="cierre" contenteditable="true"></td>
       <td><a onclick="javascript:guardarPlan('id0')" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Guardar</a></td>
@@ -283,37 +280,10 @@ $(document).ready(function(){
     $('td#nombrecurso').val(idcurso);
     $('td#elegiroa').append(elegiroa);
 
-    /*
-    $('#newplanning').empty();
-    $('#newaccordion').hide();
-    $('#newplanning').show();
-    var newplanning='<h2 style="text-align:center;">Mis Planificaciones</h2>'
-    newplanning+='<a onclick="cargaAcordeon()" style="cursor:pointer; width:250px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Volver a Curriculum Propuesto</a>'
-    newplanning+='<div id="planif"><table id="tablaplan"><tr><th style="width:10%;">Curso</th><th style="width:10%;">OA</th><th style="width:10%;">Clase</th><th style="width:10%;">Objetivo de la clase</th><th style="width:10%;">Inicio de la clase</th><th style="width:10%;">Videos Khan</th><th style="width:10%;">Ejercicios Khan</th><th style="width:10%;">Descripción Material</th><th style="width:10%;">Cierre de la clase</th><th>Acciones</th></tr>';
-    newplanning+='<tr><td>'+nombrecurso+'</td><td><select id="seleccionar" onchange="getval(this);">';
-    newplanning+='<option value="">Seleccione una opción</option>';
-    
-    for (var i = 0; i < chapters.length; i++) {
-      if(chapters[i]['id']==id){
-        var topicos = chapters[i]["topico"];
-        for (var k = 0; k < topicos.length; k++) {
-          var subtopicos = topicos[k]["subtopico"];
-          for (var j = 0; j < subtopicos.length; j++) {
-            newplanning+='<option value="'+subtopicos[j]["nombre"]+'">'+subtopicos[j]["nombre"]+'</option>';
-          }
-        }
-      }
-    }
-    newplanning+='</select><div id="aeoe"></div></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td><div id="videokhan"></div></td><td><div id="ejerciciokhan"></div></td><td contenteditable="true"></td><td contenteditable="true"></td><td><a onclick=\'(guardarPlan("'+id+'", "'+nombrecurso+'"))\' style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Guardar</a><a onclick="#" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a></td></tr></table></div>'
-
-    $('#newplanning').append(newplanning);*/
-
   }
 
   function getval(sel){
     var aeoa=sel.value;
-    var idskills='';
-    var idvideos='';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       var topicos = chapters[i]["topico"];
@@ -329,23 +299,107 @@ $(document).ready(function(){
             $('td#elegiroa').append(OA);
             $('td#elegiroa').val(subtopicos[k]['nombre'])
             var ejer = subtopicos[k]["skills"];
-            $('td#ejerciciokhan').text('');
-            for (var l = 0; l < ejer.length; l++) {
+            
+            /*for (var l = 0; l < ejer.length; l++) {
               idskills += '**'+ejer[l]["skill"];
               $('td#ejerciciokhan').append('**<a href="'+ejer[l]["url"]+'" target="_blank">'+ejer[l]["nombre"]+'</a><br>');
             }
-            $('td#ejerciciokhan').val(idskills);
-            $('td#videokhan').text('');
+            $('td#ejerciciokhan').val(idskills);*/
+            
             var vid = subtopicos[k]["videos"];
-            for (var m = 0; m < vid.length; m++) {
-              idvideos += '**'+vid[m]["video"];
-              $('#videokhan').append('**<a href="'+vid[m]["url"]+'" target="_blank">'+vid[m]["nombre"]+'</a><br>');
+            //console.log(subtopicos[k])
+            $('td#videokhan').append('<a onclick=\'(selectVideos("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Seleccionar Videos</a>')
+            $('td#ejerciciokhan').append('<a onclick=\'(selectEjercicios("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Seleccionar Ejercicios</a>')
+            //for (var m = 0; m < vid.length; m++) {
+              //$('#videokhan').append('<select><option>primera opcion</option><option>segunda opcion</option></select>')
+              //idvideos += '**'+vid[m]["video"];
+              //$('#videokhan').append('**<a href="'+vid[m]["url"]+'" target="_blank">'+vid[m]["nombre"]+'</a><br>');
+            //}
+            //$('td#videokhan').val(idvideos);
+          }
+        }
+      }
+    }
+  }
+
+  function selectEjercicios(idsubtopic){
+    //$('td#ejerciciokhan').text('');
+    var idskills='';
+    $('#popup').empty();
+    $('#hover').fadeIn();
+    $('#popup').fadeIn();
+    $('#popup').append('<div id="ejercicioskhan">');
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]["topico"];
+      for (var j = 0; j < topicos.length; j++) {
+        var subtopicos = topicos[j]["subtopico"];
+        for (var k = 0; k < subtopicos.length; k++) {
+          if(subtopicos[k]['id']==idsubtopic){
+            var ejer = subtopicos[k]["skills"];
+            for (var m = 0; m < ejer.length; m++) {
+              idskills += '**'+ejer[m]["skill"];
+              $('#popup').append('<input type="checkbox" name="skill" value="'+ejer[m]["nombre"]+'" id="skillscb"> <a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>');
+            }
+            $('td#ejerciciokhan').val(idskills);
+          }
+        }
+      }
+    }
+    $('#popup').append('<a onclick="mostrarEjercicios()" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Aceptar</a>')
+  }
+
+  function selectVideos(idsubtopic){
+    //console.log(idsubtopic);
+    var idvideos='';
+    $('#popup').empty();
+    $('#hover').fadeIn();
+    $('#popup').fadeIn();
+    $('#popup').append('<div id="videoskhan">');
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]["topico"];
+      for (var j = 0; j < topicos.length; j++) {
+        var subtopicos = topicos[j]["subtopico"];
+        for (var k = 0; k < subtopicos.length; k++) {
+          if(subtopicos[k]['id']==idsubtopic){
+            var vid = subtopicos[k]["videos"]
+            for (var l = 0; l < vid.length; l++) {
+              idvideos += '**'+vid[l]["video"];
+              $('#popup').append('<input type="checkbox" name="video" value="'+vid[l]["nombre"]+'" id="videoscb"> <a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>');
             }
             $('td#videokhan').val(idvideos);
           }
         }
       }
     }
+    $('#popup').append('<a onclick="mostrarVideos()" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Aceptar</a>')
+  }
+
+  function mostrarEjercicios(){
+    $('div#ejerciciodiv').text('');
+    $('#popup').hide();
+    $('#hover').hide();
+    var selejercicios = $('input[name="skill"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+    for (var i = 0; i < selejercicios.length; i++) {
+      $('div#ejerciciodiv').append('<br><li>'+selejercicios[i]+'</li>');
+    }
+    $('input[name="skill"]').prop("checked", false); 
+  }
+
+  function mostrarVideos(){
+    $('div#videodiv').text('');
+    $('#popup').hide();
+    $('#hover').hide();
+    var selvideos = $('input[name="video"]:checked').map(function(_,el){
+      return $(el).val();
+    }).get();
+    for (var i = 0; i < selvideos.length; i++) {
+      $('div#videodiv').append('<br><li>'+selvideos[i]+'</li>');
+    }
+    $('input[name="video"]').prop("checked", false);
   }
 
   function guardarPlan(id){
@@ -359,18 +413,20 @@ $(document).ready(function(){
     var eje = $('td#ejerciciokhan').val();
     var vid = $('td#videokhan').val();
 
-    //console.log(eje);
-    //console.log(vid);
-
     $.ajax({
       url: "{% url 'planificacion:guardarplan' %}",
       type: "POST",
       data: {clase: cla, objetivo:obj, inicio:ini, descripcion:des, cierre:cie, nombre:nom, oa:oap, ejercicio:eje, video:vid},
         success: function(response){
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
           auxResponse = response;
             if (auxResponse == "Planificacion guardada correctamente"){
-              //$("#hover").css('pointer-events','none');
-              //$("#close").css('pointer-events','none');
+              $("#hover").css('pointer-events','none');
+              $("#close").css('pointer-events','none');
               window.setTimeout(function(){location.reload()},1000);
             }
         }
@@ -389,7 +445,17 @@ $(document).ready(function(){
       type: "POST",
       data: {curso: cursoelim, oa: oaelim},
         success: function(response){
-          console.log(response);
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+            if (auxResponse == "Planificacion borrada correctamente"){
+              $("#hover").css('pointer-events','none');
+              $("#close").css('pointer-events','none');
+              window.setTimeout(function(){location.reload()},1000);
+            }
         }
     });
   }
