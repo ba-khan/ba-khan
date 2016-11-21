@@ -406,8 +406,8 @@ class Related_Video_Exercise(models.Model):
 
 class Planning(models.Model):
     id_planning = models.AutoField(primary_key=True)
-    curso = models.CharField(max_length=50)
-    oa = models.CharField(max_length=500)
+    curso = models.CharField(max_length=20)
+    oa = models.CharField(max_length=20)
     clase = models.CharField(max_length=50)
     objetivo = models.CharField(max_length=500)
     inicio = models.CharField(max_length=500)

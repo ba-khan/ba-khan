@@ -46,7 +46,28 @@ def getCurriculumProposed(request):
 		isTeacher = False
 
 	miplanificacion = Planning.objects.filter(teacher=request.user.user_profile.kaid)
-
+	vkhn = ''
+	ekhn = ''
+	for miplan in miplanificacion:
+		nombrecurso = Chapter_Mineduc.objects.filter(id_chapter_mineduc=miplan.curso).values('name')
+		miplan.nombrecurso = nombrecurso[0]['name']
+		nombreoa = Subtopic_Mineduc.objects.filter(name=miplan.oa).values('AE_OE')
+		miplan.nombreoa = nombreoa[0]['AE_OE']
+		videoskhan = miplan.videokhan
+		vk = videoskhan.split('**')
+		for i in range(1,len(vk)):
+			#print vk[i]
+			vidkhan = Video.objects.filter(id_video_name=vk[i]).values('name_spanish', 'url_video')
+			vkhan = vidkhan[0]['name_spanish']
+			vkhn = vkhn+'**'+ vkhan
+		miplan.nombrevideokhan = vkhn
+		ejercicioskhan = miplan.ejerciciokhan
+		ek = ejercicioskhan.split('**')
+		for j in range(1,len(ek)):
+			ejekhan = Skill.objects.filter(id_skill_name=ek[j]).values('name_spanish', 'url_skill')
+			ekhan = ejekhan[0]['name_spanish']
+			ekhn = ekhn+'**'+ekhan
+		miplan.nombreejerciciokhan=ekhn
 	chapter = Chapter_Mineduc.objects.all()
 	mision=[]
 	for chap in chapter:
@@ -140,7 +161,6 @@ def savePlanning(request):
 		try:
 			teacher = request.user.user_profile.kaid
 			args = request.POST
-			#print args['nombre']
 			Planning.objects.create(curso=args['nombre'], oa=args['oa'], clase=args['clase'], objetivo=args['objetivo'], inicio=args['inicio'], descripcion=args['descripcion'], cierre=args['cierre'], ejerciciokhan=args['ejercicio'], videokhan=args['video'], teacher_id=teacher)
 			return HttpResponse('Planificacion guardada correctamente')
 		except Exception as e:
