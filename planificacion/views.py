@@ -166,3 +166,16 @@ def savePlanning(request):
 		except Exception as e:
 			print e
 			return HttpResponse('no guardando')
+
+@login_required()
+def deletePlanning(request):
+	if request.method=="POST":
+		try:
+			args = request.POST
+			cursoeliminar = args['curso']
+			oaeliminar = args['oa']
+			Planning.objects.filter(curso=cursoeliminar, oa=oaeliminar).delete()
+			return HttpResponse('Planificacion borrada correctamente')
+		except Exception as e:
+			print e
+			return HttpResponse('no guardando')

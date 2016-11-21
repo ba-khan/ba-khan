@@ -147,9 +147,9 @@ div.panel.show {
       <th style="width: 10%;">Acciones</th>
     </tr>
   {% for miplan in miplanificacion %}
-    <tr id="{{ miplan.nombrecurso }}__{{ miplan.oa }}">
-      <td id="{{ miplan.curso }}">{{ miplan.nombrecurso }}</td>
-      <td id="{{ miplan.oa }}">{{ miplan.nombreoa }}</td>
+    <tr id="idcurso{{ miplan.curso }}__" class="for{{forloop.counter}}loop">
+      <td id="{{ miplan.curso }}" class="flcurso">{{ miplan.nombrecurso }}</td>
+      <td id="{{ miplan.oa }}" class="floa">{{ miplan.nombreoa }}</td>
       <td id="{{forloop.counter}}__clase">{{ miplan.clase }}</td>
       <td id="{{forloop.counter}}__objetivo">{{ miplan.objetivo }}</td>
       <td id="{{forloop.counter}}__inicio">{{ miplan.inicio }}</td>
@@ -157,7 +157,7 @@ div.panel.show {
       <td id="{{ miplan.ejerciciokhan }}">{{ miplan.nombreejerciciokhan }}</td>
       <td id="{{forloop.counter}}__descripcion">{{ miplan.descripcion }}</td>
       <td id="{{forloop.counter}}__cierre">{{ miplan.cierre }}</td>
-      <td id="{{forloop.counter}}__accion"><!--<a onclick="javascript:guardarPlan({{forloop.counter}})" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Guardar</a>--><a onclick="eliminarPlan({{forloop.counter}})" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a></td>
+      <td id="{{forloop.counter}}__accion"><a onclick="eliminarPlan({{forloop.counter}})" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a></td>
     </tr>
   {% endfor %}
     <tr id="id0">
@@ -170,7 +170,7 @@ div.panel.show {
       <td id="ejerciciokhan"></td>
       <td id="descripcion" contenteditable="true"></td>
       <td id="cierre" contenteditable="true"></td>
-      <td><a onclick="javascript:guardarPlan('id0')" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Guardar</a><!--<a onclick="#" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a>--></td>
+      <td><a onclick="javascript:guardarPlan('id0')" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Guardar</a></td>
     </tr>
   </table>
   </div>
@@ -218,7 +218,7 @@ $(document).ready(function(){
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'</button><div class="panel">';
-      newaccordion += '<a onclick=\'(setPlanning("'+chapters[i]['nombre']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Generar Planificación</a>';
+      newaccordion += '<a onclick=\'(setPlanning("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Generar Planificación</a>';
       var topicos = chapters[i]["topico"];
       for (var j = 0; j < topicos.length; j++) {
         newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
@@ -248,19 +248,25 @@ $(document).ready(function(){
     $('#newaccordion').append(newaccordion);
   }
 
-  function setPlanning(nombre){
+  function setPlanning(id){
+    $('#tablaplan').show();
     $('td#elegiroa').text('');
     elegiroa ='';
     $('#newaccordion').hide();
-    $('#tablaplan').show();
-    $('#tablaplan tr').not('[id*="'+nombre+'__"]').hide();
+
+    $('#tablaplan tr').not('[id*="idcurso'+id+'__"]').hide();
+    if($('#tablaplan tr#idcurso'+id+'__').attr('id')=="idcurso"+id+"__"){
+      var result_style = document.getElementById('idcurso'+id+'__').style;
+      result_style.display = 'table-row';
+    }
+
     $('#tablaplan tr#cabecera').show();
     $('#tablaplan tr#id0').show();
     var chapters=arbol["capitulos"];
     elegiroa+='<select id="seleccionar" onchange="getval(this);">';
     elegiroa+='<option value="">Seleccione una opción</option>';
     for (var i = 0; i < chapters.length; i++) {
-      if (chapters[i]['nombre']==nombre){
+      if (chapters[i]['id']==id){
         var nombrecurso = chapters[i]['nombre'];
         var idcurso = chapters[i]['id'];
         var topicos = chapters[i]["topico"];
@@ -372,9 +378,20 @@ $(document).ready(function(){
   }
 
   function eliminarPlan(id){
-    console.log(id);
-    var cla = $('tr td[id*="'+id+'__curso"]').text();
-    console.log(cla);
+    var cursoelim = $('tr.for'+id+'loop td.flcurso').attr('id');
+    var oaelim = $('tr.for'+id+'loop td.floa').attr('id');
+
+    console.log(cursoelim);
+    console.log(oaelim);
+
+    $.ajax({
+      url: "{% url 'planificacion:eliminarplan' %}",
+      type: "POST",
+      data: {curso: cursoelim, oa: oaelim},
+        success: function(response){
+          console.log(response);
+        }
+    });
   }
 
   function cargaAcordeon(){
