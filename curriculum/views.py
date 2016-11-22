@@ -203,9 +203,10 @@ def deleteVideoExercise(request):
 		try:
 			Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=args['idsubtopic']).delete()
 			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=args['idsubtopic']).delete()
-			HttpResponse('Videos y Ejercicios borrados correctamente')
 		except Exception as e:
-			HttpResponse('No se ha podido borrar los videos y/o ejercicios')
+			print e
+			return HttpResponse('No se ha podido borrar los videos y/o ejercicios')
+		return HttpResponse('Videos y Ejercicios borrados correctamente')
 	return HttpResponse("Error al eliminar")
 
 def topicTree():
