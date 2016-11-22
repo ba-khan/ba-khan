@@ -150,14 +150,14 @@ div.panel.show {
       <td id="{{forloop.counter}}__clase">{{ miplan.clase }}</td>
       <td id="{{forloop.counter}}__objetivo">{{ miplan.objetivo }}</td>
       <td id="{{forloop.counter}}__inicio">{{ miplan.inicio }}</td>
-      <td id="videokhan">
+      <td id="khanvideo">
       {% for video in miplan.videokhan %}
         <a href="{{video.urlskill}}" target="_blank"><li>{{video.namespanish}}</li></a><br>
       {% endfor %}
       </td>
       <!--<td id="{{ miplan.videokhan }}">{{ miplan.nombrevideokhan }}</td>-->
       <!--<td id="{{ miplan.ejerciciokhan }}">{{ miplan.nombreejerciciokhan }}</td>-->
-      <td id="ejerciciokhan">
+      <td id="khanexercise">
       {% for exercise in miplan.ejerciciokhan %}
         <a href="{{exercise.urlskill}}" target="_blank"><li>{{exercise.namespanish}}</li></a><br>
       {% endfor %}
