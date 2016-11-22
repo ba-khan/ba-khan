@@ -193,6 +193,21 @@ def saveVideoExercise(request):
 			return HttpResponse("Error al guardar")
 	return HttpResponse("Error al guardar")
 
+@permission_required('bakhanapp.isSuper', login_url="/")
+def deleteVideoExercise(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == "POST":
+		args = request.POST
+		#print args['idsubtopic']
+		#print "arriba esta el args"
+		try:
+			Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=args['idsubtopic']).delete()
+			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=args['idsubtopic']).delete()
+			HttpResponse('Videos y Ejercicios borrados correctamente')
+		except Exception as e:
+			HttpResponse('No se ha podido borrar los videos y/o ejercicios')
+	return HttpResponse("Error al eliminar")
+
 def topicTree():
     topictree_json={}
     topictree_json['checkbox']={'keep_selected_style':False}
