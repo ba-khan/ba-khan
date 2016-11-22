@@ -347,7 +347,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       //console.log(chapters[i]["nombre"])
-      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'</button><div class="panel">';
+      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'<a onclick=\'(deleteChapter("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:120px; height: 20px; padding:0px;left:500px;position:absolute;" class="kui-button kui-button-plain kui-button-primary">Eliminar Misión</a></button><div class="panel">';
       newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>';
       newaccordion += '<a onclick=\'(deleteTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Tópico</a>';
       var topicos = chapters[i]["topico"];
@@ -633,6 +633,14 @@ function deleteTopic(id){
   $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
 }
 
+function deleteChapter(id){
+  $('#popup').empty();
+  $('#hover').fadeIn();
+  $('#popup').fadeIn();
+  $('#popup').append('<p>¿Está seguro que desea eliminar la misión? Perderá toda la información de tópicos, subtópicos, videos y ejercicios asociados a él.</p>');
+  $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
+}
+
 function cancelDelete(){
   $('#popup').hide();
   $('#hover').hide();
@@ -694,6 +702,27 @@ function confirmDeleteTopic(id){
         $('#popup').append("<p class='response'>"+response+"</p>");
         auxResponse = response;
           if (auxResponse == "Topico borrado correctamente"){
+            $("#hover").css('pointer-events', 'none');
+            $('#close').css('pointer-events', 'none');
+            window.setTimeout(function(){location.reload()}, 1000);
+          }
+      }
+  });
+}
+
+function confirmDeleteChapter(id){
+  $.ajax({
+    url: "{% url 'curriculum:deletechapter' %}",
+    type: "POST",
+    data: {idchapter: id},
+      success: function(response){
+        $('#popup').empty();
+        $('#close').hide();
+        $('#hover').fadeIn();
+        $('#popup').fadeIn();
+        $('#popup').append("<p class='response'>"+response+"</p>");
+        auxResponse = response;
+          if (auxResponse == "Mision borrada correctamente"){
             $("#hover").css('pointer-events', 'none');
             $('#close').css('pointer-events', 'none');
             window.setTimeout(function(){location.reload()}, 1000);

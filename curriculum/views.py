@@ -233,6 +233,19 @@ def deleteTopic(request):
 		return HttpResponse('Topico borrado correctamente')
 	return HttpResponse('Error al eliminar')
 
+@permission_required('bakhanapp.isSuper', login_url="/")
+def deleteChapter(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == "POST":
+		args = request.POST
+		try:
+			Chapter_Mineduc.objects.filter(id_chapter_mineduc=args['idchapter']).delete()
+		except Exception as e:
+			print e
+			return HttpResponse('No se ha podido borrar la mision')
+		return HttpResponse('Mision borrada correctamente')
+	return HttpResponse('Error al eliminar')
+
 def topicTree():
     topictree_json={}
     topictree_json['checkbox']={'keep_selected_style':False}
