@@ -365,7 +365,7 @@ class Chapter_Mineduc(models.Model):
 class Topic_Mineduc(models.Model):
     id_topic_mineduc = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    id_chapter = models.ForeignKey(Chapter_Mineduc)
+    id_chapter = models.ForeignKey(Chapter_Mineduc, on_delete=models.CASCADE)
     index = models.IntegerField()
     
     def __unicode__(self): # __unicode__ on Python 2
@@ -374,7 +374,7 @@ class Topic_Mineduc(models.Model):
 class Subtopic_Mineduc(models.Model):
     id_subtopic_mineduc = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    id_topic = models.ForeignKey(Topic_Mineduc)
+    id_topic = models.ForeignKey(Topic_Mineduc, on_delete=models.CASCADE)
     AE_OE = models.CharField(max_length=500)
     index = models.IntegerField()
     
@@ -384,7 +384,7 @@ class Subtopic_Mineduc(models.Model):
 class Subtopic_Skill_Mineduc(models.Model):
     id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
     id_skill_name = models.ForeignKey(Skill)
-    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, on_delete=models.CASCADE)
     id_tree = models.CharField(max_length=50)
     
     class Meta:
@@ -393,7 +393,7 @@ class Subtopic_Skill_Mineduc(models.Model):
 class Subtopic_Video_Mineduc(models.Model):
     id_subtopic_video_mineduc = models.AutoField(primary_key=True)
     id_video_name = models.ForeignKey(Video)
-    id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc)
+    id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc, on_delete=models.CASCADE)
     id_tree = models.CharField(max_length=50)
     
     class Meta:

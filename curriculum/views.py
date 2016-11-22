@@ -198,8 +198,6 @@ def deleteVideoExercise(request):
 	request.session.set_expiry(timeSleep)
 	if request.method == "POST":
 		args = request.POST
-		#print args['idsubtopic']
-		#print "arriba esta el args"
 		try:
 			Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=args['idsubtopic']).delete()
 			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=args['idsubtopic']).delete()
@@ -208,6 +206,32 @@ def deleteVideoExercise(request):
 			return HttpResponse('No se ha podido borrar los videos y/o ejercicios')
 		return HttpResponse('Videos y Ejercicios borrados correctamente')
 	return HttpResponse("Error al eliminar")
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def deleteSubtopic(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == "POST":
+		args = request.POST
+		try:
+			Subtopic_Mineduc.objects.filter(id_topic_id=args['idtopic']).delete()
+		except Exception as e:
+			print e
+			return HttpResponse('No se ha podido borrar el subtopico')
+		return HttpResponse('Subtopico borrado correctamente')
+	return HttpResponse('Error al eliminar')
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def deleteTopic(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == "POST":
+		args = request.POST
+		try:
+			Topic_Mineduc.objects.filter(id_chapter_id=args['idchapter']).delete()
+		except Exception as e:
+			print e
+			return HttpResponse('No se ha podido borrar el topico')
+		return HttpResponse('Topico borrado correctamente')
+	return HttpResponse('Error al eliminar')
 
 def topicTree():
     topictree_json={}

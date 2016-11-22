@@ -349,10 +349,12 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
       //console.log(chapters[i]["nombre"])
       newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'</button><div class="panel">';
       newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>';
+      newaccordion += '<a onclick=\'(deleteTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Tópico</a>';
       var topicos = chapters[i]["topico"];
       for (var j = 0; j < topicos.length; j++) {
         newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
-        newaccordion += '<a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a>'
+        newaccordion += '<a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a>';
+        newaccordion += '<a onclick=\'(deleteSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Subtópico</a>';
         var subtopicos = topicos[j]["subtopico"];
         for (var k = 0; k < subtopicos.length; k++) {
           //subtopicos[i]
@@ -615,13 +617,29 @@ function deleteVideoExercise(id){
   $('#popup').append('<a onclick=\'(confirmDeleteVideoExercise("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>')
 }
 
+function deleteSubtopic(id){
+  $('#popup').empty();
+  $('#hover').fadeIn();
+  $('#popup').fadeIn();
+  $('#popup').append('<p>¿Está seguro que desea eliminar el subtópico? Perderá toda la información de videos y ejercicios asociados a él.</p>');
+  $('#popup').append('<a onclick=\'(confirmDeleteSubtopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
+}
+
+function deleteTopic(id){
+  $('#popup').empty();
+  $('#hover').fadeIn();
+  $('#popup').fadeIn();
+  $('#popup').append('<p>¿Está seguro que desea eliminar el tópico? Perderá toda la información de subtópicos, videos y ejercicios asociados a él.</p>');
+  $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
+}
+
 function cancelDelete(){
   $('#popup').hide();
   $('#hover').hide();
 }
 
 function confirmDeleteVideoExercise(id){
-  console.log(id)
+  //console.log(id)
   $.ajax({
     url: "{% url 'curriculum:deletevideoexercise' %}",
     type: "POST",
@@ -637,6 +655,48 @@ function confirmDeleteVideoExercise(id){
             $("#hover").css('pointer-events','none');
             $("#close").css('pointer-events','none');
             window.setTimeout(function(){location.reload()},1000);
+          }
+      }
+  });
+}
+
+function confirmDeleteSubtopic(id){
+  $.ajax({
+    url: "{% url 'curriculum:deletesubtopic' %}",
+    type: "POST",
+    data: {idtopic: id},
+      success: function(response){
+        $('#popup').empty();
+        $('#close').hide();
+        $('#hover').fadeIn();
+        $('#popup').fadeIn();
+        $('#popup').append("<p class='response'>"+response+"</p>");
+        auxResponse = response;
+          if (auxResponse == "Subtopico borrado correctamente"){
+            $("#hover").css('pointer-events', 'none');
+            $('#close').css('pointer-events', 'none');
+            window.setTimeout(function(){location.reload()}, 1000);
+          }
+      }
+  });
+}
+
+function confirmDeleteTopic(id){
+  $.ajax({
+    url: "{% url 'curriculum:deletetopic' %}",
+    type: "POST",
+    data: {idchapter: id},
+      success: function(response){
+        $('#popup').empty();
+        $('#close').hide();
+        $('#hover').fadeIn();
+        $('#popup').fadeIn();
+        $('#popup').append("<p class='response'>"+response+"</p>");
+        auxResponse = response;
+          if (auxResponse == "Topico borrado correctamente"){
+            $("#hover").css('pointer-events', 'none');
+            $('#close').css('pointer-events', 'none');
+            window.setTimeout(function(){location.reload()}, 1000);
           }
       }
   });
