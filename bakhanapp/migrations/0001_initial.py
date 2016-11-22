@@ -230,6 +230,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Skill_Planning',
+            fields=[
+                ('id_skill_planning', models.AutoField(serialize=False, primary_key=True)),
+                ('id_planning', models.ForeignKey(to='bakhanapp.Planning')),
+                ('id_skill', models.ForeignKey(to='bakhanapp.Skill')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Skill_Progress',
             fields=[
                 ('id_skill_progress', models.AutoField(serialize=False, primary_key=True)),
@@ -396,6 +404,14 @@ class Migration(migrations.Migration):
                 ('name_spanish', models.CharField(max_length=150, null=True)),
                 ('index', models.IntegerField()),
                 ('url_video', models.CharField(max_length=200)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Video_Planning',
+            fields=[
+                ('id_video_planning', models.AutoField(serialize=False, primary_key=True)),
+                ('id_planning', models.ForeignKey(to='bakhanapp.Planning')),
+                ('id_video', models.ForeignKey(to='bakhanapp.Video')),
             ],
         ),
         migrations.CreateModel(
@@ -571,6 +587,10 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='schedule',
             unique_together=set([('start_time', 'end_time', 'id_institution')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='planning',
+            unique_together=set([('curso', 'oa')]),
         ),
         migrations.AlterUniqueTogether(
             name='grade',

@@ -18,7 +18,7 @@ from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
 from bakhanapp.models import Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc
-from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning
+from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Skill_Planning, Video_Planning
 from django.db import connection
 
 register = template.Library()
@@ -53,21 +53,27 @@ def getCurriculumProposed(request):
 		miplan.nombrecurso = nombrecurso[0]['name']
 		nombreoa = Subtopic_Mineduc.objects.filter(name=miplan.oa).values('AE_OE')
 		miplan.nombreoa = nombreoa[0]['AE_OE']
-		videoskhan = miplan.videokhan
-		vk = videoskhan.split('**')
-		for i in range(1,len(vk)):
+		#videoskhan = miplan.videokhan
+		#vk = videoskhan.split('**')
+		#for i in range(1,len(vk)):
 			#print vk[i]
-			vidkhan = Video.objects.filter(id_video_name=vk[i]).values('name_spanish', 'url_video')
-			vkhan = vidkhan[0]['name_spanish']
-			vkhn = vkhn+'**'+ vkhan
-		miplan.nombrevideokhan = vkhn
-		ejercicioskhan = miplan.ejerciciokhan
-		ek = ejercicioskhan.split('**')
-		for j in range(1,len(ek)):
-			ejekhan = Skill.objects.filter(id_skill_name=ek[j]).values('name_spanish', 'url_skill')
-			ekhan = ejekhan[0]['name_spanish']
-			ekhn = ekhn+'**'+ekhan
-		miplan.nombreejerciciokhan=ekhn
+		#	vidkhan = Video.objects.filter(id_video_name=vk[i]).values('name_spanish', 'url_video')
+		#	vkhan = vidkhan[0]['name_spanish']
+		#	vkhn = vkhn+'**'+ vkhan
+		#miplan.nombrevideokhan = vkhn
+		miplan.ejerciciokhan = Skill_Planning.objects.filter(id_planning_id=miplan.id_planning).values('id_skill_id')
+		for i in range(len(miplan.ejerciciokhan)):
+			#print miplan.ejerciciokhan[i]
+			queryskill = Skill.objects.filter(id_skill_name=miplan.ejerciciokhan[i]['id_skill_id']).values('name_spanish', 'url_skill')
+			miplan.ejerciciokhan[i]['namespanish']=queryskill[0]['name_spanish']
+			miplan.ejerciciokhan[i]['urlskill']=queryskill[0]['url_skill']
+
+		miplan.videokhan = Video_Planning.objects.filter(id_planning_id=miplan.id_planning).values('id_video_id')
+		for j in range(len(miplan.videokhan)):
+			queryvideo = Video.objects.filter(id_video_name=miplan.videokhan[j]['id_video_id']).values('name_spanish', 'url_video')
+			miplan.videokhan[j]['namespanish']=queryvideo[0]['name_spanish']
+			miplan.videokhan[j]['urlvideo']=queryvideo[0]['url_video']
+
 	chapter = Chapter_Mineduc.objects.all()
 	mision=[]
 	for chap in chapter:
@@ -161,11 +167,20 @@ def savePlanning(request):
 		try:
 			teacher = request.user.user_profile.kaid
 			args = request.POST
-			Planning.objects.create(curso=args['nombre'], oa=args['oa'], clase=args['clase'], objetivo=args['objetivo'], inicio=args['inicio'], descripcion=args['descripcion'], cierre=args['cierre'], ejerciciokhan=args['ejercicio'], videokhan=args['video'], teacher_id=teacher)
+			Planning.objects.create(curso=args['nombre'], oa=args['oa'], clase=args['clase'], objetivo=args['objetivo'], inicio=args['inicio'], descripcion=args['descripcion'], cierre=args['cierre'], teacher_id=teacher)
+			idplanning = Planning.objects.filter(curso=args['nombre'], oa=args['oa']).values('id_planning')
+			ejerciciokhan=args['ejercicio']
+			ejerkhan = ejerciciokhan.split('**')
+			videokhan=args['video']
+			vidkhan = videokhan.split('**')
+			for i in range(1,len(ejerkhan)):
+				Skill_Planning.objects.create(id_planning_id=idplanning[0]['id_planning'], id_skill_id=ejerkhan[i])
+			for j in range(1,len(vidkhan)):
+				Video_Planning.objects.create(id_planning_id=idplanning[0]['id_planning'], id_video_id=vidkhan[j])
 			return HttpResponse('Planificacion guardada correctamente')
 		except Exception as e:
 			print e
-			return HttpResponse('no guardando')
+			return HttpResponse('La planificacion no se puede guardar')
 
 @login_required()
 def deletePlanning(request):
@@ -174,6 +189,9 @@ def deletePlanning(request):
 			args = request.POST
 			cursoeliminar = args['curso']
 			oaeliminar = args['oa']
+			idplanning = Planning.objects.filter(curso=args['curso'], oa=args['oa']).values('id_planning')
+			Video_Planning.objects.filter(id_planning_id=idplanning).delete()
+			Skill_Planning.objects.filter(id_planning_id=idplanning).delete()
 			Planning.objects.filter(curso=cursoeliminar, oa=oaeliminar).delete()
 			return HttpResponse('Planificacion borrada correctamente')
 		except Exception as e:

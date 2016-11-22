@@ -150,8 +150,18 @@ div.panel.show {
       <td id="{{forloop.counter}}__clase">{{ miplan.clase }}</td>
       <td id="{{forloop.counter}}__objetivo">{{ miplan.objetivo }}</td>
       <td id="{{forloop.counter}}__inicio">{{ miplan.inicio }}</td>
-      <td id="{{ miplan.videokhan }}">{{ miplan.nombrevideokhan }}</td>
-      <td id="{{ miplan.ejerciciokhan }}">{{ miplan.nombreejerciciokhan }}</td>
+      <td id="videokhan">
+      {% for video in miplan.videokhan %}
+        <a href="{{video.urlskill}}" target="_blank"><li>{{video.namespanish}}</li></a><br>
+      {% endfor %}
+      </td>
+      <!--<td id="{{ miplan.videokhan }}">{{ miplan.nombrevideokhan }}</td>-->
+      <!--<td id="{{ miplan.ejerciciokhan }}">{{ miplan.nombreejerciciokhan }}</td>-->
+      <td id="ejerciciokhan">
+      {% for exercise in miplan.ejerciciokhan %}
+        <a href="{{exercise.urlskill}}" target="_blank"><li>{{exercise.namespanish}}</li></a><br>
+      {% endfor %}
+      </td>
       <td id="{{forloop.counter}}__descripcion">{{ miplan.descripcion }}</td>
       <td id="{{forloop.counter}}__cierre">{{ miplan.cierre }}</td>
       <td id="{{forloop.counter}}__accion"><a onclick="eliminarPlan({{forloop.counter}})" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a></td>

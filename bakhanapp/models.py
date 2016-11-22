@@ -416,3 +416,16 @@ class Planning(models.Model):
     descripcion = models.CharField(max_length=500)
     cierre = models.CharField(max_length=500)
     teacher = models.ForeignKey(Teacher)
+
+    class Meta:
+        unique_together = ('curso', 'oa')
+
+class Skill_Planning(models.Model):
+    id_skill_planning = models.AutoField(primary_key=True)
+    id_planning = models.ForeignKey(Planning)
+    id_skill = models.ForeignKey(Skill)
+
+class Video_Planning(models.Model):
+    id_video_planning = models.AutoField(primary_key=True)
+    id_planning = models.ForeignKey(Planning)
+    id_video = models.ForeignKey(Video)
