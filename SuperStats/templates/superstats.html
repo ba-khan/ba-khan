@@ -65,12 +65,10 @@
   stroke: #000;
   shape-rendering: crispEdges;
 }
-}
-
 </style>
 
 <br>
-<div class="principal" style="background-color: #f7f7f7;height: 500px;">
+<div class="principal" style="background-color: #f7f7f7;min-height: 500px;">
 <br>
   <br>
   <h1 style="text-align:center;">Estadísticas</h1>
@@ -100,7 +98,7 @@
   </div>
 
 </div>
-  <div id="fechas" style="width:65%;float:left;" class="dates">
+  <div id="fechas" style="width:65%;float:left;height: 140px;" class="dates">
     <br>
     <h2 align="left" style="margin-left:200px;">Fechas</h2>
         <div  class="fechas" style="margin-left: 50px;">
@@ -112,7 +110,7 @@
           <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
         </div>
   </div>
-  <div id="tipochapter" style="width:35%;float:left;" class="typechapt">
+  <div id="tipochapter" style="width:35%;float:left;height: 140px;" class="typechapt">
     <br>
     <br>
     <h2 align="left">Tipo de Currículum</h2>
@@ -1672,6 +1670,7 @@ function diaselect(dia){
   }
 
 }
+
 </script>
 
 {% endblock %}

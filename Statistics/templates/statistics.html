@@ -15,7 +15,8 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
-<!--<script src="{% static 'highcharts/modules/drilldown.js' %}"></script>!-->
+<!--<script src="{% static 'highcharts/highcharts.js' %}"></script>
+<script src="{% static 'highcharts/modules/drilldown.js' %}"></script>-->
 <!--
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">!-->
 
@@ -489,16 +490,16 @@ function graficar(json, clase){
       }
 
       arrayte[i]={"name":curso, "y": tpo_ejercicios, "drilldown":curso, "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudtrabtpoejer, "cantclase":cantidad_clase, "tpo_esperado":tiempo_esperado};
-      serietpo[i]={"name":curso, "id":curso, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>'}};
+      serietpo[i]={"name":curso, "id":curso, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.2f}</b>'}};
 
       arraytv[i]={"name":curso, "y": tpo_videos, "drilldown":curso, "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudtrabtpovid, "cantclase":cantidad_clase, "est_vid_out":clase[i]["estudiantes_out_vid"]};
       serievid[i]={"name":curso, "id":curso, "data":videst, "tooltip":{"pointFormat": 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>'}};
 
       arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso, "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudtrabcantejer, "cantclase":cantidad_clase, "est_out": clase[i]["estudiantes_out"]}
       serie[i]={"name":curso, "id":curso, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'}};
+
       var arrayskill;
       var misiones = clase[i]["misiones"];
-      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Total de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
       
       if (clase[i]["estudiantes_out_vid"]==0){
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Total de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
@@ -734,7 +735,6 @@ function graficar(json, clase){
     console.log(e);
   }
 
-  /*
   var maxte=0;
   for (var j=0;j<arrayte.length;j++){
     if (arrayte[j]["y"]>maxte){
@@ -745,23 +745,40 @@ function graficar(json, clase){
     for (var j=0;j<arrayte.length;j++){
       arrayte[j]["y"]=arrayte[j]["y"]/3600;
     }
+    for (var k = 0; k < serietpo.length; k++) {
+      var datadrill = serietpo[k]["data"];
+      for (var l = 0; l < datadrill.length; l++) {
+        datadrill[l][1]=datadrill[l][1]/3600;
+      }
+    }
+    //serietpo[i]["data"]=serietpo[i]["data"]/3600;
     var ejerText= 'Tiempo (horas)';
-    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} horas</b>';
+    //var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} horas</b>';
     var formato = '{point.y:,.2f}';
+    var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} horas</b><br> Total de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
   }
   else if(maxte<3600 && maxte>=60){
     for (var j=0;j<arrayte.length;j++){
       arrayte[j]["y"]=arrayte[j]["y"]/60;
     }
+    for (var k = 0; k < serietpo.length; k++) {
+      var datadrill = serietpo[k]["data"];
+      for (var l = 0; l < datadrill.length; l++) {
+        datadrill[l][1]=datadrill[l][1]/60;
+      }
+    }
     var ejerText= 'Tiempo (minutos)';
-    var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} minutos</b>';
+    //var ejerPoint = 'Tiempo de ejercicios: <b>{point.y:,.2f} minutos</b>';
     var formato = '{point.y:,.2f}';
+    var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} minutos</b><br> Total de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
   }
   else{
     var ejerText= 'Tiempo (segundos)';
     var ejerPoint = 'Tiempo de ejercicios: <b>{point.y} segundos</b>';
     var formato = '{point.y:,.0f}';
-  }*/
+  }
+  //console.log(maxte);
+
 /*
   var maxtv=0;
   for (var j=0;j<arraytv.length;j++){
@@ -856,7 +873,8 @@ function graficar(json, clase){
         yAxis: {
             min: 0,
             title: {
-                text: 'Tiempo (segundos)'
+                //text: 'Tiempo (segundos)'
+                text: ejerText
             }
         },
         legend: {
@@ -870,7 +888,8 @@ function graficar(json, clase){
                 rotation: -90,
                 color: 'KhanBlue',
                 align: 'right',
-                format: '{point.y:,.0f}', // one decimal
+                //format: '{point.y:,.0f}', // one decimal
+                format: formato,
                 y: 10, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
