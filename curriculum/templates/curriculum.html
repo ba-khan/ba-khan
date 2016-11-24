@@ -578,6 +578,22 @@ function addSubtopic(id){
 
 function addVideoExercise(id){
     var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
+    //var info = tree['core']['data'];
+    //for (var i = 0; i < info.length; i++) {
+      //if (typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
+        //tree = tree.filter(function(obj) {
+          //return typeof obj['core']['data'][i]['data']!= "undefined" && typeof obj['core']['data'][i]['data']['skill_id']!= "undefined";
+        //});
+        //console.log(info[i]['data']['skill_id']);
+      //}
+    //}
+    /*for (var i = 0; i < tree['core']['data'].length; i++) {
+        if(typeof tree['core']['data'][i]['data']!= "undefined" && typeof tree['core']['data'][i]['data']['skill_id']!= "undefined"){
+          //console.log(tree['core']['data'][i]['data']['skill_id']);
+          tree['core']['data'].splice(i,1);
+        } 
+    }
+    console.log(tree);*/
     $('#popuptree').empty();
     $('#hover').fadeIn();
     $('#popuptree').fadeIn();
