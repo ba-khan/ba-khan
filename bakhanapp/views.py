@@ -125,8 +125,10 @@ def generateClassExcel(request, id_class):
         #print nameClass
         try:#id1004
             #create multi-sheet book with array
+            print "acaba de enmtrar al try"
             arrayAssesment={}
             arrayAssesment['General'] = getArrayClassDetail(id_class)
+            print "paso el arrayassement"
             for a in assesment:
                 name_sheet = strip_acent(a.name)
                 if len(name_sheet) > 22:
@@ -420,6 +422,7 @@ def getArrayAssesmentDetail(id_assesment):
 
 def getArrayClassDetail(id_class):
     #return a array with data of class in all assesments
+
     delta = 9
     viewFields = ['Estudiante','Recomendadas Completadas','Ejercicios Incorrectos',
         'Ejercicios Correctos','Tiempo en Ejercicios','Tiempo en Videos',
@@ -448,7 +451,6 @@ def getArrayClassDetail(id_class):
     w, h = totalFields +10 ,totalGrades+totalConf+totalSkills + delta + 10
     #w, h = totalFields +10 ,totalGrades+totalConf + delta + 10
     data = [['' for x in range(w)] for y in range(h)] 
-
     #carga del arreglo assesment
     #data[0][0] = 'Nombre de la calificacion'
     #data[0][1] = assesment.name
@@ -472,33 +474,72 @@ def getArrayClassDetail(id_class):
             if j==0:
                 data[i+delta][j] = grades[i]['name']
             if j==1:
-                data[i+delta][j] = grades[i]['recomend']
+                try:
+                    data[i+delta][j] = grades[i]['recomend']
+                except:
+                    data[i+delta][j]=0
             if j==2:
-                data[i+delta][j] = grades[i]['incorrect']
+                try:
+                    data[i+delta][j] = grades[i]['incorrect']
+                except:
+                    data[i+delta][j]=0
             if j==3:
-                data[i+delta][j] = grades[i]['correct']
+                try:
+                    data[i+delta][j] = grades[i]['correct']
+                except:
+                    data[i+delta][j]=0
             if j==4:
-                m, s = divmod(grades[i]['time'], 60)
-                data[i+delta][j] = "%02d:%02d" % (m, s)
+                try:
+                    m, s = divmod(grades[i]['time'], 60)
+                    data[i+delta][j] = "%02d:%02d" % (m, s)
+                except:
+                    data[i+delta][j]=0
             if j==5:
-                mv, sv = divmod(grades[i]['video'], 60)
-                data[i+delta][j] = "%02d:%02d" % (mv, sv)
+                try:
+                    mv, sv = divmod(grades[i]['video'], 60)
+                    data[i+delta][j] = "%02d:%02d" % (mv, sv)
+                except:
+                    data[i+delta][j]=0
             if j==6:
-                data[i+delta][j] = grades[i]['struggling']
+                try:
+                    data[i+delta][j] = grades[i]['struggling']
+                except:
+                    data[i+delta][j]=0
             if j==7:
-                data[i+delta][j] = grades[i]['practiced']
+                try:
+                    data[i+delta][j] = grades[i]['practiced']
+                except:
+                    data[i+delta][j]=0
             if j==8:
-                data[i+delta][j] = grades[i]['mastery1']
+                try:
+                    data[i+delta][j] = grades[i]['mastery1']
+                except:
+                    data[i+delta][j]=0
             if j==9:
-                data[i+delta][j] = grades[i]['mastery2']
+                try:
+                    data[i+delta][j] = grades[i]['mastery2']
+                except:
+                    data[i+delta][j]=0
             if j==10:
-                data[i+delta][j] = grades[i]['mastery3']
+                try:
+                    data[i+delta][j] = grades[i]['mastery3']
+                except:
+                    data[i+delta][j]=0
             elif j==11:
-                data[i+delta][j] = grades[i]['grade']
+                try:
+                    data[i+delta][j] = grades[i]['grade']
+                except:
+                    data[i+delta][j]=0
             elif j==12:
-                data[i+delta][j] = grades[i]['bonus']
+                try:
+                    data[i+delta][j] = grades[i]['bonus']
+                except:
+                    data[i+delta][j]=0
             elif j==13:
-                data[i+delta][j] = grades[i]['grade'] + grades[i]['bonus']
+                try:
+                    data[i+delta][j] = grades[i]['grade'] + grades[i]['bonus']
+                except:
+                    data[i+delta][j]=0
     #load skills to excel array data
     data[totalGrades+delta+1][0]='Habilidades evaluadas:'
     for l in range(totalSkills):
