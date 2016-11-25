@@ -125,10 +125,8 @@ def generateClassExcel(request, id_class):
         #print nameClass
         try:#id1004
             #create multi-sheet book with array
-            print "acaba de enmtrar al try"
             arrayAssesment={}
             arrayAssesment['General'] = getArrayClassDetail(id_class)
-            print "paso el arrayassement"
             for a in assesment:
                 name_sheet = strip_acent(a.name)
                 if len(name_sheet) > 22:

@@ -13,9 +13,5 @@ urlpatterns = [
     url(r'^deletesubtopic$', views.deleteSubtopic, name='deletesubtopic'),
     url(r'^deletetopic$', views.deleteTopic, name='deletetopic'),
     url(r'^deletechapter$', views.deleteChapter, name='deletechapter'),
-    #url(r'^getvideo$', views.getVideoExercise, name='get_videoexercise'),
-    #url(r'^seleccion$', views.selectSuperStats, name='selectSuperStats'),
-    #url(r'^comparacion$', views.compareSuperStats, name='compareSuperStats'),
-    #url(r'^seleccioncurso$', views.selectClass, name='selectClass'),
-    #url(r'^guardar$', views.saveSchedule, name='guardar_horario'),
+    url(r'^downloadCurriculum$', views.downloadCurriculum, name='downloadCurriculum'),
 ]

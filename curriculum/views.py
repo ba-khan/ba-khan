@@ -11,6 +11,7 @@ from django.db.models import Count, Sum
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core import serializers
+import unicodedata
 
 
 from django import template
@@ -245,6 +246,23 @@ def deleteChapter(request):
 			return HttpResponse('No se ha podido borrar la mision')
 		return HttpResponse('Mision borrada correctamente')
 	return HttpResponse('Error al eliminar')
+
+@login_required()
+def downloadCurriculum(request):
+	print "download curriculum"
+	request.session.set_expiry(timeSleep)
+	#if request.method == "GET":
+	#	chapmineduc = Chapter_Mineduc.objects.all()
+	#	try:
+	#		for chapm in chapmineduc:
+	#			name_sheet = strip_acent(chapm.name)
+	#	except Exception as e:
+	#		print e
+	#	return "entro en if"
+	return "no entro en if"
+
+def strip_acent(s):
+   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
 def topicTree():
     topictree_json={}

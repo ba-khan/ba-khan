@@ -289,7 +289,7 @@ div.panel {
   </div>!-->
   <div id="newaccordion">
   </div>
-  <div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadPlanning()"></button></div>
+  <div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>
 </div>
 </div>
 
@@ -340,8 +340,9 @@ $(document).ready(function(){
       }, 250);
     //});
   }
-  function downloadPlanning(){
-    //algo aca
+  function downloadCurriculum(){
+    console.log('entro en window location')
+    window.location = "/curriculum/downloadCurriculum";
   }
 
 var arbol = JSON.parse('{{ json_data | escapejs }}');
