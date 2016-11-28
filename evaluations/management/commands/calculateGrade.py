@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 query2 = Related_Video_Exercise.objects.filter(id_exercise__in=skills).values('id_video')
                 time_video = Video_Playing.objects.filter(kaid_student__in=students,id_video_name_id__in=query2,
                     date__range=(assesment.start_date,assesment.end_date)).values('kaid_student_id').annotate(time=Sum('seconds_watched'))#en esta query falta que filtre por skills
-                levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__range=(assesment.start_date,assesment.end_date)
+                levels = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=False, skill_progress__date__lte=assesment.end_date
                     ).values('kaid_student','id_student_skill','skill_progress__to_level','skill_progress__date','id_skill_name_id'
                     ).order_by('kaid_student','id_skill_name_id','-skill_progress__date').distinct('kaid_student','id_skill_name_id')#,skill_progress__to_level='practiced'
                 struggling = Student_Skill.objects.filter(kaid_student__in=students,id_skill_name_id__in=skills,struggling=True
@@ -312,8 +312,14 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
         except: 
             print "no data id_student_skills"
         try: 
-            last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
-            points = points + scores[last_level['to_level']]
+            try:
+                last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__gte = t_begin,date__lte = t_end).values('to_level').latest('date')
+            except:
+                last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
+            #if not last_level:
+            #    print "paso aca"
+            #    last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
+          points = points + scores[last_level['to_level']]
         except: 
             pass
     try:
