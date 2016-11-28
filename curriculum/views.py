@@ -263,7 +263,7 @@ def downloadCurriculum(request):
                 name_sheet=''
                 for w in words:
                     name_sheet += w[:length]
-			name_sheet = name_sheet.replace(' ','')
+			#name_sheet = name_sheet.replace(' ','')
 			#arrayCurriculum=#algo
 
 		return HttpResponse('entro al descarga excel')
