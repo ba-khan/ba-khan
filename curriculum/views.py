@@ -247,19 +247,28 @@ def deleteChapter(request):
 		return HttpResponse('Nivel borrado correctamente')
 	return HttpResponse('Error al eliminar')
 
-@login_required()
+
+@permission_required('bakhanapp.isSuper', login_url="/")
 def downloadCurriculum(request):
 	print "download curriculum"
 	request.session.set_expiry(timeSleep)
-	#if request.method == "GET":
-	#	chapmineduc = Chapter_Mineduc.objects.all()
-	#	try:
-	#		for chapm in chapmineduc:
-	#			name_sheet = strip_acent(chapm.name)
-	#	except Exception as e:
-	#		print e
-	#	return "entro en if"
-	return "no entro en if"
+	if request.method == "GET":
+		chapmineduc = Chapter_Mineduc.objects.all()
+		arrayCurriculum={}
+		for chapm in chapmineduc:
+			name_sheet = strip_acent(chapm.name)
+			if len(name_sheet)>30:
+				words = name_sheet.split()
+				length = 22/len(words)
+                name_sheet=''
+                for w in words:
+                    name_sheet += w[:length]
+			name_sheet = name_sheet.replace(' ','')
+			#arrayCurriculum=#algo
+
+		return HttpResponse('entro al descarga excel')
+	return HttpResponse('no entro en descarga excel')
+
 
 def strip_acent(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
