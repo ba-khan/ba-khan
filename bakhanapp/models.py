@@ -357,7 +357,7 @@ class Skill_Log(models.Model):
 class Chapter_Mineduc(models.Model):
     id_chapter_mineduc = models.AutoField(primary_key=True)
     index = models.IntegerField()
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
        
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
@@ -371,6 +371,9 @@ class Topic_Mineduc(models.Model):
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
 
+    class Meta:
+        unique_together = ('name', 'id_chapter')
+
 class Subtopic_Mineduc(models.Model):
     id_subtopic_mineduc = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
@@ -380,6 +383,9 @@ class Subtopic_Mineduc(models.Model):
     
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        unique_together = ('name', 'id_topic')
 
 class Subtopic_Skill_Mineduc(models.Model):
     id_subtopic_skill_mineduc = models.AutoField(primary_key=True)

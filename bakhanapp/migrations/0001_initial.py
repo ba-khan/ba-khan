@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id_chapter_mineduc', models.AutoField(serialize=False, primary_key=True)),
                 ('index', models.IntegerField()),
-                ('name', models.CharField(max_length=50)),
+                ('name', models.CharField(unique=True, max_length=50)),
             ],
         ),
         migrations.CreateModel(
@@ -553,6 +553,10 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(to='bakhanapp.Institution'),
         ),
         migrations.AlterUniqueTogether(
+            name='topic_mineduc',
+            unique_together=set([('name', 'id_chapter')]),
+        ),
+        migrations.AlterUniqueTogether(
             name='subtopic_video_mineduc',
             unique_together=set([('id_video_name', 'id_subtopic_name_mineduc')]),
         ),
@@ -567,6 +571,10 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name='subtopic_skill',
             unique_together=set([('id_skill_name', 'id_subtopic_name')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='subtopic_mineduc',
+            unique_together=set([('name', 'id_topic')]),
         ),
         migrations.AlterUniqueTogether(
             name='student_video',

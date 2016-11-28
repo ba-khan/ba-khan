@@ -268,18 +268,17 @@ div.panel {
 }
 */
 </style>
-
 <br>
 <div class="container">
 <div class="main-content">
 
   <br>
   <h1 style="text-align:center;">Curriculum MINEDUC</h1>
-  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nueva Misión</button> </div>
+  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Nivel</button> </div>
 
   <div id="newChapter">
     <form action="" method="post" id="form0">{% csrf_token %}
-      <h3>Nueva Misión</h3>
+      <h3>Nuevo Nivel</h3>
       <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
       <a onclick='javascript:hideNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
       <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
@@ -352,14 +351,14 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       //console.log(chapters[i]["nombre"])
-      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'<a onclick=\'(deleteChapter("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:120px; height: 20px; padding:0px;left:500px;position:absolute;" class="kui-button kui-button-plain kui-button-primary">Eliminar Misión</a></button><div class="panel">';
-      newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Tópico</a>';
-      newaccordion += '<a onclick=\'(deleteTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Tópico</a>';
+      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'<a onclick=\'(deleteChapter("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:120px;  padding:0px;left:500px;position:absolute;"><img style="width:25px;height:25px;" src={% static "img/deleteicon.png" %} alt="delete"></a></button><div class="panel">';
+      newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Unidad</a>';
+      newaccordion += '<a onclick=\'(deleteTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Unidad</a>';
       var topicos = chapters[i]["topico"];
       for (var j = 0; j < topicos.length; j++) {
         newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
-        newaccordion += '<a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Subtópico</a>';
-        newaccordion += '<a onclick=\'(deleteSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Subtópico</a>';
+        newaccordion += '<a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Obj. de Aprendizaje</a>';
+        newaccordion += '<a onclick=\'(deleteSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Obj. de Aprendizaje</a>';
         var subtopicos = topicos[j]["subtopico"];
         for (var k = 0; k < subtopicos.length; k++) {
           //subtopicos[i]
@@ -446,7 +445,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
         $("#popup").fadeIn();
         $("#popup").append("<p class='response'>"+response+"</p>");
         auxResponse = response;
-        if (auxResponse == "Chapter guardado correctamente"){
+        if (auxResponse == "Nivel guardado correctamente"){
           $("#hover").css('pointer-events','none');
           $("#close").css('pointer-events','none');
           window.setTimeout(function(){location.reload()},1000);
@@ -475,7 +474,7 @@ function saveNewTopic(t){
           $("#popup").fadeIn();
           $("#popup").append("<p class='response'>"+response+"</p>");
           auxResponse = response;
-          if (auxResponse == "Topic guardado correctamente"){
+          if (auxResponse == "Unidad guardada correctamente"){
             $("#hover").css('pointer-events','none');
             $("#close").css('pointer-events','none');
             window.setTimeout(function(){location.reload()},1000);
@@ -507,7 +506,7 @@ function saveNewSubtopic(t){
           $("#popup").fadeIn();
           $("#popup").append("<p class='response'>"+response+"</p>");
           auxResponse = response;
-          if (auxResponse == "Subtopic guardado correctamente"){
+          if (auxResponse == "Objetivo de Aprendizaje guardado correctamente"){
             $("#hover").css('pointer-events','none');
             $("#close").css('pointer-events','none');
             window.setTimeout(function(){location.reload()},1000);
@@ -571,14 +570,14 @@ function addTopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nuevo Tópico o Unidad</h3><label for='block'>Unidad: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
+  $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nueva Unidad</h3><label for='block'>Unidad: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
 }
 
 function addSubtopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Subtópico, Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><textarea id='textarea_coment' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:220px;height:50px;padding-top:5px'></textarea><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
+  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><textarea id='textarea_coment' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:220px;height:50px;padding-top:5px'></textarea><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
 }
 
 function addVideoExercise(id){
@@ -731,7 +730,7 @@ function deleteVideoExercise(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append('<p>¿Está seguro que desea eliminar los videos y ejercicios?</p>');
+  $('#popup').append('<div>¿Está seguro que desea eliminar los videos y ejercicios?</div>');
   $('#popup').append('<a onclick=\'(confirmDeleteVideoExercise("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>')
 }
 
@@ -739,7 +738,7 @@ function deleteSubtopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append('<p>¿Está seguro que desea eliminar el subtópico? Perderá toda la información de videos y ejercicios asociados a él.</p>');
+  $('#popup').append('<div>¿Está seguro que desea eliminar el Objetivo de Aprendizaje? Perderá toda la información de videos y ejercicios asociados a él.</div>');
   $('#popup').append('<a onclick=\'(confirmDeleteSubtopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
 }
 
@@ -747,7 +746,7 @@ function deleteTopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append('<p>¿Está seguro que desea eliminar el tópico? Perderá toda la información de subtópicos, videos y ejercicios asociados a él.</p>');
+  $('#popup').append('<div>¿Está seguro que desea eliminar la unidad? Perderá toda la información de objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
   $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
 }
 
@@ -755,7 +754,7 @@ function deleteChapter(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
-  $('#popup').append('<p>¿Está seguro que desea eliminar la misión? Perderá toda la información de tópicos, subtópicos, videos y ejercicios asociados a él.</p>');
+  $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar el nivel? Perderá toda la información de unidades, objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
   $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
 }
 
@@ -798,7 +797,7 @@ function confirmDeleteSubtopic(id){
         $('#popup').fadeIn();
         $('#popup').append("<p class='response'>"+response+"</p>");
         auxResponse = response;
-          if (auxResponse == "Subtopico borrado correctamente"){
+          if (auxResponse == "Objetivo de Aprendizaje borrado correctamente"){
             $("#hover").css('pointer-events', 'none');
             $('#close').css('pointer-events', 'none');
             window.setTimeout(function(){location.reload()}, 1000);
@@ -819,7 +818,7 @@ function confirmDeleteTopic(id){
         $('#popup').fadeIn();
         $('#popup').append("<p class='response'>"+response+"</p>");
         auxResponse = response;
-          if (auxResponse == "Topico borrado correctamente"){
+          if (auxResponse == "Unidad borrada correctamente"){
             $("#hover").css('pointer-events', 'none');
             $('#close').css('pointer-events', 'none');
             window.setTimeout(function(){location.reload()}, 1000);
@@ -840,7 +839,7 @@ function confirmDeleteChapter(id){
         $('#popup').fadeIn();
         $('#popup').append("<p class='response'>"+response+"</p>");
         auxResponse = response;
-          if (auxResponse == "Mision borrada correctamente"){
+          if (auxResponse == "Nivel borrado correctamente"){
             $("#hover").css('pointer-events', 'none');
             $('#close').css('pointer-events', 'none');
             window.setTimeout(function(){location.reload()}, 1000);

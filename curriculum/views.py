@@ -134,12 +134,12 @@ def newChapter(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			Chapter_Mineduc.objects.create(name=args['name'])
-			return HttpResponse('Chapter guardado correctamente')
+			Chapter_Mineduc.objects.create(name=nombre)
+			return HttpResponse('Nivel guardado correctamente')
 
 		except Exception as e:
 			print e
-			return HttpResponse("Error al guardar")
+			return HttpResponse("Error al guardar, compruebe que no existe el nivel")
 	return HttpResponse("Error al guardar")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -149,10 +149,10 @@ def newTopic(request):
 		args = request.POST
 		try:
 			Topic_Mineduc.objects.create(name=args['nombre'], id_chapter_id=args['curso'])
-			return HttpResponse('Topic guardado correctamente')
+			return HttpResponse('Unidad guardada correctamente')
 		except Exception as e:
 			print e
-			return HttpResponse("Error al guardar")
+			return HttpResponse("Error al guardar, revise que no exista la unidad.")
 	return HttpResponse("Error al guardar")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -162,10 +162,10 @@ def newSubtopic(request):
 		args = request.POST
 		try:
 			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'], AE_OE=args['descripcion'])
-			return HttpResponse('Subtopic guardado correctamente')
+			return HttpResponse('Objetivo de Aprendizaje guardado correctamente')
 		except Exception as e:
 			print e
-			return HttpResponse("Error al guardar")
+			return HttpResponse("Error al guardar, compruebe que no existe el Objetivo de Aprendizaje")
 	return HttpResponse("Error al guardar")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -217,8 +217,8 @@ def deleteSubtopic(request):
 			Subtopic_Mineduc.objects.filter(id_topic_id=args['idtopic']).delete()
 		except Exception as e:
 			print e
-			return HttpResponse('No se ha podido borrar el subtopico')
-		return HttpResponse('Subtopico borrado correctamente')
+			return HttpResponse('No se ha podido borrar el objetivo de aprendizaje')
+		return HttpResponse('Objetivo de Aprendizaje borrado correctamente')
 	return HttpResponse('Error al eliminar')
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -230,8 +230,8 @@ def deleteTopic(request):
 			Topic_Mineduc.objects.filter(id_chapter_id=args['idchapter']).delete()
 		except Exception as e:
 			print e
-			return HttpResponse('No se ha podido borrar el topico')
-		return HttpResponse('Topico borrado correctamente')
+			return HttpResponse('No se ha podido borrar la unidad')
+		return HttpResponse('Unidad borrada correctamente')
 	return HttpResponse('Error al eliminar')
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -243,8 +243,8 @@ def deleteChapter(request):
 			Chapter_Mineduc.objects.filter(id_chapter_mineduc=args['idchapter']).delete()
 		except Exception as e:
 			print e
-			return HttpResponse('No se ha podido borrar la mision')
-		return HttpResponse('Mision borrada correctamente')
+			return HttpResponse('No se ha podido borrar el nivel')
+		return HttpResponse('Nivel borrado correctamente')
 	return HttpResponse('Error al eliminar')
 
 @login_required()
