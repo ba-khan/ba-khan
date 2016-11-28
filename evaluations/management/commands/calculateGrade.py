@@ -319,7 +319,7 @@ def getSkillPoints(kaid_student,configured_skills,t_begin,t_end):
             #if not last_level:
             #    print "paso aca"
             #    last_level = Skill_Progress.objects.filter(id_student_skill_id=id_student_skill,date__lte = t_end).values('to_level').latest('date')
-          points = points + scores[last_level['to_level']]
+            points = points + scores[last_level['to_level']]
         except: 
             pass
     try:
