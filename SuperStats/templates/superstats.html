@@ -1235,7 +1235,19 @@ function graficarcompara(json, clase){
     var promediomasbajo1t=99999999;
     var promediomasalto2t=0;
     var promediomasbajo2t=99999999;
-
+    var totalestudiantes=0;
+    var promediomaximoejer=0;
+    var promediominimoejer=99999999;
+    var promediomaximoejer2=0;
+    var promediominimoejer2=99999999;
+    var promediomaximovid=0;
+    var promediominimovid=99999999;
+    var promediomaximovid2=0;
+    var promediominimovid2=99999999;
+    var promediomaximotot=0;
+    var promediominimotot=99999999;
+    var promediomaximotot2=0;
+    var promediominimotot2=99999999;
     for (var i=0;i<clase.length;i++){
       /*categorias[i]=clase[i]["nombre"];
       tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
@@ -1263,6 +1275,7 @@ function graficarcompara(json, clase){
       var estudtrabtpoejer2=0;
       var estudtrabtpovid2=0;
       var estudtrabcantejer2=0;
+      totalestudiantes+=estudiantes.length;
       for (j=0;j<estudiantes.length;j++){
         if (estudiantes[j]["total_ejercicios_1"]>maxtotejer1){
           maxtotejer1=estudiantes[j]["total_ejercicios_1"];
@@ -1354,6 +1367,12 @@ function graficarcompara(json, clase){
       if (mintpoejer1<minimotodos1){
         minimotodos1=mintpoejer1;
       }
+      if (clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1>promediomaximoejer){
+        promediomaximoejer=clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1;
+      }
+      if (clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1<promediominimoejer){
+        promediominimoejer=clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1;
+      }
 
       totaltodos2+=clase[i]["tiempo_ejercicios_clase_2"];
       //promediotodos2+=(clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2);
@@ -1370,6 +1389,12 @@ function graficarcompara(json, clase){
 
       if (mintpoejer2<minimotodos2){
         minimotodos2=mintpoejer2;
+      }
+      if (clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2>promediomaximoejer2){
+        promediomaximoejer2=clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2;
+      }
+      if (clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2<promediominimoejer2){
+        promediominimoejer2=clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2;
       }
 
 
@@ -1388,6 +1413,12 @@ function graficarcompara(json, clase){
       if (mintpovid1<minimotodos1v){
         minimotodos1v=mintpovid1;
       }
+      if(clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1>promediomaximovid){
+        promediomaximovid=clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1;
+      }
+      if(clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1<promediominimovid){
+        promediominimovid=clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1;
+      }
 
       totaltodos2v+=clase[i]["tiempo_videos_clase_2"];
       //promediotodos2v+=(clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2);
@@ -1403,6 +1434,12 @@ function graficarcompara(json, clase){
 
       if (mintpovid2<minimotodos2v){
         minimotodos2v=mintpovid2;
+      }
+      if(clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2>promediomaximovid2){
+        promediomaximovid2=clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2;
+      }
+      if(clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2<promediominimovid2){
+        promediominimovid2=clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2;
       }
 
 
@@ -1421,6 +1458,12 @@ function graficarcompara(json, clase){
       if (mintotejer1<minimotodos1t){
         minimotodos1t=mintotejer1;
       }
+      if(clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1>promediomaximotot){
+        promediomaximotot=clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1;
+      }
+      if(clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1<promediominimotot){
+        promediominimotot=clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1;
+      }
 
       totaltodos2t+=clase[i]["total_ejercicios_clase_2"];
       //promediotodos2t+=(clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2);
@@ -1436,6 +1479,12 @@ function graficarcompara(json, clase){
 
       if (mintotejer2<minimotodos2t){
         minimotodos2t=mintotejer2;
+      }
+      if(clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2>promediomaximotot2){
+        promediomaximotot2=clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2;
+      }
+      if(clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2<promediominimotot2){
+        promediominimotot2=clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2;
       }
 
       categorias[i]=clase[i]["nombre"];
@@ -1453,12 +1502,14 @@ function graficarcompara(json, clase){
       cantidad2[i]={"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2}
     }
     //promediotodos1=promediotodos1/clase.length;
-    promediotodos2=totaltodos2/estudiantes.length;
-    promediotodos1=totaltodos1/estudiantes.length;
+    promediotodos2=totaltodos2/totalestudiantes;
+    promediotodos1=totaltodos1/totalestudiantes;
 
     var promediotod='';
     promediotod+='<div>Total '+tipo1+': '+totaltodos1.toLocaleString()+' segundos<br>';
-    promediotod+='Promedio Estudiante '+tipo1+': '+promediotodos1.toLocaleString()+' segundos<br>';
+    promediotod+='Promedio '+tipo1+': '+promediotodos1.toLocaleString()+' segundos<br>';
+    promediotod+='Promedio Máximo '+tipo1+': '+promediomaximoejer.toLocaleString()+' segundos<br>';
+    promediotod+='Promedio Mínimo '+tipo1+': '+promediominimoejer.toLocaleString()+' segundos<br>';
     promediotod+='Curso Máximo '+tipo1+': '+promediomasalto1.toLocaleString()+' segundos<br>';
     promediotod+='Curso Mínimo '+tipo1+': '+promediomasbajo1.toLocaleString()+' segundos<br>';
     promediotod+='Estudiante Máximo '+tipo1+': '+maximotodos1.toLocaleString()+' segundos<br>';
@@ -1469,6 +1520,8 @@ function graficarcompara(json, clase){
     var promediotod2='';
     promediotod2+='<div>Total '+tipo2+': '+totaltodos2.toLocaleString()+' segundos<br>';
     promediotod2+='Promedio '+tipo2+': '+promediotodos2.toLocaleString()+' segundos<br>';
+    promediotod2+='Promedio Máximo '+tipo2+': '+promediomaximoejer2.toLocaleString()+' segundos<br>';
+    promediotod2+='Promedio Mínimo '+tipo2+': '+promediominimoejer2.toLocaleString()+' segundos<br>';
     promediotod2+='Curso Máximo '+tipo2+': '+promediomasalto2.toLocaleString()+' segundos<br>';
     promediotod2+='Curso Mínimo '+tipo2+': '+promediomasbajo2.toLocaleString()+' segundos<br>';
     promediotod2+='Estudiante Máximo '+tipo2+': '+maximotodos2.toLocaleString()+' segundos<br>';
@@ -1477,12 +1530,14 @@ function graficarcompara(json, clase){
     $('#promediototalej2').append(promediotod2);
 
 
-    promediotodos1v=totaltodos1v/estudiantes.length;
-    promediotodos2v=totaltodos2v/estudiantes.length;
+    promediotodos1v=totaltodos1v/totalestudiantes;
+    promediotodos2v=totaltodos2v/totalestudiantes;
 
     var promediotodv='';
     promediotodv+='<div>Total '+tipo1+': '+totaltodos1v.toLocaleString()+' segundos<br>';
     promediotodv+='Promedio '+tipo1+': '+promediotodos1v.toLocaleString()+' segundos<br>';
+    promediotodv+='Promedio Máximo '+tipo1+': '+promediomaximovid.toLocaleString()+' segundos<br>';
+    promediotodv+='Promedio Mínimo '+tipo1+': '+promediominimovid.toLocaleString()+' segundos<br>';
     promediotodv+='Curso Máximo '+tipo1+': '+promediomasalto1v.toLocaleString()+' segundos<br>';
     promediotodv+='Curso Mínimo '+tipo1+': '+promediomasbajo1v.toLocaleString()+' segundos<br>';
     promediotodv+='Estudiante Máximo '+tipo1+': '+maximotodos1v.toLocaleString()+' segundos<br>';
@@ -1493,6 +1548,8 @@ function graficarcompara(json, clase){
     var promediotod2v='';
     promediotod2v+='<div>Total '+tipo2+': '+totaltodos2v.toLocaleString()+' segundos<br>';
     promediotod2v+='Promedio '+tipo2+': '+promediotodos2v.toLocaleString()+' segundos<br>';
+    promediotod2v+='Promedio Máximo '+tipo2+': '+promediomaximovid2.toLocaleString()+' segundos<br>';
+    promediotod2v+='Promedio Mínimo '+tipo2+': '+promediominimovid2.toLocaleString()+' segundos<br>';
     promediotod2v+='Curso Máximo '+tipo2+': '+promediomasalto2v.toLocaleString()+' segundos<br>';
     promediotod2v+='Curso Mínimo '+tipo2+': '+promediomasbajo2v.toLocaleString()+' segundos<br>';
     promediotod2v+='Estudiante Máximo '+tipo2+': '+maximotodos2v.toLocaleString()+' segundos<br>';
@@ -1501,12 +1558,14 @@ function graficarcompara(json, clase){
     $('#promediototalvid2').append(promediotod2v);
 
 
-    promediotodos1t=totaltodos1t/estudiantes.length;
-    promediotodos2t=totaltodos2t/estudiantes.length;
+    promediotodos1t=totaltodos1t/totalestudiantes;
+    promediotodos2t=totaltodos2t/totalestudiantes;
 
     var promediotodt='';
     promediotodt+='<div>Total '+tipo1+': '+totaltodos1t.toLocaleString()+' ejercicios<br>';
     promediotodt+='Promedio '+tipo1+': '+promediotodos1t.toLocaleString()+' ejercicios<br>';
+    promediotodt+='Promedio Máximo '+tipo1+': '+promediomaximotot.toLocaleString()+' ejercicios<br>';
+    promediotodt+='Promedio Mínimo '+tipo1+': '+promediominimotot.toLocaleString()+' ejercicios<br>';
     promediotodt+='Curso Máximo '+tipo1+': '+promediomasalto1t.toLocaleString()+' ejercicios<br>';
     promediotodt+='Curso Mínimo '+tipo1+': '+promediomasbajo1t.toLocaleString()+' ejercicios<br>';
     promediotodt+='Estudiante Máximo '+tipo1+': '+maximotodos1t.toLocaleString()+' ejercicios<br>';
@@ -1517,6 +1576,8 @@ function graficarcompara(json, clase){
     var promediotod2t='';
     promediotod2t+='<div>Total '+tipo2+': '+totaltodos2t.toLocaleString()+' ejercicios<br>';
     promediotod2t+='Promedio '+tipo2+': '+promediotodos2t.toLocaleString()+' ejercicios<br>';
+    promediotod2t+='Promedio Máximo '+tipo2+': '+promediomaximotot2.toLocaleString()+' ejercicios<br>';
+    promediotod2t+='Promedio Mínimo '+tipo2+': '+promediominimotot2.toLocaleString()+' ejercicios<br>';
     promediotod2t+='Curso Máximo '+tipo2+': '+promediomasalto2t.toLocaleString()+' ejercicios<br>';
     promediotod2t+='Curso Mínimo '+tipo2+': '+promediomasbajo2t.toLocaleString()+' ejercicios<br>';
     promediotod2t+='Estudiante Máximo '+tipo2+': '+maximotodos2t.toLocaleString()+' ejercicios<br>';
