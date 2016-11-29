@@ -529,7 +529,7 @@ function graficar(json, clase){
       serie[i]={"name":nombre, "id":nombre, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'}};
 
       var arrayskill;
-      var misiones = clase[i]["misiones"];
+      //var misiones = clase[i]["misiones"];
       //var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
 
       /*if (clase[i]["estudiantes_out_vid"]==0){
@@ -545,7 +545,7 @@ function graficar(json, clase){
       else{
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_out}</b>';
       }
-      
+      /*
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -563,9 +563,6 @@ function graficar(json, clase){
         if (arrayskill===false){
           delete misiones[k];
         }
-        /*else{
-          console.log(misiones[k]["mision"])
-        }*/
       }
 
       var valormision=0;
@@ -603,7 +600,7 @@ function graficar(json, clase){
           continue;
         }
       }
-      arregloclase[i]=arreglocurso;
+      arregloclase[i]=arreglocurso;*/
     }
   }
   else{
@@ -624,7 +621,7 @@ function graficar(json, clase){
     var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
   
-  try{
+  /*try{
     var nombremision = 'sin nombre';
     var dataq=arregloclase;
     for (var t = 0; t < mission.length; t++) {
@@ -761,7 +758,7 @@ function graficar(json, clase){
 }
   catch(e){
     console.log(e);
-  }
+  }*/
 
   var maxte=0;
   for (var j=0;j<arrayte.length;j++){
@@ -1175,6 +1172,7 @@ function graficar(json, clase){
 }
 
 function graficarcompara(json, clase){
+  console.log(json);
   $('#ordenarcant').hide();
   $('#ordenarvid').hide();
   $('#ordenartot').hide();
@@ -1487,7 +1485,7 @@ function graficarcompara(json, clase){
         promediominimotot2=clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2;
       }
 
-      categorias[i]=clase[i]["nombre"];
+      categorias[i]=clase[i]["nombre"]+' '+clase[i]["establecimiento"];
       //tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
       tpoejercicios1[i]={"y":clase[i]["tiempo_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer1, "maximo":maxtpoejer1, "minimo":mintpoejer1, "promedio":clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1};
       //tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];

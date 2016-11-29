@@ -348,6 +348,7 @@ def selectSuperStats(request):
 
 							
 							#misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
+							'''
 							misiones = Chapter.objects.filter(type_chapter=tipochapter).values('name_spanish', 'id_chapter_name')
 							dictChapter=[]
 							
@@ -383,7 +384,7 @@ def selectSuperStats(request):
 												class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]=q[1]
 											else:
 												class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
-							
+							'''
 							for time in time_exercise:
 								dictTime[time['kaid_student_id']] = time['total_time']
 							for video in time_video:
