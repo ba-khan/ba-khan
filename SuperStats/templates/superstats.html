@@ -421,6 +421,7 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
+  console.log(json);
   $('#ordenartot').show();
   $('#ordenarvid').show();
   $('#ordenarcant').show();
@@ -1172,7 +1173,13 @@ function graficar(json, clase){
 }
 
 function graficarcompara(json, clase){
-  console.log(json);
+  console.log(json)
+  $('#promediototaltot').empty();
+  $('#promediototaltot2').empty();
+  $('#promediototalej').empty();
+  $('#promediototalej2').empty();
+  $('#promediototalvid').empty();
+  $('#promediototalvid2').empty();
   $('#ordenarcant').hide();
   $('#ordenarvid').hide();
   $('#ordenartot').hide();

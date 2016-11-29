@@ -108,6 +108,7 @@ def selectSuperStats(request):
 								time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
 								total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
 								try:
+									total2={}
 									queryradiothree = Class_Schedule.objects.filter(id_class_id__in=classes).values('day', 'id_schedule_id')
 									delta = timedelta(days=1)
 									total_out=[]
@@ -130,15 +131,15 @@ def selectSuperStats(request):
 													time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 													total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 											d+=delta
-									for total2 in total_exercise:
-										for outt in total_out:
-											if total2['kaid_student_id']==outt['kaid_student_id']:
-												total2['total_total']= total2['total_total']-outt['total']
+									#for total2 in total_exercise:
+									#	for outt in total_out:
+									#		if total2['kaid_student_id']==outt['kaid_student_id']:
+									#			total2['total_total']= total2['total_total']-outt['total']
 
-									for video2 in time_video:
-										for out_video in time_video_out:
-											if video2['kaid_student_id']==out_video['kaid_student_id']:
-												video2['total_seconds']= video2['total_seconds']-out_video['seconds']
+									#for video2 in time_video:
+									#	for out_video in time_video_out:
+									#		if video2['kaid_student_id']==out_video['kaid_student_id']:
+									#			video2['total_seconds']= video2['total_seconds']-out_video['seconds']
 
 									for total3 in total_exercise:
 										if total3['total_total']>0:
@@ -385,6 +386,7 @@ def selectSuperStats(request):
 											else:
 												class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
 							'''
+							print total_exercise
 							for time in time_exercise:
 								dictTime[time['kaid_student_id']] = time['total_time']
 							for video in time_video:
@@ -875,6 +877,8 @@ def compareSuperStats(request):
 								class_json["establecimiento"]='R.A.P.'
 							if idinst[0]['name']=="Liceo Gabriela Mistral":
 								class_json["establecimiento"]='G.M.'
+
+							print total_exercise_1
 
 							for time_1 in time_exercise_1:
 								dictTime_1[time_1['kaid_student_id']] = time_1['total_time']

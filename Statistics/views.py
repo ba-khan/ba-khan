@@ -133,6 +133,7 @@ def selectStatistics(request):
 											time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 											total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 									d+=delta
+							'''
 							for total2 in total_exercise:
 								for outt in total_out:
 									if total2['kaid_student_id']==outt['kaid_student_id']:
@@ -142,7 +143,7 @@ def selectStatistics(request):
 								for out_video in time_video_out:
 									if video2['kaid_student_id']==out_video['kaid_student_id']:
 										video2['total_seconds']= video2['total_seconds']-out_video['seconds']
-							
+							'''
 
 							for total3 in total_exercise:
 								if total3['total_total']>0:
