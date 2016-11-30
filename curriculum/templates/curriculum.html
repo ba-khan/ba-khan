@@ -650,18 +650,19 @@ function valorfiltro(valor, id){
     },500);
   }
   if(valor.value == "videos"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
+    var tree = JSON.parse('{{ topictree_json_string_video | escapejs }}');
     var info = tree['core']['data'];
     //console.log(info);
     for (var i = 0; i < info.length; i++) {
         if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
           delete info[i]
+          //console.log(info[i]['data']);
         } 
     }
-    
+    //console.log(info)
     try{
       $('#newTree'+id+'').jstree("destroy");  
-      //$('#newTree'+id+'').jstree(tree);  
+      $('#newTree'+id+'').jstree(tree);  
       //$('#newTree'+id+'').jstree(tree);
       //$('#newTree'+id+'').jstree("refresh");
       //console.log('paso el try');
@@ -673,7 +674,8 @@ function valorfiltro(valor, id){
       //console.log(err);
       //$('#newTree'+id+'').jstree(tree);
     }
-    /*setTimeout(function(){
+    //console.log(tree);
+    setTimeout(function(){
       var chapters=arbol["capitulos"];
       for (var i = 0; i < chapters.length; i++) {
         var topicos = chapters[i]["topico"];
@@ -689,7 +691,7 @@ function valorfiltro(valor, id){
           }
         }
       }
-    },1000);*/
+    },500);
   }
   if (valor.value == "todos"){
     var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
