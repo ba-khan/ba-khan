@@ -174,6 +174,12 @@
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Cantidad (ascendente)</OPTION>
       <OPTION VALUE="2">Cantidad (descendente)</OPTION>
+      <OPTION VALUE="3">Promedio (ascendente)</OPTION>
+      <OPTION VALUE="4">Promedio (descendente)</OPTION>
+      <OPTION VALUE="5">Máximo (ascendente)</OPTION>
+      <OPTION VALUE="6">Máximo (descendente)</OPTION>
+      <OPTION VALUE="7">Mínimo (ascendente)</OPTION>
+      <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
 <hr>
@@ -186,6 +192,12 @@
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
+      <OPTION VALUE="3">Promedio (ascendente)</OPTION>
+      <OPTION VALUE="4">Promedio (descendente)</OPTION>
+      <OPTION VALUE="5">Máximo (ascendente)</OPTION>
+      <OPTION VALUE="6">Máximo (descendente)</OPTION>
+      <OPTION VALUE="7">Mínimo (ascendente)</OPTION>
+      <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
 <hr>
@@ -198,6 +210,12 @@
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
+      <OPTION VALUE="3">Promedio (ascendente)</OPTION>
+      <OPTION VALUE="4">Promedio (descendente)</OPTION>
+      <OPTION VALUE="5">Máximo (ascendente)</OPTION>
+      <OPTION VALUE="6">Máximo (descendente)</OPTION>
+      <OPTION VALUE="7">Mínimo (ascendente)</OPTION>
+      <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
 <div class="widget">
@@ -421,7 +439,7 @@ function crearEstadisticas(){
 }
 
 function graficar(json, clase){
-  console.log(json);
+  //console.log(json);
   $('#ordenartot').show();
   $('#ordenarvid').show();
   $('#ordenarcant').show();
@@ -1173,16 +1191,16 @@ function graficar(json, clase){
 }
 
 function graficarcompara(json, clase){
-  console.log(json)
+  //console.log(json)
   $('#promediototaltot').empty();
   $('#promediototaltot2').empty();
   $('#promediototalej').empty();
   $('#promediototalej2').empty();
   $('#promediototalvid').empty();
   $('#promediototalvid2').empty();
-  $('#ordenarcant').hide();
-  $('#ordenarvid').hide();
-  $('#ordenartot').hide();
+  $('#ordenarcant').show();
+  $('#ordenarvid').show();
+  $('#ordenartot').show();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
@@ -1494,17 +1512,17 @@ function graficarcompara(json, clase){
 
       categorias[i]=clase[i]["nombre"]+' '+clase[i]["establecimiento"];
       //tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
-      tpoejercicios1[i]={"y":clase[i]["tiempo_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer1, "maximo":maxtpoejer1, "minimo":mintpoejer1, "promedio":clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1};
+      tpoejercicios1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"], "y":clase[i]["tiempo_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer1, "maximo":maxtpoejer1, "minimo":mintpoejer1, "promedio":clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1};
       //tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
-      tpoejercicios2[i]={"y":clase[i]["tiempo_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer2, "maximo":maxtpoejer2, "minimo":mintpoejer2, "promedio":clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2};
+      tpoejercicios2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer2, "maximo":maxtpoejer2, "minimo":mintpoejer2, "promedio":clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2};
       //tpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
-      tpovideos1[i]={"y":clase[i]["tiempo_videos_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid1, "maximo":maxtpovid1, "minimo":mintpovid1, "promedio":clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1}
+      tpovideos1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_videos_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid1, "maximo":maxtpovid1, "minimo":mintpovid1, "promedio":clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1}
       //tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
-      tpovideos2[i]={"y":clase[i]["tiempo_videos_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid2, "maximo":maxtpovid2, "minimo":mintpovid2, "promedio":clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2}
+      tpovideos2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_videos_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid2, "maximo":maxtpovid2, "minimo":mintpovid2, "promedio":clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2}
       //cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
-      cantidad1[i]={"y":clase[i]["total_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer1, "maximo":maxtotejer1, "minimo":mintotejer1, "promedio":clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1}
+      cantidad1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer1, "maximo":maxtotejer1, "minimo":mintotejer1, "promedio":clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1}
       //cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
-      cantidad2[i]={"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2}
+      cantidad2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2}
     }
     //promediotodos1=promediotodos1/clase.length;
     promediotodos2=totaltodos2/totalestudiantes;
@@ -1623,10 +1641,10 @@ function graficarcompara(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#containerej').highcharts({
-
+    var chart = new Highcharts.Chart({
         chart: {
-            type: 'column'
+            renderTo: 'containerej',
+            type: 'column',
         },
         title: {
             text: 'Tiempo de ejercicios'
@@ -1703,6 +1721,68 @@ function graficarcompara(json, clase){
             }
         }]
     });
+    function sortTotal(valor){
+      //aqui va algo
+      if (valor=="0"){
+        tpoejercicios1.sort(function(a,b){
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
+        });
+        /*categorias.sort(function(a,b){
+          return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        });*/
+        categorias.sort();
+        //categorias.reverse();
+      }
+      if (valor=="1"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(a.y) - parseInt(b.y);
+        });
+      }
+      if (valor=="2"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+      }
+      if (valor=="3"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(a.promedio) - parseInt(b.promedio);
+        });
+      }
+      if (valor=="4"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(b.promedio) - parseInt(a.promedio);
+        });
+      }
+      if (valor=="5"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(a.maximo) - parseInt(b.maximo);
+        });
+      }
+      if (valor=="6"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(b.maximo) - parseInt(a.maximo);
+        });
+      }
+      if (valor=="7"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(a.minimo) - parseInt(b.minimo);
+        });
+      }
+      if (valor=="8"){
+        tpoejercicios1.sort(function(a,b){
+          return parseInt(b.minimo) - parseInt(a.minimo);
+        });
+      }
+      for (var i = 0; i < tpoejercicios1.length; i++) {
+        categorias[i]=tpoejercicios1[i]['name']
+      }
+      return [tpoejercicios1, categorias];
+    }
+
+    $('#ordenartot').change(function(){
+      var retorno = sortTotal($('select#ordenartot option:selected').val());
+      chart.series[0].update(retorno);
+    })
   });
     $(function () {
       Highcharts.setOptions({
@@ -1717,10 +1797,10 @@ function graficarcompara(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#containervid').highcharts({
-
+      var chart = new Highcharts.Chart({
         chart: {
-            type: 'column'
+            renderTo: 'containervid',
+            type: 'column',
         },
         title: {
             text: 'Tiempo de videos'
@@ -1797,6 +1877,68 @@ function graficarcompara(json, clase){
             }
         }]
     });
+    function sortTotal(valor){
+      //aqui va algo
+      if (valor=="0"){
+        tpovideos1.sort(function(a,b){
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
+        });
+        /*categorias.sort(function(a,b){
+          return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        });*/
+        categorias.sort();
+        //categorias.reverse();
+      }
+      if (valor=="1"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(a.y) - parseInt(b.y);
+        });
+      }
+      if (valor=="2"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+      }
+      if (valor=="3"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(a.promedio) - parseInt(b.promedio);
+        });
+      }
+      if (valor=="4"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(b.promedio) - parseInt(a.promedio);
+        });
+      }
+      if (valor=="5"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(a.maximo) - parseInt(b.maximo);
+        });
+      }
+      if (valor=="6"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(b.maximo) - parseInt(a.maximo);
+        });
+      }
+      if (valor=="7"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(a.minimo) - parseInt(b.minimo);
+        });
+      }
+      if (valor=="8"){
+        tpovideos1.sort(function(a,b){
+          return parseInt(b.minimo) - parseInt(a.minimo);
+        });
+      }
+      for (var i = 0; i < tpovideos1.length; i++) {
+        categorias[i]=tpovideos1[i]['name']
+      }
+      return [tpovideos1, categorias];
+    }
+
+    $('#ordenarvid').change(function(){
+      var retorno = sortTotal($('select#ordenarvid option:selected').val());
+      chart.series[0].update(retorno);
+    })
   });
     $(function () {
       Highcharts.setOptions({
@@ -1811,10 +1953,10 @@ function graficarcompara(json, clase){
           drillUpText: "Volver a {series.name}" 
         }
       });
-    $('#containertot').highcharts({
-
+    var chart = new Highcharts.Chart({
         chart: {
-            type: 'column'
+            renderTo: 'containertot',
+            type: 'column',
         },
         title: {
             text: 'Cantidad de ejercicios'
@@ -1891,6 +2033,68 @@ function graficarcompara(json, clase){
             }
         }]
     });
+    function sortTotal(valor){
+      //aqui va algo
+      if (valor=="0"){
+        cantidad1.sort(function(a,b){
+          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
+        });
+        /*categorias.sort(function(a,b){
+          return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        });*/
+        categorias.sort();
+        //categorias.reverse();
+      }
+      if (valor=="1"){
+        cantidad1.sort(function(a,b){
+          return parseInt(a.y) - parseInt(b.y);
+        });
+      }
+      if (valor=="2"){
+        cantidad1.sort(function(a,b){
+          return parseInt(b.y) - parseInt(a.y);
+        });
+      }
+      if (valor=="3"){
+        cantidad1.sort(function(a,b){
+          return parseInt(a.promedio) - parseInt(b.promedio);
+        });
+      }
+      if (valor=="4"){
+        cantidad1.sort(function(a,b){
+          return parseInt(b.promedio) - parseInt(a.promedio);
+        });
+      }
+      if (valor=="5"){
+        cantidad1.sort(function(a,b){
+          return parseInt(a.maximo) - parseInt(b.maximo);
+        });
+      }
+      if (valor=="6"){
+        cantidad1.sort(function(a,b){
+          return parseInt(b.maximo) - parseInt(a.maximo);
+        });
+      }
+      if (valor=="7"){
+        cantidad1.sort(function(a,b){
+          return parseInt(a.minimo) - parseInt(b.minimo);
+        });
+      }
+      if (valor=="8"){
+        cantidad1.sort(function(a,b){
+          return parseInt(b.minimo) - parseInt(a.minimo);
+        });
+      }
+      for (var i = 0; i < cantidad1.length; i++) {
+        categorias[i]=cantidad1[i]['name']
+      }
+      return [cantidad1, categorias];
+    }
+
+    $('#ordenarcant').change(function(){
+      var retorno = sortTotal($('select#ordenarcant option:selected').val());
+      chart.series[0].update(retorno);
+    })
   });
 }
 
