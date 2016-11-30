@@ -115,15 +115,6 @@
           <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
         </div>
   </div>
-  <div id="tipochapter" style="width:35%;float:left;height: 140px;" class="typechapt">
-    <br>
-    <br>
-    <h2 align="left">Tipo de Currículum</h2>
-    <select id="selectchapter" class="skill_search" style="margin-right: 150px">
-      <OPTION VALUE="MK">Misiones Khan</OPTION>
-      <OPTION VALUE="CK">Currículum Khan</OPTION>
-    </select>
-  </div>
 <br>
     <div style="float:left;width:100%" align="center">
     <input type="button" id="button_realizar" onClick="crearEstadisticas();" class="kui-button kui-button-plain kui-button-primary" value="Ver estadísticas">
@@ -218,6 +209,15 @@
       <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
+<div id="tipochapter" style="height: 140px;align-self: center" class="typechapt">
+    <br>
+    <br>
+    <h2 align="center">Tipo de Currículum</h2>
+    <select id="selectchapter" class="skill_search" style="margin-right: 150px">
+      <OPTION VALUE="MK">Misiones Khan</OPTION>
+      <OPTION VALUE="CK">Currículum Khan</OPTION>
+    </select>
+  </div>
 <div class="widget">
     <div class="header">Misiones</div>
     <div id="chart" class="chart-container">
@@ -259,6 +259,8 @@
           $("#popup").fadeOut();
           $("#popup_error").fadeOut();
         });
+
+    $('#tipochapter').hide();
 
 
 function loading(){
@@ -1698,7 +1700,7 @@ function graficarcompara(json, clase){
                 color: 'KhanBlue',
                 align: 'right',
                 format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
+                y: -50, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
@@ -1713,7 +1715,7 @@ function graficarcompara(json, clase){
                 color: 'KhanBlue',
                 align: 'right',
                 format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
+                y: -50, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
@@ -1854,7 +1856,7 @@ function graficarcompara(json, clase){
                 color: 'KhanBlue',
                 align: 'right',
                 format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
+                y: -50, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
@@ -1869,7 +1871,7 @@ function graficarcompara(json, clase){
                 color: 'KhanBlue',
                 align: 'right',
                 format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
+                y: -50, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
@@ -2010,7 +2012,7 @@ function graficarcompara(json, clase){
                 color: 'KhanBlue',
                 align: 'right',
                 format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
+                y: -50, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
@@ -2025,7 +2027,7 @@ function graficarcompara(json, clase){
                 color: 'KhanBlue',
                 align: 'right',
                 format: '{point.y:,.0f}', // one decimal
-                y: 10, // 10 pixels down from the top
+                y: -50, // 10 pixels down from the top
                 style: {
                     fontSize: '11px',
                     fontFamily: 'Verdana, sans-serif'
