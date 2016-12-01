@@ -6,12 +6,12 @@
 
 {% block body2 %}
 
-<script src="{% static 'js/editablegrid.js' %}"></script>
+<!--<script src="{% static 'js/editablegrid.js' %}"></script>
 <script src="{% static 'js/editablegrid_renderers.js' %}"></script>
 <script src="{% static 'js/editablegrid_editors.js' %}"></script>
 <script src="{% static 'js/editablegrid_validators.js' %}"></script>
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
-<script src="{% static 'js/editablegrid_charts.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>-->
 
 <!--<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">-->
 
@@ -147,25 +147,23 @@ label{
 input{
   margin-bottom: 10px;
 }
- 
-#sidebar {
-  margin-right: -1px;
-  float: left;
-  width: 240px;
+
+#topbar {
+
     box-sizing: border-box;
    -moz-box-sizing: border-box;
    z-index: 2;
    margin-right: -1px;
 }
-#sidebar ul {
+#topbar ul.tab {
     margin: 0;
     padding: 0;
     list-style: none;
 }
-#sidebar ul li {
+#topbar ul.tab li {
     margin: 0;
 }
-#sidebar ul li a {
+#topbar ul.tab li a {
   margin: 1px 0px 1px 1px;
     padding: 15px 20px;
     font-size: 16px;
@@ -182,20 +180,22 @@ input{
     transition:  background 0.3s ease-in-out;
     
 }
-#sidebar ul li a.select{
+#topbar ul.tab li a.select{
   border-right: 1px solid #f7f7f7;
   background: #f7f7f7;
   color: #56861f;
   
 }
-#sidebar ul li:hover a {
+#topbar ul.tab li:hover a {
     background: #f7f7f7;
     color: #56861f;
 }
-#sidebar ul li:visited a {
+#topbar ul.tab li:visited a {
     background: #f7f7f7;
     color: #56861f;
 }
+
+#topbar ul.tab li {float: left;}
 
 .redBackground{
     background-color: gray;  
@@ -213,7 +213,7 @@ input{
   border: 1px solid #ddd;
 }
 
-button.accordion {
+/*button.accordion {
     background-color: #eee;
     color: #444;
     cursor: pointer;
@@ -223,15 +223,15 @@ button.accordion {
     border: none;
     outline: none;
     transition: 0.4s;
-}
+}*/
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-button.accordion.active, button.accordion:hover {
+/*button.accordion.active, button.accordion:hover {
     background-color: #ddd;
 }
 
 button.accordion:after {
-    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    content: '\02795'; 
     font-size: 13px;
     color: #777;
     float: right;
@@ -239,8 +239,8 @@ button.accordion:after {
 }
 
 button.accordion.active:after {
-    content: "\2796"; /* Unicode character for "minus" sign (-) */
-}
+    content: "\2796"; 
+}*/
 
 /* Style the accordion panel. Note: hidden by default */
 div.panel {
@@ -288,7 +288,14 @@ div.panel {
   </div>!-->
   <div id="newaccordion">
   </div>
-  <div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>
+  <div id="sidebar"></div>
+  <div id="topbar"></div>
+  <div id="contenidopestanas">
+    <div id="cpestana0" class="cpestanna" align="center">
+    <h3 align="center">Nombre Unidad:</h3>
+    </div>
+  </div>
+  <!--<div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>-->
 </div>
 </div>
 
@@ -315,6 +322,7 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       $("#popuptree").fadeOut();
       });
+    $('#contenidopestanas').hide();
 
     accordionMineduc();
     var acc = document.getElementsByClassName("accordion");
@@ -345,13 +353,17 @@ $(document).ready(function(){
   }
 
 var arbol = JSON.parse('{{ json_data | escapejs }}');
+console.log(arbol);
   function accordionMineduc(){
+    $('#sidebar').hide();
+    $('#topbar').hide();
     //console.log(arbol);
     var newaccordion='';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
+      newaccordion+='<button onclick=\'(showChapter("'+chapters[i]['id']+'"))\' class="kui-button kui-button-plain kui-button-primary">'+chapters[i]["nombre"]+'</button><br>';
       //console.log(chapters[i]["nombre"])
-      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'<a onclick=\'(deleteChapter("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:120px;  padding:0px;left:500px;position:absolute;"><img style="width:25px;height:25px;" src={% static "img/deleteicon.png" %} alt="delete"></a></button><div class="panel">';
+      /*newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'<a onclick=\'(deleteChapter("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:120px;  padding:0px;left:500px;position:absolute;"><img style="width:25px;height:25px;" src={% static "img/deleteicon.png" %} alt="delete"></a></button><div class="panel">';
       newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Unidad</a>';
       newaccordion += '<a onclick=\'(deleteTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Unidad</a>';
       var topicos = chapters[i]["topico"];
@@ -389,13 +401,79 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
         }
         newaccordion += '</div>'
       }
-      newaccordion+='</div>';
+      newaccordion+='</div>';*/
     }
     $('#newaccordion').append(newaccordion);
   }
 
 
   $('#curriculum').addClass('active selected');
+
+  function showChapter(id){
+    //console.log(id);
+    $('#sidebar').show();
+    $('#topbar').show();
+    $('#newaccordion').hide();
+    $('#buttonNewChapter').hide();
+    $('#contenidopestanas').show();
+    var newsidebar='';
+    newsidebar+='<ul><li id="pestana0"><a href="javascript:cambiarPestanna(pestana0);" class="select"><i class="plus"></i> Nueva Unidad</a></li>';
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      if(chapters[i]['id']==id){
+        var topicos = chapters[i]["topico"];
+        for (var i = 0; i < topicos.length; i++) {
+          //console.log(topicos[i]['id']);
+          newsidebar+='<li id="pestana'+topicos[i]['id']+'"><a href="javascript:cambiarPestanna(pestana'+topicos[i]['id']+', '+id+', '+topicos[i]['id']+');" >'+topicos[i]['nombre']+'</a></li>'
+        }
+      }
+    }
+    newsidebar+='</ul>';
+    $('#sidebar').append(newsidebar);
+  }
+
+  function cambiarPestanna(pestanna, idchapter, idtopic){
+    newTopBar(idchapter, idtopic);
+    console.log(pestanna.id)
+    id = (pestanna.id).substring(7);
+    pestanna = document.getElementById(pestanna.id);
+    cpestanna = document.getElementById('c' + pestanna.id);
+    cpestannas = document.getElementsByClassName('cpestanna');
+    contenidopestanas = document.getElementById('contenidopestanas');
+    for (i=0;i<cpestannas.length;i++){
+     $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
+     
+    }
+    $(document).ready(function () {
+     $(document.getElementsByClassName("select")).removeClass("select");
+     $(cpestanna).css('display', '');
+     $(pestanna.getElementsByTagName('a')).addClass("select");
+    });
+  }
+
+  function newTopBar(idchapter, idtopic){
+    //console.log(idchapter);
+    //console.log(idtopic);
+    $('#topbar').empty();
+    var newtopbar='';
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      if(chapters[i]['id']==idchapter){
+        var topicos = chapters[i]["topico"];
+        for (var i = 0; i < topicos.length; i++) {
+          if(topicos[i]['id']==idtopic){
+            newtopbar+='<ul  class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestanna(pestanatop0, "", "");" class="select"><i class="plus"></i> Nuevo OA</a></li>';
+            var subtopicos = topicos[i]['subtopico'];
+            for (var i = 0; i < subtopicos.length; i++) {
+              newtopbar+='<li id="pestana'+subtopicos[i]['id']+'"><a href="javascript:cambiarPestanna(pestanatop'+subtopicos[i]['id']+', "", "");" >'+subtopicos[i]['nombre']+'</a></li>';
+            }
+          }
+        }
+      }
+    }
+    newtopbar+='</ul>';
+    $('#topbar').append(newtopbar);
+  }
 
   function showNewChapter(){
   $('#newChapter').toggle('blind',10);

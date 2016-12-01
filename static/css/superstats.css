@@ -184,7 +184,7 @@ table.testsched td {
 }
 
 .container{
-  max-width: 1000px;
+  min-width: 1000px;
     /*position: relative;*/
     /*height: 100%;*/
     /*width: 100%;*/
