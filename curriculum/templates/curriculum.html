@@ -422,7 +422,6 @@ console.log(arbol);
       if(chapters[i]['id']==id){
         var topicos = chapters[i]["topico"];
         for (var i = 0; i < topicos.length; i++) {
-          //console.log(topicos[i]['id']);
           newsidebar+='<li id="pestana'+topicos[i]['id']+'"><a href="javascript:cambiarPestanna(pestana'+topicos[i]['id']+', '+id+', '+topicos[i]['id']+');" >'+topicos[i]['nombre']+'</a></li>'
         }
       }
