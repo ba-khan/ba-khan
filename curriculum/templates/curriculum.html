@@ -180,8 +180,8 @@ input{
     transition:  background 0.3s ease-in-out;
     
 }
-#topbar ul.tab li a.select{
-  border-right: 1px solid #f7f7f7;
+#topbar ul.tab li a.selectdos{
+  border-bottom: 1px solid #f7f7f7;
   background: #f7f7f7;
   color: #56861f;
   
@@ -432,7 +432,7 @@ console.log(arbol);
 
   function cambiarPestanna(pestanna, idchapter, idtopic){
     newTopBar(idchapter, idtopic);
-    console.log(pestanna.id)
+    //console.log(pestanna.id)
     id = (pestanna.id).substring(7);
     pestanna = document.getElementById(pestanna.id);
     cpestanna = document.getElementById('c' + pestanna.id);
@@ -446,6 +446,29 @@ console.log(arbol);
      $(document.getElementsByClassName("select")).removeClass("select");
      $(cpestanna).css('display', '');
      $(pestanna.getElementsByTagName('a')).addClass("select");
+     $('#apestanatop0').addClass("selectdos");
+    });
+  }
+
+  function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
+    //console.log('pestanna:'+pestanna);
+    //console.log('idtopic:'+idtopic);
+    //console.log('idsubtopic:'+idsubtopic);
+
+    id=(pestanna.id).substring(10);
+    console.log(id);
+    pestannatop = document.getElementById(pestanna.id);
+    cpestannatop = document.getElementById('c'+pestanna.id);
+    cpestannastop = document.getElementsByClassName('cpestannatop');
+    contenidopestanastop = document.getElementById('contenidopestanastop');
+    for (var i = 0; i < cpestannastop.length; i++) {
+      $(contenidopestanastop.getElementsByClassName('cpestannatop')[i]).css('display', 'none');
+    }
+    $(document).ready(function () {
+     $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
+     $(cpestannatop).css('display', '');
+     $(pestanna.getElementsByTagName('a')).addClass("selectdos");
+     //$('#apestanatop0').addClass("selectdos");
     });
   }
 
@@ -460,10 +483,10 @@ console.log(arbol);
         var topicos = chapters[i]["topico"];
         for (var i = 0; i < topicos.length; i++) {
           if(topicos[i]['id']==idtopic){
-            newtopbar+='<ul  class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestanna(pestanatop0, "", "");" class="select"><i class="plus"></i> Nuevo OA</a></li>';
+            newtopbar+='<ul  class="tab"><li id="pestanatop0"><a href="#" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo OA</a></li>';
             var subtopicos = topicos[i]['subtopico'];
             for (var i = 0; i < subtopicos.length; i++) {
-              newtopbar+='<li id="pestana'+subtopicos[i]['id']+'"><a href="javascript:cambiarPestanna(pestanatop'+subtopicos[i]['id']+', "", "");" >'+subtopicos[i]['nombre']+'</a></li>';
+              newtopbar+='<li id="pestanatop'+subtopicos[i]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop'+subtopicos[i]['id']+', '+idtopic+' ,'+subtopicos[i]['id']+')" >'+subtopicos[i]['nombre']+'</a></li>';
             }
           }
         }
