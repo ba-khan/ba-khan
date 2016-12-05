@@ -170,6 +170,8 @@
 <hr>
 <div id="containertotnivel" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
+<div id="containertotinst" style="min-width: 300px;  margin: 0 auto"></div>
+<hr>
 <div id="promediototalej" style="float:left;width: 50%;"></div>
 <div id="promediototalej2" style="float:left;width: 50%;"></div>
 <div id="containerej" style="min-width: 300px; margin: 0 auto"></div>
@@ -447,6 +449,7 @@ function graficar(json, clase){
   var arraytv=[];
   var arraycant=[];
   var distxnivel=[];
+  var distxinst=[];
   var arraylsmb = new Array(12).fill(0);
   var arrayea = new Array(12).fill(0);
   var arraycei = new Array(12).fill(0);
@@ -454,6 +457,19 @@ function graficar(json, clase){
   var arrayrap = new Array(12).fill(0);
   var arraygm = new Array(12).fill(0);
   var arraybakhan = new Array(12).fill(0);
+
+  var array1basico = new Array(7).fill(0);
+  var array2basico = new Array(7).fill(0);
+  var array3basico = new Array(7).fill(0);
+  var array4basico = new Array(7).fill(0);
+  var array5basico = new Array(7).fill(0);
+  var array6basico = new Array(7).fill(0);
+  var array7basico = new Array(7).fill(0);
+  var array8basico = new Array(7).fill(0);
+  var array1medio = new Array(7).fill(0);
+  var array2medio = new Array(7).fill(0);
+  var array3medio = new Array(7).fill(0);
+  var array4medio = new Array(7).fill(0);
   //var colors=['blue', 'red', 'green', 'yellow', 'orange', 'brown', 'gray'];
   var serie=[];
   var serietpo=[];
@@ -523,30 +539,282 @@ function graficar(json, clase){
       if (ee=="LSMB"){
         colorcolumn[i]='#84C8D7';
         arraylsmb[level-1]=arraylsmb[level-1]+cantidad;
+        if (level==1){
+          array1basico[0]+=cantidad;
+        }
+        if (level==2){
+          array2basico[0]+=cantidad;
+        }
+        if (level==3){
+          array3basico[0]+=cantidad;
+        }
+        if (level==4){
+          array4basico[0]+=cantidad;
+        }
+        if (level==5){
+          array5basico[0]+=cantidad;
+        }
+        if (level==6){
+          array6basico[0]+=cantidad;
+        }
+        if (level==7){
+          array7basico[0]+=cantidad;
+        }
+        if (level==8){
+          array8basico[0]+=cantidad;
+        }
+        if (level==9){
+          array1medio[0]+=cantidad;
+        }
+        if (level==10){
+          array2medio[0]+=cantidad;
+        }
+        if (level==11){
+          array3medio[0]+=cantidad;
+        }
+        if (level==12){
+          array4medio[0]+=cantidad;
+        }
       }
       if (ee=="E.A."){
         colorcolumn[i]='#D7212A';
         arrayea[level-1]=arrayea[level-1]+cantidad;
+        if (level==1){
+          array1basico[1]+=cantidad;
+        }
+        if (level==2){
+          array2basico[1]+=cantidad;
+        }
+        if (level==3){
+          array3basico[1]+=cantidad;
+        }
+        if (level==4){
+          array4basico[1]+=cantidad;
+        }
+        if (level==5){
+          array5basico[1]+=cantidad;
+        }
+        if (level==6){
+          array6basico[1]+=cantidad;
+        }
+        if (level==7){
+          array7basico[1]+=cantidad;
+        }
+        if (level==8){
+          array8basico[1]+=cantidad;
+        }
+        if (level==9){
+          array1medio[1]+=cantidad;
+        }
+        if (level==10){
+          array2medio[1]+=cantidad;
+        }
+        if (level==11){
+          array3medio[1]+=cantidad;
+        }
+        if (level==12){
+          array4medio[1]+=cantidad;
+        }
       }
       if (ee=="C.E.I."){
         colorcolumn[i]='#009900';
         arraycei[level-1]=arraycei[level-1]+cantidad;
+        if (level==1){
+          array1basico[2]+=cantidad;
+        }
+        if (level==2){
+          array2basico[2]+=cantidad;
+        }
+        if (level==3){
+          array3basico[2]+=cantidad;
+        }
+        if (level==4){
+          array4basico[2]+=cantidad;
+        }
+        if (level==5){
+          array5basico[2]+=cantidad;
+        }
+        if (level==6){
+          array6basico[2]+=cantidad;
+        }
+        if (level==7){
+          array7basico[2]+=cantidad;
+        }
+        if (level==8){
+          array8basico[2]+=cantidad;
+        }
+        if (level==9){
+          array1medio[2]+=cantidad;
+        }
+        if (level==10){
+          array2medio[2]+=cantidad;
+        }
+        if (level==11){
+          array3medio[2]+=cantidad;
+        }
+        if (level==12){
+          array4medio[2]+=cantidad;
+        }
       }
       if (ee=="L.A.V."){
         colorcolumn[i]='#CCCC00';
         arraylav[level-1]=arraylav[level-1]+cantidad;
+        if (level==1){
+          array1basico[3]+=cantidad;
+        }
+        if (level==2){
+          array2basico[3]+=cantidad;
+        }
+        if (level==3){
+          array3basico[3]+=cantidad;
+        }
+        if (level==4){
+          array4basico[3]+=cantidad;
+        }
+        if (level==5){
+          array5basico[3]+=cantidad;
+        }
+        if (level==6){
+          array6basico[3]+=cantidad;
+        }
+        if (level==7){
+          array7basico[3]+=cantidad;
+        }
+        if (level==8){
+          array8basico[3]+=cantidad;
+        }
+        if (level==9){
+          array1medio[3]+=cantidad;
+        }
+        if (level==10){
+          array2medio[3]+=cantidad;
+        }
+        if (level==11){
+          array3medio[3]+=cantidad;
+        }
+        if (level==12){
+          array4medio[3]+=cantidad;
+        }
       }
       if (ee=="R.A.P."){
         colorcolumn[i]='#FF8000';
         arrayrap[level-1]=arrayrap[level-1]+cantidad;
+        if (level==1){
+          array1basico[4]+=cantidad;
+        }
+        if (level==2){
+          array2basico[4]+=cantidad;
+        }
+        if (level==3){
+          array3basico[4]+=cantidad;
+        }
+        if (level==4){
+          array4basico[4]+=cantidad;
+        }
+        if (level==5){
+          array5basico[4]+=cantidad;
+        }
+        if (level==6){
+          array6basico[4]+=cantidad;
+        }
+        if (level==7){
+          array7basico[4]+=cantidad;
+        }
+        if (level==8){
+          array8basico[4]+=cantidad;
+        }
+        if (level==9){
+          array1medio[4]+=cantidad;
+        }
+        if (level==10){
+          array2medio[4]+=cantidad;
+        }
+        if (level==11){
+          array3medio[4]+=cantidad;
+        }
+        if (level==12){
+          array4medio[4]+=cantidad;
+        }
       }
       if (ee=="G.M."){
         colorcolumn[i]='#663300';
         arraygm[level-1]=arraygm[level-1]+cantidad;
+        if (level==1){
+          array1basico[5]+=cantidad;
+        }
+        if (level==2){
+          array2basico[5]+=cantidad;
+        }
+        if (level==3){
+          array3basico[5]+=cantidad;
+        }
+        if (level==4){
+          array4basico[5]+=cantidad;
+        }
+        if (level==5){
+          array5basico[5]+=cantidad;
+        }
+        if (level==6){
+          array6basico[5]+=cantidad;
+        }
+        if (level==7){
+          array7basico[5]+=cantidad;
+        }
+        if (level==8){
+          array8basico[5]+=cantidad;
+        }
+        if (level==9){
+          array1medio[5]+=cantidad;
+        }
+        if (level==10){
+          array2medio[5]+=cantidad;
+        }
+        if (level==11){
+          array3medio[5]+=cantidad;
+        }
+        if (level==12){
+          array4medio[5]+=cantidad;
+        }
       }
       if (ee=="BA-Khan"){
         colorcolumn[i]='#808080';
         arraybakhan[level-1]=arraybakhan[level-1]+cantidad;
+        if (level==1){
+          array1basico[6]+=cantidad;
+        }
+        if (level==2){
+          array2basico[6]+=cantidad;
+        }
+        if (level==3){
+          array3basico[6]+=cantidad;
+        }
+        if (level==4){
+          array4basico[6]+=cantidad;
+        }
+        if (level==5){
+          array5basico[6]+=cantidad;
+        }
+        if (level==6){
+          array6basico[6]+=cantidad;
+        }
+        if (level==7){
+          array7basico[6]+=cantidad;
+        }
+        if (level==8){
+          array8basico[6]+=cantidad;
+        }
+        if (level==9){
+          array1medio[6]+=cantidad;
+        }
+        if (level==10){
+          array2medio[6]+=cantidad;
+        }
+        if (level==11){
+          array3medio[6]+=cantidad;
+        }
+        if (level==12){
+          array4medio[6]+=cantidad;
+        }
       }
 
       arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudiantes.length, "cantclase":cantidad_clase, "tpo_esperado":tiempo_esperado, "establecimiento": ee};
@@ -639,6 +907,19 @@ function graficar(json, clase){
     distxnivel[4]={'name':'R.A.P.', 'data':arrayrap};
     distxnivel[5]={'name':'G.M.', 'data':arraygm};
     distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan};
+
+    distxinst[0]={'name':'1ro basico', 'data':array1basico};
+    distxinst[1]={'name':'2do basico', 'data':array2basico};
+    distxinst[2]={'name':'3ro basico', 'data':array3basico};
+    distxinst[3]={'name':'4to basico', 'data':array4basico};
+    distxinst[4]={'name':'5to basico', 'data':array5basico};
+    distxinst[5]={'name':'6to basico', 'data':array6basico};
+    distxinst[6]={'name':'7mo basico', 'data':array7basico};
+    distxinst[7]={'name':'8vo basico', 'data':array8basico};
+    distxinst[8]={'name':'1ro medio', 'data':array1medio};
+    distxinst[9]={'name':'2do medio', 'data':array2medio};
+    distxinst[10]={'name':'3ro medio', 'data':array3medio};
+    distxinst[11]={'name':'4to medio', 'data':array4medio};
     //console.log(arraylsmb);
   }
   else{
@@ -1326,17 +1607,82 @@ function graficar(json, clase){
             }
         },
         series: distxnivel
+    });
+
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containertotinst',
+            type: 'column',
+        },
+        title: {
+            text: 'Distribución de Ejercicios Realizados por Institución'
+        },
+        xAxis: {
+            categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'G.M.', 'Ba-Khan']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad de Ejercicios'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+            }
+        },
+        series: distxinst
         /*series: [{
             name: 'John',
-            data: [5, 3, 4, 7, 2,5, 3, 4, 7, 2,3,4]
+            data: [5, 3, 4, 7, 2,3, 4]
         }, {
             name: 'Jane',
-            data: [2, 2, 3, 2, 1,2, 2, 3, 2, 1,2,3]
+            data: [2, 2, 3, 2, 1,2, 3]
         }, {
             name: 'Joe',
-            data: [3, 4, 4, 2, 5,3, 4, 4, 2, 5,6,7]
+            data: [3, 4, 4, 2, 5,6, 7]
         }]*/
     });
+});
 });
   
 }
