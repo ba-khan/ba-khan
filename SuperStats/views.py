@@ -353,7 +353,7 @@ def selectSuperStats(request):
 							if idinst[0]['name']=="Liceo Rudolfo Armando Philipi":
 								class_json["establecimiento"]='R.A.P.'
 							if idinst[0]['name']=="Liceo Gabriela Mistral":
-								class_json["establecimiento"]='G.M.'
+								class_json["establecimiento"]='L.G.M.'
 
 							
 							#misiones = Chapter.objects.exclude(index=None).values('name_spanish', 'id_chapter_name')
@@ -884,7 +884,7 @@ def compareSuperStats(request):
 							if idinst[0]['name']=="Liceo Rudolfo Armando Philipi":
 								class_json["establecimiento"]='R.A.P.'
 							if idinst[0]['name']=="Liceo Gabriela Mistral":
-								class_json["establecimiento"]='G.M.'
+								class_json["establecimiento"]='L.G.M.'
 
 							#print total_exercise_1
 

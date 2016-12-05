@@ -190,6 +190,10 @@
 </select>
 </div>
 <hr>
+<div id="containerejernivel" style="min-width: 300px;  margin: 0 auto"></div>
+<hr>
+<div id="containerejerinst" style="min-width: 300px;  margin: 0 auto"></div>
+<hr>
 <div id="promediototalvid" style="float:left;width: 50%;"></div>
 <div id="promediototalvid2" style="float:left;width: 50%;"></div>
 <div id="containervid" style="min-width: 300px;  margin: 0 auto"></div>
@@ -207,6 +211,10 @@
       <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
+<hr>
+<div id="containervidnivel" style="min-width: 300px;  margin: 0 auto"></div>
+<hr>
+<div id="containervidinst" style="min-width: 300px;  margin: 0 auto"></div>
 <div id="tipochapter" style="height: 140px;align-self: center" class="typechapt">
     <br>
     <br>
@@ -404,6 +412,8 @@ function crearEstadisticas(){
             jsonResponse = JSON.parse(response);
             hideDivMain();
             showDiv();
+            $('#button_last').show();
+            $('.widget').hide();
             //console.log(response);
             //$('#loading').hide()
             stoploading();
@@ -470,7 +480,52 @@ function graficar(json, clase){
   var array2medio = new Array(7).fill(0);
   var array3medio = new Array(7).fill(0);
   var array4medio = new Array(7).fill(0);
-  //var colors=['blue', 'red', 'green', 'yellow', 'orange', 'brown', 'gray'];
+
+  var distxnivelejer=[];
+  var distxinstejer=[];
+  var arraylsmbejer = new Array(12).fill(0);
+  var arrayeaejer = new Array(12).fill(0);
+  var arrayceiejer = new Array(12).fill(0);
+  var arraylavejer = new Array(12).fill(0);
+  var arrayrapejer = new Array(12).fill(0);
+  var arraygmejer = new Array(12).fill(0);
+  var arraybakhanejer = new Array(12).fill(0);
+
+  var array1basicoejer = new Array(7).fill(0);
+  var array2basicoejer = new Array(7).fill(0);
+  var array3basicoejer = new Array(7).fill(0);
+  var array4basicoejer = new Array(7).fill(0);
+  var array5basicoejer = new Array(7).fill(0);
+  var array6basicoejer = new Array(7).fill(0);
+  var array7basicoejer = new Array(7).fill(0);
+  var array8basicoejer = new Array(7).fill(0);
+  var array1medioejer = new Array(7).fill(0);
+  var array2medioejer = new Array(7).fill(0);
+  var array3medioejer = new Array(7).fill(0);
+  var array4medioejer = new Array(7).fill(0);
+
+  var distxnivelvid=[];
+  var distxinstvid=[];
+  var arraylsmbvid = new Array(12).fill(0);
+  var arrayeavid = new Array(12).fill(0);
+  var arrayceivid = new Array(12).fill(0);
+  var arraylavvid = new Array(12).fill(0);
+  var arrayrapvid = new Array(12).fill(0);
+  var arraygmvid = new Array(12).fill(0);
+  var arraybakhanvid = new Array(12).fill(0);
+
+  var array1basicovid = new Array(7).fill(0);
+  var array2basicovid = new Array(7).fill(0);
+  var array3basicovid = new Array(7).fill(0);
+  var array4basicovid = new Array(7).fill(0);
+  var array5basicovid = new Array(7).fill(0);
+  var array6basicovid = new Array(7).fill(0);
+  var array7basicovid = new Array(7).fill(0);
+  var array8basicovid = new Array(7).fill(0);
+  var array1mediovid = new Array(7).fill(0);
+  var array2mediovid = new Array(7).fill(0);
+  var array3mediovid = new Array(7).fill(0);
+  var array4mediovid = new Array(7).fill(0);
   var serie=[];
   var serietpo=[];
   var serievid=[];
@@ -575,6 +630,82 @@ function graficar(json, clase){
         if (level==12){
           array4medio[0]+=cantidad;
         }
+
+        arraylsmbejer[level-1]=arraylsmbejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[0]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[0]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[0]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[0]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[0]+=tpo_ejercicios;
+        }
+
+        arraylsmbvid[level-1]=arraylsmbvid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[0]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[0]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[0]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[0]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[0]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[0]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[0]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[0]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[0]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[0]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[0]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[0]+=tpo_videos;
+        }
       }
       if (ee=="E.A."){
         colorcolumn[i]='#D7212A';
@@ -614,6 +745,82 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[1]+=cantidad;
+        }
+
+        arrayeaejer[level-1]=arrayeaejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[1]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[1]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[1]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[1]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[1]+=tpo_ejercicios;
+        }
+
+        arrayeavid[level-1]=arrayeavid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[1]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[1]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[1]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[1]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[1]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[1]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[1]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[1]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[1]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[1]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[1]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[1]+=tpo_videos;
         }
       }
       if (ee=="C.E.I."){
@@ -655,6 +862,82 @@ function graficar(json, clase){
         if (level==12){
           array4medio[2]+=cantidad;
         }
+
+        arrayceiejer[level-1]=arrayceiejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[2]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[2]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[2]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[2]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[2]+=tpo_ejercicios;
+        }
+
+        arrayceivid[level-1]=arrayceivid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[2]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[2]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[2]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[2]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[2]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[2]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[2]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[2]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[2]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[2]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[2]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[2]+=tpo_videos;
+        }
       }
       if (ee=="L.A.V."){
         colorcolumn[i]='#CCCC00';
@@ -694,6 +977,82 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[3]+=cantidad;
+        }
+
+        arraylavejer[level-1]=arraylavejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[3]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[3]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[3]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[3]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[3]+=tpo_ejercicios;
+        }
+
+        arraylavvid[level-1]=arraylavvid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[3]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[3]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[3]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[3]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[3]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[3]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[3]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[3]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[3]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[3]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[3]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[3]+=tpo_videos;
         }
       }
       if (ee=="R.A.P."){
@@ -735,8 +1094,84 @@ function graficar(json, clase){
         if (level==12){
           array4medio[4]+=cantidad;
         }
+
+        arrayrapejer[level-1]=arrayrapejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[4]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[4]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[4]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[4]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[4]+=tpo_ejercicios;
+        }
+
+        arrayrapvid[level-1]=arrayrapvid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[4]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[4]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[4]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[4]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[4]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[4]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[4]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[4]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[4]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[4]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[4]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[4]+=tpo_videos;
+        }
       }
-      if (ee=="G.M."){
+      if (ee=="L.G.M."){
         colorcolumn[i]='#663300';
         arraygm[level-1]=arraygm[level-1]+cantidad;
         if (level==1){
@@ -774,6 +1209,82 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[5]+=cantidad;
+        }
+
+        arraygmejer[level-1]=arraygmejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[5]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[5]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[5]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[5]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[5]+=tpo_ejercicios;
+        }
+
+        arraygmvid[level-1]=arraygmvid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[5]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[5]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[5]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[5]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[5]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[5]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[5]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[5]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[5]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[5]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[5]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[5]+=tpo_videos;
         }
       }
       if (ee=="BA-Khan"){
@@ -814,6 +1325,82 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[6]+=cantidad;
+        }
+
+        arraybakhanejer[level-1]=arraybakhanejer[level-1]+tpo_ejercicios;
+        if (level==1){
+          array1basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==2){
+          array2basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==3){
+          array3basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==4){
+          array4basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==5){
+          array5basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==6){
+          array6basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==7){
+          array7basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==8){
+          array8basicoejer[6]+=tpo_ejercicios;
+        }
+        if (level==9){
+          array1medioejer[6]+=tpo_ejercicios;
+        }
+        if (level==10){
+          array2medioejer[6]+=tpo_ejercicios;
+        }
+        if (level==11){
+          array3medioejer[6]+=tpo_ejercicios;
+        }
+        if (level==12){
+          array4medioejer[6]+=tpo_ejercicios;
+        }
+
+        arraybakhanvid[level-1]=arraybakhanvid[level-1]+tpo_videos;
+        if (level==1){
+          array1basicovid[6]+=tpo_videos;
+        }
+        if (level==2){
+          array2basicovid[6]+=tpo_videos;
+        }
+        if (level==3){
+          array3basicovid[6]+=tpo_videos;
+        }
+        if (level==4){
+          array4basicovid[6]+=tpo_videos;
+        }
+        if (level==5){
+          array5basicovid[6]+=tpo_videos;
+        }
+        if (level==6){
+          array6basicovid[6]+=tpo_videos;
+        }
+        if (level==7){
+          array7basicovid[6]+=tpo_videos;
+        }
+        if (level==8){
+          array8basicovid[6]+=tpo_videos;
+        }
+        if (level==9){
+          array1mediovid[6]+=tpo_videos;
+        }
+        if (level==10){
+          array2mediovid[6]+=tpo_videos;
+        }
+        if (level==11){
+          array3mediovid[6]+=tpo_videos;
+        }
+        if (level==12){
+          array4mediovid[6]+=tpo_videos;
         }
       }
 
@@ -905,7 +1492,7 @@ function graficar(json, clase){
     distxnivel[2]={'name':'C.E.I.', 'data':arraycei};
     distxnivel[3]={'name':'L.A.V.', 'data':arraylav};
     distxnivel[4]={'name':'R.A.P.', 'data':arrayrap};
-    distxnivel[5]={'name':'G.M.', 'data':arraygm};
+    distxnivel[5]={'name':'L.G.M.', 'data':arraygm};
     distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan};
 
     distxinst[0]={'name':'1ro basico', 'data':array1basico};
@@ -920,6 +1507,48 @@ function graficar(json, clase){
     distxinst[9]={'name':'2do medio', 'data':array2medio};
     distxinst[10]={'name':'3ro medio', 'data':array3medio};
     distxinst[11]={'name':'4to medio', 'data':array4medio};
+
+    distxnivelejer[0]={'name':'LSMB', 'data':arraylsmbejer};
+    distxnivelejer[1]={'name':'E.A.', 'data':arrayeaejer};
+    distxnivelejer[2]={'name':'C.E.I.', 'data':arrayceiejer};
+    distxnivelejer[3]={'name':'L.A.V.', 'data':arraylavejer};
+    distxnivelejer[4]={'name':'R.A.P.', 'data':arrayrapejer};
+    distxnivelejer[5]={'name':'L.G.M.', 'data':arraygmejer};
+    distxnivelejer[6]={'name':'Ba-Khan', 'data':arraybakhanejer};
+
+    distxinstejer[0]={'name':'1ro basico', 'data':array1basicoejer};
+    distxinstejer[1]={'name':'2do basico', 'data':array2basicoejer};
+    distxinstejer[2]={'name':'3ro basico', 'data':array3basicoejer};
+    distxinstejer[3]={'name':'4to basico', 'data':array4basicoejer};
+    distxinstejer[4]={'name':'5to basico', 'data':array5basicoejer};
+    distxinstejer[5]={'name':'6to basico', 'data':array6basicoejer};
+    distxinstejer[6]={'name':'7mo basico', 'data':array7basicoejer};
+    distxinstejer[7]={'name':'8vo basico', 'data':array8basicoejer};
+    distxinstejer[8]={'name':'1ro medio', 'data':array1medioejer};
+    distxinstejer[9]={'name':'2do medio', 'data':array2medioejer};
+    distxinstejer[10]={'name':'3ro medio', 'data':array3medioejer};
+    distxinstejer[11]={'name':'4to medio', 'data':array4medioejer};
+
+    distxnivelvid[0]={'name':'LSMB', 'data':arraylsmbvid};
+    distxnivelvid[1]={'name':'E.A.', 'data':arrayeavid};
+    distxnivelvid[2]={'name':'C.E.I.', 'data':arrayceivid};
+    distxnivelvid[3]={'name':'L.A.V.', 'data':arraylavvid};
+    distxnivelvid[4]={'name':'R.A.P.', 'data':arrayrapvid};
+    distxnivelvid[5]={'name':'L.G.M.', 'data':arraygmvid};
+    distxnivelvid[6]={'name':'Ba-Khan', 'data':arraybakhanvid};
+
+    distxinstvid[0]={'name':'1ro basico', 'data':array1basicovid};
+    distxinstvid[1]={'name':'2do basico', 'data':array2basicovid};
+    distxinstvid[2]={'name':'3ro basico', 'data':array3basicovid};
+    distxinstvid[3]={'name':'4to basico', 'data':array4basicovid};
+    distxinstvid[4]={'name':'5to basico', 'data':array5basicovid};
+    distxinstvid[5]={'name':'6to basico', 'data':array6basicovid};
+    distxinstvid[6]={'name':'7mo basico', 'data':array7basicovid};
+    distxinstvid[7]={'name':'8vo basico', 'data':array8basicovid};
+    distxinstvid[8]={'name':'1ro medio', 'data':array1mediovid};
+    distxinstvid[9]={'name':'2do medio', 'data':array2mediovid};
+    distxinstvid[10]={'name':'3ro medio', 'data':array3mediovid};
+    distxinstvid[11]={'name':'4to medio', 'data':array4mediovid};
     //console.log(arraylsmb);
   }
   else{
@@ -1275,7 +1904,7 @@ function graficar(json, clase){
         if (arrayte[i]['establecimiento']=="R.A.P."){
           colorcolumn[i]='#FF8000';
         }
-        if (arrayte[i]['establecimiento']=="G.M."){
+        if (arrayte[i]['establecimiento']=="L.G.M."){
           colorcolumn[i]='#663300';
         }
         if (arrayte[i]['establecimiento']=="BA-Khan"){
@@ -1290,6 +1919,136 @@ function graficar(json, clase){
       //console.log(retorno);
       chart.series[0].update(retorno);
     })
+  });
+
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+        var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containerejernivel',
+            type: 'column',
+        },
+        title: {
+            text: 'Distribución de Tiempo de Ejercicios Realizados por Nivel'
+        },
+        xAxis: {
+            categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo de Ejercicios (segundos)'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+            }
+        },
+        series: distxnivelejer
+    });
+  });
+
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containerejerinst',
+            type: 'column',
+        },
+        title: {
+            text: 'Distribución de Tiempo de Ejercicios Realizados por Institución'
+        },
+        xAxis: {
+            categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo de Ejercicios (segundos)'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+            }
+        },
+        series: distxinstejer
+    });
   });
 
   $(function () {
@@ -1403,7 +2162,7 @@ function graficar(json, clase){
         if (arraytv[i]['establecimiento']=="R.A.P."){
           colorcolumn[i]='#FF8000';
         }
-        if (arraytv[i]['establecimiento']=="G.M."){
+        if (arraytv[i]['establecimiento']=="L.G.M."){
           colorcolumn[i]='#663300';
         }
         if (arraytv[i]['establecimiento']=="BA-Khan"){
@@ -1418,6 +2177,136 @@ function graficar(json, clase){
       //console.log(retorno);
       chart.series[0].update(retorno);
     })
+  });
+
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+        var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containervidnivel',
+            type: 'column',
+        },
+        title: {
+            text: 'Distribución de Tiempo de Videos Realizados por Nivel'
+        },
+        xAxis: {
+            categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo de Videos (segundos)'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+            }
+        },
+        series: distxnivelvid
+    });
+  });
+
+    $(function () {
+      Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containervidinst',
+            type: 'column',
+        },
+        title: {
+            text: 'Distribución de Tiempo de Videos Realizados por Institución'
+        },
+        xAxis: {
+            categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Tiempo de Videos (segundos)'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        legend: {
+            align: 'right',
+            x: -30,
+            verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },
+        tooltip: {
+            headerFormat: '<b>{point.x}</b><br/>',
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                }
+            }
+        },
+        series: distxinstvid
+    });
   });
 
   $(function () {
@@ -1529,7 +2418,7 @@ function graficar(json, clase){
         if (arraycant[i]['establecimiento']=="R.A.P."){
           colorcolumn[i]='#FF8000';
         }
-        if (arraycant[i]['establecimiento']=="G.M."){
+        if (arraycant[i]['establecimiento']=="L.G.M."){
           colorcolumn[i]='#663300';
         }
         if (arraycant[i]['establecimiento']=="BA-Khan"){
@@ -1608,6 +2497,7 @@ function graficar(json, clase){
         },
         series: distxnivel
     });
+  });
 
     $(function () {
       Highcharts.setOptions({
@@ -1631,7 +2521,7 @@ function graficar(json, clase){
             text: 'Distribución de Ejercicios Realizados por Institución'
         },
         xAxis: {
-            categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'G.M.', 'Ba-Khan']
+            categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
         },
         yAxis: {
             min: 0,
@@ -1671,19 +2561,8 @@ function graficar(json, clase){
             }
         },
         series: distxinst
-        /*series: [{
-            name: 'John',
-            data: [5, 3, 4, 7, 2,3, 4]
-        }, {
-            name: 'Jane',
-            data: [2, 2, 3, 2, 1,2, 3]
-        }, {
-            name: 'Joe',
-            data: [3, 4, 4, 2, 5,6, 7]
-        }]*/
     });
-});
-});
+  });
   
 }
 
