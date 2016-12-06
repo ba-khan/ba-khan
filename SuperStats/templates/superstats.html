@@ -12,7 +12,9 @@
 <script src="{% static 'js/editablegrid_validators.js' %}"></script>
 <script src="{% static 'js/editablegrid_utils.js' %}"></script>
 <script src="{% static 'js/editablegrid_charts.js' %}"></script>
-<script src="{% static 'highcharts/highcharts5.0.3.js' %}"></script>
+<!--<script src="{% static 'highcharts/highcharts5.0.3.js' %}"></script>-->
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
 <script src="{% static 'highcharts/modules/drilldown5.0.3.js' %}"></script>
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">
@@ -174,6 +176,8 @@
 </div>
 <hr>
 <div id="containertotnivel" style="min-width: 300px;  margin: 0 auto"></div>
+<hr>
+<div id="containertotnivelprom" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
 <div id="containertotinst" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
@@ -477,6 +481,7 @@ function graficar(json, clase){
   var arraytv=[];
   var arraycant=[];
   var distxnivel=[];
+  var distxnivelprom=[];
   var distxinst=[];
   var arraylsmb = new Array(12).fill(0);
   var arrayea = new Array(12).fill(0);
@@ -485,6 +490,14 @@ function graficar(json, clase){
   var arrayrap = new Array(12).fill(0);
   var arraygm = new Array(12).fill(0);
   var arraybakhan = new Array(12).fill(0);
+
+  var arraylsmbprom = new Array(12).fill(0);
+  var arrayeaprom = new Array(12).fill(0);
+  var arrayceiprom = new Array(12).fill(0);
+  var arraylavprom = new Array(12).fill(0);
+  var arrayrapprom = new Array(12).fill(0);
+  var arraygmprom = new Array(12).fill(0);
+  var arraybakhanprom = new Array(12).fill(0);
 
   var array1basico = new Array(7).fill(0);
   var array2basico = new Array(7).fill(0);
@@ -546,6 +559,7 @@ function graficar(json, clase){
   var array4mediovid = new Array(7).fill(0);
 
   var elementremove = [];
+  var elementremoveprom = [];
   var elementremoveinst = [];
   var elementremoveejer = [];
   var elementremoveinstejer = [];
@@ -556,6 +570,30 @@ function graficar(json, clase){
   var serievid=[];
   var j;
   var mission=[];
+
+  /*var estudianteslsmb=0;
+  var estudiantesea=0;
+  var estudiantescei=0;
+  var estudianteslav=0;
+  var estudiantesrap=0;
+  var estudianteslgm=0;
+  var estudiantesbakhan=0;
+
+  var estudiantes1basico=0;
+  var estudiantes2basico=0;
+  var estudiantes3basico=0;
+  var estudiantes4basico=0;
+  var estudiantes5basico=0;
+  var estudiantes6basico=0;
+  var estudiantes7basico=0;
+  var estudiantes8basico=0;
+  var estudiantes1medio=0;
+  var estudiantes2medio=0;
+  var estudiantes3medio=0;
+  var estudiantes4medio=0;*/
+
+  var estudiantesniveles = new Array(12).fill(0);
+
   if(json["clases"]){
     var clase = json["clases"]
     var colorcolumn=[];
@@ -583,10 +621,13 @@ function graficar(json, clase){
       var estudtrabtpoejer=0;
       var estudtrabtpovid=0;
       var estudtrabcantejer=0;
+      estudiantesniveles[level-1]+=estudiantes.length;
       for (j=0;j<estudiantes.length;j++){
         datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
         tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
         videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
+
+
         if (estudiantes[j]["total_ejercicios"]>maxtotejer){
           maxtotejer=estudiantes[j]["total_ejercicios"];
         }
@@ -619,6 +660,7 @@ function graficar(json, clase){
       if (ee=="LSMB"){
         colorcolumn[i]='#84C8D7';
         arraylsmb[level-1]=arraylsmb[level-1]+cantidad;
+        arraylsmbprom[level-1]=arraylsmbprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[0]+=cantidad;
         }
@@ -735,6 +777,7 @@ function graficar(json, clase){
       if (ee=="E.A."){
         colorcolumn[i]='#D7212A';
         arrayea[level-1]=arrayea[level-1]+cantidad;
+        arrayeaprom[level-1]=arrayeaprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[1]+=cantidad;
         }
@@ -851,6 +894,7 @@ function graficar(json, clase){
       if (ee=="C.E.I."){
         colorcolumn[i]='#009900';
         arraycei[level-1]=arraycei[level-1]+cantidad;
+        arrayceiprom[level-1]=arrayceiprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[2]+=cantidad;
         }
@@ -967,6 +1011,7 @@ function graficar(json, clase){
       if (ee=="L.A.V."){
         colorcolumn[i]='#CCCC00';
         arraylav[level-1]=arraylav[level-1]+cantidad;
+        arraylavprom[level-1]=arraylavprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[3]+=cantidad;
         }
@@ -1083,6 +1128,7 @@ function graficar(json, clase){
       if (ee=="R.A.P."){
         colorcolumn[i]='#FF8000';
         arrayrap[level-1]=arrayrap[level-1]+cantidad;
+        arrayrapprom[level-1]=arrayrapprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[4]+=cantidad;
         }
@@ -1199,6 +1245,7 @@ function graficar(json, clase){
       if (ee=="L.G.M."){
         colorcolumn[i]='#663300';
         arraygm[level-1]=arraygm[level-1]+cantidad;
+        arraygmprom[level-1]=arraygmprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[5]+=cantidad;
         }
@@ -1315,6 +1362,7 @@ function graficar(json, clase){
       if (ee=="BA-Khan"){
         colorcolumn[i]='#808080';
         arraybakhan[level-1]=arraybakhan[level-1]+cantidad;
+        arraybakhanprom[level-1]=arraybakhanprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         if (level==1){
           array1basico[6]+=cantidad;
         }
@@ -1512,14 +1560,26 @@ function graficar(json, clase){
       }
       arregloclase[i]=arreglocurso;*/
     }
-    distxnivel[0]={'name':'LSMB', 'data':arraylsmb};
-    distxnivel[1]={'name':'E.A.', 'data':arrayea};
-    distxnivel[2]={'name':'C.E.I.', 'data':arraycei};
-    distxnivel[3]={'name':'L.A.V.', 'data':arraylav};
-    distxnivel[4]={'name':'R.A.P.', 'data':arrayrap};
-    distxnivel[5]={'name':'L.G.M.', 'data':arraygm};
-    distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan};
+    var arraypromedio= new Array(12).fill(0);
+    for (var i = 0; i < arraylsmb.length; i++) {
+      var average=(arraylsmb[i]+arrayea[i]+arraycei[i]+arraylav[i]+arrayrap[i]+arraygm[i]+arraybakhan[i])/estudiantesniveles[i];
+      if (isNaN(average)){
+        arraypromedio[i]=0;
+      }
+      else{
+        arraypromedio[i]=Math.round(average*100)/100;
+      }
+    }
 
+    distxnivel[0]={'name':'LSMB', 'data':arraylsmb, 'type':'column', 'yAxis':1};
+    distxnivel[1]={'name':'E.A.', 'data':arrayea, 'type':'column', 'yAxis':1};
+    distxnivel[2]={'name':'C.E.I.', 'data':arraycei, 'type':'column', 'yAxis':1};
+    distxnivel[3]={'name':'L.A.V.', 'data':arraylav, 'type':'column', 'yAxis':1};
+    distxnivel[4]={'name':'R.A.P.', 'data':arrayrap, 'type':'column', 'yAxis':1};
+    distxnivel[5]={'name':'L.G.M.', 'data':arraygm, 'type':'column', 'yAxis':1};
+    distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan, 'type':'column', 'yAxis':1};
+    distxnivel[7]={'name':'Promedio Ejercicios', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivel[8]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
 
     var contador=0;
     for (var i = 0; i < distxnivel.length; i++) {
@@ -1536,6 +1596,33 @@ function graficar(json, clase){
     };
     for (var i = 0; i < elementremove.length; i++) {
       distxnivel.splice(elementremove[i]-i,1);
+    };
+
+    distxnivelprom[0]={'name':'LSMB', 'data':arraylsmbprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[1]={'name':'E.A.', 'data':arrayeaprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[2]={'name':'C.E.I.', 'data':arrayceiprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[3]={'name':'L.A.V.', 'data':arraylavprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[4]={'name':'R.A.P.', 'data':arrayrapprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[5]={'name':'L.G.M.', 'data':arraygmprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[6]={'name':'Ba-Khan', 'data':arraybakhanprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[7]={'name':'Promedio Ejercicios', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelprom[8]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorprom=0;
+    for (var i = 0; i < distxnivelprom.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelprom[i]['data'].length; j++) {
+        if(distxnivelprom[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveprom[contadorprom]=i;
+        contadorprom++;
+      }
+    };
+    for (var i = 0; i < elementremoveprom.length; i++) {
+      distxnivelprom.splice(elementremoveprom[i]-i,1);
     };
 
     distxinst[0]={'name':'1ro basico', 'data':array1basico};
@@ -2114,6 +2201,7 @@ function graficar(json, clase){
     });
   });
 
+
     $(function () {
       Highcharts.setOptions({
           lang:{
@@ -2575,56 +2663,169 @@ function graficar(json, clase){
           drillUpText: "Volver a {series.name}",
         }
       });
-        var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'containertotnivel',
-            type: 'column',
-        },
-        title: {
-            text: 'Distribución de Ejercicios Realizados por Nivel'
-        },
-        xAxis: {
-            categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Cantidad de Ejercicios'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+      var chart = new Highcharts.Chart({
+          plotOptions: {
+                column: {
+                    stacking: 'normal'
                 }
-            }
-        },
-        legend: {
-            align: 'right',
-            x: -30,
-            verticalAlign: 'top',
-            y: 25,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
-        },
-        tooltip: {
-            headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
-        },
-        plotOptions: {
-            column: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+          },
+          chart: {
+              renderTo: 'containertotnivel',
+              zoomType: 'xy'
+              //type: 'column',
+          },
+          title: {
+              text: 'Distribución de Ejercicios Realizados por Nivel (Total)'
+          },
+          xAxis: [{
+              categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+          }],
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad Total por Nivel',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Ejercicios (Total)',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          tooltip: {
+              shared: true
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'left',
+              x: 120,
+              verticalAlign: 'top',
+              y: 80,
+              floating: true,
+              backgroundColor: '#FFFFFF'
+          },
+          series: distxnivel
+      });
+  });
+
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+          plotOptions: {
+                column: {
+                    stacking: 'normal'
                 }
-            }
-        },
-        series: distxnivel
-    });
+          },
+          chart: {
+              renderTo: 'containertotnivelprom',
+              zoomType: 'xy'
+              //type: 'column',
+          },
+          title: {
+              text: 'Distribución de Ejercicios Realizados por Nivel (Promedio)'
+          },
+          xAxis: [{
+              categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+          }],
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad Promedio por Nivel',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Ejercicios (Promedio)',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          tooltip: {
+              shared: true
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'left',
+              x: 120,
+              verticalAlign: 'top',
+              y: 80,
+              floating: true,
+              backgroundColor: '#FFFFFF'
+          },
+          series: distxnivelprom
+      });
   });
 
     $(function () {
