@@ -526,6 +526,13 @@ function graficar(json, clase){
   var array2mediovid = new Array(7).fill(0);
   var array3mediovid = new Array(7).fill(0);
   var array4mediovid = new Array(7).fill(0);
+
+  var elementremove = [];
+  var elementremoveinst = [];
+  var elementremoveejer = [];
+  var elementremoveinstejer = [];
+  var elementremovevid = [];
+  var elementremoveinstvid = [];
   var serie=[];
   var serietpo=[];
   var serievid=[];
@@ -1495,6 +1502,24 @@ function graficar(json, clase){
     distxnivel[5]={'name':'L.G.M.', 'data':arraygm};
     distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan};
 
+
+    var contador=0;
+    for (var i = 0; i < distxnivel.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivel[i]['data'].length; j++) {
+        if(distxnivel[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremove[contador]=i;
+        contador++;
+      }
+    };
+    for (var i = 0; i < elementremove.length; i++) {
+      distxnivel.splice(elementremove[i]-i,1);
+    };
+
     distxinst[0]={'name':'1ro basico', 'data':array1basico};
     distxinst[1]={'name':'2do basico', 'data':array2basico};
     distxinst[2]={'name':'3ro basico', 'data':array3basico};
@@ -1508,6 +1533,23 @@ function graficar(json, clase){
     distxinst[10]={'name':'3ro medio', 'data':array3medio};
     distxinst[11]={'name':'4to medio', 'data':array4medio};
 
+    var contadorinst=0;
+    for (var i = 0; i < distxinst.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinst[i]['data'].length; j++) {
+        if(distxinst[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinst[contadorinst]=i;
+        contadorinst++;
+      }
+    };
+    for (var i = 0; i < elementremoveinst.length; i++) {
+      distxinst.splice(elementremoveinst[i]-i,1);
+    };
+
     distxnivelejer[0]={'name':'LSMB', 'data':arraylsmbejer};
     distxnivelejer[1]={'name':'E.A.', 'data':arrayeaejer};
     distxnivelejer[2]={'name':'C.E.I.', 'data':arrayceiejer};
@@ -1515,6 +1557,23 @@ function graficar(json, clase){
     distxnivelejer[4]={'name':'R.A.P.', 'data':arrayrapejer};
     distxnivelejer[5]={'name':'L.G.M.', 'data':arraygmejer};
     distxnivelejer[6]={'name':'Ba-Khan', 'data':arraybakhanejer};
+
+    var contadorejer=0;
+    for (var i = 0; i < distxnivelejer.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelejer[i]['data'].length; j++) {
+        if(distxnivelejer[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveejer[contadorejer]=i;
+        contadorejer++;
+      }
+    };
+    for (var i = 0; i < elementremoveejer.length; i++) {
+      distxnivelejer.splice(elementremoveejer[i]-i,1);
+    };
 
     distxinstejer[0]={'name':'1ro basico', 'data':array1basicoejer};
     distxinstejer[1]={'name':'2do basico', 'data':array2basicoejer};
@@ -1529,6 +1588,23 @@ function graficar(json, clase){
     distxinstejer[10]={'name':'3ro medio', 'data':array3medioejer};
     distxinstejer[11]={'name':'4to medio', 'data':array4medioejer};
 
+    var contadorinstejer=0;
+    for (var i = 0; i < distxinstejer.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstejer[i]['data'].length; j++) {
+        if(distxinstejer[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstejer[contadorinstejer]=i;
+        contadorinstejer++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstejer.length; i++) {
+      distxinstejer.splice(elementremoveinstejer[i]-i,1);
+    };
+
     distxnivelvid[0]={'name':'LSMB', 'data':arraylsmbvid};
     distxnivelvid[1]={'name':'E.A.', 'data':arrayeavid};
     distxnivelvid[2]={'name':'C.E.I.', 'data':arrayceivid};
@@ -1536,6 +1612,23 @@ function graficar(json, clase){
     distxnivelvid[4]={'name':'R.A.P.', 'data':arrayrapvid};
     distxnivelvid[5]={'name':'L.G.M.', 'data':arraygmvid};
     distxnivelvid[6]={'name':'Ba-Khan', 'data':arraybakhanvid};
+
+    var contadorvid=0;
+    for (var i = 0; i < distxnivelvid.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelvid[i]['data'].length; j++) {
+        if(distxnivelvid[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremovevid[contadorvid]=i;
+        contadorvid++;
+      }
+    };
+    for (var i = 0; i < elementremovevid.length; i++) {
+      distxnivelvid.splice(elementremovevid[i]-i,1);
+    };
 
     distxinstvid[0]={'name':'1ro basico', 'data':array1basicovid};
     distxinstvid[1]={'name':'2do basico', 'data':array2basicovid};
@@ -1549,7 +1642,24 @@ function graficar(json, clase){
     distxinstvid[9]={'name':'2do medio', 'data':array2mediovid};
     distxinstvid[10]={'name':'3ro medio', 'data':array3mediovid};
     distxinstvid[11]={'name':'4to medio', 'data':array4mediovid};
-    //console.log(arraylsmb);
+    
+    var contadorinstvid=0;
+    for (var i = 0; i < distxinstvid.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstvid[i]['data'].length; j++) {
+        if(distxinstvid[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstvid[contadorinstvid]=i;
+        contadorinstvid++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstvid.length; i++) {
+      distxinstvid.splice(elementremoveinstvid[i]-i,1);
+    };
+
   }
   else{
     if(json["students"]){
