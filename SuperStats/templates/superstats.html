@@ -155,6 +155,11 @@
 <div id="containertot" style="min-width: 300px;  margin: 0 auto"></div>
 <br>
 <div id="ordencant">
+<select id="ordenarcant3" class="skill_search">
+    <OPTION VALUE="0">Nombre</OPTION>
+    <OPTION VALUE="1">Cantidad (ascendente)</OPTION>
+    <OPTION VALUE="2">Cantidad (descendente)</OPTION>
+</select>
 <select id="ordenarcant" class="skill_search">
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Cantidad (ascendente)</OPTION>
@@ -177,6 +182,11 @@
 <div id="containerej" style="min-width: 300px; margin: 0 auto"></div>
 <br>
 <div id="ordentot">
+  <select id="ordenartot3" class="skill_search">
+      <OPTION VALUE="0">Nombre</OPTION>
+      <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
+      <OPTION VALUE="2">Tiempo (descendente)</OPTION>
+</select>
 <select id="ordenartot" class="skill_search">
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
@@ -199,6 +209,11 @@
 <div id="containervid" style="min-width: 300px;  margin: 0 auto"></div>
 <br>
 <div id="ordenvid">
+  <select id="ordenarvid3" class="skill_search">
+      <OPTION VALUE="0">Nombre</OPTION>
+      <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
+      <OPTION VALUE="2">Tiempo (descendente)</OPTION>
+</select>
 <select id="ordenarvid" class="skill_search">
       <OPTION VALUE="0">Nombre</OPTION>
       <OPTION VALUE="1">Tiempo (ascendente)</OPTION>
@@ -450,9 +465,12 @@ function crearEstadisticas(){
 
 function graficar(json, clase){
   //console.log(json);
-  $('#ordenartot').show();
-  $('#ordenarvid').show();
-  $('#ordenarcant').show();
+  $('#ordenartot3').show();
+  $('#ordenarvid3').show();
+  $('#ordenarcant3').show();
+  $('#ordenartot').hide();
+  $('#ordenarvid').hide();
+  $('#ordenarcant').hide();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
@@ -1922,10 +1940,10 @@ function graficar(json, clase){
             type: 'column',
             events: {
               drilldown: function(e){
-                $('#ordenartot').hide();
+                $('#ordenartot3').hide();
               },
               drillup: function(e){
-                $('#ordenartot').show();
+                $('#ordenartot3').show();
               }
             }
         },
@@ -2024,8 +2042,8 @@ function graficar(json, clase){
       return [arrayte,colorcolumn];
     }
 
-    $('#ordenartot').change(function(){
-      var retorno = sortTotal($('select#ordenartot option:selected').val());
+    $('#ordenartot3').change(function(){
+      var retorno = sortTotal($('select#ordenartot3 option:selected').val());
       //console.log(retorno);
       chart.series[0].update(retorno);
     })
@@ -2081,7 +2099,7 @@ function graficar(json, clase){
         },
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
         },
         plotOptions: {
             column: {
@@ -2146,7 +2164,7 @@ function graficar(json, clase){
         },
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
         },
         plotOptions: {
             column: {
@@ -2180,10 +2198,10 @@ function graficar(json, clase){
             type: 'column',
             events: {
               drilldown: function(e){
-                $('#ordenarvid').hide();
+                $('#ordenarvid3').hide();
               },
               drillup: function(e){
-                $('#ordenarvid').show();
+                $('#ordenarvid3').show();
               }
             }
         },
@@ -2282,8 +2300,8 @@ function graficar(json, clase){
       return [arrayte,colorcolumn];
     }
 
-    $('#ordenarvid').change(function(){
-      var retorno = sortTotal($('select#ordenarvid option:selected').val());
+    $('#ordenarvid3').change(function(){
+      var retorno = sortTotal($('select#ordenarvid3 option:selected').val());
       //console.log(retorno);
       chart.series[0].update(retorno);
     })
@@ -2339,7 +2357,7 @@ function graficar(json, clase){
         },
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
         },
         plotOptions: {
             column: {
@@ -2404,7 +2422,7 @@ function graficar(json, clase){
         },
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
         },
         plotOptions: {
             column: {
@@ -2438,10 +2456,10 @@ function graficar(json, clase){
             type: 'column',
             events: {
               drilldown: function(e){
-                $('#ordenarcant').hide();
+                $('#ordenarcant3').hide();
               },
               drillup: function(e){
-                $('#ordenarcant').show();
+                $('#ordenarcant3').show();
               }
             }
         },
@@ -2538,8 +2556,8 @@ function graficar(json, clase){
       return [arraycant,colorcolumn];;
     }
 
-    $('#ordenarcant').change(function(){
-      var retorno = sortTotal($('select#ordenarcant option:selected').val());
+    $('#ordenarcant3').change(function(){
+      var retorno = sortTotal($('select#ordenarcant3 option:selected').val());
       chart.series[0].update(retorno);
     })
   });
@@ -2594,7 +2612,7 @@ function graficar(json, clase){
         },
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
         },
         plotOptions: {
             column: {
@@ -2659,7 +2677,7 @@ function graficar(json, clase){
         },
         tooltip: {
             headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
         },
         plotOptions: {
             column: {
@@ -2687,6 +2705,9 @@ function graficarcompara(json, clase){
   $('#ordenarcant').show();
   $('#ordenarvid').show();
   $('#ordenartot').show();
+  $('#ordenarcant3').hide();
+  $('#ordenarvid3').hide();
+  $('#ordenartot3').hide();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
