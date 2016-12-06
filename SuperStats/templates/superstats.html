@@ -181,6 +181,8 @@
 <hr>
 <div id="containertotinst" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
+<div id="containertotinstprom" style="min-width: 300px;  margin: 0 auto"></div>
+<hr>
 <div id="promediototalej" style="float:left;width: 50%;"></div>
 <div id="promediototalej2" style="float:left;width: 50%;"></div>
 <div id="containerej" style="min-width: 300px; margin: 0 auto"></div>
@@ -483,6 +485,7 @@ function graficar(json, clase){
   var distxnivel=[];
   var distxnivelprom=[];
   var distxinst=[];
+  var distxinstprom=[];
   var arraylsmb = new Array(12).fill(0);
   var arrayea = new Array(12).fill(0);
   var arraycei = new Array(12).fill(0);
@@ -511,6 +514,19 @@ function graficar(json, clase){
   var array2medio = new Array(7).fill(0);
   var array3medio = new Array(7).fill(0);
   var array4medio = new Array(7).fill(0);
+
+  var array1basicoprom = new Array(7).fill(0);
+  var array2basicoprom = new Array(7).fill(0);
+  var array3basicoprom = new Array(7).fill(0);
+  var array4basicoprom = new Array(7).fill(0);
+  var array5basicoprom = new Array(7).fill(0);
+  var array6basicoprom = new Array(7).fill(0);
+  var array7basicoprom = new Array(7).fill(0);
+  var array8basicoprom = new Array(7).fill(0);
+  var array1medioprom = new Array(7).fill(0);
+  var array2medioprom = new Array(7).fill(0);
+  var array3medioprom = new Array(7).fill(0);
+  var array4medioprom = new Array(7).fill(0);
 
   var distxnivelejer=[];
   var distxinstejer=[];
@@ -561,6 +577,7 @@ function graficar(json, clase){
   var elementremove = [];
   var elementremoveprom = [];
   var elementremoveinst = [];
+  var elementremoveinstprom = [];
   var elementremoveejer = [];
   var elementremoveinstejer = [];
   var elementremovevid = [];
@@ -593,6 +610,7 @@ function graficar(json, clase){
   var estudiantes4medio=0;*/
 
   var estudiantesniveles = new Array(12).fill(0);
+  var estudiantesnivelesinst = new Array(6).fill(0);
 
   if(json["clases"]){
     var clase = json["clases"]
@@ -661,41 +679,54 @@ function graficar(json, clase){
         colorcolumn[i]='#84C8D7';
         arraylsmb[level-1]=arraylsmb[level-1]+cantidad;
         arraylsmbprom[level-1]=arraylsmbprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[0]+=estudiantes.length;
         if (level==1){
           array1basico[0]+=cantidad;
+          array1basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[0]+=cantidad;
+          array2basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[0]+=cantidad;
+          array3basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[0]+=cantidad;
+          array4basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[0]+=cantidad;
+          array5basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[0]+=cantidad;
+          array6basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[0]+=cantidad;
+          array7basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[0]+=cantidad;
+          array8basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[0]+=cantidad;
+          array1medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[0]+=cantidad;
+          array2medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[0]+=cantidad;
+          array3medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[0]+=cantidad;
+          array4medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arraylsmbejer[level-1]=arraylsmbejer[level-1]+tpo_ejercicios;
@@ -778,41 +809,54 @@ function graficar(json, clase){
         colorcolumn[i]='#D7212A';
         arrayea[level-1]=arrayea[level-1]+cantidad;
         arrayeaprom[level-1]=arrayeaprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[1]+=estudiantes.length;
         if (level==1){
           array1basico[1]+=cantidad;
+          array1basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[1]+=cantidad;
+          array2basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[1]+=cantidad;
+          array3basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[1]+=cantidad;
+          array4basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[1]+=cantidad;
+          array5basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[1]+=cantidad;
+          array6basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[1]+=cantidad;
+          array7basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[1]+=cantidad;
+          array8basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[1]+=cantidad;
+          array1medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[1]+=cantidad;
+          array2medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[1]+=cantidad;
+          array3medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[1]+=cantidad;
+          array4medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arrayeaejer[level-1]=arrayeaejer[level-1]+tpo_ejercicios;
@@ -895,41 +939,54 @@ function graficar(json, clase){
         colorcolumn[i]='#009900';
         arraycei[level-1]=arraycei[level-1]+cantidad;
         arrayceiprom[level-1]=arrayceiprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[2]+=estudiantes.length;
         if (level==1){
           array1basico[2]+=cantidad;
+          array1basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[2]+=cantidad;
+          array2basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[2]+=cantidad;
+          array3basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[2]+=cantidad;
+          array4basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[2]+=cantidad;
+          array5basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[2]+=cantidad;
+          array6basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[2]+=cantidad;
+          array7basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[2]+=cantidad;
+          array8basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[2]+=cantidad;
+          array1medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[2]+=cantidad;
+          array2medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[2]+=cantidad;
+          array3medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[2]+=cantidad;
+          array4medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arrayceiejer[level-1]=arrayceiejer[level-1]+tpo_ejercicios;
@@ -1012,41 +1069,54 @@ function graficar(json, clase){
         colorcolumn[i]='#CCCC00';
         arraylav[level-1]=arraylav[level-1]+cantidad;
         arraylavprom[level-1]=arraylavprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[3]+=estudiantes.length;
         if (level==1){
           array1basico[3]+=cantidad;
+          array1basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[3]+=cantidad;
+          array2basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[3]+=cantidad;
+          array3basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[3]+=cantidad;
+          array4basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[3]+=cantidad;
+          array5basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[3]+=cantidad;
+          array6basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[3]+=cantidad;
+          array7basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[3]+=cantidad;
+          array8basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[3]+=cantidad;
+          array1medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[3]+=cantidad;
+          array2medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[3]+=cantidad;
+          array3medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[3]+=cantidad;
+          array4medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arraylavejer[level-1]=arraylavejer[level-1]+tpo_ejercicios;
@@ -1129,41 +1199,54 @@ function graficar(json, clase){
         colorcolumn[i]='#FF8000';
         arrayrap[level-1]=arrayrap[level-1]+cantidad;
         arrayrapprom[level-1]=arrayrapprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[4]+=estudiantes.length;
         if (level==1){
           array1basico[4]+=cantidad;
+          array1basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[4]+=cantidad;
+          array2basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[4]+=cantidad;
+          array3basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[4]+=cantidad;
+          array4basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[4]+=cantidad;
+          array5basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[4]+=cantidad;
+          array6basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[4]+=cantidad;
+          array7basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[4]+=cantidad;
+          array8basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[4]+=cantidad;
+          array1medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[4]+=cantidad;
+          array2medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[4]+=cantidad;
+          array3medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[4]+=cantidad;
+          array4medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arrayrapejer[level-1]=arrayrapejer[level-1]+tpo_ejercicios;
@@ -1246,41 +1329,54 @@ function graficar(json, clase){
         colorcolumn[i]='#663300';
         arraygm[level-1]=arraygm[level-1]+cantidad;
         arraygmprom[level-1]=arraygmprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[5]+=estudiantes.length;
         if (level==1){
           array1basico[5]+=cantidad;
+          array1basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[5]+=cantidad;
+          array2basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[5]+=cantidad;
+          array3basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[5]+=cantidad;
+          array4basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[5]+=cantidad;
+          array5basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[5]+=cantidad;
+          array6basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[5]+=cantidad;
+          array7basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[5]+=cantidad;
+          array8basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[5]+=cantidad;
+          array1medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[5]+=cantidad;
+          array2medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[5]+=cantidad;
+          array3medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[5]+=cantidad;
+          array4medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arraygmejer[level-1]=arraygmejer[level-1]+tpo_ejercicios;
@@ -1363,41 +1459,54 @@ function graficar(json, clase){
         colorcolumn[i]='#808080';
         arraybakhan[level-1]=arraybakhan[level-1]+cantidad;
         arraybakhanprom[level-1]=arraybakhanprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        estudiantesnivelesinst[6]+=estudiantes.length;
         if (level==1){
           array1basico[6]+=cantidad;
+          array1basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[6]+=cantidad;
+          array2basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[6]+=cantidad;
+          array3basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[6]+=cantidad;
+          array4basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[6]+=cantidad;
+          array5basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[6]+=cantidad;
+          array6basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[6]+=cantidad;
+          array7basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[6]+=cantidad;
+          array8basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[6]+=cantidad;
+          array1medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[6]+=cantidad;
+          array2medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[6]+=cantidad;
+          array3medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[6]+=cantidad;
+          array4medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
         }
 
         arraybakhanejer[level-1]=arraybakhanejer[level-1]+tpo_ejercicios;
@@ -1625,18 +1734,32 @@ function graficar(json, clase){
       distxnivelprom.splice(elementremoveprom[i]-i,1);
     };
 
-    distxinst[0]={'name':'1ro basico', 'data':array1basico};
-    distxinst[1]={'name':'2do basico', 'data':array2basico};
-    distxinst[2]={'name':'3ro basico', 'data':array3basico};
-    distxinst[3]={'name':'4to basico', 'data':array4basico};
-    distxinst[4]={'name':'5to basico', 'data':array5basico};
-    distxinst[5]={'name':'6to basico', 'data':array6basico};
-    distxinst[6]={'name':'7mo basico', 'data':array7basico};
-    distxinst[7]={'name':'8vo basico', 'data':array8basico};
-    distxinst[8]={'name':'1ro medio', 'data':array1medio};
-    distxinst[9]={'name':'2do medio', 'data':array2medio};
-    distxinst[10]={'name':'3ro medio', 'data':array3medio};
-    distxinst[11]={'name':'4to medio', 'data':array4medio};
+
+    var arraypromedioinst= new Array(6).fill(0);
+    for (var i = 0; i < array1basico.length; i++) {
+      var average=(array1basico[i]+array2basico[i]+array3basico[i]+array4basico[i]+array5basico[i]+array6basico[i]+array7basico[i]+array8basico[i]+array1medio[i]+array2medio[i]+array3medio[i]+array4medio[i])/estudiantesnivelesinst[i];
+      if (isNaN(average)){
+        arraypromedioinst[i]=0;
+      }
+      else{
+        arraypromedioinst[i]=Math.round(average*100)/100;
+      }
+    }
+
+    distxinst[0]={'name':'1ro basico', 'data':array1basico, 'type':'column', 'yAxis':1};
+    distxinst[1]={'name':'2do basico', 'data':array2basico, 'type':'column', 'yAxis':1};
+    distxinst[2]={'name':'3ro basico', 'data':array3basico, 'type':'column', 'yAxis':1};
+    distxinst[3]={'name':'4to basico', 'data':array4basico, 'type':'column', 'yAxis':1};
+    distxinst[4]={'name':'5to basico', 'data':array5basico, 'type':'column', 'yAxis':1};
+    distxinst[5]={'name':'6to basico', 'data':array6basico, 'type':'column', 'yAxis':1};
+    distxinst[6]={'name':'7mo basico', 'data':array7basico, 'type':'column', 'yAxis':1};
+    distxinst[7]={'name':'8vo basico', 'data':array8basico, 'type':'column', 'yAxis':1};
+    distxinst[8]={'name':'1ro medio', 'data':array1medio, 'type':'column', 'yAxis':1};
+    distxinst[9]={'name':'2do medio', 'data':array2medio, 'type':'column', 'yAxis':1};
+    distxinst[10]={'name':'3ro medio', 'data':array3medio, 'type':'column', 'yAxis':1};
+    distxinst[11]={'name':'4to medio', 'data':array4medio, 'type':'column', 'yAxis':1};
+    distxinst[12]={'name':'Promedio Ejercicios', 'data':arraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinst[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
 
     var contadorinst=0;
     for (var i = 0; i < distxinst.length; i++) {
@@ -1654,6 +1777,39 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinst.length; i++) {
       distxinst.splice(elementremoveinst[i]-i,1);
     };
+
+    distxinstprom[0]={'name':'1ro basico', 'data':array1basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[1]={'name':'2do basico', 'data':array2basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[2]={'name':'3ro basico', 'data':array3basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[3]={'name':'4to basico', 'data':array4basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[4]={'name':'5to basico', 'data':array5basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[5]={'name':'6to basico', 'data':array6basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[6]={'name':'7mo basico', 'data':array7basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[7]={'name':'8vo basico', 'data':array8basicoprom, 'type':'column', 'yAxis':1};
+    distxinstprom[8]={'name':'1ro medio', 'data':array1medioprom, 'type':'column', 'yAxis':1};
+    distxinstprom[9]={'name':'2do medio', 'data':array2medioprom, 'type':'column', 'yAxis':1};
+    distxinstprom[10]={'name':'3ro medio', 'data':array3medioprom, 'type':'column', 'yAxis':1};
+    distxinstprom[11]={'name':'4to medio', 'data':array4medioprom, 'type':'column', 'yAxis':1};
+    distxinstprom[12]={'name':'Promedio Ejercicios', 'data':arraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstprom[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorinstprom=0;
+    for (var i = 0; i < distxinstprom.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstprom[i]['data'].length; j++) {
+        if(distxinstprom[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstprom[contadorinstprom]=i;
+        contadorinstprom++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstprom.length; i++) {
+      distxinstprom.splice(elementremoveinstprom[i]-i,1);
+    };
+
 
     distxnivelejer[0]={'name':'LSMB', 'data':arraylsmbejer};
     distxnivelejer[1]={'name':'E.A.', 'data':arrayeaejer};
@@ -2827,9 +2983,9 @@ function graficar(json, clase){
           series: distxnivelprom
       });
   });
-
-    $(function () {
-      Highcharts.setOptions({
+  
+  $(function () {
+    Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
           thousandsSep: ".",
@@ -2842,57 +2998,169 @@ function graficar(json, clase){
         }
       });
       var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'containertotinst',
-            type: 'column',
-        },
-        title: {
-            text: 'Distribución de Ejercicios Realizados por Institución'
-        },
-        xAxis: {
-            categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Cantidad de Ejercicios'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+          plotOptions: {
+                column: {
+                    stacking: 'normal'
                 }
-            }
-        },
-        legend: {
-            align: 'right',
-            x: -30,
-            verticalAlign: 'top',
-            y: 25,
-            floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-            borderColor: '#CCC',
-            borderWidth: 1,
-            shadow: false
-        },
-        tooltip: {
-            headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal:,.0f}'
-        },
-        plotOptions: {
-            column: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-                }
-            }
-        },
-        series: distxinst
-    });
-  });
+          },
+          chart: {
+              renderTo: 'containertotinst',
+              zoomType: 'xy'
+              //type: 'column',
+          },
+          title: {
+              text: 'Distribución de Ejercicios Realizados por Institución (Total)'
+          },
+          xAxis: [{
+              categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
+          }],
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad Total por Institución',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
   
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Ejercicios (Total)',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          tooltip: {
+              shared: true
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'left',
+              x: 120,
+              verticalAlign: 'top',
+              y: 80,
+              floating: true,
+              backgroundColor: '#FFFFFF'
+          },
+          series: distxinst
+      });
+  });
+
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+          plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+          },
+          chart: {
+              renderTo: 'containertotinstprom',
+              zoomType: 'xy'
+              //type: 'column',
+          },
+          title: {
+              text: 'Distribución de Ejercicios Realizados por Institución (Promedio)'
+          },
+          xAxis: [{
+              categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
+          }],
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad Total por Institución',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Ejercicios (Promedio)',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          tooltip: {
+              shared: true
+          },
+          legend: {
+              layout: 'vertical',
+              align: 'left',
+              x: 120,
+              verticalAlign: 'top',
+              y: 80,
+              floating: true,
+              backgroundColor: '#FFFFFF'
+          },
+          series: distxinstprom
+      });
+  });
 }
 
 function graficarcompara(json, clase){
