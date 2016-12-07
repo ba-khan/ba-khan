@@ -485,6 +485,18 @@ function graficar(json, clase){
   $('#ordenartot').hide();
   $('#ordenarvid').hide();
   $('#ordenarcant').hide();
+  $('#containertotnivel').show();
+  $('#containertotnivelprom').show();
+  $('#containertotinst').show();
+  $('#containertotinstprom').show();
+  $('#containerejernivel').show();
+  $('#containerejernivelprom').show();
+  $('#containerejerinst').show();
+  $('#containerejerinstprom').show();
+  $('#containervidnivel').show();
+  $('#containervidnivelprom').show();
+  $('#containervidinst').show();
+  $('#containervidinstprom').show();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
@@ -735,7 +747,7 @@ function graficar(json, clase){
       }
       //var colorcolumn={"color":colors[i]};
       if (ee=="LSMB"){
-        colorcolumn[i]='#84C8D7';
+        colorcolumn[i]='#7CB5EC';
         arraylsmb[level-1]=arraylsmb[level-1]+cantidad;
         arraylsmbprom[level-1]=arraylsmbprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[0]+=estudiantes.length;
@@ -891,7 +903,7 @@ function graficar(json, clase){
         }
       }
       if (ee=="E.A."){
-        colorcolumn[i]='#D7212A';
+        colorcolumn[i]='#434348';
         arrayea[level-1]=arrayea[level-1]+cantidad;
         arrayeaprom[level-1]=arrayeaprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[1]+=estudiantes.length;
@@ -1047,7 +1059,7 @@ function graficar(json, clase){
         }
       }
       if (ee=="C.E.I."){
-        colorcolumn[i]='#009900';
+        colorcolumn[i]='#90ED7D';
         arraycei[level-1]=arraycei[level-1]+cantidad;
         arrayceiprom[level-1]=arrayceiprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[2]+=estudiantes.length;
@@ -1203,7 +1215,7 @@ function graficar(json, clase){
         }
       }
       if (ee=="L.A.V."){
-        colorcolumn[i]='#CCCC00';
+        colorcolumn[i]='#F7A35C';
         arraylav[level-1]=arraylav[level-1]+cantidad;
         arraylavprom[level-1]=arraylavprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[3]+=estudiantes.length;
@@ -1359,7 +1371,7 @@ function graficar(json, clase){
         }
       }
       if (ee=="R.A.P."){
-        colorcolumn[i]='#FF8000';
+        colorcolumn[i]='#8085E9';
         arrayrap[level-1]=arrayrap[level-1]+cantidad;
         arrayrapprom[level-1]=arrayrapprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[4]+=estudiantes.length;
@@ -1515,7 +1527,7 @@ function graficar(json, clase){
         }
       }
       if (ee=="L.G.M."){
-        colorcolumn[i]='#663300';
+        colorcolumn[i]='#F15C80';
         arraygm[level-1]=arraygm[level-1]+cantidad;
         arraygmprom[level-1]=arraygmprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[5]+=estudiantes.length;
@@ -1671,7 +1683,7 @@ function graficar(json, clase){
         }
       }
       if (ee=="BA-Khan"){
-        colorcolumn[i]='#808080';
+        colorcolumn[i]='#E4D354';
         arraybakhan[level-1]=arraybakhan[level-1]+cantidad;
         arraybakhanprom[level-1]=arraybakhanprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[6]+=estudiantes.length;
@@ -2671,25 +2683,25 @@ function graficar(json, clase){
       }
       for (var i = 0; i < arrayte.length; i++) {
         if (arrayte[i]['establecimiento']=="LSMB"){
-          colorcolumn[i]='#84C8D7';
+          colorcolumn[i]='#7CB5EC';
         }
         if (arrayte[i]['establecimiento']=="E.A."){
-          colorcolumn[i]='#D7212A';
+          colorcolumn[i]='#434348';
         }
         if (arrayte[i]['establecimiento']=="C.E.I."){
-          colorcolumn[i]='#009900';
+          colorcolumn[i]='#90ED7D';
         }
         if (arrayte[i]['establecimiento']=="L.A.V."){
-          colorcolumn[i]='#CCCC00';
+          colorcolumn[i]='#F7A35C';
         }
         if (arrayte[i]['establecimiento']=="R.A.P."){
-          colorcolumn[i]='#FF8000';
+          colorcolumn[i]='#8085E9';
         }
         if (arrayte[i]['establecimiento']=="L.G.M."){
-          colorcolumn[i]='#663300';
+          colorcolumn[i]='#F15C80';
         }
         if (arrayte[i]['establecimiento']=="BA-Khan"){
-          colorcolumn[i]='#808080';
+          colorcolumn[i]='#E4D354';
         }
       }
       return [arrayte,colorcolumn];
@@ -3155,25 +3167,25 @@ function graficar(json, clase){
       }
       for (var i = 0; i < arraytv.length; i++) {
         if (arraytv[i]['establecimiento']=="LSMB"){
-          colorcolumn[i]='#84C8D7';
+          colorcolumn[i]='#7CB5EC';
         }
         if (arraytv[i]['establecimiento']=="E.A."){
-          colorcolumn[i]='#D7212A';
+          colorcolumn[i]='#434348';
         }
         if (arraytv[i]['establecimiento']=="C.E.I."){
-          colorcolumn[i]='#009900';
+          colorcolumn[i]='#90ED7D';
         }
         if (arraytv[i]['establecimiento']=="L.A.V."){
-          colorcolumn[i]='#CCCC00';
+          colorcolumn[i]='#F7A35C';
         }
         if (arraytv[i]['establecimiento']=="R.A.P."){
-          colorcolumn[i]='#FF8000';
+          colorcolumn[i]='#8085E9';
         }
         if (arraytv[i]['establecimiento']=="L.G.M."){
-          colorcolumn[i]='#663300';
+          colorcolumn[i]='#F15C80';
         }
         if (arraytv[i]['establecimiento']=="BA-Khan"){
-          colorcolumn[i]='#808080';
+          colorcolumn[i]='#E4D354';
         }
       }
       return [arrayte,colorcolumn];
@@ -3637,25 +3649,25 @@ function graficar(json, clase){
       }
       for (var i = 0; i < arraycant.length; i++) {
         if (arraycant[i]['establecimiento']=="LSMB"){
-          colorcolumn[i]='#84C8D7';
+          colorcolumn[i]='#7CB5EC';
         }
         if (arraycant[i]['establecimiento']=="E.A."){
-          colorcolumn[i]='#D7212A';
+          colorcolumn[i]='#434348';
         }
         if (arraycant[i]['establecimiento']=="C.E.I."){
-          colorcolumn[i]='#009900';
+          colorcolumn[i]='#90ED7D';
         }
         if (arraycant[i]['establecimiento']=="L.A.V."){
-          colorcolumn[i]='#CCCC00';
+          colorcolumn[i]='#F7A35C';
         }
         if (arraycant[i]['establecimiento']=="R.A.P."){
-          colorcolumn[i]='#FF8000';
+          colorcolumn[i]='#8085E9';
         }
         if (arraycant[i]['establecimiento']=="L.G.M."){
-          colorcolumn[i]='#663300';
+          colorcolumn[i]='#F15C80';
         }
         if (arraycant[i]['establecimiento']=="BA-Khan"){
-          colorcolumn[i]='#808080';
+          colorcolumn[i]='#E4D354';
         }
       }
       return [arraycant,colorcolumn];;
@@ -4025,7 +4037,7 @@ function graficar(json, clase){
 }
 
 function graficarcompara(json, clase){
-  //console.log(json)
+  console.log(json)
   $('#promediototaltot').empty();
   $('#promediototaltot2').empty();
   $('#promediototalej').empty();
@@ -4038,6 +4050,18 @@ function graficarcompara(json, clase){
   $('#ordenarcant3').hide();
   $('#ordenarvid3').hide();
   $('#ordenartot3').hide();
+  //$('#containertotnivel').hide();
+  $('#containertotnivelprom').hide();
+  $('#containertotinst').hide();
+  $('#containertotinstprom').hide();
+  $('#containerejernivel').hide();
+  $('#containerejernivelprom').hide();
+  $('#containerejerinst').hide();
+  $('#containerejerinstprom').hide();
+  $('#containervidnivel').hide();
+  $('#containervidnivelprom').hide();
+  $('#containervidinst').hide();
+  $('#containervidinstprom').hide();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
@@ -4920,6 +4944,85 @@ function graficarcompara(json, clase){
       var retorno = sortTotal($('select#ordenarcant option:selected').val());
       chart.series[0].update(retorno);
     })
+  });
+
+  $(function () {
+      Highcharts.chart('containertotnivel', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Ejemplo (data falsa)'
+          },
+
+          xAxis: {
+              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico']
+          },
+
+          yAxis: [{
+              allowDecimals: false,
+              min: 0,
+              title: {
+                  text: 'cantidad de ejercicios'
+              }
+            },
+            {
+              allowDecimals: false,
+              min: 0,
+              title: {
+                  text: 'numero de estudiantes'
+              },
+              opposite: true
+            }],
+
+          /*tooltip: {
+              formatter: function () {
+                  return '<b>' + this.x + '</b><br/>' +
+                      this.series.name + ': ' + this.y + '<br/>' +
+                      'Total: ' + this.point.stackTotal;
+              }
+          },*/
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+
+          series: [{
+              name: 'lsmb todo',
+              data: [5, 3, 4, 7, 2],
+              type: 'column',
+              stack: 'male'
+          }, {
+              name: 'alabama todo',
+              data: [3, 4, 4, 2, 5],
+              type: 'column',
+              stack: 'male'
+          }, {
+              name: 'lsmb horario de clase',
+              data: [2, 5, 6, 2, 1],
+              type: 'column',
+              stack: 'female'
+          }, {
+              name: 'alabama horario de clase',
+              data: [3, 0, 4, 4, 3],
+              type: 'column',
+              stack: 'female'
+          },
+          {
+            name: 'estudiantes',
+            data: [5,7,5,1,6],
+            type: 'spline',
+            yAxis: 1
+          }]
+      });
   });
 }
 

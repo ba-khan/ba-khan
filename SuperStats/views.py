@@ -868,8 +868,10 @@ def compareSuperStats(request):
 								for clase in classes:
 									if clase.additional:
 										class_json["nombre"]=str(clase.nivel)+" "+str(clase.letter)+" "+str(clase.year)+" "+str(clase.additional)
+										class_json["level"]=clase.level
 									else:
 										class_json["nombre"]=str(clase.nivel)+" "+str(clase.letter)+" "+str(clase.year)
+										class_json["level"]=clase.level
 							except Exception as e:
 								print e
 
