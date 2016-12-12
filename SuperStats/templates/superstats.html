@@ -681,7 +681,7 @@ function graficar(json, clase){
   var estudiantes4medio=0;*/
 
   var estudiantesniveles = new Array(12).fill(0);
-  var estudiantesnivelesinst = new Array(6).fill(0);
+  var estudiantesnivelesinst = new Array(7).fill(0);
 
   if(json["clases"]){
     var clase = json["clases"]
@@ -751,1092 +751,938 @@ function graficar(json, clase){
         arraylsmb[level-1]=arraylsmb[level-1]+cantidad;
         arraylsmbprom[level-1]=arraylsmbprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[0]+=estudiantes.length;
+
         if (level==1){
           array1basico[0]+=cantidad;
           array1basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[0]+=cantidad;
-          array2basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[0]+=cantidad;
-          array3basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[0]+=cantidad;
-          array4basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[0]+=cantidad;
-          array5basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[0]+=cantidad;
-          array6basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[0]+=cantidad;
-          array7basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[0]+=cantidad;
-          array8basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[0]+=cantidad;
-          array1medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[0]+=cantidad;
-          array2medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[0]+=cantidad;
-          array3medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[0]+=cantidad;
-          array4medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arraylsmbejer[level-1]=arraylsmbejer[level-1]+tpo_ejercicios;
-        arraylsmbejerprom[level-1]=arraylsmbejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[0]+=tpo_ejercicios;
           array1basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[0]+=tpo_ejercicios;
-          array2basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[0]+=tpo_ejercicios;
-          array3basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[0]+=tpo_ejercicios;
-          array4basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[0]+=tpo_ejercicios;
-          array5basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[0]+=tpo_ejercicios;
-          array6basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[0]+=tpo_ejercicios;
-          array7basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[0]+=tpo_ejercicios;
-          array8basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[0]+=tpo_ejercicios;
-          array1medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[0]+=tpo_ejercicios;
-          array2medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[0]+=tpo_ejercicios;
-          array3medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[0]+=tpo_ejercicios;
-          array4medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arraylsmbvid[level-1]=arraylsmbvid[level-1]+tpo_videos;
-        arraylsmbvidprom[level-1]=arraylsmbvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[0]+=tpo_videos;
           array1basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[0]+=cantidad;
+          array2basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[0]+=tpo_ejercicios;
+          array2basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[0]+=tpo_videos;
           array2basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[0]+=cantidad;
+          array3basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[0]+=tpo_ejercicios;
+          array3basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[0]+=tpo_videos;
           array3basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[0]+=cantidad;
+          array4basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[0]+=tpo_ejercicios;
+          array4basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[0]+=tpo_videos;
           array4basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[0]+=cantidad;
+          array5basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[0]+=tpo_ejercicios;
+          array5basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[0]+=tpo_videos;
           array5basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[0]+=cantidad;
+          array6basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[0]+=tpo_ejercicios;
+          array6basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[0]+=tpo_videos;
           array6basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[0]+=cantidad;
+          array7basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[0]+=tpo_ejercicios;
+          array7basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[0]+=tpo_videos;
           array7basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[0]+=cantidad;
+          array8basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[0]+=tpo_ejercicios;
+          array8basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[0]+=tpo_videos;
           array8basicovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[0]+=cantidad;
+          array1medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[0]+=tpo_ejercicios;
+          array1medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[0]+=tpo_videos;
           array1mediovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[0]+=cantidad;
+          array2medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[0]+=tpo_ejercicios;
+          array2medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[0]+=tpo_videos;
           array2mediovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[0]+=cantidad;
+          array3medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[0]+=tpo_ejercicios;
+          array3medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[0]+=tpo_videos;
           array3mediovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[0]+=cantidad;
+          array4medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[0]+=tpo_ejercicios;
+          array4medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[0]+=tpo_videos;
           array4mediovidprom[0]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+
+        arraylsmbejer[level-1]=arraylsmbejer[level-1]+tpo_ejercicios;
+        arraylsmbejerprom[level-1]=arraylsmbejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arraylsmbvid[level-1]=arraylsmbvid[level-1]+tpo_videos;
+        arraylsmbvidprom[level-1]=arraylsmbvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
+
       }
       if (ee=="E.A."){
         colorcolumn[i]='#434348';
         arrayea[level-1]=arrayea[level-1]+cantidad;
         arrayeaprom[level-1]=arrayeaprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[1]+=estudiantes.length;
+
         if (level==1){
           array1basico[1]+=cantidad;
           array1basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[1]+=cantidad;
-          array2basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[1]+=cantidad;
-          array3basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[1]+=cantidad;
-          array4basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[1]+=cantidad;
-          array5basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[1]+=cantidad;
-          array6basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[1]+=cantidad;
-          array7basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[1]+=cantidad;
-          array8basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[1]+=cantidad;
-          array1medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[1]+=cantidad;
-          array2medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[1]+=cantidad;
-          array3medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[1]+=cantidad;
-          array4medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arrayeaejer[level-1]=arrayeaejer[level-1]+tpo_ejercicios;
-        arrayeaejerprom[level-1]=arrayeaejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[1]+=tpo_ejercicios;
           array1basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[1]+=tpo_ejercicios;
-          array2basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[1]+=tpo_ejercicios;
-          array3basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[1]+=tpo_ejercicios;
-          array4basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[1]+=tpo_ejercicios;
-          array5basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[1]+=tpo_ejercicios;
-          array6basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[1]+=tpo_ejercicios;
-          array7basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[1]+=tpo_ejercicios;
-          array8basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[1]+=tpo_ejercicios;
-          array1medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[1]+=tpo_ejercicios;
-          array2medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[1]+=tpo_ejercicios;
-          array3medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[1]+=tpo_ejercicios;
-          array4medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arrayeavid[level-1]=arrayeavid[level-1]+tpo_videos;
-        arrayeavidprom[level-1]=arrayeavidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[1]+=tpo_videos;
           array1basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[1]+=cantidad;
+          array2basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[1]+=tpo_ejercicios;
+          array2basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[1]+=tpo_videos;
           array2basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[1]+=cantidad;
+          array3basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[1]+=tpo_ejercicios;
+          array3basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[1]+=tpo_videos;
           array3basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[1]+=cantidad;
+          array4basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[1]+=tpo_ejercicios;
+          array4basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[1]+=tpo_videos;
           array4basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[1]+=cantidad;
+          array5basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[1]+=tpo_ejercicios;
+          array5basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[1]+=tpo_videos;
           array5basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[1]+=cantidad;
+          array6basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[1]+=tpo_ejercicios;
+          array6basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[1]+=tpo_videos;
           array6basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[1]+=cantidad;
+          array7basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[1]+=tpo_ejercicios;
+          array7basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[1]+=tpo_videos;
           array7basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[1]+=cantidad;
+          array8basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[1]+=tpo_ejercicios;
+          array8basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[1]+=tpo_videos;
           array8basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[1]+=cantidad;
+          array1medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[1]+=tpo_ejercicios;
+          array1medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[1]+=tpo_videos;
           array1mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[1]+=cantidad;
+          array2medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[1]+=tpo_ejercicios;
+          array2medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[1]+=tpo_videos;
           array2mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[1]+=cantidad;
+          array3medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[1]+=tpo_ejercicios;
+          array3medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[1]+=tpo_videos;
           array3mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[1]+=cantidad;
+          array4medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[1]+=tpo_ejercicios;
+          array4medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[1]+=tpo_videos;
           array4mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+
+
+        arrayeaejer[level-1]=arrayeaejer[level-1]+tpo_ejercicios;
+        arrayeaejerprom[level-1]=arrayeaejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arrayeavid[level-1]=arrayeavid[level-1]+tpo_videos;
+        arrayeavidprom[level-1]=arrayeavidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
+        
       }
       if (ee=="C.E.I."){
         colorcolumn[i]='#90ED7D';
         arraycei[level-1]=arraycei[level-1]+cantidad;
         arrayceiprom[level-1]=arrayceiprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[2]+=estudiantes.length;
+
         if (level==1){
           array1basico[2]+=cantidad;
           array1basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[2]+=cantidad;
-          array2basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[2]+=cantidad;
-          array3basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[2]+=cantidad;
-          array4basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[2]+=cantidad;
-          array5basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[2]+=cantidad;
-          array6basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[2]+=cantidad;
-          array7basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[2]+=cantidad;
-          array8basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[2]+=cantidad;
-          array1medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[2]+=cantidad;
-          array2medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[2]+=cantidad;
-          array3medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[2]+=cantidad;
-          array4medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arrayceiejer[level-1]=arrayceiejer[level-1]+tpo_ejercicios;
-        arrayceiejerprom[level-1]=arrayceiejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[2]+=tpo_ejercicios;
           array1basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[2]+=tpo_ejercicios;
-          array2basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[2]+=tpo_ejercicios;
-          array3basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[2]+=tpo_ejercicios;
-          array4basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[2]+=tpo_ejercicios;
-          array5basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[2]+=tpo_ejercicios;
-          array6basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[2]+=tpo_ejercicios;
-          array7basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[2]+=tpo_ejercicios;
-          array8basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[2]+=tpo_ejercicios;
-          array1medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[2]+=tpo_ejercicios;
-          array2medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[2]+=tpo_ejercicios;
-          array3medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[2]+=tpo_ejercicios;
-          array4medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arrayceivid[level-1]=arrayceivid[level-1]+tpo_videos;
-        arrayceividprom[level-1]=arrayceividprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[2]+=tpo_videos;
           array1basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[2]+=cantidad;
+          array2basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[2]+=tpo_ejercicios;
+          array2basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[2]+=tpo_videos;
           array2basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[2]+=cantidad;
+          array3basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[2]+=tpo_ejercicios;
+          array3basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[2]+=tpo_videos;
           array3basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[2]+=cantidad;
+          array4basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[2]+=tpo_ejercicios;
+          array4basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[2]+=tpo_videos;
           array4basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[2]+=cantidad;
+          array5basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[2]+=tpo_ejercicios;
+          array5basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[2]+=tpo_videos;
           array5basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[2]+=cantidad;
+          array6basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[2]+=tpo_ejercicios;
+          array6basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[2]+=tpo_videos;
           array6basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[2]+=cantidad;
+          array7basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[2]+=tpo_ejercicios;
+          array7basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[2]+=tpo_videos;
           array7basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[2]+=cantidad;
+          array8basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[2]+=tpo_ejercicios;
+          array8basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[2]+=tpo_videos;
           array8basicovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[2]+=cantidad;
+          array1medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[2]+=tpo_ejercicios;
+          array1medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[2]+=tpo_videos;
           array1mediovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[2]+=cantidad;
+          array2medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[2]+=tpo_ejercicios;
+          array2medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[2]+=tpo_videos;
           array2mediovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[2]+=cantidad;
+          array3medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[2]+=tpo_ejercicios;
+          array3medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[2]+=tpo_videos;
           array3mediovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[2]+=cantidad;
+          array4medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[2]+=tpo_ejercicios;
+          array4medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[2]+=tpo_videos;
           array4mediovidprom[2]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+
+        arrayceiejer[level-1]=arrayceiejer[level-1]+tpo_ejercicios;
+        arrayceiejerprom[level-1]=arrayceiejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arrayceivid[level-1]=arrayceivid[level-1]+tpo_videos;
+        arrayceividprom[level-1]=arrayceividprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
       }
       if (ee=="L.A.V."){
         colorcolumn[i]='#F7A35C';
         arraylav[level-1]=arraylav[level-1]+cantidad;
         arraylavprom[level-1]=arraylavprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[3]+=estudiantes.length;
+
         if (level==1){
           array1basico[3]+=cantidad;
           array1basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[3]+=cantidad;
-          array2basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[3]+=cantidad;
-          array3basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[3]+=cantidad;
-          array4basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[3]+=cantidad;
-          array5basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[3]+=cantidad;
-          array6basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[3]+=cantidad;
-          array7basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[3]+=cantidad;
-          array8basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[3]+=cantidad;
-          array1medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[3]+=cantidad;
-          array2medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[3]+=cantidad;
-          array3medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[3]+=cantidad;
-          array4medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arraylavejer[level-1]=arraylavejer[level-1]+tpo_ejercicios;
-        arraylavejerprom[level-1]=arraylavejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[3]+=tpo_ejercicios;
           array1basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[3]+=tpo_ejercicios;
-          array2basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[3]+=tpo_ejercicios;
-          array3basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[3]+=tpo_ejercicios;
-          array4basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[3]+=tpo_ejercicios;
-          array5basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[3]+=tpo_ejercicios;
-          array6basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[3]+=tpo_ejercicios;
-          array7basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[3]+=tpo_ejercicios;
-          array8basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[3]+=tpo_ejercicios;
-          array1medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[3]+=tpo_ejercicios;
-          array2medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[3]+=tpo_ejercicios;
-          array3medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[3]+=tpo_ejercicios;
-          array4medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arraylavvid[level-1]=arraylavvid[level-1]+tpo_videos;
-        arraylavvidprom[level-1]=arraylavvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[3]+=tpo_videos;
           array1basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[3]+=cantidad;
+          array2basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[3]+=tpo_ejercicios;
+          array2basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[3]+=tpo_videos;
           array2basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[3]+=cantidad;
+          array3basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[3]+=tpo_ejercicios;
+          array3basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[3]+=tpo_videos;
           array3basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[3]+=cantidad;
+          array4basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[3]+=tpo_ejercicios;
+          array4basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[3]+=tpo_videos;
           array4basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[3]+=cantidad;
+          array5basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[3]+=tpo_ejercicios;
+          array5basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[3]+=tpo_videos;
           array5basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[3]+=cantidad;
+          array6basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[3]+=tpo_ejercicios;
+          array6basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[3]+=tpo_videos;
           array6basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[3]+=cantidad;
+          array7basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[3]+=tpo_ejercicios;
+          array7basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[3]+=tpo_videos;
           array7basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[3]+=cantidad;
+          array8basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[3]+=tpo_ejercicios;
+          array8basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[3]+=tpo_videos;
           array8basicovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[3]+=cantidad;
+          array1medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[3]+=tpo_ejercicios;
+          array1medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[3]+=tpo_videos;
           array1mediovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[3]+=cantidad;
+          array2medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[3]+=tpo_ejercicios;
+          array2medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[3]+=tpo_videos;
           array2mediovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[3]+=cantidad;
+          array3medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[3]+=tpo_ejercicios;
+          array3medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[3]+=tpo_videos;
           array3mediovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[3]+=cantidad;
+          array4medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[3]+=tpo_ejercicios;
+          array4medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[3]+=tpo_videos;
           array4mediovidprom[3]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+
+        arraylavejer[level-1]=arraylavejer[level-1]+tpo_ejercicios;
+        arraylavejerprom[level-1]=arraylavejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arraylavvid[level-1]=arraylavvid[level-1]+tpo_videos;
+        arraylavvidprom[level-1]=arraylavvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
+      
       }
       if (ee=="R.A.P."){
         colorcolumn[i]='#8085E9';
         arrayrap[level-1]=arrayrap[level-1]+cantidad;
         arrayrapprom[level-1]=arrayrapprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[4]+=estudiantes.length;
+
         if (level==1){
           array1basico[4]+=cantidad;
           array1basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[4]+=cantidad;
-          array2basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[4]+=cantidad;
-          array3basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[4]+=cantidad;
-          array4basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[4]+=cantidad;
-          array5basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[4]+=cantidad;
-          array6basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[4]+=cantidad;
-          array7basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[4]+=cantidad;
-          array8basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[4]+=cantidad;
-          array1medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[4]+=cantidad;
-          array2medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[4]+=cantidad;
-          array3medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[4]+=cantidad;
-          array4medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arrayrapejer[level-1]=arrayrapejer[level-1]+tpo_ejercicios;
-        arrayrapejerprom[level-1]=arrayrapejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[4]+=tpo_ejercicios;
           array1basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[4]+=tpo_ejercicios;
-          array2basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[4]+=tpo_ejercicios;
-          array3basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[4]+=tpo_ejercicios;
-          array4basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[4]+=tpo_ejercicios;
-          array5basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[4]+=tpo_ejercicios;
-          array6basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[4]+=tpo_ejercicios;
-          array7basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[4]+=tpo_ejercicios;
-          array8basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[4]+=tpo_ejercicios;
-          array1medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[4]+=tpo_ejercicios;
-          array2medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[4]+=tpo_ejercicios;
-          array3medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[4]+=tpo_ejercicios;
-          array4medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arrayrapvid[level-1]=arrayrapvid[level-1]+tpo_videos;
-        arrayrapvidprom[level-1]=arrayrapvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[4]+=tpo_videos;
           array1basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[4]+=cantidad;
+          array2basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[4]+=tpo_ejercicios;
+          array2basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[4]+=tpo_videos;
           array2basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[4]+=cantidad;
+          array3basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[4]+=tpo_ejercicios;
+          array3basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[4]+=tpo_videos;
           array3basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[4]+=cantidad;
+          array4basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[4]+=tpo_ejercicios;
+          array4basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[4]+=tpo_videos;
           array4basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[4]+=cantidad;
+          array5basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[4]+=tpo_ejercicios;
+          array5basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[4]+=tpo_videos;
           array5basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[4]+=cantidad;
+          array6basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[4]+=tpo_ejercicios;
+          array6basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[4]+=tpo_videos;
           array6basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[4]+=cantidad;
+          array7basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[4]+=tpo_ejercicios;
+          array7basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[4]+=tpo_videos;
           array7basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[4]+=cantidad;
+          array8basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[4]+=tpo_ejercicios;
+          array8basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[4]+=tpo_videos;
           array8basicovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[4]+=cantidad;
+          array1medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[4]+=tpo_ejercicios;
+          array1medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[4]+=tpo_videos;
           array1mediovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[4]+=cantidad;
+          array2medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[4]+=tpo_ejercicios;
+          array2medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[4]+=tpo_videos;
           array2mediovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[4]+=cantidad;
+          array3medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[4]+=tpo_ejercicios;
+          array3medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[4]+=tpo_videos;
           array3mediovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[4]+=cantidad;
+          array4medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[4]+=tpo_ejercicios;
+          array4medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[4]+=tpo_videos;
           array4mediovidprom[4]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+
+        arrayrapejer[level-1]=arrayrapejer[level-1]+tpo_ejercicios;
+        arrayrapejerprom[level-1]=arrayrapejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arrayrapvid[level-1]=arrayrapvid[level-1]+tpo_videos;
+        arrayrapvidprom[level-1]=arrayrapvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
+        
       }
       if (ee=="L.G.M."){
         colorcolumn[i]='#F15C80';
         arraygm[level-1]=arraygm[level-1]+cantidad;
         arraygmprom[level-1]=arraygmprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[5]+=estudiantes.length;
+
         if (level==1){
           array1basico[5]+=cantidad;
           array1basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[5]+=cantidad;
-          array2basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[5]+=cantidad;
-          array3basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[5]+=cantidad;
-          array4basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[5]+=cantidad;
-          array5basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[5]+=cantidad;
-          array6basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[5]+=cantidad;
-          array7basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[5]+=cantidad;
-          array8basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[5]+=cantidad;
-          array1medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[5]+=cantidad;
-          array2medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[5]+=cantidad;
-          array3medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[5]+=cantidad;
-          array4medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arraygmejer[level-1]=arraygmejer[level-1]+tpo_ejercicios;
-        arraygmejerprom[level-1]=arraygmejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[5]+=tpo_ejercicios;
           array1basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[5]+=tpo_ejercicios;
-          array2basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[5]+=tpo_ejercicios;
-          array3basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[5]+=tpo_ejercicios;
-          array4basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[5]+=tpo_ejercicios;
-          array5basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[5]+=tpo_ejercicios;
-          array6basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[5]+=tpo_ejercicios;
-          array7basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[5]+=tpo_ejercicios;
-          array8basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[5]+=tpo_ejercicios;
-          array1medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[5]+=tpo_ejercicios;
-          array2medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[5]+=tpo_ejercicios;
-          array3medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[5]+=tpo_ejercicios;
-          array4medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arraygmvid[level-1]=arraygmvid[level-1]+tpo_videos;
-        arraygmvidprom[level-1]=arraygmvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[5]+=tpo_videos;
           array1basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[5]+=cantidad;
+          array2basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[5]+=tpo_ejercicios;
+          array2basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[5]+=tpo_videos;
           array2basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[5]+=cantidad;
+          array3basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[5]+=tpo_ejercicios;
+          array3basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[5]+=tpo_videos;
           array3basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[5]+=cantidad;
+          array4basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[5]+=tpo_ejercicios;
+          array4basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[5]+=tpo_videos;
           array4basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[5]+=cantidad;
+          array5basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[5]+=tpo_ejercicios;
+          array5basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[5]+=tpo_videos;
           array5basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[5]+=cantidad;
+          array6basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[5]+=tpo_ejercicios;
+          array6basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[5]+=tpo_videos;
           array6basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[5]+=cantidad;
+          array7basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[5]+=tpo_ejercicios;
+          array7basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[5]+=tpo_videos;
           array7basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[5]+=cantidad;
+          array8basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[5]+=tpo_ejercicios;
+          array8basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[5]+=tpo_videos;
           array8basicovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[5]+=cantidad;
+          array1medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[5]+=tpo_ejercicios;
+          array1medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[5]+=tpo_videos;
           array1mediovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[5]+=cantidad;
+          array2medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[5]+=tpo_ejercicios;
+          array2medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[5]+=tpo_videos;
           array2mediovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[5]+=cantidad;
+          array3medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[5]+=tpo_ejercicios;
+          array3medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[5]+=tpo_videos;
           array3mediovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[5]+=cantidad;
+          array4medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[5]+=tpo_ejercicios;
+          array4medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[5]+=tpo_videos;
           array4mediovidprom[5]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+        
+        arraygmejer[level-1]=arraygmejer[level-1]+tpo_ejercicios;
+        arraygmejerprom[level-1]=arraygmejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arraygmvid[level-1]=arraygmvid[level-1]+tpo_videos;
+        arraygmvidprom[level-1]=arraygmvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
+        
       }
       if (ee=="BA-Khan"){
         colorcolumn[i]='#E4D354';
         arraybakhan[level-1]=arraybakhan[level-1]+cantidad;
         arraybakhanprom[level-1]=arraybakhanprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
         estudiantesnivelesinst[6]+=estudiantes.length;
+
         if (level==1){
           array1basico[6]+=cantidad;
           array1basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basico[6]+=cantidad;
-          array2basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basico[6]+=cantidad;
-          array3basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basico[6]+=cantidad;
-          array4basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basico[6]+=cantidad;
-          array5basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basico[6]+=cantidad;
-          array6basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basico[6]+=cantidad;
-          array7basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basico[6]+=cantidad;
-          array8basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medio[6]+=cantidad;
-          array1medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medio[6]+=cantidad;
-          array2medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medio[6]+=cantidad;
-          array3medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medio[6]+=cantidad;
-          array4medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
-        }
 
-        arraybakhanejer[level-1]=arraybakhanejer[level-1]+tpo_ejercicios;
-        arraybakhanejerprom[level-1]=arraybakhanejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        if (level==1){
           array1basicoejer[6]+=tpo_ejercicios;
           array1basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==2){
-          array2basicoejer[6]+=tpo_ejercicios;
-          array2basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==3){
-          array3basicoejer[6]+=tpo_ejercicios;
-          array3basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==4){
-          array4basicoejer[6]+=tpo_ejercicios;
-          array4basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==5){
-          array5basicoejer[6]+=tpo_ejercicios;
-          array5basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==6){
-          array6basicoejer[6]+=tpo_ejercicios;
-          array6basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==7){
-          array7basicoejer[6]+=tpo_ejercicios;
-          array7basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==8){
-          array8basicoejer[6]+=tpo_ejercicios;
-          array8basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==9){
-          array1medioejer[6]+=tpo_ejercicios;
-          array1medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==10){
-          array2medioejer[6]+=tpo_ejercicios;
-          array2medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==11){
-          array3medioejer[6]+=tpo_ejercicios;
-          array3medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
-        if (level==12){
-          array4medioejer[6]+=tpo_ejercicios;
-          array4medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
-        }
 
-        arraybakhanvid[level-1]=arraybakhanvid[level-1]+tpo_videos;
-        arraybakhanvidprom[level-1]=arraybakhanvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
-        if (level==1){
           array1basicovid[6]+=tpo_videos;
           array1basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
+          array2basico[6]+=cantidad;
+          array2basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2basicoejer[6]+=tpo_ejercicios;
+          array2basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2basicovid[6]+=tpo_videos;
           array2basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
+          array3basico[6]+=cantidad;
+          array3basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3basicoejer[6]+=tpo_ejercicios;
+          array3basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3basicovid[6]+=tpo_videos;
           array3basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
+          array4basico[6]+=cantidad;
+          array4basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4basicoejer[6]+=tpo_ejercicios;
+          array4basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4basicovid[6]+=tpo_videos;
           array4basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
+          array5basico[6]+=cantidad;
+          array5basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array5basicoejer[6]+=tpo_ejercicios;
+          array5basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array5basicovid[6]+=tpo_videos;
           array5basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
+          array6basico[6]+=cantidad;
+          array6basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array6basicoejer[6]+=tpo_ejercicios;
+          array6basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array6basicovid[6]+=tpo_videos;
           array6basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
+          array7basico[6]+=cantidad;
+          array7basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array7basicoejer[6]+=tpo_ejercicios;
+          array7basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array7basicovid[6]+=tpo_videos;
           array7basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
+          array8basico[6]+=cantidad;
+          array8basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array8basicoejer[6]+=tpo_ejercicios;
+          array8basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array8basicovid[6]+=tpo_videos;
           array8basicovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
+          array1medio[6]+=cantidad;
+          array1medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array1medioejer[6]+=tpo_ejercicios;
+          array1medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array1mediovid[6]+=tpo_videos;
           array1mediovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
+          array2medio[6]+=cantidad;
+          array2medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array2medioejer[6]+=tpo_ejercicios;
+          array2medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array2mediovid[6]+=tpo_videos;
           array2mediovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
+          array3medio[6]+=cantidad;
+          array3medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array3medioejer[6]+=tpo_ejercicios;
+          array3medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array3mediovid[6]+=tpo_videos;
           array3mediovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
+          array4medio[6]+=cantidad;
+          array4medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+
+          array4medioejer[6]+=tpo_ejercicios;
+          array4medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
           array4mediovid[6]+=tpo_videos;
           array4mediovidprom[6]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
+
+        arraybakhanejer[level-1]=arraybakhanejer[level-1]+tpo_ejercicios;
+        arraybakhanejerprom[level-1]=arraybakhanejerprom[level-1]+Math.round(tpo_ejercicios/estudiantes.length*100)/100;
+
+        arraybakhanvid[level-1]=arraybakhanvid[level-1]+tpo_videos;
+        arraybakhanvidprom[level-1]=arraybakhanvidprom[level-1]+Math.round(tpo_videos/estudiantes.length*100)/100;
+        
       }
 
       arrayte[i]={"name":nombre, "y": tpo_ejercicios, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudiantes.length, "cantclase":cantidad_clase, "tpo_esperado":tiempo_esperado, "establecimiento": ee};
@@ -4037,7 +3883,7 @@ function graficar(json, clase){
 }
 
 function graficarcompara(json, clase){
-  console.log(json)
+  //console.log(json)
   $('#promediototaltot').empty();
   $('#promediototaltot2').empty();
   $('#promediototalej').empty();
@@ -4050,18 +3896,6 @@ function graficarcompara(json, clase){
   $('#ordenarcant3').hide();
   $('#ordenarvid3').hide();
   $('#ordenartot3').hide();
-  //$('#containertotnivel').hide();
-  //$('#containertotnivelprom').hide();
-  //$('#containertotinst').hide();
-  //$('#containertotinstprom').hide();
-  $('#containerejernivel').hide();
-  $('#containerejernivelprom').hide();
-  $('#containerejerinst').hide();
-  $('#containerejerinstprom').hide();
-  $('#containervidnivel').hide();
-  $('#containervidnivelprom').hide();
-  $('#containervidinst').hide();
-  $('#containervidinstprom').hide();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
@@ -4218,7 +4052,7 @@ function graficarcompara(json, clase){
     var array4medioprom2 = new Array(7).fill(0);
 
     var estudiantesniveles = new Array(12).fill(0);
-    var estudiantesnivelesinst = new Array(6).fill(0);
+    var estudiantesnivelesinst = new Array(7).fill(0);
     var distxnivel=[];
     var distxnivelprom=[];
     var distxinst=[];
@@ -4227,6 +4061,184 @@ function graficarcompara(json, clase){
     var elementremoveprom=[];
     var elementremoveinst=[];
     var elementremoveinstprom=[];
+
+    var distxnivelejer=[];
+    var distxnivelejerprom=[];
+    var distxinstejer=[];
+    var distxinstejerprom=[];
+    var elementremoveejer = [];
+    var elementremoveejerprom = [];
+    var elementremoveinstejer = [];
+    var elementremoveinstejerprom = [];
+
+    var distxnivelvid=[];
+    var distxnivelvidprom=[];
+    var distxinstvid=[];
+    var distxinstvidprom=[];
+    var elementremovevid = [];
+    var elementremovevidprom = [];
+    var elementremoveinstvid = [];
+    var elementremoveinstvidprom = [];
+
+    var arraylsmbejer = new Array(12).fill(0);
+    var arrayeaejer = new Array(12).fill(0);
+    var arrayceiejer = new Array(12).fill(0);
+    var arraylavejer = new Array(12).fill(0);
+    var arrayrapejer = new Array(12).fill(0);
+    var arraygmejer = new Array(12).fill(0);
+    var arraybakhanejer = new Array(12).fill(0);
+    var arraylsmbejer2 = new Array(12).fill(0);
+    var arrayeaejer2 = new Array(12).fill(0);
+    var arrayceiejer2 = new Array(12).fill(0);
+    var arraylavejer2 = new Array(12).fill(0);
+    var arrayrapejer2 = new Array(12).fill(0);
+    var arraygmejer2 = new Array(12).fill(0);
+    var arraybakhanejer2 = new Array(12).fill(0);
+
+    var arraylsmbejerprom = new Array(12).fill(0);
+    var arrayeaejerprom = new Array(12).fill(0);
+    var arrayceiejerprom = new Array(12).fill(0);
+    var arraylavejerprom = new Array(12).fill(0);
+    var arrayrapejerprom = new Array(12).fill(0);
+    var arraygmejerprom = new Array(12).fill(0);
+    var arraybakhanejerprom = new Array(12).fill(0);
+    var arraylsmbejerprom2 = new Array(12).fill(0);
+    var arrayeaejerprom2 = new Array(12).fill(0);
+    var arrayceiejerprom2 = new Array(12).fill(0);
+    var arraylavejerprom2 = new Array(12).fill(0);
+    var arrayrapejerprom2 = new Array(12).fill(0);
+    var arraygmejerprom2 = new Array(12).fill(0);
+    var arraybakhanejerprom2 = new Array(12).fill(0);
+
+    var array1basicoejer = new Array(7).fill(0);
+    var array2basicoejer = new Array(7).fill(0);
+    var array3basicoejer = new Array(7).fill(0);
+    var array4basicoejer = new Array(7).fill(0);
+    var array5basicoejer = new Array(7).fill(0);
+    var array6basicoejer = new Array(7).fill(0);
+    var array7basicoejer = new Array(7).fill(0);
+    var array8basicoejer = new Array(7).fill(0);
+    var array1medioejer = new Array(7).fill(0);
+    var array2medioejer = new Array(7).fill(0);
+    var array3medioejer = new Array(7).fill(0);
+    var array4medioejer = new Array(7).fill(0);
+    var array1basicoejer2 = new Array(7).fill(0);
+    var array2basicoejer2 = new Array(7).fill(0);
+    var array3basicoejer2 = new Array(7).fill(0);
+    var array4basicoejer2 = new Array(7).fill(0);
+    var array5basicoejer2 = new Array(7).fill(0);
+    var array6basicoejer2 = new Array(7).fill(0);
+    var array7basicoejer2 = new Array(7).fill(0);
+    var array8basicoejer2 = new Array(7).fill(0);
+    var array1medioejer2 = new Array(7).fill(0);
+    var array2medioejer2 = new Array(7).fill(0);
+    var array3medioejer2 = new Array(7).fill(0);
+    var array4medioejer2 = new Array(7).fill(0);
+
+    var array1basicoejerprom = new Array(7).fill(0);
+    var array2basicoejerprom = new Array(7).fill(0);
+    var array3basicoejerprom = new Array(7).fill(0);
+    var array4basicoejerprom = new Array(7).fill(0);
+    var array5basicoejerprom = new Array(7).fill(0);
+    var array6basicoejerprom = new Array(7).fill(0);
+    var array7basicoejerprom = new Array(7).fill(0);
+    var array8basicoejerprom = new Array(7).fill(0);
+    var array1medioejerprom = new Array(7).fill(0);
+    var array2medioejerprom = new Array(7).fill(0);
+    var array3medioejerprom = new Array(7).fill(0);
+    var array4medioejerprom = new Array(7).fill(0);
+    var array1basicoejerprom2 = new Array(7).fill(0);
+    var array2basicoejerprom2 = new Array(7).fill(0);
+    var array3basicoejerprom2 = new Array(7).fill(0);
+    var array4basicoejerprom2 = new Array(7).fill(0);
+    var array5basicoejerprom2 = new Array(7).fill(0);
+    var array6basicoejerprom2 = new Array(7).fill(0);
+    var array7basicoejerprom2 = new Array(7).fill(0);
+    var array8basicoejerprom2 = new Array(7).fill(0);
+    var array1medioejerprom2 = new Array(7).fill(0);
+    var array2medioejerprom2 = new Array(7).fill(0);
+    var array3medioejerprom2 = new Array(7).fill(0);
+    var array4medioejerprom2 = new Array(7).fill(0);
+
+    var array1basicovid = new Array(7).fill(0);
+    var array2basicovid = new Array(7).fill(0);
+    var array3basicovid = new Array(7).fill(0);
+    var array4basicovid = new Array(7).fill(0);
+    var array5basicovid = new Array(7).fill(0);
+    var array6basicovid = new Array(7).fill(0);
+    var array7basicovid = new Array(7).fill(0);
+    var array8basicovid = new Array(7).fill(0);
+    var array1mediovid = new Array(7).fill(0);
+    var array2mediovid = new Array(7).fill(0);
+    var array3mediovid = new Array(7).fill(0);
+    var array4mediovid = new Array(7).fill(0);
+    var array1basicovid2 = new Array(7).fill(0);
+    var array2basicovid2 = new Array(7).fill(0);
+    var array3basicovid2 = new Array(7).fill(0);
+    var array4basicovid2 = new Array(7).fill(0);
+    var array5basicovid2 = new Array(7).fill(0);
+    var array6basicovid2 = new Array(7).fill(0);
+    var array7basicovid2 = new Array(7).fill(0);
+    var array8basicovid2 = new Array(7).fill(0);
+    var array1mediovid2 = new Array(7).fill(0);
+    var array2mediovid2 = new Array(7).fill(0);
+    var array3mediovid2 = new Array(7).fill(0);
+    var array4mediovid2 = new Array(7).fill(0);
+
+    var array1basicovidprom = new Array(7).fill(0);
+    var array2basicovidprom = new Array(7).fill(0);
+    var array3basicovidprom = new Array(7).fill(0);
+    var array4basicovidprom = new Array(7).fill(0);
+    var array5basicovidprom = new Array(7).fill(0);
+    var array6basicovidprom = new Array(7).fill(0);
+    var array7basicovidprom = new Array(7).fill(0);
+    var array8basicovidprom = new Array(7).fill(0);
+    var array1mediovidprom = new Array(7).fill(0);
+    var array2mediovidprom = new Array(7).fill(0);
+    var array3mediovidprom = new Array(7).fill(0);
+    var array4mediovidprom = new Array(7).fill(0);
+    var array1basicovidprom2 = new Array(7).fill(0);
+    var array2basicovidprom2 = new Array(7).fill(0);
+    var array3basicovidprom2 = new Array(7).fill(0);
+    var array4basicovidprom2 = new Array(7).fill(0);
+    var array5basicovidprom2 = new Array(7).fill(0);
+    var array6basicovidprom2 = new Array(7).fill(0);
+    var array7basicovidprom2 = new Array(7).fill(0);
+    var array8basicovidprom2 = new Array(7).fill(0);
+    var array1mediovidprom2 = new Array(7).fill(0);
+    var array2mediovidprom2 = new Array(7).fill(0);
+    var array3mediovidprom2 = new Array(7).fill(0);
+    var array4mediovidprom2 = new Array(7).fill(0);
+
+    var arraylsmbvid = new Array(12).fill(0);
+    var arrayeavid = new Array(12).fill(0);
+    var arrayceivid = new Array(12).fill(0);
+    var arraylavvid = new Array(12).fill(0);
+    var arrayrapvid = new Array(12).fill(0);
+    var arraygmvid = new Array(12).fill(0);
+    var arraybakhanvid = new Array(12).fill(0);
+    var arraylsmbvid2 = new Array(12).fill(0);
+    var arrayeavid2 = new Array(12).fill(0);
+    var arrayceivid2 = new Array(12).fill(0);
+    var arraylavvid2 = new Array(12).fill(0);
+    var arrayrapvid2 = new Array(12).fill(0);
+    var arraygmvid2 = new Array(12).fill(0);
+    var arraybakhanvid2 = new Array(12).fill(0);
+
+    var arraylsmbvidprom = new Array(12).fill(0);
+    var arrayeavidprom = new Array(12).fill(0);
+    var arrayceividprom = new Array(12).fill(0);
+    var arraylavvidprom = new Array(12).fill(0);
+    var arrayrapvidprom = new Array(12).fill(0);
+    var arraygmvidprom = new Array(12).fill(0);
+    var arraybakhanvidprom = new Array(12).fill(0);
+    var arraylsmbvidprom2 = new Array(12).fill(0);
+    var arrayeavidprom2 = new Array(12).fill(0);
+    var arrayceividprom2 = new Array(12).fill(0);
+    var arraylavvidprom2 = new Array(12).fill(0);
+    var arrayrapvidprom2 = new Array(12).fill(0);
+    var arraygmvidprom2 = new Array(12).fill(0);
+    var arraybakhanvidprom2 = new Array(12).fill(0);
 
     for (var i=0;i<clase.length;i++){
       var estudiantes = clase[i]["students"];
@@ -4327,11 +4339,20 @@ function graficarcompara(json, clase){
        if (mintotejer2==99999999){
         mintotejer2=0
       }
-      var cntdd1 = clase[i]["tiempo_ejercicios_clase_1"];
-      var cntdd2 = clase[i]["tiempo_ejercicios_clase_2"];
+      var cntdd1 = clase[i]["total_ejercicios_clase_1"];
+      var cntdd2 = clase[i]["total_ejercicios_clase_2"];
+      var tpoejer1 = clase[i]["tiempo_ejercicios_clase_1"];
+      var tpoejer2 = clase[i]["tiempo_ejercicios_clase_2"];
+      var tpovid1 = clase[i]["tiempo_videos_clase_1"];
+      var tpovid2 = clase[i]["tiempo_videos_clase_2"];
 
-      var cntddprom1 = Math.round(clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1*100)/100;
-      var cntddprom2 = Math.round(clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2*100)/100;
+      var cntddprom1 = Math.round(clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1*100)/100;
+      var cntddprom2 = Math.round(clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2*100)/100;
+      var tpoejerprom1 = Math.round(clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1*100)/100;
+      var tpoejerprom2 = Math.round(clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2*100)/100;
+      var tpovidprom1 = Math.round(clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1*100)/100;
+      var tpovidprom2 = Math.round(clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2*100)/100;
+
       if (ee=="LSMB"){
         arraylsmb[level-1]+=cntdd1;
         arraylsmb2[level-1]+=cntdd2;
@@ -4341,12 +4362,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[0]+=estudiantes.length;
 
+        arraylsmbejer[level-1]+=tpoejer1;
+        arraylsmbejer2[level-1]+=tpoejer2;
+        arraylsmbejerprom[level-1]+=tpoejerprom1;
+        arraylsmbejerprom2[level-1]+=tpoejerprom2;
+
+        arraylsmbvid[level-1]+=tpovid1;
+        arraylsmbvid2[level-1]+=tpovid2;
+        arraylsmbvidprom[level-1]+=tpovidprom1;
+        arraylsmbvidprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[0]+=cntdd1;
           array1basicoprom[0]+=cntddprom1;
 
           array1basico2[0]+=cntdd2;
           array1basicoprom2[0]+=cntddprom2;
+
+          array1basicoejer[0]+=tpoejer1;
+          array1basicoejer2[0]+=tpoejer2;
+
+          array1basicoejerprom[0]+=tpoejerprom1;
+          array1basicoejerprom2[0]+=tpoejerprom2;
+
+          array1basicovid[0]+=tpovid1;
+          array1basicovid2[0]+=tpovid2;
+
+          array1basicovidprom[0]+=tpovidprom1;
+          array1basicovidprom2[0]+=tpovidprom2;
         }
         if (level==2){
           array2basico[0]+=cntdd1;
@@ -4354,6 +4397,18 @@ function graficarcompara(json, clase){
 
           array2basico2[0]+=cntdd2;
           array2basicoprom2[0]+=cntddprom2;
+
+          array2basicoejer[0]+=tpoejer1;
+          array2basicoejer2[0]+=tpoejer2;
+
+          array2basicoejerprom[0]+=tpoejerprom1;
+          array2basicoejerprom2[0]+=tpoejerprom2;
+
+          array2basicovid[0]+=tpovid1;
+          array2basicovid2[0]+=tpovid2;
+
+          array2basicovidprom[0]+=tpovidprom1;
+          array2basicovidprom2[0]+=tpovidprom2;
         }
         if (level==3){
           array3basico[0]+=cntdd1;
@@ -4361,6 +4416,18 @@ function graficarcompara(json, clase){
 
           array3basico2[0]+=cntdd2;
           array3basicoprom2[0]+=cntddprom2;
+
+          array3basicoejer[0]+=tpoejer1;
+          array3basicoejer2[0]+=tpoejer2;
+
+          array3basicoejerprom[0]+=tpoejerprom1;
+          array3basicoejerprom2[0]+=tpoejerprom2;
+
+          array3basicovid[0]+=tpovid1;
+          array3basicovid2[0]+=tpovid2;
+
+          array3basicovidprom[0]+=tpovidprom1;
+          array3basicovidprom2[0]+=tpovidprom2;
         }
         if (level==4){
           array4basico[0]+=cntdd1;
@@ -4368,6 +4435,18 @@ function graficarcompara(json, clase){
 
           array4basico2[0]+=cntdd2;
           array4basicoprom2[0]+=cntddprom2;
+
+          array4basicoejer[0]+=tpoejer1;
+          array4basicoejer2[0]+=tpoejer2;
+
+          array4basicoejerprom[0]+=tpoejerprom1;
+          array4basicoejerprom2[0]+=tpoejerprom2;
+
+          array4basicovid[0]+=tpovid1;
+          array4basicovid2[0]+=tpovid2;
+
+          array4basicovidprom[0]+=tpovidprom1;
+          array4basicovidprom2[0]+=tpovidprom2;
         }
         if (level==5){
           array5basico[0]+=cntdd1;
@@ -4375,6 +4454,18 @@ function graficarcompara(json, clase){
 
           array5basico2[0]+=cntdd2;
           array5basicoprom2[0]+=cntddprom2;
+
+          array5basicoejer[0]+=tpoejer1;
+          array5basicoejer2[0]+=tpoejer2;
+
+          array5basicoejerprom[0]+=tpoejerprom1;
+          array5basicoejerprom2[0]+=tpoejerprom2;
+
+          array5basicovid[0]+=tpovid1;
+          array5basicovid2[0]+=tpovid2;
+
+          array5basicovidprom[0]+=tpovidprom1;
+          array5basicovidprom2[0]+=tpovidprom2;
         }
         if (level==6){
           array6basico[0]+=cntdd1;
@@ -4382,6 +4473,18 @@ function graficarcompara(json, clase){
 
           array6basico2[0]+=cntdd2;
           array6basicoprom2[0]+=cntddprom2;
+
+          array6basicoejer[0]+=tpoejer1;
+          array6basicoejer2[0]+=tpoejer2;
+
+          array6basicoejerprom[0]+=tpoejerprom1;
+          array6basicoejerprom2[0]+=tpoejerprom2;
+
+          array6basicovid[0]+=tpovid1;
+          array6basicovid2[0]+=tpovid2;
+
+          array6basicovidprom[0]+=tpovidprom1;
+          array6basicovidprom2[0]+=tpovidprom2;
         }
         if (level==7){
           array7basico[0]+=cntdd1;
@@ -4389,6 +4492,18 @@ function graficarcompara(json, clase){
 
           array7basico2[0]+=cntdd2;
           array7basicoprom2[0]+=cntddprom2;
+
+          array7basicoejer[0]+=tpoejer1;
+          array7basicoejer2[0]+=tpoejer2;
+
+          array7basicoejerprom[0]+=tpoejerprom1;
+          array7basicoejerprom2[0]+=tpoejerprom2;
+
+          array7basicovid[0]+=tpovid1;
+          array7basicovid2[0]+=tpovid2;
+
+          array7basicovidprom[0]+=tpovidprom1;
+          array7basicovidprom2[0]+=tpovidprom2;
         }
         if (level==8){
           array8basico[0]+=cntdd1;
@@ -4396,6 +4511,18 @@ function graficarcompara(json, clase){
 
           array8basico2[0]+=cntdd2;
           array8basicoprom2[0]+=cntddprom2;
+
+          array8basicoejer[0]+=tpoejer1;
+          array8basicoejer2[0]+=tpoejer2;
+
+          array8basicoejerprom[0]+=tpoejerprom1;
+          array8basicoejerprom2[0]+=tpoejerprom2;
+
+          array8basicovid[0]+=tpovid1;
+          array8basicovid2[0]+=tpovid2;
+
+          array8basicovidprom[0]+=tpovidprom1;
+          array8basicovidprom2[0]+=tpovidprom2;
         }
         if (level==9){
           array1medio[0]+=cntdd1;
@@ -4403,6 +4530,18 @@ function graficarcompara(json, clase){
 
           array1medio2[0]+=cntdd2;
           array1medioprom2[0]+=cntddprom2;
+
+          array1medioejer[0]+=tpoejer1;
+          array1medioejer2[0]+=tpoejer2;
+
+          array1medioejerprom[0]+=tpoejerprom1;
+          array1medioejerprom2[0]+=tpoejerprom2;
+
+          array1mediovid[0]+=tpovid1;
+          array1mediovid2[0]+=tpovid2;
+
+          array1mediovidprom[0]+=tpovidprom1;
+          array1mediovidprom2[0]+=tpovidprom2;
         }
         if (level==10){
           array2medio[0]+=cntdd1;
@@ -4410,6 +4549,18 @@ function graficarcompara(json, clase){
 
           array2medio2[0]+=cntdd2;
           array2medioprom2[0]+=cntddprom2;
+
+          array2medioejer[0]+=tpoejer1;
+          array2medioejer2[0]+=tpoejer2;
+
+          array2medioejerprom[0]+=tpoejerprom1;
+          array2medioejerprom2[0]+=tpoejerprom2;
+
+          array2mediovid[0]+=tpovid1;
+          array2mediovid2[0]+=tpovid2;
+
+          array2mediovidprom[0]+=tpovidprom1;
+          array2mediovidprom2[0]+=tpovidprom2;
         }
         if (level==11){
           array3medio[0]+=cntdd1;
@@ -4417,6 +4568,18 @@ function graficarcompara(json, clase){
 
           array3medio2[0]+=cntdd2;
           array3medioprom2[0]+=cntddprom2;
+
+          array3medioejer[0]+=tpoejer1;
+          array3medioejer2[0]+=tpoejer2;
+
+          array3medioejerprom[0]+=tpoejerprom1;
+          array3medioejerprom2[0]+=tpoejerprom2;
+
+          array3mediovid[0]+=tpovid1;
+          array3mediovid2[0]+=tpovid2;
+
+          array3mediovidprom[0]+=tpovidprom1;
+          array3mediovidprom2[0]+=tpovidprom2;
         }
         if (level==12){
           array4medio[0]+=cntdd1;
@@ -4424,6 +4587,18 @@ function graficarcompara(json, clase){
 
           array4medio2[0]+=cntdd2;
           array4medioprom2[0]+=cntddprom2;
+
+          array4medioejer[0]+=tpoejer1;
+          array4medioejer2[0]+=tpoejer2;
+
+          array4medioejerprom[0]+=tpoejerprom1;
+          array4medioejerprom2[0]+=tpoejerprom2;
+
+          array4mediovid[0]+=tpovid1;
+          array4mediovid2[0]+=tpovid2;
+
+          array4mediovidprom[0]+=tpovidprom1;
+          array4mediovidprom2[0]+=tpovidprom2;
         }
       }
       if (ee=="E.A."){
@@ -4435,12 +4610,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[1]+=estudiantes.length;
 
+        arrayeaejer[level-1]+=tpoejer1;
+        arrayeaejer2[level-1]+=tpoejer2;
+        arrayeaejerprom[level-1]+=tpoejerprom1;
+        arrayeaejerprom2[level-1]+=tpoejerprom2;
+
+        arrayeavid[level-1]+=tpovid1;
+        arrayeavid2[level-1]+=tpovid2;
+        arrayeavidprom[level-1]+=tpovidprom1;
+        arrayeavidprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[1]+=cntdd1;
           array1basicoprom[1]+=cntddprom1;
 
           array1basico2[1]+=cntdd2;
           array1basicoprom2[1]+=cntddprom2;
+
+          array1basicoejer[1]+=tpoejer1;
+          array1basicoejer2[1]+=tpoejer2;
+
+          array1basicoejerprom[1]+=tpoejerprom1;
+          array1basicoejerprom2[1]+=tpoejerprom2;
+
+          array1basicovid[1]+=tpovid1;
+          array1basicovid2[1]+=tpovid2;
+
+          array1basicovidprom[1]+=tpovidprom1;
+          array1basicovidprom2[1]+=tpovidprom2;
         }
         if (level==2){
           array2basico[1]+=cntdd1;
@@ -4448,6 +4645,18 @@ function graficarcompara(json, clase){
 
           array2basico2[1]+=cntdd2;
           array2basicoprom2[1]+=cntddprom2;
+
+          array2basicoejer[1]+=tpoejer1;
+          array2basicoejer2[1]+=tpoejer2;
+
+          array2basicoejerprom[1]+=tpoejerprom1;
+          array2basicoejerprom2[1]+=tpoejerprom2;
+
+          array2basicovid[1]+=tpovid1;
+          array2basicovid2[1]+=tpovid2;
+
+          array2basicovidprom[1]+=tpovidprom1;
+          array2basicovidprom2[1]+=tpovidprom2;
         }
         if (level==3){
           array3basico[1]+=cntdd1;
@@ -4455,6 +4664,18 @@ function graficarcompara(json, clase){
 
           array3basico2[1]+=cntdd2;
           array3basicoprom2[1]+=cntddprom2;
+
+          array3basicoejer[1]+=tpoejer1;
+          array3basicoejer2[1]+=tpoejer2;
+
+          array3basicoejerprom[1]+=tpoejerprom1;
+          array3basicoejerprom2[1]+=tpoejerprom2;
+
+          array3basicovid[1]+=tpovid1;
+          array3basicovid2[1]+=tpovid2;
+
+          array3basicovidprom[1]+=tpovidprom1;
+          array3basicovidprom2[1]+=tpovidprom2;
         }
         if (level==4){
           array4basico[1]+=cntdd1;
@@ -4462,6 +4683,18 @@ function graficarcompara(json, clase){
 
           array4basico2[1]+=cntdd2;
           array4basicoprom2[1]+=cntddprom2;
+
+          array4basicoejer[1]+=tpoejer1;
+          array4basicoejer2[1]+=tpoejer2;
+
+          array4basicoejerprom[1]+=tpoejerprom1;
+          array4basicoejerprom2[1]+=tpoejerprom2;
+
+          array4basicovid[1]+=tpovid1;
+          array4basicovid2[1]+=tpovid2;
+
+          array4basicovidprom[1]+=tpovidprom1;
+          array4basicovidprom2[1]+=tpovidprom2;
         }
         if (level==5){
           array5basico[1]+=cntdd1;
@@ -4469,6 +4702,18 @@ function graficarcompara(json, clase){
 
           array5basico2[1]+=cntdd2;
           array5basicoprom2[1]+=cntddprom2;
+
+          array5basicoejer[1]+=tpoejer1;
+          array5basicoejer2[1]+=tpoejer2;
+
+          array5basicoejerprom[1]+=tpoejerprom1;
+          array5basicoejerprom2[1]+=tpoejerprom2;
+
+          array5basicovid[1]+=tpovid1;
+          array5basicovid2[1]+=tpovid2;
+
+          array5basicovidprom[1]+=tpovidprom1;
+          array5basicovidprom2[1]+=tpovidprom2;
         }
         if (level==6){
           array6basico[1]+=cntdd1;
@@ -4476,6 +4721,18 @@ function graficarcompara(json, clase){
 
           array6basico2[1]+=cntdd2;
           array6basicoprom2[1]+=cntddprom2;
+
+          array6basicoejer[1]+=tpoejer1;
+          array6basicoejer2[1]+=tpoejer2;
+
+          array6basicoejerprom[1]+=tpoejerprom1;
+          array6basicoejerprom2[1]+=tpoejerprom2;
+
+          array6basicovid[1]+=tpovid1;
+          array6basicovid2[1]+=tpovid2;
+
+          array6basicovidprom[1]+=tpovidprom1;
+          array6basicovidprom2[1]+=tpovidprom2;
         }
         if (level==7){
           array7basico[1]+=cntdd1;
@@ -4483,6 +4740,18 @@ function graficarcompara(json, clase){
 
           array7basico2[1]+=cntdd2;
           array7basicoprom2[1]+=cntddprom2;
+
+          array7basicoejer[1]+=tpoejer1;
+          array7basicoejer2[1]+=tpoejer2;
+
+          array7basicoejerprom[1]+=tpoejerprom1;
+          array7basicoejerprom2[1]+=tpoejerprom2;
+
+          array7basicovid[1]+=tpovid1;
+          array7basicovid2[1]+=tpovid2;
+
+          array7basicovidprom[1]+=tpovidprom1;
+          array7basicovidprom2[1]+=tpovidprom2;
         }
         if (level==8){
           array8basico[1]+=cntdd1;
@@ -4490,6 +4759,18 @@ function graficarcompara(json, clase){
 
           array8basico2[1]+=cntdd2;
           array8basicoprom2[1]+=cntddprom2;
+
+          array8basicoejer[1]+=tpoejer1;
+          array8basicoejer2[1]+=tpoejer2;
+
+          array8basicoejerprom[1]+=tpoejerprom1;
+          array8basicoejerprom2[1]+=tpoejerprom2;
+
+          array8basicovid[1]+=tpovid1;
+          array8basicovid2[1]+=tpovid2;
+
+          array8basicovidprom[1]+=tpovidprom1;
+          array8basicovidprom2[1]+=tpovidprom2;
         }
         if (level==9){
           array1medio[1]+=cntdd1;
@@ -4497,6 +4778,18 @@ function graficarcompara(json, clase){
 
           array1medio2[1]+=cntdd2;
           array1medioprom2[1]+=cntddprom2;
+
+          array1medioejer[1]+=tpoejer1;
+          array1medioejer2[1]+=tpoejer2;
+
+          array1medioejerprom[1]+=tpoejerprom1;
+          array1medioejerprom2[1]+=tpoejerprom2;
+
+          array1mediovid[1]+=tpovid1;
+          array1mediovid2[1]+=tpovid2;
+
+          array1mediovidprom[1]+=tpovidprom1;
+          array1mediovidprom2[1]+=tpovidprom2;
         }
         if (level==10){
           array2medio[1]+=cntdd1;
@@ -4504,6 +4797,18 @@ function graficarcompara(json, clase){
 
           array2medio2[1]+=cntdd2;
           array2medioprom2[1]+=cntddprom2;
+
+          array2medioejer[1]+=tpoejer1;
+          array2medioejer2[1]+=tpoejer2;
+
+          array2medioejerprom[1]+=tpoejerprom1;
+          array2medioejerprom2[1]+=tpoejerprom2;
+
+          array2mediovid[1]+=tpovid1;
+          array2mediovid2[1]+=tpovid2;
+
+          array2mediovidprom[1]+=tpovidprom1;
+          array2mediovidprom2[1]+=tpovidprom2;
         }
         if (level==11){
           array3medio[1]+=cntdd1;
@@ -4511,6 +4816,18 @@ function graficarcompara(json, clase){
 
           array3medio2[1]+=cntdd2;
           array3medioprom2[1]+=cntddprom2;
+
+          array3medioejer[1]+=tpoejer1;
+          array3medioejer2[1]+=tpoejer2;
+
+          array3medioejerprom[1]+=tpoejerprom1;
+          array3medioejerprom2[1]+=tpoejerprom2;
+
+          array3mediovid[1]+=tpovid1;
+          array3mediovid2[1]+=tpovid2;
+
+          array3mediovidprom[1]+=tpovidprom1;
+          array3mediovidprom2[1]+=tpovidprom2;
         }
         if (level==12){
           array4medio[1]+=cntdd1;
@@ -4518,6 +4835,18 @@ function graficarcompara(json, clase){
 
           array4medio2[1]+=cntdd2;
           array4medioprom2[1]+=cntddprom2;
+
+          array4medioejer[1]+=tpoejer1;
+          array4medioejer2[1]+=tpoejer2;
+
+          array4medioejerprom[1]+=tpoejerprom1;
+          array4medioejerprom2[1]+=tpoejerprom2;
+
+          array4mediovid[1]+=tpovid1;
+          array4mediovid2[1]+=tpovid2;
+
+          array4mediovidprom[1]+=tpovidprom1;
+          array4mediovidprom2[1]+=tpovidprom2;
         }
       }
       if (ee=="C.E.I."){
@@ -4529,12 +4858,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[2]+=estudiantes.length;
 
+        arrayceiejer[level-1]+=tpoejer1;
+        arrayceiejer2[level-1]+=tpoejer2;
+        arrayceiejerprom[level-1]+=tpoejerprom1;
+        arrayceiejerprom2[level-1]+=tpoejerprom2;
+
+        arrayceivid[level-1]+=tpovid1;
+        arrayceivid2[level-1]+=tpovid2;
+        arrayceividprom[level-1]+=tpovidprom1;
+        arrayceividprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[2]+=cntdd1;
           array1basicoprom[2]+=cntddprom1;
 
           array1basico2[2]+=cntdd2;
           array1basicoprom2[2]+=cntddprom2;
+
+          array1basicoejer[2]+=tpoejer1;
+          array1basicoejer2[2]+=tpoejer2;
+
+          array1basicoejerprom[2]+=tpoejerprom1;
+          array1basicoejerprom2[2]+=tpoejerprom2;
+
+          array1basicovid[2]+=tpovid1;
+          array1basicovid2[2]+=tpovid2;
+
+          array1basicovidprom[2]+=tpovidprom1;
+          array1basicovidprom2[2]+=tpovidprom2;
         }
         if (level==2){
           array2basico[2]+=cntdd1;
@@ -4542,6 +4893,18 @@ function graficarcompara(json, clase){
 
           array2basico2[2]+=cntdd2;
           array2basicoprom2[2]+=cntddprom2;
+
+          array2basicoejer[2]+=tpoejer1;
+          array2basicoejer2[2]+=tpoejer2;
+
+          array2basicoejerprom[2]+=tpoejerprom1;
+          array2basicoejerprom2[2]+=tpoejerprom2;
+
+          array2basicovid[2]+=tpovid1;
+          array2basicovid2[2]+=tpovid2;
+
+          array2basicovidprom[2]+=tpovidprom1;
+          array2basicovidprom2[2]+=tpovidprom2;
         }
         if (level==3){
           array3basico[2]+=cntdd1;
@@ -4549,6 +4912,18 @@ function graficarcompara(json, clase){
 
           array3basico2[2]+=cntdd2;
           array3basicoprom2[2]+=cntddprom2;
+
+          array3basicoejer[2]+=tpoejer1;
+          array3basicoejer2[2]+=tpoejer2;
+
+          array3basicoejerprom[2]+=tpoejerprom1;
+          array3basicoejerprom2[2]+=tpoejerprom2;
+
+          array3basicovid[2]+=tpovid1;
+          array3basicovid2[2]+=tpovid2;
+
+          array3basicovidprom[2]+=tpovidprom1;
+          array3basicovidprom2[2]+=tpovidprom2;
         }
         if (level==4){
           array4basico[2]+=cntdd1;
@@ -4556,6 +4931,18 @@ function graficarcompara(json, clase){
 
           array4basico2[2]+=cntdd2;
           array4basicoprom2[2]+=cntddprom2;
+
+          array4basicoejer[2]+=tpoejer1;
+          array4basicoejer2[2]+=tpoejer2;
+
+          array4basicoejerprom[2]+=tpoejerprom1;
+          array4basicoejerprom2[2]+=tpoejerprom2;
+
+          array4basicovid[2]+=tpovid1;
+          array4basicovid2[2]+=tpovid2;
+
+          array4basicovidprom[2]+=tpovidprom1;
+          array4basicovidprom2[2]+=tpovidprom2;
         }
         if (level==5){
           array5basico[2]+=cntdd1;
@@ -4563,6 +4950,18 @@ function graficarcompara(json, clase){
 
           array5basico2[2]+=cntdd2;
           array5basicoprom2[2]+=cntddprom2;
+
+          array5basicoejer[2]+=tpoejer1;
+          array5basicoejer2[2]+=tpoejer2;
+
+          array5basicoejerprom[2]+=tpoejerprom1;
+          array5basicoejerprom2[2]+=tpoejerprom2;
+
+          array5basicovid[2]+=tpovid1;
+          array5basicovid2[2]+=tpovid2;
+
+          array5basicovidprom[2]+=tpovidprom1;
+          array5basicovidprom2[2]+=tpovidprom2;
         }
         if (level==6){
           array6basico[2]+=cntdd1;
@@ -4570,6 +4969,18 @@ function graficarcompara(json, clase){
 
           array6basico2[2]+=cntdd2;
           array6basicoprom2[2]+=cntddprom2;
+
+          array6basicoejer[2]+=tpoejer1;
+          array6basicoejer2[2]+=tpoejer2;
+
+          array6basicoejerprom[2]+=tpoejerprom1;
+          array6basicoejerprom2[2]+=tpoejerprom2;
+
+          array6basicovid[2]+=tpovid1;
+          array6basicovid2[2]+=tpovid2;
+
+          array6basicovidprom[2]+=tpovidprom1;
+          array6basicovidprom2[2]+=tpovidprom2;
         }
         if (level==7){
           array7basico[2]+=cntdd1;
@@ -4577,6 +4988,18 @@ function graficarcompara(json, clase){
 
           array7basico2[2]+=cntdd2;
           array7basicoprom2[2]+=cntddprom2;
+
+          array7basicoejer[2]+=tpoejer1;
+          array7basicoejer2[2]+=tpoejer2;
+
+          array7basicoejerprom[2]+=tpoejerprom1;
+          array7basicoejerprom2[2]+=tpoejerprom2;
+
+          array7basicovid[2]+=tpovid1;
+          array7basicovid2[2]+=tpovid2;
+
+          array7basicovidprom[2]+=tpovidprom1;
+          array7basicovidprom2[2]+=tpovidprom2;
         }
         if (level==8){
           array8basico[2]+=cntdd1;
@@ -4584,6 +5007,18 @@ function graficarcompara(json, clase){
 
           array8basico2[2]+=cntdd2;
           array8basicoprom2[2]+=cntddprom2;
+
+          array8basicoejer[2]+=tpoejer1;
+          array8basicoejer2[2]+=tpoejer2;
+
+          array8basicoejerprom[2]+=tpoejerprom1;
+          array8basicoejerprom2[2]+=tpoejerprom2;
+
+          array8basicovid[2]+=tpovid1;
+          array8basicovid2[2]+=tpovid2;
+
+          array8basicovidprom[2]+=tpovidprom1;
+          array8basicovidprom2[2]+=tpovidprom2;
         }
         if (level==9){
           array1medio[2]+=cntdd1;
@@ -4591,6 +5026,18 @@ function graficarcompara(json, clase){
 
           array1medio2[2]+=cntdd2;
           array1medioprom2[2]+=cntddprom2;
+
+          array1medioejer[2]+=tpoejer1;
+          array1medioejer2[2]+=tpoejer2;
+
+          array1medioejerprom[2]+=tpoejerprom1;
+          array1medioejerprom2[2]+=tpoejerprom2;
+
+          array1mediovid[2]+=tpovid1;
+          array1mediovid2[2]+=tpovid2;
+
+          array1mediovidprom[2]+=tpovidprom1;
+          array1mediovidprom2[2]+=tpovidprom2;
         }
         if (level==10){
           array2medio[2]+=cntdd1;
@@ -4598,6 +5045,18 @@ function graficarcompara(json, clase){
 
           array2medio2[2]+=cntdd2;
           array2medioprom2[2]+=cntddprom2;
+
+          array2medioejer[2]+=tpoejer1;
+          array2medioejer2[2]+=tpoejer2;
+
+          array2medioejerprom[2]+=tpoejerprom1;
+          array2medioejerprom2[2]+=tpoejerprom2;
+
+          array2mediovid[2]+=tpovid1;
+          array2mediovid2[2]+=tpovid2;
+
+          array2mediovidprom[2]+=tpovidprom1;
+          array2mediovidprom2[2]+=tpovidprom2;
         }
         if (level==11){
           array3medio[2]+=cntdd1;
@@ -4605,6 +5064,18 @@ function graficarcompara(json, clase){
 
           array3medio2[2]+=cntdd2;
           array3medioprom2[2]+=cntddprom2;
+
+          array3medioejer[2]+=tpoejer1;
+          array3medioejer2[2]+=tpoejer2;
+
+          array3medioejerprom[2]+=tpoejerprom1;
+          array3medioejerprom2[2]+=tpoejerprom2;
+
+          array3mediovid[2]+=tpovid1;
+          array3mediovid2[2]+=tpovid2;
+
+          array3mediovidprom[2]+=tpovidprom1;
+          array3mediovidprom2[2]+=tpovidprom2;
         }
         if (level==12){
           array4medio[2]+=cntdd1;
@@ -4612,6 +5083,18 @@ function graficarcompara(json, clase){
 
           array4medio2[2]+=cntdd2;
           array4medioprom2[2]+=cntddprom2;
+
+          array4medioejer[2]+=tpoejer1;
+          array4medioejer2[2]+=tpoejer2;
+
+          array4medioejerprom[2]+=tpoejerprom1;
+          array4medioejerprom2[2]+=tpoejerprom2;
+
+          array4mediovid[2]+=tpovid1;
+          array4mediovid2[2]+=tpovid2;
+
+          array4mediovidprom[2]+=tpovidprom1;
+          array4mediovidprom2[2]+=tpovidprom2;
         }
       }
       if (ee=="L.A.V."){
@@ -4623,12 +5106,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[3]+=estudiantes.length;
 
+        arraylavejer[level-1]+=tpoejer1;
+        arraylavejer2[level-1]+=tpoejer2;
+        arraylavejerprom[level-1]+=tpoejerprom1;
+        arraylavejerprom2[level-1]+=tpoejerprom2;
+
+        arraylavvid[level-1]+=tpovid1;
+        arraylavvid2[level-1]+=tpovid2;
+        arraylavvidprom[level-1]+=tpovidprom1;
+        arraylavvidprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[3]+=cntdd1;
           array1basicoprom[3]+=cntddprom1;
 
           array1basico2[3]+=cntdd2;
           array1basicoprom2[3]+=cntddprom2;
+
+          array1basicoejer[3]+=tpoejer1;
+          array1basicoejer2[3]+=tpoejer2;
+
+          array1basicoejerprom[3]+=tpoejerprom1;
+          array1basicoejerprom2[3]+=tpoejerprom2;
+
+          array1basicovid[3]+=tpovid1;
+          array1basicovid2[3]+=tpovid2;
+
+          array1basicovidprom[3]+=tpovidprom1;
+          array1basicovidprom2[3]+=tpovidprom2;
         }
         if (level==2){
           array2basico[3]+=cntdd1;
@@ -4636,6 +5141,18 @@ function graficarcompara(json, clase){
 
           array2basico2[3]+=cntdd2;
           array2basicoprom2[3]+=cntddprom2;
+
+          array2basicoejer[3]+=tpoejer1;
+          array2basicoejer2[3]+=tpoejer2;
+
+          array2basicoejerprom[3]+=tpoejerprom1;
+          array2basicoejerprom2[3]+=tpoejerprom2;
+
+          array2basicovid[3]+=tpovid1;
+          array2basicovid2[3]+=tpovid2;
+
+          array2basicovidprom[3]+=tpovidprom1;
+          array2basicovidprom2[3]+=tpovidprom2;
         }
         if (level==3){
           array3basico[3]+=cntdd1;
@@ -4643,6 +5160,18 @@ function graficarcompara(json, clase){
 
           array3basico2[3]+=cntdd2;
           array3basicoprom2[3]+=cntddprom2;
+
+          array3basicoejer[3]+=tpoejer1;
+          array3basicoejer2[3]+=tpoejer2;
+
+          array3basicoejerprom[3]+=tpoejerprom1;
+          array3basicoejerprom2[3]+=tpoejerprom2;
+
+          array3basicovid[3]+=tpovid1;
+          array3basicovid2[3]+=tpovid2;
+
+          array3basicovidprom[3]+=tpovidprom1;
+          array3basicovidprom2[3]+=tpovidprom2;
         }
         if (level==4){
           array4basico[3]+=cntdd1;
@@ -4650,6 +5179,18 @@ function graficarcompara(json, clase){
 
           array4basico2[3]+=cntdd2;
           array4basicoprom2[3]+=cntddprom2;
+
+          array4basicoejer[3]+=tpoejer1;
+          array4basicoejer2[3]+=tpoejer2;
+
+          array4basicoejerprom[3]+=tpoejerprom1;
+          array4basicoejerprom2[3]+=tpoejerprom2;
+
+          array4basicovid[3]+=tpovid1;
+          array4basicovid2[3]+=tpovid2;
+
+          array4basicovidprom[3]+=tpovidprom1;
+          array4basicovidprom2[3]+=tpovidprom2;
         }
         if (level==5){
           array5basico[3]+=cntdd1;
@@ -4657,6 +5198,18 @@ function graficarcompara(json, clase){
 
           array5basico2[3]+=cntdd2;
           array5basicoprom2[3]+=cntddprom2;
+
+          array5basicoejer[3]+=tpoejer1;
+          array5basicoejer2[3]+=tpoejer2;
+
+          array5basicoejerprom[3]+=tpoejerprom1;
+          array5basicoejerprom2[3]+=tpoejerprom2;
+
+          array5basicovid[3]+=tpovid1;
+          array5basicovid2[3]+=tpovid2;
+
+          array5basicovidprom[3]+=tpovidprom1;
+          array5basicovidprom2[3]+=tpovidprom2;
         }
         if (level==6){
           array6basico[3]+=cntdd1;
@@ -4664,6 +5217,18 @@ function graficarcompara(json, clase){
 
           array6basico2[3]+=cntdd2;
           array6basicoprom2[3]+=cntddprom2;
+
+          array6basicoejer[3]+=tpoejer1;
+          array6basicoejer2[3]+=tpoejer2;
+
+          array6basicoejerprom[3]+=tpoejerprom1;
+          array6basicoejerprom2[3]+=tpoejerprom2;
+
+          array6basicovid[3]+=tpovid1;
+          array6basicovid2[3]+=tpovid2;
+
+          array6basicovidprom[3]+=tpovidprom1;
+          array6basicovidprom2[3]+=tpovidprom2;
         }
         if (level==7){
           array7basico[3]+=cntdd1;
@@ -4671,6 +5236,18 @@ function graficarcompara(json, clase){
 
           array7basico2[3]+=cntdd2;
           array7basicoprom2[3]+=cntddprom2;
+
+          array7basicoejer[3]+=tpoejer1;
+          array7basicoejer2[3]+=tpoejer2;
+
+          array7basicoejerprom[3]+=tpoejerprom1;
+          array7basicoejerprom2[3]+=tpoejerprom2;
+
+          array7basicovid[3]+=tpovid1;
+          array7basicovid2[3]+=tpovid2;
+
+          array7basicovidprom[3]+=tpovidprom1;
+          array7basicovidprom2[3]+=tpovidprom2;
         }
         if (level==8){
           array8basico[3]+=cntdd1;
@@ -4678,6 +5255,18 @@ function graficarcompara(json, clase){
 
           array8basico2[3]+=cntdd2;
           array8basicoprom2[3]+=cntddprom2;
+
+          array8basicoejer[3]+=tpoejer1;
+          array8basicoejer2[3]+=tpoejer2;
+
+          array8basicoejerprom[3]+=tpoejerprom1;
+          array8basicoejerprom2[3]+=tpoejerprom2;
+
+          array8basicovid[3]+=tpovid1;
+          array8basicovid2[3]+=tpovid2;
+
+          array8basicovidprom[3]+=tpovidprom1;
+          array8basicovidprom2[3]+=tpovidprom2;
         }
         if (level==9){
           array1medio[3]+=cntdd1;
@@ -4685,6 +5274,18 @@ function graficarcompara(json, clase){
 
           array1medio2[3]+=cntdd2;
           array1medioprom2[3]+=cntddprom2;
+
+          array1medioejer[3]+=tpoejer1;
+          array1medioejer2[3]+=tpoejer2;
+
+          array1medioejerprom[3]+=tpoejerprom1;
+          array1medioejerprom2[3]+=tpoejerprom2;
+
+          array1mediovid[3]+=tpovid1;
+          array1mediovid2[3]+=tpovid2;
+
+          array1mediovidprom[3]+=tpovidprom1;
+          array1mediovidprom2[3]+=tpovidprom2;
         }
         if (level==10){
           array2medio[3]+=cntdd1;
@@ -4692,6 +5293,18 @@ function graficarcompara(json, clase){
 
           array2medio2[3]+=cntdd2;
           array2medioprom2[3]+=cntddprom2;
+
+          array2medioejer[3]+=tpoejer1;
+          array2medioejer2[3]+=tpoejer2;
+
+          array2medioejerprom[3]+=tpoejerprom1;
+          array2medioejerprom2[3]+=tpoejerprom2;
+
+          array2mediovid[3]+=tpovid1;
+          array2mediovid2[3]+=tpovid2;
+
+          array2mediovidprom[3]+=tpovidprom1;
+          array2mediovidprom2[3]+=tpovidprom2;
         }
         if (level==11){
           array3medio[3]+=cntdd1;
@@ -4699,6 +5312,18 @@ function graficarcompara(json, clase){
 
           array3medio2[3]+=cntdd2;
           array3medioprom2[3]+=cntddprom2;
+
+          array3medioejer[3]+=tpoejer1;
+          array3medioejer2[3]+=tpoejer2;
+
+          array3medioejerprom[3]+=tpoejerprom1;
+          array3medioejerprom2[3]+=tpoejerprom2;
+
+          array3mediovid[3]+=tpovid1;
+          array3mediovid2[3]+=tpovid2;
+
+          array3mediovidprom[3]+=tpovidprom1;
+          array3mediovidprom2[3]+=tpovidprom2;
         }
         if (level==12){
           array4medio[3]+=cntdd1;
@@ -4706,6 +5331,18 @@ function graficarcompara(json, clase){
 
           array4medio2[3]+=cntdd2;
           array4medioprom2[3]+=cntddprom2;
+
+          array4medioejer[3]+=tpoejer1;
+          array4medioejer2[3]+=tpoejer2;
+
+          array4medioejerprom[3]+=tpoejerprom1;
+          array4medioejerprom2[3]+=tpoejerprom2;
+
+          array4mediovid[3]+=tpovid1;
+          array4mediovid2[3]+=tpovid2;
+
+          array4mediovidprom[3]+=tpovidprom1;
+          array4mediovidprom2[3]+=tpovidprom2;
         }
       }
       if (ee=="R.A.P."){
@@ -4717,12 +5354,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[4]+=estudiantes.length;
 
+        arrayrapejer[level-1]+=tpoejer1;
+        arrayrapejer2[level-1]+=tpoejer2;
+        arrayrapejerprom[level-1]+=tpoejerprom1;
+        arrayrapejerprom2[level-1]+=tpoejerprom2;
+
+        arrayrapvid[level-1]+=tpovid1;
+        arrayrapvid2[level-1]+=tpovid2;
+        arrayrapvidprom[level-1]+=tpovidprom1;
+        arrayrapvidprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[4]+=cntdd1;
           array1basicoprom[4]+=cntddprom1;
 
           array1basico2[4]+=cntdd2;
           array1basicoprom2[4]+=cntddprom2;
+
+          array1basicoejer[4]+=tpoejer1;
+          array1basicoejer2[4]+=tpoejer2;
+
+          array1basicoejerprom[4]+=tpoejerprom1;
+          array1basicoejerprom2[4]+=tpoejerprom2;
+
+          array1basicovid[4]+=tpovid1;
+          array1basicovid2[4]+=tpovid2;
+
+          array1basicovidprom[4]+=tpovidprom1;
+          array1basicovidprom2[4]+=tpovidprom2;
         }
         if (level==2){
           array2basico[4]+=cntdd1;
@@ -4730,6 +5389,18 @@ function graficarcompara(json, clase){
 
           array2basico2[4]+=cntdd2;
           array2basicoprom2[4]+=cntddprom2;
+
+          array2basicoejer[4]+=tpoejer1;
+          array2basicoejer2[4]+=tpoejer2;
+
+          array2basicoejerprom[4]+=tpoejerprom1;
+          array2basicoejerprom2[4]+=tpoejerprom2;
+
+          array2basicovid[4]+=tpovid1;
+          array2basicovid2[4]+=tpovid2;
+
+          array2basicovidprom[4]+=tpovidprom1;
+          array2basicovidprom2[4]+=tpovidprom2;
         }
         if (level==3){
           array3basico[4]+=cntdd1;
@@ -4737,6 +5408,18 @@ function graficarcompara(json, clase){
 
           array3basico2[4]+=cntdd2;
           array3basicoprom2[4]+=cntddprom2;
+
+          array3basicoejer[4]+=tpoejer1;
+          array3basicoejer2[4]+=tpoejer2;
+
+          array3basicoejerprom[4]+=tpoejerprom1;
+          array3basicoejerprom2[4]+=tpoejerprom2;
+
+          array3basicovid[4]+=tpovid1;
+          array3basicovid2[4]+=tpovid2;
+
+          array3basicovidprom[4]+=tpovidprom1;
+          array3basicovidprom2[4]+=tpovidprom2;
         }
         if (level==4){
           array4basico[4]+=cntdd1;
@@ -4744,6 +5427,18 @@ function graficarcompara(json, clase){
 
           array4basico2[4]+=cntdd2;
           array4basicoprom2[4]+=cntddprom2;
+
+          array4basicoejer[4]+=tpoejer1;
+          array4basicoejer2[4]+=tpoejer2;
+
+          array4basicoejerprom[4]+=tpoejerprom1;
+          array4basicoejerprom2[4]+=tpoejerprom2;
+
+          array4basicovid[4]+=tpovid1;
+          array4basicovid2[4]+=tpovid2;
+
+          array4basicovidprom[4]+=tpovidprom1;
+          array4basicovidprom2[4]+=tpovidprom2;
         }
         if (level==5){
           array5basico[4]+=cntdd1;
@@ -4751,6 +5446,18 @@ function graficarcompara(json, clase){
 
           array5basico2[4]+=cntdd2;
           array5basicoprom2[4]+=cntddprom2;
+
+          array5basicoejer[4]+=tpoejer1;
+          array5basicoejer2[4]+=tpoejer2;
+
+          array5basicoejerprom[4]+=tpoejerprom1;
+          array5basicoejerprom2[4]+=tpoejerprom2;
+
+          array5basicovid[4]+=tpovid1;
+          array5basicovid2[4]+=tpovid2;
+
+          array5basicovidprom[4]+=tpovidprom1;
+          array5basicovidprom2[4]+=tpovidprom2;
         }
         if (level==6){
           array6basico[4]+=cntdd1;
@@ -4758,6 +5465,18 @@ function graficarcompara(json, clase){
 
           array6basico2[4]+=cntdd2;
           array6basicoprom2[4]+=cntddprom2;
+
+          array6basicoejer[4]+=tpoejer1;
+          array6basicoejer2[4]+=tpoejer2;
+
+          array6basicoejerprom[4]+=tpoejerprom1;
+          array6basicoejerprom2[4]+=tpoejerprom2;
+
+          array6basicovid[4]+=tpovid1;
+          array6basicovid2[4]+=tpovid2;
+
+          array6basicovidprom[4]+=tpovidprom1;
+          array6basicovidprom2[4]+=tpovidprom2;
         }
         if (level==7){
           array7basico[4]+=cntdd1;
@@ -4765,6 +5484,18 @@ function graficarcompara(json, clase){
 
           array7basico2[4]+=cntdd2;
           array7basicoprom2[4]+=cntddprom2;
+
+          array7basicoejer[4]+=tpoejer1;
+          array7basicoejer2[4]+=tpoejer2;
+
+          array7basicoejerprom[4]+=tpoejerprom1;
+          array7basicoejerprom2[4]+=tpoejerprom2;
+
+          array7basicovid[4]+=tpovid1;
+          array7basicovid2[4]+=tpovid2;
+
+          array7basicovidprom[4]+=tpovidprom1;
+          array7basicovidprom2[4]+=tpovidprom2;
         }
         if (level==8){
           array8basico[4]+=cntdd1;
@@ -4772,6 +5503,18 @@ function graficarcompara(json, clase){
 
           array8basico2[4]+=cntdd2;
           array8basicoprom2[4]+=cntddprom2;
+
+          array8basicoejer[4]+=tpoejer1;
+          array8basicoejer2[4]+=tpoejer2;
+
+          array8basicoejerprom[4]+=tpoejerprom1;
+          array8basicoejerprom2[4]+=tpoejerprom2;
+
+          array8basicovid[4]+=tpovid1;
+          array8basicovid2[4]+=tpovid2;
+
+          array8basicovidprom[4]+=tpovidprom1;
+          array8basicovidprom2[4]+=tpovidprom2;
         }
         if (level==9){
           array1medio[4]+=cntdd1;
@@ -4779,6 +5522,18 @@ function graficarcompara(json, clase){
 
           array1medio2[4]+=cntdd2;
           array1medioprom2[4]+=cntddprom2;
+
+          array1medioejer[4]+=tpoejer1;
+          array1medioejer2[4]+=tpoejer2;
+
+          array1medioejerprom[4]+=tpoejerprom1;
+          array1medioejerprom2[4]+=tpoejerprom2;
+
+          array1mediovid[4]+=tpovid1;
+          array1mediovid2[4]+=tpovid2;
+
+          array1mediovidprom[4]+=tpovidprom1;
+          array1mediovidprom2[4]+=tpovidprom2;
         }
         if (level==10){
           array2medio[4]+=cntdd1;
@@ -4786,6 +5541,18 @@ function graficarcompara(json, clase){
 
           array2medio2[4]+=cntdd2;
           array2medioprom2[4]+=cntddprom2;
+
+          array2medioejer[4]+=tpoejer1;
+          array2medioejer2[4]+=tpoejer2;
+
+          array2medioejerprom[4]+=tpoejerprom1;
+          array2medioejerprom2[4]+=tpoejerprom2;
+
+          array2mediovid[4]+=tpovid1;
+          array2mediovid2[4]+=tpovid2;
+
+          array2mediovidprom[4]+=tpovidprom1;
+          array2mediovidprom2[4]+=tpovidprom2;
         }
         if (level==11){
           array3medio[4]+=cntdd1;
@@ -4793,6 +5560,18 @@ function graficarcompara(json, clase){
 
           array3medio2[4]+=cntdd2;
           array3medioprom2[4]+=cntddprom2;
+
+          array3medioejer[4]+=tpoejer1;
+          array3medioejer2[4]+=tpoejer2;
+
+          array3medioejerprom[4]+=tpoejerprom1;
+          array3medioejerprom2[4]+=tpoejerprom2;
+
+          array3mediovid[4]+=tpovid1;
+          array3mediovid2[4]+=tpovid2;
+
+          array3mediovidprom[4]+=tpovidprom1;
+          array3mediovidprom2[4]+=tpovidprom2;
         }
         if (level==12){
           array4medio[4]+=cntdd1;
@@ -4800,6 +5579,18 @@ function graficarcompara(json, clase){
 
           array4medio2[4]+=cntdd2;
           array4medioprom2[4]+=cntddprom2;
+
+          array4medioejer[4]+=tpoejer1;
+          array4medioejer2[4]+=tpoejer2;
+
+          array4medioejerprom[4]+=tpoejerprom1;
+          array4medioejerprom2[4]+=tpoejerprom2;
+
+          array4mediovid[4]+=tpovid1;
+          array4mediovid2[4]+=tpovid2;
+
+          array4mediovidprom[4]+=tpovidprom1;
+          array4mediovidprom2[4]+=tpovidprom2;
         }
       }
       if (ee=="L.G.M."){
@@ -4811,12 +5602,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[5]+=estudiantes.length;
 
+        arraylgmejer[level-1]+=tpoejer1;
+        arraylgmejer2[level-1]+=tpoejer2;
+        arraylgmejerprom[level-1]+=tpoejerprom1;
+        arraylgmejerprom2[level-1]+=tpoejerprom2;
+
+        arraylgmvid[level-1]+=tpovid1;
+        arraylgmvid2[level-1]+=tpovid2;
+        arraylgmvidprom[level-1]+=tpovidprom1;
+        arraylgmvidprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[5]+=cntdd1;
           array1basicoprom[5]+=cntddprom1;
 
           array1basico2[5]+=cntdd2;
           array1basicoprom2[5]+=cntddprom2;
+
+          array1basicoejer[5]+=tpoejer1;
+          array1basicoejer2[5]+=tpoejer2;
+
+          array1basicoejerprom[5]+=tpoejerprom1;
+          array1basicoejerprom2[5]+=tpoejerprom2;
+
+          array1basicovid[5]+=tpovid1;
+          array1basicovid2[5]+=tpovid2;
+
+          array1basicovidprom[5]+=tpovidprom1;
+          array1basicovidprom2[5]+=tpovidprom2;
         }
         if (level==2){
           array2basico[5]+=cntdd1;
@@ -4824,6 +5637,18 @@ function graficarcompara(json, clase){
 
           array2basico2[5]+=cntdd2;
           array2basicoprom2[5]+=cntddprom2;
+
+          array2basicoejer[5]+=tpoejer1;
+          array2basicoejer2[5]+=tpoejer2;
+
+          array2basicoejerprom[5]+=tpoejerprom1;
+          array2basicoejerprom2[5]+=tpoejerprom2;
+
+          array2basicovid[5]+=tpovid1;
+          array2basicovid2[5]+=tpovid2;
+
+          array2basicovidprom[5]+=tpovidprom1;
+          array2basicovidprom2[5]+=tpovidprom2;
         }
         if (level==3){
           array3basico[5]+=cntdd1;
@@ -4831,6 +5656,18 @@ function graficarcompara(json, clase){
 
           array3basico2[5]+=cntdd2;
           array3basicoprom2[5]+=cntddprom2;
+
+          array3basicoejer[5]+=tpoejer1;
+          array3basicoejer2[5]+=tpoejer2;
+
+          array3basicoejerprom[5]+=tpoejerprom1;
+          array3basicoejerprom2[5]+=tpoejerprom2;
+
+          array3basicovid[5]+=tpovid1;
+          array3basicovid2[5]+=tpovid2;
+
+          array3basicovidprom[5]+=tpovidprom1;
+          array3basicovidprom2[5]+=tpovidprom2;
         }
         if (level==4){
           array4basico[5]+=cntdd1;
@@ -4838,6 +5675,18 @@ function graficarcompara(json, clase){
 
           array4basico2[5]+=cntdd2;
           array4basicoprom2[5]+=cntddprom2;
+
+          array4basicoejer[5]+=tpoejer1;
+          array4basicoejer2[5]+=tpoejer2;
+
+          array4basicoejerprom[5]+=tpoejerprom1;
+          array4basicoejerprom2[5]+=tpoejerprom2;
+
+          array4basicovid[5]+=tpovid1;
+          array4basicovid2[5]+=tpovid2;
+
+          array4basicovidprom[5]+=tpovidprom1;
+          array4basicovidprom2[5]+=tpovidprom2;
         }
         if (level==5){
           array5basico[5]+=cntdd1;
@@ -4845,6 +5694,18 @@ function graficarcompara(json, clase){
 
           array5basico2[5]+=cntdd2;
           array5basicoprom2[5]+=cntddprom2;
+
+          array5basicoejer[5]+=tpoejer1;
+          array5basicoejer2[5]+=tpoejer2;
+
+          array5basicoejerprom[5]+=tpoejerprom1;
+          array5basicoejerprom2[5]+=tpoejerprom2;
+
+          array5basicovid[5]+=tpovid1;
+          array5basicovid2[5]+=tpovid2;
+
+          array5basicovidprom[5]+=tpovidprom1;
+          array5basicovidprom2[5]+=tpovidprom2;
         }
         if (level==6){
           array6basico[5]+=cntdd1;
@@ -4852,6 +5713,18 @@ function graficarcompara(json, clase){
 
           array6basico2[5]+=cntdd2;
           array6basicoprom2[5]+=cntddprom2;
+
+          array6basicoejer[5]+=tpoejer1;
+          array6basicoejer2[5]+=tpoejer2;
+
+          array6basicoejerprom[5]+=tpoejerprom1;
+          array6basicoejerprom2[5]+=tpoejerprom2;
+
+          array6basicovid[5]+=tpovid1;
+          array6basicovid2[5]+=tpovid2;
+
+          array6basicovidprom[5]+=tpovidprom1;
+          array6basicovidprom2[5]+=tpovidprom2;
         }
         if (level==7){
           array7basico[5]+=cntdd1;
@@ -4859,6 +5732,18 @@ function graficarcompara(json, clase){
 
           array7basico2[5]+=cntdd2;
           array7basicoprom2[5]+=cntddprom2;
+
+          array7basicoejer[5]+=tpoejer1;
+          array7basicoejer2[5]+=tpoejer2;
+
+          array7basicoejerprom[5]+=tpoejerprom1;
+          array7basicoejerprom2[5]+=tpoejerprom2;
+
+          array7basicovid[5]+=tpovid1;
+          array7basicovid2[5]+=tpovid2;
+
+          array7basicovidprom[5]+=tpovidprom1;
+          array7basicovidprom2[5]+=tpovidprom2;
         }
         if (level==8){
           array8basico[5]+=cntdd1;
@@ -4866,6 +5751,18 @@ function graficarcompara(json, clase){
 
           array8basico2[5]+=cntdd2;
           array8basicoprom2[5]+=cntddprom2;
+
+          array8basicoejer[5]+=tpoejer1;
+          array8basicoejer2[5]+=tpoejer2;
+
+          array8basicoejerprom[5]+=tpoejerprom1;
+          array8basicoejerprom2[5]+=tpoejerprom2;
+
+          array8basicovid[5]+=tpovid1;
+          array8basicovid2[5]+=tpovid2;
+
+          array8basicovidprom[5]+=tpovidprom1;
+          array8basicovidprom2[5]+=tpovidprom2;
         }
         if (level==9){
           array1medio[5]+=cntdd1;
@@ -4873,6 +5770,18 @@ function graficarcompara(json, clase){
 
           array1medio2[5]+=cntdd2;
           array1medioprom2[5]+=cntddprom2;
+
+          array1medioejer[5]+=tpoejer1;
+          array1medioejer2[5]+=tpoejer2;
+
+          array1medioejerprom[5]+=tpoejerprom1;
+          array1medioejerprom2[5]+=tpoejerprom2;
+
+          array1mediovid[5]+=tpovid1;
+          array1mediovid2[5]+=tpovid2;
+
+          array1mediovidprom[5]+=tpovidprom1;
+          array1mediovidprom2[5]+=tpovidprom2;
         }
         if (level==10){
           array2medio[5]+=cntdd1;
@@ -4880,6 +5789,18 @@ function graficarcompara(json, clase){
 
           array2medio2[5]+=cntdd2;
           array2medioprom2[5]+=cntddprom2;
+
+          array2medioejer[5]+=tpoejer1;
+          array2medioejer2[5]+=tpoejer2;
+
+          array2medioejerprom[5]+=tpoejerprom1;
+          array2medioejerprom2[5]+=tpoejerprom2;
+
+          array2mediovid[5]+=tpovid1;
+          array2mediovid2[5]+=tpovid2;
+
+          array2mediovidprom[5]+=tpovidprom1;
+          array2mediovidprom2[5]+=tpovidprom2;
         }
         if (level==11){
           array3medio[5]+=cntdd1;
@@ -4887,6 +5808,18 @@ function graficarcompara(json, clase){
 
           array3medio2[5]+=cntdd2;
           array3medioprom2[5]+=cntddprom2;
+
+          array3medioejer[5]+=tpoejer1;
+          array3medioejer2[5]+=tpoejer2;
+
+          array3medioejerprom[5]+=tpoejerprom1;
+          array3medioejerprom2[5]+=tpoejerprom2;
+
+          array3mediovid[5]+=tpovid1;
+          array3mediovid2[5]+=tpovid2;
+
+          array3mediovidprom[5]+=tpovidprom1;
+          array3mediovidprom2[5]+=tpovidprom2;
         }
         if (level==12){
           array4medio[5]+=cntdd1;
@@ -4894,6 +5827,18 @@ function graficarcompara(json, clase){
 
           array4medio2[5]+=cntdd2;
           array4medioprom2[5]+=cntddprom2;
+
+          array4medioejer[5]+=tpoejer1;
+          array4medioejer2[5]+=tpoejer2;
+
+          array4medioejerprom[5]+=tpoejerprom1;
+          array4medioejerprom2[5]+=tpoejerprom2;
+
+          array4mediovid[5]+=tpovid1;
+          array4mediovid2[5]+=tpovid2;
+
+          array4mediovidprom[5]+=tpovidprom1;
+          array4mediovidprom2[5]+=tpovidprom2;
         }
       }
       if (ee=="BA-Khan"){
@@ -4905,12 +5850,34 @@ function graficarcompara(json, clase){
 
         estudiantesnivelesinst[6]+=estudiantes.length;
 
+        arraybakhanejer[level-1]+=tpoejer1;
+        arraybakhanejer2[level-1]+=tpoejer2;
+        arraybakhanejerprom[level-1]+=tpoejerprom1;
+        arraybakhanejerprom2[level-1]+=tpoejerprom2;
+
+        arraybakhanvid[level-1]+=tpovid1;
+        arraybakhanvid2[level-1]+=tpovid2;
+        arraybakhanvidprom[level-1]+=tpovidprom1;
+        arraybakhanvidprom2[level-1]+=tpovidprom2;
+
         if (level==1){
           array1basico[6]+=cntdd1;
           array1basicoprom[6]+=cntddprom1;
 
           array1basico2[6]+=cntdd2;
           array1basicoprom2[6]+=cntddprom2;
+
+          array1basicoejer[6]+=tpoejer1;
+          array1basicoejer2[6]+=tpoejer2;
+
+          array1basicoejerprom[6]+=tpoejerprom1;
+          array1basicoejerprom2[6]+=tpoejerprom2;
+
+          array1basicovid[6]+=tpovid1;
+          array1basicovid2[6]+=tpovid2;
+
+          array1basicovidprom[6]+=tpovidprom1;
+          array1basicovidprom2[6]+=tpovidprom2;
         }
         if (level==2){
           array2basico[6]+=cntdd1;
@@ -4918,6 +5885,18 @@ function graficarcompara(json, clase){
 
           array2basico2[6]+=cntdd2;
           array2basicoprom2[6]+=cntddprom2;
+
+          array2basicoejer[6]+=tpoejer1;
+          array2basicoejer2[6]+=tpoejer2;
+
+          array2basicoejerprom[6]+=tpoejerprom1;
+          array2basicoejerprom2[6]+=tpoejerprom2;
+
+          array2basicovid[6]+=tpovid1;
+          array2basicovid2[6]+=tpovid2;
+
+          array2basicovidprom[6]+=tpovidprom1;
+          array2basicovidprom2[6]+=tpovidprom2;
         }
         if (level==3){
           array3basico[6]+=cntdd1;
@@ -4925,6 +5904,18 @@ function graficarcompara(json, clase){
 
           array3basico2[6]+=cntdd2;
           array3basicoprom2[6]+=cntddprom2;
+
+          array3basicoejer[6]+=tpoejer1;
+          array3basicoejer2[6]+=tpoejer2;
+
+          array3basicoejerprom[6]+=tpoejerprom1;
+          array3basicoejerprom2[6]+=tpoejerprom2;
+
+          array3basicovid[6]+=tpovid1;
+          array3basicovid2[6]+=tpovid2;
+
+          array3basicovidprom[6]+=tpovidprom1;
+          array3basicovidprom2[6]+=tpovidprom2;
         }
         if (level==4){
           array4basico[6]+=cntdd1;
@@ -4932,6 +5923,18 @@ function graficarcompara(json, clase){
 
           array4basico2[6]+=cntdd2;
           array4basicoprom2[6]+=cntddprom2;
+
+          array4basicoejer[6]+=tpoejer1;
+          array4basicoejer2[6]+=tpoejer2;
+
+          array4basicoejerprom[6]+=tpoejerprom1;
+          array4basicoejerprom2[6]+=tpoejerprom2;
+
+          array4basicovid[6]+=tpovid1;
+          array4basicovid2[6]+=tpovid2;
+
+          array4basicovidprom[6]+=tpovidprom1;
+          array4basicovidprom2[6]+=tpovidprom2;
         }
         if (level==5){
           array5basico[6]+=cntdd1;
@@ -4939,6 +5942,18 @@ function graficarcompara(json, clase){
 
           array5basico2[6]+=cntdd2;
           array5basicoprom2[6]+=cntddprom2;
+
+          array5basicoejer[6]+=tpoejer1;
+          array5basicoejer2[6]+=tpoejer2;
+
+          array5basicoejerprom[6]+=tpoejerprom1;
+          array5basicoejerprom2[6]+=tpoejerprom2;
+
+          array5basicovid[6]+=tpovid1;
+          array5basicovid2[6]+=tpovid2;
+
+          array5basicovidprom[6]+=tpovidprom1;
+          array5basicovidprom2[6]+=tpovidprom2;
         }
         if (level==6){
           array6basico[6]+=cntdd1;
@@ -4946,6 +5961,18 @@ function graficarcompara(json, clase){
 
           array6basico2[6]+=cntdd2;
           array6basicoprom2[6]+=cntddprom2;
+
+          array6basicoejer[6]+=tpoejer1;
+          array6basicoejer2[6]+=tpoejer2;
+
+          array6basicoejerprom[6]+=tpoejerprom1;
+          array6basicoejerprom2[6]+=tpoejerprom2;
+
+          array6basicovid[6]+=tpovid1;
+          array6basicovid2[6]+=tpovid2;
+
+          array6basicovidprom[6]+=tpovidprom1;
+          array6basicovidprom2[6]+=tpovidprom2;
         }
         if (level==7){
           array7basico[6]+=cntdd1;
@@ -4953,6 +5980,18 @@ function graficarcompara(json, clase){
 
           array7basico2[6]+=cntdd2;
           array7basicoprom2[6]+=cntddprom2;
+
+          array7basicoejer[6]+=tpoejer1;
+          array7basicoejer2[6]+=tpoejer2;
+
+          array7basicoejerprom[6]+=tpoejerprom1;
+          array7basicoejerprom2[6]+=tpoejerprom2;
+
+          array7basicovid[6]+=tpovid1;
+          array7basicovid2[6]+=tpovid2;
+
+          array7basicovidprom[6]+=tpovidprom1;
+          array7basicovidprom2[6]+=tpovidprom2;
         }
         if (level==8){
           array8basico[6]+=cntdd1;
@@ -4960,6 +5999,18 @@ function graficarcompara(json, clase){
 
           array8basico2[6]+=cntdd2;
           array8basicoprom2[6]+=cntddprom2;
+
+          array8basicoejer[6]+=tpoejer1;
+          array8basicoejer2[6]+=tpoejer2;
+
+          array8basicoejerprom[6]+=tpoejerprom1;
+          array8basicoejerprom2[6]+=tpoejerprom2;
+
+          array8basicovid[6]+=tpovid1;
+          array8basicovid2[6]+=tpovid2;
+
+          array8basicovidprom[6]+=tpovidprom1;
+          array8basicovidprom2[6]+=tpovidprom2;
         }
         if (level==9){
           array1medio[6]+=cntdd1;
@@ -4967,6 +6018,18 @@ function graficarcompara(json, clase){
 
           array1medio2[6]+=cntdd2;
           array1medioprom2[6]+=cntddprom2;
+
+          array1medioejer[6]+=tpoejer1;
+          array1medioejer2[6]+=tpoejer2;
+
+          array1medioejerprom[6]+=tpoejerprom1;
+          array1medioejerprom2[6]+=tpoejerprom2;
+
+          array1mediovid[6]+=tpovid1;
+          array1mediovid2[6]+=tpovid2;
+
+          array1mediovidprom[6]+=tpovidprom1;
+          array1mediovidprom2[6]+=tpovidprom2;
         }
         if (level==10){
           array2medio[6]+=cntdd1;
@@ -4974,6 +6037,18 @@ function graficarcompara(json, clase){
 
           array2medio2[6]+=cntdd2;
           array2medioprom2[6]+=cntddprom2;
+
+          array2medioejer[6]+=tpoejer1;
+          array2medioejer2[6]+=tpoejer2;
+
+          array2medioejerprom[6]+=tpoejerprom1;
+          array2medioejerprom2[6]+=tpoejerprom2;
+
+          array2mediovid[6]+=tpovid1;
+          array2mediovid2[6]+=tpovid2;
+
+          array2mediovidprom[6]+=tpovidprom1;
+          array2mediovidprom2[6]+=tpovidprom2;
         }
         if (level==11){
           array3medio[6]+=cntdd1;
@@ -4981,6 +6056,18 @@ function graficarcompara(json, clase){
 
           array3medio2[6]+=cntdd2;
           array3medioprom2[6]+=cntddprom2;
+
+          array3medioejer[6]+=tpoejer1;
+          array3medioejer2[6]+=tpoejer2;
+
+          array3medioejerprom[6]+=tpoejerprom1;
+          array3medioejerprom2[6]+=tpoejerprom2;
+
+          array3mediovid[6]+=tpovid1;
+          array3mediovid2[6]+=tpovid2;
+
+          array3mediovidprom[6]+=tpovidprom1;
+          array3mediovidprom2[6]+=tpovidprom2;
         }
         if (level==12){
           array4medio[6]+=cntdd1;
@@ -4988,6 +6075,18 @@ function graficarcompara(json, clase){
 
           array4medio2[6]+=cntdd2;
           array4medioprom2[6]+=cntddprom2;
+
+          array4medioejer[6]+=tpoejer1;
+          array4medioejer2[6]+=tpoejer2;
+
+          array4medioejerprom[6]+=tpoejerprom1;
+          array4medioejerprom2[6]+=tpoejerprom2;
+
+          array4mediovid[6]+=tpovid1;
+          array4mediovid2[6]+=tpovid2;
+
+          array4mediovidprom[6]+=tpovidprom1;
+          array4mediovidprom2[6]+=tpovidprom2;
         }
       }
 
@@ -5215,6 +6314,7 @@ function graficarcompara(json, clase){
     distxnivelprom[15]={'name':'Promedio Ejercicios '+tipo2+'', 'data':arraypromedio2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
     distxnivelprom[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
 
+
     var contadorprom=0;
     for (var i = 0; i < distxnivelprom.length; i++) {
       var verificador = true;
@@ -5232,6 +6332,8 @@ function graficarcompara(json, clase){
       distxnivelprom.splice(elementremoveprom[i]-i,1);
     };
 
+    //console.log(estudiantesnivelesinst);
+
     var arraypromedioinst= new Array(6).fill(0);
     for (var i = 0; i < array1basico.length; i++) {
       var average=(array1basico[i]+array2basico[i]+array3basico[i]+array4basico[i]+array5basico[i]+array6basico[i]+array7basico[i]+array8basico[i]+array1medio[i]+array2medio[i]+array3medio[i]+array4medio[i])/estudiantesnivelesinst[i];
@@ -5244,7 +6346,7 @@ function graficarcompara(json, clase){
     }
 
     var arraypromedioinst2= new Array(6).fill(0);
-    for (var i = 0; i < array1basico.length; i++) {
+    for (var i = 0; i < array1basico2.length; i++) {
       var average=(array1basico2[i]+array2basico2[i]+array3basico2[i]+array4basico2[i]+array5basico2[i]+array6basico2[i]+array7basico2[i]+array8basico2[i]+array1medio2[i]+array2medio2[i]+array3medio2[i]+array4medio2[i])/estudiantesnivelesinst[i];
       if (isNaN(average)){
         arraypromedioinst2[i]=0;
@@ -5253,7 +6355,6 @@ function graficarcompara(json, clase){
         arraypromedioinst2[i]=Math.round(average*100)/100;
       }
     }
-
     distxinst[0]={'name':'1ro basico '+tipo1+'', 'data':array1basico, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
     distxinst[1]={'name':'2do basico '+tipo1+'', 'data':array2basico, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
     distxinst[2]={'name':'3ro basico '+tipo1+'', 'data':array3basico, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
@@ -5342,6 +6443,412 @@ function graficarcompara(json, clase){
     };
     for (var i = 0; i < elementremoveinstprom.length; i++) {
       distxinstprom.splice(elementremoveinstprom[i]-i,1);
+    };
+
+    var arraypromedioejer = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbejer.length; i++) {
+      var average=(arraylsmbejer[i]+arrayeaejer[i]+arrayceiejer[i]+arraylavejer[i]+arrayrapejer[i]+arraygmejer[i]+arraybakhanejer[i])/estudiantesniveles[i];
+      if (isNaN(average)){
+        arraypromedioejer[i]=0;
+      }
+      else{
+        arraypromedioejer[i]=Math.round(average*100)/100;
+      }
+    }
+    var arraypromedioejer2 = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbejer2.length; i++) {
+      var average2=(arraylsmbejer2[i]+arrayeaejer2[i]+arrayceiejer2[i]+arraylavejer2[i]+arrayrapejer2[i]+arraygmejer2[i]+arraybakhanejer2[i])/estudiantesniveles[i];
+      if (isNaN(average2)){
+        arraypromedioejer2[i]=0;
+      }
+      else{
+        arraypromedioejer2[i]=Math.round(average2*100)/100;
+      }
+    }
+
+    distxnivelejer[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbejer, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxnivelejer[1]={'name':'E.A. '+tipo1+'', 'data':arrayeaejer, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxnivelejer[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceiejer, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxnivelejer[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavejer, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxnivelejer[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapejer, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxnivelejer[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmejer, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxnivelejer[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanejer, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxnivelejer[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbejer2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
+    distxnivelejer[8]={'name':'E.A. '+tipo2+'', 'data':arrayeaejer2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxnivelejer[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceiejer2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxnivelejer[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavejer2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
+    distxnivelejer[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapejer2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxnivelejer[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmejer2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxnivelejer[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanejer2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxnivelejer[14]={'name':'Promedio Tiempo de Ejercicios '+tipo1+'', 'data':arraypromedioejer, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelejer[15]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedioejer2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelejer[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorejer=0;
+    for (var i = 0; i < distxnivelejer.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelejer[i]['data'].length; j++) {
+        if(distxnivelejer[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveejer[contadorejer]=i;
+        contadorejer++;
+      }
+    };
+    for (var i = 0; i < elementremoveejer.length; i++) {
+      distxnivelejer.splice(elementremoveejer[i]-i,1);
+    };
+
+    distxnivelejerprom[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbejerprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxnivelejerprom[1]={'name':'E.A. '+tipo1+'', 'data':arrayeaejerprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxnivelejerprom[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceiejerprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxnivelejerprom[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavejerprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxnivelejerprom[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapejerprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxnivelejerprom[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmejerprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxnivelejerprom[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanejerprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxnivelejerprom[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbejerprom2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
+    distxnivelejerprom[8]={'name':'E.A. '+tipo2+'', 'data':arrayeaejerprom2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxnivelejerprom[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceiejerprom2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxnivelejerprom[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavejerprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
+    distxnivelejerprom[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapejerprom2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxnivelejerprom[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmejerprom2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxnivelejerprom[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanejerprom2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxnivelejerprom[14]={'name':'Promedio Tiempo de Ejercicios '+tipo1+'', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelejerprom[15]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedio2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelejerprom[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorejerprom=0;
+    for (var i = 0; i < distxnivelejerprom.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelejerprom[i]['data'].length; j++) {
+        if(distxnivelejerprom[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveejerprom[contadorejerprom]=i;
+        contadorejerprom++;
+      }
+    };
+    for (var i = 0; i < elementremoveejerprom.length; i++) {
+      distxnivelejerprom.splice(elementremoveejerprom[i]-i,1);
+    };
+
+    var arraypromedioejerinst= new Array(6).fill(0);
+    for (var i = 0; i < array1basicoejer.length; i++) {
+      var average=(array1basicoejer[i]+array2basicoejer[i]+array3basicoejer[i]+array4basicoejer[i]+array5basicoejer[i]+array6basicoejer[i]+array7basicoejer[i]+array8basicoejer[i]+array1medioejer[i]+array2medioejer[i]+array3medioejer[i]+array4medioejer[i])/estudiantesnivelesinst[i];
+      if (isNaN(average)){
+        arraypromedioejerinst[i]=0;
+      }
+      else{
+        arraypromedioejerinst[i]=Math.round(average*100)/100;
+      }
+    }
+
+    var arraypromedioejerinst2= new Array(6).fill(0);
+    for (var i = 0; i < array1basicoejer2.length; i++) {
+      var average=(array1basicoejer2[i]+array2basicoejer2[i]+array3basicoejer2[i]+array4basicoejer2[i]+array5basicoejer2[i]+array6basicoejer2[i]+array7basicoejer2[i]+array8basicoejer2[i]+array1medioejer2[i]+array2medioejer2[i]+array3medioejer2[i]+array4medioejer2[i])/estudiantesnivelesinst[i];
+      if (isNaN(average)){
+        arraypromedioejerinst2[i]=0;
+      }
+      else{
+        arraypromedioejerinst2[i]=Math.round(average*100)/100;
+      }
+    }
+
+    distxinstejer[0]={'name':'1ro basico '+tipo1+'', 'data':array1basicoejer, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxinstejer[1]={'name':'2do basico '+tipo1+'', 'data':array2basicoejer, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxinstejer[2]={'name':'3ro basico '+tipo1+'', 'data':array3basicoejer, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxinstejer[3]={'name':'4to basico '+tipo1+'', 'data':array4basicoejer, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxinstejer[4]={'name':'5to basico '+tipo1+'', 'data':array5basicoejer, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxinstejer[5]={'name':'6to basico '+tipo1+'', 'data':array6basicoejer, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxinstejer[6]={'name':'7mo basico '+tipo1+'', 'data':array7basicoejer, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxinstejer[7]={'name':'8vo basico '+tipo1+'', 'data':array8basicoejer, 'type':'column', 'yAxis':1, 'color': '#2B908F', 'stack': tipo1};
+    distxinstejer[8]={'name':'1ro medio '+tipo1+'', 'data':array1medioejer, 'type':'column', 'yAxis':1, 'color': '#F45B5B', 'stack': tipo1};
+    distxinstejer[9]={'name':'2do medio '+tipo1+'', 'data':array2medioejer, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo1};
+    distxinstejer[10]={'name':'3ro medio '+tipo1+'', 'data':array3medioejer, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo1};
+    distxinstejer[11]={'name':'4to medio '+tipo1+'', 'data':array4medioejer, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo1};
+    distxinstejer[12]={'name':'1ro basico '+tipo2+'', 'data':array1basicoejer2, 'type':'column', 'yAxis':1, 'color': '#6BA4CB', 'stack': tipo2};
+    distxinstejer[13]={'name':'2do basico '+tipo2+'', 'data':array2basicoejer2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxinstejer[14]={'name':'3ro basico '+tipo2+'', 'data':array3basicoejer2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxinstejer[15]={'name':'4to basico '+tipo2+'', 'data':array4basicoejer2, 'type':'column', 'yAxis':1, 'color': '#E6924B', 'stack': tipo2};
+    distxinstejer[16]={'name':'5to basico '+tipo2+'', 'data':array5basicoejer2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxinstejer[17]={'name':'6to basico '+tipo2+'', 'data':array6basicoejer2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxinstejer[18]={'name':'7mo basico '+tipo2+'', 'data':array7basicoejer2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxinstejer[19]={'name':'8vo basico '+tipo2+'', 'data':array8basicoejer2, 'type':'column', 'yAxis':1, 'color': '#1A8F7E', 'stack': tipo2};
+    distxinstejer[20]={'name':'1ro medio '+tipo2+'', 'data':array1medioejer2, 'type':'column', 'yAxis':1, 'color': '#E34A4A', 'stack': tipo2};
+    distxinstejer[21]={'name':'2do medio '+tipo2+'', 'data':array2medioejer2, 'type':'column', 'yAxis':1, 'color': '#80D7D0', 'stack': tipo2};
+    distxinstejer[22]={'name':'3ro medio '+tipo2+'', 'data':array3medioejer2, 'type':'column', 'yAxis':1, 'color': '#8DC2B9', 'stack': tipo2};
+    distxinstejer[23]={'name':'4to medio '+tipo2+'', 'data':array4medioejer2, 'type':'column', 'yAxis':1, 'color': '#535015', 'stack': tipo2};
+    distxinstejer[24]={'name':'Promedio Tiempo de Ejercicios '+tipo1+'', 'data':arraypromedioejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstejer[25]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedioejerinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstejer[26]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorinstejer=0;
+    for (var i = 0; i < distxinstejer.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstejer[i]['data'].length; j++) {
+        if(distxinstejer[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstejer[contadorinstejer]=i;
+        contadorinstejer++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstejer.length; i++) {
+      distxinstejer.splice(elementremoveinstejer[i]-i,1);
+    };
+
+    distxinstejerprom[0]={'name':'1ro basico '+tipo1+'', 'data':array1basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxinstejerprom[1]={'name':'2do basico '+tipo1+'', 'data':array2basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxinstejerprom[2]={'name':'3ro basico '+tipo1+'', 'data':array3basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxinstejerprom[3]={'name':'4to basico '+tipo1+'', 'data':array4basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxinstejerprom[4]={'name':'5to basico '+tipo1+'', 'data':array5basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxinstejerprom[5]={'name':'6to basico '+tipo1+'', 'data':array6basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxinstejerprom[6]={'name':'7mo basico '+tipo1+'', 'data':array7basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxinstejerprom[7]={'name':'8vo basico '+tipo1+'', 'data':array8basicoejerprom, 'type':'column', 'yAxis':1, 'color': '#2B908F', 'stack': tipo1};
+    distxinstejerprom[8]={'name':'1ro medio '+tipo1+'', 'data':array1medioejerprom, 'type':'column', 'yAxis':1, 'color': '#F45B5B', 'stack': tipo1};
+    distxinstejerprom[9]={'name':'2do medio '+tipo1+'', 'data':array2medioejerprom, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo1};
+    distxinstejerprom[10]={'name':'3ro medio '+tipo1+'', 'data':array3medioejerprom, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo1};
+    distxinstejerprom[11]={'name':'4to medio '+tipo1+'', 'data':array4medioejerprom, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo1};
+    distxinstejerprom[12]={'name':'1ro basico '+tipo2+'', 'data':array1basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#6BA4CB', 'stack': tipo2};
+    distxinstejerprom[13]={'name':'2do basico '+tipo2+'', 'data':array2basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxinstejerprom[14]={'name':'3ro basico '+tipo2+'', 'data':array3basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxinstejerprom[15]={'name':'4to basico '+tipo2+'', 'data':array4basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#E6924B', 'stack': tipo2};
+    distxinstejerprom[16]={'name':'5to basico '+tipo2+'', 'data':array5basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxinstejerprom[17]={'name':'6to basico '+tipo2+'', 'data':array6basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxinstejerprom[18]={'name':'7mo basico '+tipo2+'', 'data':array7basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxinstejerprom[19]={'name':'8vo basico '+tipo2+'', 'data':array8basicoejerprom2, 'type':'column', 'yAxis':1, 'color': '#1A8F7E', 'stack': tipo2};
+    distxinstejerprom[20]={'name':'1ro medio '+tipo2+'', 'data':array1medioejerprom2, 'type':'column', 'yAxis':1, 'color': '#E34A4A', 'stack': tipo2};
+    distxinstejerprom[21]={'name':'2do medio '+tipo2+'', 'data':array2medioejerprom2, 'type':'column', 'yAxis':1, 'color': '#80D7D0', 'stack': tipo2};
+    distxinstejerprom[22]={'name':'3ro medio '+tipo2+'', 'data':array3medioejerprom2, 'type':'column', 'yAxis':1, 'color': '#8DC2B9', 'stack': tipo2};
+    distxinstejerprom[23]={'name':'4to medio '+tipo2+'', 'data':array4medioejerprom2, 'type':'column', 'yAxis':1, 'color': '#535015', 'stack': tipo2};
+    distxinstejerprom[24]={'name':'Promedio Tiempo de Ejercicios '+tipo1+'', 'data':arraypromedioejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstejerprom[25]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedioejerinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstejerprom[26]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorinstejerprom=0;
+    for (var i = 0; i < distxinstejerprom.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstejerprom[i]['data'].length; j++) {
+        if(distxinstejerprom[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstejerprom[contadorinstejerprom]=i;
+        contadorinstejerprom++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstejerprom.length; i++) {
+      distxinstejerprom.splice(elementremoveinstejerprom[i]-i,1);
+    };
+
+    var arraypromediovid = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbvid.length; i++) {
+      var average=(arraylsmbvid[i]+arrayeavid[i]+arrayceivid[i]+arraylavvid[i]+arrayrapvid[i]+arraygmvid[i]+arraybakhanvid[i])/estudiantesniveles[i];
+      if (isNaN(average)){
+        arraypromediovid[i]=0;
+      }
+      else{
+        arraypromediovid[i]=Math.round(average*100)/100;
+      }
+    }
+    var arraypromediovid2 = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbvid2.length; i++) {
+      var average2=(arraylsmbvid2[i]+arrayeavid2[i]+arrayceivid2[i]+arraylavvid2[i]+arrayrapvid2[i]+arraygmvid2[i]+arraybakhanvid2[i])/estudiantesniveles[i];
+      if (isNaN(average2)){
+        arraypromediovid2[i]=0;
+      }
+      else{
+        arraypromediovid2[i]=Math.round(average2*100)/100;
+      }
+    }
+
+    distxnivelvid[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbvid, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxnivelvid[1]={'name':'E.A. '+tipo1+'', 'data':arrayeavid, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxnivelvid[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceivid, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxnivelvid[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavvid, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxnivelvid[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapvid, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxnivelvid[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmvid, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxnivelvid[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanvid, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxnivelvid[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbvid2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
+    distxnivelvid[8]={'name':'E.A. '+tipo2+'', 'data':arrayeavid2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxnivelvid[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceivid2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxnivelvid[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavvid2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
+    distxnivelvid[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapvid2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxnivelvid[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmvid2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxnivelvid[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanvid2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxnivelvid[14]={'name':'Promedio Tiempo de Videos '+tipo1+'', 'data':arraypromediovid, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelvid[15]={'name':'Promedio Tiempo de Videos '+tipo2+'', 'data':arraypromediovid2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelvid[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorvid=0;
+    for (var i = 0; i < distxnivelvid.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelvid[i]['data'].length; j++) {
+        if(distxnivelvid[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremovevid[contadorvid]=i;
+        contadorvid++;
+      }
+    };
+    for (var i = 0; i < elementremovevid.length; i++) {
+      distxnivelvid.splice(elementremovevid[i]-i,1);
+    };
+
+    distxnivelvidprom[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbvidprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxnivelvidprom[1]={'name':'E.A. '+tipo1+'', 'data':arrayeavidprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxnivelvidprom[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceividprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxnivelvidprom[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavvidprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxnivelvidprom[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapvidprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxnivelvidprom[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmvidprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxnivelvidprom[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanvidprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxnivelvidprom[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbvidprom2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
+    distxnivelvidprom[8]={'name':'E.A. '+tipo2+'', 'data':arrayeavidprom2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxnivelvidprom[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceividprom2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxnivelvidprom[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavvidprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
+    distxnivelvidprom[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapvidprom2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxnivelvidprom[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmvidprom2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxnivelvidprom[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanvidprom2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxnivelvidprom[14]={'name':'Promedio Tiempo de Videos '+tipo1+'', 'data':arraypromediovid, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelvidprom[15]={'name':'Promedio Tiempo de Videos '+tipo2+'', 'data':arraypromediovid2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxnivelvidprom[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorvidprom=0;
+    for (var i = 0; i < distxnivelvidprom.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxnivelvidprom[i]['data'].length; j++) {
+        if(distxnivelvidprom[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremovevidprom[contadorvidprom]=i;
+        contadorvidprom++;
+      }
+    };
+    for (var i = 0; i < elementremovevidprom.length; i++) {
+      distxnivelvidprom.splice(elementremovevidprom[i]-i,1);
+    };
+
+    var arraypromediovidinst= new Array(6).fill(0);
+    for (var i = 0; i < array1basicovid.length; i++) {
+      var average=(array1basicovid[i]+array2basicovid[i]+array3basicovid[i]+array4basicovid[i]+array5basicovid[i]+array6basicovid[i]+array7basicovid[i]+array8basicovid[i]+array1mediovid[i]+array2mediovid[i]+array3mediovid[i]+array4mediovid[i])/estudiantesnivelesinst[i];
+      if (isNaN(average)){
+        arraypromediovidinst[i]=0;
+      }
+      else{
+        arraypromediovidinst[i]=Math.round(average*100)/100;
+      }
+    }
+
+    var arraypromediovidinst2= new Array(6).fill(0);
+    for (var i = 0; i < array1basicovid2.length; i++) {
+      var average=(array1basicovid2[i]+array2basicovid2[i]+array3basicovid2[i]+array4basicovid2[i]+array5basicovid2[i]+array6basicovid2[i]+array7basicovid2[i]+array8basicovid2[i]+array1mediovid2[i]+array2mediovid2[i]+array3mediovid2[i]+array4mediovid2[i])/estudiantesnivelesinst[i];
+      if (isNaN(average)){
+        arraypromediovidinst2[i]=0;
+      }
+      else{
+        arraypromediovidinst2[i]=Math.round(average*100)/100;
+      }
+    }
+
+    distxinstvid[0]={'name':'1ro basico '+tipo1+'', 'data':array1basicovid, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxinstvid[1]={'name':'2do basico '+tipo1+'', 'data':array2basicovid, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxinstvid[2]={'name':'3ro basico '+tipo1+'', 'data':array3basicovid, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxinstvid[3]={'name':'4to basico '+tipo1+'', 'data':array4basicovid, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxinstvid[4]={'name':'5to basico '+tipo1+'', 'data':array5basicovid, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxinstvid[5]={'name':'6to basico '+tipo1+'', 'data':array6basicovid, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxinstvid[6]={'name':'7mo basico '+tipo1+'', 'data':array7basicovid, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxinstvid[7]={'name':'8vo basico '+tipo1+'', 'data':array8basicovid, 'type':'column', 'yAxis':1, 'color': '#2B908F', 'stack': tipo1};
+    distxinstvid[8]={'name':'1ro medio '+tipo1+'', 'data':array1mediovid, 'type':'column', 'yAxis':1, 'color': '#F45B5B', 'stack': tipo1};
+    distxinstvid[9]={'name':'2do medio '+tipo1+'', 'data':array2mediovid, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo1};
+    distxinstvid[10]={'name':'3ro medio '+tipo1+'', 'data':array3mediovid, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo1};
+    distxinstvid[11]={'name':'4to medio '+tipo1+'', 'data':array4mediovid, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo1};
+    distxinstvid[12]={'name':'1ro basico '+tipo2+'', 'data':array1basicovid2, 'type':'column', 'yAxis':1, 'color': '#6BA4CB', 'stack': tipo2};
+    distxinstvid[13]={'name':'2do basico '+tipo2+'', 'data':array2basicovid2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxinstvid[14]={'name':'3ro basico '+tipo2+'', 'data':array3basicovid2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxinstvid[15]={'name':'4to basico '+tipo2+'', 'data':array4basicovid2, 'type':'column', 'yAxis':1, 'color': '#E6924B', 'stack': tipo2};
+    distxinstvid[16]={'name':'5to basico '+tipo2+'', 'data':array5basicovid2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxinstvid[17]={'name':'6to basico '+tipo2+'', 'data':array6basicovid2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxinstvid[18]={'name':'7mo basico '+tipo2+'', 'data':array7basicovid2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxinstvid[19]={'name':'8vo basico '+tipo2+'', 'data':array8basicovid2, 'type':'column', 'yAxis':1, 'color': '#1A8F7E', 'stack': tipo2};
+    distxinstvid[20]={'name':'1ro medio '+tipo2+'', 'data':array1mediovid2, 'type':'column', 'yAxis':1, 'color': '#E34A4A', 'stack': tipo2};
+    distxinstvid[21]={'name':'2do medio '+tipo2+'', 'data':array2mediovid2, 'type':'column', 'yAxis':1, 'color': '#80D7D0', 'stack': tipo2};
+    distxinstvid[22]={'name':'3ro medio '+tipo2+'', 'data':array3mediovid2, 'type':'column', 'yAxis':1, 'color': '#8DC2B9', 'stack': tipo2};
+    distxinstvid[23]={'name':'4to medio '+tipo2+'', 'data':array4mediovid2, 'type':'column', 'yAxis':1, 'color': '#535015', 'stack': tipo2};
+    distxinstvid[24]={'name':'Promedio Tiempo de Videos '+tipo1+'', 'data':arraypromediovidinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstvid[25]={'name':'Promedio Tiempo de Videos '+tipo2+'', 'data':arraypromediovidinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstvid[26]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorinstvid=0;
+    for (var i = 0; i < distxinstvid.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstvid[i]['data'].length; j++) {
+        if(distxinstvid[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstvid[contadorinstvid]=i;
+        contadorinstvid++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstvid.length; i++) {
+      distxinstvid.splice(elementremoveinstvid[i]-i,1);
+    };
+
+    distxinstvidprom[0]={'name':'1ro basico '+tipo1+'', 'data':array1basicovidprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
+    distxinstvidprom[1]={'name':'2do basico '+tipo1+'', 'data':array2basicovidprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
+    distxinstvidprom[2]={'name':'3ro basico '+tipo1+'', 'data':array3basicovidprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
+    distxinstvidprom[3]={'name':'4to basico '+tipo1+'', 'data':array4basicovidprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
+    distxinstvidprom[4]={'name':'5to basico '+tipo1+'', 'data':array5basicovidprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
+    distxinstvidprom[5]={'name':'6to basico '+tipo1+'', 'data':array6basicovidprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
+    distxinstvidprom[6]={'name':'7mo basico '+tipo1+'', 'data':array7basicovidprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
+    distxinstvidprom[7]={'name':'8vo basico '+tipo1+'', 'data':array8basicovidprom, 'type':'column', 'yAxis':1, 'color': '#2B908F', 'stack': tipo1};
+    distxinstvidprom[8]={'name':'1ro medio '+tipo1+'', 'data':array1mediovidprom, 'type':'column', 'yAxis':1, 'color': '#F45B5B', 'stack': tipo1};
+    distxinstvidprom[9]={'name':'2do medio '+tipo1+'', 'data':array2mediovidprom, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo1};
+    distxinstvidprom[10]={'name':'3ro medio '+tipo1+'', 'data':array3mediovidprom, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo1};
+    distxinstvidprom[11]={'name':'4to medio '+tipo1+'', 'data':array4mediovidprom, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo1};
+    distxinstvidprom[12]={'name':'1ro basico '+tipo2+'', 'data':array1basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#6BA4CB', 'stack': tipo2};
+    distxinstvidprom[13]={'name':'2do basico '+tipo2+'', 'data':array2basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
+    distxinstvidprom[14]={'name':'3ro basico '+tipo2+'', 'data':array3basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxinstvidprom[15]={'name':'4to basico '+tipo2+'', 'data':array4basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#E6924B', 'stack': tipo2};
+    distxinstvidprom[16]={'name':'5to basico '+tipo2+'', 'data':array5basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
+    distxinstvidprom[17]={'name':'6to basico '+tipo2+'', 'data':array6basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
+    distxinstvidprom[18]={'name':'7mo basico '+tipo2+'', 'data':array7basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxinstvidprom[19]={'name':'8vo basico '+tipo2+'', 'data':array8basicovidprom2, 'type':'column', 'yAxis':1, 'color': '#1A8F7E', 'stack': tipo2};
+    distxinstvidprom[20]={'name':'1ro medio '+tipo2+'', 'data':array1mediovidprom2, 'type':'column', 'yAxis':1, 'color': '#E34A4A', 'stack': tipo2};
+    distxinstvidprom[21]={'name':'2do medio '+tipo2+'', 'data':array2mediovidprom2, 'type':'column', 'yAxis':1, 'color': '#80D7D0', 'stack': tipo2};
+    distxinstvidprom[22]={'name':'3ro medio '+tipo2+'', 'data':array3mediovidprom2, 'type':'column', 'yAxis':1, 'color': '#8DC2B9', 'stack': tipo2};
+    distxinstvidprom[23]={'name':'4to medio '+tipo2+'', 'data':array4mediovidprom2, 'type':'column', 'yAxis':1, 'color': '#535015', 'stack': tipo2};
+    distxinstvidprom[24]={'name':'Promedio Tiempo de Videos '+tipo1+'', 'data':arraypromediovidinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstvidprom[25]={'name':'Promedio Tiempo de Videos '+tipo2+'', 'data':arraypromediovidinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    distxinstvidprom[26]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+
+    var contadorinstvidprom=0;
+    for (var i = 0; i < distxinstvidprom.length; i++) {
+      var verificador = true;
+      for (var j = 0; j < distxinstvidprom[i]['data'].length; j++) {
+        if(distxinstvidprom[i]['data'][j]!=0){
+          verificador=false;
+        }
+      };
+      if (verificador==true){
+        elementremoveinstvidprom[contadorinstvidprom]=i;
+        contadorinstvidprom++;
+      }
+    };
+    for (var i = 0; i < elementremoveinstvidprom.length; i++) {
+      distxinstvidprom.splice(elementremoveinstvidprom[i]-i,1);
     };
 
     promediotodos2=totaltodos2/totalestudiantes;
@@ -5540,6 +7047,295 @@ function graficarcompara(json, clase){
             }
         }]
     });
+
+    $(function () {
+      Highcharts.chart('containerejernivel', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Ejercicios por Nivel (Total)'
+          },
+
+          xAxis: {
+              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Total por Nivel',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo de Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxnivelejer
+      });
+  });
+
+    $(function () {
+      Highcharts.chart('containerejernivelprom', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Ejercicios por Nivel (Promedio)'
+          },
+
+          xAxis: {
+              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad Promedio por Nivel',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo de Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxnivelejerprom
+      });
+  });
+
+    $(function () {
+      Highcharts.chart('containerejerinst', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Ejercicios por Institución (Total)'
+          },
+
+          xAxis: {
+              categories: ['LSMB', 'EA', 'CEI', 'LAV', 'RAP', 'LGM', 'BA-Khan']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad Total por Institución',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxinstejer
+      });
+  });
+
+    $(function () {
+      Highcharts.chart('containerejerinstprom', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Ejercicios por Institución (Promedio)'
+          },
+
+          xAxis: {
+              categories: ['LSMB', 'EA', 'CEI', 'LAV', 'RAP', 'LGM', 'BA-Khan']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Promedio por Institución',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxinstejerprom
+      });
+  });
+
     function sortTotal(valor){
       if (valor=="0"){
         tpoejercicios1.sort(function(a,b){
@@ -5754,6 +7550,295 @@ function graficarcompara(json, clase){
       chart.series[0].update(retorno);
     })
   });
+
+$(function () {
+      Highcharts.chart('containervidnivel', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Videos por Nivel (Total)'
+          },
+
+          xAxis: {
+              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Total por Nivel',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo de Videos',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxnivelvid
+      });
+  });
+
+$(function () {
+      Highcharts.chart('containervidnivelprom', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Videos por Nivel (Promedio)'
+          },
+
+          xAxis: {
+              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Promedio por Nivel',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo de Videos',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxnivelvidprom
+      });
+  });
+
+$(function () {
+      Highcharts.chart('containervidinst', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Videos por Institución (Total)'
+          },
+
+          xAxis: {
+              categories: ['LSMB', 'EA', 'CEI', 'LAV', 'RAP', 'LGM', 'BA-Khan']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Total por Institución',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo de Videos',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxinstvid
+      });
+  });
+
+$(function () {
+      Highcharts.chart('containervidinstprom', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Tiempo de Videos por Institución (Promedio)'
+          },
+
+          xAxis: {
+              categories: ['LSMB', 'EA', 'CEI', 'LAV', 'RAP', 'LGM', 'BA-Khan']
+          },
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Promedio por Institución',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Tiempo de Videos',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              }
+          },
+          series: distxinstvidprom
+      });
+  });
+
     $(function () {
       Highcharts.setOptions({
           lang:{
@@ -6087,7 +8172,7 @@ function graficarcompara(json, clase){
           }, { // Secondary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Cantidad Total por Institución',
+                  text: 'Cantidad Promedio por Institución',
                   style: {
                       color: '#4572A7'
                   }
