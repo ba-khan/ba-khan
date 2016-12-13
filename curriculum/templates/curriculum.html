@@ -55,7 +55,7 @@ input{
   height: 100%;
 }
 #popup{
-  height:350px;
+  height:150px;
 }
 #popuptree{
   height:650px;
@@ -270,7 +270,26 @@ div.panel {
 </style>
 <br>
 <div class="container">
-<div class="main-content">
+<div class="class-content">
+  <h1 style="text-align:center;">Curriculum MINEDUC</h1>
+  <div style="width:100%; height:55px; margin-left: 200px; float: left;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Nivel</button> </div>
+
+  <div id="newChapter">
+    <form action="" method="post" id="form0">{% csrf_token %}
+      <h3>Nuevo Nivel</h3>
+      <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+      <a onclick='javascript:hideNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
+      <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
+    </form>
+  </div>
+  <div id="newaccordion"></div>
+</div>
+<div id="sidebar" style="display: none;"></div>
+<div class="main-content" style="display: none;">
+  <h1 style="text-align:center;" id="namecurso"></h1>
+</div>
+
+<!--<div class="main-content">
 
   <br>
   <h1 style="text-align:center;">Curriculum MINEDUC</h1>
@@ -284,15 +303,12 @@ div.panel {
       <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
     </form>
   </div>
-  <!--<div id="newtable">
-  </div>!-->
   <div id="newaccordion">
   </div>
   <div id="sidebar"></div>
   <div id="topbar"></div>
   <div id="contenidopestanas">
     <div id="cpestana0" class="cpestanna" align="center">
-    <!--<img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar">-->
     <a href="#" onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
     <h1 id="namecurso"></h1>
     <h2>Nueva Unidad</h2>
@@ -304,7 +320,6 @@ div.panel {
 
   <div id="contenidopestanastop">
     <div id="cpestanatop0" class="cpestannatop" align="center">
-    <!--<img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar">-->
     <a href="#" onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
     <h1 id="namecurso"></h1>
     <h2>Nuevo OA</h2>
@@ -313,8 +328,8 @@ div.panel {
     <a onclick='javascript:saveNewSubtopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a>
     </div>
   </div>
-  <!--<div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>-->
-</div>
+  <div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>
+</div>-->
 </div>
 
 <div id="popup" style="display:none">
@@ -389,46 +404,6 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       newaccordion+='<button onclick=\'(showChapter("'+chapters[i]['id']+'", "'+chapters[i]["nombre"]+'"))\' class="kui-button kui-button-plain kui-button-primary">'+chapters[i]["nombre"]+'</button><br>';
-      //console.log(chapters[i]["nombre"])
-      /*newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'<a onclick=\'(deleteChapter("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:120px;  padding:0px;left:500px;position:absolute;"><img style="width:25px;height:25px;" src={% static "img/deleteicon.png" %} alt="delete"></a></button><div class="panel">';
-      newaccordion += '<a onclick=\'(addTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Unidad</a>';
-      newaccordion += '<a onclick=\'(deleteTopic("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Unidad</a>';
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
-        newaccordion += '<a onclick=\'(addSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Obj. de Aprendizaje</a>';
-        newaccordion += '<a onclick=\'(deleteSubtopic("'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Obj. de Aprendizaje</a>';
-        var subtopicos = topicos[j]["subtopico"];
-        for (var k = 0; k < subtopicos.length; k++) {
-          //subtopicos[i]
-          newaccordion += '<button class="accordion">'+subtopicos[k]["nombre"]+'</button><div class="panel">'
-          newaccordion += '<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios/Videos</a>';
-          newaccordion += '<a onclick=\'(deleteVideoExercise("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar Ejercicios/Videos</a>';
-          newaccordion += '<p>'+subtopicos[k]['aeoe']+'</p>'
-          var ejer = subtopicos[k]["skills"];
-          newaccordion += '<button class="accordion">Ejercicios</button><div class="panel">';
-          for (var m = 0; m < ejer.length; m++) {
-            //vid[l]
-           // console.log(ejer[m]["skill"])
-            newaccordion += '<img src={% static "img/ejercicios.png" %} alt="ejercicios"><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>';
-            //newaccordion += '<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
-          }
-          newaccordion += '</div>';
-          var vid = subtopicos[k]["videos"];
-          newaccordion += '<button class="accordion">Videos</button><div class="panel">';
-          for (var l = 0; l < vid.length; l++) {
-            //vid[l]
-           // console.log(vid[l]["video"])
-            newaccordion += '<img src={% static "img/videos.png" %} alt="videos"><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>';
-            //newaccordion += '<li><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a></li><br>'
-            $('#newTree'+subtopicos[k]["id"]).jstree('select_node', vid[l]["video"]);
-          }
-          newaccordion += '</div>';
-          newaccordion += '</div>';
-        }
-        newaccordion += '</div>'
-      }
-      newaccordion+='</div>';*/
     }
     $('#newaccordion').append(newaccordion);
   }
@@ -437,7 +412,11 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
   $('#curriculum').addClass('active selected');
 
   function showChapter(id, nombre){
-    try{
+    $('#namecurso').empty();
+    $('.class-content').hide();
+    $('.main-content').show();
+    $('#namecurso').append(nombre);
+    /*try{
       $('#sidebar').empty();
       $('#namecurso').empty();
       $('#sidebar').show();
@@ -462,8 +441,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     }
     catch(err){
       console.log(err);
-    }
-
+    }*/
   }
 
   function cambiarPestanna(pestanna, idchapter, idtopic){
