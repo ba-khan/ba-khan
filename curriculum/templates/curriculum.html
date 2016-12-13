@@ -294,11 +294,23 @@ div.panel {
     <div id="cpestana0" class="cpestanna" align="center">
     <!--<img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar">-->
     <a href="#" onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
-    <h1 id="namecurso""></h1>
+    <h1 id="namecurso"></h1>
     <h2>Nueva Unidad</h2>
     <h3>Datos de la Unidad:</h3>
-    <label for='block'>Nombre Unidad: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-    <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a>
+    <label for='block'>Nombre Unidad: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+    <a onclick='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a>
+    </div>
+  </div>
+
+  <div id="contenidopestanastop">
+    <div id="cpestanatop0" class="cpestannatop" align="center">
+    <!--<img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar">-->
+    <a href="#" onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
+    <h1 id="namecurso"></h1>
+    <h2>Nuevo OA</h2>
+    <h3>Datos del OA:</h3>
+    <label for='block'>Nombre OA: </label><input id="newNameSubtopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
+    <a onclick='javascript:saveNewSubtopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a>
     </div>
   </div>
   <!--<div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>-->
@@ -329,6 +341,7 @@ $(document).ready(function(){
       $("#popuptree").fadeOut();
       });
     $('#contenidopestanas').hide();
+    $('#contenidopestanastop').hide();
 
     accordionMineduc();
     var acc = document.getElementsByClassName("accordion");
@@ -347,6 +360,7 @@ $(document).ready(function(){
     $('#sidebar').hide();
     $('#topbar').hide();
     $('#contenidopestanas').hide();
+    $('#contenidopestanastop').hide();
   }
 
   function buscar(){
@@ -366,7 +380,7 @@ $(document).ready(function(){
   }
 
 var arbol = JSON.parse('{{ json_data | escapejs }}');
-console.log(arbol);
+//console.log(arbol);
   function accordionMineduc(){
     $('#sidebar').hide();
     $('#topbar').hide();
@@ -454,12 +468,17 @@ console.log(arbol);
 
   function cambiarPestanna(pestanna, idchapter, idtopic){
     newTopBar(idchapter, idtopic);
+    $('#contenidopestanastop').show();
     //console.log(pestanna.id)
     id = (pestanna.id).substring(7);
     pestanna = document.getElementById(pestanna.id);
     cpestanna = document.getElementById('c' + pestanna.id);
     cpestannas = document.getElementsByClassName('cpestanna');
     contenidopestanas = document.getElementById('contenidopestanas');
+    console.log(id);
+    if (id==0){
+      $('#contenidopestanastop').hide();
+    }
     for (i=0;i<cpestannas.length;i++){
      $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
      
@@ -473,9 +492,6 @@ console.log(arbol);
   }
 
   function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
-    //console.log('pestanna:'+pestanna);
-    //console.log('idtopic:'+idtopic);
-    //console.log('idsubtopic:'+idsubtopic);
 
     id=(pestanna.id).substring(10);
     //console.log(id);
@@ -490,13 +506,13 @@ console.log(arbol);
      $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
      $(cpestannatop).css('display', '');
      $(pestanna.getElementsByTagName('a')).addClass("selectdos");
-     //$('#apestanatop0').addClass("selectdos");
     });
   }
 
   function newTopBar(idchapter, idtopic){
-    //console.log(idchapter);
-    //console.log(idtopic);
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    $('#contenidopestanastop').hide();
+    //location.reload();
     $('#topbar').empty();
     var newtopbar='';
     var chapters=arbol["capitulos"];
@@ -505,10 +521,14 @@ console.log(arbol);
         var topicos = chapters[i]["topico"];
         for (var i = 0; i < topicos.length; i++) {
           if(topicos[i]['id']==idtopic){
-            newtopbar+='<ul  class="tab"><li id="pestanatop0"><a href="#" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo OA</a></li>';
-            var subtopicos = topicos[i]['subtopico'];
-            for (var i = 0; i < subtopicos.length; i++) {
-              newtopbar+='<li id="pestanatop'+subtopicos[i]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop'+subtopicos[i]['id']+', '+idtopic+' ,'+subtopicos[i]['id']+')" >'+subtopicos[i]['nombre']+'</a></li>';
+            newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="#" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo OA</a></li>';
+            try{
+              for (var j = 0; j < topicos[i]['subtopico'].length; j++) {
+                newtopbar+='<li id="pestanatop'+topicos[i]['subtopico'][j]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop'+topicos[i]['subtopico'][j]['id']+', '+idtopic+' ,'+topicos[i]['subtopico'][j]['id']+')" >'+topicos[i]['subtopico'][j]['nombre']+'</a></li>';
+              }
+            }
+            catch(err){
+              console.log(err);
             }
           }
         }
@@ -554,40 +574,43 @@ console.log(arbol);
   }
 
   function saveNewChapter(){
-  if(validar()){
-    $.ajax({
-    url: "{% url 'curriculum:nuevo_chapter' %}",
-    type: "POST",
-    data: $("#form0").serialize(),
-      success: function(response){
-        $("#popup").empty()
-        $("#close").hide();
-        $("#hover").fadeIn();
-        $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-        if (auxResponse == "Nivel guardado correctamente"){
-          $("#hover").css('pointer-events','none');
-          $("#close").css('pointer-events','none');
-          window.setTimeout(function(){location.reload()},1000);
+    var nName = $('#newName').val();
+    if(validar()){
+      $.ajax({
+      url: "{% url 'curriculum:nuevo_chapter' %}",
+      type: "POST",
+      data: {chapter: nName},
+        success: function(response){
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+          if (auxResponse == "Nivel guardado correctamente"){
+            $("#hover").css('pointer-events','none');
+            $("#close").css('pointer-events','none');
+            window.setTimeout(function(){location.reload()},1000);
+          }
         }
-      }
-    });
-  }else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+      });
+    }else{
+      $("#popup").empty()
+      $("#hover").fadeIn().css('display', '');
+      $("#popup").fadeIn().css('display', '');
+      $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+    }
   }
-}
 
-function saveNewTopic(t){
-  var nombretopic = $('#newNameTopic').val()
+function saveNewTopic(){
+  var nombretopic = $('#newNameTopic').val();
+  var nombrecurso = $('#namecurso').text();
+  //console.log(nombrecurso);
   if(validarTopic()){
     $.ajax({
       url: "{% url 'curriculum:nuevo_topic' %}",
       type: "POST",
-      data: {nombre: nombretopic, curso: t},
+      data: {nombre: nombretopic, curso: nombrecurso},
         success: function(response){
           $("#popup").empty()
           $("#close").hide();

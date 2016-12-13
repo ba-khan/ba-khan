@@ -154,9 +154,9 @@ def getCurriculum(request):
 def newChapter(request):
 	request.session.set_expiry(timeSleep)
 	if request.method == 'POST':
-		args = request.POST
 		try:
-			Chapter_Mineduc.objects.create(name=nombre)
+			args = request.POST
+			Chapter_Mineduc.objects.create(name=args['chapter'])
 			return HttpResponse('Nivel guardado correctamente')
 
 		except Exception as e:
@@ -170,7 +170,8 @@ def newTopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			Topic_Mineduc.objects.create(name=args['nombre'], id_chapter_id=args['curso'])
+			nombrecap = Chapter_Mineduc.objects.filter(name=args['curso']).values('id_chapter_mineduc')
+			Topic_Mineduc.objects.create(name=args['nombre'], id_chapter_id=nombrecap[0]['id_chapter_mineduc'])
 			return HttpResponse('Unidad guardada correctamente')
 		except Exception as e:
 			print e
