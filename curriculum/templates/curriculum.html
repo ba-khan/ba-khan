@@ -284,9 +284,10 @@ div.panel {
   </div>
   <div id="newaccordion"></div>
 </div>
-<div id="sidebar" style="display: none;"></div>
+<h1 style="text-align:center;display: none;margin-left: 50px; margin-top: 20px;" id="namecurso"></h1>
+<a onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
+<div style="margin-left: 100px; float: left; display: none;" id="sidebar"></div>
 <div class="main-content" style="display: none;">
-  <h1 style="text-align:center;" id="namecurso"></h1>
 </div>
 
 <!--<div class="main-content">
@@ -371,11 +372,15 @@ $(document).ready(function(){
   });
 
   function backChapter(){
-    $('#newaccordion').show();
+    /*$('#newaccordion').show();
     $('#sidebar').hide();
     $('#topbar').hide();
     $('#contenidopestanas').hide();
-    $('#contenidopestanastop').hide();
+    $('#contenidopestanastop').hide();*/
+    $('.class-content').show();
+    $('.main-content').hide();
+    $('#namecurso').hide();
+    $('#sidebar').hide();
   }
 
   function buscar(){
@@ -403,7 +408,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     var newaccordion='';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
-      newaccordion+='<button onclick=\'(showChapter("'+chapters[i]['id']+'", "'+chapters[i]["nombre"]+'"))\' class="kui-button kui-button-plain kui-button-primary">'+chapters[i]["nombre"]+'</button><br>';
+      newaccordion+='<button onclick=\'(showChapter("'+chapters[i]['id']+'", "'+chapters[i]["nombre"]+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:120px; height: 35px; padding:8px; margin-top:10px">'+chapters[i]["nombre"]+'</button><br>';
     }
     $('#newaccordion').append(newaccordion);
   }
@@ -412,36 +417,28 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
   $('#curriculum').addClass('active selected');
 
   function showChapter(id, nombre){
+    //console.log(id);
+    //console.log(nombre);
+    $('#sidebar').empty();
     $('#namecurso').empty();
     $('.class-content').hide();
     $('.main-content').show();
     $('#namecurso').append(nombre);
-    /*try{
-      $('#sidebar').empty();
-      $('#namecurso').empty();
-      $('#sidebar').show();
-      $('#topbar').show();
-      $('#newaccordion').hide();
-      $('#buttonNewChapter').hide();
-      $('#contenidopestanas').show();
-      $('#namecurso').append(nombre);
-      var newsidebar='';
-      newsidebar+='<ul><li id="pestana0"><a href="javascript:cambiarPestanna(pestana0);" class="select"><i class="plus"></i> Nueva Unidad</a></li>';
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        if(chapters[i]['id']==id){
-          var topicos = chapters[i]["topico"];
-          for (var j = 0; j < topicos.length; j++) {
-            newsidebar+='<li id="pestana'+topicos[j]['id']+'"><a href="javascript:cambiarPestanna(pestana'+topicos[j]['id']+', '+id+', '+topicos[j]['id']+');" >'+topicos[j]['nombre']+'</a></li>'
-          }
+    $('#sidebar').show();
+    $('#namecurso').show();
+    var newsidebar='';
+    newsidebar+='<ul><li id="pestana0"><a href="javascript:cambiarPestanna(pestana0);" class="select"><i class="plus"></i> Nueva Unidad</a></li>';
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      if(chapters[i]['id']==id){
+        var topicos = chapters[i]["topico"];
+        for (var j = 0; j < topicos.length; j++) {
+          newsidebar+='<li id="pestana'+topicos[j]['id']+'"><a href="javascript:cambiarPestanna(pestana'+topicos[j]['id']+', '+id+', '+topicos[j]['id']+');" >'+topicos[j]['nombre']+'</a></li>';
         }
       }
-      newsidebar+='</ul>';
-      $('#sidebar').append(newsidebar);
     }
-    catch(err){
-      console.log(err);
-    }*/
+    newsidebar+='</ul>';
+    $('#sidebar').append(newsidebar);
   }
 
   function cambiarPestanna(pestanna, idchapter, idtopic){
