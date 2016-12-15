@@ -414,7 +414,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
 //console.log(arbol);
   function accordionMineduc(){
     $('#sidebar').hide();
-    $('#topbar').hide();
+    //$('#topbar').hide();
     //console.log(arbol);
     var newaccordion='';
     var chapters=arbol["capitulos"];
@@ -440,9 +440,9 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     $('#namecurso').show();
     $('#buttonback').show();
     var newsidebar='';
-    var pestannas = '';
+    var pestannas = '<div id="contenidopestanas">';
     newsidebar+='<ul><li id="pestana0"><a href="javascript:cambiarPestanna(pestana0);" class="select"><i class="plus"></i> Nueva Unidad</a></li>';
-    pestannas+='<div id="contenidopestanas"><div id="cpestana0" class="cpestanna" align="center"><h2>Nueva Unidad</h2><h3>Datos de la Unidad:</h3><label for="block">Nombre Unidad: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewTopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a></div>';
+    pestannas+='<div id="cpestana0" class="cpestanna" align="center"><h2>Nueva Unidad</h2><h3>Datos de la Unidad:</h3><label for="block">Nombre Unidad: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewTopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a></div>';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       if(chapters[i]['id']==id){
@@ -450,7 +450,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
         for (var j = 0; j < topicos.length; j++) {
           newsidebar+='<li id="pestana'+topicos[j]['id']+'"><a href="javascript:cambiarPestanna(pestana'+topicos[j]['id']+', '+id+', '+topicos[j]['id']+');" >'+topicos[j]['nombre']+'</a></li>';
 
-          pestannas+='<div id="cpestana'+topicos[j]['id']+'" class="cpestanna" style="display:none;" align="center"><div id="topbar"></div></div>';
+          pestannas+='<div id="cpestana'+topicos[j]['id']+'" class="cpestanna" style="display:none;" align="center"><div id="topbar" class="topbar'+topicos[j]['id']+'"></div></div>';
         }
       }
     }
@@ -461,7 +461,8 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
   }
 
   function cambiarPestanna(pestanna, idchapter, idtopic){
-    //newTopBar(idchapter, idtopic);
+    //$('#topbar').empty();
+    newTopBar(idchapter, idtopic);
     //$('#contenidopestanastop').show();
     //console.log(pestanna.id)
     id = (pestanna.id).substring(7);
@@ -469,25 +470,20 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     cpestanna = document.getElementById('c' + pestanna.id);
     cpestannas = document.getElementsByClassName('cpestanna');
     contenidopestanas = document.getElementById('contenidopestanas');
-    //console.log(contenidopestanas);
-    /*if (id==0){
-      $('#contenidopestanastop').hide();
-    }*/
+
     for (i=0;i<cpestannas.length;i++){
      $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
      
     }
     $(document).ready(function () {
      $(document.getElementsByClassName("select")).removeClass("select");
-     $(cpestanna).css('display', '');
-     $(pestanna.getElementsByTagName('a')).addClass("select");
-     newTopBar(idchapter, idtopic);
-     //$('#apestanatop0').addClass("selectdos");
+       $(cpestanna).css('display', '');
+       $(pestanna.getElementsByTagName('a')).addClass("select");
+       //console.log(pestanna);
     });
   }
 
-  /*function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
-
+  function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
     id=(pestanna.id).substring(10);
     //console.log(id);
     pestannatop = document.getElementById(pestanna.id);
@@ -502,13 +498,10 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
      $(cpestannatop).css('display', '');
      $(pestanna.getElementsByTagName('a')).addClass("selectdos");
     });
-  }*/
+  }
 
   function newTopBar(idchapter, idtopic){
-    //var arbol = JSON.parse('{{ json_data | escapejs }}');
-    //$('#contenidopestanastop').hide();
-    //location.reload();
-    $('#topbar').empty();
+    $('.topbar'+idtopic+'').empty();
     var newtopbar='';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
@@ -516,7 +509,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
         var topicos = chapters[i]["topico"];
         for (var i = 0; i < topicos.length; i++) {
           if(topicos[i]['id']==idtopic){
-            newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="#" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo OA</a></li>';
+            newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestannaTop(pestanatop0)" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo OA</a></li>';
             try{
               for (var j = 0; j < topicos[i]['subtopico'].length; j++) {
                 newtopbar+='<li id="pestanatop'+topicos[i]['subtopico'][j]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop'+topicos[i]['subtopico'][j]['id']+', '+idtopic+' ,'+topicos[i]['subtopico'][j]['id']+')" >'+topicos[i]['subtopico'][j]['nombre']+'</a></li>';
@@ -530,7 +523,9 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
       }
     }
     newtopbar+='</ul>';
-    $('#topbar').append(newtopbar);
+
+    newtopbar+='<div style="margin-top:50px;text-align:center;"><h2>Nuevo Objetivo de Aprendizaje</h2><h3>Datos del OA:</h3><label for="block">Nombre OA: </label><input id="newNameSubtopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewSubtopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a></div>'
+    $('.topbar'+idtopic+'').append(newtopbar);
   }
 
   function showNewChapter(){
