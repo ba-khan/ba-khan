@@ -442,7 +442,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     var newsidebar='';
     var pestannas = '<div id="contenidopestanas">';
     newsidebar+='<ul><li id="pestana0"><a href="javascript:cambiarPestanna(pestana0);" class="select"><i class="plus"></i> Nueva Unidad</a></li>';
-    pestannas+='<div id="cpestana0" class="cpestanna" align="center"><h2>Nueva Unidad</h2><h3>Datos de la Unidad:</h3><label for="block">Nombre Unidad: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewTopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a></div>';
+    pestannas+='<div id="cpestana0" class="cpestanna" align="center"><h2>Nueva Unidad</h2><h3>Datos de la Unidad:</h3><label for="block">Nombre Unidad: </label><input id="newNameTopic" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewTopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a></div>';
     var chapters=arbol["capitulos"];
     for (var i = 0; i < chapters.length; i++) {
       if(chapters[i]['id']==id){
@@ -486,12 +486,24 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
   function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
     id=(pestanna.id).substring(10);
     //console.log(id);
+    //console.log(idtopic);
     pestannatop = document.getElementById(pestanna.id);
     cpestannatop = document.getElementById('c'+pestanna.id);
     cpestannastop = document.getElementsByClassName('cpestannatop');
-    contenidopestanastop = document.getElementById('contenidopestanastop');
-    for (var i = 0; i < cpestannastop.length; i++) {
+    //contenidopestanastop = document.getElementById('contenidopestanastop');
+    /*for (var i = 0; i < cpestannastop.length; i++) {
       $(contenidopestanastop.getElementsByClassName('cpestannatop')[i]).css('display', 'none');
+    }*/
+    if (id.charAt(0)!='0'){
+      $('#cntotrostop'+idtopic+'').empty();
+      $('#cntpsttop'+idtopic+'').hide();
+      pestannasTop(idsubtopic, idtopic);
+      document.getElementById('cntotrostop'+idtopic+'').style.display = 'block';
+    }
+    else{
+      var localid = (pestanna.id).substring(11);
+      $('#cntotrostop'+localid+'').hide();
+      document.getElementById('cntpsttop'+localid+'').style.display = 'block';
     }
     $(document).ready(function () {
      $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
@@ -509,7 +521,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
         var topicos = chapters[i]["topico"];
         for (var i = 0; i < topicos.length; i++) {
           if(topicos[i]['id']==idtopic){
-            newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestannaTop(pestanatop0)" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo OA</a></li>';
+            newtopbar+='<ul class="tab"><li id="pestanatop0'+idtopic+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+idtopic+')" class="selectdos" id="apestanatop0'+idtopic+'"><i class="plus"></i> Nuevo OA</a></li>';
             try{
               for (var j = 0; j < topicos[i]['subtopico'].length; j++) {
                 newtopbar+='<li id="pestanatop'+topicos[i]['subtopico'][j]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop'+topicos[i]['subtopico'][j]['id']+', '+idtopic+' ,'+topicos[i]['subtopico'][j]['id']+')" >'+topicos[i]['subtopico'][j]['nombre']+'</a></li>';
@@ -524,8 +536,28 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     }
     newtopbar+='</ul>';
 
-    newtopbar+='<div style="margin-top:50px;text-align:center;"><h2>Nuevo Objetivo de Aprendizaje</h2><h3>Datos del OA:</h3><label for="block">Nombre OA: </label><input id="newNameSubtopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewSubtopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a></div>'
+    newtopbar+='<div id="cntpsttop'+idtopic+'" style="margin-top:70px;text-align:center;min-width:500px;"><h2>Nuevo Objetivo de Aprendizaje</h2><h3>Datos del OA:</h3><label for="block">Nombre OA: </label><input id="newNameSubtopic'+idtopic+'" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><label for="block">Descripción del OA: </label><textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:220px; height:50px; padding-top:5px"></textarea><br><a onclick="javascript:saveNewSubtopic('+idtopic+')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a></div>';
+    newtopbar+='<div id="cntotrostop'+idtopic+'" style="margin-top:70px;text-align:center;min-width:500px;"></div>'
     $('.topbar'+idtopic+'').append(newtopbar);
+  }
+
+  function pestannasTop(idsubtopic, idtopic){
+    var contenidotop='';
+    var chapters=arbol['capitulos'];
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]["topico"];
+      for (var i = 0; i < topicos.length; i++) {
+        if (topicos[i]['id']==idtopic){
+          var subtopicos = topicos[i]["subtopico"];
+          for (var i = 0; i < subtopicos.length; i++) {
+            if(subtopicos[i]['id']==idsubtopic){
+              contenidotop+='<h3>Descripción: </h3><br><label>'+subtopicos[i]['aeoe']+'</label>';
+            }
+          }
+        }
+      }
+    }
+    $('#cntotrostop'+idtopic+'').append(contenidotop);
   }
 
   function showNewChapter(){
@@ -624,15 +656,16 @@ function saveNewTopic(){
 }
 
 
-function saveNewSubtopic(t){
-  var nombresubtopic = $('#newNameSubtopic').val()
-  var descripcionsubtopic = $('#textarea_coment').val()
+function saveNewSubtopic(idtopic){
+  var nombresubtopic = $('#newNameSubtopic'+idtopic+'').val();
+  var descripcionsubtopic = $('#textarea_coment').val();
+
   //console.log(descripcionsubtopic);
-  if(validarSubtopic()){
+  if(validarSubtopic(idtopic)){
     $.ajax({
       url: "{% url 'curriculum:nuevo_subtopic' %}",
       type: "POST",
-      data: {nombre: nombresubtopic, curso: t, descripcion: descripcionsubtopic},
+      data: {nombre: nombresubtopic, topico: idtopic, descripcion: descripcionsubtopic},
         success: function(response){
           $("#popup").empty()
           $("#close").hide();
@@ -700,19 +733,19 @@ function saveVideoExercise(t){
   }
 }
 
-function addTopic(id){
+/*function addTopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
   $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nueva Unidad</h3><label for='block'>Unidad: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
-}
+}*/
 
-function addSubtopic(id){
+/*function addSubtopic(id){
   $('#popup').empty();
   $('#hover').fadeIn();
   $('#popup').fadeIn();
   $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><textarea id='textarea_coment' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:220px;height:50px;padding-top:5px'></textarea><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
-}
+}*/
 
 function addVideoExercise(id){
     var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
@@ -1008,14 +1041,16 @@ function validarTopic(){
   return flag;
 }
 
-function validarSubtopic(){
+function validarSubtopic(idtopic){
   flag = true;
-  nName = document.getElementById("newNameSubtopic").value;
+  nName = document.getElementById("newNameSubtopic"+idtopic+"").value;
   if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+    console.log(nName);
     $("#newNameSubtopic").css('color', '#C30202');
     flag = false;
   }else{
     $("#newNameSubtopic").css('color', '#000000');
+    console.log('entro en else');
   }
   return flag;
 }

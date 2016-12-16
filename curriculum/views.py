@@ -184,7 +184,7 @@ def newSubtopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['curso'], AE_OE=args['descripcion'])
+			Subtopic_Mineduc.objects.create(name=args['nombre'], id_topic_id=args['topico'], AE_OE=args['descripcion'])
 			return HttpResponse('Objetivo de Aprendizaje guardado correctamente')
 		except Exception as e:
 			print e
