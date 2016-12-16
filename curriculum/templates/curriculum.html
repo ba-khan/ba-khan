@@ -551,14 +551,15 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
           var subtopicos = topicos[i]["subtopico"];
           for (var i = 0; i < subtopicos.length; i++) {
             if(subtopicos[i]['id']==idsubtopic){
-              contenidotop+='<h3>Descripción: </h3><br><label>'+subtopicos[i]['aeoe']+'</label>';
+              contenidotop+='<h3>Descripción: </h3><label><b>'+subtopicos[i]['aeoe']+'</b></label><hr>';
             }
           }
         }
       }
     }
-    //contenidotop+="<a onclick=\"(addVideoExercise('" + idsubtopic + " ', '"+idtopic+"'))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:160px; height: 50px; padding:8px; margin-top:10px'>Agregar Videos - Ejercicios</a>";
-    addVideoExercise(idsubtopic, idtopic);
+    contenidotop+='<div id="videoexercise"><div id="ejerciciosdiv" style="width:50%; float:left;"><h3>Ejercicios</h3></div><div id="videosdiv" style="width:50%; float:left;"><h3>Videos</h3></div></div><hr>';
+    contenidotop+='<br><a onclick=\'(addVideoExercise("'+idsubtopic+'","'+idtopic+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios - Videos</a>';
+    //addVideoExercise(idsubtopic, idtopic);
     $('#cntotrostop'+idtopic+'').append(contenidotop);
   }
 
@@ -691,10 +692,10 @@ function saveNewSubtopic(idtopic){
   }
 }
 
-function saveVideoExercise(t){
-  var infodata=[]
+function saveVideoExercise(idsubtopic){
+  var infodata=[];
   var cont=0;
-  var select = $("#newTree"+t).jstree("get_selected", true);
+  var select = $("#newTree"+idsubtopic).jstree("get_selected", true);
   for (var i = 0; i < select.length; i++) {
     if (typeof select[i]["data"] != "undefined"){
       if(select[i]["data"]["skill_id"]){
@@ -703,17 +704,17 @@ function saveVideoExercise(t){
       else{
         infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
       }
-
     }
 
     cont++;
   }
+  console.log(infodata);
 
   if (select.length>0){
     $.ajax({
     url: "{% url 'curriculum:save_videoexercise' %}",
     type: "POST",
-    data: {infodata, subtopic:t},
+    data: {infodata, subtopic:idsubtopic},
       success: function(response){
         $('#popuptree').hide();
         $("#popup").empty()

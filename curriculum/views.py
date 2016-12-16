@@ -201,7 +201,7 @@ def saveVideoExercise(request):
 			Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopic_id).delete()
 			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopic_id).delete()
 			cantidad = (len(args)-1)/3
-			print args
+			#print args
 			for x in range(0,cantidad):
 				try:
 					if args['infodata['+str(x)+'][icon]']=="false":
