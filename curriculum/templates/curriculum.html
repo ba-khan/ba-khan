@@ -559,26 +559,26 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
       }
     }
 
-    contenidotop+='<div id="videoexercise"><div id="ejerciciosdiv" style="width:50%; float:left;"><h3>Ejercicios</h3><ul>';
-    var chapters=arbol['capitulos'];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var i = 0; i < topicos.length; i++) {
-        if (topicos[i]['id']==idtopic){
-          var subtopicos = topicos[i]["subtopico"];
-          for (var i = 0; i < subtopicos.length; i++) {
-            if(subtopicos[i]['id']==idsubtopic){
-              var ejercicios = subtopicos[i]['skills'];
-              for (var i = 0; i < ejercicios.length; i++) {
-                contenidotop+='<li>'+ejercicios[i]['nombre']+'</li>';
+    contenidotop+='<div id="videoexercise"><div id="ejerciciosdiv" style="width:50%; float:left;"><h3>Ejercicios</h3>';
+    /*var chapters=arbol['capitulos'];
+    for (var k = 0; k < chapters.length; k++) {
+      var topicos = chapters[k]["topico"];
+      for (var k = 0; k < topicos.length; k++) {
+        if (topicos[k]['id']==idtopic){
+          var subtopicos = topicos[k]["subtopico"];
+          for (var k = 0; k < subtopicos.length; k++) {
+            if(subtopicos[k]['id']==idsubtopic){
+              var ejercicios = subtopicos[k]['skills'];
+              for (var k = 0; k < ejercicios.length; k++) {
+                contenidotop+='<li>'+ejercicios[k]['nombre']+'</li>';
               }
             }
           }
         }
       }
-    }
-    contenidotop+='</ul></div><div id="videosdiv" style="width:50%; float:left;"><h3>Videos</h3><ul>';
-    var chapters=arbol['capitulos'];
+    }*/
+    contenidotop+='</div><div id="videosdiv" style="width:50%; float:left;"><h3>Videos</h3>';
+    /*var chapters=arbol['capitulos'];
     for (var j = 0; j < chapters.length; j++) {
       var topicos = chapters[j]["topico"];
       for (var j = 0; j < topicos.length; j++) {
@@ -595,8 +595,8 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
           }
         }
       }
-    }
-    contenidotop+='</ul></div></div><hr>';
+    }*/
+    contenidotop+='</div></div><hr>';
     contenidotop+='<br><a onclick=\'(addVideoExercise("'+idsubtopic+'","'+idtopic+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios - Videos</a>';
     //addVideoExercise(idsubtopic, idtopic);
     $('#cntotrostop'+idtopic+'').append(contenidotop);

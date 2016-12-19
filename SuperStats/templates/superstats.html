@@ -99,7 +99,7 @@
   </div>
 
 </div>
-  <div id="fechas" style="width:65%;float:left;height: 140px;" class="dates">
+  <div id="fechas" style="width:50%;float:left;height: 140px;" class="dates">
     <br>
     <h2 align="left" style="margin-left:200px;">Fechas</h2>
         <div  class="fechas" style="margin-left: 50px;">
@@ -659,7 +659,7 @@ function graficar(json, clase){
   var j;
   var mission=[];
 
-  /*var estudianteslsmb=0;
+  var estudianteslsmb=0;
   var estudiantesea=0;
   var estudiantescei=0;
   var estudianteslav=0;
@@ -667,7 +667,7 @@ function graficar(json, clase){
   var estudianteslgm=0;
   var estudiantesbakhan=0;
 
-  var estudiantes1basico=0;
+  /*var estudiantes1basico=0;
   var estudiantes2basico=0;
   var estudiantes3basico=0;
   var estudiantes4basico=0;
@@ -749,12 +749,13 @@ function graficar(json, clase){
       if (ee=="LSMB"){
         colorcolumn[i]='#7CB5EC';
         arraylsmb[level-1]=arraylsmb[level-1]+cantidad;
-        arraylsmbprom[level-1]=arraylsmbprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //estudianteslsmb+=estudiantes.length;
+        //arrayeaprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[0]+=estudiantes.length;
 
         if (level==1){
           array1basico[0]+=cantidad;
-          array1basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[0]+=tpo_ejercicios;
           array1basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -764,7 +765,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[0]+=cantidad;
-          array2basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[0]+=tpo_ejercicios;
           array2basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -774,7 +775,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[0]+=cantidad;
-          array3basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[0]+=tpo_ejercicios;
           array3basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -784,7 +785,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[0]+=cantidad;
-          array4basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[0]+=tpo_ejercicios;
           array4basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -794,7 +795,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[0]+=cantidad;
-          array5basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[0]+=tpo_ejercicios;
           array5basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -804,7 +805,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[0]+=cantidad;
-          array6basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[0]+=tpo_ejercicios;
           array6basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -814,7 +815,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[0]+=cantidad;
-          array7basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[0]+=tpo_ejercicios;
           array7basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -824,7 +825,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[0]+=cantidad;
-          array8basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[0]+=tpo_ejercicios;
           array8basicoejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -834,7 +835,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[0]+=cantidad;
-          array1medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[0]+=tpo_ejercicios;
           array1medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -844,7 +845,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[0]+=cantidad;
-          array2medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[0]+=tpo_ejercicios;
           array2medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -854,7 +855,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[0]+=cantidad;
-          array3medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[0]+=tpo_ejercicios;
           array3medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -864,7 +865,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[0]+=cantidad;
-          array4medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[0]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[0]+=tpo_ejercicios;
           array4medioejerprom[0]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -883,12 +884,12 @@ function graficar(json, clase){
       if (ee=="E.A."){
         colorcolumn[i]='#434348';
         arrayea[level-1]=arrayea[level-1]+cantidad;
-        arrayeaprom[level-1]=arrayeaprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //arrayeaprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[1]+=estudiantes.length;
 
         if (level==1){
           array1basico[1]+=cantidad;
-          array1basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[1]+=tpo_ejercicios;
           array1basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -898,7 +899,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[1]+=cantidad;
-          array2basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[1]+=tpo_ejercicios;
           array2basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -908,7 +909,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[1]+=cantidad;
-          array3basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[1]+=tpo_ejercicios;
           array3basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -918,7 +919,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[1]+=cantidad;
-          array4basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[1]+=tpo_ejercicios;
           array4basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -928,7 +929,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[1]+=cantidad;
-          array5basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[1]+=tpo_ejercicios;
           array5basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -938,7 +939,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[1]+=cantidad;
-          array6basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[1]+=tpo_ejercicios;
           array6basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -948,7 +949,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[1]+=cantidad;
-          array7basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[1]+=tpo_ejercicios;
           array7basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -958,7 +959,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[1]+=cantidad;
-          array8basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[1]+=tpo_ejercicios;
           array8basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -968,7 +969,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[1]+=cantidad;
-          array1medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[1]+=tpo_ejercicios;
           array1medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -978,7 +979,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[1]+=cantidad;
-          array2medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[1]+=tpo_ejercicios;
           array2medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -988,7 +989,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[1]+=cantidad;
-          array3medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[1]+=tpo_ejercicios;
           array3medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -998,7 +999,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[1]+=cantidad;
-          array4medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[1]+=tpo_ejercicios;
           array4medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1018,12 +1019,12 @@ function graficar(json, clase){
       if (ee=="C.E.I."){
         colorcolumn[i]='#90ED7D';
         arraycei[level-1]=arraycei[level-1]+cantidad;
-        arrayceiprom[level-1]=arrayceiprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //arrayceiprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[2]+=estudiantes.length;
 
         if (level==1){
           array1basico[2]+=cantidad;
-          array1basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[2]+=tpo_ejercicios;
           array1basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1033,7 +1034,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[2]+=cantidad;
-          array2basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[2]+=tpo_ejercicios;
           array2basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1043,7 +1044,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[2]+=cantidad;
-          array3basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[2]+=tpo_ejercicios;
           array3basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1053,7 +1054,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[2]+=cantidad;
-          array4basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[2]+=tpo_ejercicios;
           array4basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1063,7 +1064,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[2]+=cantidad;
-          array5basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[2]+=tpo_ejercicios;
           array5basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1073,7 +1074,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[2]+=cantidad;
-          array6basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[2]+=tpo_ejercicios;
           array6basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1083,7 +1084,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[2]+=cantidad;
-          array7basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[2]+=tpo_ejercicios;
           array7basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1093,7 +1094,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[2]+=cantidad;
-          array8basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[2]+=tpo_ejercicios;
           array8basicoejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1103,7 +1104,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[2]+=cantidad;
-          array1medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[2]+=tpo_ejercicios;
           array1medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1113,7 +1114,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[2]+=cantidad;
-          array2medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[2]+=tpo_ejercicios;
           array2medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1123,7 +1124,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[2]+=cantidad;
-          array3medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[2]+=tpo_ejercicios;
           array3medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1133,7 +1134,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[2]+=cantidad;
-          array4medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[2]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[2]+=tpo_ejercicios;
           array4medioejerprom[2]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1151,12 +1152,12 @@ function graficar(json, clase){
       if (ee=="L.A.V."){
         colorcolumn[i]='#F7A35C';
         arraylav[level-1]=arraylav[level-1]+cantidad;
-        arraylavprom[level-1]=arraylavprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //arraylavprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[3]+=estudiantes.length;
 
         if (level==1){
           array1basico[3]+=cantidad;
-          array1basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[3]+=tpo_ejercicios;
           array1basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1166,7 +1167,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[3]+=cantidad;
-          array2basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[3]+=tpo_ejercicios;
           array2basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1176,7 +1177,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[3]+=cantidad;
-          array3basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[3]+=tpo_ejercicios;
           array3basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1186,7 +1187,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[3]+=cantidad;
-          array4basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[3]+=tpo_ejercicios;
           array4basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1196,7 +1197,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[3]+=cantidad;
-          array5basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[3]+=tpo_ejercicios;
           array5basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1206,7 +1207,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[3]+=cantidad;
-          array6basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[3]+=tpo_ejercicios;
           array6basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1216,7 +1217,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[3]+=cantidad;
-          array7basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[3]+=tpo_ejercicios;
           array7basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1226,7 +1227,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[3]+=cantidad;
-          array8basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[3]+=tpo_ejercicios;
           array8basicoejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1236,7 +1237,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[3]+=cantidad;
-          array1medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[3]+=tpo_ejercicios;
           array1medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1246,7 +1247,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[3]+=cantidad;
-          array2medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[3]+=tpo_ejercicios;
           array2medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1256,7 +1257,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[3]+=cantidad;
-          array3medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[3]+=tpo_ejercicios;
           array3medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1266,7 +1267,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[3]+=cantidad;
-          array4medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[3]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[3]+=tpo_ejercicios;
           array4medioejerprom[3]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1285,12 +1286,12 @@ function graficar(json, clase){
       if (ee=="R.A.P."){
         colorcolumn[i]='#8085E9';
         arrayrap[level-1]=arrayrap[level-1]+cantidad;
-        arrayrapprom[level-1]=arrayrapprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //arrayrapprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[4]+=estudiantes.length;
 
         if (level==1){
           array1basico[4]+=cantidad;
-          array1basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[4]+=tpo_ejercicios;
           array1basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1300,7 +1301,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[4]+=cantidad;
-          array2basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[4]+=tpo_ejercicios;
           array2basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1310,7 +1311,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[4]+=cantidad;
-          array3basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[4]+=tpo_ejercicios;
           array3basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1320,7 +1321,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[4]+=cantidad;
-          array4basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[4]+=tpo_ejercicios;
           array4basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1330,7 +1331,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[4]+=cantidad;
-          array5basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[4]+=tpo_ejercicios;
           array5basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1340,7 +1341,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[4]+=cantidad;
-          array6basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[4]+=tpo_ejercicios;
           array6basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1350,7 +1351,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[4]+=cantidad;
-          array7basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[4]+=tpo_ejercicios;
           array7basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1360,7 +1361,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[4]+=cantidad;
-          array8basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[4]+=tpo_ejercicios;
           array8basicoejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1370,7 +1371,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[4]+=cantidad;
-          array1medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[4]+=tpo_ejercicios;
           array1medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1380,7 +1381,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[4]+=cantidad;
-          array2medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[4]+=tpo_ejercicios;
           array2medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1390,7 +1391,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[4]+=cantidad;
-          array3medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[4]+=tpo_ejercicios;
           array3medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1400,7 +1401,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[4]+=cantidad;
-          array4medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[4]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[4]+=tpo_ejercicios;
           array4medioejerprom[4]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1419,12 +1420,12 @@ function graficar(json, clase){
       if (ee=="L.G.M."){
         colorcolumn[i]='#F15C80';
         arraygm[level-1]=arraygm[level-1]+cantidad;
-        arraygmprom[level-1]=arraygmprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //arraygmprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[5]+=estudiantes.length;
 
         if (level==1){
           array1basico[5]+=cantidad;
-          array1basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[5]+=tpo_ejercicios;
           array1basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1434,7 +1435,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[5]+=cantidad;
-          array2basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[5]+=tpo_ejercicios;
           array2basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1444,7 +1445,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[5]+=cantidad;
-          array3basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[5]+=tpo_ejercicios;
           array3basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1454,7 +1455,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[5]+=cantidad;
-          array4basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[5]+=tpo_ejercicios;
           array4basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1464,7 +1465,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[5]+=cantidad;
-          array5basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[5]+=tpo_ejercicios;
           array5basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1474,7 +1475,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[5]+=cantidad;
-          array6basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[5]+=tpo_ejercicios;
           array6basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1484,7 +1485,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[5]+=cantidad;
-          array7basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[5]+=tpo_ejercicios;
           array7basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1494,7 +1495,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[5]+=cantidad;
-          array8basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[5]+=tpo_ejercicios;
           array8basicoejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1504,7 +1505,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[5]+=cantidad;
-          array1medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[5]+=tpo_ejercicios;
           array1medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1514,7 +1515,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[5]+=cantidad;
-          array2medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[5]+=tpo_ejercicios;
           array2medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1524,7 +1525,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[5]+=cantidad;
-          array3medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[5]+=tpo_ejercicios;
           array3medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1534,7 +1535,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[5]+=cantidad;
-          array4medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[5]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[5]+=tpo_ejercicios;
           array4medioejerprom[5]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1553,12 +1554,12 @@ function graficar(json, clase){
       if (ee=="BA-Khan"){
         colorcolumn[i]='#E4D354';
         arraybakhan[level-1]=arraybakhan[level-1]+cantidad;
-        arraybakhanprom[level-1]=arraybakhanprom[level-1]+Math.round(cantidad/estudiantes.length*100)/100;
+        //arraybakhanprom[level-1]+=(Math.round(cantidad/estudiantes.length*100)/100);
         estudiantesnivelesinst[6]+=estudiantes.length;
 
         if (level==1){
           array1basico[6]+=cantidad;
-          array1basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1basicoejer[6]+=tpo_ejercicios;
           array1basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1568,7 +1569,7 @@ function graficar(json, clase){
         }
         if (level==2){
           array2basico[6]+=cantidad;
-          array2basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2basicoejer[6]+=tpo_ejercicios;
           array2basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1578,7 +1579,7 @@ function graficar(json, clase){
         }
         if (level==3){
           array3basico[6]+=cantidad;
-          array3basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3basicoejer[6]+=tpo_ejercicios;
           array3basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1588,7 +1589,7 @@ function graficar(json, clase){
         }
         if (level==4){
           array4basico[6]+=cantidad;
-          array4basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4basicoejer[6]+=tpo_ejercicios;
           array4basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1598,7 +1599,7 @@ function graficar(json, clase){
         }
         if (level==5){
           array5basico[6]+=cantidad;
-          array5basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array5basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array5basicoejer[6]+=tpo_ejercicios;
           array5basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1608,7 +1609,7 @@ function graficar(json, clase){
         }
         if (level==6){
           array6basico[6]+=cantidad;
-          array6basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array6basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array6basicoejer[6]+=tpo_ejercicios;
           array6basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1618,7 +1619,7 @@ function graficar(json, clase){
         }
         if (level==7){
           array7basico[6]+=cantidad;
-          array7basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array7basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array7basicoejer[6]+=tpo_ejercicios;
           array7basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1628,7 +1629,7 @@ function graficar(json, clase){
         }
         if (level==8){
           array8basico[6]+=cantidad;
-          array8basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array8basicoprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array8basicoejer[6]+=tpo_ejercicios;
           array8basicoejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1638,7 +1639,7 @@ function graficar(json, clase){
         }
         if (level==9){
           array1medio[6]+=cantidad;
-          array1medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array1medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array1medioejer[6]+=tpo_ejercicios;
           array1medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1648,7 +1649,7 @@ function graficar(json, clase){
         }
         if (level==10){
           array2medio[6]+=cantidad;
-          array2medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array2medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array2medioejer[6]+=tpo_ejercicios;
           array2medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1658,7 +1659,7 @@ function graficar(json, clase){
         }
         if (level==11){
           array3medio[6]+=cantidad;
-          array3medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array3medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array3medioejer[6]+=tpo_ejercicios;
           array3medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1668,7 +1669,7 @@ function graficar(json, clase){
         }
         if (level==12){
           array4medio[6]+=cantidad;
-          array4medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
+          //array4medioprom[6]+=Math.round(cantidad/estudiantes.length*100)/100;
 
           array4medioejer[6]+=tpo_ejercicios;
           array4medioejerprom[6]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
@@ -1771,6 +1772,34 @@ function graficar(json, clase){
     var arraypromedio= new Array(12).fill(0);
     for (var i = 0; i < arraylsmb.length; i++) {
       var average=(arraylsmb[i]+arrayea[i]+arraycei[i]+arraylav[i]+arrayrap[i]+arraygm[i]+arraybakhan[i])/estudiantesniveles[i];
+      arraylsmbprom[i]=Math.round(arraylsmb[i]/estudiantesniveles[i]*100)/100;
+      arrayeaprom[i]=Math.round(arrayea[i]/estudiantesniveles[i]*100)/100;
+      arrayceiprom[i]=Math.round(arraycei[i]/estudiantesniveles[i]*100)/100;
+      arraylavprom[i]=Math.round(arraylav[i]/estudiantesniveles[i]*100)/100;
+      arrayrapprom[i]=Math.round(arrayrap[i]/estudiantesniveles[i]*100)/100;
+      arraygmprom[i]=Math.round(arraygm[i]/estudiantesniveles[i]*100)/100;
+      arraybakhanprom[i]=Math.round(arraybakhan[i]/estudiantesniveles[i]*100)/100;
+      if (isNaN(arraylsmbprom[i])){
+        arraylsmbprom[i]=0;
+      }
+      if (isNaN(arrayeaprom[i])){
+        arrayeaprom[i]=0;
+      }
+      if (isNaN(arrayceiprom[i])){
+        arrayceiprom[i]=0;
+      }
+      if (isNaN(arraylavprom[i])){
+        arraylavprom[i]=0;
+      }
+      if (isNaN(arrayrapprom[i])){
+        arrayrapprom[i]=0;
+      }
+      if (isNaN(arraygmprom[i])){
+        arraygmprom[i]=0;
+      }
+      if (isNaN(arraybakhanprom[i])){
+        arraybakhanprom[i]=0;
+      }
       if (isNaN(average)){
         arraypromedio[i]=0;
       }
@@ -1778,16 +1807,57 @@ function graficar(json, clase){
         arraypromedio[i]=Math.round(average*100)/100;
       }
     }
+    var categoriasdxn = ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio'];
+    var realarraylsmb=[];
+    var realarrayea=[];
+    var realarraycei=[];
+    var realarraylav=[];
+    var realarrayrap=[];
+    var realarraygm=[];
+    var realarraybakhan=[];
+    var realarraylsmbprom=[];
+    var realarrayeaprom=[];
+    var realarrayceiprom=[];
+    var realarraylavprom=[];
+    var realarrayrapprom=[];
+    var realarraygmprom=[];
+    var realarraybakhanprom=[];
+    var categoriasrealdxn=[];
+    var realarraypromedio=[];
+    var realestudiantesxnivel=[];
+    var count =0;
+    for (var i = 0; i < estudiantesniveles.length; i++) {
+      if(estudiantesniveles[i]!=0){
+        realarraylsmb[count]=arraylsmb[i];
+        realarrayea[count]=arrayea[i];
+        realarraycei[count]=arraycei[i];
+        realarraylav[count]=arraylav[i];
+        realarrayrap[count]=arrayrap[i];
+        realarraygm[count]=arraygm[i];
+        realarraybakhan[count]=arraybakhan[i];
+        realarraylsmbprom[count]=arraylsmbprom[i];
+        realarrayeaprom[count]=arrayeaprom[i];
+        realarrayceiprom[count]=arrayceiprom[i];
+        realarraylavprom[count]=arraylavprom[i];
+        realarrayrapprom[count]=arrayrapprom[i];
+        realarraygmprom[count]=arraygmprom[i];
+        realarraybakhanprom[count]=arraybakhanprom[i];
+        categoriasrealdxn[count]=categoriasdxn[i];
+        realarraypromedio[count]=arraypromedio[i];
+        realestudiantesxnivel[count]=estudiantesniveles[i];
+        count++;
+      }
+    }
 
-    distxnivel[0]={'name':'LSMB', 'data':arraylsmb, 'type':'column', 'yAxis':1};
-    distxnivel[1]={'name':'E.A.', 'data':arrayea, 'type':'column', 'yAxis':1};
-    distxnivel[2]={'name':'C.E.I.', 'data':arraycei, 'type':'column', 'yAxis':1};
-    distxnivel[3]={'name':'L.A.V.', 'data':arraylav, 'type':'column', 'yAxis':1};
-    distxnivel[4]={'name':'R.A.P.', 'data':arrayrap, 'type':'column', 'yAxis':1};
-    distxnivel[5]={'name':'L.G.M.', 'data':arraygm, 'type':'column', 'yAxis':1};
-    distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan, 'type':'column', 'yAxis':1};
-    distxnivel[7]={'name':'Promedio Ejercicios', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivel[8]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivel[0]={'name':'LSMB', 'data':realarraylsmb, 'type':'column', 'yAxis':1};
+    distxnivel[1]={'name':'E.A.', 'data':realarrayea, 'type':'column', 'yAxis':1};
+    distxnivel[2]={'name':'C.E.I.', 'data':realarraycei, 'type':'column', 'yAxis':1};
+    distxnivel[3]={'name':'L.A.V.', 'data':realarraylav, 'type':'column', 'yAxis':1};
+    distxnivel[4]={'name':'R.A.P.', 'data':realarrayrap, 'type':'column', 'yAxis':1};
+    distxnivel[5]={'name':'L.G.M.', 'data':realarraygm, 'type':'column', 'yAxis':1};
+    distxnivel[6]={'name':'Ba-Khan', 'data':realarraybakhan, 'type':'column', 'yAxis':1};
+    distxnivel[7]={'name':'Promedio Ejercicios', 'data':realarraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth': 0};
+    distxnivel[8]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contador=0;
     for (var i = 0; i < distxnivel.length; i++) {
@@ -1806,15 +1876,15 @@ function graficar(json, clase){
       distxnivel.splice(elementremove[i]-i,1);
     };
 
-    distxnivelprom[0]={'name':'LSMB', 'data':arraylsmbprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[1]={'name':'E.A.', 'data':arrayeaprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[2]={'name':'C.E.I.', 'data':arrayceiprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[3]={'name':'L.A.V.', 'data':arraylavprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[4]={'name':'R.A.P.', 'data':arrayrapprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[5]={'name':'L.G.M.', 'data':arraygmprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[6]={'name':'Ba-Khan', 'data':arraybakhanprom, 'type':'column', 'yAxis':1};
-    distxnivelprom[7]={'name':'Promedio Ejercicios', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelprom[8]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivelprom[0]={'name':'LSMB', 'data':realarraylsmbprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[1]={'name':'E.A.', 'data':realarrayeaprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[2]={'name':'C.E.I.', 'data':realarrayceiprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[3]={'name':'L.A.V.', 'data':realarraylavprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[4]={'name':'R.A.P.', 'data':realarrayrapprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[5]={'name':'L.G.M.', 'data':realarraygmprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[6]={'name':'Ba-Khan', 'data':realarraybakhanprom, 'type':'column', 'yAxis':1};
+    distxnivelprom[7]={'name':'Promedio Ejercicios', 'data':realarraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    distxnivelprom[8]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contadorprom=0;
     for (var i = 0; i < distxnivelprom.length; i++) {
@@ -1837,6 +1907,56 @@ function graficar(json, clase){
     var arraypromedioinst= new Array(6).fill(0);
     for (var i = 0; i < array1basico.length; i++) {
       var average=(array1basico[i]+array2basico[i]+array3basico[i]+array4basico[i]+array5basico[i]+array6basico[i]+array7basico[i]+array8basico[i]+array1medio[i]+array2medio[i]+array3medio[i]+array4medio[i])/estudiantesnivelesinst[i];
+      array1basicoprom[i] = Math.round(array1basico[i]/estudiantesniveles[0]*100)/100;
+      array2basicoprom[i] = Math.round(array2basico[i]/estudiantesniveles[1]*100)/100;
+      array3basicoprom[i] = Math.round(array3basico[i]/estudiantesniveles[2]*100)/100;
+      array4basicoprom[i] = Math.round(array4basico[i]/estudiantesniveles[3]*100)/100;
+      array5basicoprom[i] = Math.round(array5basico[i]/estudiantesniveles[4]*100)/100;
+      array6basicoprom[i] = Math.round(array6basico[i]/estudiantesniveles[5]*100)/100;
+      array7basicoprom[i] = Math.round(array7basico[i]/estudiantesniveles[6]*100)/100;
+      array8basicoprom[i] = Math.round(array8basico[i]/estudiantesniveles[7]*100)/100;
+      array1medioprom[i] = Math.round(array1medio[i]/estudiantesniveles[8]*100)/100;
+      array2medioprom[i] = Math.round(array2medio[i]/estudiantesniveles[9]*100)/100;
+      array3medioprom[i] = Math.round(array3medio[i]/estudiantesniveles[10]*100)/100;
+      array4medioprom[i] = Math.round(array4medio[i]/estudiantesniveles[11]*100)/100;
+
+      //console.log(estudiantesnivelesinst);
+      if (isNaN(array1basicoprom[i])){
+        array1basicoprom[i]=0;
+      }
+      if (isNaN(array2basicoprom[i])){
+        array2basicoprom[i]=0;
+      }
+      if (isNaN(array3basicoprom[i])){
+        array3basicoprom[i]=0;
+      }
+      if (isNaN(array4basicoprom[i])){
+        array4basicoprom[i]=0;
+      }
+      if (isNaN(array5basicoprom[i])){
+        array5basicoprom[i]=0;
+      }
+      if (isNaN(array6basicoprom[i])){
+        array6basicoprom[i]=0;
+      }
+      if (isNaN(array7basicoprom[i])){
+        array7basicoprom[i]=0;
+      }
+      if (isNaN(array8basicoprom[i])){
+        array8basicoprom[i]=0;
+      }
+      if (isNaN(array1medioprom[i])){
+        array1medioprom[i]=0;
+      }
+      if (isNaN(array2medioprom[i])){
+        array2medioprom[i]=0;
+      }
+      if (isNaN(array3medioprom[i])){
+        array3medioprom[i]=0;
+      }
+      if (isNaN(array4medioprom[i])){
+        array4medioprom[i]=0;
+      }
       if (isNaN(average)){
         arraypromedioinst[i]=0;
       }
@@ -1844,21 +1964,61 @@ function graficar(json, clase){
         arraypromedioinst[i]=Math.round(average*100)/100;
       }
     }
+    //console.log(array1medioprom);
+    //console.log(array2medioprom);
 
-    distxinst[0]={'name':'1ro basico', 'data':array1basico, 'type':'column', 'yAxis':1};
-    distxinst[1]={'name':'2do basico', 'data':array2basico, 'type':'column', 'yAxis':1};
-    distxinst[2]={'name':'3ro basico', 'data':array3basico, 'type':'column', 'yAxis':1};
-    distxinst[3]={'name':'4to basico', 'data':array4basico, 'type':'column', 'yAxis':1};
-    distxinst[4]={'name':'5to basico', 'data':array5basico, 'type':'column', 'yAxis':1};
-    distxinst[5]={'name':'6to basico', 'data':array6basico, 'type':'column', 'yAxis':1};
-    distxinst[6]={'name':'7mo basico', 'data':array7basico, 'type':'column', 'yAxis':1};
-    distxinst[7]={'name':'8vo basico', 'data':array8basico, 'type':'column', 'yAxis':1};
-    distxinst[8]={'name':'1ro medio', 'data':array1medio, 'type':'column', 'yAxis':1};
-    distxinst[9]={'name':'2do medio', 'data':array2medio, 'type':'column', 'yAxis':1};
-    distxinst[10]={'name':'3ro medio', 'data':array3medio, 'type':'column', 'yAxis':1};
-    distxinst[11]={'name':'4to medio', 'data':array4medio, 'type':'column', 'yAxis':1};
-    distxinst[12]={'name':'Promedio Ejercicios', 'data':arraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxinst[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+    var categoriasdxi = ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan'];
+    var realarray1basico=[];
+    var realarray2basico=[];
+    var realarray3basico=[];
+    var realarray4basico=[];
+    var realarray5basico=[];
+    var realarray6basico=[];
+    var realarray7basico=[];
+    var realarray8basico=[];
+    var realarray1medio=[];
+    var realarray2medio=[];
+    var realarray3medio=[];
+    var realarray4medio=[];
+    var realarraypromedioinst=[];
+    var realestudiantesxnivelinst=[];
+    var categoriasdxireal=[];
+    var countinst = 0;
+    for (var i = 0; i < estudiantesnivelesinst.length; i++) {
+      if(estudiantesnivelesinst[i]!=0){
+        realarray1basico[countinst]=array1basico[i];
+        realarray2basico[countinst]=array2basico[i];
+        realarray3basico[countinst]=array3basico[i];
+        realarray4basico[countinst]=array4basico[i];
+        realarray5basico[countinst]=array5basico[i];
+        realarray6basico[countinst]=array6basico[i];
+        realarray7basico[countinst]=array7basico[i];
+        realarray8basico[countinst]=array8basico[i];
+        realarray1medio[countinst]=array1medio[i];
+        realarray2medio[countinst]=array2medio[i];
+        realarray3medio[countinst]=array3medio[i];
+        realarray4medio[countinst]=array4medio[i];
+        realarraypromedioinst[countinst]=arraypromedioinst[i];
+        realestudiantesxnivelinst[countinst]=estudiantesnivelesinst[i];
+        categoriasdxireal[countinst]=categoriasdxi[i];
+        countinst++;
+      }
+    }
+
+    distxinst[0]={'name':'1ro basico', 'data':realarray1basico, 'type':'column', 'yAxis':1};
+    distxinst[1]={'name':'2do basico', 'data':realarray2basico, 'type':'column', 'yAxis':1};
+    distxinst[2]={'name':'3ro basico', 'data':realarray3basico, 'type':'column', 'yAxis':1};
+    distxinst[3]={'name':'4to basico', 'data':realarray4basico, 'type':'column', 'yAxis':1};
+    distxinst[4]={'name':'5to basico', 'data':realarray5basico, 'type':'column', 'yAxis':1};
+    distxinst[5]={'name':'6to basico', 'data':realarray6basico, 'type':'column', 'yAxis':1};
+    distxinst[6]={'name':'7mo basico', 'data':realarray7basico, 'type':'column', 'yAxis':1};
+    distxinst[7]={'name':'8vo basico', 'data':realarray8basico, 'type':'column', 'yAxis':1};
+    distxinst[8]={'name':'1ro medio', 'data':realarray1medio, 'type':'column', 'yAxis':1};
+    distxinst[9]={'name':'2do medio', 'data':realarray2medio, 'type':'column', 'yAxis':1};
+    distxinst[10]={'name':'3ro medio', 'data':realarray3medio, 'type':'column', 'yAxis':1};
+    distxinst[11]={'name':'4to medio', 'data':realarray4medio, 'type':'column', 'yAxis':1};
+    distxinst[12]={'name':'Promedio Ejercicios', 'data':realarraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    distxinst[13]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivelinst, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contadorinst=0;
     for (var i = 0; i < distxinst.length; i++) {
@@ -1889,9 +2049,10 @@ function graficar(json, clase){
     distxinstprom[9]={'name':'2do medio', 'data':array2medioprom, 'type':'column', 'yAxis':1};
     distxinstprom[10]={'name':'3ro medio', 'data':array3medioprom, 'type':'column', 'yAxis':1};
     distxinstprom[11]={'name':'4to medio', 'data':array4medioprom, 'type':'column', 'yAxis':1};
-    distxinstprom[12]={'name':'Promedio Ejercicios', 'data':arraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxinstprom[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+    distxinstprom[12]={'name':'Promedio Ejercicios', 'data':arraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    distxinstprom[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
+    //console.log(distxinstprom);
     var contadorinstprom=0;
     for (var i = 0; i < distxinstprom.length; i++) {
       var verificador = true;
@@ -1954,8 +2115,8 @@ function graficar(json, clase){
     distxnivelejerprom[4]={'name':'R.A.P.', 'data':arrayrapejerprom, 'type':'column', 'yAxis':1};
     distxnivelejerprom[5]={'name':'L.G.M.', 'data':arraygmejerprom, 'type':'column', 'yAxis':1};
     distxnivelejerprom[6]={'name':'Ba-Khan', 'data':arraybakhanejerprom, 'type':'column', 'yAxis':1};
-    distxnivelejerprom[7]={'name':'Promedio Tiempo de Ejercicios', 'data':arraypromedioejer, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelejerprom[8]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivelejerprom[7]={'name':'Promedio Tiempo de Ejercicios', 'data':arraypromedioejer, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    distxnivelejerprom[8]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contadorejerprom=0;
     for (var i = 0; i < distxnivelejerprom.length; i++) {
@@ -1997,8 +2158,8 @@ function graficar(json, clase){
     distxinstejer[9]={'name':'2do medio', 'data':array2medioejer, 'type':'column', 'yAxis':1};
     distxinstejer[10]={'name':'3ro medio', 'data':array3medioejer, 'type':'column', 'yAxis':1};
     distxinstejer[11]={'name':'4to medio', 'data':array4medioejer, 'type':'column', 'yAxis':1};
-    distxinstejer[12]={'name':'Promedio Tiempo de Ejercicios', 'data':arraypromedioejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxinstejer[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+    distxinstejer[12]={'name':'Promedio Tiempo de Ejercicios', 'data':arraypromedioejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    distxinstejer[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contadorinstejer=0;
     for (var i = 0; i < distxinstejer.length; i++) {
@@ -2029,8 +2190,8 @@ function graficar(json, clase){
     distxinstejerprom[9]={'name':'2do medio', 'data':array2medioejerprom, 'type':'column', 'yAxis':1};
     distxinstejerprom[10]={'name':'3ro medio', 'data':array3medioejerprom, 'type':'column', 'yAxis':1};
     distxinstejerprom[11]={'name':'4to medio', 'data':array4medioejerprom, 'type':'column', 'yAxis':1};
-    distxinstejerprom[12]={'name':'Promedio Tiempo de Ejercicios', 'data':arraypromedioejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxinstejerprom[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E'};
+    distxinstejerprom[12]={'name':'Promedio Tiempo de Ejercicios', 'data':arraypromedioejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    distxinstejerprom[13]={'name':'Cantidad de Estudiantes', 'data':estudiantesnivelesinst, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contadorinstejerprom=0;
     for (var i = 0; i < distxinstejerprom.length; i++) {
@@ -2585,7 +2746,7 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Tiempo de Ejercicios Realizados por Nivel (Total)'
+              text: 'Distribución de Tiempo de Ejercicios Total Realizados por Nivel'
           },
           xAxis: [{
               categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -2637,13 +2798,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+              enabled: true
           },
           series: distxnivelejer
       });
@@ -2674,7 +2829,7 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Tiempo de Ejercicios Realizados por Nivel (Promedio)'
+              text: 'Distribución de Tiempo de Ejercicios Promedio Realizados por Nivel'
           },
           xAxis: [{
               categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -2726,13 +2881,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+              enabled: true
           },
           series: distxnivelejerprom
       });
@@ -2763,7 +2912,7 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Tiempo de Ejercicios Realizados por Institución (Total)'
+              text: 'Distribución de Tiempo de Ejercicios Total Realizados por Institución'
           },
           xAxis: [{
               categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -2815,13 +2964,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+              enabled: true
           },
           series: distxinstejer
       });
@@ -2852,7 +2995,7 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Tiempo de Ejercicios Realizados por Institución (Promedio)'
+              text: 'Distribución de Tiempo de Ejercicios Promedio Realizados por Institución'
           },
           xAxis: [{
               categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
@@ -2904,13 +3047,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+              enabled: true
           },
           series: distxinstejerprom
       });
@@ -3550,10 +3687,10 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Ejercicios Realizados por Nivel (Total)'
+              text: 'Distribución de Ejercicios Total Realizados por Nivel'
           },
           xAxis: [{
-              categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+              categories: categoriasrealdxn
           }],
           yAxis: [{ // Primary yAxis
               labels: {
@@ -3602,6 +3739,9 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
+            enabled: true
+          },
+          /*legend: {
               layout: 'vertical',
               align: 'left',
               x: 120,
@@ -3609,7 +3749,7 @@ function graficar(json, clase){
               y: 80,
               floating: true,
               backgroundColor: '#FFFFFF'
-          },
+          },*/
           series: distxnivel
       });
   });
@@ -3639,10 +3779,10 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Ejercicios Realizados por Nivel (Promedio)'
+              text: 'Distribución de Ejercicios Promedio Realizados por Nivel'
           },
           xAxis: [{
-              categories: ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+              categories: categoriasrealdxn
           }],
           yAxis: [{ // Primary yAxis
               labels: {
@@ -3691,13 +3831,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+            enabled: true
           },
           series: distxnivelprom
       });
@@ -3728,10 +3862,10 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Ejercicios Realizados por Institución (Total)'
+              text: 'Distribución de Ejercicios Total Realizados por Institución'
           },
           xAxis: [{
-              categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
+              categories: categoriasdxireal
           }],
           yAxis: [{ // Primary yAxis
               labels: {
@@ -3780,13 +3914,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+            enabled: true
           },
           series: distxinst
       });
@@ -3817,7 +3945,7 @@ function graficar(json, clase){
               //type: 'column',
           },
           title: {
-              text: 'Distribución de Ejercicios Realizados por Institución (Promedio)'
+              text: 'Distribución de Ejercicios Promedio Realizados por Institución'
           },
           xAxis: [{
               categories: ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'Ba-Khan']
@@ -3869,13 +3997,7 @@ function graficar(json, clase){
               shared: true
           },
           legend: {
-              layout: 'vertical',
-              align: 'left',
-              x: 120,
-              verticalAlign: 'top',
-              y: 80,
-              floating: true,
-              backgroundColor: '#FFFFFF'
+            enabled: true
           },
           series: distxinstprom
       });
