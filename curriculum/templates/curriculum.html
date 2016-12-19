@@ -542,6 +542,7 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
   }
 
   function pestannasTop(idsubtopic, idtopic){
+    $('#videoexercise').empty();
     var contenidotop='';
     var chapters=arbol['capitulos'];
     for (var i = 0; i < chapters.length; i++) {
@@ -557,7 +558,45 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
         }
       }
     }
-    contenidotop+='<div id="videoexercise"><div id="ejerciciosdiv" style="width:50%; float:left;"><h3>Ejercicios</h3></div><div id="videosdiv" style="width:50%; float:left;"><h3>Videos</h3></div></div><hr>';
+
+    contenidotop+='<div id="videoexercise"><div id="ejerciciosdiv" style="width:50%; float:left;"><h3>Ejercicios</h3><ul>';
+    var chapters=arbol['capitulos'];
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]["topico"];
+      for (var i = 0; i < topicos.length; i++) {
+        if (topicos[i]['id']==idtopic){
+          var subtopicos = topicos[i]["subtopico"];
+          for (var i = 0; i < subtopicos.length; i++) {
+            if(subtopicos[i]['id']==idsubtopic){
+              var ejercicios = subtopicos[i]['skills'];
+              for (var i = 0; i < ejercicios.length; i++) {
+                contenidotop+='<li>'+ejercicios[i]['nombre']+'</li>';
+              }
+            }
+          }
+        }
+      }
+    }
+    contenidotop+='</ul></div><div id="videosdiv" style="width:50%; float:left;"><h3>Videos</h3><ul>';
+    var chapters=arbol['capitulos'];
+    for (var j = 0; j < chapters.length; j++) {
+      var topicos = chapters[j]["topico"];
+      for (var j = 0; j < topicos.length; j++) {
+        if (topicos[j]['id']==idtopic){
+          var subtopicos = topicos[j]["subtopico"];
+          for (var j = 0; j < subtopicos.length; j++) {
+            if(subtopicos[j]['id']==idsubtopic){
+              var videos = subtopicos[j]['videos'];
+              for (var j = 0; j < videos.length; j++) {
+                //console.log(videos);
+                contenidotop+='<li>'+videos[j]['nombre']+'</li>';
+              }
+            }
+          }
+        }
+      }
+    }
+    contenidotop+='</ul></div></div><hr>';
     contenidotop+='<br><a onclick=\'(addVideoExercise("'+idsubtopic+'","'+idtopic+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios - Videos</a>';
     //addVideoExercise(idsubtopic, idtopic);
     $('#cntotrostop'+idtopic+'').append(contenidotop);
