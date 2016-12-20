@@ -150,7 +150,8 @@
 </div>
 <div class="graphics" id="graph" align="center">
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
-
+<hr>
+<div id="containertodos" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
 <div id="promediototaltot" style="float:left;width: 50%;"></div>
 <div id="promediototaltot2" style="float:left;width: 50%;"></div>
@@ -553,6 +554,8 @@ function graficar(json, clase){
   var distxinstejer=[];
   var distxinstejerprom=[];
 
+  var arraycontainertodo=[];
+
   var arraylsmbejer = new Array(12).fill(0);
   var arrayeaejer = new Array(12).fill(0);
   var arrayceiejer = new Array(12).fill(0);
@@ -666,6 +669,11 @@ function graficar(json, clase){
   var estudiantesrap=0;
   var estudianteslgm=0;
   var estudiantesbakhan=0;
+
+  var arraycantidad=[];
+  var arraytpoejercicios=[];
+  var arraytpovideos=[];
+  var arraynombres=[];
 
   /*var estudiantes1basico=0;
   var estudiantes2basico=0;
@@ -1694,6 +1702,11 @@ function graficar(json, clase){
       arraycant[i]={"name":nombre, "y": cantidad, "drilldown":nombre, "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudiantes.length, "cantclase":cantidad_clase, "est_out": clase[i]["estudiantes_out"], "establecimiento": ee}
       serie[i]={"name":nombre, "id":nombre, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.0f} ejercicios</b>'}};
 
+      arraycantidad[i]=cantidad;
+      arraytpoejercicios[i]=tpo_ejercicios;
+      arraytpovideos[i]=tpo_videos;
+      arraynombres[i]=nombre;
+
       var arrayskill;
       //var misiones = clase[i]["misiones"];
       //var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
@@ -1768,6 +1781,10 @@ function graficar(json, clase){
       }
       arregloclase[i]=arreglocurso;*/
     }
+    arraycontainertodo[0]={'name': 'Cantidad de Ejercicios', 'data': arraycantidad, 'type':'column', 'yAxis': 1};
+    arraycontainertodo[1]={'name': 'Tiempo de Ejercicios', 'data': arraytpoejercicios, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
+    arraycontainertodo[2]={'name': 'Tiempo de Videos', 'data': arraytpovideos, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth':0};
+
     var arraypromedio= new Array(12).fill(0);
     for (var i = 0; i < arraylsmb.length; i++) {
       var average=(arraylsmb[i]+arrayea[i]+arraycei[i]+arraylav[i]+arrayrap[i]+arraygm[i]+arraybakhan[i])/estudiantesniveles[i];
@@ -2005,7 +2022,7 @@ function graficar(json, clase){
     distxnivel[4]={'name':'R.A.P.', 'data':realarrayrap, 'type':'column', 'yAxis':1};
     distxnivel[5]={'name':'L.G.M.', 'data':realarraygm, 'type':'column', 'yAxis':1};
     distxnivel[6]={'name':'Ba-Khan', 'data':realarraybakhan, 'type':'column', 'yAxis':1};
-    distxnivel[7]={'name':'Promedio Ejercicios', 'data':realarraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth': 0};
+    distxnivel[7]={'name':'Promedio Ejercicios', 'data':realarraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
     distxnivel[8]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
     var contador=0;
@@ -2954,6 +2971,92 @@ function graficar(json, clase){
     var formato = '{point.y:,.0f}';
     var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Total de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
   }
+
+  $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+          plotOptions: {
+                column: {
+                    stacking: 'normal'
+                }
+          },
+          chart: {
+              renderTo: 'containertodos',
+              zoomType: 'xy'
+              //type: 'column',
+          },
+          title: {
+              text: 'Distribución de la información'
+          },
+          xAxis: [{
+              categories: arraynombres
+              //type: 'category'
+          }],
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Tiempo Total de Videos',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true,
+              min: 0
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad Total de Ejercicios',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo Total de Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true,
+              min: 0
+          }],
+          tooltip: {
+              shared: true
+          },
+          legend: {
+              enabled: true
+          },
+          series: arraycontainertodo
+      });
+  });
 
   $(function () {
     Highcharts.setOptions({
