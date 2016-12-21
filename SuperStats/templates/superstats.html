@@ -6899,6 +6899,7 @@ function graficarcompara(json, clase){
     var realarraygmprom=[];
     var realarraybakhanprom=[];
     var realarraypromedio=[];
+    var realarraypromedio2=[];
     var realestudiantesxnivel=[];
     var categoriasdxn = ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio'];
     var arraydedatos=[];
@@ -6922,7 +6923,9 @@ function graficarcompara(json, clase){
         realarraygm2[count]=arraygm2[i];
         realarraybakhan2[count]=arraybakhan2[i];
         realarraypromedio[count]=arraypromedio[i];
-        realestudiantesxnivel[count]=estudiantesniveles[i];
+        realarraypromedio2[count]=arraypromedio2[i];
+        realestudiantesxnivel[2*count]=estudiantesniveles[i];
+        realestudiantesxnivel[2*count+1]=estudiantesniveles[i];
         /*realarraylsmbprom[count]=arraylsmbprom[i];
         realarrayeaprom[count]=arrayeaprom[i];
         realarrayceiprom[count]=arrayceiprom[i];
@@ -6947,23 +6950,30 @@ function graficarcompara(json, clase){
     var zeroes = [];
     cats.forEach(function () {zeroes.push(0);}); 
 
-    arraydedatos[0]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[1]={'name':'E.A.', 'color':'#434348', 'data':realarrayea, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[2]={'name':'C.E.I.', 'color':'#90ED7D', 'data':realarraycei, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[3]={'name':'L.A.V.', 'color':'#F7A35C', 'data':realarraylav, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[4]={'name':'R.A.P.', 'color':'#8085E9', 'data':realarrayrap, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[5]={'name':'G.M.', 'color':'#F15C80', 'data':realarraygm, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[6]={'name':'Bakhan', 'color':'#E4D354', 'data':realarraybakhan, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
-    arraydedatos[7]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[8]={'name':'E.A.', 'color':'#434348', 'data':realarrayea2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[9]={'name':'C.E.I.', 'color':'#90ED7D', 'data':realarraycei2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[10]={'name':'L.A.V.', 'color':'#F7A35C', 'data':realarraylav2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[11]={'name':'R.A.P.', 'color':'#8085E9', 'data':realarrayrap2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[12]={'name':'G.M.', 'color':'#F15C80', 'data':realarraygm2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[13]={'name':'Bakhan', 'color':'#E4D354', 'data':realarraybakhan2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
-    arraydedatos[14]={'name':'',  'stack':tipo2 , 'data': realzeroes,'showInLegend': false};
-    //arraydedatos[15]={'name':'Promedio Ejercicios '+tipo1+'', 'data':realarraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    //arraydedatos[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E'};
+    var rlarrayprom=[];
+
+    for (var i = 0; i < realarraypromedio.length; i++) {
+      rlarrayprom[2*i]=realarraypromedio[i];
+      rlarrayprom[2*i+1]=realarraypromedio2[i];
+    }
+
+    arraydedatos[0]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[1]={'name':'E.A.', 'color':'#434348', 'data':realarrayea, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[2]={'name':'C.E.I.', 'color':'#90ED7D', 'data':realarraycei, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[3]={'name':'L.A.V.', 'color':'#F7A35C', 'data':realarraylav, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[4]={'name':'R.A.P.', 'color':'#8085E9', 'data':realarrayrap, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[5]={'name':'G.M.', 'color':'#F15C80', 'data':realarraygm, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[6]={'name':'Bakhan', 'color':'#E4D354', 'data':realarraybakhan, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[7]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[8]={'name':'E.A.', 'color':'#434348', 'data':realarrayea2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[9]={'name':'C.E.I.', 'color':'#90ED7D', 'data':realarraycei2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[10]={'name':'L.A.V.', 'color':'#F7A35C', 'data':realarraylav2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[11]={'name':'R.A.P.', 'color':'#8085E9', 'data':realarrayrap2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[12]={'name':'G.M.', 'color':'#F15C80', 'data':realarraygm2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[13]={'name':'Bakhan', 'color':'#E4D354', 'data':realarraybakhan2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
+    arraydedatos[14]={'name':'',  'stack':tipo2 , 'data': realzeroes,'showInLegend': false, 'yAxis':1};
+    arraydedatos[15]={'name':'Promedio Ejercicios', 'data':rlarrayprom, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/><b>{series.name}</b>: {point.y}'},'lineWidth':0};
+    arraydedatos[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/><b>{series.name}</b>: {point.y}'},'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
 
     /*var ug = [tipo1, tipo2];
     var cts = ug.concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug);
@@ -7677,7 +7687,10 @@ function graficarcompara(json, clase){
           },
 
           xAxis: [{
-              categories: categorias
+              categories: categorias,
+              crosshair: {
+                color: '#E0E0E0'
+               }
           },{
               categories: subcategorias,
               opposite: true,
@@ -7738,7 +7751,9 @@ function graficarcompara(json, clase){
 
           plotOptions: {
               column: {
-                  stacking: 'normal'
+                  stacking: 'normal',
+                  pointWidth: 50,
+                  groupPadding: 0
               },
               series:{
                 events:{
@@ -8816,14 +8831,17 @@ $(function () {
             categories: realcategoriasdxn,
                          lineColor:'#ffffff',
                       tickWidth: 0,
+                      crosshair: {
+                      color: '#E0E0E0'
+                     }
                      
                  //     plotBands : [ {  from:-0.5, to:0.5, color:"#eeeeee"  }, 
                 //                   {  from: 1.5, to:2.5, color:"#eeeeee"  },
                 //                    {  from: 3.5, to:4.5, color:"#eeeeee"  }]       
-        }     ,
+            }     ,
          ],
 
-        /*yAxis: [{ // Primary yAxis
+        yAxis: [{ // Primary yAxis
               labels: {
                   style: {
                       color: '#89A54E'
@@ -8865,8 +8883,8 @@ $(function () {
                   }
               },
               opposite: true
-          }],*/
-        yAxis:{
+          }],
+        /*yAxis:{
           gridLineWidth: 0,
               title: {
                   text: 'Cantidad Total por Nivel',
@@ -8879,15 +8897,24 @@ $(function () {
                       color: '#4572A7'
                   }
               }
-        },
+        },*/
+        /*yAxis: {
+            allowDecimals: false,
+            min: 0,
+            title: {
+                text: 'Cantidad Total por Nivel'
+            }
+        },*/
 
-        tooltip: {
+        /*tooltip: {
             pointFormat: '<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'
-        },
+        },*/
 
         plotOptions: {
             column: {
-                stacking: 'normal'
+                stacking: 'normal',
+                pointWidth: 50,
+                groupPadding: 0
             }
         },
         series: arraydedatos
