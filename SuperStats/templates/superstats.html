@@ -6852,8 +6852,8 @@ function graficarcompara(json, clase){
 
     arraycontainertodo[0]={'name':'Cantidad de Ejercicios "'+tipo1+'"', 'data':arraycantidad1, 'type':'column', 'yAxis':1, 'color':'#7CB5EC', 'stack':tipo1};
     arraycontainertodo[1]={'name':'Cantidad de Ejercicios "'+tipo2+'"', 'data':arraycantidad2, 'type':'column', 'yAxis':1, 'color':'#434348', 'stack':tipo2};
-    arraycontainertodo[2]={'name':'Tiempo de Ejercicios', 'data':arraygrande, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'xAxis':1,'marker':{'enabled':true}, 'dashStyle': 'shortdot'};
-    arraycontainertodo[3]={'name':'Tiempo de Videos', 'data':arraygrandevideo, 'type':'spline', 'color':'#89A54E', 'xAxis':1};
+    arraycontainertodo[2]={'name':'Tiempo de Ejercicios', 'data':arraygrande, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'xAxis':1,'marker':{'enabled':true}, 'lineWidth': 0};
+    arraycontainertodo[3]={'name':'Tiempo de Videos', 'data':arraygrandevideo, 'type':'spline', 'color':'#89A54E', 'xAxis':1, 'lineWidth': 0};
 
 
     var arraypromedio= new Array(12).fill(0);
@@ -6877,29 +6877,124 @@ function graficarcompara(json, clase){
       }
     }
 
-    distxnivel[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmb, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
-    distxnivel[1]={'name':'E.A. '+tipo1+'', 'data':arrayea, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
-    distxnivel[2]={'name':'C.E.I. '+tipo1+'', 'data':arraycei, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
-    distxnivel[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylav, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
-    distxnivel[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrap, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
-    distxnivel[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygm, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
-    distxnivel[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhan, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
-    distxnivel[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmb2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2};
-    distxnivel[8]={'name':'E.A. '+tipo2+'', 'data':arrayea2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2};
-    distxnivel[9]={'name':'C.E.I. '+tipo2+'', 'data':arraycei2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2};
-    distxnivel[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylav2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
-    distxnivel[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrap2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2};
-    distxnivel[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygm2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2};
-    distxnivel[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhan2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2};
+    var realarraylsmb=[];
+    var realarrayea=[];
+    var realarraycei=[];
+    var realarraylav=[];
+    var realarrayrap=[];
+    var realarraygm=[];
+    var realarraybakhan=[];
+    var realarraylsmb2=[];
+    var realarrayea2=[];
+    var realarraycei2=[];
+    var realarraylav2=[];
+    var realarrayrap2=[];
+    var realarraygm2=[];
+    var realarraybakhan2=[];
+    var realarraylsmbprom=[];
+    var realarrayeaprom=[];
+    var realarrayceiprom=[];
+    var realarraylavprom=[];
+    var realarrayrapprom=[];
+    var realarraygmprom=[];
+    var realarraybakhanprom=[];
+    var realarraypromedio=[];
+    var realestudiantesxnivel=[];
+    var categoriasdxn = ['1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio'];
+    var arraydedatos=[];
+    var categoriasnivel=['3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico'];
+    var realcategoriasdxn=[];
+    var count = 0;
+    for (var i = 0; i < estudiantesniveles.length; i++) {
+      if(estudiantesniveles[i]!=0){
+        realarraylsmb[count]=arraylsmb[i];
+        realarrayea[count]=arrayea[i];
+        realarraycei[count]=arraycei[i];
+        realarraylav[count]=arraylav[i];
+        realarrayrap[count]=arrayrap[i];
+        realarraygm[count]=arraygm[i];
+        realarraybakhan[count]=arraybakhan[i];
+        realarraylsmb2[count]=arraylsmb2[i];
+        realarrayea2[count]=arrayea2[i];
+        realarraycei2[count]=arraycei2[i];
+        realarraylav2[count]=arraylav2[i];
+        realarrayrap2[count]=arrayrap2[i];
+        realarraygm2[count]=arraygm2[i];
+        realarraybakhan2[count]=arraybakhan2[i];
+        realarraypromedio[count]=arraypromedio[i];
+        realestudiantesxnivel[count]=estudiantesniveles[i];
+        /*realarraylsmbprom[count]=arraylsmbprom[i];
+        realarrayeaprom[count]=arrayeaprom[i];
+        realarrayceiprom[count]=arrayceiprom[i];
+        realarraylavprom[count]=arraylavprom[i];
+        realarrayrapprom[count]=arrayrapprom[i];
+        realarraygmprom[count]=arraygmprom[i];
+        realarraybakhanprom[count]=arraybakhanprom[i];*/
+        realcategoriasdxn[count]=categoriasdxn[i];
+        count++;
+      }
+    }
+    //console.log(realcategoriasdxn);
+
+    var ugly = [tipo1,tipo2];
+    var realcats=ugly;
+    for (var i = 0; i < realcategoriasdxn.length-1; i++) {
+      realcats=realcats.concat(ugly);
+    }
+    var realzeroes=[];
+    realcats.forEach(function () {realzeroes.push(0);}); 
+    var cats = ugly.concat(ugly).concat(ugly).concat(ugly).concat(ugly).concat(ugly);
+    var zeroes = [];
+    cats.forEach(function () {zeroes.push(0);}); 
+
+    arraydedatos[0]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[1]={'name':'E.A.', 'color':'#434348', 'data':realarrayea, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[2]={'name':'C.E.I.', 'color':'#90ED7D', 'data':realarraycei, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[3]={'name':'L.A.V.', 'color':'#F7A35C', 'data':realarraylav, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[4]={'name':'R.A.P.', 'color':'#8085E9', 'data':realarrayrap, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[5]={'name':'G.M.', 'color':'#F15C80', 'data':realarraygm, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[6]={'name':'Bakhan', 'color':'#E4D354', 'data':realarraybakhan, 'stack':tipo1 ,'xAxis':1, 'type':'column'};
+    arraydedatos[7]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[8]={'name':'E.A.', 'color':'#434348', 'data':realarrayea2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[9]={'name':'C.E.I.', 'color':'#90ED7D', 'data':realarraycei2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[10]={'name':'L.A.V.', 'color':'#F7A35C', 'data':realarraylav2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[11]={'name':'R.A.P.', 'color':'#8085E9', 'data':realarrayrap2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[12]={'name':'G.M.', 'color':'#F15C80', 'data':realarraygm2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[13]={'name':'Bakhan', 'color':'#E4D354', 'data':realarraybakhan2, 'stack':tipo2 ,'xAxis':1,'showInLegend':false, 'type':'column'};
+    arraydedatos[14]={'name':'',  'stack':tipo2 , 'data': realzeroes,'showInLegend': false};
+    //arraydedatos[15]={'name':'Promedio Ejercicios '+tipo1+'', 'data':realarraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
+    //arraydedatos[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E'};
+
+    /*var ug = [tipo1, tipo2];
+    var cts = ug.concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug).concat(ug);
+    var zeroes = [];
+    cts.forEach(function(){zeroes.push(0);});
+    console.log(zeroes);
+
+    distxnivel[0]={'name':'LSMB', 'data':arraylsmb, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1, 'xAxis':1};
+    distxnivel[1]={'name':'E.A.', 'data':arrayea, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1, 'xAxis':1};
+    distxnivel[2]={'name':'C.E.I.', 'data':arraycei, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1, 'xAxis':1};
+    distxnivel[3]={'name':'L.A.V.', 'data':arraylav, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1, 'xAxis':1};
+    distxnivel[4]={'name':'R.A.P.', 'data':arrayrap, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1, 'xAxis':1};
+    distxnivel[5]={'name':'L.G.M.', 'data':arraygm, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1, 'xAxis':1};
+    distxnivel[6]={'name':'Ba-Khan', 'data':arraybakhan, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1, 'xAxis':1};
+    distxnivel[7]={'name':'LSMB', 'data':arraylsmb2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
+    distxnivel[8]={'name':'E.A.', 'data':arrayea2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
+    distxnivel[9]={'name':'C.E.I.', 'data':arraycei2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
+    distxnivel[10]={'name':'L.A.V.', 'data':arraylav2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
+    distxnivel[11]={'name':'R.A.P.', 'data':arrayrap2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
+    distxnivel[12]={'name':'L.G.M.', 'data':arraygm2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
+    distxnivel[13]={'name':'Ba-Khan', 'data':arraybakhan2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'showInLegend':false, 'xAxis':1};
     distxnivel[14]={'name':'Promedio Ejercicios '+tipo1+'', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
     distxnivel[15]={'name':'Promedio Ejercicios '+tipo2+'', 'data':arraypromedio2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
     distxnivel[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivel[17]={'name':'', 'data':zeroes, 'showInLegend':false, 'stack':tipo2}*/
 
     var contador=0;
-    for (var i = 0; i < distxnivel.length; i++) {
+    for (var i = 0; i < arraydedatos.length; i++) {
       var verificador = true;
-      for (var j = 0; j < distxnivel[i]['data'].length; j++) {
-        if(distxnivel[i]['data'][j]!=0){
+      for (var j = 0; j < arraydedatos[i]['data'].length; j++) {
+        if(arraydedatos[i]['data'][j]!=0){
           verificador=false;
         }
       };
@@ -6909,7 +7004,7 @@ function graficarcompara(json, clase){
       }
     };
     for (var i = 0; i < elementremove.length; i++) {
-      distxnivel.splice(elementremove[i]-i,1);
+      arraydedatos.splice(elementremove[i]-i,1);
     };
 
     distxnivelprom[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
@@ -8699,20 +8794,143 @@ $(function () {
     })
   });
 
-  $(function () {
-      Highcharts.chart('containertotnivel', {
+$(function () {
+    var options = {
+
+        chart: {
+            type: 'column'
+        },
+
+        title: {
+            text: 'Distribución de Cantidad de Ejercicios Total por Nivel'
+        },
+
+        xAxis: [
+   
+                  {
+            categories: realcats,
+                      labels: {autoRotation:false, style: {textOverflow: 'none'}, enabled: true},
+           tickWidth: 0,
+        },
+                  {
+            categories: realcategoriasdxn,
+                         lineColor:'#ffffff',
+                      tickWidth: 0,
+                     
+                 //     plotBands : [ {  from:-0.5, to:0.5, color:"#eeeeee"  }, 
+                //                   {  from: 1.5, to:2.5, color:"#eeeeee"  },
+                //                    {  from: 3.5, to:4.5, color:"#eeeeee"  }]       
+        }     ,
+         ],
+
+        /*yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Cantidad de Estudiantes',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad Total por Nivel',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Promedio de Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true
+          }],*/
+        yAxis:{
+          gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad Total por Nivel',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+        },
+
+        tooltip: {
+            pointFormat: '<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'
+        },
+
+        plotOptions: {
+            column: {
+                stacking: 'normal'
+            }
+        },
+        series: arraydedatos
+    };
+    
+    var onLegendClick= function (event) {
+                                  var myname = this.name;
+                                  var myvis  = !this.visible;
+                                  this.chart.series.forEach( function (elem) {
+                                    if (elem.name == myname) {
+                                      elem.setVisible(myvis);
+                                    }
+                                  });
+                                  return false;
+                                }
+                            
+    
+    options.series.forEach(function (serie) {
+        serie.events = { legendItemClick : onLegendClick} ;
+    });
+    $('#containertotnivel').highcharts(options);
+});
+  /*$(function () {
+      var options = {
 
           chart: {
-              type: 'column'
+              type: 'column',
           },
 
           title: {
               text: 'Distribución de Cantidad de Ejercicios por Nivel (Total)'
           },
 
-          xAxis: {
-              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
-          },
+          xAxis: [{
+              categories: cts,
+              labels: {autoRotation:false, style:{textOverflow:'none'}, enabled:true},
+              tickWidth:0,
+            },{
+              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio'],
+              lineColor:'#ffffff',
+              tickWidth: 0,
+            
+          }],
 
           yAxis: [{ // Primary yAxis
               labels: {
@@ -8768,8 +8986,24 @@ $(function () {
               }
           },
           series: distxnivel
-      });
-  });
+      };
+      var onLegendClick= function (event) {
+                                  var myname = this.name;
+                                  var myvis  = !this.visible;
+                                  this.chart.series.forEach( function (elem) {
+                                    if (elem.name == myname) {
+                                      elem.setVisible(myvis);
+                                    }
+                                  });
+                                  return false;
+                                }
+                            
+    
+    options.series.forEach(function (serie) {
+        serie.events = { legendItemClick : onLegendClick} ;
+    });
+    $('#containertotnivel').highcharts(options);
+  });*/
 
   $(function () {
       Highcharts.chart('containertotnivelprom', {
