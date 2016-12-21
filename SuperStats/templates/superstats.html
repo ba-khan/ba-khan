@@ -4483,18 +4483,22 @@ function graficarcompara(json, clase){
   $('#ordenarcant3').hide();
   $('#ordenarvid3').hide();
   $('#ordenartot3').hide();
+  //$('#containertodos').hide();
   var colorScale = d3.scale.ordinal().range(['#1c758a'])
     .domain(['KhanBlue']);
   var arrayte=[];
   var arraytv=[];
   var arraycant=[]; 
   var categorias=[];
+  var subcategorias=[];
   var tpoejercicios1=[];
   var tpoejercicios2=[];
   var tpovideos1=[];
   var tpovideos2=[];
   var cantidad1=[];
   var cantidad2=[];
+  var arraygrande=[];
+  var arraygrandevideo=[];
 
   var j;
   if(json["clases"]){
@@ -4667,6 +4671,8 @@ function graficarcompara(json, clase){
     var elementremoveinstvid = [];
     var elementremoveinstvidprom = [];
 
+    var arraycontainertodo=[];
+
     var arraylsmbejer = new Array(12).fill(0);
     var arrayeaejer = new Array(12).fill(0);
     var arrayceiejer = new Array(12).fill(0);
@@ -4826,6 +4832,13 @@ function graficarcompara(json, clase){
     var arrayrapvidprom2 = new Array(12).fill(0);
     var arraygmvidprom2 = new Array(12).fill(0);
     var arraybakhanvidprom2 = new Array(12).fill(0);
+
+    var arraytpoejercicios1=[];
+    var arraytpoejercicios2=[];
+    var arraytpovideos1=[];
+    var arraytpovideos2=[];
+    var arraycantidad1=[];
+    var arraycantidad2=[];
 
     for (var i=0;i<clase.length;i++){
       var estudiantes = clase[i]["students"];
@@ -6812,20 +6825,36 @@ function graficarcompara(json, clase){
         promediominimotot2=clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2;
       }
 
+      arraytpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
+      arraytpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
+      arraytpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
+      arraytpovideos2[i]=clase[i]["tiempo_videos_clase_2"]
+      arraycantidad1[i]=clase[i]["total_ejercicios_clase_1"];
+      arraycantidad2[i]=clase[i]["total_ejercicios_clase_2"]
+
       categorias[i]=clase[i]["nombre"]+' '+clase[i]["establecimiento"];
-      //tpoejercicios1[i]=clase[i]["tiempo_ejercicios_clase_1"];
+      subcategorias[2*i]=clase[i]["nombre"]+' '+clase[i]["establecimiento"]+' '+tipo1;
+      subcategorias[2*i+1]=clase[i]["nombre"]+' '+clase[i]["establecimiento"]+' '+tipo2;
+
+      arraygrande[2*i]=clase[i]["tiempo_ejercicios_clase_1"];
+      arraygrande[2*i+1]=clase[i]["tiempo_ejercicios_clase_2"];
+
+      arraygrandevideo[2*i]=clase[i]["tiempo_videos_clase_1"];
+      arraygrandevideo[2*i+1]=clase[i]["tiempo_videos_clase_2"];
+
       tpoejercicios1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"], "y":clase[i]["tiempo_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer1, "maximo":maxtpoejer1, "minimo":mintpoejer1, "promedio":clase[i]["tiempo_ejercicios_clase_1"]/estudtrabtpoejer1};
-      //tpoejercicios2[i]=clase[i]["tiempo_ejercicios_clase_2"];
       tpoejercicios2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer2, "maximo":maxtpoejer2, "minimo":mintpoejer2, "promedio":clase[i]["tiempo_ejercicios_clase_2"]/estudtrabtpoejer2};
-      //tpovideos1[i]=clase[i]["tiempo_videos_clase_1"];
-      tpovideos1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_videos_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid1, "maximo":maxtpovid1, "minimo":mintpovid1, "promedio":clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1}
-      //tpovideos2[i]=clase[i]["tiempo_videos_clase_2"];
-      tpovideos2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_videos_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid2, "maximo":maxtpovid2, "minimo":mintpovid2, "promedio":clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2}
-      //cantidad1[i]=clase[i]["total_ejercicios_clase_1"];
-      cantidad1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer1, "maximo":maxtotejer1, "minimo":mintotejer1, "promedio":clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1}
-      //cantidad2[i]=clase[i]["total_ejercicios_clase_2"];
-      cantidad2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2}
+      tpovideos1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_videos_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid1, "maximo":maxtpovid1, "minimo":mintpovid1, "promedio":clase[i]["tiempo_videos_clase_1"]/estudtrabtpovid1};
+      tpovideos2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["tiempo_videos_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid2, "maximo":maxtpovid2, "minimo":mintpovid2, "promedio":clase[i]["tiempo_videos_clase_2"]/estudtrabtpovid2};
+      cantidad1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer1, "maximo":maxtotejer1, "minimo":mintotejer1, "promedio":clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1};
+      cantidad2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2};
     }
+
+    arraycontainertodo[0]={'name':'Cantidad de Ejercicios "'+tipo1+'"', 'data':arraycantidad1, 'type':'column', 'yAxis':1, 'color':'#7CB5EC', 'stack':tipo1};
+    arraycontainertodo[1]={'name':'Cantidad de Ejercicios "'+tipo2+'"', 'data':arraycantidad2, 'type':'column', 'yAxis':1, 'color':'#434348', 'stack':tipo2};
+    arraycontainertodo[2]={'name':'Tiempo de Ejercicios', 'data':arraygrande, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'xAxis':1,'marker':{'enabled':true}, 'dashStyle': 'shortdot'};
+    arraycontainertodo[3]={'name':'Tiempo de Videos', 'data':arraygrandevideo, 'type':'spline', 'color':'#89A54E', 'xAxis':1};
+
 
     var arraypromedio= new Array(12).fill(0);
     for (var i = 0; i < arraylsmb.length; i++) {
@@ -6855,13 +6884,13 @@ function graficarcompara(json, clase){
     distxnivel[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrap, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
     distxnivel[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygm, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
     distxnivel[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhan, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
-    distxnivel[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmb2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
-    distxnivel[8]={'name':'E.A. '+tipo2+'', 'data':arrayea2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
-    distxnivel[9]={'name':'C.E.I. '+tipo2+'', 'data':arraycei2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
+    distxnivel[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmb2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2};
+    distxnivel[8]={'name':'E.A. '+tipo2+'', 'data':arrayea2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2};
+    distxnivel[9]={'name':'C.E.I. '+tipo2+'', 'data':arraycei2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2};
     distxnivel[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylav2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
-    distxnivel[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrap2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
-    distxnivel[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygm2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
-    distxnivel[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhan2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
+    distxnivel[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrap2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2};
+    distxnivel[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygm2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2};
+    distxnivel[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhan2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2};
     distxnivel[14]={'name':'Promedio Ejercicios '+tipo1+'', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
     distxnivel[15]={'name':'Promedio Ejercicios '+tipo2+'', 'data':arraypromedio2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
     distxnivel[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
@@ -7540,6 +7569,93 @@ function graficarcompara(json, clase){
       }
     }
   }
+
+  $(function () {
+      Highcharts.chart('containertodos', {
+
+          chart: {
+              type: 'column'
+          },
+
+          title: {
+              text: 'Distribución de Información'
+          },
+
+          xAxis: [{
+              categories: categorias
+          },{
+              categories: subcategorias,
+              opposite: true,
+              labels: {
+                enabled: false
+              }
+          }],
+
+          yAxis: [{ // Primary yAxis
+              labels: {
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              title: {
+                  text: 'Tiempo de Videos',
+                  style: {
+                      color: '#89A54E'
+                  }
+              },
+              opposite: true,
+              min: 0
+  
+          }, { // Secondary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Cantidad de Ejercicios',
+                  style: {
+                      color: '#4572A7'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#4572A7'
+                  }
+              }
+  
+          }, { // Tertiary yAxis
+              gridLineWidth: 0,
+              title: {
+                  text: 'Tiempo de Ejercicios',
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              labels: {
+                  style: {
+                      color: '#AA4643'
+                  }
+              },
+              opposite: true,
+              min: 0
+          }],
+          
+          tooltip:{
+            shared: true
+          },
+
+          plotOptions: {
+              column: {
+                  stacking: 'normal'
+              },
+              series:{
+                events:{
+                  legendItemClick: function(){
+                    return false;
+                  }
+                }
+              }
+          },
+          series: arraycontainertodo
+      });
+  });
 
   $(function () {
       Highcharts.setOptions({
