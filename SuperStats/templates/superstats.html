@@ -153,9 +153,9 @@
 <hr>
 <div id="containertodos" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
+<div id="containertot" style="min-width: 300px;  margin: 0 auto"></div>
 <div id="promediototaltot" style="float:left;width: 50%;"></div>
 <div id="promediototaltot2" style="float:left;width: 50%;"></div>
-<div id="containertot" style="min-width: 300px;  margin: 0 auto"></div>
 <br>
 <div id="ordencant">
 <select id="ordenarcant3" class="skill_search">
@@ -184,9 +184,9 @@
 <hr>
 <div id="containertotinstprom" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
+<div id="containerej" style="min-width: 300px; margin: 0 auto"></div>
 <div id="promediototalej" style="float:left;width: 50%;"></div>
 <div id="promediototalej2" style="float:left;width: 50%;"></div>
-<div id="containerej" style="min-width: 300px; margin: 0 auto"></div>
 <br>
 <div id="ordentot">
   <select id="ordenartot3" class="skill_search">
@@ -215,9 +215,9 @@
 <hr>
 <div id="containerejerinstprom" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
+<div id="containervid" style="min-width: 300px;  margin: 0 auto"></div>
 <div id="promediototalvid" style="float:left;width: 50%;"></div>
 <div id="promediototalvid2" style="float:left;width: 50%;"></div>
-<div id="containervid" style="min-width: 300px;  margin: 0 auto"></div>
 <br>
 <div id="ordenvid">
   <select id="ordenarvid3" class="skill_search">
@@ -4477,9 +4477,9 @@ function graficarcompara(json, clase){
   $('#promediototalej2').empty();
   $('#promediototalvid').empty();
   $('#promediototalvid2').empty();
-  $('#ordenarcant').show();
-  $('#ordenarvid').show();
-  $('#ordenartot').show();
+  $('#ordenarcant').hide();
+  $('#ordenarvid').hide();
+  $('#ordenartot').hide();
   $('#ordenarcant3').hide();
   $('#ordenarvid3').hide();
   $('#ordenartot3').hide();
@@ -4964,8 +4964,8 @@ function graficarcompara(json, clase){
 
         arraylsmbejer[level-1]+=tpoejer1;
         arraylsmbejer2[level-1]+=tpoejer2;
-        arraylsmbejerprom[level-1]+=tpoejerprom1;
-        arraylsmbejerprom2[level-1]+=tpoejerprom2;
+        //arraylsmbejerprom[level-1]+=tpoejerprom1;
+        //arraylsmbejerprom2[level-1]+=tpoejerprom2;
 
         arraylsmbvid[level-1]+=tpovid1;
         arraylsmbvid2[level-1]+=tpovid2;
@@ -5212,8 +5212,8 @@ function graficarcompara(json, clase){
 
         arrayeaejer[level-1]+=tpoejer1;
         arrayeaejer2[level-1]+=tpoejer2;
-        arrayeaejerprom[level-1]+=tpoejerprom1;
-        arrayeaejerprom2[level-1]+=tpoejerprom2;
+        //arrayeaejerprom[level-1]+=tpoejerprom1;
+        //arrayeaejerprom2[level-1]+=tpoejerprom2;
 
         arrayeavid[level-1]+=tpovid1;
         arrayeavid2[level-1]+=tpovid2;
@@ -5460,8 +5460,8 @@ function graficarcompara(json, clase){
 
         arrayceiejer[level-1]+=tpoejer1;
         arrayceiejer2[level-1]+=tpoejer2;
-        arrayceiejerprom[level-1]+=tpoejerprom1;
-        arrayceiejerprom2[level-1]+=tpoejerprom2;
+        //arrayceiejerprom[level-1]+=tpoejerprom1;
+        //arrayceiejerprom2[level-1]+=tpoejerprom2;
 
         arrayceivid[level-1]+=tpovid1;
         arrayceivid2[level-1]+=tpovid2;
@@ -5708,8 +5708,8 @@ function graficarcompara(json, clase){
 
         arraylavejer[level-1]+=tpoejer1;
         arraylavejer2[level-1]+=tpoejer2;
-        arraylavejerprom[level-1]+=tpoejerprom1;
-        arraylavejerprom2[level-1]+=tpoejerprom2;
+        //arraylavejerprom[level-1]+=tpoejerprom1;
+        //arraylavejerprom2[level-1]+=tpoejerprom2;
 
         arraylavvid[level-1]+=tpovid1;
         arraylavvid2[level-1]+=tpovid2;
@@ -5956,8 +5956,8 @@ function graficarcompara(json, clase){
 
         arrayrapejer[level-1]+=tpoejer1;
         arrayrapejer2[level-1]+=tpoejer2;
-        arrayrapejerprom[level-1]+=tpoejerprom1;
-        arrayrapejerprom2[level-1]+=tpoejerprom2;
+        //arrayrapejerprom[level-1]+=tpoejerprom1;
+        //arrayrapejerprom2[level-1]+=tpoejerprom2;
 
         arrayrapvid[level-1]+=tpovid1;
         arrayrapvid2[level-1]+=tpovid2;
@@ -6204,8 +6204,8 @@ function graficarcompara(json, clase){
 
         arraygmejer[level-1]+=tpoejer1;
         arraygmejer2[level-1]+=tpoejer2;
-        arraygmejerprom[level-1]+=tpoejerprom1;
-        arraygmejerprom2[level-1]+=tpoejerprom2;
+        //arraygmejerprom[level-1]+=tpoejerprom1;
+        //arraygmejerprom2[level-1]+=tpoejerprom2;
 
         arraygmvid[level-1]+=tpovid1;
         arraygmvid2[level-1]+=tpovid2;
@@ -6452,8 +6452,8 @@ function graficarcompara(json, clase){
 
         arraybakhanejer[level-1]+=tpoejer1;
         arraybakhanejer2[level-1]+=tpoejer2;
-        arraybakhanejerprom[level-1]+=tpoejerprom1;
-        arraybakhanejerprom2[level-1]+=tpoejerprom2;
+        //arraybakhanejerprom[level-1]+=tpoejerprom1;
+        //arraybakhanejerprom2[level-1]+=tpoejerprom2;
 
         arraybakhanvid[level-1]+=tpovid1;
         arraybakhanvid2[level-1]+=tpovid2;
@@ -6887,6 +6887,37 @@ function graficarcompara(json, clase){
     var realarraypromedio2=[];
     var realestudiantesxnivel=[];
 
+    var realarraylsmbejer=[];
+    var realarrayeaejer=[];
+    var realarrayceiejer=[];
+    var realarraylavejer=[];
+    var realarrayrapejer=[];
+    var realarraygmejer=[];
+    var realarraybakhanejer=[];
+    var realarraylsmbejer2=[];
+    var realarrayeaejer2=[];
+    var realarrayceiejer2=[];
+    var realarraylavejer2=[];
+    var realarrayrapejer2=[];
+    var realarraygmejer2=[];
+    var realarraybakhanejer2=[];
+    var realarraylsmbejerprom=[];
+    var realarrayeaejerprom=[];
+    var realarrayceiejerprom=[];
+    var realarraylavejerprom=[];
+    var realarrayrapejerprom=[];
+    var realarraygmejerprom=[];
+    var realarraybakhanejerprom=[];
+    var realarraylsmbejerprom2=[];
+    var realarrayeaejerprom2=[];
+    var realarrayceiejerprom2=[];
+    var realarraylavejerprom2=[];
+    var realarrayrapejerprom2=[];
+    var realarraygmejerprom2=[];
+    var realarraybakhanejerprom2=[];
+    var realarraypromedioejer=[];
+    var realarraypromedioejer2=[];
+
     var realarray1basico=[];
     var realarray2basico=[];
     var realarray3basico=[];
@@ -6960,6 +6991,21 @@ function graficarcompara(json, clase){
       arraygmprom2[i]=Math.round(arraygm2[i]/estudiantesniveles[i]*100)/100;
       arraybakhanprom2[i]=Math.round(arraybakhan2[i]/estudiantesniveles[i]*100)/100;
 
+      arraylsmbejerprom[i]=Math.round(arraylsmbejer[i]/estudiantesniveles[i]*100)/100;
+      arrayeaejerprom[i]=Math.round(arrayeaejer[i]/estudiantesniveles[i]*100)/100;
+      arrayceiejerprom[i]=Math.round(arrayceiejer[i]/estudiantesniveles[i]*100)/100;
+      arraylavejerprom[i]=Math.round(arraylavejer[i]/estudiantesniveles[i]*100)/100;
+      arrayrapejerprom[i]=Math.round(arrayrapejer[i]/estudiantesniveles[i]*100)/100;
+      arraygmejerprom[i]=Math.round(arraygmejer[i]/estudiantesniveles[i]*100)/100;
+      arraybakhanejerprom[i]=Math.round(arraybakhanejer[i]/estudiantesniveles[i]*100)/100;
+      arraylsmbejerprom2[i]=Math.round(arraylsmbejer2[i]/estudiantesniveles[i]*100)/100;
+      arrayeaejerprom2[i]=Math.round(arrayeaejer2[i]/estudiantesniveles[i]*100)/100;
+      arrayceiejerprom2[i]=Math.round(arrayceiejer2[i]/estudiantesniveles[i]*100)/100;
+      arraylavejerprom2[i]=Math.round(arraylavejer2[i]/estudiantesniveles[i]*100)/100;
+      arrayrapejerprom2[i]=Math.round(arrayrapejer2[i]/estudiantesniveles[i]*100)/100;
+      arraygmejerprom2[i]=Math.round(arraygmejer2[i]/estudiantesniveles[i]*100)/100;
+      arraybakhanejerprom2[i]=Math.round(arraybakhanejer2[i]/estudiantesniveles[i]*100)/100;
+
       if (isNaN(arraylsmbprom[i])){
         arraylsmbprom[i]=0;
       }
@@ -7002,6 +7048,50 @@ function graficarcompara(json, clase){
       if (isNaN(arraybakhanprom2[i])){
         arraybakhanprom2[i]=0;
       }
+
+      if (isNaN(arraylsmbejerprom[i])){
+        arraylsmbejerprom[i]=0;
+      }
+      if (isNaN(arrayeaejerprom[i])){
+        arrayeaejerprom[i]=0;
+      }
+      if (isNaN(arrayceiejerprom[i])){
+        arrayceiejerprom[i]=0;
+      }
+      if (isNaN(arraylavejerprom[i])){
+        arraylavejerprom[i]=0;
+      }
+      if (isNaN(arrayrapejerprom[i])){
+        arrayrapejerprom[i]=0;
+      }
+      if (isNaN(arraygmejerprom[i])){
+        arraygmejerprom[i]=0;
+      }
+      if (isNaN(arraybakhanejerprom[i])){
+        arraybakhanejerprom[i]=0;
+      }
+      if (isNaN(arraylsmbejerprom2[i])){
+        arraylsmbejerprom2[i]=0;
+      }
+      if (isNaN(arrayeaejerprom2[i])){
+        arrayeaejerprom2[i]=0;
+      }
+      if (isNaN(arrayceiejerprom2[i])){
+        arrayceiejerprom2[i]=0;
+      }
+      if (isNaN(arraylavejerprom2[i])){
+        arraylavejerprom2[i]=0;
+      }
+      if (isNaN(arrayrapejerprom2[i])){
+        arrayrapejerprom2[i]=0;
+      }
+      if (isNaN(arraygmejerprom2[i])){
+        arraygmejerprom2[i]=0;
+      }
+      if (isNaN(arraybakhanejerprom2[i])){
+        arraybakhanejerprom2[i]=0;
+      }
+
       if (isNaN(average)){
         arraypromedio[i]=0;
       }
@@ -7017,6 +7107,27 @@ function graficarcompara(json, clase){
       }
       else{
         arraypromedio2[i]=Math.round(average2*100)/100;
+      }
+    }
+
+    var arraypromedioejer = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbejer.length; i++) {
+      var average=(arraylsmbejer[i]+arrayeaejer[i]+arrayceiejer[i]+arraylavejer[i]+arrayrapejer[i]+arraygmejer[i]+arraybakhanejer[i])/estudiantesniveles[i];
+      if (isNaN(average)){
+        arraypromedioejer[i]=0;
+      }
+      else{
+        arraypromedioejer[i]=Math.round(average*100)/100;
+      }
+    }
+    var arraypromedioejer2 = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbejer2.length; i++) {
+      var average2=(arraylsmbejer2[i]+arrayeaejer2[i]+arrayceiejer2[i]+arraylavejer2[i]+arrayrapejer2[i]+arraygmejer2[i]+arraybakhanejer2[i])/estudiantesniveles[i];
+      if (isNaN(average2)){
+        arraypromedioejer2[i]=0;
+      }
+      else{
+        arraypromedioejer2[i]=Math.round(average2*100)/100;
       }
     }
 
@@ -7040,6 +7151,37 @@ function graficarcompara(json, clase){
         realarrayrap2[count]=arrayrap2[i];
         realarraygm2[count]=arraygm2[i];
         realarraybakhan2[count]=arraybakhan2[i];
+
+        realarraylsmbejer[count]=arraylsmbejer[i];
+        realarrayeaejer[count]=arrayeaejer[i];
+        realarrayceiejer[count]=arrayceiejer[i];
+        realarraylavejer[count]=arraylavejer[i];
+        realarrayrapejer[count]=arrayrapejer[i];
+        realarraygmejer[count]=arraygmejer[i];
+        realarraybakhanejer[count]=arraybakhanejer[i];
+        realarraylsmbejer2[count]=arraylsmbejer2[i];
+        realarrayeaejer2[count]=arrayeaejer2[i];
+        realarrayceiejer2[count]=arrayceiejer2[i];
+        realarraylavejer2[count]=arraylavejer2[i];
+        realarrayrapejer2[count]=arrayrapejer2[i];
+        realarraygmejer2[count]=arraygmejer2[i];
+        realarraybakhanejer2[count]=arraybakhanejer2[i];
+
+        realarraylsmbejerprom[count]=arraylsmbejerprom[i];
+        realarrayeaejerprom[count]=arrayeaejerprom[i];
+        realarrayceiejerprom[count]=arrayceiejerprom[i];
+        realarraylavejerprom[count]=arraylavejerprom[i];
+        realarrayrapejerprom[count]=arrayrapejerprom[i];
+        realarraygmejerprom[count]=arraygmejerprom[i];
+        realarraybakhanejerprom[count]=arraybakhanejerprom[i];
+        realarraylsmbejerprom2[count]=arraylsmbejerprom2[i];
+        realarrayeaejerprom2[count]=arrayeaejerprom2[i];
+        realarrayceiejerprom2[count]=arrayceiejerprom2[i];
+        realarraylavejerprom2[count]=arraylavejerprom2[i];
+        realarrayrapejerprom2[count]=arrayrapejerprom2[i];
+        realarraygmejerprom2[count]=arraygmejerprom2[i];
+        realarraybakhanejerprom2[count]=arraybakhanejerprom2[i];
+
         realarraypromedio[count]=arraypromedio[i];
         realarraypromedio2[count]=arraypromedio2[i];
         realestudiantesxnivel[2*count]=estudiantesniveles[i];
@@ -7059,6 +7201,9 @@ function graficarcompara(json, clase){
         realarraygmprom2[count]=arraygmprom2[i];
         realarraybakhanprom2[count]=arraybakhanprom2[i];
         realcategoriasdxn[count]=categoriasdxn[i];
+
+        realarraypromedioejer[count]=arraypromedioejer[i];
+        realarraypromedioejer2[count]=arraypromedioejer2[i];
         count++;
       }
     }
@@ -7277,6 +7422,7 @@ function graficarcompara(json, clase){
 
     var rlarrayprom=[];
     var rlarrayprominst=[];
+    var rlarraypromejer=[];
 
     for (var i = 0; i < realarraypromedio.length; i++) {
       rlarrayprom[2*i]=realarraypromedio[i];
@@ -7286,6 +7432,11 @@ function graficarcompara(json, clase){
     for (var i = 0; i < realarraypromedioinst.length; i++) {
       rlarrayprominst[2*i]=realarraypromedioinst[i];
       rlarrayprominst[2*i+1]=realarraypromedioinst2[i];
+    }
+
+    for (var i = 0; i < realarraypromedioejer.length; i++) {
+      rlarraypromejer[2*i]=realarraypromedioejer[i];
+      rlarraypromejer[2*i+1]=realarraypromedioejer2[i];
     }
 
     arraydedatos[0]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
@@ -7420,20 +7571,21 @@ function graficarcompara(json, clase){
     distxinstprom[9]={'name':'2do medio', 'data':realarray2medioprom, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
     distxinstprom[10]={'name':'3ro medio', 'data':realarray3medioprom, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
     distxinstprom[11]={'name':'4to medio', 'data':realarray4medioprom, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[12]={'name':'1ro basico', 'data':realarray1basicoprom2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[13]={'name':'2do basico', 'data':realarray2basicoprom2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[14]={'name':'3ro basico', 'data':realarray3basicoprom2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[15]={'name':'4to basico', 'data':realarray4basicoprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[16]={'name':'5to basico', 'data':realarray5basicoprom2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[17]={'name':'6to basico', 'data':realarray6basicoprom2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[18]={'name':'7mo basico', 'data':realarray7basicoprom2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[19]={'name':'8vo basico', 'data':realarray8basicoprom2, 'type':'column', 'yAxis':1, 'color': '#2B908F', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[20]={'name':'1ro medio', 'data':realarray1medioprom2, 'type':'column', 'yAxis':1, 'color': '#F45B5B', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[21]={'name':'2do medio', 'data':realarray2medioprom2, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[22]={'name':'3ro medio', 'data':realarray3medioprom2, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[23]={'name':'4to medio', 'data':realarray4medioprom2, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
-    distxinstprom[24]={'name':'Promedio Ejercicios '+tipo1+'', 'data':realarraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
-    distxinstprom[25]={'name':'Promedio Ejercicios '+tipo2+'', 'data':realarraypromedioinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
+    distxinstprom[12]={'name':'1ro basico', 'data':realarray1basicoprom2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[13]={'name':'2do basico', 'data':realarray2basicoprom2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[14]={'name':'3ro basico', 'data':realarray3basicoprom2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[15]={'name':'4to basico', 'data':realarray4basicoprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[16]={'name':'5to basico', 'data':realarray5basicoprom2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[17]={'name':'6to basico', 'data':realarray6basicoprom2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[18]={'name':'7mo basico', 'data':realarray7basicoprom2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[19]={'name':'8vo basico', 'data':realarray8basicoprom2, 'type':'column', 'yAxis':1, 'color': '#2B908F', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[20]={'name':'1ro medio', 'data':realarray1medioprom2, 'type':'column', 'yAxis':1, 'color': '#F45B5B', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[21]={'name':'2do medio', 'data':realarray2medioprom2, 'type':'column', 'yAxis':1, 'color': '#91E8E1', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[22]={'name':'3ro medio', 'data':realarray3medioprom2, 'type':'column', 'yAxis':1, 'color': '#9ED3CA', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[23]={'name':'4to medio', 'data':realarray4medioprom2, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend':false};
+    distxinstprom[24]={'name':'',  'stack':tipo2 , 'data': realzeroesinst,'showInLegend': false, 'yAxis':1};
+    distxinstprom[25]={'name':'Promedio Ejercicios '+tipo1+'', 'data':rlarrayprominst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
+    //distxinstprom[25]={'name':'Promedio Ejercicios '+tipo2+'', 'data':realarraypromedioinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
     distxinstprom[26]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivelinst, 'type':'spline', 'color':'#89A54E', 'lineWidth':0};
 
     var contadorinstprom=0;
@@ -7453,44 +7605,23 @@ function graficarcompara(json, clase){
       distxinstprom.splice(elementremoveinstprom[i]-i,1);
     };
 
-    var arraypromedioejer = new Array(12).fill(0);
-    for (var i = 0; i < arraylsmbejer.length; i++) {
-      var average=(arraylsmbejer[i]+arrayeaejer[i]+arrayceiejer[i]+arraylavejer[i]+arrayrapejer[i]+arraygmejer[i]+arraybakhanejer[i])/estudiantesniveles[i];
-      if (isNaN(average)){
-        arraypromedioejer[i]=0;
-      }
-      else{
-        arraypromedioejer[i]=Math.round(average*100)/100;
-      }
-    }
-    var arraypromedioejer2 = new Array(12).fill(0);
-    for (var i = 0; i < arraylsmbejer2.length; i++) {
-      var average2=(arraylsmbejer2[i]+arrayeaejer2[i]+arrayceiejer2[i]+arraylavejer2[i]+arrayrapejer2[i]+arraygmejer2[i]+arraybakhanejer2[i])/estudiantesniveles[i];
-      if (isNaN(average2)){
-        arraypromedioejer2[i]=0;
-      }
-      else{
-        arraypromedioejer2[i]=Math.round(average2*100)/100;
-      }
-    }
-
-    distxnivelejer[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbejer, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
-    distxnivelejer[1]={'name':'E.A. '+tipo1+'', 'data':arrayeaejer, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
-    distxnivelejer[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceiejer, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
-    distxnivelejer[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavejer, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
-    distxnivelejer[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapejer, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
-    distxnivelejer[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmejer, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
-    distxnivelejer[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanejer, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
-    distxnivelejer[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbejer2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
-    distxnivelejer[8]={'name':'E.A. '+tipo2+'', 'data':arrayeaejer2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
-    distxnivelejer[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceiejer2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
-    distxnivelejer[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavejer2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
-    distxnivelejer[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapejer2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
-    distxnivelejer[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmejer2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
-    distxnivelejer[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanejer2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
-    distxnivelejer[14]={'name':'Promedio Tiempo de Ejercicios '+tipo1+'', 'data':arraypromedioejer, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelejer[15]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedioejer2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelejer[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivelejer[0]={'name':'LSMB', 'data':realarraylsmbejer, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[1]={'name':'E.A.', 'data':realarrayeaejer, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[2]={'name':'C.E.I.', 'data':realarrayceiejer, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[3]={'name':'L.A.V.', 'data':realarraylavejer, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[4]={'name':'R.A.P.', 'data':realarrayrapejer, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[5]={'name':'L.G.M.', 'data':realarraygmejer, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[6]={'name':'Ba-Khan', 'data':realarraybakhanejer, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejer[7]={'name':'LSMB', 'data':realarraylsmbejer2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[8]={'name':'E.A.', 'data':realarrayeaejer2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[9]={'name':'C.E.I.', 'data':realarrayceiejer2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[10]={'name':'L.A.V.', 'data':realarraylavejer2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[11]={'name':'R.A.P.', 'data':realarrayrapejer2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[12]={'name':'L.G.M.', 'data':realarraygmejer2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[13]={'name':'Ba-Khan', 'data':realarraybakhanejer2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejer[14]={'name':'',  'stack':tipo2 , 'data': realzeroes,'showInLegend': false, 'yAxis':1};
+    distxnivelejer[15]={'name':'Promedio Tiempo de Ejercicios', 'data':rlarraypromejer, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
+    distxnivelejer[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'lineWidth':0};
 
     var contadorejer=0;
     for (var i = 0; i < distxnivelejer.length; i++) {
@@ -7509,23 +7640,23 @@ function graficarcompara(json, clase){
       distxnivelejer.splice(elementremoveejer[i]-i,1);
     };
 
-    distxnivelejerprom[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbejerprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
-    distxnivelejerprom[1]={'name':'E.A. '+tipo1+'', 'data':arrayeaejerprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
-    distxnivelejerprom[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceiejerprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
-    distxnivelejerprom[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavejerprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
-    distxnivelejerprom[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapejerprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
-    distxnivelejerprom[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmejerprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
-    distxnivelejerprom[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanejerprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
-    distxnivelejerprom[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbejerprom2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
-    distxnivelejerprom[8]={'name':'E.A. '+tipo2+'', 'data':arrayeaejerprom2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
-    distxnivelejerprom[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceiejerprom2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
-    distxnivelejerprom[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavejerprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
-    distxnivelejerprom[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapejerprom2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
-    distxnivelejerprom[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmejerprom2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
-    distxnivelejerprom[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanejerprom2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
-    distxnivelejerprom[14]={'name':'Promedio Tiempo de Ejercicios '+tipo1+'', 'data':arraypromedio, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelejerprom[15]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedio2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelejerprom[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivelejerprom[0]={'name':'LSMB', 'data':realarraylsmbejerprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[1]={'name':'E.A.', 'data':realarrayeaejerprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[2]={'name':'C.E.I.', 'data':realarrayceiejerprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[3]={'name':'L.A.V.', 'data':realarraylavejerprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[4]={'name':'R.A.P.', 'data':realarrayrapejerprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[5]={'name':'L.G.M.', 'data':realarraygmejerprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[6]={'name':'Ba-Khan', 'data':realarraybakhanejerprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelejerprom[7]={'name':'LSMB', 'data':realarraylsmbejerprom2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[8]={'name':'E.A.', 'data':realarrayeaejerprom2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[9]={'name':'C.E.I.', 'data':realarrayceiejerprom2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[10]={'name':'L.A.V.', 'data':realarraylavejerprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[11]={'name':'R.A.P.', 'data':realarrayrapejerprom2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[12]={'name':'L.G.M.', 'data':realarraygmejerprom2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[13]={'name':'Ba-Khan', 'data':realarraybakhanejerprom2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelejerprom[14]={'name':'',  'stack':tipo2 , 'data': realzeroes, 'showInLegend': false, 'yAxis':1};
+    distxnivelejerprom[15]={'name':'Promedio Tiempo de Ejercicios', 'data':rlarraypromejer, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
+    distxnivelejerprom[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'lineWidth':0};
 
     var contadorejerprom=0;
     for (var i = 0; i < distxnivelejerprom.length; i++) {
@@ -8149,21 +8280,38 @@ function graficarcompara(json, clase){
     });
 
     $(function () {
-      Highcharts.chart('containerejernivel', {
+    var options = {
 
-          chart: {
-              type: 'column'
-          },
+        chart: {
+            type: 'column'
+        },
 
-          title: {
-              text: 'Distribución de Tiempo de Ejercicios por Nivel (Total)'
-          },
+        title: {
+            text: 'Distribución de Tiempo de Ejercicios Total por Nivel'
+        },
 
-          xAxis: {
-              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
-          },
+        xAxis: [
+   
+                  {
+            categories: realcats,
+                      labels: {autoRotation:false, style: {textOverflow: 'none'}, enabled: true},
+           tickWidth: 0,
+        },
+                  {
+            categories: realcategoriasdxn,
+                         lineColor:'#ffffff',
+                      tickWidth: 0,
+                      crosshair: {
+                      color: '#E0E0E0'
+                     }
+                     
+                 //     plotBands : [ {  from:-0.5, to:0.5, color:"#eeeeee"  }, 
+                //                   {  from: 1.5, to:2.5, color:"#eeeeee"  },
+                //                    {  from: 3.5, to:4.5, color:"#eeeeee"  }]       
+            }     ,
+         ],
 
-          yAxis: [{ // Primary yAxis
+        yAxis: [{ // Primary yAxis
               labels: {
                   style: {
                       color: '#89A54E'
@@ -8175,12 +8323,13 @@ function graficarcompara(json, clase){
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Tiempo Total por Nivel',
+                  text: 'Tiempo de Ejercicios por Nivel',
                   style: {
                       color: '#4572A7'
                   }
@@ -8194,7 +8343,7 @@ function graficarcompara(json, clase){
           }, { // Tertiary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Promedio de Tiempo de Ejercicios',
+                  text: 'Promedio de Tiempo Ejercicios',
                   style: {
                       color: '#AA4643'
                   }
@@ -8204,38 +8353,71 @@ function graficarcompara(json, clase){
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
-          
-          tooltip:{
-            shared: true
-          },
 
-          plotOptions: {
-              column: {
-                  stacking: 'normal'
-              }
-          },
-          series: distxnivelejer
-      });
-  });
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                //pointWidth: 50,
+                groupPadding: 0
+            }
+        },
+        series: distxnivelejer
+    };
+    
+    var onLegendClick= function (event) {
+                                  var myname = this.name;
+                                  var myvis  = !this.visible;
+                                  this.chart.series.forEach( function (elem) {
+                                    if (elem.name == myname) {
+                                      elem.setVisible(myvis);
+                                    }
+                                  });
+                                  return false;
+                                }
+                            
+    
+    options.series.forEach(function (serie) {
+        serie.events = { legendItemClick : onLegendClick} ;
+    });
+    $('#containerejernivel').highcharts(options);
+});
 
     $(function () {
-      Highcharts.chart('containerejernivelprom', {
+    var options = {
 
-          chart: {
-              type: 'column'
-          },
+        chart: {
+            type: 'column'
+        },
 
-          title: {
-              text: 'Distribución de Tiempo de Ejercicios Promedio por Nivel'
-          },
+        title: {
+            text: 'Distribución de Tiempo de Ejercicios Promedio por Nivel'
+        },
 
-          xAxis: {
-              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
-          },
+        xAxis: [
+   
+                  {
+            categories: realcats,
+                      labels: {autoRotation:false, style: {textOverflow: 'none'}, enabled: true},
+           tickWidth: 0,
+        },
+                  {
+            categories: realcategoriasdxn,
+                         lineColor:'#ffffff',
+                      tickWidth: 0,
+                      crosshair: {
+                      color: '#E0E0E0'
+                     }
+                     
+                 //     plotBands : [ {  from:-0.5, to:0.5, color:"#eeeeee"  }, 
+                //                   {  from: 1.5, to:2.5, color:"#eeeeee"  },
+                //                    {  from: 3.5, to:4.5, color:"#eeeeee"  }]       
+            }     ,
+         ],
 
-          yAxis: [{ // Primary yAxis
+        yAxis: [{ // Primary yAxis
               labels: {
                   style: {
                       color: '#89A54E'
@@ -8247,12 +8429,13 @@ function graficarcompara(json, clase){
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Cantidad Promedio por Nivel',
+                  text: 'Tiempo de Ejercicios Promedio por Nivel',
                   style: {
                       color: '#4572A7'
                   }
@@ -8266,7 +8449,7 @@ function graficarcompara(json, clase){
           }, { // Tertiary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Promedio de Tiempo de Ejercicios',
+                  text: 'Promedio de Tiempo Ejercicios',
                   style: {
                       color: '#AA4643'
                   }
@@ -8276,21 +8459,37 @@ function graficarcompara(json, clase){
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
-          
-          tooltip:{
-            shared: true
-          },
 
-          plotOptions: {
-              column: {
-                  stacking: 'normal'
-              }
-          },
-          series: distxnivelejerprom
-      });
-  });
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                //pointWidth: 50,
+                groupPadding: 0
+            }
+        },
+        series: distxnivelejerprom
+    };
+    
+    var onLegendClick= function (event) {
+                                  var myname = this.name;
+                                  var myvis  = !this.visible;
+                                  this.chart.series.forEach( function (elem) {
+                                    if (elem.name == myname) {
+                                      elem.setVisible(myvis);
+                                    }
+                                  });
+                                  return false;
+                                }
+                            
+    
+    options.series.forEach(function (serie) {
+        serie.events = { legendItemClick : onLegendClick} ;
+    });
+    $('#containerejernivelprom').highcharts(options);
+});
 
     $(function () {
       Highcharts.chart('containerejerinst', {
@@ -8436,7 +8635,7 @@ function graficarcompara(json, clase){
       });
   });
 
-    function sortTotal(valor){
+    /*function sortTotal(valor){
       if (valor=="0"){
         tpoejercicios1.sort(function(a,b){
           return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
@@ -8492,7 +8691,7 @@ function graficarcompara(json, clase){
     $('#ordenartot').change(function(){
       var retorno = sortTotal($('select#ordenartot option:selected').val());
       chart.series[0].update(retorno);
-    })
+    })*/
   });
     $(function () {
       Highcharts.setOptions({
@@ -9032,15 +9231,13 @@ $(function () {
             }
         }]
     });
-    function sortTotal(valor){
+    /*function sortTotal(valor){
       //aqui va algo
       if (valor=="0"){
         cantidad1.sort(function(a,b){
           return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
         });
-        /*categorias.sort(function(a,b){
-          return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-        });*/
+
         categorias.sort();
         //categorias.reverse();
       }
@@ -9093,7 +9290,7 @@ $(function () {
     $('#ordenarcant').change(function(){
       var retorno = sortTotal($('select#ordenarcant option:selected').val());
       chart.series[0].update(retorno);
-    })
+    })*/
   });
 
 $(function () {
@@ -9140,7 +9337,8 @@ $(function () {
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
@@ -9169,7 +9367,8 @@ $(function () {
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
 
         plotOptions: {
@@ -9245,7 +9444,8 @@ $(function () {
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
@@ -9274,7 +9474,8 @@ $(function () {
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
 
         plotOptions: {
@@ -9349,7 +9550,8 @@ $(function () {
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
@@ -9378,7 +9580,8 @@ $(function () {
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
 
         plotOptions: {
@@ -9453,7 +9656,8 @@ $(function () {
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
@@ -9482,7 +9686,8 @@ $(function () {
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
 
         plotOptions: {
