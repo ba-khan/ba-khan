@@ -4969,8 +4969,6 @@ function graficarcompara(json, clase){
 
         arraylsmbvid[level-1]+=tpovid1;
         arraylsmbvid2[level-1]+=tpovid2;
-        arraylsmbvidprom[level-1]+=tpovidprom1;
-        arraylsmbvidprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[0]+=cntdd1;
@@ -5181,8 +5179,6 @@ function graficarcompara(json, clase){
 
         arrayeavid[level-1]+=tpovid1;
         arrayeavid2[level-1]+=tpovid2;
-        arrayeavidprom[level-1]+=tpovidprom1;
-        arrayeavidprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[1]+=cntdd1;
@@ -5393,8 +5389,6 @@ function graficarcompara(json, clase){
 
         arrayceivid[level-1]+=tpovid1;
         arrayceivid2[level-1]+=tpovid2;
-        arrayceividprom[level-1]+=tpovidprom1;
-        arrayceividprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[2]+=cntdd1;
@@ -5605,8 +5599,6 @@ function graficarcompara(json, clase){
 
         arraylavvid[level-1]+=tpovid1;
         arraylavvid2[level-1]+=tpovid2;
-        arraylavvidprom[level-1]+=tpovidprom1;
-        arraylavvidprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[3]+=cntdd1;
@@ -5817,8 +5809,6 @@ function graficarcompara(json, clase){
 
         arrayrapvid[level-1]+=tpovid1;
         arrayrapvid2[level-1]+=tpovid2;
-        arrayrapvidprom[level-1]+=tpovidprom1;
-        arrayrapvidprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[4]+=cntdd1;
@@ -5976,9 +5966,6 @@ function graficarcompara(json, clase){
 
           array2mediovid[4]+=tpovid1;
           array2mediovid2[4]+=tpovid2;
-
-          array2mediovidprom[4]+=tpovidprom1;
-          array2mediovidprom2[4]+=tpovidprom2;
         }
         if (level==11){
           array3medio[4]+=cntdd1;
@@ -6029,8 +6016,6 @@ function graficarcompara(json, clase){
 
         arraygmvid[level-1]+=tpovid1;
         arraygmvid2[level-1]+=tpovid2;
-        arraygmvidprom[level-1]+=tpovidprom1;
-        arraygmvidprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[5]+=cntdd1;
@@ -6241,8 +6226,6 @@ function graficarcompara(json, clase){
 
         arraybakhanvid[level-1]+=tpovid1;
         arraybakhanvid2[level-1]+=tpovid2;
-        arraybakhanvidprom[level-1]+=tpovidprom1;
-        arraybakhanvidprom2[level-1]+=tpovidprom2;
 
         if (level==1){
           array1basico[6]+=cntdd1;
@@ -6666,6 +6649,37 @@ function graficarcompara(json, clase){
     var realarraypromedioejer=[];
     var realarraypromedioejer2=[];
 
+    var realarraylsmbvid=[];
+    var realarrayeavid=[];
+    var realarrayceivid=[];
+    var realarraylavvid=[];
+    var realarrayrapvid=[];
+    var realarraygmvid=[];
+    var realarraybakhanvid=[];
+    var realarraylsmbvid2=[];
+    var realarrayeavid2=[];
+    var realarrayceivid2=[];
+    var realarraylavvid2=[];
+    var realarrayrapvid2=[];
+    var realarraygmvid2=[];
+    var realarraybakhanvid2=[];
+    var realarraylsmbvidprom=[];
+    var realarrayeavidprom=[];
+    var realarrayceividprom=[];
+    var realarraylavvidprom=[];
+    var realarrayrapvidprom=[];
+    var realarraygmvidprom=[];
+    var realarraybakhanvidprom=[];
+    var realarraylsmbvidprom2=[];
+    var realarrayeavidprom2=[];
+    var realarrayceividprom2=[];
+    var realarraylavvidprom2=[];
+    var realarrayrapvidprom2=[];
+    var realarraygmvidprom2=[];
+    var realarraybakhanvidprom2=[];
+    var realarraypromediovid=[];
+    var realarraypromediovid2=[];
+
     var realarray1basico=[];
     var realarray2basico=[];
     var realarray3basico=[];
@@ -6806,6 +6820,21 @@ function graficarcompara(json, clase){
       arraygmejerprom2[i]=Math.round(arraygmejer2[i]/estudiantesniveles[i]*100)/100;
       arraybakhanejerprom2[i]=Math.round(arraybakhanejer2[i]/estudiantesniveles[i]*100)/100;
 
+      arraylsmbvidprom[i]=Math.round(arraylsmbvid[i]/estudiantesniveles[i]*100)/100;
+      arrayeavidprom[i]=Math.round(arrayeavid[i]/estudiantesniveles[i]*100)/100;
+      arrayceividprom[i]=Math.round(arrayceivid[i]/estudiantesniveles[i]*100)/100;
+      arraylavvidprom[i]=Math.round(arraylavvid[i]/estudiantesniveles[i]*100)/100;
+      arrayrapvidprom[i]=Math.round(arrayrapvid[i]/estudiantesniveles[i]*100)/100;
+      arraygmvidprom[i]=Math.round(arraygmvid[i]/estudiantesniveles[i]*100)/100;
+      arraybakhanvidprom[i]=Math.round(arraybakhanvid[i]/estudiantesniveles[i]*100)/100;
+      arraylsmbvidprom2[i]=Math.round(arraylsmbvid2[i]/estudiantesniveles[i]*100)/100;
+      arrayeavidprom2[i]=Math.round(arrayeavid2[i]/estudiantesniveles[i]*100)/100;
+      arrayceividprom2[i]=Math.round(arrayceivid2[i]/estudiantesniveles[i]*100)/100;
+      arraylavvidprom2[i]=Math.round(arraylavvid2[i]/estudiantesniveles[i]*100)/100;
+      arrayrapvidprom2[i]=Math.round(arrayrapvid2[i]/estudiantesniveles[i]*100)/100;
+      arraygmvidprom2[i]=Math.round(arraygmvid2[i]/estudiantesniveles[i]*100)/100;
+      arraybakhanvidprom2[i]=Math.round(arraybakhanvid2[i]/estudiantesniveles[i]*100)/100;
+
       if (isNaN(arraylsmbprom[i])){
         arraylsmbprom[i]=0;
       }
@@ -6892,6 +6921,49 @@ function graficarcompara(json, clase){
         arraybakhanejerprom2[i]=0;
       }
 
+      if (isNaN(arraylsmbvidprom[i])){
+        arraylsmbvidprom[i]=0;
+      }
+      if (isNaN(arrayeavidprom[i])){
+        arrayeavidprom[i]=0;
+      }
+      if (isNaN(arrayceividprom[i])){
+        arrayceividprom[i]=0;
+      }
+      if (isNaN(arraylavvidprom[i])){
+        arraylavvidprom[i]=0;
+      }
+      if (isNaN(arrayrapvidprom[i])){
+        arrayrapvidprom[i]=0;
+      }
+      if (isNaN(arraygmvidprom[i])){
+        arraygmvidprom[i]=0;
+      }
+      if (isNaN(arraybakhanvidprom[i])){
+        arraybakhanvidprom[i]=0;
+      }
+      if (isNaN(arraylsmbvidprom2[i])){
+        arraylsmbvidprom2[i]=0;
+      }
+      if (isNaN(arrayeavidprom2[i])){
+        arrayeavidprom2[i]=0;
+      }
+      if (isNaN(arrayceividprom2[i])){
+        arrayceividprom2[i]=0;
+      }
+      if (isNaN(arraylavvidprom2[i])){
+        arraylavvidprom2[i]=0;
+      }
+      if (isNaN(arrayrapvidprom2[i])){
+        arrayrapvidprom2[i]=0;
+      }
+      if (isNaN(arraygmvidprom2[i])){
+        arraygmvidprom2[i]=0;
+      }
+      if (isNaN(arraybakhanvidprom2[i])){
+        arraybakhanvidprom2[i]=0;
+      }
+
       if (isNaN(average)){
         arraypromedio[i]=0;
       }
@@ -6928,6 +7000,27 @@ function graficarcompara(json, clase){
       }
       else{
         arraypromedioejer2[i]=Math.round(average2*100)/100;
+      }
+    }
+
+    var arraypromediovid = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbvid.length; i++) {
+      var average=(arraylsmbvid[i]+arrayeavid[i]+arrayceivid[i]+arraylavvid[i]+arrayrapvid[i]+arraygmvid[i]+arraybakhanvid[i])/estudiantesniveles[i];
+      if (isNaN(average)){
+        arraypromediovid[i]=0;
+      }
+      else{
+        arraypromediovid[i]=Math.round(average*100)/100;
+      }
+    }
+    var arraypromediovid2 = new Array(12).fill(0);
+    for (var i = 0; i < arraylsmbvid2.length; i++) {
+      var average2=(arraylsmbvid2[i]+arrayeavid2[i]+arrayceivid2[i]+arraylavvid2[i]+arrayrapvid2[i]+arraygmvid2[i]+arraybakhanvid2[i])/estudiantesniveles[i];
+      if (isNaN(average2)){
+        arraypromediovid2[i]=0;
+      }
+      else{
+        arraypromediovid2[i]=Math.round(average2*100)/100;
       }
     }
 
@@ -6982,6 +7075,36 @@ function graficarcompara(json, clase){
         realarraygmejerprom2[count]=arraygmejerprom2[i];
         realarraybakhanejerprom2[count]=arraybakhanejerprom2[i];
 
+        realarraylsmbvid[count]=arraylsmbvid[i];
+        realarrayeavid[count]=arrayeavid[i];
+        realarrayceivid[count]=arrayceivid[i];
+        realarraylavvid[count]=arraylavvid[i];
+        realarrayrapvid[count]=arrayrapvid[i];
+        realarraygmvid[count]=arraygmvid[i];
+        realarraybakhanvid[count]=arraybakhanvid[i];
+        realarraylsmbvid2[count]=arraylsmbvid2[i];
+        realarrayeavid2[count]=arrayeavid2[i];
+        realarrayceivid2[count]=arrayceivid2[i];
+        realarraylavvid2[count]=arraylavvid2[i];
+        realarrayrapvid2[count]=arrayrapvid2[i];
+        realarraygmvid2[count]=arraygmvid2[i];
+        realarraybakhanvid2[count]=arraybakhanvid2[i];
+
+        realarraylsmbvidprom[count]=arraylsmbvidprom[i];
+        realarrayeavidprom[count]=arrayeavidprom[i];
+        realarrayceividprom[count]=arrayceividprom[i];
+        realarraylavvidprom[count]=arraylavvidprom[i];
+        realarrayrapvidprom[count]=arrayrapvidprom[i];
+        realarraygmvidprom[count]=arraygmvidprom[i];
+        realarraybakhanvidprom[count]=arraybakhanvidprom[i];
+        realarraylsmbvidprom2[count]=arraylsmbvidprom2[i];
+        realarrayeavidprom2[count]=arrayeavidprom2[i];
+        realarrayceividprom2[count]=arrayceividprom2[i];
+        realarraylavvidprom2[count]=arraylavvidprom2[i];
+        realarrayrapvidprom2[count]=arrayrapvidprom2[i];
+        realarraygmvidprom2[count]=arraygmvidprom2[i];
+        realarraybakhanvidprom2[count]=arraybakhanvidprom2[i];
+
         realarraypromedio[count]=arraypromedio[i];
         realarraypromedio2[count]=arraypromedio2[i];
         realestudiantesxnivel[2*count]=estudiantesniveles[i];
@@ -7004,6 +7127,8 @@ function graficarcompara(json, clase){
 
         realarraypromedioejer[count]=arraypromedioejer[i];
         realarraypromedioejer2[count]=arraypromedioejer2[i];
+        realarraypromediovid[count]=arraypromediovid[i];
+        realarraypromediovid2[count]=arraypromediovid2[i];
         count++;
       }
     }
@@ -7407,6 +7532,7 @@ function graficarcompara(json, clase){
     var rlarrayprominst=[];
     var rlarraypromejer=[];
     var rlarraypromejerinst=[];
+    var rlarraypromvid=[];
 
     for (var i = 0; i < realarraypromedio.length; i++) {
       rlarrayprom[2*i]=realarraypromedio[i];
@@ -7426,6 +7552,11 @@ function graficarcompara(json, clase){
     for (var i = 0; i < realarraypromedioejerinst.length; i++) {
       rlarraypromejerinst[2*i]=realarraypromedioejerinst[i];
       rlarraypromejerinst[2*i+1]=realarraypromedioejerinst2[i];
+    }
+
+    for (var i = 0; i < realarraypromediovid.length; i++) {
+      rlarraypromvid[2*i]=realarraypromediovid[i];
+      rlarraypromvid[2*i+1]=realarraypromediovid2[i];
     }
 
     arraydedatos[0]={'name':'LSMB', 'color':'#7CB5EC', 'data':realarraylsmb, 'stack':tipo1 ,'xAxis':1, 'type':'column', 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'yAxis':1};
@@ -7735,7 +7866,6 @@ function graficarcompara(json, clase){
     distxinstejerprom[23]={'name':'4to medio', 'data':realarray4medioejerprom2, 'type':'column', 'yAxis':1, 'color': '#646126', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
     distxinstejerprom[24]={'name':'',  'stack':tipo2 , 'data': realzeroesinst, 'showInLegend': false, 'yAxis':1};
     distxinstejerprom[25]={'name':'Promedio Tiempo de Ejercicios', 'data':rlarraypromejerinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth': 0};
-    //distxinstejerprom[25]={'name':'Promedio Tiempo de Ejercicios '+tipo2+'', 'data':arraypromedioejerinst2, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
     distxinstejerprom[26]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivelinst, 'type':'spline', 'color':'#89A54E', 'lineWidth': 0};
 
     var contadorinstejerprom=0;
@@ -7755,44 +7885,23 @@ function graficarcompara(json, clase){
       distxinstejerprom.splice(elementremoveinstejerprom[i]-i,1);
     };
 
-    var arraypromediovid = new Array(12).fill(0);
-    for (var i = 0; i < arraylsmbvid.length; i++) {
-      var average=(arraylsmbvid[i]+arrayeavid[i]+arrayceivid[i]+arraylavvid[i]+arrayrapvid[i]+arraygmvid[i]+arraybakhanvid[i])/estudiantesniveles[i];
-      if (isNaN(average)){
-        arraypromediovid[i]=0;
-      }
-      else{
-        arraypromediovid[i]=Math.round(average*100)/100;
-      }
-    }
-    var arraypromediovid2 = new Array(12).fill(0);
-    for (var i = 0; i < arraylsmbvid2.length; i++) {
-      var average2=(arraylsmbvid2[i]+arrayeavid2[i]+arrayceivid2[i]+arraylavvid2[i]+arrayrapvid2[i]+arraygmvid2[i]+arraybakhanvid2[i])/estudiantesniveles[i];
-      if (isNaN(average2)){
-        arraypromediovid2[i]=0;
-      }
-      else{
-        arraypromediovid2[i]=Math.round(average2*100)/100;
-      }
-    }
-
-    distxnivelvid[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbvid, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
-    distxnivelvid[1]={'name':'E.A. '+tipo1+'', 'data':arrayeavid, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
-    distxnivelvid[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceivid, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
-    distxnivelvid[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavvid, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
-    distxnivelvid[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapvid, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
-    distxnivelvid[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmvid, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
-    distxnivelvid[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanvid, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
-    distxnivelvid[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbvid2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
-    distxnivelvid[8]={'name':'E.A. '+tipo2+'', 'data':arrayeavid2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
-    distxnivelvid[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceivid2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
-    distxnivelvid[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavvid2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
-    distxnivelvid[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapvid2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
-    distxnivelvid[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmvid2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
-    distxnivelvid[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanvid2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
-    distxnivelvid[14]={'name':'Promedio Tiempo de Videos '+tipo1+'', 'data':arraypromediovid, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelvid[15]={'name':'Promedio Tiempo de Videos '+tipo2+'', 'data':arraypromediovid2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelvid[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivelvid[0]={'name':'LSMB', 'data':realarraylsmbvid, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[1]={'name':'E.A.', 'data':realarrayeavid, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[2]={'name':'C.E.I.', 'data':realarrayceivid, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[3]={'name':'L.A.V.', 'data':realarraylavvid, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[4]={'name':'R.A.P.', 'data':realarrayrapvid, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[5]={'name':'L.G.M.', 'data':realarraygmvid, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[6]={'name':'Ba-Khan', 'data':realarraybakhanvid, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvid[7]={'name':'LSMB', 'data':realarraylsmbvid2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[8]={'name':'E.A.', 'data':realarrayeavid2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[9]={'name':'C.E.I.', 'data':realarrayceivid2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[10]={'name':'L.A.V.', 'data':realarraylavvid2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[11]={'name':'R.A.P.', 'data':realarrayrapvid2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[12]={'name':'L.G.M.', 'data':realarraygmvid2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[13]={'name':'Ba-Khan', 'data':realarraybakhanvid2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvid[14]={'name':'',  'stack':tipo2 , 'data': realzeroes, 'showInLegend': false, 'yAxis':1};
+    distxnivelvid[15]={'name':'Promedio Tiempo de Videos', 'data':rlarraypromvid, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
+    distxnivelvid[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'lineWidth':0};
 
     var contadorvid=0;
     for (var i = 0; i < distxnivelvid.length; i++) {
@@ -7811,23 +7920,23 @@ function graficarcompara(json, clase){
       distxnivelvid.splice(elementremovevid[i]-i,1);
     };
 
-    distxnivelvidprom[0]={'name':'LSMB '+tipo1+'', 'data':arraylsmbvidprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1};
-    distxnivelvidprom[1]={'name':'E.A. '+tipo1+'', 'data':arrayeavidprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1};
-    distxnivelvidprom[2]={'name':'C.E.I. '+tipo1+'', 'data':arrayceividprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1};
-    distxnivelvidprom[3]={'name':'L.A.V. '+tipo1+'', 'data':arraylavvidprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1};
-    distxnivelvidprom[4]={'name':'R.A.P. '+tipo1+'', 'data':arrayrapvidprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1};
-    distxnivelvidprom[5]={'name':'L.G.M. '+tipo1+'', 'data':arraygmvidprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1};
-    distxnivelvidprom[6]={'name':'Ba-Khan '+tipo1+'', 'data':arraybakhanvidprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1};
-    distxnivelvidprom[7]={'name':'LSMB '+tipo2+'', 'data':arraylsmbvidprom2, 'type':'column', 'yAxis':1, 'color': '#6BA4DB', 'stack': tipo2};
-    distxnivelvidprom[8]={'name':'E.A. '+tipo2+'', 'data':arrayeavidprom2, 'type':'column', 'yAxis':1, 'color': '#323237', 'stack': tipo2};
-    distxnivelvidprom[9]={'name':'C.E.I. '+tipo2+'', 'data':arrayceividprom2, 'type':'column', 'yAxis':1, 'color': '#8FDC6C', 'stack': tipo2};
-    distxnivelvidprom[10]={'name':'L.A.V. '+tipo2+'', 'data':arraylavvidprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2};
-    distxnivelvidprom[11]={'name':'R.A.P. '+tipo2+'', 'data':arrayrapvidprom2, 'type':'column', 'yAxis':1, 'color': '#7F74D8', 'stack': tipo2};
-    distxnivelvidprom[12]={'name':'L.G.M. '+tipo2+'', 'data':arraygmvidprom2, 'type':'column', 'yAxis':1, 'color': '#E04B7F', 'stack': tipo2};
-    distxnivelvidprom[13]={'name':'Ba-Khan '+tipo2+'', 'data':arraybakhanvidprom2, 'type':'column', 'yAxis':1, 'color': '#D3C243', 'stack': tipo2};
-    distxnivelvidprom[14]={'name':'Promedio Tiempo de Videos '+tipo1+'', 'data':arraypromediovid, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelvidprom[15]={'name':'Promedio Tiempo de Videos '+tipo2+'', 'data':arraypromediovid2, 'type':'spline', 'color':'#993532', 'yAxis':2, 'marker':{'enabled':false}, 'dashStyle': 'shortdot'};
-    distxnivelvidprom[16]={'name':'Cantidad de Estudiantes', 'data':estudiantesniveles, 'type':'spline', 'color':'#89A54E'};
+    distxnivelvidprom[0]={'name':'LSMB', 'data':realarraylsmbvidprom, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[1]={'name':'E.A.', 'data':realarrayeavidprom, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[2]={'name':'C.E.I.', 'data':realarrayceividprom, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[3]={'name':'L.A.V.', 'data':realarraylavvidprom, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[4]={'name':'R.A.P.', 'data':realarrayrapvidprom, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[5]={'name':'L.G.M.', 'data':realarraygmvidprom, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[6]={'name':'Ba-Khan', 'data':realarraybakhanvidprom, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo1, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}};
+    distxnivelvidprom[7]={'name':'LSMB', 'data':realarraylsmbvidprom2, 'type':'column', 'yAxis':1, 'color': '#7CB5EC', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[8]={'name':'E.A.', 'data':realarrayeavidprom2, 'type':'column', 'yAxis':1, 'color': '#434348', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[9]={'name':'C.E.I.', 'data':realarrayceividprom2, 'type':'column', 'yAxis':1, 'color': '#90ED7D', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[10]={'name':'L.A.V.', 'data':realarraylavvidprom2, 'type':'column', 'yAxis':1, 'color': '#F7A35C', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[11]={'name':'R.A.P.', 'data':realarrayrapvidprom2, 'type':'column', 'yAxis':1, 'color': '#8085E9', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[12]={'name':'L.G.M.', 'data':realarraygmvidprom2, 'type':'column', 'yAxis':1, 'color': '#F15C80', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[13]={'name':'Ba-Khan', 'data':realarraybakhanvidprom2, 'type':'column', 'yAxis':1, 'color': '#E4D354', 'stack': tipo2, 'xAxis':1, 'tooltip':{'pointFormat':'<b>{series.options.stack}</b><br/>{series.name}: {point.y}<br/> Total: {point.stackTotal:,.0f}'}, 'showInLegend': false};
+    distxnivelvidprom[14]={'name':'',  'stack':tipo2 , 'data': realzeroes, 'showInLegend': false, 'yAxis':1};
+    distxnivelvidprom[15]={'name':'Promedio Tiempo de Videos', 'data':rlarraypromvid, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'dashStyle': 'shortdot', 'lineWidth':0};
+    distxnivelvidprom[16]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivel, 'type':'spline', 'color':'#89A54E', 'lineWidth':0};
 
     var contadorvidprom=0;
     for (var i = 0; i < distxnivelvidprom.length; i++) {
@@ -8245,6 +8354,7 @@ function graficarcompara(json, clase){
                 }
             }
         }]
+    });
     });
 
     $(function () {
@@ -8670,79 +8780,7 @@ function graficarcompara(json, clase){
     });
     $('#containerejerinstprom').highcharts(options);
 });
-
-   /* $(function () {
-      Highcharts.chart('containerejerinstprom', {
-
-          chart: {
-              type: 'column'
-          },
-
-          title: {
-              text: 'Distribución de Tiempo de Ejercicios Promedio por Institución'
-          },
-
-          xAxis: {
-              categories: ['LSMB', 'EA', 'CEI', 'LAV', 'RAP', 'LGM', 'BA-Khan']
-          },
-
-          yAxis: [{ // Primary yAxis
-              labels: {
-                  style: {
-                      color: '#89A54E'
-                  }
-              },
-              title: {
-                  text: 'Cantidad de Estudiantes',
-                  style: {
-                      color: '#89A54E'
-                  }
-              },
-              opposite: true
   
-          }, { // Secondary yAxis
-              gridLineWidth: 0,
-              title: {
-                  text: 'Tiempo Promedio por Institución',
-                  style: {
-                      color: '#4572A7'
-                  }
-              },
-              labels: {
-                  style: {
-                      color: '#4572A7'
-                  }
-              }
-  
-          }, { // Tertiary yAxis
-              gridLineWidth: 0,
-              title: {
-                  text: 'Promedio de Tiempo Ejercicios',
-                  style: {
-                      color: '#AA4643'
-                  }
-              },
-              labels: {
-                  style: {
-                      color: '#AA4643'
-                  }
-              },
-              opposite: true
-          }],
-          
-          tooltip:{
-            shared: true
-          },
-
-          plotOptions: {
-              column: {
-                  stacking: 'normal'
-              }
-          },
-          series: distxinstejerprom
-      });
-  });*/
-  });
 
     $(function () {
       Highcharts.setOptions({
@@ -8902,21 +8940,38 @@ function graficarcompara(json, clase){
   });
 
 $(function () {
-      Highcharts.chart('containervidnivel', {
+    var options = {
 
-          chart: {
-              type: 'column'
-          },
+        chart: {
+            type: 'column'
+        },
 
-          title: {
-              text: 'Distribución de Tiempo de Videos Total por Nivel'
-          },
+        title: {
+            text: 'Distribución de Tiempo de Videos Total por Nivel'
+        },
 
-          xAxis: {
-              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
-          },
+        xAxis: [
+   
+                  {
+            categories: realcats,
+                      labels: {autoRotation:false, style: {textOverflow: 'none'}, enabled: true},
+           tickWidth: 0,
+        },
+                  {
+            categories: realcategoriasdxn,
+                         lineColor:'#ffffff',
+                      tickWidth: 0,
+                      crosshair: {
+                      color: '#E0E0E0'
+                     }
+                     
+                 //     plotBands : [ {  from:-0.5, to:0.5, color:"#eeeeee"  }, 
+                //                   {  from: 1.5, to:2.5, color:"#eeeeee"  },
+                //                    {  from: 3.5, to:4.5, color:"#eeeeee"  }]       
+            }     ,
+         ],
 
-          yAxis: [{ // Primary yAxis
+        yAxis: [{ // Primary yAxis
               labels: {
                   style: {
                       color: '#89A54E'
@@ -8928,12 +8983,13 @@ $(function () {
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Tiempo Total por Nivel',
+                  text: 'Tiempo de Videos Total por Nivel',
                   style: {
                       color: '#4572A7'
                   }
@@ -8957,38 +9013,71 @@ $(function () {
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
-          
-          tooltip:{
-            shared: true
-          },
 
-          plotOptions: {
-              column: {
-                  stacking: 'normal'
-              }
-          },
-          series: distxnivelvid
-      });
-  });
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                //pointWidth: 50,
+                groupPadding: 0
+            }
+        },
+        series: distxnivelvid
+    };
+    
+    var onLegendClick= function (event) {
+                                  var myname = this.name;
+                                  var myvis  = !this.visible;
+                                  this.chart.series.forEach( function (elem) {
+                                    if (elem.name == myname) {
+                                      elem.setVisible(myvis);
+                                    }
+                                  });
+                                  return false;
+                                }
+                            
+    
+    options.series.forEach(function (serie) {
+        serie.events = { legendItemClick : onLegendClick} ;
+    });
+    $('#containervidnivel').highcharts(options);
+});
 
 $(function () {
-      Highcharts.chart('containervidnivelprom', {
+    var options = {
 
-          chart: {
-              type: 'column'
-          },
+        chart: {
+            type: 'column'
+        },
 
-          title: {
-              text: 'Distribución de Tiempo de Videos Promedio por Nivel'
-          },
+        title: {
+            text: 'Distribución de Tiempo de Videos Promedio por Nivel'
+        },
 
-          xAxis: {
-              categories: ['1 basico', '2 basico', '3 basico', '4 basico', '5 basico', '6 basico', '7 basico', '8 basico', '1 medio', '2 medio', '3 medio', '4 medio']
-          },
+        xAxis: [
+   
+                  {
+            categories: realcats,
+                      labels: {autoRotation:false, style: {textOverflow: 'none'}, enabled: true},
+           tickWidth: 0,
+        },
+                  {
+            categories: realcategoriasdxn,
+                         lineColor:'#ffffff',
+                      tickWidth: 0,
+                      crosshair: {
+                      color: '#E0E0E0'
+                     }
+                     
+                 //     plotBands : [ {  from:-0.5, to:0.5, color:"#eeeeee"  }, 
+                //                   {  from: 1.5, to:2.5, color:"#eeeeee"  },
+                //                    {  from: 3.5, to:4.5, color:"#eeeeee"  }]       
+            }     ,
+         ],
 
-          yAxis: [{ // Primary yAxis
+        yAxis: [{ // Primary yAxis
               labels: {
                   style: {
                       color: '#89A54E'
@@ -9000,12 +9089,13 @@ $(function () {
                       color: '#89A54E'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
   
           }, { // Secondary yAxis
               gridLineWidth: 0,
               title: {
-                  text: 'Tiempo Promedio por Nivel',
+                  text: 'Tiempo de Videos Promedio por Nivel',
                   style: {
                       color: '#4572A7'
                   }
@@ -9029,21 +9119,37 @@ $(function () {
                       color: '#AA4643'
                   }
               },
-              opposite: true
+              opposite: true,
+              min: 0
           }],
-          
-          tooltip:{
-            shared: true
-          },
 
-          plotOptions: {
-              column: {
-                  stacking: 'normal'
-              }
-          },
-          series: distxnivelvidprom
-      });
-  });
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                //pointWidth: 50,
+                groupPadding: 0
+            }
+        },
+        series: distxnivelvidprom
+    };
+    
+    var onLegendClick= function (event) {
+                                  var myname = this.name;
+                                  var myvis  = !this.visible;
+                                  this.chart.series.forEach( function (elem) {
+                                    if (elem.name == myname) {
+                                      elem.setVisible(myvis);
+                                    }
+                                  });
+                                  return false;
+                                }
+                            
+    
+    options.series.forEach(function (serie) {
+        serie.events = { legendItemClick : onLegendClick} ;
+    });
+    $('#containervidnivelprom').highcharts(options);
+});
 
 $(function () {
       Highcharts.chart('containervidinst', {
@@ -9282,66 +9388,6 @@ $(function () {
             }
         }]
     });
-    /*function sortTotal(valor){
-      //aqui va algo
-      if (valor=="0"){
-        cantidad1.sort(function(a,b){
-          return ((a.name < b.name) ? -1 : ((a.name > b.name) ? 1 : 0));
-        });
-
-        categorias.sort();
-        //categorias.reverse();
-      }
-      if (valor=="1"){
-        cantidad1.sort(function(a,b){
-          return parseInt(a.y) - parseInt(b.y);
-        });
-      }
-      if (valor=="2"){
-        cantidad1.sort(function(a,b){
-          return parseInt(b.y) - parseInt(a.y);
-        });
-      }
-      if (valor=="3"){
-        cantidad1.sort(function(a,b){
-          return parseInt(a.promedio) - parseInt(b.promedio);
-        });
-      }
-      if (valor=="4"){
-        cantidad1.sort(function(a,b){
-          return parseInt(b.promedio) - parseInt(a.promedio);
-        });
-      }
-      if (valor=="5"){
-        cantidad1.sort(function(a,b){
-          return parseInt(a.maximo) - parseInt(b.maximo);
-        });
-      }
-      if (valor=="6"){
-        cantidad1.sort(function(a,b){
-          return parseInt(b.maximo) - parseInt(a.maximo);
-        });
-      }
-      if (valor=="7"){
-        cantidad1.sort(function(a,b){
-          return parseInt(a.minimo) - parseInt(b.minimo);
-        });
-      }
-      if (valor=="8"){
-        cantidad1.sort(function(a,b){
-          return parseInt(b.minimo) - parseInt(a.minimo);
-        });
-      }
-      for (var i = 0; i < cantidad1.length; i++) {
-        categorias[i]=cantidad1[i]['name']
-      }
-      return [cantidad1, categorias];
-    }
-
-    $('#ordenarcant').change(function(){
-      var retorno = sortTotal($('select#ordenarcant option:selected').val());
-      chart.series[0].update(retorno);
-    })*/
   });
 
 $(function () {
