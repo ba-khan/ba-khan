@@ -127,7 +127,7 @@ function onSlide(ui,id) {
 						<h3>Datos de la Pauta:</h3>
 						<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" ><br>
 						<br>
-						<label id="apprPer" for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" ><br>
+						<label id="apprPer" for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" onkeydown="return FilterInput(event)"><br>
 						<br>
 						<input name="importance_skill_level0" value="50" type="hidden">
 				    	<input name="importance_completed_rec0" value="50" type="hidden">
@@ -312,6 +312,13 @@ function onSlide(ui,id) {
 </div> <!-- cerrar div principal del home  -->
 
 <script>
+function FilterInput(event){
+	var keyCode = ('which' in event) ? event.which : event.keyCode;
+
+	isNotWanted = (keyCode == 69 || keyCode == 109 || keyCode == 107 || keyCode == 189 || keyCode == 187);
+	return !isNotWanted;
+}
+
 	function setMainContentHeight(){
 		sidebar = document.getElementById('sidebar');
 		var lis = sidebar.getElementsByTagName('li');
