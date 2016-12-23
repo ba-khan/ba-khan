@@ -321,7 +321,7 @@ class Assesment_Skill(models.Model):
     id_subtopic_skill = models.ForeignKey(Subtopic_Skill)
     
     class Meta:
-        unique_together = ('id_assesment_config', 'id_skill_name')
+        unique_together = ('id_assesment_config', 'id_skill_name', 'id_subtopic_skill')
 
 
 class Skill_Log(models.Model):

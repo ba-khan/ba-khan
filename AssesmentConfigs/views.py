@@ -39,7 +39,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         assesment_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_skill_name_id')
         config_skills = Assesment_Skill.objects.filter(id_assesment_config_id=assesment_config.id_assesment_config).values('id_subtopic_skill_id')
         #print config_skills
-        skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
+        #skills = Skill.objects.filter(id_skill_name__in=assesment_skills).values('name_spanish')
         #print skills
         config_json={}
         config_json["id_assesment_config"]=assesment_config.id_assesment_config
@@ -56,8 +56,10 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["config_skills"]=[]
         for i in range(len(assesment_skills)):
             #print config_skills[i]
+            skills = Skill.objects.filter(id_skill_name=assesment_skills[i]['id_skill_name_id']).values('name_spanish')
             config_json["assesment_skills"].append(assesment_skills[i])
-            config_json["assesment_skills_spanish"].append(skills[i])
+            #config_json["assesment_skills_spanish"].append(skills[i])
+            config_json["assesment_skills_spanish"].append(skills[0]['name_spanish'])
             #config_json["config_skills"].append(config_skills[i])
         for j in range(len(config_skills)):
             #print config_skills[j]
