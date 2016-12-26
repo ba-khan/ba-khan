@@ -263,7 +263,6 @@
   	  				return tot+" de "+tot;
   	  			})
   	  			d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
-  	  				console.log("total");
   	  				return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
   	  			});
   	  		}else{
@@ -1272,7 +1271,9 @@
 	    	.transition().duration(750)
 		    .text(function(d) {
 		    	var new_data = new_data=this.parentNode.__data__;
-		    	return new_data.values["mastery3"]+new_data.values["mastery2"]+new_data.values["mastery1"]+new_data.values["practiced"]+new_data.values["struggling"]});
+		    	var total = new_data.values["mastery3"]+new_data.values["mastery2"]+new_data.values["mastery1"]+new_data.values["practiced"]+new_data.values["struggling"];
+		    	return total+" de "+total;
+		    });
 
 	    var sortingCriterion = $("select.skills_level").val();
 	  		if (sortingCriterion =="total"){	
