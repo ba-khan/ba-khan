@@ -1006,7 +1006,6 @@ def getClassStudents(request, id_class):
                 i+=1
                 json_array.append(student_json)
             json_dict={"students":json_array, "assesments":assesment_array}
-            
 
             json_data = json.dumps(json_dict)
             classroom = Class.objects.filter(id_class=id_class)

@@ -41,6 +41,7 @@ import sys, os
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def getCurriculum(request):
+	print "entro aca *************************."
 	request.session.set_expiry(timeSleep)
 	chapter = Chapter_Mineduc.objects.all()
 
@@ -162,10 +163,12 @@ def getCurriculum(request):
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def getCurriculumNivel(request, id_chapter):
+	print "************************-----******************"
 	request.session.set_expiry(timeSleep)
 	if request.method == 'POST':
-		return HttpResponse('algo')
-	return HttpResponse('no algo')
+		tpmin = Topic_Mineduc.objects.filter(id_chapter_id=id_chapter)
+		return render_to_response('curriculumnivel.html', {'topic_mineduc':tpmin}, context_instance=RequestContext(request))
+	return HttpResponseRedirect("/inicio")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newChapter(request):

@@ -272,20 +272,9 @@ div.panel {
 <br>
 <div class="container">
 <div class="class-content">
-  <h1 style="text-align:center;">Curriculum MINEDUC</h1>
-  <div style="width:100%; height:55px; margin-left: 200px; float: left;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Nivel</button> </div>
 
-  <div id="newChapter">
-    <form action="" method="post" id="form0">{% csrf_token %}
-      <h3>Nuevo Nivel</h3>
-      <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-      <a onclick='javascript:hideNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-      <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
-    </form>
-  </div>
-
-  {% for chap in capitulos %}
-    <a role="button" href="{% url 'getCurriculumNivel' chap.id_chapter_mineduc %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()">{{ chap.name }}</a>
+  {% for top in topic_mineduc %}
+    <div>{{% top.name %}}</div>
   {% endfor %}
   <!--<div id="newaccordion"></div>
   }
