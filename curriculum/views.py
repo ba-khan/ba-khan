@@ -38,6 +38,15 @@ import sys, os
 ##
 ## @return     The schedules.
 ##
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def getCurriculum(request):
+	request.session.set_expiry(timeSleep)
+	chapter = Chapter_Mineduc.objects.all()
+
+	return render_to_response('curriculum.html', {'capitulos':chapter}, context_instance=RequestContext(request))
+
+'''
 @permission_required('bakhanapp.isSuper', login_url="/")
 def getCurriculum(request):
 	request.session.set_expiry(timeSleep)
@@ -149,6 +158,14 @@ def getCurriculum(request):
 	topictree_json['core']={'data':topictree}
 	topictree_json_string=json.dumps(topictree_json)
 	return render_to_response('curriculum.html', { 'json_data':json_data, 'topictree_json_string':topictree_json_string, 'topictree_json_string_video':topictree_json_string_video} ,context_instance=RequestContext(request))
+'''
+
+@permission_required('bakhanapp.isSuper', login_url="/")
+def getCurriculumNivel(request, id_chapter):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		return HttpResponse('algo')
+	return HttpResponse('no algo')
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newChapter(request):

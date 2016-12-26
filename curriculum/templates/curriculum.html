@@ -283,12 +283,18 @@ div.panel {
       <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
     </form>
   </div>
-  <div id="newaccordion"></div>
+
+  {% for chap in capitulos %}
+    <div>{{ chap.name }}</div>
+    <!--<font size="2"><a role="button" onClick="loading()" aria-disabled="false" href="{% url 'getClassStudents' class.id_class %}" class="kui-button kui-button-plain kui-button-primary" style="width:100%;">Ver Curso</a></font>-->
+  {% endfor %}
+  <!--<div id="newaccordion"></div>
+  }
 </div>
 <h1 style="text-align:center;display: none;margin-left: 50px; margin-top: 20px;" id="namecurso"></h1>
 <a id="buttonback" onClick='javascript:backChapter()' style="display:none;margin-left: -50px;margin-top: 100px;"><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
 <div style="margin-left: 100px; float: left; display: none;" id="sidebar"></div>
-<div class="main-content" style="display: none;">
+<div class="main-content" style="display: none;">-->
   
   <!--<div id="contenidopestanas">
     <div id="cpestana0" class="cpestanna" align="center">
