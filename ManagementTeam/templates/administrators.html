@@ -82,12 +82,17 @@ label{
 input{
 	margin-bottom: 10px;
 }
+
+.testgrid{
+	max-width: 1000px;
+	table-layout: fixed;
+}
 </style>
 
 
 
 <script>
-	window.onload = function () {
+	/*window.onload = function () {
         administratorGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
 
 		// we build and load the metadata in Javascript
@@ -112,11 +117,15 @@ input{
 		);
 
 		administratorGrid.renderGrid();
-	} 
+	} */
 	
 </script>
 
-
+<style type="text/css">
+	td.mousepointer{
+		cursor: pointer;
+	}
+</style>
 
 <br>
 <div class="container">
@@ -128,17 +137,17 @@ input{
 	<br><br>
 	<table id="adminGrid" class="testgrid">
 		<tr>
-			<th>Nombre</th>
-			<th>E-Mail</th>
-			<th>Teléfono</th>
-			<th>Acciones</th>
+			<th style="width: 30%;">Nombre</th>
+			<th style="width: 30%;">E-Mail</th>
+			<th style="width: 15%;">Teléfono</th>
+			<th style="width: 25%;">Acciones</th>
 		</tr>
 		{% for admin in administrators %}
 		<tr id="R{{ forloop.counter }}">
-			<td>{{ admin.name }}</td>
-			<td>{% if admin.email == None %}{{ "" }}{% else %}{{ admin.email }}{% endif %}</td>
-			<td id="sPhone{{ forloop.counter }}">{{ admin.phone }}</td>
-			<td class="editablegrid-action" data-title="action" style="width:205px">
+			<td style="width: 30%;">{{ admin.name }}</td>
+			<td style="width: 30%;" contenteditable='true' class="mousepointer" onkeyup="validaremail('{{ forloop.counter }}')" id="emailequipo{{ forloop.counter }}">{% if admin.email == None %}{{ "" }}{% else %}{{ admin.email }}{% endif %}</td>
+			<td style="width: 15%;" id="sPhone{{ forloop.counter }}" contenteditable='true' class="mousepointer" onkeyup="validarcelular('{{ forloop.counter }}')">{{ admin.phone }}</td>
+			<td style="width: 25%;" class="editablegrid-action" data-title="action">
 				<a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 				<a onclick="javascript:deleteData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Eliminar</a>
 			</td>
@@ -169,6 +178,33 @@ input{
 </div> <!-- cerrar div principal del home  -->
 
 <script>
+function validaremail(cont){
+	var ee = $('td#emailequipo'+cont+'').text();
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	if (re.test(ee) & ee.length<254){
+		console.log(ee.length);
+		$('td#emailequipo'+cont+'').css('color', '#000000');
+		}
+	else{
+		$('td#emailequipo'+cont+'').css('color', '#C30202');
+	}
+}
+
+function validarcelular(cont){
+	var ce = $('td#sPhone'+cont+'').text();
+	if (ce>=400000000 & ce<=999999999){
+		if(ce.match(/^\d+$/)){
+			$('td#sPhone'+cont+'').css('color', '#000000');
+		}
+		else{
+			$('td#sPhone'+cont+'').css('color', '#C30202');
+		}
+	}
+	else{
+		$('td#sPhone'+cont+'').css('color', '#C30202');
+	}
+}
+
 function showNewAdmin(){
 	$('#newAdmin').toggle('blind',10);
 	$('#buttonNewAdmin').hide();
@@ -207,7 +243,7 @@ function saveNewAdmin(){
 	}else{
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
-		$("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+		$("#popup").append("<p class='response'>Revise los campos en Rojo</p>");
 	}
 }
 
@@ -269,7 +305,7 @@ function confirmSave(answer,id){
 					$("#popup").fadeIn();
 					
 					auxResponse = response;
-					if (auxResponse == "Nuevo Administrador guardado correctamente"){
+					if (auxResponse == "Cambios guardados correctamente"){
 						window.setTimeout(function(){location.reload()},2000);
 					}
 				}
@@ -364,21 +400,27 @@ function validar(){
 	nNumber = document.getElementById("newNumber").value;
 
 	if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+		$('#newName').css("border", "1px solid #C30202");
 		$("#newName").css('color', '#C30202');
 		flag = false;
 	}else{
 		$("#newName").css('color', '#000000');
+		$('#newName').css("border", "0px solid #C30202");
 	}
 	if(nNumber.length != 9) {
 		$("#newNumber").css('color', '#C30202');
+		$('#newNumber').css("border", "1px solid #C30202");
 		flag = false;
 	}else{
 		$("#newNumber").css('color', '#000000');
+		$('#newNumber').css("border", "0px solid #000000");
 	}
 	if(/[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/.test(nMail)) {
 		$("#newMail").css('color', '#000000');
+		$('#newMail').css("border", "0px solid #000000");
 	}else{
 		$("#newMail").css('color', '#C30202');
+		$('#newMail').css("border", "1px solid #C30202");
 		flag = false;
 	}
 	return flag;
