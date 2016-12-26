@@ -227,23 +227,30 @@ def newTeacherClass(request):
         identifiers = inst.identifier
         passes = inst.password
 
+
         sessions = run_tests(identifiers,passes,keys,secrets)
         data = searchTeacher(sessions,newTeacher)
 
-        #if data["is_child_account"]==False and data["nickname"]==newTeacher: FALTA UNA VALIDACION MAS
-        if data["username"]==newTeacher:
-            try:
-                teacher = Teacher.objects.get(kaid_teacher=data["kaid"])
-                return HttpResponse("Ya existe el profesor.")
-            except:
-                if data["email"]==None:
-                    email=""
-                else:
-                    email = data["email"]
-                teacher = Teacher.objects.create(kaid_teacher=data["kaid"], name=data["username"], email=email, id_institution_id=inst.id_institution)
-                return HttpResponse("Nuevo profesor creado.")
-        else:
-            return HttpResponse("No se encuentra el profesor.")
+        try:
+
+            #if data["is_child_account"]==False and data["nickname"]==newTeacher: FALTA UNA VALIDACION MAS
+            if data["username"]==newTeacher:
+                try:
+                    teacher = Teacher.objects.get(kaid_teacher=data["kaid"])
+                    return HttpResponse("Ya existe el profesor.")
+                except:
+                    if data["email"]==None:
+                        email=""
+                    else:
+                        email = data["email"]
+                    teacher = Teacher.objects.create(kaid_teacher=data["kaid"], name=data["username"], email=email, id_institution_id=inst.id_institution)
+                    return HttpResponse("Nuevo profesor creado.")
+            else:
+                return HttpResponse("No se encuentra el profesor.")
+        except Exception as e:
+            print e
+            return HttpResponse("Compruebe que el profesor no esté asociado a otra Institución.")
+
 
 
 ##
