@@ -196,6 +196,7 @@ table.testsched td {
   border: 1px solid #ddd;
   /*z-index: 1;*/
   min-height: 400px;
+  max-width: 800px;
 }
 .class-content {
   padding: 15px 20px;

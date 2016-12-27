@@ -273,7 +273,7 @@ div.panel {
       <ul>
         <li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Unidad</a></li>
           {% for top in topic_mineduc %}
-            <li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ top.name }}</a></li>
+            <li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, {{ top.id_topic_mineduc }});' >{{ top.name }}</a></li>
           {% endfor %}
         </ul>
     </div>
@@ -281,19 +281,18 @@ div.panel {
     <div class="todo" style="min-width: 700px;">
 
     <div id="topbar" style="width: 100%; float: left; display: none">
-      <ul class="tab">
+      <!--<ul class="tab">
         <li id="pestanatop0"><a href='javascript:cambiarPestannaTop(pestanatop0);' class="selectdos" id="apestanatop0"><i class="plus"></i> Nueva Unidad top</a></li>
           {% for top in topic_mineduc %}
             <li id="pestanatop{{ forloop.counter }}"><a href='javascript:cambiarPestannaTop(pestanatop{{ forloop.counter }});' >{{ top.name }}</a></li>
           {% endfor %}
-        </ul>
+        </ul>-->
     </div>
 
     <div class="main-content" style="width: 100%; float: left;">
       
       <div id="contenidopestanas" style="margin-right: 200px;">
-   
-       <!-- ------------------Nueva Pauta------------------------------------- -->
+
        <div id="cpestana0" class="cpestanna">
        <br>
         <h2 id="namecurso">{{ nombrecapitulo }}</h2>
@@ -304,6 +303,24 @@ div.panel {
             <label for="block" style="margin-top: -10px;">Descripción de la Unidad: </label><textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
             <br>
             <div style="margin-left:200px"><a href='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary">Guardar Unidad</a></div>
+          </form>
+        </div>
+      </div>
+      </div>
+
+      <div id="contenidopestanastop" style="float: left; width: 100%;">
+
+       <div id="cpestanatop0" class="cpestannatop" style="max-width: 500px;">
+       <br>
+        <h2 id="nameunidad"></h2>
+        <p style="display: none;" id="idunidad"></p>
+        <div id="formtop00" class="form">
+          <form action="" method="post" id="formtop0">{% csrf_token %}
+            <h3>Datos del Objetivo de Aprendizaje:</h3>
+            <label for='name'>Nombre del OA: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" id="newNameSubtopic"><br>
+            <label for="block" style="margin-top: -10px;">Descripción del OA: </label><textarea id="textarea_coment_oa" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
+            <br>
+            <div style="margin-left:200px"><a href='javascript:saveNewSubtopic()' class="kui-button kui-button-plain kui-button-primary">Guardar OA</a></div>
           </form>
         </div>
       </div>
@@ -366,6 +383,8 @@ div.panel {
 
 <script type="text/javascript">
 
+$('#curriculum').addClass('active selected');
+
 $(document).ready(function(){
     
     $("#hover").click(function(){
@@ -379,7 +398,9 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       $("#popuptree").fadeOut();
       });
-    //$('#contenidopestanas').hide();
+    $('#contenidopestanastop').css('display', 'none');
+
+    
   });
 
   function backChapter(){
@@ -390,14 +411,50 @@ $(document).ready(function(){
     $('#buttonback').hide();
   }
 
+  function drawTopBar(idtopic){
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    var chapters=arbol["capitulos"];
+    var newtopbar='';
+    newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestannaTop(pestanatop0);" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo Objetivo de Aprendizaje</a></li>';
 
-  function cambiarPestanna(pestanna, idchapter, idtopic){
-    //newTopBar(idchapter, idtopic);
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]['topico'];
+      for (var j = 0; j < topicos.length; j++) {
+        if (topicos[j]['id']==idtopic){
+          var subtopicos = topicos[j]['subtopico'];
+          for (var k = 0; k < subtopicos.length; k++) {
+            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop'+subtopicos[k]['id']+'"><i class="plus"></i> '+subtopicos[k]['nombre']+'</a></li>';
+          }
+        }
+      }
+    }
+
+    newtopbar+='</ul>';
+
+    $('#topbar').append(newtopbar);
+  }
+
+
+  function cambiarPestanna(pestanna, idtopic){
+    $('#topbar').empty();
     id = (pestanna.id).substring(7);
     pestanna = document.getElementById(pestanna.id);
     cpestanna = document.getElementById('c' + pestanna.id);
     cpestannas = document.getElementsByClassName('cpestanna');
     contenidopestanas = document.getElementById('contenidopestanas');
+
+    drawTopBar(idtopic);
+
+    var texto = $('#pestana'+id+'').text();
+
+    $('#nameunidad').empty();
+    $('#nameunidad').append(texto);
+
+    $('#idunidad').empty();
+    $('#idunidad').append(id);
+
+    var namesubtopic = $('input[id*="newNameSubtopic"]');
+    namesubtopic.attr('id',"newNameSubtopic"+id+'');
 
     for (i=0;i<cpestannas.length;i++){
      $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
@@ -406,10 +463,12 @@ $(document).ready(function(){
     if (id!=0){
       $('.main-content').css('position', 'relative');
       $('#topbar').css('display','');
+      $('#contenidopestanastop').css('display', '');
     }
     else{
       $('.main-content').css('position', 'relative');
       $('#topbar').css('display','none');
+      $('#contenidopestanastop').css('display', 'none');
     }
 
     $(document).ready(function () {
@@ -428,6 +487,13 @@ $(document).ready(function(){
     pestannatop = document.getElementById(pestanna.id);
     cpestannatop = document.getElementById('c'+pestanna.id);
     cpestannastop = document.getElementsByClassName('cpestannatop');
+
+    if(id==0){
+      $('#contenidopestanastop').css('display', '');
+    }
+    else{
+      $('#contenidopestanastop').css('display', 'none');
+    }
 
     $(document).ready(function () {
      $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
@@ -533,9 +599,14 @@ function saveNewTopic(){
 }
 
 
-function saveNewSubtopic(idtopic){
+function saveNewSubtopic(){
+  var idtopic = $('#idunidad').text();
   var nombresubtopic = $('#newNameSubtopic'+idtopic+'').val();
-  var descripcionsubtopic = $('#textarea_coment').val();
+  var descripcionsubtopic = $('#textarea_coment_oa').val();
+
+  /*console.log(idtopic);
+  console.log(nombresubtopic);
+  console.log(descripcionsubtopic);*/
 
   //console.log(descripcionsubtopic);
   if(validarSubtopic(idtopic)){
