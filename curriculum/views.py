@@ -41,7 +41,6 @@ import sys, os
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def getCurriculum(request):
-	print "entro aca *************************."
 	request.session.set_expiry(timeSleep)
 	chapter = Chapter_Mineduc.objects.all()
 
@@ -162,13 +161,15 @@ def getCurriculum(request):
 '''
 
 @permission_required('bakhanapp.isSuper', login_url="/")
-def getCurriculumNivel(request, id_chapter):
-	print "************************-----******************"
+def getCurriculumNivel(request, id_chapter_mineduc):
 	request.session.set_expiry(timeSleep)
-	if request.method == 'POST':
-		tpmin = Topic_Mineduc.objects.filter(id_chapter_id=id_chapter)
-		return render_to_response('curriculumnivel.html', {'topic_mineduc':tpmin}, context_instance=RequestContext(request))
-	return HttpResponseRedirect("/inicio")
+	try:
+		tpmin = Topic_Mineduc.objects.filter(id_chapter_id=id_chapter_mineduc)
+		nombrechapter = Chapter_Mineduc.objects.filter(id_chapter_mineduc=id_chapter_mineduc).values('name')
+		return render_to_response('curriculumnivel.html', {'topic_mineduc':tpmin, 'nombrecapitulo':nombrechapter[0]['name']}, context_instance=RequestContext(request))
+	except Exception as e:
+		print e
+		return HttpResponseRedirect("/inicio")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
 def newChapter(request):
@@ -191,7 +192,7 @@ def newTopic(request):
 		args = request.POST
 		try:
 			nombrecap = Chapter_Mineduc.objects.filter(name=args['curso']).values('id_chapter_mineduc')
-			Topic_Mineduc.objects.create(name=args['nombre'], id_chapter_id=nombrecap[0]['id_chapter_mineduc'])
+			Topic_Mineduc.objects.create(name=args['nombre'], id_chapter_id=nombrecap[0]['id_chapter_mineduc'], descripcion_topic=args['descripcion'])
 			return HttpResponse('Unidad guardada correctamente')
 		except Exception as e:
 			print e

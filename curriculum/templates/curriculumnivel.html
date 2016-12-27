@@ -154,7 +154,7 @@ input{
     box-sizing: border-box;
    -moz-box-sizing: border-box;
    z-index: 2;
-   height: 80px;
+   height: 50px;
    /*margin-right: -1px;*/
 }
 #topbar ul.tab {
@@ -166,14 +166,12 @@ input{
     margin: 0;
 }
 #topbar ul.tab li a {
-  /*margin: 1px 0px 1px 1px;*/
   padding: 15px 20px;
   font-size: 14px;
   font-weight: 100;
   background: #EEEEEE;
   text-decoration: none;
   display: block;
-  /*border-radius: 10px 1px 1px 10px;*/
   border: 1px solid #ddd;
   -webkit-transition:  background 0.3s ease-in-out;
   -moz-transition:  background 0.3s ease-in-out;
@@ -271,70 +269,91 @@ div.panel {
 </style>
 <br>
 <div class="container">
-<div class="class-content">
-
-  {% for top in topic_mineduc %}
-    <div>{{% top.name %}}</div>
-  {% endfor %}
-  <!--<div id="newaccordion"></div>
-  }
-</div>
-<h1 style="text-align:center;display: none;margin-left: 50px; margin-top: 20px;" id="namecurso"></h1>
-<a id="buttonback" onClick='javascript:backChapter()' style="display:none;margin-left: -50px;margin-top: 100px;"><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
-<div style="margin-left: 100px; float: left; display: none;" id="sidebar"></div>
-<div class="main-content" style="display: none;">-->
-  
-  <!--<div id="contenidopestanas">
-    <div id="cpestana0" class="cpestanna" align="center">
-      <h2>Nueva Unidad</h2>
-      <h3>Datos de la Unidad:</h3>
-      <label for='block'>Nombre Unidad: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-      <a onclick='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a>
+    <div id="sidebar">
+      <ul>
+        <li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Unidad</a></li>
+          {% for top in topic_mineduc %}
+            <li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ top.name }}</a></li>
+          {% endfor %}
+        </ul>
     </div>
-  </div>-->
-</div>
 
-<!--<div class="main-content">
+    <div class="todo" style="min-width: 700px;">
 
-  <br>
-  <h1 style="text-align:center;">Curriculum MINEDUC</h1>
-  <div style="width:100%; height:55px;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Nivel</button> </div>
-
-  <div id="newChapter">
-    <form action="" method="post" id="form0">{% csrf_token %}
-      <h3>Nuevo Nivel</h3>
-      <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-      <a onclick='javascript:hideNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-      <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
-    </form>
-  </div>
-  <div id="newaccordion">
-  </div>
-  <div id="sidebar"></div>
-  <div id="topbar"></div>
-  <div id="contenidopestanas">
-    <div id="cpestana0" class="cpestanna" align="center">
-    <a href="#" onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
-    <h1 id="namecurso"></h1>
-    <h2>Nueva Unidad</h2>
-    <h3>Datos de la Unidad:</h3>
-    <label for='block'>Nombre Unidad: </label><input id="newNameTopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-    <a onclick='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a>
+    <div id="topbar" style="width: 100%; float: left; display: none">
+      <ul class="tab">
+        <li id="pestanatop0"><a href='javascript:cambiarPestannaTop(pestanatop0);' class="selectdos" id="apestanatop0"><i class="plus"></i> Nueva Unidad top</a></li>
+          {% for top in topic_mineduc %}
+            <li id="pestanatop{{ forloop.counter }}"><a href='javascript:cambiarPestannaTop(pestanatop{{ forloop.counter }});' >{{ top.name }}</a></li>
+          {% endfor %}
+        </ul>
     </div>
-  </div>
 
-  <div id="contenidopestanastop">
-    <div id="cpestanatop0" class="cpestannatop" align="center">
-    <a href="#" onClick='javascript:backChapter()'><img style="width:25px;height:25px;" src={% static "img/back.png" %} alt="regresar"></a>
-    <h1 id="namecurso"></h1>
-    <h2>Nuevo OA</h2>
-    <h3>Datos del OA:</h3>
-    <label for='block'>Nombre OA: </label><input id="newNameSubtopic" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-    <a onclick='javascript:saveNewSubtopic()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a>
+    <div class="main-content" style="width: 100%; float: left;">
+      
+      <div id="contenidopestanas" style="margin-right: 200px;">
+   
+       <!-- ------------------Nueva Pauta------------------------------------- -->
+       <div id="cpestana0" class="cpestanna">
+       <br>
+        <h2 id="namecurso">{{ nombrecapitulo }}</h2>
+        <div id="form00" class="form">
+          <form action="" method="post" id="form0">{% csrf_token %}
+            <h3>Datos de la Unidad:</h3>
+            <label for='name'>Nombre de la Unidad: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" id="newNameTopic"><br>
+            <label for="block" style="margin-top: -10px;">Descripción de la Unidad: </label><textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
+            <br>
+            <div style="margin-left:200px"><a href='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary">Guardar Unidad</a></div>
+          </form>
+        </div>
+      </div>
+      </div>
+<!--
+      {% for top in topic_mineduc %}
+      <div id="cpestana{{ forloop.counter }}" class="cpestanna" style="display: none">
+        <h2>{{ top.name }}</h2>
+        <div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
+          <form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
+            <h3>Datos de la Pauta:</h3>
+            <label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="{{ top.name }}" ><br>
+            <br>
+            <label id="apprPer" for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" onkeydown="return FilterInput(event)"><br>
+            <br>
+            <input name="forloop" value="{{ forloop.counter }}" type="hidden">
+            <input name="importance_skill_level{{ forloop.counter }}" type="hidden">
+            <input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
+            <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
+            <br>
+            <h4 style="text-align:center">% de Importancia para la Evaluación</h4>
+            <div id="skill_level_div{{ forloop.counter }}" class="percentage">
+              <span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
+
+            </div>
+            <div id="slider_up">
+              <div id="slider{{ forloop.counter }}" class="slider">
+                <div id="left-color{{ forloop.counter }}" class="left-color" style="width: 50%">
+                </div>
+              </div>
+            </div>
+            <div id="completed_rec_div{{ forloop.counter }}" class="percentage">
+              <span id="importance_completed_rec{{ forloop.counter }}">50</span>%</br>
+
+            </div><br>
+            <div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Habilidades Practicadas</p></div>
+            <div style="float:left;margin-left:125px"><a href='javascript:confirmSaveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
+          </form>
+        </div>
+        <div id="skills">
+          <h3>Habilidades</h3>
+          <div id="search">
+          <label for='skill_search0'>Buscar: </label><input id="skill_search0" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" >
+          </div>
+        </div>
+      </div>
+      </div>
+      {% endfor %}-->
     </div>
-  </div>
-  <div id="descargar"><button type="button" class="btn-download" id="button" title="Descargar Planificación" onclick="downloadCurriculum()"></button></div>
-</div>-->
+    </div>
 </div>
 
 <div id="popup" style="display:none">
@@ -360,106 +379,20 @@ $(document).ready(function(){
       $("#popup").fadeOut();
       $("#popuptree").fadeOut();
       });
-    $('#contenidopestanas').hide();
+    //$('#contenidopestanas').hide();
   });
-    //$('#contenidopestanastop').hide();
-/*
-    accordionMineduc();
-    var acc = document.getElementsByClassName("accordion");
-    var i;
-
-    for (i = 0; i < acc.length; i++) {
-        acc[i].onclick = function(){
-            this.classList.toggle("active");
-            this.nextElementSibling.classList.toggle("show");
-        }
-    }
-  });*/
 
   function backChapter(){
-    /*$('#newaccordion').show();
-    $('#sidebar').hide();
-    $('#topbar').hide();
-    $('#contenidopestanas').hide();
-    $('#contenidopestanastop').hide();*/
     $('.class-content').show();
     $('.main-content').hide();
     $('#namecurso').hide();
     $('#sidebar').hide();
     $('#buttonback').hide();
   }
-/*
-  function buscar(){
-    var to=false;
-    //$('#skill_search').keyup(function () {
-      if(to) { clearTimeout(to); }
-      to = setTimeout(function () {
-        var v = $('#skill_search').val();
-        //$('#newTree').jstree(true).search(v);
-        $('[id*="newTree"]').jstree(true).search(v);
-      }, 250);
-    //});
-  }
-  function downloadCurriculum(){
-    console.log('entro en descarga curriculum')
-    window.location = "/curriculum/downloadCurriculum";
-  }
 
-var arbol = JSON.parse('{{ json_data | escapejs }}');
-//console.log(arbol);
-  function accordionMineduc(){
-    $('#sidebar').hide();
-    //$('#topbar').hide();
-    //console.log(arbol);
-    var newaccordion='';
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      newaccordion+='<button onclick=\'(showChapter("'+chapters[i]['id']+'", "'+chapters[i]["nombre"]+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:120px; height: 35px; padding:8px; margin-top:10px">'+chapters[i]["nombre"]+'</button><br>';
-    }
-    $('#newaccordion').append(newaccordion);
-  }
-
-
-  $('#curriculum').addClass('active selected');
-
-  function showChapter(id, nombre){
-    //console.log(id);
-    //console.log(nombre);
-    $('#sidebar').empty();
-    $('#namecurso').empty();
-    $('.main-content').empty();
-    $('.class-content').hide();
-    $('.main-content').show();
-    $('#namecurso').append(nombre);
-    $('#sidebar').show();
-    $('#namecurso').show();
-    $('#buttonback').show();
-    var newsidebar='';
-    var pestannas = '<div id="contenidopestanas">';
-    newsidebar+='<ul><li id="pestana0"><a href="javascript:cambiarPestanna(pestana0);" class="select"><i class="plus"></i> Nueva Unidad</a></li>';
-    pestannas+='<div id="cpestana0" class="cpestanna" align="center"><h2>Nueva Unidad</h2><h3>Datos de la Unidad:</h3><label for="block">Nombre Unidad: </label><input id="newNameTopic" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><a onclick="javascript:saveNewTopic()"" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar Unidad</a></div>';
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      if(chapters[i]['id']==id){
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          newsidebar+='<li id="pestana'+topicos[j]['id']+'"><a href="javascript:cambiarPestanna(pestana'+topicos[j]['id']+', '+id+', '+topicos[j]['id']+');" >'+topicos[j]['nombre']+'</a></li>';
-
-          pestannas+='<div id="cpestana'+topicos[j]['id']+'" class="cpestanna" style="display:none;" align="center"><div id="topbar" class="topbar'+topicos[j]['id']+'"></div></div>';
-        }
-      }
-    }
-    newsidebar+='</ul>';
-    pestannas+='</div>';
-    $('#sidebar').append(newsidebar);
-    $('.main-content').append(pestannas);
-  }
 
   function cambiarPestanna(pestanna, idchapter, idtopic){
-    //$('#topbar').empty();
-    newTopBar(idchapter, idtopic);
-    //$('#contenidopestanastop').show();
-    //console.log(pestanna.id)
+    //newTopBar(idchapter, idtopic);
     id = (pestanna.id).substring(7);
     pestanna = document.getElementById(pestanna.id);
     cpestanna = document.getElementById('c' + pestanna.id);
@@ -468,36 +401,34 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
 
     for (i=0;i<cpestannas.length;i++){
      $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
-     
     }
+
+    if (id!=0){
+      $('.main-content').css('position', 'relative');
+      $('#topbar').css('display','');
+    }
+    else{
+      $('.main-content').css('position', 'relative');
+      $('#topbar').css('display','none');
+    }
+
     $(document).ready(function () {
      $(document.getElementsByClassName("select")).removeClass("select");
        $(cpestanna).css('display', '');
        $(pestanna.getElementsByTagName('a')).addClass("select");
-       //console.log(pestanna);
+
+       $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
+       $('#apestanatop0').addClass("selectdos");
     });
   }
 
   function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
     id=(pestanna.id).substring(10);
-    //console.log(id);
-    //console.log(idtopic);
+
     pestannatop = document.getElementById(pestanna.id);
     cpestannatop = document.getElementById('c'+pestanna.id);
     cpestannastop = document.getElementsByClassName('cpestannatop');
-    //contenidopestanastop = document.getElementById('contenidopestanastop');
 
-    if (id.charAt(0)!='0'){
-      $('#cntotrostop'+idtopic+'').empty();
-      $('#cntpsttop'+idtopic+'').hide();
-      pestannasTop(idsubtopic, idtopic);
-      document.getElementById('cntotrostop'+idtopic+'').style.display = 'block';
-    }
-    else{
-      var localid = (pestanna.id).substring(11);
-      $('#cntotrostop'+localid+'').hide();
-      document.getElementById('cntpsttop'+localid+'').style.display = 'block';
-    }
     $(document).ready(function () {
      $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
      $(cpestannatop).css('display', '');
@@ -505,62 +436,6 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
     });
   }
 
-  function newTopBar(idchapter, idtopic){
-    $('.topbar'+idtopic+'').empty();
-    var newtopbar='';
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      if(chapters[i]['id']==idchapter){
-        var topicos = chapters[i]["topico"];
-        for (var i = 0; i < topicos.length; i++) {
-          if(topicos[i]['id']==idtopic){
-            newtopbar+='<ul class="tab"><li id="pestanatop0'+idtopic+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+idtopic+')" class="selectdos" id="apestanatop0'+idtopic+'"><i class="plus"></i> Nuevo OA</a></li>';
-            try{
-              for (var j = 0; j < topicos[i]['subtopico'].length; j++) {
-                newtopbar+='<li id="pestanatop'+topicos[i]['subtopico'][j]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop'+topicos[i]['subtopico'][j]['id']+', '+idtopic+' ,'+topicos[i]['subtopico'][j]['id']+')" >'+topicos[i]['subtopico'][j]['nombre']+'</a></li>';
-              }
-            }
-            catch(err){
-              console.log(err);
-            }
-          }
-        }
-      }
-    }
-    newtopbar+='</ul>';
-
-    newtopbar+='<div id="cntpsttop'+idtopic+'" style="margin-top:70px;text-align:center;min-width:500px;"><h2>Nuevo Objetivo de Aprendizaje</h2><h3>Datos del OA:</h3><label for="block">Nombre OA: </label><input id="newNameSubtopic'+idtopic+'" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br><label for="block">Descripción del OA: </label><textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:220px; height:50px; padding-top:5px"></textarea><br><a onclick="javascript:saveNewSubtopic('+idtopic+')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:150px; height: 35px; padding:8px; margin-top:10px">Guardar OA</a></div>';
-    newtopbar+='<div id="cntotrostop'+idtopic+'" style="margin-top:70px;text-align:center;min-width:500px;"></div>'
-    $('.topbar'+idtopic+'').append(newtopbar);
-  }
-
-  function pestannasTop(idsubtopic, idtopic){
-    $('#videoexercise').empty();
-    var contenidotop='';
-    var chapters=arbol['capitulos'];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var i = 0; i < topicos.length; i++) {
-        if (topicos[i]['id']==idtopic){
-          var subtopicos = topicos[i]["subtopico"];
-          for (var i = 0; i < subtopicos.length; i++) {
-            if(subtopicos[i]['id']==idsubtopic){
-              contenidotop+='<h3>Descripción: </h3><label><b>'+subtopicos[i]['aeoe']+'</b></label><hr>';
-            }
-          }
-        }
-      }
-    }
-
-    contenidotop+='<div id="videoexercise"><div id="ejerciciosdiv" style="width:50%; float:left;"><h3>Ejercicios</h3>';
-
-    contenidotop+='</div><div id="videosdiv" style="width:50%; float:left;"><h3>Videos</h3>';
-
-    contenidotop+='</div></div><hr>';
-    contenidotop+='<br><a onclick=\'(addVideoExercise("'+idsubtopic+'","'+idtopic+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Agregar Ejercicios - Videos</a>';
-    //addVideoExercise(idsubtopic, idtopic);
-    $('#cntotrostop'+idtopic+'').append(contenidotop);
-  }*/
 
   function showNewChapter(){
   $('#newChapter').toggle('blind',10);
@@ -628,13 +503,13 @@ var arbol = JSON.parse('{{ json_data | escapejs }}');
 
 function saveNewTopic(){
   var nombretopic = $('#newNameTopic').val();
+  var desctopic = $('#textarea_coment').val();
   var nombrecurso = $('#namecurso').text();
-  //console.log(nombrecurso);
   if(validarTopic()){
     $.ajax({
       url: "{% url 'curriculum:nuevo_topic' %}",
       type: "POST",
-      data: {nombre: nombretopic, curso: nombrecurso},
+      data: {nombre: nombretopic, curso: nombrecurso, descripcion: desctopic},
         success: function(response){
           $("#popup").empty()
           $("#close").hide();

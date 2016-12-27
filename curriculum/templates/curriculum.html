@@ -285,7 +285,7 @@ div.panel {
   </div>
 
   {% for chap in capitulos %}
-    <a role="button" href="{% url 'getCurriculumNivel' chap.id_chapter_mineduc %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()">{{ chap.name }}</a>
+    <a role="button" href="{% url 'curriculum:getCurriculumNivel' chap.id_chapter_mineduc %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()">{{ chap.name }}</a>
   {% endfor %}
   <!--<div id="newaccordion"></div>
   }

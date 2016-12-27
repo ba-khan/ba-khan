@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^deletechapter$', views.deleteChapter, name='deletechapter'),
     url(r'^downloadCurriculum$', views.downloadCurriculum, name='downloadCurriculum'),
     url(r'^curriculumNivel$', views.getCurriculumNivel, name='getCurriculumNivel'),
+    url(r'^nivel/(?P<id_chapter_mineduc>[0-9]+)/$', 'curriculum.views.getCurriculumNivel', name='getCurriculumNivel'),
 ]

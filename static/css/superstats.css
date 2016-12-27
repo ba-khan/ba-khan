@@ -191,10 +191,10 @@ table.testsched td {
 }
 .main-content {
   background: #f7f7f7;
-  width: 100%;
+  /*width: 100%;*/
   padding-right:10%;
   border: 1px solid #ddd;
-  z-index: 1;
+  /*z-index: 1;*/
   min-height: 400px;
 }
 .class-content {
