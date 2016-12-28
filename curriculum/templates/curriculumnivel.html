@@ -66,7 +66,7 @@ input{
   z-index: 1;
   overflow: hidden;
   width: 63px; height: 54px;
-  text-align: right;
+  /*text-align: right;*/
 }
 .ribbon span {
   font-size: 9px;
@@ -96,7 +96,7 @@ input{
 }
 .ribbon span::after {
   content: "";
-  position: absolute; right: 0px; top: 100%;
+  /*position: absolute; right: 0px; top: 100%;*/
   z-index: -1;
   /*border-left: 3px solid transparent;
   border-right: 3px solid #79A70A;
@@ -266,6 +266,41 @@ div.panel {
     opacity: 0;
 }
 */
+
+.videos,.skills, .descripcion{
+  border: 1px solid #D9D9D9;
+  border-radius: 5px;
+  width: 395px;
+  height: 90px;
+  padding: 10px;
+  margin: 10px;
+  margin-left: 150px;
+  overflow: hidden;
+  overflow: scroll;
+  overflow: auto;
+  background: #F6F7F7;
+  float:left;
+  cursor: default;
+  -moz-user-select':-moz-none;
+    -moz-user-select:none;
+    -o-user-select:none;
+    -khtml-user-select:none; 
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+.main-content li{
+  text-align:left;
+}
+
+.main-content h2, h3{
+  text-align: center;
+}
+
+.contenidodhv h2{
+  margin-bottom: 0px;
+}
 </style>
 <br>
 <div class="container">
@@ -281,12 +316,6 @@ div.panel {
     <div class="todo" style="min-width: 700px;">
 
     <div id="topbar" style="width: 100%; float: left; display: none">
-      <!--<ul class="tab">
-        <li id="pestanatop0"><a href='javascript:cambiarPestannaTop(pestanatop0);' class="selectdos" id="apestanatop0"><i class="plus"></i> Nueva Unidad top</a></li>
-          {% for top in topic_mineduc %}
-            <li id="pestanatop{{ forloop.counter }}"><a href='javascript:cambiarPestannaTop(pestanatop{{ forloop.counter }});' >{{ top.name }}</a></li>
-          {% endfor %}
-        </ul>-->
     </div>
 
     <div class="main-content" style="width: 100%; float: left;">
@@ -325,50 +354,6 @@ div.panel {
         </div>
       </div>
       </div>
-<!--
-      {% for top in topic_mineduc %}
-      <div id="cpestana{{ forloop.counter }}" class="cpestanna" style="display: none">
-        <h2>{{ top.name }}</h2>
-        <div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
-          <form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
-            <h3>Datos de la Pauta:</h3>
-            <label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="{{ top.name }}" ><br>
-            <br>
-            <label id="apprPer" for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" onchange="validar()" onkeyup="validar()" name="approval_percentage" value="" min="0" max="100" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" onkeydown="return FilterInput(event)"><br>
-            <br>
-            <input name="forloop" value="{{ forloop.counter }}" type="hidden">
-            <input name="importance_skill_level{{ forloop.counter }}" type="hidden">
-            <input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
-            <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
-            <br>
-            <h4 style="text-align:center">% de Importancia para la Evaluación</h4>
-            <div id="skill_level_div{{ forloop.counter }}" class="percentage">
-              <span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
-
-            </div>
-            <div id="slider_up">
-              <div id="slider{{ forloop.counter }}" class="slider">
-                <div id="left-color{{ forloop.counter }}" class="left-color" style="width: 50%">
-                </div>
-              </div>
-            </div>
-            <div id="completed_rec_div{{ forloop.counter }}" class="percentage">
-              <span id="importance_completed_rec{{ forloop.counter }}">50</span>%</br>
-
-            </div><br>
-            <div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Habilidades Practicadas</p></div>
-            <div style="float:left;margin-left:125px"><a href='javascript:confirmSaveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
-          </form>
-        </div>
-        <div id="skills">
-          <h3>Habilidades</h3>
-          <div id="search">
-          <label for='skill_search0'>Buscar: </label><input id="skill_search0" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" >
-          </div>
-        </div>
-      </div>
-      </div>
-      {% endfor %}-->
     </div>
     </div>
 </div>
@@ -400,8 +385,10 @@ $(document).ready(function(){
       });
     $('#contenidopestanastop').css('display', 'none');
 
-    
+    contenidoTop();
   });
+
+var arbol = JSON.parse('{{ json_data | escapejs }}');
 
   function backChapter(){
     $('.class-content').show();
@@ -409,6 +396,38 @@ $(document).ready(function(){
     $('#namecurso').hide();
     $('#sidebar').hide();
     $('#buttonback').hide();
+  }
+
+  function contenidoTop(){
+    var conttop='';
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    var chapters=arbol["capitulos"];
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos=chapters[i]['topico'];
+      for (var j = 0; j < topicos.length; j++) {
+        var subtopicos=topicos[j]['subtopico'];
+        for (var k = 0; k < subtopicos.length; k++) {
+          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv"><div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left;"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br><div id="todahabilidad"><h2>Habilidades</h2><div class="skills" style="float:left;"><ul>';
+          var skills = subtopicos[k]['skills'];
+          for (var l = 0; l < skills.length; l++) {
+            conttop+='<li><img style="width:15px;height:15px;" src={% static "img/ejercicios.png" %} alt="habs">'+skills[l]['nombre']+'</li>';
+          }
+          conttop+='</ul></div></div><br><br><div id="todovideo"><h2>Videos</h2><div class="videos" style="float:left;"><ul>';
+
+          var videos = subtopicos[k]['videos'];
+          for (var m = 0; m < videos.length; m++) {
+            conttop+='<li><img style="width:15px;height:15px;" src={% static "img/videos.png" %} alt="vids">'+videos[m]['nombre']+'</li>';
+          }
+
+          conttop+='</ul></div></div></div>';
+          //console.log(subtopicos[k]['id']);
+          //console.log(topicos[j]['id']);
+          conttop+='<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botoncito0'+subtopicos[k]['id']+'">Agregar Ejercicios - Videos</a>';
+          conttop+='</div>';
+        }
+      }
+    }
+    $('#contenidopestanastop').append(conttop);
   }
 
   function drawTopBar(idtopic){
@@ -423,16 +442,17 @@ $(document).ready(function(){
         if (topicos[j]['id']==idtopic){
           var subtopicos = topicos[j]['subtopico'];
           for (var k = 0; k < subtopicos.length; k++) {
-            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop'+subtopicos[k]['id']+'"><i class="plus"></i> '+subtopicos[k]['nombre']+'</a></li>';
+            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'"><i class="plus"></i> '+subtopicos[k]['nombre']+'</a></li>';
           }
         }
       }
     }
 
     newtopbar+='</ul>';
-
     $('#topbar').append(newtopbar);
   }
+
+  $('#breadcrumb').html('Nivel / {{ nombrecapitulo }}')
 
 
   function cambiarPestanna(pestanna, idtopic){
@@ -459,11 +479,14 @@ $(document).ready(function(){
     for (i=0;i<cpestannas.length;i++){
      $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
     }
+    //console.log(cpestannas);
 
     if (id!=0){
       $('.main-content').css('position', 'relative');
       $('#topbar').css('display','');
       $('#contenidopestanastop').css('display', '');
+      $('[id*="cpestanatop0"]').css('display', 'none');
+      $('#cpestanatop0').css('display','');
     }
     else{
       $('.main-content').css('position', 'relative');
@@ -481,19 +504,31 @@ $(document).ready(function(){
     });
   }
 
-  function cambiarPestannaTop(pestanna, idtopic, idsubtopic){
+  function cambiarPestannaTop(pestanna){
     id=(pestanna.id).substring(10);
-
     pestannatop = document.getElementById(pestanna.id);
-    cpestannatop = document.getElementById('c'+pestanna.id);
+    var psttop=pestanna.id;
+    cpestannatop = document.getElementById('c'+psttop);
     cpestannastop = document.getElementsByClassName('cpestannatop');
 
+    //console.log(cpestannatop);
+
+    for (i=0;i<cpestannastop.length;i++){
+     $(contenidopestanastop.getElementsByClassName('cpestannatop')[i]).css('display', 'none');
+    }
+
     if(id==0){
-      $('#contenidopestanastop').css('display', '');
+      $('#cpestanatop0').css('display', '');
     }
     else{
-      $('#contenidopestanastop').css('display', 'none');
+      $('#cpestanatop0').css('display', 'none');
     }
+    //console.log('botoncito'+id+'');
+    //console.log($('#botoncito'+id+''));
+    $('[id*="botoncito"]').css('display', 'none');
+    $('#botoncito'+id+'').css('display', '');
+
+    //$('#cpestanatop0'+id+'').css('display', '');
 
     $(document).ready(function () {
      $(document.getElementsByClassName("selectdos")).removeClass("selectdos");

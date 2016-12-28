@@ -36,7 +36,7 @@ table.testinst td {
   z-index: 1;
   overflow: hidden;
   width: 63px; height: 54px;
-  text-align: right;
+  /*text-align: right;*/
 }
 .ribbon span {
   font-size: 9px;
@@ -66,7 +66,7 @@ table.testinst td {
 }
 .ribbon span::after {
   content: "";
-  position: absolute; right: 0px; top: 100%;
+  /*position: absolute; right: 0px; top: 100%;*/
   z-index: -1;
   /*border-left: 3px solid transparent;
   border-right: 3px solid #79A70A;
@@ -192,7 +192,7 @@ table.testsched td {
 .main-content {
   background: #f7f7f7;
   /*width: 100%;*/
-  padding-right:10%;
+  /*padding-right:10%;*/
   border: 1px solid #ddd;
   /*z-index: 1;*/
   min-height: 400px;
@@ -203,7 +203,7 @@ table.testsched td {
   background: #f7f7f7;
   width: 100%;
   padding-left:10%;
-  padding-right:10%;
+  /*padding-right:10%;*/
   border: 1px solid #ddd;
   z-index: 1;
 }
@@ -217,7 +217,7 @@ table.testsched td {
   padding: 15px 20px;
   width: 100%;
   padding-left:10%;
-  padding-right:10%;
+  /*padding-right:10%;*/
   z-index: 1;
 }
 .trabajo{
