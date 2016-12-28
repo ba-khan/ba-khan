@@ -388,8 +388,6 @@ $(document).ready(function(){
     contenidoTop();
   });
 
-var arbol = JSON.parse('{{ json_data | escapejs }}');
-
   function backChapter(){
     $('.class-content').show();
     $('.main-content').hide();
@@ -685,10 +683,8 @@ function saveVideoExercise(idsubtopic){
         infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
       }
     }
-
     cont++;
   }
-  console.log(infodata);
 
   if (select.length>0){
     $.ajax({
@@ -732,6 +728,7 @@ function saveVideoExercise(idsubtopic){
 
 function addVideoExercise(idsubtopic, idtopic){
   var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
+  var arbol = JSON.parse('{{ json_data | escapejs }}');
   //console.log(tree);
   $('#popuptree').empty();
   $('#hover').fadeIn();
@@ -741,33 +738,33 @@ function addVideoExercise(idsubtopic, idtopic){
   $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
   $('#newTree'+idsubtopic+'').jstree(tree);
   $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
+
   
   setTimeout(function(){
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        if (topicos[j]['id']==idtopic){
+      var chapters=arbol["capitulos"];
+      for (var i = 0; i < chapters.length; i++) {
+        var topicos = chapters[i]["topico"];
+        for (var j = 0; j < topicos.length; j++) {
           var subtopicos = topicos[j]["subtopico"];
           for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==idsubtopic){
+            if (subtopicos[k]['id']==id){
               var ejer = subtopicos[k]["skills"];
               for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
+                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
               }
               var vid = subtopicos[k]["videos"];
               for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
+                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+vid[m]['idtree']+'');
               }
             }
           }
-        }   
+        }
       }
-    }
-  },1000);
+    },1000);   
 }
 
 function valorfiltro(valor, id){
+  var arbol = JSON.parse('{{ json_data | escapejs }}');
   if(valor.value == "ejercicios"){
     var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
     var info = tree['core']['data'];
