@@ -273,7 +273,7 @@ div.panel {
       <ul>
         <li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Unidad</a></li>
           {% for top in topic_mineduc %}
-            <li id="pestana{{ forloop.counter }}"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }}, {{ top.id_topic_mineduc }});' >{{ top.name }}</a></li>
+            <li id="pestana{{ top.id_topic_mineduc }}"><a href='javascript:cambiarPestanna(pestana{{ top.id_topic_mineduc }}, {{ top.id_topic_mineduc }});' >{{ top.name }}</a></li>
           {% endfor %}
         </ul>
     </div>
