@@ -52,8 +52,6 @@ urlpatterns = [
     url(r'^curriculum/', include('curriculum.urls', namespace="curriculum")),
     url(r'^curriculum/','bakhanapp.views.curriculum', name='curriculum'),
 
-    #url(r'^curriculum/nivel/(?P<id_chapter_mineduc>[0-9]+)/$', 'curriculum.views.getCurriculumNivel', name='getCurriculumNivel'),
-
     url(r'^planificacion/', include('planificacion.urls', namespace="planificacion")),
     url(r'^planificacion/','bakhanapp.views.planificacion', name='planificacion'),
 

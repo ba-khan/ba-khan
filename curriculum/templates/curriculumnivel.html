@@ -440,7 +440,7 @@ $(document).ready(function(){
         if (topicos[j]['id']==idtopic){
           var subtopicos = topicos[j]['subtopico'];
           for (var k = 0; k < subtopicos.length; k++) {
-            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'"><i class="plus"></i> '+subtopicos[k]['nombre']+'</a></li>';
+            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'">'+subtopicos[k]['nombre']+'</a></li>';
           }
         }
       }

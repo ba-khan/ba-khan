@@ -195,18 +195,17 @@ table.testsched td {
   /*padding-right:10%;*/
   border: 1px solid #ddd;
   /*z-index: 1;*/
-  min-height: 400px;
-  max-width: 800px;
+  /*min-height: 400px;*/
+  min-width: 800px;
 }
 .class-content {
   padding: 15px 20px;
   background: #f7f7f7;
   width: 100%;
   padding-left:10%;
-  padding-right:50%;
+  /*padding-right:10%;*/
   border: 1px solid #ddd;
   z-index: 1;
-  align-content: left;
 }
 .allcontent{
   background: #f7f7f7;

@@ -45,6 +45,18 @@ def getCurriculumProposed(request):
 	else:
 		isTeacher = False
 
+	if (request.user.has_perm('bakhanapp.isAdmin')):
+		classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).values('level').distinct().order_by('level')
+	N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+	for i in range(len(classes)):
+		#print classes[i]['level']
+		classes[i]['nivel'] = N[int(classes[i]['level'])] 
+		#x.add(classes[i].level)
+
+	#uniq = x
+
+	#print list(uniq)
+	'''
 	miplanificacion = Planning.objects.filter(teacher=request.user.user_profile.kaid)
 	vkhn = ''
 	ekhn = ''
@@ -53,17 +65,9 @@ def getCurriculumProposed(request):
 		miplan.nombrecurso = nombrecurso[0]['name']
 		nombreoa = Subtopic_Mineduc.objects.filter(name=miplan.oa).values('AE_OE')
 		miplan.nombreoa = nombreoa[0]['AE_OE']
-		#videoskhan = miplan.videokhan
-		#vk = videoskhan.split('**')
-		#for i in range(1,len(vk)):
-			#print vk[i]
-		#	vidkhan = Video.objects.filter(id_video_name=vk[i]).values('name_spanish', 'url_video')
-		#	vkhan = vidkhan[0]['name_spanish']
-		#	vkhn = vkhn+'**'+ vkhan
-		#miplan.nombrevideokhan = vkhn
+
 		miplan.ejerciciokhan = Skill_Planning.objects.filter(id_planning_id=miplan.id_planning).values('id_skill_id')
 		for i in range(len(miplan.ejerciciokhan)):
-			#print miplan.ejerciciokhan[i]
 			queryskill = Skill.objects.filter(id_skill_name=miplan.ejerciciokhan[i]['id_skill_id']).values('name_spanish', 'url_skill')
 			miplan.ejerciciokhan[i]['namespanish']=queryskill[0]['name_spanish']
 			miplan.ejerciciokhan[i]['urlskill']=queryskill[0]['url_skill']
@@ -159,7 +163,26 @@ def getCurriculumProposed(request):
 		topictree.append(video_obj)
 	topictree_json['core']={'data':topictree}
 	topictree_json_string=json.dumps(topictree_json)
-	return render_to_response('planificacion.html', { 'json_data':json_data, 'topictree_json_string':topictree_json_string, 'isTeacher':isTeacher, 'miplanificacion': miplanificacion} ,context_instance=RequestContext(request))
+	'''
+	return render_to_response('planificacion.html', { 'isTeacher':isTeacher, 'classes':classes} ,context_instance=RequestContext(request))
+
+
+@login_required()
+def getCurriculumPropuesto(request, level):
+	request.session.set_expiry(timeSleep)
+	try:
+		N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
+		nivel = N[int(level)]
+		'''
+		if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+			isTeacher = True
+		else:
+			isTeacher = False
+		'''
+		return render_to_response('planificacionnivel.html',{'nivel':nivel},  context_instance=RequestContext(request))
+	except Exception as e:
+		print e
+		return HttpResponseRedirect("/inicio")
 
 @login_required()
 def savePlanning(request):

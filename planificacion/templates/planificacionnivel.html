@@ -116,10 +116,7 @@ div.panel.show {
 <div class="container">
 
 <div class="main-content">
-{% for class in classes %}
-<a role="button" href="{% url 'planificacion:getCurriculumPropuesto' class.level %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()">{{ class.nivel }}</a>
-    <br>
-{% endfor %}
+aqui va la magia
 </div>
 
   <!--<br>
@@ -188,6 +185,7 @@ div.panel.show {
 </div>
 
 <script type="text/javascript">
+$('#breadcrumb').html('Nivel / {{ nivel }}')
 /*$(document).ready(function(){
     $('#newplanning').hide();
     $("#hover").click(function(){
@@ -305,7 +303,6 @@ div.panel.show {
             $('td#elegiroa').val(subtopicos[k]['nombre'])
             var ejer = subtopicos[k]["skills"];
             
-
             
             var vid = subtopicos[k]["videos"];
             //console.log(subtopicos[k])
