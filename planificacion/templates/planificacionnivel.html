@@ -114,7 +114,13 @@ div.panel.show {
 
 <br>
 <div class="container">
-
+<div id="sidebar">
+      <ul>
+          {% for top in topic_mineduc %}
+            <li id="pestana{{ top.id_topic_mineduc }}"><a href='javascript:cambiarPestanna(pestana{{ top.id_topic_mineduc }}, {{ top.id_topic_mineduc }});' >{{ top.name }}</a></li>
+          {% endfor %}
+        </ul>
+    </div>
 <div class="main-content">
 aqui va la magia
 </div>
@@ -186,6 +192,77 @@ aqui va la magia
 
 <script type="text/javascript">
 $('#breadcrumb').html('Nivel / {{ nivel }}')
+
+function cambiarPestanna(pestanna, idtopic){
+    $('#topbar').empty();
+    id = (pestanna.id).substring(7);
+    pestanna = document.getElementById(pestanna.id);
+    cpestanna = document.getElementById('c' + pestanna.id);
+    cpestannas = document.getElementsByClassName('cpestanna');
+    contenidopestanas = document.getElementById('contenidopestanas');
+
+    //drawTopBar(idtopic);
+
+    var texto = $('#pestana'+id+'').text();
+
+    $('#nameunidad').empty();
+    $('#nameunidad').append(texto);
+
+    $('#idunidad').empty();
+    $('#idunidad').append(id);
+
+    var namesubtopic = $('input[id*="newNameSubtopic"]');
+    namesubtopic.attr('id',"newNameSubtopic"+id+'');
+
+    for (i=0;i<cpestannas.length;i++){
+     $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
+    }
+    //console.log(cpestannas);
+
+    if (id!=0){
+      $('.main-content').css('position', 'relative');
+      $('#topbar').css('display','');
+      $('#contenidopestanastop').css('display', '');
+      $('[id*="cpestanatop0"]').css('display', 'none');
+      $('#cpestanatop0').css('display','');
+    }
+    else{
+      $('.main-content').css('position', 'relative');
+      $('#topbar').css('display','none');
+      $('#contenidopestanastop').css('display', 'none');
+    }
+
+    $(document).ready(function () {
+     $(document.getElementsByClassName("select")).removeClass("select");
+       $(cpestanna).css('display', '');
+       $(pestanna.getElementsByTagName('a')).addClass("select");
+
+       $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
+       $('#apestanatop0').addClass("selectdos");
+    });
+  }
+
+  function drawTopBar(idtopic){
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    var chapters=arbol["capitulos"];
+    var newtopbar='';
+    newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestannaTop(pestanatop0);" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo Objetivo de Aprendizaje</a></li>';
+
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]['topico'];
+      for (var j = 0; j < topicos.length; j++) {
+        if (topicos[j]['id']==idtopic){
+          var subtopicos = topicos[j]['subtopico'];
+          for (var k = 0; k < subtopicos.length; k++) {
+            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'">'+subtopicos[k]['nombre']+'</a></li>';
+          }
+        }
+      }
+    }
+
+    newtopbar+='</ul>';
+    $('#topbar').append(newtopbar);
+  }
 /*$(document).ready(function(){
     $('#newplanning').hide();
     $("#hover").click(function(){

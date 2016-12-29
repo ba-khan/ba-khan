@@ -173,13 +173,19 @@ def getCurriculumPropuesto(request, level):
 	try:
 		N = ['kinder','1ro basico','2do basico','3ro basico','4to basico','5to basico','6to basico','7mo basico','8vo basico','1ro medio','2do medio','3ro medio','4to medio']
 		nivel = N[int(level)]
+
+		tpmin = Topic_Mineduc.objects.filter(id_chapter_id=Chapter_Mineduc.objects.filter(name__iexact=nivel))
+		#idchapter = Chapter_Mineduc.objects.filter(name__iexact=nivel)
+		#print idchapter
+
+
 		'''
 		if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
 			isTeacher = True
 		else:
 			isTeacher = False
 		'''
-		return render_to_response('planificacionnivel.html',{'nivel':nivel},  context_instance=RequestContext(request))
+		return render_to_response('planificacionnivel.html',{'nivel':nivel, 'topic_mineduc':tpmin},  context_instance=RequestContext(request))
 	except Exception as e:
 		print e
 		return HttpResponseRedirect("/inicio")
