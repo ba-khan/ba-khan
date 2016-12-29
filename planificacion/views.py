@@ -175,17 +175,57 @@ def getCurriculumPropuesto(request, level):
 		nivel = N[int(level)]
 
 		tpmin = Topic_Mineduc.objects.filter(id_chapter_id=Chapter_Mineduc.objects.filter(name__iexact=nivel))
-		#idchapter = Chapter_Mineduc.objects.filter(name__iexact=nivel)
-		#print idchapter
 
+		chapter = Chapter_Mineduc.objects.all()
+		mision=[]
+		for chap in chapter:
+			capitulo={}
+			capitulo["id"]=chap.id_chapter_mineduc
+			capitulo["nombre"]=chap.name
+			unidad=[]
+			topic = Topic_Mineduc.objects.filter(id_chapter_id=chap.id_chapter_mineduc)
+			for top in topic:
+				topico={}
+				topico["id"]=top.id_topic_mineduc
+				topico["nombre"]=top.name
+				aprendizaje=[]
+				subtopic = Subtopic_Mineduc.objects.filter(id_topic_id=top.id_topic_mineduc).order_by('name')
+				for sub in subtopic:
+					subtopico={}
+					subtopico["id"]=sub.id_subtopic_mineduc
+					subtopico["nombre"]=sub.name
+					subtopico["aeoe"]=sub.AE_OE
+					skills=[]
+					videos=[]
+					subtopicskill = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc_id=subtopico["id"])
+					for subskill in subtopicskill:
+						nameskill = Skill.objects.filter(id_skill_name=subskill.id_skill_name_id).values('name_spanish', 'url_skill')
+						subtskillmin={}
+						subtskillmin["skill"]=subskill.id_skill_name_id
+						subtskillmin["nombre"]=nameskill[0]['name_spanish']
+						subtskillmin["url"]=nameskill[0]['url_skill']
+						subtskillmin["idtree"]=subskill.id_tree
+						skills.append(subtskillmin)
+					subtopico["skills"]=skills
+					subtopicvideo = Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=subtopico["id"])
+					for subvideo in subtopicvideo:
+						namevideo=Video.objects.filter(id_video_name=subvideo.id_video_name_id).values('name_spanish', 'url_video')
+						subtvideomin={}
+						subtvideomin["video"]=subvideo.id_video_name_id
+						subtvideomin["nombre"]=namevideo[0]['name_spanish']
+						subtvideomin["url"]=namevideo[0]['url_video']
+						subtvideomin["idtree"]=subvideo.id_tree
+						videos.append(subtvideomin)
+					subtopico["videos"]=videos
+					aprendizaje.append(subtopico)
+				topico["subtopico"]=aprendizaje
+				unidad.append(topico)
+			capitulo["topico"]=unidad
+			mision.append(capitulo)
+		json_dict={"capitulos":mision}
+		json_data = json.dumps(json_dict)
 
-		'''
-		if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
-			isTeacher = True
-		else:
-			isTeacher = False
-		'''
-		return render_to_response('planificacionnivel.html',{'nivel':nivel, 'topic_mineduc':tpmin},  context_instance=RequestContext(request))
+		return render_to_response('planificacionnivel.html',{'nivel':nivel, 'topic_mineduc':tpmin, 'json_data':json_data},  context_instance=RequestContext(request))
 	except Exception as e:
 		print e
 		return HttpResponseRedirect("/inicio")
