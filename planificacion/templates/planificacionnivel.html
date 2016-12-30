@@ -18,10 +18,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
 
 <style>
-table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
-table.testsched td, table.testsched th { padding: 5px; border: 1px solid #E0E0E0;}
-table.testsched th { background: #E5E5E5; text-align: left;}
-table.testsched th {
+th a:hover { text-decoration: underline; }
+  table.tablaplanning { border-collapse: collapse; border: 1px solid #CCB; width:950px;}
+  table.tablaplanning td, table.tablaplanning th { padding: 5px; border: 1px solid #E0E0E0;}
+  table.tablaplanning th { background: #E5E5E5; text-align: left;}
+  input.tablaplanning { background: red; color: #FDFDFD; }
+
+  table.tablaplanning th {
     color: #555;
     background-color: #ccc;
     border: 1px solid #bbb;
@@ -30,25 +33,10 @@ table.testsched th {
     padding: 5px;
     text-align:center;
 }
-table.testsched td {
+table.tablaplanning td {
   text-align: left;
 }
 
-table.testschedos { border-collapse: collapse; border: 1px solid #CCB; width:650px;table-layout: fixed;}
-table.testschedos td, table.testschedos th { padding: 5px; border: 1px solid #E0E0E0;overflow: hidden;}
-table.testschedos th { background: #E5E5E5; text-align: left;}
-table.testschedos th {
-    color: #555;
-    background-color: #ccc;
-    border: 1px solid #bbb;
-    text-shadow: 0 1px 0 #eee;
-    vertical-align: bottom;
-    padding: 5px;
-    text-align:center;
-}
-table.testschedos td {
-  text-align: left;
-}
 input{
   z-index: 1000;
   width: 100%;
@@ -212,52 +200,36 @@ input{
   border: 1px solid #ddd;
 }
 
-/*button.accordion {
-    background-color: #eee;
-    color: #444;
+button.accordion {
+    background-color: #444;
+    color: #aaa;
     cursor: pointer;
     padding: 18px;
     width: 100%;
-    text-align: left;
     border: none;
+    text-align: left;
     outline: none;
+    font-size: 15px;
     transition: 0.4s;
-}*/
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-/*button.accordion.active, button.accordion:hover {
-    background-color: #ddd;
 }
 
-button.accordion:after {
-    content: '\02795'; 
-    font-size: 13px;
+button.accordion.active, button.accordion:hover {
+    background-color: #777;
+}
+
+/*button.accordion:after {
+    content: '\002B';
     color: #777;
+    font-weight: bold;
     float: right;
     margin-left: 5px;
 }
 
 button.accordion.active:after {
-    content: "\2796"; 
+    content: "\2212";
 }*/
 
-/* Style the accordion panel. Note: hidden by default */
-div.panel {
-    padding: 0 18px;
-    background-color: white;
-    display: none;
-    overflow: hidden;
-    transition: 0.6s ease-in-out;
-    opacity: 0;
-}
-
-/* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
-div.panel.show {
-    display: block;
-    opacity: 1;
-}
-/*
-div.panel {
+/*div.panel {
     padding: 0 18px;
     background-color: white;
     max-height: 0;
@@ -265,7 +237,13 @@ div.panel {
     transition: 0.6s ease-in-out;
     opacity: 0;
 }
-*/
+
+div.panel.show {
+    opacity: 1;
+    min-width: 800px;
+    min-height: 800px;
+}*/
+
 
 .videos,.skills, .descripcion{
   border: 1px solid #D9D9D9;
@@ -302,6 +280,10 @@ div.panel {
 .contenidodhv h2{
   margin-bottom: 0px;
 }
+
+td.mousepointer{
+    cursor: pointer;
+  }
 </style>
 <br>
 <div class="container">
@@ -367,6 +349,7 @@ $(document).ready(function(){
     $('#contenidopestanastop').css('display', 'none');
 
     contenidoTop();
+
   });
 
   function backChapter(){
@@ -389,7 +372,8 @@ $(document).ready(function(){
           conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv"><div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br>';
 
           conttop+='<div id="contenidoplanning'+subtopicos[k]['id']+'" style="display:none;">';
-          conttop+='<a onclick=\'(mostrarEjercicios())\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonmostrarej0'+subtopicos[k]['id']+'">EJERCICIOS</a>';
+
+          conttop+='<button class="accordion" style="margin-left:100px;" onclick="mostrarEjercicios();">Definir Ejercicios</button><br><br>';
 
           conttop+='<div id="todahabilidad" class="todahabilidad" style="display:none;">';
           conttop+='<a onclick=\'(addExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonexer0'+subtopicos[k]['id']+'">Agregar Ejercicios</a>';
@@ -398,10 +382,11 @@ $(document).ready(function(){
           for (var l = 0; l < skills.length; l++) { 
             conttop+='<div title="'+skills[l]['nombre']+'" class="cuadradito" id="'+skills[l]['idtree']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+skills[l]['nombre']+'</div>';
           }
-          conttop+='</div><h2>Habilidades de mi clase</h2><div class="skills" id="skillmiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div></div>';
+          conttop+='</div><h2>Habilidades para mi clase</h2><div class="skills" id="skillmiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div></div>';
 
           conttop+='<br><br>';
-          conttop+='<a onclick=\'(mostrarVideos())\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonmostrarvi0'+subtopicos[k]['id']+'">VIDEOS</a>';
+          conttop+='<button class="accordion" style="margin-left:100px;" onclick="mostrarVideos();">Definir Videos</button><br><br>';
+
           conttop+='<div id="todovideo" class="todovideo" style="display:none;">';
           conttop+='<a onclick=\'(addVideo("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonvid0'+subtopicos[k]['id']+'">Agregar Videos</a>';
           conttop+='<h2>Videos Propuestos</h2><div class="videos" id="videopropuesto'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)">';
@@ -410,12 +395,17 @@ $(document).ready(function(){
           for (var m = 0; m < videos.length; m++) {
             conttop+='<div title="'+videos[m]['nombre']+'" class="cuadradito" id="'+videos[m]['idtree']+'" draggable="true" ondragstart="startvid(event)" ondragend="endvid(event)">'+videos[m]['nombre']+'</div>';
           }
-          conttop+='</div><h2>Videos de mi clase</h2><div class="videos" id="videomiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)"></div></div>';
+          conttop+='</div><h2>Videos para mi clase</h2><div class="videos" id="videomiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)"></div></div>';
+
+          conttop+='<a onclick=\'(setPlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonplan0'+subtopicos[k]['id']+'">Empezar Planificación</a>';
 
           conttop+='</div>';
           conttop+='</div>';
+          conttop+='<br><br>';
           conttop+='<a onclick=\'(newPlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonnp0'+subtopicos[k]['id']+'">Nueva Planificación</a>';
-          /*conttop+='<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botoncito0'+subtopicos[k]['id']+'">Agregar Ejercicios - Videos</a>';*/
+          conttop+='<div id="tablaplanning'+subtopicos[k]['id']+'" style="display:none;width:700px;" class="tablaplanning"></div><br><br>';
+
+          conttop+='<a onclick=\'(savePlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonsave0'+subtopicos[k]['id']+'">Guardar Planificación</a>'
           conttop+='</div>';
         }
       }
@@ -425,14 +415,12 @@ $(document).ready(function(){
 
   function mostrarEjercicios(){
     $('.todovideo').css('display', 'none');
-    //$('.todahabilidad').css('display', '');
     if( !($('.todahabilidad').is(":visible")) ){
       $('.todahabilidad').toggle('blind',1000)
     }
   }
 
   function mostrarVideos(){
-   // $('.todovideo').css('display', '');
     $('.todahabilidad').css('display', 'none');
     if( !($('.todovideo').is(":visible")) ){
       $('.todovideo').toggle('blind',1000)
@@ -539,9 +527,99 @@ $(document).ready(function(){
 
       }
 
+  function savePlanning(idsubtopico, idtopico){
+    var oa = $('tr#id'+idsubtopico+' td#oa').text();
+    var clase = $('tr#id'+idsubtopico+' td#clase').text();
+    var objetivo = $('tr#id'+idsubtopico+' td#objetivo').text();
+    var inicio = $('tr#id'+idsubtopico+' td#inicio').text();
+    var cierre = $('tr#id'+idsubtopico+' td#cierre').text();
+    var ejercicios = $('tr#id'+idsubtopico+' td#ejercicios').text();
+    var videos = $('tr#id'+idsubtopico+' td#videos').text();
+
+    var nivel = "{{ nivel }}";
+
+    $.ajax({
+      url: "{% url 'planificacion:guardarplan' %}",
+      type: "POST",
+      data: {oa:oa, clase:clase, objetivo:objetivo, inicio:inicio, cierre:cierre, ejercicios:ejercicios, videos:videos, nivel:nivel},
+        success: function(response){
+          $("#popup").empty()
+          $("#close").hide();
+          $("#hover").fadeIn();
+          $("#popup").fadeIn();
+          $("#popup").append("<p class='response'>"+response+"</p>");
+          auxResponse = response;
+            if (auxResponse == "Planificacion guardada correctamente"){
+              $("#hover").css('pointer-events','none');
+              $("#close").css('pointer-events','none');
+              window.setTimeout(function(){location.reload()},1000);
+            }
+        }
+    });
+  }
+
+  function setPlanning(idsubtopico, idtopico){
+    //$('#botonplan0'+idsubtopico).css('display', 'none');
+    $('#tablaplanning'+idsubtopico+'').empty();
+    var mitabla='';
+
+    $('#botonsave0'+idsubtopico+'').css('display', '');
+
+    var openDiv = document.getElementById('skillmiclase'+idsubtopico+''); 
+    var cuadritos = openDiv.getElementsByClassName('cuadradito');
+    var ids =[];
+    for (var i = 0; i < cuadritos.length; i++) {
+          ids.push({
+            title_skill:cuadritos[i].title,
+            id_skill:cuadritos[i].id
+          });
+        }
+    
+    var openDivVid = document.getElementById('videomiclase'+idsubtopico+''); 
+    var cuadritosvid = openDivVid.getElementsByClassName('cuadradito');
+    var idsvids =[];
+    for (var i = 0; i < cuadritosvid.length; i++) {
+          idsvids.push({
+            title_video:cuadritosvid[i].title,
+            id_video:cuadritosvid[i].id
+          });
+        }
+
+    var arbol = JSON.parse('{{ json_data | escapejs }}');
+    var chapters=arbol["capitulos"];
+
+    mitabla+='<table><thead><tr id="cabecera"><th style="width: 15%;">Objetivo de Aprendizaje</th><th style="width: 14%;">Clase</th><th style="width: 15%;">Objetivo de la Clase</th><th style="width: 14%;">Inicio de la Clase</th><th style="width: 14%;">Cierre de la Clase</th><th style="width: 14%;">Ejercicios Khan</th><th style="width: 14%;">Videos Khan</th></thead></tr>';
+
+    for (var i = 0; i < chapters.length; i++) {
+      var topicos = chapters[i]['topico'];
+      for (var j = 0; j < topicos.length; j++) {
+        if(topicos[j]['id']==idtopico){
+          var subtopicos = topicos[j]['subtopico'];
+          for (var k = 0; k < subtopicos.length; k++) {
+            if (subtopicos[k]['id']==idsubtopico){
+              mitabla+='<tbody><tr id="id'+idsubtopico+'"><td id="oa">'+subtopicos[k]['aeoe']+'</td><td id="clase" contenteditable="true" class="mousepointer"></td><td id="objetivo" contenteditable="true" class="mousepointer"></td><td id="inicio" contenteditable="true" class="mousepointer"></td><td id="cierre" contenteditable="true" class="mousepointer"></td><td id="ejercicios"><ul>';
+              for (var l = 0; l < ids.length; l++) {
+                mitabla+='<li id="'+ids[l]['id_skill']+'"><img src={% static "img/ejercicios.png" %} alt="ejercicios" height="15px;" width="15px;">'+ids[l]['title_skill']+'</li><div style="display:none;">##</div>'
+              }
+              mitabla+='</ul></td><td id="videos"><ul>';
+              for (var m = 0; m < idsvids.length; m++) {
+                mitabla+='<li id="'+idsvids[m]['id_video']+'"><img src={% static "img/videos.png" %} alt="videos" height="15px;" width="15px;">'+idsvids[m]['title_video']+'</li><div style="display:none;">##</div>'
+              }
+
+              mitabla+='</ul></td></tr></tbody></table>';
+            }
+          }
+        }
+      }
+    }
+
+    $('#tablaplanning'+idsubtopico+'').append(mitabla);
+    $('#tablaplanning'+idsubtopico+'').css('display', '');
+  }
+
   function newPlanning(idsubtopico, idtopico){
     $('[id*="contenidoplanning"]').css('display', 'none');
-    //$('#contenidoplanning'+idsubtopico+'').css('display', '');
+    $('[id*="botonnp0"]').css('display', 'none');
     if( !($('#contenidoplanning'+idsubtopico+'').is(":visible")) ){
       $('#contenidoplanning'+idsubtopico+'').toggle('blind',1000)
     }
@@ -576,7 +654,7 @@ $(document).ready(function(){
     return idsubtopico
   }
 
-  $('#breadcrumb').html('Nivel / {{ nombrecapitulo }}')
+  $('#breadcrumb').html('Nivel / {{ nivel }}')
 
 
   function cambiarPestanna(pestanna, idtopic){
@@ -641,7 +719,7 @@ $(document).ready(function(){
        $('#botonvid0'+x+'').css('display', '');
        $('#botonmostrarej0'+x+'').css('display', '');
        $('#botonmostrarvi0'+x+'').css('display', '');
-       //$('#botoncito0'+x+'').css('display', '');
+       $('#botonplan0'+x+'').css('display', '');
     });
   }
 
@@ -679,9 +757,12 @@ $(document).ready(function(){
 
 
     $('[id*="botonmostrarej"]').css('display', 'none');
-    $('#botonmostrarej0'+x+'').css('display', '');
+    $('#botonmostrarej0'+id+'').css('display', '');
     $('[id*="botonmostrarvi"]').css('display', 'none');
-    $('#botonmostrarvi0'+x+'').css('display', '');
+    $('#botonmostrarvi0'+id+'').css('display', '');
+
+    $('[id*="botonplan"]').css('display', 'none');
+    $('#botonplan0'+id+'').css('display', '');
 
     //$('#cpestanatop0'+id+'').css('display', '');
 

@@ -304,16 +304,18 @@ def savePlanning(request):
 		try:
 			teacher = request.user.user_profile.kaid
 			args = request.POST
-			Planning.objects.create(curso=args['nombre'], oa=args['oa'], clase=args['clase'], objetivo=args['objetivo'], inicio=args['inicio'], descripcion=args['descripcion'], cierre=args['cierre'], teacher_id=teacher)
-			idplanning = Planning.objects.filter(curso=args['nombre'], oa=args['oa']).values('id_planning')
-			ejerciciokhan=args['ejercicio']
-			ejerkhan = ejerciciokhan.split('**')
-			videokhan=args['video']
-			vidkhan = videokhan.split('**')
-			for i in range(1,len(ejerkhan)):
-				Skill_Planning.objects.create(id_planning_id=idplanning[0]['id_planning'], id_skill_id=ejerkhan[i])
-			for j in range(1,len(vidkhan)):
-				Video_Planning.objects.create(id_planning_id=idplanning[0]['id_planning'], id_video_id=vidkhan[j])
+			Planning.objects.create(curso=args['nivel'], oa=args['oa'], clase=args['clase'], objetivo=args['objetivo'], inicio=args['inicio'], cierre=args['cierre'], teacher_id=teacher)
+			idplanning = Planning.objects.filter(curso=args['nivel'], oa=args['oa']).values('id_planning')
+			ejerciciokhan=args['ejercicios']
+			ejerkhan = ejerciciokhan.split('##')
+			videokhan=args['videos']
+			vidkhan = videokhan.split('##')
+			for i in range(0,len(ejerkhan)-1):
+				habilidad = Skill.objects.filter(name_spanish=ejerkhan[i]).values('id_skill_name')
+				Skill_Planning.objects.create(id_planning_id=idplanning[0]['id_planning'], id_skill_id=habilidad[0]['id_skill_name'])
+			for j in range(0,len(vidkhan)-1):
+				video = Video.objects.filter(name_spanish=vidkhan[j]).values('id_video_name')
+				Video_Planning.objects.create(id_planning_id=idplanning[0]['id_planning'], id_video_id=video[0]['id_video_name'])
 			return HttpResponse('Planificacion guardada correctamente')
 		except Exception as e:
 			print e
