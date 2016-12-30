@@ -290,6 +290,7 @@ div.panel {
     user-select:none;
 }
 
+
 .main-content li{
   text-align:left;
 }
@@ -323,40 +324,12 @@ div.panel {
     </div>
 
     <div class="main-content" style="width: 100%; float: left;">
+    <h3 style="display: none;" id="mensajeoa">No existen Objetivos de Aprendizaje para esta unidad.</h3>
       
       <div id="contenidopestanas" style="margin-right: 200px;">
-
-       <!--<div id="cpestana0" class="cpestanna">
-       <br>
-        <h2 id="namecurso">{{ nombrecapitulo }}</h2>
-        <div id="form00" class="form">
-          <form action="" method="post" id="form0">{% csrf_token %}
-            <h3>Datos de la Unidad:</h3>
-            <label for='name'>Nombre de la Unidad: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" id="newNameTopic"><br>
-            <label for="block" style="margin-top: -10px;">Descripción de la Unidad: </label><textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
-            <br>
-            <div style="margin-left:200px"><a href='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary">Guardar Unidad</a></div>
-          </form>
-        </div>
-      </div>-->
       </div>
 
       <div id="contenidopestanastop" style="float: left; width: 100%;">
-
-       <!--<div id="cpestanatop0" class="cpestannatop" style="max-width: 500px;">
-       <br>
-        <h2 id="nameunidad"></h2>
-        <p style="display: none;" id="idunidad"></p>
-        <div id="formtop00" class="form">
-          <form action="" method="post" id="formtop0">{% csrf_token %}
-            <h3>Datos del Objetivo de Aprendizaje:</h3>
-            <label for='name'>Nombre del OA: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" id="newNameSubtopic"><br>
-            <label for="block" style="margin-top: -10px;">Descripción del OA: </label><textarea id="textarea_coment_oa" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
-            <br>
-            <div style="margin-left:200px"><a href='javascript:saveNewSubtopic()' class="kui-button kui-button-plain kui-button-primary">Guardar OA</a></div>
-          </form>
-        </div>
-      </div>-->
       </div>
     </div>
     </div>
@@ -393,13 +366,6 @@ $(document).ready(function(){
       });
     $('#contenidopestanastop').css('display', 'none');
 
-
-    /*{% for top in topic_mineduc %}
-      {% if forloop.first %}
-        $('li#pestana'+{{ top.id_topic_mineduc }}+'').trigger('click');
-      {% endif %}
-    {% endfor %}*/
-
     contenidoTop();
   });
 
@@ -420,22 +386,36 @@ $(document).ready(function(){
       for (var j = 0; j < topicos.length; j++) {
         var subtopicos=topicos[j]['subtopico'];
         for (var k = 0; k < subtopicos.length; k++) {
-          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv"><div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left;"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br><div id="todahabilidad"><h2>Habilidades</h2><div class="skills" style="float:left;"><ul>';
+          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv"><div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br>';
+
+          conttop+='<div id="contenidoplanning'+subtopicos[k]['id']+'" style="display:none;">';
+          conttop+='<a onclick=\'(mostrarEjercicios())\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonmostrarej0'+subtopicos[k]['id']+'">EJERCICIOS</a>';
+
+          conttop+='<div id="todahabilidad" class="todahabilidad" style="display:none;">';
+          conttop+='<a onclick=\'(addExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonexer0'+subtopicos[k]['id']+'">Agregar Ejercicios</a>';
+          conttop+='<h2>Habilidades Propuestas</h2><div class="skills" id="skillpropuesta'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">';
           var skills = subtopicos[k]['skills'];
-          for (var l = 0; l < skills.length; l++) {
-            conttop+='<li><img style="width:15px;height:15px;" src={% static "img/ejercicios.png" %} alt="habs">'+skills[l]['nombre']+'</li>';
+          for (var l = 0; l < skills.length; l++) { 
+            conttop+='<div title="'+skills[l]['nombre']+'" class="cuadradito" id="'+skills[l]['idtree']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+skills[l]['nombre']+'</div>';
           }
-          conttop+='</ul></div></div><br><br><div id="todovideo"><h2>Videos</h2><div class="videos" style="float:left;"><ul>';
+          conttop+='</div><h2>Habilidades de mi clase</h2><div class="skills" id="skillmiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div></div>';
+
+          conttop+='<br><br>';
+          conttop+='<a onclick=\'(mostrarVideos())\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonmostrarvi0'+subtopicos[k]['id']+'">VIDEOS</a>';
+          conttop+='<div id="todovideo" class="todovideo" style="display:none;">';
+          conttop+='<a onclick=\'(addVideo("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonvid0'+subtopicos[k]['id']+'">Agregar Videos</a>';
+          conttop+='<h2>Videos Propuestos</h2><div class="videos" id="videopropuesto'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)">';
 
           var videos = subtopicos[k]['videos'];
           for (var m = 0; m < videos.length; m++) {
-            conttop+='<li><img style="width:15px;height:15px;" src={% static "img/videos.png" %} alt="vids">'+videos[m]['nombre']+'</li>';
+            conttop+='<div title="'+videos[m]['nombre']+'" class="cuadradito" id="'+videos[m]['idtree']+'" draggable="true" ondragstart="startvid(event)" ondragend="endvid(event)">'+videos[m]['nombre']+'</div>';
           }
+          conttop+='</div><h2>Videos de mi clase</h2><div class="videos" id="videomiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)"></div></div>';
 
-          conttop+='</ul></div></div></div>';
-          //console.log(subtopicos[k]['id']);
-          //console.log(topicos[j]['id']);
-          conttop+='<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botoncito0'+subtopicos[k]['id']+'">Agregar Ejercicios - Videos</a>';
+          conttop+='</div>';
+          conttop+='</div>';
+          conttop+='<a onclick=\'(newPlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonnp0'+subtopicos[k]['id']+'">Nueva Planificación</a>';
+          /*conttop+='<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botoncito0'+subtopicos[k]['id']+'">Agregar Ejercicios - Videos</a>';*/
           conttop+='</div>';
         }
       }
@@ -443,10 +423,135 @@ $(document).ready(function(){
     $('#contenidopestanastop').append(conttop);
   }
 
+  function mostrarEjercicios(){
+    $('.todovideo').css('display', 'none');
+    //$('.todahabilidad').css('display', '');
+    if( !($('.todahabilidad').is(":visible")) ){
+      $('.todahabilidad').toggle('blind',1000)
+    }
+  }
+
+  function mostrarVideos(){
+   // $('.todovideo').css('display', '');
+    $('.todahabilidad').css('display', 'none');
+    if( !($('.todovideo').is(":visible")) ){
+      $('.todovideo').toggle('blind',1000)
+    }
+  }
+
+  function start(e) {
+          e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
+          e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
+          e.dataTransfer.setDragImage(e.target, 0, 0); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
+          e.target.style.opacity = '0.4'; 
+      };
+
+      function end(e){
+          e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
+          e.dataTransfer.clearData("Data");
+      };
+
+      function enter(e) {
+          e.target.style.border = '3px dotted #555'; 
+      };
+
+      function leave(e) {
+          e.target.style.border = ''; 
+      };
+
+      function over(e) {
+          var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
+          var id = e.target.id; // Elemento sobre el que se arrastra
+          
+          // return false para que se pueda soltar
+          if (id.indexOf('skillpropuesta')>-1){
+              return false; // Cualquier elemento se puede soltar sobre el div destino 1
+          }
+
+          if (id.indexOf('skillmiclase')>-1){
+              return false; // En el Evaluados se puede soltar cualquier elemento menos el elemento con id=arrastrable3
+          }   
+      };
+
+      function drop(e){
+
+          var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+          e.target.appendChild(document.getElementById(elementoArrastrado));
+          e.target.style.border = '';  // Quita el borde
+          tamContX = $('#'+e.target.id).width();
+          tamContY = $('#'+e.target.id).height();
+
+          tamElemX = $('#'+elementoArrastrado).width();
+          tamElemY = $('#'+elementoArrastrado).height();
+
+          posXCont = $('#'+e.target.id).position().left;
+          posYCont = $('#'+e.target.id).position().top;
+
+      }
+
+  function startvid(e) {
+          e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
+          e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
+          e.dataTransfer.setDragImage(e.target, 0, 0); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
+          e.target.style.opacity = '0.4'; 
+      };
+
+      function endvid(e){
+          e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
+          e.dataTransfer.clearData("Data");
+      };
+
+      function entervid(e) {
+          e.target.style.border = '3px dotted #555'; 
+      };
+
+      function leavevid(e) {
+          e.target.style.border = ''; 
+      };
+
+      function overvid(e) {
+          var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
+          var id = e.target.id; // Elemento sobre el que se arrastra
+          
+          // return false para que se pueda soltar
+          if (id.indexOf('videopropuesto')>-1){
+              return false; // Cualquier elemento se puede soltar sobre el div destino 1
+          }
+
+          if (id.indexOf('videomiclase')>-1){
+              return false; // En el Evaluados se puede soltar cualquier elemento menos el elemento con id=arrastrable3
+          }   
+      };
+
+      function dropvid(e){
+
+          var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
+          e.target.appendChild(document.getElementById(elementoArrastrado));
+          e.target.style.border = '';  // Quita el borde
+          tamContX = $('#'+e.target.id).width();
+          tamContY = $('#'+e.target.id).height();
+
+          tamElemX = $('#'+elementoArrastrado).width();
+          tamElemY = $('#'+elementoArrastrado).height();
+
+          posXCont = $('#'+e.target.id).position().left;
+          posYCont = $('#'+e.target.id).position().top;
+
+      }
+
+  function newPlanning(idsubtopico, idtopico){
+    $('[id*="contenidoplanning"]').css('display', 'none');
+    //$('#contenidoplanning'+idsubtopico+'').css('display', '');
+    if( !($('#contenidoplanning'+idsubtopico+'').is(":visible")) ){
+      $('#contenidoplanning'+idsubtopico+'').toggle('blind',1000)
+    }
+  }
+
   function drawTopBar(idtopic){
     var arbol = JSON.parse('{{ json_data | escapejs }}');
     var chapters=arbol["capitulos"];
     var newtopbar='';
+    var idsubtopico;
     newtopbar+='<ul class="tab">';
     for (var i = 0; i < chapters.length; i++) {
       var topicos = chapters[i]['topico'];
@@ -455,6 +560,7 @@ $(document).ready(function(){
           var subtopicos = topicos[j]['subtopico'];
           for (var k = 0; k < subtopicos.length; k++) {
             if (k==0){
+              idsubtopico=subtopicos[k]['id'];
               newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'" class="selectdos">'+subtopicos[k]['nombre']+'</a></li>'; 
             }
             else{
@@ -467,6 +573,7 @@ $(document).ready(function(){
 
     newtopbar+='</ul>';
     $('#topbar').append(newtopbar);
+    return idsubtopico
   }
 
   $('#breadcrumb').html('Nivel / {{ nombrecapitulo }}')
@@ -475,13 +582,23 @@ $(document).ready(function(){
   function cambiarPestanna(pestanna, idtopic){
     $('#topbar').empty();
     id = (pestanna.id).substring(7);
-    console.log(pestanna);
+    //console.log(pestanna);
     pestanna = document.getElementById(pestanna.id);
     cpestanna = document.getElementById('c' + pestanna.id);
     cpestannas = document.getElementsByClassName('cpestanna');
     contenidopestanas = document.getElementById('contenidopestanas');
 
-    drawTopBar(idtopic);
+    var x = drawTopBar(idtopic);
+
+    if (typeof x === 'undefined' || x === null){
+      //console.log(x);
+      $('#mensajeoa').css('display', '')
+    }
+    else{
+      $('#mensajeoa').css('display', 'none')
+    }
+
+    //console.log(x);
 
     var texto = $('#pestana'+id+'').text();
 
@@ -504,7 +621,7 @@ $(document).ready(function(){
       $('#topbar').css('display','');
       $('#contenidopestanastop').css('display', '');
       $('[id*="cpestanatop0"]').css('display', 'none');
-      $('#cpestanatop0').css('display','');
+      $('#cpestanatop0'+x+'').css('display','');
     }
     else{
       $('.main-content').css('position', 'relative');
@@ -518,7 +635,13 @@ $(document).ready(function(){
        $(pestanna.getElementsByTagName('a')).addClass("select");
 
        $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
-       $('#apestanatop0').addClass("selectdos");
+       $('#apestanatop0'+x+'').addClass("selectdos");
+       $('#botonnp0'+x+'').css('display', '');
+       $('#botonexer0'+x+'').css('display', '');
+       $('#botonvid0'+x+'').css('display', '');
+       $('#botonmostrarej0'+x+'').css('display', '');
+       $('#botonmostrarvi0'+x+'').css('display', '');
+       //$('#botoncito0'+x+'').css('display', '');
     });
   }
 
@@ -543,8 +666,22 @@ $(document).ready(function(){
     }
     //console.log('botoncito'+id+'');
     //console.log($('#botoncito'+id+''));
-    $('[id*="botoncito"]').css('display', 'none');
-    $('#botoncito'+id+'').css('display', '');
+    //$('[id*="botoncito"]').css('display', 'none');
+    //$('#botoncito'+id+'').css('display', '');
+    $('[id*="botonnp"]').css('display', 'none');
+    $('#botonnp'+id+'').css('display', '');
+
+    $('[id*="botonexer"]').css('display', 'none');
+    $('#botonexer'+id+'').css('display', '');
+
+    $('[id*="botonvid"]').css('display', 'none');
+    $('#botonvid'+id+'').css('display', '');
+
+
+    $('[id*="botonmostrarej"]').css('display', 'none');
+    $('#botonmostrarej0'+x+'').css('display', '');
+    $('[id*="botonmostrarvi"]').css('display', 'none');
+    $('#botonmostrarvi0'+x+'').css('display', '');
 
     //$('#cpestanatop0'+id+'').css('display', '');
 
@@ -732,21 +869,93 @@ function saveVideoExercise(idsubtopic){
   }
 }
 
-/*function addTopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nueva Unidad</h3><label for='block'>Unidad: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
-}*/
+function showExercise(idsubtopic){
+  $('#skillpropuesta'+idsubtopic+'').empty();
+  var select = $('#newTree'+idsubtopic).jstree("get_selected", true);
+  for (var i = 0; i < select.length; i++) {
+    if(typeof select[i]["data"] != 'undefined'){
+      $('#skillpropuesta'+idsubtopic+'').append('<div title="'+select[i]['text']+'" class="cuadradito" id="'+select[i]['id']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+select[i]['text']+'</div>');
+    }
+  }
+  $('#popuptree').hide();
+  $('#hover').fadeOut();
+}
 
-/*function addSubtopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><textarea id='textarea_coment' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:220px;height:50px;padding-top:5px'></textarea><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
-}*/
+function showVideo(idsubtopic){
+  $('#videopropuesto'+idsubtopic+'').empty();
+  var select = $('#newTree'+idsubtopic).jstree("get_selected", true);
+  for (var i = 0; i < select.length; i++) {
+    if(typeof select[i]["data"] != 'undefined'){
+      $('#videopropuesto'+idsubtopic+'').append('<div title="'+select[i]['text']+'" class="cuadradito" id="'+select[i]['id']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+select[i]['text']+'</div>');
+    }
+  }
+  $('#popuptree').hide();
+  $('#hover').fadeOut();
+}
 
-function addVideoExercise(idsubtopic, idtopic){
+function addExercise(idsubtopic, idtopic){
+  var tree = JSON.parse('{{ topictree_exercise | escapejs }}');
+  var arbol = JSON.parse('{{ json_data | escapejs }}');
+  //console.log(tree);
+  $('#popuptree').empty();
+  $('#hover').fadeIn();
+  $('#popuptree').fadeIn();
+  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
+  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
+  $('#newTree'+idsubtopic+'').jstree(tree);
+  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(showExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
+  
+  setTimeout(function(){
+      var chapters=arbol["capitulos"];
+      for (var i = 0; i < chapters.length; i++) {
+        var topicos = chapters[i]["topico"];
+        for (var j = 0; j < topicos.length; j++) {
+          var subtopicos = topicos[j]["subtopico"];
+          for (var k = 0; k < subtopicos.length; k++) {
+            if (subtopicos[k]['id']==idsubtopic){
+              var ejer = subtopicos[k]["skills"];
+              for (var l = 0; l < ejer.length; l++) {
+                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
+              }
+            }
+          }
+        }
+      }
+    },1000);   
+}
+
+function addVideo(idsubtopic, idtopic){
+  var tree = JSON.parse('{{ topictree_video | escapejs }}');
+  var arbol = JSON.parse('{{ json_data | escapejs }}');
+  //console.log(tree);
+  $('#popuptree').empty();
+  $('#hover').fadeIn();
+  $('#popuptree').fadeIn();
+  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
+  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
+  $('#newTree'+idsubtopic+'').jstree(tree);
+  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(showVideo('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
+  
+  setTimeout(function(){
+      var chapters=arbol["capitulos"];
+      for (var i = 0; i < chapters.length; i++) {
+        var topicos = chapters[i]["topico"];
+        for (var j = 0; j < topicos.length; j++) {
+          var subtopicos = topicos[j]["subtopico"];
+          for (var k = 0; k < subtopicos.length; k++) {
+            if (subtopicos[k]['id']==idsubtopic){
+              var vid = subtopicos[k]["videos"];
+              for (var m = 0; m < vid.length; m++) {
+                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+vid[m]['idtree']+'');
+              }
+            }
+          }
+        }
+      }
+    },1000);   
+}
+
+/*function addVideoExercise(idsubtopic, idtopic){
   var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
   var arbol = JSON.parse('{{ json_data | escapejs }}');
   //console.log(tree);
@@ -781,7 +990,7 @@ function addVideoExercise(idsubtopic, idtopic){
         }
       }
     },1000);   
-}
+}*/
 
 function valorfiltro(valor, id){
   var arbol = JSON.parse('{{ json_data | escapejs }}');
