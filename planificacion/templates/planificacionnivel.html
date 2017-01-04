@@ -37,6 +37,22 @@ table.tablaplanning td {
   text-align: left;
 }
 
+table#tablaplan { border-collapse: collapse; border: 1px solid #CCB; width:800px;}
+table#tablaplan td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
+table#tablaplan th { background: #E5E5E5; text-align: left;}
+table#tablaplan th {
+    color: #555;
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    text-shadow: 0 1px 0 #eee;
+    vertical-align: bottom;
+    padding: 5px;
+    text-align:center;
+}
+table#tablaplan td {
+  text-align: left;
+}
+
 input{
   z-index: 1000;
   width: 100%;
@@ -301,6 +317,7 @@ td.mousepointer{
     </div>
 
     <div class="todo" style="min-width: 700px;">
+      <h3 style="display: none;" id="mensajeun">No existen Unidades para este nivel.</h3>
 
     <div id="topbar" style="width: 100%; float: left; display: none">
     </div>
@@ -330,9 +347,15 @@ td.mousepointer{
 $('#planificacion').addClass('active selected');
 
 $(document).ready(function(){
-  setTimeout(function(){
-    $('a.select')[0].click();
-  }, 100);
+  if (typeof $('a.select')[0] !== "undefined"){
+    setTimeout(function(){
+      $('a.select')[0].click();
+    }, 100);
+  }
+  else{
+    $('#mensajeun').css('display', '');
+  }
+  
   
     
     $("#hover").click(function(){
@@ -369,7 +392,28 @@ $(document).ready(function(){
       for (var j = 0; j < topicos.length; j++) {
         var subtopicos=topicos[j]['subtopico'];
         for (var k = 0; k < subtopicos.length; k++) {
-          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv"><div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br>';
+          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv">';
+
+          conttop+='<div id="tablamiplanning"><h2>Mis Planificaciones</h2><br><table id="tablaplan"><tr id="cabecera"><th style="width: 16.5%;">Clase</th><th style="width: 16.5%;">Objetivo de la Clase</th><th style="width: 16.5%;">Inicio de la Clase</th><th style="width: 16.5%;">Cierre de la Clase</th><th style="width: 17%;">Ejercicios Khan</th><th style="width: 17%;">Videos Khan</th></tr>';
+          {% for miplan in miplanificacion %}
+          if ("{{ miplan.oa }}" == subtopicos[k]['aeoe']) {
+            conttop+='<tr id="idcurso{{ miplan.curso }}__" class="for{{"forloop.counter"}}loop"><td id="{{forloop.counter}}__clase">{{ miplan.clase }}</td><td id="{{forloop.counter}}__objetivo">{{ miplan.objetivo }}</td><td id="{{forloop.counter}}__inicio">{{ miplan.inicio }}</td><td id="{{forloop.counter}}__cierre">{{ miplan.cierre }}</td>';
+            conttop+='<td id="khanexercise"><ul>'
+            {% for exercise in miplan.ejerciciokhan %}
+              conttop+='<a href="{{exercise.urlskill}}" target="_blank"><li>{{exercise.namespanish}}</li></a><br>'
+            {% endfor %}
+            conttop+='</ul></td>';
+            conttop+='<td id="khanvideo"><ul>'
+            {% for video in miplan.videokhan %}
+              conttop+='<a href="{{video.urlvideo}}" target="_blank"><li>{{video.namespanish}}</li></a><br>'
+            {% endfor %}
+            conttop+='</ul></td>';
+          conttop+='</tr>';
+          }
+          {% endfor %}
+          conttop+='</table></div><br><br>';
+
+          conttop+='<div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br>';
 
           conttop+='<div id="contenidoplanning'+subtopicos[k]['id']+'" style="display:none;">';
 
