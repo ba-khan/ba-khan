@@ -377,6 +377,7 @@ class Migration(migrations.Migration):
                 ('id_topic_mineduc', models.AutoField(serialize=False, primary_key=True)),
                 ('name', models.CharField(max_length=50)),
                 ('index', models.IntegerField()),
+                ('descripcion_topic', models.CharField(max_length=250)),
                 ('id_chapter', models.ForeignKey(to='bakhanapp.Chapter_Mineduc')),
             ],
         ),
@@ -618,6 +619,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='assesment_skill',
-            unique_together=set([('id_assesment_config', 'id_skill_name')]),
+            unique_together=set([('id_assesment_config', 'id_skill_name', 'id_subtopic_skill')]),
         ),
     ]
