@@ -550,8 +550,8 @@ function fillParameters(id, kaid) {
 		$('input:checkbox').removeAttr('checked');
 	}
 	else{
-		$('.testsched').show();
-		$('.testschedos').hide();
+		$('.testsched').hide();
+		$('.testschedos').show();
 		$('input[value*="day_"]').prop("disabled", false);
 		$('input:checkbox').removeAttr('checked');
 	}
@@ -568,8 +568,8 @@ function fillParameters(id, kaid) {
 		if (id==id_class){
 			$("input[value='"+idcheckbox+"']").prop("checked", true);
 			$('input[value*="day_"]').prop("disabled", false);
-			$('.testsched').show();
-			$('.testschedos').hide();
+			$('.testsched').hide();
+			$('.testschedos').show();
 		}
 		if (id=="0"){
 			$('.testschedos').show();
