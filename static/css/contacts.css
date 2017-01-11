@@ -1,10 +1,10 @@
-	body { /*font-family:'lucida grande', tahoma, verdana, arial, sans-serif;*/ font-size:14px; }
-	a { color: #555; text-decoration: none; }
-	th a:hover { text-decoration: underline; }
-	table.testgrid { border-collapse: collapse; border: 1px solid #CCB; width:950px;}
-	table.testgrid td, table.testgrid th { padding: 5px; border: 1px solid #E0E0E0;}
-	table.testgrid th { background: #E5E5E5; text-align: left;}
-	input.invalid { background: red; color: #FDFDFD; }
+body { /*font-family:'lucida grande', tahoma, verdana, arial, sans-serif;*/ font-size:14px; }
+  a { color: #555; text-decoration: none; }
+  th a:hover { text-decoration: underline; }
+  table.testgrid { border-collapse: collapse; border: 1px solid #CCB; width:950px;}
+  table.testgrid td, table.testgrid th { padding: 5px; border: 1px solid #E0E0E0;}
+  table.testgrid th { background: #E5E5E5; text-align: left;}
+  input.invalid { background: red; color: #FDFDFD; }
 
 .container {
   max-width: 1200px;
@@ -13,13 +13,13 @@
     width: 100%;
 }
 .main-content{
-	padding: 15px 20px;
-	background: #f7f7f7;
-	width: 100%;
-	padding-left:10%;
-	padding-right:10%;
-	border: 1px solid #ddd;
-	z-index: 1;
+  padding: 15px 20px;
+  background: #f7f7f7;
+  width: 100%;
+  padding-left:10%;
+  padding-right:10%;
+  border: 1px solid #ddd;
+  z-index: 1;
 }
 
 /* --------- POPUP ----------- */
@@ -69,20 +69,20 @@
 }
  /* --------- FIN POPUP ----------- */
 
- tr:hover {
-	background-color: #BFDAB3;
-}
+ /*tr:hover {
+  background-color: #BFDAB3;
+}*/
 label {
-	float: left;
+  float: left;
     margin-right: 5px;
     padding-top: 4px;
 }
 .simple-input.search-input {
-	font-size: 115%;
+  font-size: 115%;
 }
 input.invalid {
-	color: #c30202;
-	background: #f7f7f7;
+  color: #c30202;
+  background: #f7f7f7;
 }
 table.testgrid th {
     color: #555;
@@ -92,6 +92,7 @@ table.testgrid th {
     vertical-align: bottom;
     padding: 5px;
     text-align:center;
+    max-width: 1000px;
 }
 table.testgrid td {
   text-align: left;

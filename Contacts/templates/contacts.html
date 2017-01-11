@@ -17,12 +17,18 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts.css'%}">
 
-
+<style type="text/css">
+	td.mousepointer{
+		cursor: pointer;
+	}
+	.testgrid{
+		table-layout: fixed;
+	}
+</style>
 
 <script>
-	window.onload = function() {
+	/*window.onload = function() {
             editableGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "{% static 'img/up.png' %}", sortIconDown: "{% static 'img/down.png' %}"}); 
-
 		// we build and load the metadata in Javascript
 		editableGrid.load({ metadata: [
 			{ name: "student_name", datatype: "string", editable: false },
@@ -34,7 +40,6 @@
 			{ name: "tutor_phone", datatype: "integer", editable: true },
 			{ name: "action", datatype: "html", editable: false }
 		]});
-
 		// then we attach to the HTML table and render it
 		editableGrid.attachToHTMLTable('htmlgrid');
 		editableGrid.addCellValidator("student_phone", new CellValidator({ isValid: function(value) { return value == "" || (parseInt(value) >= 400000000 && parseInt(value) < 999999999); } }));
@@ -49,9 +54,9 @@
 		    }
 		);
 		
-		editableGrid.renderGrid();
+		//editableGrid.renderGrid();
 		resize2();
-	} 
+	} */
 	
 </script>
 
@@ -61,36 +66,34 @@
 
 <br>
 <h1 style="text-align:center;">Contactos</h1>
-<label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
+<!--<label for="searchField">Buscar: </label><input type="text" id="searchField" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>-->
 <br><br>
-<div>
+<!--<div>
 	<div id="Alumnos">Estudiantes</div>
 	<div id="Apoderados">Apoderados</div>
-</div>
+</div>-->
 <table id="htmlgrid" class="testgrid">
 	<tr>
-		<th>Nombre</th>
-		<th>E-Mail</th>
-		<th>Celular</th>
-		<th>Nombre</th>
-		<th>E-Mail</th>
-		<th>Celular</th>
-		<th>Acciones</th>
+		<th colspan="3" style="width: 45%;">Estudiantes</th>
+		<th colspan="3" style="width: 45%;">Apoderados</th>
+	</tr>
+	<tr>
+		<th style="width: 15%;">Nombre</th>
+		<th style="width: 15%;">E-Mail</th>
+		<th style="width: 15%;">Celular</th>
+		<th style="width: 15%;">Nombre</th>
+		<th style="width: 15%;">E-Mail</th>
+		<th style="width: 15%;">Celular</th>
+		<th style="width: 10%;">Acciones</th>
 	</tr>
 	{% for data in datas %}
 	<tr id="R{{ forloop.counter }}">
-		<td onchange="resize2()">{{ data.0.nickname }}</td>
-		<td onchange="resize2()">{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
-		<td id="sPhone{{ forloop.counter }}" onchange="resize2()">
-			{% if not data.0.phone == 0 %}
-			{{ data.0.phone }}
-			{% endif %}
-		</td>
-		<td onchange="resize2()">{{ data.1.name }}</td>
-		<td onchange="resize2()">{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
-		<td onchange="resize2()">{% if not data.0.phone == 0 %}
-			{{ data.1.phone }}
-			{% endif %}</td>
+		<td>{{ data.0.nickname }}</td>
+		<td contenteditable='true' class="mousepointer" onkeyup="validaremail('{{ forloop.counter }}')" id="emailestudiante{{ forloop.counter }}">{% if data.0.email == None %}{{ "" }}{% else %}{{ data.0.email }}{% endif %}</td>
+		<td id="sPhone{{ forloop.counter }}" contenteditable='true' class="mousepointer" onkeyup="validarcelular('{{ forloop.counter }}')">{% if data.0.phone == None %}{{ "" }}{% else %}{{ data.0.phone }}{% endif %}</td>
+		<td contenteditable='true' class="mousepointer">{{ data.1.name }}</td>
+		<td contenteditable='true' class="mousepointer" onkeyup="validaremailapo('{{ forloop.counter }}')" id="emailapoderado{{ forloop.counter }}">{% if data.1.email == None %}{{ "" }}{% else %}{{ data.1.email }}{% endif %}</td>
+		<td id="sPhoneapo{{ forloop.counter }}" contenteditable='true' class="mousepointer" onkeyup="validarcelularapo('{{ forloop.counter }}')">{% if data.1.phone == None %}{{ "" }}{% else %}{{ data.1.phone }}{% endif %}</td>
 		<td class="editablegrid-action" data-title="action" style="width:100px">
 			<a onclick="javascript:saveData({{ forloop.counter }})" style="cursor:pointer; width:100px; height: 32px; padding:8px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
 		</td>
@@ -133,7 +136,7 @@
 </div> <!-- cerrar div principal del home  -->
 
 <script>
-function resize2(){
+/*function resize2(){
 	window.setTimeout(function(){
 		var a = $("th.editablegrid-student_name").width();
 		var b = $("th.editablegrid-student_email").width();
@@ -146,7 +149,7 @@ function resize2(){
 		$("#Apoderados").width(d+e+f+g+46);
 	},50);
 	
-}
+}*/
 function reloadPage(){
 	setTimeout(function(){
 		$('.response').fadeOut();
@@ -158,7 +161,54 @@ function reloadPage(){
 	}, 1000); 
 	
 }
-
+function validaremail(cont){
+	var ee = $('td#emailestudiante'+cont+'').text();
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	if (re.test(ee) & ee.length<254){
+		$('td#emailestudiante'+cont+'').css('color', '#000000');
+	}
+	else{
+		$('td#emailestudiante'+cont+'').css('color', '#C30202');
+	}
+}
+function validaremailapo(cont){
+	var ee = $('td#emailapoderado'+cont+'').text();
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	if (re.test(ee) & ee.length<254){
+		$('td#emailapoderado'+cont+'').css('color', '#000000');
+	}
+	else{
+		$('td#emailapoderado'+cont+'').css('color', '#C30202');
+	}
+}
+function validarcelular(cont){
+	var ce = $('td#sPhone'+cont+'').text();
+	if (ce>=400000000 & ce<=999999999){
+		if(ce.match(/^\d+$/)){
+			$('td#sPhone'+cont+'').css('color', '#000000');
+		}
+		else{
+			$('td#sPhone'+cont+'').css('color', '#C30202');
+		}
+	}
+	else{
+		$('td#sPhone'+cont+'').css('color', '#C30202');
+	}
+}
+function validarcelularapo(cont){
+	var ce = $('td#sPhoneapo'+cont+'').text();
+	if (ce>=400000000 & ce<=999999999){
+		if(ce.match(/^\d+$/)){
+			$('td#sPhoneapo'+cont+'').css('color', '#000000');
+		}
+		else{
+			$('td#sPhoneapo'+cont+'').css('color', '#C30202');
+		}
+	}
+	else{
+		$('td#sPhoneapo'+cont+'').css('color', '#C30202');
+	}
+}
 function saveData(id){
 	$("#acceptSave").remove();
 	$("#cancelSave").remove();
@@ -182,14 +232,11 @@ function saveData(id){
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 	}
-
 }
-
 function confirmSave(answer,id){
 	if (answer==1){
 		tr = $(document.getElementById("R"+id));
 		var tdJson = new Object();
-
 				tdJson.studentName= tr["context"]["children"][0].textContent;
 				tdJson.studentEmail= tr["context"]["children"][1].textContent;
 				tdJson.studentPhone= tr["context"]["children"][2].textContent;
@@ -222,7 +269,6 @@ function confirmSave(answer,id){
 		$("#popup").fadeOut(750);
 	}
 }
-
 $(document).ready(function(){
 	  
 	  //chiusura al click sulla parte scura
@@ -249,7 +295,6 @@ $(document).ready(function(){
 		float:left;
 		text-align: center;
 	}
-
 </style>
 
 {% endblock %}

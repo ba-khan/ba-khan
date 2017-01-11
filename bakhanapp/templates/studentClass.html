@@ -10,15 +10,10 @@
 {% endblock %}
 
 {% block body2 %}	
-<script src="{% static 'highcharts/highcharts.js'%}"></script>
-<script src="{% static 'highcharts/highcharts-more.js'%}"></script>
-<script src="{% static 'highcharts/modules/exporting.js'%}"></script>
 <style>
-
 	tr:hover {
 		background-color: #BFDAB3; /* resaltar filas */
 	}
-
 #box2000 > div
 {
     -webkit-transition: width 0.2s ease; 
@@ -183,7 +178,6 @@
 	          rightY = centerY - this.radius * Math.sin(thetaRad + Math.PI / 2);
 	          return "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
 	        };
-
 	        function Needle(el,id) {
 	          
 	          this.el = el;
@@ -191,21 +185,17 @@
 	          this.len = 24;//width / 3;
 	          this.radius = 4;//this.len / 6;
 	        }
-
 	        Needle.prototype.render = function() {
 	          this.el.append('circle').attr('class', 'needle-center').attr('cx', 0).attr('cy', 0).attr('r', this.radius);
 	          return this.el.append('path').attr('class', 'needle').attr('d', recalcPointerPos.call(this,0));
 	        };
-
 	        Needle.prototype.moveTo = function(perc) {
 	          var self,
 	              oldValue = this.perc || 0;
-
 	          this.perc = perc;
 	          self = this;
 	          
 	          var id=this.id;
-
 	          // Reset pointer position
 	          this.el.transition().delay(100).ease('quad').duration(200).select('.needle').tween('reset-progress', function() {
 	            return function(percentOfPercent) {
@@ -214,7 +204,6 @@
 	              return d3.select(this).attr('d', recalcPointerPos.call(self, progress));
 	            };
 	          });
-
 	          this.el.transition().delay(300).ease('bounce').duration(1500).select('.needle').tween('progress', function() {
 	            return function(percentOfPercent) {
 	              var progress = percentOfPercent * perc;
@@ -239,7 +228,6 @@
   	    	$("#popup_evaluacion").fadeOut();
   	    	$("#popup_error").fadeOut();
   	    	showResumenSkills(true);
-
   	    });
   	  	$("#close").click(function(){
   	  		showResumenSkills(true);
@@ -266,7 +254,6 @@
   	  				return tot+" de "+tot;
   	  			})
   	  			d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
-  	  				console.log("total");
   	  				return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
   	  			});
   	  		}else{
@@ -295,7 +282,6 @@
   		
   		
 	});
-
 	var json = JSON.parse('{{ jason_data | escapejs }}');
 	var students = json.students;
 	var assesments=json.assesments;
@@ -332,12 +318,10 @@
 			students[i]['average']=(average);
 		}
 	}
-
 	//Sort assesments array by their creation date
 	assesments.sort(function(a, b) {
     	return parseInt(b.id) - parseInt(a.id);
 	});
-
 	var data = [];
 	data.push(students);
     // column definitions
@@ -351,10 +335,8 @@
         { head: 'Habilidades', cl: 'skills_level', values: d3.f('skills_level'), type:'numeric'},
         //{ head: 'Evaluacion1', cl: 'assesment', id: 'tooltip', tooltip: '{% for assesment_config in assesment_configs %}{{ "Nombre: " }}{{ assesment_config.name }}{{ "<hr style=margin: 0>% aprobacion: " }}{{ assesment_config.approval_percentage }}{{ "<hr style=margin: 0>Puntaje maximo: " }}{{ assesment_config.top_score }}{% endfor %}', value: d3.f('evaluacion')}//, html: d3.f('evaluacion') },
     ];
-
     columns.push({head: 'Promedio', cl: 'averages', value: d3.f('averages'), html: d3.f('average'), type:'numeric'})
     //data.push(assesments[0]["assesment_student"]);
-
     for (i=0; i<json["assesments"].length; i++){
     	var class_id="assesment"+json["assesments"][i]["id"];
     	columns.push({head_assesment: json["assesments"][i]["name"], column: i, cl: class_id, value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})
@@ -373,7 +355,6 @@
 	var barWidth, chart, chartInset, degToRad, repaintGauge,
 	    height, margin, numSections, padRad, percToDeg, percToRad, 
 	    percent, radius, sectionIndx, svg, totalPercent, width;
-
     percent = .75;
 	numSections = 1;
 	sectionPerc = 1 / numSections / 2;
@@ -416,7 +397,6 @@
         
     //create button new evaluation    
     table.append('caption').text('{% for class in classroom %}{{ class.level }} {{ class.letter }}').text(' Nueva Evaluación{% endfor %}')
-
     // create table header
     table.append('thead').append('tr')
         .selectAll('th')
@@ -450,7 +430,6 @@
     $(".arrow-down.skills_time").attr("column",function(){
         return $("th.skills_time").index();
     });
-
 	table.select('th.videos_time').append('div')
 		.attr("class","sort-div")
 		.html(function (d){ return '<div class="arrow-up videos_time" name="'+d.cl+'"></div> <div class="arrow-down videos_time" name="'+d.cl+'"></div>'});
@@ -461,7 +440,6 @@
     $(".arrow-down.videos_time").attr("column",function(){
         return $("th.videos_time").index();
     });
-
     table.select('th.recommendations').append('div')
     		.attr("class","sort-div")
     		.html(function (d){ return '<div class="arrow-up recommendations" name="'+d.cl+'"></div><div class="arrow-down recommendations" name="'+d.cl+'"></div>'});
@@ -509,19 +487,16 @@
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="editButton" title="Editar" onClick="isEvaluation('+number_class_id+')"></button><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button><button type="button" class="excelButton" title="Descargar" onClick="generateExcel('+number_class_id+')"></button>')
-
 			endDates.push(endDate)
     		   		
     		table.select('th.'+class_id)
     		.append('span')
     		.attr("class","counter")
     		.attr("id","cntdwn"+i);
-
     		table.select('th.'+class_id)
     		.append('div')
     		.attr("class","ribbon")
     		.attr("id","ribbon"+i).html("<span>En Curso</span>");
-
     		
     	}
     	else if (todayDate<endDate){
@@ -529,14 +504,12 @@
     		.append('div')
     		.attr('class',"buttonsES")
     		.html('<button type="button" class="showButton" title="Ver Evaluación" onClick="showEvaluation('+number_class_id+')"><button type="button" class="summaryButton" title="Resumen" onClick="resumenAssesment('+number_class_id+')"></button><button type="button" class="excelButton" title="Descargar" onClick="generateExcel('+number_class_id+')"></button>')
-
 			endDates.push(endDate)
     		   		
     		table.select('th.'+class_id)
     		.append('span')
     		.attr("class","counter")
     		.attr("id","cntdwn"+i);
-
     		table.select('th.'+class_id)
     		.append('div')
     		.attr("class","ribbon")
@@ -565,7 +538,6 @@
     $(".arrow-up.assesment").attr("column",function(){
 		var assesment_name = $(this).attr("name");
 		return $("th."+assesment_name).index();
-
 	});
 	$(".arrow-down.assesment").attr("column",function(d){
 		var assesment_name = $(this).attr("name");
@@ -605,11 +577,9 @@
 	        .attr("href","/mantisbt/login_select_proj_page.php?ref=bug_report_page.php")
 	        .attr("target","_blank")
 	        .text("Reportar problemas"); 
-
 //*******************************************************************************************************************************
 //**************** d3 end generation main ***************************************************************************************
 //*******************************************************************************************************************************
-
     var dataIndex = 0;
     var backgroundJobs = data[dataIndex];
     
@@ -648,7 +618,6 @@
     
     
     var changeData = function (dataIndex , assesment) {
-
  		var idSelectedAssesment=dataIndex+1;
     	if (!selectedAssesment){ // Seleccionando una evaluación
     		$(".assesment kui-button-plain kui-button kui-button-primary assesmentButton").css("background-color","");
@@ -774,7 +743,6 @@
         tick_update();
     }
     
-
     /////////// escala de skill_levels de jordan y tu
     var skill_levels_scaling=d3.scale.linear()
 	.domain([0,d3.max(students,function(d){
@@ -787,7 +755,6 @@
 			return total_skills;
 		})])
 		.range([0,120]);
-
 	//skills_level_colors = ["#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
 	skills_level_colors = ["#C30202","#9CDCEB", "#58C4DD", "#29ABCA", "#1C758A"];
 	
@@ -803,26 +770,22 @@
 		var approveColor = d3.scale.linear()
 	  .domain([4.0,7.0])//d3.range(4,7, 3.0 / (approveColors.length - 1)))
 	  .range(approveColors);*/
-
     
 	/////////////// parte principal para dibujar la tabla //////////////////////////////  
 	table.append('tbody');
     
     var tbody = d3.select('tbody');
-
     function tick() {
     	
         var rows = tbody.selectAll("tr")
     	.data(backgroundJobs, function(d) {
     	    return d.name;
     	});
-
     	rows.enter()
     		.append("tr");
     	//rows.transition().sort(function (a, b) { return a == null || b == null ? 0 : stringCompare(a[attrName], b[attrName]); });
         
         //rows.order();
-
         var cells = rows.selectAll("td")
     		.data(function(row,i) {
     			return columns.map(function(c) {
@@ -834,7 +797,6 @@
 	                return cell;
     			});
     		});
-
     	cells.enter()
     		.append("td").html(d3.f('html'))
 	        .attr('class', d3.f('cl'))
@@ -860,12 +822,10 @@
     	.data(backgroundJobs, function(d) {
     	    return d.name;
     	});
-
     	/*rows.enter()
     		.append("tr");
         
         rows.order();*/
-
         var cells = rows.selectAll("td")
     		.data(function(row,i) {
     			return columns.map(function(c) {
@@ -896,6 +856,8 @@
        svg.select("text.incorrect");
        svg.select("rect.correct");
        svg.select("text.correct");
+       svg.select("rect.totalskill");
+       svg.select("text.totalskill");
        
        //Update data of skill level d3 bars
        //svg.select("rect.skills_level");
@@ -985,7 +947,6 @@
     		.transition().duration(750)
     		//.attr("x", function(d) { return escalarTiemposVideo(d.value)+5; })
     		.text(function(d) { return d.valueF });
-
 	}
     
     function drawCorrectIncorrect(){
@@ -1005,7 +966,6 @@
 		      .attr("x", function(d) { return 60-escalarCorrectIncorrect(d.values["incorrect"]); })
 		      .attr("width", function(d){return escalarCorrectIncorrect(d.values["incorrect"]); })
 	    	  .style("fill","#C30202");
-
 	    correct_incorrect
 	    	.append("text")
 	    	.attr("class","incorrect")
@@ -1043,11 +1003,10 @@
 		
 		//Sorting by the total of exercises done is default
 	  		d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values["correct"]+d.values["incorrect"];});
-
 	  	//Add Total (correct + incorrect) to the table
 	  	correct_incorrect
 	    	.append("text")
-	    	.attr("class","correct")
+	    	.attr("class","totalskill")
 		    .attr("x", 43)//function(d) { return 93+escalarCorrectIncorrect(d.values[0])})
 		    .attr("y", 35)
 		    .attr("dy", ".35em")
@@ -1056,7 +1015,6 @@
 		    .text(function(d) { 
 		    	total = parseInt(d.values["correct"]) + parseInt(d.values["incorrect"])
 		    	return "Total: "+ total });
-
 		
 		//Sorting by the total of exercises done is default
 	  		d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values["correct"]+d.values["incorrect"];});
@@ -1067,9 +1025,9 @@
 	    	  .transition().duration(750)
 	    	  .attr("x", function(d) { return 60-escalarCorrectIncorrect(d.values["incorrect"]); })
 		      .attr("width", function(d){return escalarCorrectIncorrect(d.values["incorrect"]); });
-
 	    var incorrect_texts = tbody.selectAll("text.incorrect")//correct_incorrect
-	    	.text(function(d) { return "I:"+d.values["incorrect"] })
+	    	.text(function(d) { 
+	    		return "I:"+d.values["incorrect"] })
 		    .transition().duration(750)
 	    	.attr("transform",function(d){
 				var textWidth = d3.select(this).node().getBBox().width;
@@ -1089,6 +1047,11 @@
 	  		}else{
 	    	d3.selectAll("td.exercises").attr("data-sortAs",function(d){return d.values[sortingCriterion];})
 	  		}
+	  	var correct_incorrect = tbody.selectAll("text.totalskill")
+		    .text(function(d) { 
+		    	total = parseInt(d.values["correct"]) + parseInt(d.values["incorrect"])
+		    	//console.log(total);
+		    	return "Total: "+ total });
 	}
     
     
@@ -1128,7 +1091,6 @@
 		      .attr('y',12)
 		      .attr('height', "20px")
 		      .style('fill', function(d, i){ return skills_level_colors[i]; });
-
 		       $("svg.skills_level").tipsy({ 
 				        gravity: $.fn.tipsy.autoNS,
 				        opacity: 1,
@@ -1139,7 +1101,6 @@
 				          return tooltp
 				        }
 				    });
-
 		      	$("svg.recommendations").qtip({ 
 		      		content: function() {
 				        	var b = $(this).prop("__data__");
@@ -1186,9 +1147,7 @@
 					          		tooltp = tooltp+"<li style='text-align:left;'><label style='color:red; font-weight:bold; font-size:125%; float:left;margin-right:8px; margin-left:2px'>X</label>"+allSkills[k][0]+"</li>"
 					          	}
 				          	}
-
 				          	tooltp = tooltp + '</ul>';
-
 				          return tooltp
 				    },
                     */
@@ -1219,7 +1178,6 @@
 	    d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
   			return d.values["mastery3"]+d.values["mastery2"]+d.values["mastery1"]+d.values["practiced"]+d.values["struggling"];
   		});
-
   		//d3.selectAll("svg.skills_level")
 	    skill_levels
 	    	.append("text")
@@ -1261,14 +1219,14 @@
 		          return skill_levels_scaling(d.value);})
 		      .attr('x',function(d, i){
 		          return skill_levels_scaling(d.prev_value);});
-
 		var skill_levels = tbody.selectAll("svg.skills_level")
 			.select("text")
 	    	.transition().duration(750)
 		    .text(function(d) {
 		    	var new_data = new_data=this.parentNode.__data__;
-		    	return new_data.values["mastery3"]+new_data.values["mastery2"]+new_data.values["mastery1"]+new_data.values["practiced"]+new_data.values["struggling"]});
-
+		    	var total = new_data.values["mastery3"]+new_data.values["mastery2"]+new_data.values["mastery1"]+new_data.values["practiced"]+new_data.values["struggling"];
+		    	return total+" de "+total;
+		    });
 	    var sortingCriterion = $("select.skills_level").val();
 	  		if (sortingCriterion =="total"){	
 	  			d3.selectAll("td.skills_level").attr("data-sortAs",function(d){
@@ -1302,7 +1260,6 @@
 		approveColor[assesment_num_id] = d3.scale.linear()
 		  .domain([approval_grade,max_grade])//d3.range(4,7, 3.0 / (approveColors.length - 1)))
 		  .range(approveColors);
-
     	var assesments_svg = tbody.selectAll("td.assesment"+json["assesments"][i]["id"]).attr("class","assesment assesment"+json["assesments"][i]["id"])
 	    	.append("svg")
 	    	.attr("class","assesment assesment"+json["assesments"][i]["id"])
@@ -1354,7 +1311,6 @@
     				//console.log(d.value.grade + d.value.bonus_grade);
     				//console.log('entro en else');
     			}
-
     			if ((d.value.grade + d.value.bonus_grade + d.value.teacher_grade)>max_grade){
     				$('#final').val(max_grade);
     				//console.log('entro en if');
@@ -1370,7 +1326,6 @@
     			$("#hover").fadeIn().css('display', '');
     			$("#popup").fadeIn().css('display', '');
     			//autoCalculateGrade();
-
     		});
     	
     	
@@ -1414,7 +1369,6 @@
     			var textWidth = d3.select(this).node().getBBox().width;
 				return "translate("+(-(textWidth/2))+",0)";
     	});
-
 	      $("circle."+assesment_id).qtip({
              content: function() {
 	          var d = $(this).prop("__data__");
@@ -1479,15 +1433,12 @@
 	function percToDeg(perc) {
 	    return perc * 360;
 	};
-
 	function percToRad(perc) {
 	    return degToRad(percToDeg(perc));
 	};
-
 	function degToRad(deg) {
 	    return deg * Math.PI / 180;
 	};
-
 	
 	/////////////// dibujar al principio ///////////////////
     tick();
@@ -1521,7 +1472,6 @@
 	    	arcStartRad = percToRad(next_start);
 	    	arcEndRad = arcStartRad + percToRad(perc / 2);
 	    	next_start += perc / 2;
-
 	  	    var arc1 = d3.svg.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
 	  	    arc1.startAngle(arcStartRad).endAngle(arcEndRad);
 	  	    console.log(arc1);
@@ -1572,7 +1522,6 @@
     			d3_needle.moveTo(completed_perc);
 	    		d3_needles.push(d3_needle);
     		});
-
  		
     }
 	
@@ -1596,7 +1545,6 @@
     			d3.select("#chart-empty"+i).transition().delay(300).ease('bounce').duration(1500).attr("d",arc2_array[i]);
     			d3_needles[i].moveTo(completed_perc);
     		});
-
  		
     }
     
@@ -1623,7 +1571,6 @@
 		//console.log(tbody.selectAll("td.recommendations"));
     	tbody.selectAll("td.recommendations").attr("data-sortAs",function(d){return d.values.completed_perc;});
     }
-
     function recalcPointerPos(len,radius,perc) {
           var centerX, centerY, leftX, leftY, rightX, rightY, thetaRad, topX, topY;
           thetaRad = percToRad(perc / 2);
@@ -1657,22 +1604,18 @@
 			d3.select("#chart-filled"+i).attr("d",arc1_array[i]);
 			d3.select("#chart-empty"+i).attr("d",arc2_array[i]);
     }
-
     function percentile(arr, p) {
 	    if (arr.length === 0) return 0;
 	    if (typeof p !== 'number') throw new TypeError('p must be a number');
 	    if (p <= 0) return arr[0];
 	    if (p >= 1) return arr[arr.length - 1];
-
 	    var index = arr.length * p,
 	        lower = Math.floor(index),
 	        upper = lower + 1,
 	        weight = index % 1;
-
 	    if (upper >= arr.length) return arr[lower];
 	    return arr[lower]; //* (1 - weight) + arr[upper] * weight;
 	}
-
     function drawSkillsBoxPlot(skill_levels,skill_names){
     	var textSkillLevels = ["No practicado","En dificultades","Practicado","Nivel 1","Nivel 2","Dominado"];
     	//console.log(skill_names);
@@ -1683,26 +1626,21 @@
     		skill_names[i]=skill_names[i].substring(0,10);
     	}*/
     	$('#skills_boxplot').highcharts({
-
 	        chart: {
 	            type: 'boxplot'
 	        },
-
 	        title: {
 	            text: 'Habilidades practicadas'
 	        },
-
 	        legend: {
 	            enabled: false
 	        },
-
 	        xAxis: {
 	            categories: skill_names,
 	            title: {
 	                text: 'Habilidad'
 	            }
 	        },
-
 	        yAxis: {
 	            title: {
 	                text: 'Nivel alcanzado'
@@ -1715,7 +1653,6 @@
 		        tickInterval: 1,
 		        max: 5
 	        },
-
 	        series: [{
 	            name: 'Niveles',
 	            data: skill_levels,
@@ -1723,26 +1660,20 @@
 	                headerFormat: '<em>Habilidad: {point.key}</em><br/>'
 	            }
 	        }]
-
 	    });
     }
-
-
     function drawHistogram(min_grade, max_grade, grades, bins){
 			
 			var values = grades;
 			
 			// Formatters for counts and times (converting numbers to Dates).
 			var formatCount = d3.format(",.0f");
-
 			var margin = {top: 15, right: 10, bottom: 25, left: 10},
 			    widthg = 480 - margin.left - margin.right,
 			    heightg = 200 - margin.top - margin.bottom;
-
 			var x = d3.scale.linear()
 			    .domain([min_grade,max_grade])
 			    .range([0, widthg]);
-
 			// Generate a histogram using user-specified uniformly-spaced bins.
 			var dataHistogram = d3.layout.histogram()
 			    .bins(x.ticks(bins))
@@ -1751,30 +1682,25 @@
 			var y = d3.scale.linear()
 			    .domain([0, d3.max(dataHistogram, function(d) { return d.y; })])
 			    .range([heightg,0]);
-
 			var xAxis = d3.svg.axis()
 			    .scale(x)
 			    .orient("bottom");
 			    //.tickFormat(formatMinutes);
-
 			var svg = d3.select("#resumen_graph").append("svg")
 			    .attr("width", widthg + margin.left + margin.right)
 			    .attr("height", heightg + margin.top + margin.bottom)
 			  .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 			var bar = svg.selectAll(".bar")
 			    .data(dataHistogram)
 			  .enter().append("g")
 			    .attr("class", "bar")
 			    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-
 			bar.append("rect")
 			    .attr("x", (widthg + margin.left + margin.right)/100)
 			    .attr("width", (widthg + margin.left + margin.right)/bins - 15)//x(dataHistogram[0].dx) - 1)
 			    //.attr("height", function(d) { console.log(y(d.y));return heightg - y(d.y); });
 			    .attr("height", function(d) { return heightg - y(d.y); });
-
 			bar.append("text")
 			    .attr("dy", "-0.75em")
 			    .attr("y", 6)
@@ -1788,12 +1714,10 @@
 			    		return formatCount(d.y); 
 			    	}
 			    });
-
 			svg.append("g")
 			    .attr("class", "x axis")
 			    .attr("transform", "translate(0," + heightg + ")")
 			    .call(xAxis);
-
 	}
 		
 		function noEvaluarTodos(){
@@ -1822,20 +1746,16 @@
 	        e.dataTransfer.setDragImage(e.target, 0, 0); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
 	        e.target.style.opacity = '0.4'; 
 	    };
-
 	    function end(e){
 	        e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
 	        e.dataTransfer.clearData("Data");
 	    };
-
 	    function enter(e) {
 	        e.target.style.border = '3px dotted #555'; 
 	    };
-
 	    function leave(e) {
 	        e.target.style.border = ''; 
 	    };
-
 	    function over(e) {
 	        var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
 	        var id = e.target.id; // Elemento sobre el que se arrastra
@@ -1844,26 +1764,20 @@
 	        if (id == 'sinEvaluar'){
 	            return false; // Cualquier elemento se puede soltar sobre el div destino 1
 	        }
-
 	        if (id == 'Evaluados'){
 	            return false; // En el Evaluados se puede soltar cualquier elemento menos el elemento con id=arrastrable3
 	        }   
 	    };
-
 	    function drop(e){
-
 	        var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
 	        e.target.appendChild(document.getElementById(elementoArrastrado));
 	        e.target.style.border = '';  // Quita el borde
 	        tamContX = $('#'+e.target.id).width();
 	        tamContY = $('#'+e.target.id).height();
-
 	        tamElemX = $('#'+elementoArrastrado).width();
 	        tamElemY = $('#'+elementoArrastrado).height();
-
 	        posXCont = $('#'+e.target.id).position().left;
 	        posYCont = $('#'+e.target.id).position().top;
-
 	    }
 		
 		function fillParameters(id) {
@@ -1978,7 +1892,6 @@
 			}
 			return flag
 		}
-
 		function validarRealizarEvaluacion(){
 			$("#botonesEvaluacion").hide();			
 			input_name = document.getElementById("input_nombre").value;
@@ -2013,7 +1926,6 @@
 			}
 			return flag;
 		}
-
 		var normalize = (function() {
 		  var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç", 
 		      to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
@@ -2035,7 +1947,6 @@
 		  }
 		 
 		})();
-
 		function NombrePrueba(){
 			var assesmentNames = []
 	  	  	for (i=0;i<assesments.length;i++){
@@ -2060,7 +1971,6 @@
 			$("input").css('pointer-events','none');
 			$("button").css('pointer-events','none');
 			$("img").css('pointer-events','none');
-
 			var comentario = $('#textarea_coment').val()
 			$("input[name='input_comment']").val(comentario)
 			$.ajax({
@@ -2253,8 +2163,6 @@
 			$("#flechaNinguno").attr('onClick','disabled');
 			$("input[name='fecha_termino']").attr('onchange', '');
 			$("input[name='fecha_termino']").attr('onkeyup', '');
-
-
 		}
 		function editAssesment(id_assesment){	
 			$("#flechaTodos").attr('onClick','EvaluarTodos()');
@@ -2359,7 +2267,6 @@
     			$("#popupEvaluacion").append("<p>Datos mal ingresados o incompletos, revise los campos incompletos o en color <strong><font color='#C30202'>rojo</font></strong></p>");
     			$("#popup_error").fadeIn().css('display', '');
 			}
-
 		}
 		function Loading(){
 			$("#popup_evaluacion").show();
@@ -2397,7 +2304,6 @@
 				$("#resumenSkills").show();
 			};
 		};
-
 		function resumenAssesment(id_assesment){
 			$("#hover").fadeIn().css('display', '');
 		    $("#popup_resumen").fadeIn().css('display', '');
@@ -2444,9 +2350,7 @@
 					}
 				}
 			};
-
 			
-
 			//student=assesments[aux]['assesment_student']
 			$('#resumen_data').append("<p><strong> Nombre:</strong> "+assesments[aux]['name']+" </p>");
 			$('#resumen_data').append("<p><strong> Inicio:</strong> "+assesments[aux]['start_date']+" </p>");
@@ -2469,10 +2373,8 @@
 					//console.log(students[k]['assesment'+id_assesment]['grade']+students[k]['assesment'+id_assesment]['bonus_grade']+students[k]['assesment'+id_assesment]['teacher_grade']);
 				}
 			}
-
 			/*
 			Tooltip para las habilidades en la lupita
-
 			$("#qtipSkills").qtip({ 
 	      		content: function() {
 	      			tooltp ="";
@@ -2572,10 +2474,7 @@
 			//deciles(grade_order,assesments[aux]['min_grade'],assesments[aux]['max_grade'])
 			$('.highcharts-button').css('visibility','hidden');
 			$('text:contains("Highcharts.com")').css('visibility','hidden');	
-
-
 		}
-
 		function deciles(arg_grade,min,max){
 			arg_grade=arg_grade.sort();
 			decil = (arg_grade.length)/10
@@ -2655,75 +2554,61 @@
 			//testGraphic();
 			//makeGraphic();
 		}
-
 /*function makeGraphic(){
 			// Generate a Bates distribution of 10 random variables.
 			// Generate a log-normal distribution with a median of 30 minutes.
 var values = d3.range(1000).map(d3.random.logNormal(Math.log(30), .4));
-
 // Formatters for counts and times (converting numbers to Dates).
 var formatCount = d3.format(",.0f"),
     formatTime = d3.time.format("%H:%M"),
     formatMinutes = function(d) { return formatTime(new Date(2012, 0, 1, 0, d)); };
-
 var margin = {top: 10, right: 30, bottom: 30, left: 30},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
-
 var x = d3.scale.linear()
     .domain([0, 120])
     .range([0, width]);
-
 // Generate a histogram using twenty uniformly-spaced bins.
 var data = d3.layout.histogram()
     .bins(x.ticks(20))
     (values);
-
 var y = d3.scale.linear()
     .domain([0, d3.max(data, function(d) { return d.y; })])
     .range([height, 0]);
-
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
     .tickFormat(formatMinutes);
-
 var svg = d3.select("#resumen_graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 var bar = svg.selectAll(".bar")
     .data(data)
   .enter().append("g")
     .attr("class", "bar")
     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-
 bar.append("rect")
     .attr("x", 1)
     .attr("width", x(data[0].dx) - 1)
     .attr("height", function(d) { return height - y(d.y); });
-
 bar.append("text")
     .attr("dy", ".75em")
     .attr("y", 6)
     .attr("x", x(data[0].dx) / 2)
     .attr("text-anchor", "middle")
     .text(function(d) { return formatCount(d.y); });
-
 svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
     .call(xAxis);
-
 		}*/
 		
 		
 	</script>
 
 <script language="JavaScript" type="text/javascript">
-
 cntdwns = document.getElementsByClassName("counter");
 for (var i = cntdwns.length - 1; i >= 0; i--) {
 	StartCountDown(cntdwns[i].id,endDates[i])
@@ -2766,7 +2651,6 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
       document.getElementById(myDiv).innerHTML = "Evaluación Lista";
     }
   }
-
   function showDiv(){
   	if( !($('#contenido_a_mostrar').is(":visible")) ){
     	$('#contenido_a_mostrar').toggle('blind',1000)
@@ -2813,8 +2697,6 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
   	//	$('#final').val(sugerida);
   	//}
   }
-
-
 </script>
 
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
@@ -2838,7 +2720,6 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     		$(texts[i]).attr('dx','12');
     	}
     }
-
     $(".SE").tipsy({ 
 	        gravity: $.fn.tipsy.autoNS,
 	        opacity: 1,
@@ -2847,9 +2728,6 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
 	          return '<ul><li>Estudiante sin evaluar</li></ul>';
 	        }
 	      });
-
-
-
     for (i=0; i<assesments.length; i++){
     	aux="assesment"+assesments[i]["id"];
     	name=assesments[i]["config_name"];
@@ -2879,12 +2757,9 @@ for (var i = cntdwns.length - 1; i >= 0; i--) {
     	Puntaje máximo: "+json["assesments"][i]["top_score"]+"<hr style=margin: 0>
     	Nota máxima: "+json["assesments"][i]["max_grade"]+"<hr style=margin: 0>
     	Nota mínima: "+json["assesments"][i]["min_grade"], value: d3.f(class_id), type:'numeric'})//html: d3.f('evaluacion')})*/
-
     }
    
-
 $('#breadcrumb').html('Curso / {{ spanish_classroom }}')
-
 function generateExcel(id_assesment){
 	window.location = "/inicio/cursos/generateAssesmentExcel/"+id_assesment;
 	
@@ -2893,7 +2768,6 @@ function generateClassExcel(id_class){
 	window.location = "/inicio/cursos/generateClassExcel/"+id_class;
 	
 }
-
 $("#nMinTooltip").tipsy({ 
 	        gravity: 'w',
 	        opacity: 1,
@@ -2942,9 +2816,7 @@ $("#fTerTooltip").tipsy({
 	          return '<label>Fecha en que termina la evaluación. (Debe ser mayor a la fecha de inicio y a la fecha de hoy)</label>';
 	        }
 	      });
-
 /*fin*/
 </script>
 
 {% endblock %}
-

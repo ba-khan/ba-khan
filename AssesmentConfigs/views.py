@@ -15,10 +15,9 @@ from bakhanapp.models import Assesment_Skill,Class_Subject
 register = template.Library()
 
 from bakhanapp.models import Skill
-from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile, Administrator
+from bakhanapp.models import Assesment_Config,Subtopic_Skill,User_Profile
 from bakhanapp.views import getTopictree
 import json
-from configs import timeSleep
 
 
 ##-------------------------------------------------------------------------------
@@ -31,7 +30,7 @@ from configs import timeSleep
 ##
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
-    request.session.set_expiry(timeSleep)#5 minutos de inactividad
+    request.session.set_expiry(300)#5 minutos de inactividad
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid).order_by('-id_assesment_config')
 
     json_array=[]
@@ -57,12 +56,9 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["config_skills"]=[]
         for i in range(len(assesment_skills)):
             #print config_skills[i]
-            #print assesment_skills[i]['id_skill_name_id']
             skills = Skill.objects.filter(id_skill_name=assesment_skills[i]['id_skill_name_id']).values('name_spanish')
-            #print "abajo esta skills"
-            #print skills
-            #print "arriba esta skills"
             config_json["assesment_skills"].append(assesment_skills[i])
+            #config_json["assesment_skills_spanish"].append(skills[i])
             config_json["assesment_skills_spanish"].append(skills[0]['name_spanish'])
             #config_json["config_skills"].append(config_skills[i])
         for j in range(len(config_skills)):
@@ -75,7 +71,7 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_data = json.dumps(json_dict)
     #print (json_data)
     topictree= getTopictree('math')
-    if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+    if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False
