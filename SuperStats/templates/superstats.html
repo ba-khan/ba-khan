@@ -3061,6 +3061,8 @@ function graficar(json, clase){
   }
   
   if(serietpo.length>0){
+    $('hr#soloestudiantes').show();
+    $('select#ordenartot3').show();
     $(function () {
     Highcharts.setOptions({
           lang:{
@@ -3264,7 +3266,6 @@ function graficar(json, clase){
   
 
   if (distxnivelejer.length>0){
-    console.log(distxnivelejer);
     $(function () {
     Highcharts.setOptions({
           lang:{
@@ -3612,8 +3613,9 @@ function graficar(json, clase){
   });
   }
   
-
-  $(function () {
+  if (serievid.length>0){
+    $('select#ordenarvid3').show();
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3684,14 +3686,14 @@ function graficar(json, clase){
                 }
             },
             tooltip: {
-            pointFormat: pointarraytv
+            pointFormat: pointarraytvest
             }
         }],
         drilldown: {
             series: serievid
           }
     });
-      function sortTotal(valor){
+    function sortTotal(valor){
       //aqui va algo
       if (valor=="0"){
         arraytv.sort(function(a,b){
@@ -3740,6 +3742,80 @@ function graficar(json, clase){
       chart.series[0].update(retorno);
     })
   });
+  }
+  else{
+    $('select#ordenarvid3').hide();
+    $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+      var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containervid',
+            type: 'column',
+        },
+        title: {
+            text: 'Tiempo de videos'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                //text: 'Tiempo (segundos)'
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        //colors: colorcolumn,
+        series: [{
+            name: 'Cursos',
+            data: arraytv,
+            colorByPoint: true,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                //color: 'KhanBlue',
+                align: 'right',
+                //format: '{point.y:,.0f}', // one decimal
+                format: '{point.y:,.0f}',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            },
+            tooltip: {
+            pointFormat: pointarraytvest
+            }
+        }]
+    });
+});
+  }
+  
+      
 
   if (distxnivelvid.length>0){
     $(function () {
@@ -4089,8 +4165,9 @@ function graficar(json, clase){
   });
   }
   
-
-  $(function () {
+  if (serie.length>0){
+    $('#ordenarcant3').show();
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -4159,7 +4236,7 @@ function graficar(json, clase){
                 }
             },
             tooltip: {
-              pointFormat: pointarraycant
+              pointFormat: pointarraycantest
             },
         }],
         drilldown: {
@@ -4214,6 +4291,76 @@ function graficar(json, clase){
       chart.series[0].update(retorno);
     })
   });
+  }
+  else{
+    $('#ordenarcant3').hide();
+    $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}",
+        }
+      });
+    var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containertot',
+            type: 'column'
+        },
+        title: {
+            text: 'Cantidad de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Cantidad (ejercicios)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        //colors: colorcolumn,
+        series: [{
+            name: 'Cursos',
+            data: arraycant,
+            colorByPoint: true,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                //color: 'KhanBlue',
+                align: 'right',
+                format: '{point.y:,.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            },
+            tooltip: {
+              pointFormat: pointarraycantest
+            },
+        }]
+    });
+  }
+  
 
   if (distxnivel.length>0){
     $(function () {
