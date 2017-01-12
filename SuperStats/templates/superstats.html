@@ -8155,8 +8155,9 @@ function graficarcompara(json, clase){
       }
     }
   }
-
-  $(function () {
+  if (json["clases"]){
+    $('hr#soloestudiantes').show();
+    $(function () {
       Highcharts.chart('containertodos', {
 
           chart: {
@@ -9868,6 +9869,11 @@ $(function () {
     });
     $('#containertotinstprom').highcharts(options);
 });
+  }
+  else{
+    $('hr#soloestudiantes').hide();
+  }
+  
 
 }
 
