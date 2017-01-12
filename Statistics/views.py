@@ -449,6 +449,7 @@ def selectStatistics(request):
 				json_data = json.dumps(json_dict)
 
 			else:
+				j=0
 				sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
 				students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 				if radio=="radio1":
@@ -1062,6 +1063,7 @@ def compareStatistics(request):
 				json_data = json.dumps(json_dict)
 			
 			else:
+				j=0
 				sclass = Student_Class.objects.filter(id_class_id=cursos[0]).values('kaid_student_id')
 				students=Student.objects.filter(kaid_student__in=sclass).order_by('nickname')
 				if radio=="radio5":

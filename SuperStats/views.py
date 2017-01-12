@@ -446,6 +446,7 @@ def selectSuperStats(request):
 						json_data = json.dumps(json_dict)
 					
 				else:
+					j=0
 					newcurso = cursos[0].split("_")
 					classes = Class.objects.filter(id_class=newcurso[1], id_institution_id=establecimiento).order_by('level','letter')
 					if classes:
@@ -975,6 +976,7 @@ def compareSuperStats(request):
 						json_data = json.dumps(json_dict)
 
 				else:
+					j=0
 					newcurso = cursos[0].split("_")
 					classes = Class.objects.filter(id_class=newcurso[1], id_institution_id=establecimiento).order_by('level','letter')
 					if classes:

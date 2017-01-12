@@ -152,7 +152,7 @@
 <input type="button" id="button_parameter" onClick="containerShow()" class="kui-button kui-button-plain kui-button-primary" value="Definir parámetros">
 <hr>
 <div id="containertodos" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containertot" style="min-width: 300px;  margin: 0 auto"></div>
 <div id="promediototaltot" style="float:left;width: 50%;"></div>
 <div id="promediototaltot2" style="float:left;width: 50%;"></div>
@@ -175,13 +175,13 @@
       <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containertotnivel" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containertotnivelprom" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containertotinst" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containertotinstprom" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
 <div id="containerej" style="min-width: 300px; margin: 0 auto"></div>
@@ -206,13 +206,13 @@
       <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containerejernivel" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containerejernivelprom" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containerejerinst" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containerejerinstprom" style="min-width: 300px;  margin: 0 auto"></div>
 <hr>
 <div id="containervid" style="min-width: 300px;  margin: 0 auto"></div>
@@ -237,13 +237,13 @@
       <OPTION VALUE="8">Mínimo (descendente)</OPTION>
 </select>
 </div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containervidnivel" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containervidnivelprom" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containervidinst" style="min-width: 300px;  margin: 0 auto"></div>
-<hr>
+<hr id="soloestudiantes">
 <div id="containervidinstprom" style="min-width: 300px;  margin: 0 auto"></div>
 <div id="tipochapter" style="height: 140px;align-self: center" class="typechapt">
     <br>
@@ -2743,9 +2743,9 @@ function graficar(json, clase){
         arraycant[j]=[name, cantidad]
       }
     }
-    var pointarrayte='Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>';
-    var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
-    var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
+    var pointarrayteest='Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>';
+    var pointarraytvest = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
+    var pointarraycantest = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
   
   /*try{
@@ -2972,7 +2972,8 @@ function graficar(json, clase){
     var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Total de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
   }
 
-  $(function () {
+  if (arraycontainertodo.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3057,8 +3058,10 @@ function graficar(json, clase){
           series: arraycontainertodo
       });
   });
-
-  $(function () {
+  }
+  
+  if(serietpo.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3185,8 +3188,84 @@ function graficar(json, clase){
       chart.series[0].update(retorno);
     })
   });
+  }
+  else{
+    $('select#ordenartot3').hide();
+    $('hr#soloestudiantes').hide();
+    $(function () {
+    Highcharts.setOptions({
+          lang:{
+          decimalPoint: ",",
+          thousandsSep: ".",
+          downloadJPEG: "Descargar imagen JPEG",
+          downloadPDF: "Descargar documento PDF",
+          downloadPNG: "Descargar imagen PNG",
+          downloadSVG: "Descargar imagen vectorial SVG",
+          printChart: "Imprimir gráfico",
+          drillUpText: "Volver a {series.name}"
+        }
+      });
+      var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'containerej',
+            type: 'column',
+        },
+        title: {
+            text: 'Tiempo de ejercicios'
+        },
+        subtitle: {
+            text: 'Fuente: <a href="https://es.khanacademy.org/">Khan Academy</a>'
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                //text: 'Tiempo (segundos)'
+                text: 'Tiempo (segundos)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        //colors: colorcolumn,
+        series: [{
+            name: 'Cursos',
+            data: arrayte,
+            colorByPoint: true,
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                //color: 'KhanBlue',
+                align: 'right',
+                //format: '{point.y:,.0f}', // one decimal
+                format: '{point.y:,.0f}',
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '11px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            },
+            tooltip: {
+            pointFormat: pointarrayteest
+            }
+        }]
+    });
+  });
+  }
+  
 
-  $(function () {
+  if (distxnivelejer.length>0){
+    console.log(distxnivelejer);
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3270,8 +3349,10 @@ function graficar(json, clase){
           series: distxnivelejer
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxnivelejerprom.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3355,8 +3436,10 @@ function graficar(json, clase){
           series: distxnivelejerprom
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxinstejer.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3440,8 +3523,10 @@ function graficar(json, clase){
           series: distxinstejer
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxinstejerprom.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3525,6 +3610,8 @@ function graficar(json, clase){
           series: distxinstejerprom
       });
   });
+  }
+  
 
   $(function () {
     Highcharts.setOptions({
@@ -3654,7 +3741,8 @@ function graficar(json, clase){
     })
   });
 
-  $(function () {
+  if (distxnivelvid.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3738,8 +3826,10 @@ function graficar(json, clase){
           series: distxnivelvid
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxnivelvidprom.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3823,8 +3913,10 @@ function graficar(json, clase){
           series: distxnivelvidprom
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxinstvid.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3908,8 +4000,10 @@ function graficar(json, clase){
           series: distxinstvid
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxinstvidprom.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -3993,6 +4087,8 @@ function graficar(json, clase){
           series: distxinstvidprom
       });
   });
+  }
+  
 
   $(function () {
     Highcharts.setOptions({
@@ -4119,7 +4215,8 @@ function graficar(json, clase){
     })
   });
 
-  $(function () {
+  if (distxnivel.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -4212,8 +4309,10 @@ function graficar(json, clase){
           series: distxnivel
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxnivelprom.length){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -4297,8 +4396,10 @@ function graficar(json, clase){
           series: distxnivelprom
       });
   });
+  }
   
-  $(function () {
+  if (distxinst.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -4382,8 +4483,10 @@ function graficar(json, clase){
           series: distxinst
       });
   });
-
-  $(function () {
+  }
+  
+  if (distxinstprom.length>0){
+    $(function () {
     Highcharts.setOptions({
           lang:{
           decimalPoint: ",",
@@ -4467,6 +4570,8 @@ function graficar(json, clase){
           series: distxinstprom
       });
   });
+  }
+  
 }
 
 function graficarcompara(json, clase){

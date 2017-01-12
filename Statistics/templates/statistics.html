@@ -422,7 +422,7 @@ function graficar(json, clase){
   var serie=[];
   var serietpo=[];
   var serievid=[];
-  var j;
+  //var j;
   var mission=[];
   if(json["clases"]){
     var clase = json["clases"]
@@ -448,7 +448,7 @@ function graficar(json, clase){
       var estudtrabtpoejer=0;
       var estudtrabtpovid=0;
       var estudtrabcantejer=0;
-      for (j=0;j<estudiantes.length;j++){
+      for (var j=0;j<estudiantes.length;j++){
         datosest[j]=[estudiantes[j]["name"], estudiantes[j]["total_ejercicios"]];
         tpoest[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_ejercicios"]];
         videst[j]=[estudiantes[j]["name"], estudiantes[j]["tiempo_videos"]];
