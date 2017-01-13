@@ -131,6 +131,7 @@ def generateClassExcel(request, id_class):
                 name_sheet = strip_acent(a.name)
                 if len(name_sheet) > 22:
                     words = name_sheet.split()
+                    #print len(words)
                     length = 22/len(words)
                     name_sheet=''
                     for w in words:
