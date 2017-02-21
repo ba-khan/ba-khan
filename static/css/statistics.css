@@ -131,7 +131,7 @@ tr.nocolor:hover {
 input[type="checkbox"]{
   z-index: 1000;
   width: 80%;
-  height: 80%;
+  /*height: 80%;*/
   margin-bottom:5px;
 }
 
