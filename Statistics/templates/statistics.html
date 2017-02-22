@@ -218,7 +218,7 @@
       <OPTION VALUE="2">Tiempo (descendente)</OPTION>
 </select>
 </div>
-<div class="widget">
+<div class="widget" id="textoMisiones">
     <div class="header">Misiones</div>
     <div id="chart" class="chart-container">
     
@@ -425,6 +425,7 @@ function graficar(json, clase){
   //var j;
   var mission=[];
   if(json["clases"]){
+    $('#textoMisiones').css('display', '');
     var clase = json["clases"]
     var n=0;
     var arregloclase=[];
@@ -585,6 +586,7 @@ function graficar(json, clase){
 
   else{
     if(json["students"]){
+      $('#textoMisiones').css('display', 'none');
       var student = json["students"]
       for (var j=0;j<student.length;j++){
         var name=student[j]["name"]
@@ -1196,6 +1198,7 @@ function graficarcompara(json, clase){
 
   var j;
   if(json["clases"]){
+    $('#textoMisiones').css('display', '');
     var clase = json["clases"]
     var tipo1 = clase[0]["tipo1"]
     var tipo2 = clase[0]["tipo2"]
@@ -1314,6 +1317,7 @@ function graficarcompara(json, clase){
 
   else{
     if(json["students"]){
+      $('#textoMisiones').css('display', 'none');
       var student = json["students"]
       var tipo1 = student[0]["tipo1"]
       var tipo2 = student[0]["tipo2"]
@@ -1728,6 +1732,7 @@ function updateSchedule(){
   var sel = $('input[name="clase"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
+  console.log(sel.length);
   //var valor = $('input[value*="radio"]:checked').val()
   
   if ($("input[value*='radio']:checked").val()=="radio2"){
