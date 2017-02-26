@@ -494,13 +494,13 @@ function graficar(json, clase){
       }
 
       arrayte[i]={"name":curso, "y": tpo_ejercicios, "drilldown":curso, "cantidad":estudiantes.length, "trabajaron":estudtrabtpoejer, "maximo":maxtpoejer, "minimo":mintpoejer, "promedio":tpo_ejercicios/estudtrabtpoejer, "cantclase":cantidad_clase, "tpo_esperado":tiempo_esperado};
-      serietpo[i]={"name":curso, "id":curso, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.2f}</b>'}};
+      serietpo[i]={"name":curso, "id":curso, "data":tpoest, "tooltip":{"pointFormat": 'Tiempo de ejercicios: <b>{point.y:,.2f}</b>'},"dataLabels":{"enabled":true, "rotation":-90,"color":"KhanBlue","align":"right","format":formato,"y":10, "style":{"fontSize":"11px","fontFamily":"Verdana, sans-serif"}}};
 
       arraytv[i]={"name":curso, "y": tpo_videos, "drilldown":curso, "cantidad":estudiantes.length, "trabajaron":estudtrabtpovid, "maximo":maxtpovid, "minimo":mintpovid, "promedio":tpo_videos/estudtrabtpovid, "cantclase":cantidad_clase, "est_vid_out":clase[i]["estudiantes_out_vid"]};
-      serievid[i]={"name":curso, "id":curso, "data":videst, "tooltip":{"pointFormat": 'Tiempo de videos: <b>{point.y:,.2f}</b>'}};
+      serievid[i]={"name":curso, "id":curso, "data":videst, "tooltip":{"pointFormat": 'Tiempo de videos: <b>{point.y:,.2f}</b>'},"dataLabels":{"enabled":true, "rotation":-90,"color":"KhanBlue","align":"right","format":formato,"y":10, "style":{"fontSize":"11px","fontFamily":"Verdana, sans-serif"}}};
 
       arraycant[i]={"name":curso, "y": cantidad, "drilldown":curso, "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer, "maximo":maxtotejer, "minimo":mintotejer, "promedio":cantidad/estudtrabcantejer, "cantclase":cantidad_clase, "est_out": clase[i]["estudiantes_out"]}
-      serie[i]={"name":curso, "id":curso, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.f} ejercicios</b>'}};
+      serie[i]={"name":curso, "id":curso, "data":datosest, "tooltip":{"pointFormat": 'Cantidad de ejercicios: <b>{point.y:,.f} ejercicios</b>'},"dataLabels":{"enabled":true, "rotation":-90,"color":"KhanBlue","align":"right","format":formato,"y":10, "style":{"fontSize":"11px","fontFamily":"Verdana, sans-serif"}}};
 
       var arrayskill;
       var misiones = clase[i]["misiones"];
@@ -1732,7 +1732,6 @@ function updateSchedule(){
   var sel = $('input[name="clase"]:checked').map(function(_,el){
     return $(el).val();
   }).get();
-  console.log(sel.length);
   //var valor = $('input[value*="radio"]:checked').val()
   
   if ($("input[value*='radio']:checked").val()=="radio2"){
