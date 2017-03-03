@@ -160,11 +160,11 @@
     <h2 align="left" style="margin-left: 150px">Fechas</h2>
         <div  class="fechas">
           <p class="label_input"><strong id="fIniTooltip">Desde</strong></p>
-          <input name="desde" onchange="validar()" onkeyup="validar()" id="desde" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Desde"/>
+          <input name="desde" onchange="validar()" onkeyup="validar()" id="desde" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Desde" value="2016-11-01"/>
         </div>
         <div  class="fechas">
           <p class="label_input"><strong id="fTerTooltip">Hasta</strong></p>
-          <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta"/>
+          <input name="hasta" onchange="validar()" onkeyup="validar()" id="hasta" class="ui-corner-all placeholder simple-input search-input blur-on-esc skill_search" type="date" max="9999-12-31" placeholder="Hasta" value="2016-11-30"/>
         </div>
   </div>
   <div id="tipochapter" style="width:25%;float:left;">
@@ -425,7 +425,7 @@ function graficar(json, clase){
   //var j;
   var mission=[];
   if(json["clases"]){
-    $('#textoMisiones').css('display', '');
+    //$('#textoMisiones').css('display', '');
     var clase = json["clases"]
     var n=0;
     var arregloclase=[];
@@ -582,26 +582,29 @@ function graficar(json, clase){
       arregloclase[i]=arreglocurso;
     }
 
+    /*PARA CUANDO SE SELECCIONA UN SOLO CURSO*/
+
+    if(json["clases"].length==1){
+      if(json["clases"][0]["students"]){
+        //$('#textoMisiones').css('display', 'none');
+        var student = json["clases"][0]["students"]
+        for (var j=0;j<student.length;j++){
+          var name=student[j]["name"]
+          var tpo_ejercicios = student[j]["tiempo_ejercicios"]
+          var tpo_videos = student[j]["tiempo_videos"]
+          var cantidad = student[j]["total_ejercicios"]
+          arrayte[j]={"name":name, "y": tpo_ejercicios};
+          arraytv[j]={"name":name, "y": tpo_videos};
+          arraycant[j]={"name":name, "y": cantidad}
+        }
+      }
+      var pointarrayte='Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>';
+      var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
+      var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
+    }
+
   }
 
-  else{
-    if(json["students"]){
-      $('#textoMisiones').css('display', 'none');
-      var student = json["students"]
-      for (var j=0;j<student.length;j++){
-        var name=student[j]["name"]
-        var tpo_ejercicios = student[j]["tiempo_ejercicios"]
-        var tpo_videos = student[j]["tiempo_videos"]
-        var cantidad = student[j]["total_ejercicios"]
-        arrayte[j]={"name":name, "y": tpo_ejercicios};
-        arraytv[j]={"name":name, "y": tpo_videos};
-        arraycant[j]={"name":name, "y": cantidad}
-      }
-    }
-    var pointarrayte='Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b>';
-    var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
-    var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
-  }
   try{
     var nombremision = 'sin nombre';
     var dataq=arregloclase;
@@ -737,6 +740,7 @@ function graficar(json, clase){
     }
 }
   catch(e){
+    console.log("Misiones qlas CATCH");
     console.log(e);
   }
 
@@ -1198,7 +1202,7 @@ function graficarcompara(json, clase){
 
   var j;
   if(json["clases"]){
-    $('#textoMisiones').css('display', '');
+    //$('#textoMisiones').css('display', '');
     var clase = json["clases"]
     var tipo1 = clase[0]["tipo1"]
     var tipo2 = clase[0]["tipo2"]
@@ -1317,7 +1321,7 @@ function graficarcompara(json, clase){
 
   else{
     if(json["students"]){
-      $('#textoMisiones').css('display', 'none');
+      //$('#textoMisiones').css('display', 'none');
       var student = json["students"]
       var tipo1 = student[0]["tipo1"]
       var tipo2 = student[0]["tipo2"]
