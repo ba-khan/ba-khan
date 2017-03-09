@@ -20,6 +20,7 @@ from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Stude
 from bakhanapp.models import Schedule, Chapter, Skill_Progress, Topic, Subtopic, Subtopic_Skill, Skill
 from django.db import connection
 from django.db.models import Max
+from django.db.models import Q
 
 register = template.Library()
 from configs import timeSleep
@@ -345,6 +346,7 @@ def createClassJson(j,curso,radio,fechadesde,fechahasta,tipochapter):
 	
 	dictHab={}
 	chapts=[]
+	skills_aux=[]
 
 	for mision in misiones:
 		dictSkill={}
@@ -357,24 +359,63 @@ def createClassJson(j,curso,radio,fechadesde,fechahasta,tipochapter):
 			#spanish_name = Skill.objects.filter(id_skill_name=selec['id_skill_name_id']).values('name_spanish')
 			skills_mis={'id': selec.id_skill_name, 'nombre_skill':selec.name_spanish,'nivel': {'mastery3':0, 'mastery2':0, 'mastery1':0, 'practiced':0, 'unstarted':0, 'struggling':0}}
 			skills_array.append(skills_mis)
+			skills_aux.append(selec.id_skill_name)
 		dictSkill["habilidades"]=skills_array
 		dictChapter.append(dictSkill)
 	class_json["misiones"]=dictChapter
+	#print class_json["misiones"]
 
-	cursor = connection.cursor()
-	cursor.callproc("niveles", [int(curso), fechadesde, fechahasta])
-	query = cursor.fetchall()
+	# en tabla skill_progress agregar 'struggling boolean', 'id_skill_name_id' y 'kaid_student_id' en una tabla nueva
+	# desde la tabla student_skill.
+	# Asi voy a tener en una tabla "skill_progress2" la fecha y cambios de estado de habilidades
+	# Para nuevos datos, crear funcion en poblamiento de datos.
+	# Para datos anteriores, ir creando registros en la tabla a medida que se solicitan estos datos
+	# Por lo tanto, if (existen datos en nueva tabla) -> se solicitan y se hace el conteo como ahora
+	# else -> hacer la query, agregar datos en nueva tabla, y hacer el conteo como ahora
 
-	for q in query:
-		longitud=len(class_json["misiones"])
-		for x in range(0, longitud-1):
-			longskill=len(class_json["misiones"][x]["habilidades"])
-			for y in range(0,longskill-1):
-				if class_json["misiones"][x]["habilidades"][y]["id"]==q[2]:
-					if q[3]==True:
-						class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]=q[1]
-					else:
-						class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
+	class_students=Student.objects.filter(kaid_student__in=(Student_Class.objects.filter(id_class_id=curso).values('kaid_student_id'))).values('kaid_student')
+	# RECORRIENDO ESTUDIANTE POR ESTUDIANTE
+	student_skills=Student_Skill.objects.filter(Q(kaid_student__in=class_students),Q(id_skill_name__in=skills_aux))
+
+	for st_sk in student_skills:
+		# RECORRIENDO CADA SKILL DEL ESTUDIANTE
+
+		skill_progresses=Skill_Progress.objects.filter(Q(id_student_skill=st_sk.id_student_skill),Q(date__gt=fechadesde),Q(date__lt=fechahasta)).order_by('-date')
+		if len(skill_progresses)>0:
+			# SI EXISTEN DATOS DENTRO DEL RANGO DE FECHAS HACER CONTEO
+			# AGREGAR DATOS A UNA TABLA NUEVA PARA AGILIZAR ESTE PROCESO
+
+			longitud=len(class_json["misiones"])
+			for x in range(0, longitud-1):
+				longskill=len(class_json["misiones"][x]["habilidades"])
+				for y in range(0,longskill-1):
+					if class_json["misiones"][x]["habilidades"][y]["id"]==st_sk.id_skill_name_id:
+						if st_sk.struggling==True:
+							class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]+=1
+							#print class_json["misiones"][x]["habilidades"][y]
+						else:
+							class_json["misiones"][x]["habilidades"][y]["nivel"][skill_progresses[0].to_level]+=1
+							#print class_json["misiones"][x]["habilidades"][y]
+
+	#cursor = connection.cursor()
+	#cursor.callproc("niveles", [int(curso), fechadesde, fechahasta])
+	#print curso, fechadesde, fechahasta
+	#query = cursor.fetchall()
+	#print query
+
+	#for q in query:
+		#print q[0], q[1], q[2], q[3]
+		#longitud=len(class_json["misiones"])
+		#for x in range(0, longitud-1):
+			#longskill=len(class_json["misiones"][x]["habilidades"])
+			#for y in range(0,longskill-1):
+				#if class_json["misiones"][x]["habilidades"][y]["id"]==q[2]:
+					#if q[3]==True:
+						#class_json["misiones"][x]["habilidades"][y]["nivel"]["struggling"]=q[1]
+						#print class_json["misiones"][x]["habilidades"][y]
+					#else:
+						#class_json["misiones"][x]["habilidades"][y]["nivel"][q[0]]=q[1]
+						#print class_json["misiones"][x]["habilidades"][y]
 
 	
 	for time in time_exercise:
