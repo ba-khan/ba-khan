@@ -24,8 +24,25 @@ register = template.Library()
 from configs import timeSleep
 
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 
+class FixedOffset(tzinfo):
+    """Fixed offset in minutes: `time = utc_time + utc_offset`."""
+    def __init__(self, offset):
+        self.__offset = timedelta(minutes=offset)
+        hours, minutes = divmod(offset, 60)
+        #NOTE: the last part is to remind about deprecated POSIX GMT+h timezones
+        #  that have the opposite sign in the name;
+        #  the corresponding numeric value is not used e.g., no minutes
+        self.__name = '<%+03d%02d>%+d' % (hours, minutes, -hours)
+    def utcoffset(self, dt=None):
+        return self.__offset
+    def tzname(self, dt=None):
+        return self.__name
+    def dst(self, dt=None):
+        return timedelta(0)
+    def __repr__(self):
+        return 'FixedOffset(%d)' % (self.utcoffset().total_seconds() / 60)
 
 ##
 ## @brief      Gets the schedules.
@@ -104,12 +121,12 @@ def selectSuperStats(request):
 							if radio=="radio1":
 								contador_est=0
 								contador_vid=0
-								total2est={}
-								time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
-								time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
-								total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde, fechahasta]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
+								#total2est={}
+								time_exercise = Skill_Attempt.objects.filter(kaid_student_id__in=students, date__range=[fechadesde.replace(tzinfo=FixedOffset(-180)), fechahasta.replace(tzinfo=FixedOffset(-180))]).values('kaid_student_id').annotate(total_time=Sum('time_taken'))
+								time_video = Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[fechadesde.replace(tzinfo=FixedOffset(-180)), fechahasta.replace(tzinfo=FixedOffset(-180))]).values('kaid_student_id').annotate(total_seconds=Sum('seconds_watched'))
+								total_exercise = Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[fechadesde.replace(tzinfo=FixedOffset(-180)), fechahasta.replace(tzinfo=FixedOffset(-180))]).values('kaid_student_id').annotate(total_total=Count('kaid_student_id'))
 								try:
-									total2={}
+									#total2={}
 									queryradiothree = Class_Schedule.objects.filter(id_class_id__in=classes).values('day', 'id_schedule_id')
 									delta = timedelta(days=1)
 									total_out=[]
@@ -127,8 +144,8 @@ def selectSuperStats(request):
 													newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 													newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')-timedelta(hours=1)
 												else:
-													newstart = datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')
-													newend = datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')
+													newstart = (datetime.strptime(newstart, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=FixedOffset(-180))
+													newend = (datetime.strptime(newend, '%Y-%m-%d %H:%M:%S')).replace(tzinfo=FixedOffset(-180))
 													time_video_out.extend(list(Video_Playing.objects.filter(kaid_student_id__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(seconds=Sum('seconds_watched'))))
 													total_out.extend(list(Skill_Attempt.objects.filter(kaid_student__in=students, date__range=[newstart, newend]).values('kaid_student_id').annotate(total=Count('kaid_student_id'))))
 											d+=delta
@@ -144,14 +161,14 @@ def selectSuperStats(request):
 									#		if video2['kaid_student_id']==out_video['kaid_student_id']:
 									#			video2['total_seconds']= video2['total_seconds']-out_video['seconds']
 
-									for total3 in total2est:
+									#for total3 in total2est:
 										#print total3
-										if total3['total_total']>0:
-											contador_est+=1
+										#if total3['total_total']>0:
+											#contador_est+=1
 
-									for video3 in time_video:
-										if video3['total_seconds']>0:			
-											contador_vid+=1
+									#for video3 in time_video:
+										#if video3['total_seconds']>0:			
+											#contador_vid+=1
 
 								except Exception as e:
 									print e
