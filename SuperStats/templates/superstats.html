@@ -1116,15 +1116,15 @@ function graficar(json, clase){
       arraynombres[i]=nombre;
 
       var arrayskill;
-      //var misiones = clase[i]["misiones"];
-      //var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
+      var misiones = clase[i]["misiones"];
+      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
 
-      /*if (clase[i]["estudiantes_out_vid"]==0){
+      if (clase[i]["estudiantes_out_vid"]==0){
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
       }
       else{
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
-      }*/
+      }
       
       if (clase[i]["estudiantes_out"]==0){
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
@@ -1132,7 +1132,7 @@ function graficar(json, clase){
       else{
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_out}</b>';
       }
-      /*
+      
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -1187,7 +1187,7 @@ function graficar(json, clase){
           continue;
         }
       }
-      arregloclase[i]=arreglocurso;*/
+      arregloclase[i]=arreglocurso;
       //console.log(estNivelEstablecimiento);
     }
 
@@ -2156,6 +2156,9 @@ function graficar(json, clase){
     var pointarraytvest = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
     var pointarraycantest = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
+  // AQUI SE DEBIERA INVOCAR LA FUNCION QUE GRAFICARA LAS MISIONES SELECCIONADAS
+  console.log("linea 2160");
+  console.log(arregloclase);
   /*
   try{
     var nombremision = 'sin nombre';
