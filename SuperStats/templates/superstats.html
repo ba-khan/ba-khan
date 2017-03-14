@@ -1187,7 +1187,7 @@ function graficar(json, clase){
         }
       }
       arregloclase[i]=arreglocurso;*/
-      console.log(estNivelEstablecimiento);
+      //console.log(estNivelEstablecimiento);
     }
 
     arraycontainertodo[0]={'name': 'Cantidad de Ejercicios', 'data': arraycantidad, 'type':'column', 'yAxis': 1};0
@@ -1195,12 +1195,11 @@ function graficar(json, clase){
     arraycontainertodo[2]={'name': 'Tiempo de Videos', 'data': arraytpovideos, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth':0};
 
     var arraypromedio= new Array(12).fill(0);
-    console.log(arraylsmb);
+    //console.log(arraylsmb);
     for (var i = 0; i < arraylsmb.length; i++) {
       var average=(arraylsmb[i]+arrayea[i]+arraycei[i]+arraylav[i]+arrayrap[i]+arraygm[i]+arraybakhan[i])/estudiantesniveles[i];
       j=i+1;
       arraylsmbprom[i]=Math.round(arraylsmb[i]/estNivelEstablecimiento["LSMB"][j]*100)/100;
-      console.log("calculando promedio ql: "+arraylsmb[i]+"/"+estNivelEstablecimiento["LSMB"][j]);
       arrayeaprom[i]=Math.round(arrayea[i]/estNivelEstablecimiento["E.A."][j]*100)/100;
       arrayceiprom[i]=Math.round(arraycei[i]/estNivelEstablecimiento["C.E.I."][j]*100)/100;
       arraylavprom[i]=Math.round(arraylav[i]/estNivelEstablecimiento["L.A.V."][j]*100)/100;
@@ -1427,7 +1426,7 @@ function graficar(json, clase){
         count++;
       }
     }
-    
+
     distxnivel[0]={'name':'LSMB', 'data':realarraylsmb, 'type':'column', 'yAxis':1};
     distxnivel[1]={'name':'E.A.', 'data':realarrayea, 'type':'column', 'yAxis':1};
     distxnivel[2]={'name':'C.E.I.', 'data':realarraycei, 'type':'column', 'yAxis':1};
@@ -6060,52 +6059,58 @@ function graficarcompara(json, clase){
     var categoriasdxireal=[];
 
     var arraypromedio= new Array(12).fill(0);
+    console.log("linea 6062");
     for (var i = 0; i < arraylsmb.length; i++) {
       var average=(arraylsmb[i]+arrayea[i]+arraycei[i]+arraylav[i]+arrayrap[i]+arraygm[i]+arraybakhan[i])/estudiantesniveles[i];
-      arraylsmbprom[i]=Math.round(arraylsmb[i]/estudiantesniveles[i]*100)/100;
-      arrayeaprom[i]=Math.round(arrayea[i]/estudiantesniveles[i]*100)/100;
-      arrayceiprom[i]=Math.round(arraycei[i]/estudiantesniveles[i]*100)/100;
-      arraylavprom[i]=Math.round(arraylav[i]/estudiantesniveles[i]*100)/100;
-      arrayrapprom[i]=Math.round(arrayrap[i]/estudiantesniveles[i]*100)/100;
-      arraygmprom[i]=Math.round(arraygm[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanprom[i]=Math.round(arraybakhan[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbprom2[i]=Math.round(arraylsmb2[i]/estudiantesniveles[i]*100)/100;
-      arrayeaprom2[i]=Math.round(arrayea2[i]/estudiantesniveles[i]*100)/100;
-      arrayceiprom2[i]=Math.round(arraycei2[i]/estudiantesniveles[i]*100)/100;
-      arraylavprom2[i]=Math.round(arraylav2[i]/estudiantesniveles[i]*100)/100;
-      arrayrapprom2[i]=Math.round(arrayrap2[i]/estudiantesniveles[i]*100)/100;
-      arraygmprom2[i]=Math.round(arraygm2[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanprom2[i]=Math.round(arraybakhan2[i]/estudiantesniveles[i]*100)/100;
+      console.log(average);
+      j=i+1;
+      arraylsmbprom[i]=Math.round(arraylsmb[i]/estNivelEstablecimiento["LSMB"][j]*100)/100;
+      arrayeaprom[i]=Math.round(arrayea[i]/estNivelEstabestNivelEstablecimiento["E.A."][j]*100)/100;
+      arrayceiprom[i]=Math.round(arraycei[i]/estNivelEstabestNivelEstablecimiento["C.E.I."][j]*100)/100;
+      arraylavprom[i]=Math.round(arraylav[i]/estNivelEstabestNivelEstablecimiento["L.A.V."][j]*100)/100;
+      arrayrapprom[i]=Math.round(arrayrap[i]/estNivelEstabestNivelEstablecimiento["R.A.P."][j]*100)/100;
+      arraygmprom[i]=Math.round(arraygm[i]/estNivelEstabestNivelEstablecimiento["L.G.M."][j]*100)/100;
+      arraybakhanprom[i]=Math.round(arraybakhan[i]/estNivelEstabestNivelEstablecimiento["BA-Khan"][j]*100)/100;
 
-      arraylsmbejerprom[i]=Math.round(arraylsmbejer[i]/estudiantesniveles[i]*100)/100;
-      arrayeaejerprom[i]=Math.round(arrayeaejer[i]/estudiantesniveles[i]*100)/100;
-      arrayceiejerprom[i]=Math.round(arrayceiejer[i]/estudiantesniveles[i]*100)/100;
-      arraylavejerprom[i]=Math.round(arraylavejer[i]/estudiantesniveles[i]*100)/100;
-      arrayrapejerprom[i]=Math.round(arrayrapejer[i]/estudiantesniveles[i]*100)/100;
-      arraygmejerprom[i]=Math.round(arraygmejer[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanejerprom[i]=Math.round(arraybakhanejer[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbejerprom2[i]=Math.round(arraylsmbejer2[i]/estudiantesniveles[i]*100)/100;
-      arrayeaejerprom2[i]=Math.round(arrayeaejer2[i]/estudiantesniveles[i]*100)/100;
-      arrayceiejerprom2[i]=Math.round(arrayceiejer2[i]/estudiantesniveles[i]*100)/100;
-      arraylavejerprom2[i]=Math.round(arraylavejer2[i]/estudiantesniveles[i]*100)/100;
-      arrayrapejerprom2[i]=Math.round(arrayrapejer2[i]/estudiantesniveles[i]*100)/100;
-      arraygmejerprom2[i]=Math.round(arraygmejer2[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanejerprom2[i]=Math.round(arraybakhanejer2[i]/estudiantesniveles[i]*100)/100;
+      arraylsmbprom2[i]=Math.round(arraylsmb2[i]/estNivelEstabestNivelEstablecimiento["LSMB"][j]*100)/100;
+      arrayeaprom2[i]=Math.round(arrayea2[i]/estNivelEstabestNivelEstablecimiento["E.A."][j]*100)/100;
+      arrayceiprom2[i]=Math.round(arraycei2[i]/estNivelEstabestNivelEstablecimiento["C.E.I."][j]*100)/100;
+      arraylavprom2[i]=Math.round(arraylav2[i]/estNivelEstabestNivelEstablecimiento["L.A.V."][j]*100)/100;
+      arrayrapprom2[i]=Math.round(arrayrap2[i]/estNivelEstabestNivelEstablecimiento["R.A.P."][j]*100)/100;
+      arraygmprom2[i]=Math.round(arraygm2[i]/estNivelEstabestNivelEstablecimiento["L.G.M."][j]*100)/100;
+      arraybakhanprom2[i]=Math.round(arraybakhan2[i]/estNivelEstabestNivelEstablecimiento["BA-Khan"][j]*100)/100;
 
-      arraylsmbvidprom[i]=Math.round(arraylsmbvid[i]/estudiantesniveles[i]*100)/100;
-      arrayeavidprom[i]=Math.round(arrayeavid[i]/estudiantesniveles[i]*100)/100;
-      arrayceividprom[i]=Math.round(arrayceivid[i]/estudiantesniveles[i]*100)/100;
-      arraylavvidprom[i]=Math.round(arraylavvid[i]/estudiantesniveles[i]*100)/100;
-      arrayrapvidprom[i]=Math.round(arrayrapvid[i]/estudiantesniveles[i]*100)/100;
-      arraygmvidprom[i]=Math.round(arraygmvid[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanvidprom[i]=Math.round(arraybakhanvid[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbvidprom2[i]=Math.round(arraylsmbvid2[i]/estudiantesniveles[i]*100)/100;
-      arrayeavidprom2[i]=Math.round(arrayeavid2[i]/estudiantesniveles[i]*100)/100;
-      arrayceividprom2[i]=Math.round(arrayceivid2[i]/estudiantesniveles[i]*100)/100;
-      arraylavvidprom2[i]=Math.round(arraylavvid2[i]/estudiantesniveles[i]*100)/100;
-      arrayrapvidprom2[i]=Math.round(arrayrapvid2[i]/estudiantesniveles[i]*100)/100;
-      arraygmvidprom2[i]=Math.round(arraygmvid2[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanvidprom2[i]=Math.round(arraybakhanvid2[i]/estudiantesniveles[i]*100)/100;
+      arraylsmbejerprom[i]=Math.round(arraylsmbejer[i]/estNivelEstablecimiento["LSMB"][j]*100)/100;
+      arrayeaejerprom[i]=Math.round(arrayeaejer[i]/estNivelEstablecimiento["E.A."][j]*100)/100;
+      arrayceiejerprom[i]=Math.round(arrayceiejer[i]/estNivelEstablecimiento["C.E.I."][j]*100)/100;
+      arraylavejerprom[i]=Math.round(arraylavejer[i]/estNivelEstablecimiento["L.A.V."][j]*100)/100;
+      arrayrapejerprom[i]=Math.round(arrayrapejer[i]/estNivelEstablecimiento["R.A.P."][j]*100)/100;
+      arraygmejerprom[i]=Math.round(arraygmejer[i]/estNivelEstablecimiento["L.G.M."][j]*100)/100;
+      arraybakhanejerprom[i]=Math.round(arraybakhanejer[i]/estNivelEstablecimiento["BA-Khan"][j]*100)/100;
+
+      arraylsmbejerprom2[i]=Math.round(arraylsmbejer2[i]/estNivelEstablecimiento["LSMB"][j]*100)/100;
+      arrayeaejerprom2[i]=Math.round(arrayeaejer2[i]/estNivelEstablecimiento["E.A."][j]*100)/100;
+      arrayceiejerprom2[i]=Math.round(arrayceiejer2[i]/estNivelEstablecimiento["C.E.I."][j]*100)/100;
+      arraylavejerprom2[i]=Math.round(arraylavejer2[i]/estNivelEstablecimiento["L.A.V."][j]*100)/100;
+      arrayrapejerprom2[i]=Math.round(arrayrapejer2[i]/estNivelEstablecimiento["R.A.P."][j]*100)/100;
+      arraygmejerprom2[i]=Math.round(arraygmejer2[i]/estNivelEstablecimiento["L.G.M."][j]*100)/100;
+      arraybakhanejerprom2[i]=Math.round(arraybakhanejer2[i]/estNivelEstablecimiento["BA-Khan"][j]*100)/100;
+
+      arraylsmbvidprom[i]=Math.round(arraylsmbvid[i]/estNivelEstablecimiento["LSMB"][j]*100)/100;
+      arrayeavidprom[i]=Math.round(arrayeavid[i]/estNivelEstablecimiento["E.A."][j]*100)/100;
+      arrayceividprom[i]=Math.round(arrayceivid[i]/estNivelEstablecimiento["C.E.I."][j]*100)/100;
+      arraylavvidprom[i]=Math.round(arraylavvid[i]/estNivelEstablecimiento["L.A.V."][j]*100)/100;
+      arrayrapvidprom[i]=Math.round(arrayrapvid[i]/estNivelEstablecimiento["R.A.P."][j]*100)/100;
+      arraygmvidprom[i]=Math.round(arraygmvid[i]/estNivelEstablecimiento["L.G.M."][j]*100)/100;
+      arraybakhanvidprom[i]=Math.round(arraybakhanvid[i]/estNivelEstablecimiento["BA-Khan"][j]*100)/100;
+
+      arraylsmbvidprom2[i]=Math.round(arraylsmbvid2[i]/estNivelEstablecimiento["LSMB"][j]*100)/100;
+      arrayeavidprom2[i]=Math.round(arrayeavid2[i]/estNivelEstablecimiento["E.A."][j]*100)/100;
+      arrayceividprom2[i]=Math.round(arrayceivid2[i]/estNivelEstablecimiento["C.E.I."][j]*100)/100;
+      arraylavvidprom2[i]=Math.round(arraylavvid2[i]/estNivelEstablecimiento["L.A.V."][j]*100)/100;
+      arrayrapvidprom2[i]=Math.round(arrayrapvid2[i]/estNivelEstablecimiento["R.A.P."][j]*100)/100;
+      arraygmvidprom2[i]=Math.round(arraygmvid2[i]/estNivelEstablecimiento["L.G.M."][j]*100)/100;
+      arraybakhanvidprom2[i]=Math.round(arraybakhanvid2[i]/estNivelEstablecimiento["BA-Khan"][j]*100)/100;
 
       if (isNaN(arraylsmbprom[i])){
         arraylsmbprom[i]=0;
@@ -6406,6 +6411,7 @@ function graficarcompara(json, clase){
     }
 
     var arraypromedioinst= new Array(6).fill(0);
+    console.log(estudiantesnivelesinst);
     for (var i = 0; i < array1basico.length; i++) {
       var average=(array1basico[i]+array2basico[i]+array3basico[i]+array4basico[i]+array5basico[i]+array6basico[i]+array7basico[i]+array8basico[i]+array1medio[i]+array2medio[i]+array3medio[i]+array4medio[i])/estudiantesnivelesinst[i];
       array1basicoprom[i]=Math.round(array1basico[i]/estudiantesnivelesinst[i]*100)/100;
