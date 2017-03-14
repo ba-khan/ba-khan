@@ -1115,15 +1115,15 @@ function graficar(json, clase){
       arraynombres[i]=nombre;
 
       var arrayskill;
-      //var misiones = clase[i]["misiones"];
-      //var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
+      var misiones = clase[i]["misiones"];
+      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
 
-      /*if (clase[i]["estudiantes_out_vid"]==0){
+      if (clase[i]["estudiantes_out_vid"]==0){
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
       }
       else{
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
-      }*/
+      }
       
       if (clase[i]["estudiantes_out"]==0){
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
@@ -1131,7 +1131,7 @@ function graficar(json, clase){
       else{
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_out}</b>';
       }
-      /*
+      
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -1186,7 +1186,7 @@ function graficar(json, clase){
           continue;
         }
       }
-      arregloclase[i]=arreglocurso;*/
+      arregloclase[i]=arreglocurso;
       //console.log(estNivelEstablecimiento);
     }
 
@@ -2156,7 +2156,7 @@ function graficar(json, clase){
     var pointarraycantest = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
   
-  /*try{
+  try{
     var nombremision = 'sin nombre';
     var dataq=arregloclase;
     for (var t = 0; t < mission.length; t++) {
@@ -2293,7 +2293,7 @@ function graficar(json, clase){
 }
   catch(e){
     console.log(e);
-  }*/
+  }
 
   var maxte=0;
   for (var j=0;j<arrayte.length;j++){
@@ -4131,6 +4131,153 @@ function graficar(json, clase){
   
 }
 
+function statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, indice,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2){
+  if (level==1){
+    array1basico[indice]+=cntdd1;
+
+    array1basico2[indice]+=cntdd2;
+
+    array1basicoejer[indice]+=tpoejer1;
+    array1basicoejer2[indice]+=tpoejer2;
+
+    array1basicovid[indice]+=tpovid1;
+    array1basicovid2[indice]+=tpovid2;
+  }
+  if (level==2){
+    array2basico[indice]+=cntdd1;
+
+    array2basico2[indice]+=cntdd2;
+
+    array2basicoejer[indice]+=tpoejer1;
+    array2basicoejer2[indice]+=tpoejer2;
+
+    array2basicovid[indice]+=tpovid1;
+    array2basicovid2[indice]+=tpovid2;
+  }
+  if (level==3){
+    array3basico[indice]+=cntdd1;
+
+    array3basico2[indice]+=cntdd2;
+
+    array3basicoejer[indice]+=tpoejer1;
+    array3basicoejer2[indice]+=tpoejer2;
+
+    array3basicovid[indice]+=tpovid1;
+    array3basicovid2[indice]+=tpovid2;
+  }
+  if (level==4){
+    array4basico[indice]+=cntdd1;
+
+    array4basico2[indice]+=cntdd2;
+
+    array4basicoejer[indice]+=tpoejer1;
+    array4basicoejer2[indice]+=tpoejer2;
+
+    array4basicovid[indice]+=tpovid1;
+    array4basicovid2[indice]+=tpovid2;
+  }
+  if (level==5){
+    array5basico[indice]+=cntdd1;
+
+    array5basico2[indice]+=cntdd2;
+
+    array5basicoejer[indice]+=tpoejer1;
+    array5basicoejer2[indice]+=tpoejer2;
+
+    array5basicovid[indice]+=tpovid1;
+    array5basicovid2[indice]+=tpovid2;
+  }
+  if (level==6){
+    array6basico[indice]+=cntdd1;
+
+    array6basico2[indice]+=cntdd2;
+
+    array6basicoejer[indice]+=tpoejer1;
+    array6basicoejer2[indice]+=tpoejer2;
+
+    array6basicovid[indice]+=tpovid1;
+    array6basicovid2[indice]+=tpovid2;
+  }
+  if (level==7){
+    array7basico[indice]+=cntdd1;
+
+    array7basico2[indice]+=cntdd2;
+
+    array7basicoejer[indice]+=tpoejer1;
+    array7basicoejer2[indice]+=tpoejer2;
+
+    array7basicovid[indice]+=tpovid1;
+    array7basicovid2[indice]+=tpovid2;
+  }
+  if (level==8){
+    array8basico[indice]+=cntdd1;
+
+    array8basico2[indice]+=cntdd2;
+
+    array8basicoejer[indice]+=tpoejer1;
+    array8basicoejer2[indice]+=tpoejer2;
+
+    array8basicovid[indice]+=tpovid1;
+    array8basicovid2[indice]+=tpovid2;
+  }
+  if (level==9){
+    array1medio[indice]+=cntdd1;
+
+    array1medio2[indice]+=cntdd2;
+
+    array1medioejer[indice]+=tpoejer1;
+    array1medioejer2[indice]+=tpoejer2;
+
+    array1mediovid[indice]+=tpovid1;
+    array1mediovid2[indice]+=tpovid2;
+  }
+  if (level==10){
+    array2medio[indice]+=cntdd1;
+
+    array2medio2[indice]+=cntdd2;
+
+    array2medioejer[indice]+=tpoejer1;
+    array2medioejer2[indice]+=tpoejer2;
+
+    array2mediovid[indice]+=tpovid1;
+    array2mediovid2[indice]+=tpovid2;
+  }
+  if (level==11){
+    array3medio[indice]+=cntdd1;
+
+    array3medio2[indice]+=cntdd2;
+
+    array3medioejer[indice]+=tpoejer1;
+    array3medioejer2[indice]+=tpoejer2;
+
+    array3mediovid[indice]+=tpovid1;
+    array3mediovid2[indice]+=tpovid2;
+  }
+  if (level==12){
+    array4medio[indice]+=cntdd1;
+
+    array4medio2[indice]+=cntdd2;
+
+    array4medioejer[indice]+=tpoejer1;
+    array4medioejer2[indice]+=tpoejer2;
+
+    array4mediovid[indice]+=tpovid1;
+    array4mediovid2[indice]+=tpovid2;
+  }
+}
+
 function graficarcompara(json, clase){
   //console.log(json)
   $('#promediototaltot').empty();
@@ -4627,138 +4774,19 @@ function graficarcompara(json, clase){
         arraylsmbvid[level-1]+=tpovid1;
         arraylsmbvid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[0]+=cntdd1;
-
-          array1basico2[0]+=cntdd2;
-
-          array1basicoejer[0]+=tpoejer1;
-          array1basicoejer2[0]+=tpoejer2;
-
-          array1basicovid[0]+=tpovid1;
-          array1basicovid2[0]+=tpovid2;
-        }
-        if (level==2){
-          array2basico[0]+=cntdd1;
-
-          array2basico2[0]+=cntdd2;
-
-          array2basicoejer[0]+=tpoejer1;
-          array2basicoejer2[0]+=tpoejer2;
-
-          array2basicovid[0]+=tpovid1;
-          array2basicovid2[0]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[0]+=cntdd1;
-
-          array3basico2[0]+=cntdd2;
-
-          array3basicoejer[0]+=tpoejer1;
-          array3basicoejer2[0]+=tpoejer2;
-
-          array3basicovid[0]+=tpovid1;
-          array3basicovid2[0]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[0]+=cntdd1;
-
-          array4basico2[0]+=cntdd2;
-
-          array4basicoejer[0]+=tpoejer1;
-          array4basicoejer2[0]+=tpoejer2;
-
-          array4basicovid[0]+=tpovid1;
-          array4basicovid2[0]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[0]+=cntdd1;
-
-          array5basico2[0]+=cntdd2;
-
-          array5basicoejer[0]+=tpoejer1;
-          array5basicoejer2[0]+=tpoejer2;
-
-          array5basicovid[0]+=tpovid1;
-          array5basicovid2[0]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[0]+=cntdd1;
-
-          array6basico2[0]+=cntdd2;
-
-          array6basicoejer[0]+=tpoejer1;
-          array6basicoejer2[0]+=tpoejer2;
-
-          array6basicovid[0]+=tpovid1;
-          array6basicovid2[0]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[0]+=cntdd1;
-
-          array7basico2[0]+=cntdd2;
-
-          array7basicoejer[0]+=tpoejer1;
-          array7basicoejer2[0]+=tpoejer2;
-
-          array7basicovid[0]+=tpovid1;
-          array7basicovid2[0]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[0]+=cntdd1;
-
-          array8basico2[0]+=cntdd2;
-
-          array8basicoejer[0]+=tpoejer1;
-          array8basicoejer2[0]+=tpoejer2;
-
-          array8basicovid[0]+=tpovid1;
-          array8basicovid2[0]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[0]+=cntdd1;
-
-          array1medio2[0]+=cntdd2;
-
-          array1medioejer[0]+=tpoejer1;
-          array1medioejer2[0]+=tpoejer2;
-
-          array1mediovid[0]+=tpovid1;
-          array1mediovid2[0]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[0]+=cntdd1;
-
-          array2medio2[0]+=cntdd2;
-
-          array2medioejer[0]+=tpoejer1;
-          array2medioejer2[0]+=tpoejer2;
-
-          array2mediovid[0]+=tpovid1;
-          array2mediovid2[0]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[0]+=cntdd1;
-
-          array3medio2[0]+=cntdd2;
-
-          array3medioejer[0]+=tpoejer1;
-          array3medioejer2[0]+=tpoejer2;
-
-          array3mediovid[0]+=tpovid1;
-          array3mediovid2[0]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[0]+=cntdd1;
-
-          array4medio2[0]+=cntdd2;
-
-          array4medioejer[0]+=tpoejer1;
-          array4medioejer2[0]+=tpoejer2;
-
-          array4mediovid[0]+=tpovid1;
-          array4mediovid2[0]+=tpovid2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 0,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
       if (ee=="E.A."){
         arrayea[level-1]+=cntdd1;
@@ -4772,138 +4800,19 @@ function graficarcompara(json, clase){
         arrayeavid[level-1]+=tpovid1;
         arrayeavid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[1]+=cntdd1;
-
-          array1basico2[1]+=cntdd2;
-
-          array1basicoejer[1]+=tpoejer1;
-          array1basicoejer2[1]+=tpoejer2;
-
-          array1basicovid[1]+=tpovid1;
-          array1basicovid2[1]+=tpovid2;
-        }
-        if (level==2){
-          array2basico[1]+=cntdd1;
-
-          array2basico2[1]+=cntdd2;
-
-          array2basicoejer[1]+=tpoejer1;
-          array2basicoejer2[1]+=tpoejer2;
-
-          array2basicovid[1]+=tpovid1;
-          array2basicovid2[1]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[1]+=cntdd1;
-
-          array3basico2[1]+=cntdd2;
-
-          array3basicoejer[1]+=tpoejer1;
-          array3basicoejer2[1]+=tpoejer2;
-
-          array3basicovid[1]+=tpovid1;
-          array3basicovid2[1]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[1]+=cntdd1;
-
-          array4basico2[1]+=cntdd2;
-
-          array4basicoejer[1]+=tpoejer1;
-          array4basicoejer2[1]+=tpoejer2;
-
-          array4basicovid[1]+=tpovid1;
-          array4basicovid2[1]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[1]+=cntdd1;
-
-          array5basico2[1]+=cntdd2;
-
-          array5basicoejer[1]+=tpoejer1;
-          array5basicoejer2[1]+=tpoejer2;
-
-          array5basicovid[1]+=tpovid1;
-          array5basicovid2[1]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[1]+=cntdd1;
-
-          array6basico2[1]+=cntdd2;
-
-          array6basicoejer[1]+=tpoejer1;
-          array6basicoejer2[1]+=tpoejer2;
-
-          array6basicovid[1]+=tpovid1;
-          array6basicovid2[1]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[1]+=cntdd1;
-
-          array7basico2[1]+=cntdd2;
-
-          array7basicoejer[1]+=tpoejer1;
-          array7basicoejer2[1]+=tpoejer2;
-
-          array7basicovid[1]+=tpovid1;
-          array7basicovid2[1]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[1]+=cntdd1;
-
-          array8basico2[1]+=cntdd2;
-
-          array8basicoejer[1]+=tpoejer1;
-          array8basicoejer2[1]+=tpoejer2;
-
-          array8basicovid[1]+=tpovid1;
-          array8basicovid2[1]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[1]+=cntdd1;
-
-          array1medio2[1]+=cntdd2;
-
-          array1medioejer[1]+=tpoejer1;
-          array1medioejer2[1]+=tpoejer2;
-
-          array1mediovid[1]+=tpovid1;
-          array1mediovid2[1]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[1]+=cntdd1;
-
-          array2medio2[1]+=cntdd2;
-
-          array2medioejer[1]+=tpoejer1;
-          array2medioejer2[1]+=tpoejer2;
-
-          array2mediovid[1]+=tpovid1;
-          array2mediovid2[1]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[1]+=cntdd1;
-
-          array3medio2[1]+=cntdd2;
-
-          array3medioejer[1]+=tpoejer1;
-          array3medioejer2[1]+=tpoejer2;
-
-          array3mediovid[1]+=tpovid1;
-          array3mediovid2[1]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[1]+=cntdd1;
-
-          array4medio2[1]+=cntdd2;
-
-          array4medioejer[1]+=tpoejer1;
-          array4medioejer2[1]+=tpoejer2;
-
-          array4mediovid[1]+=tpovid1;
-          array4mediovid2[1]+=tpovid2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 1,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
       if (ee=="C.E.I."){
         arraycei[level-1]+=cntdd1;
@@ -4917,138 +4826,19 @@ function graficarcompara(json, clase){
         arrayceivid[level-1]+=tpovid1;
         arrayceivid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[2]+=cntdd1;
-
-          array1basico2[2]+=cntdd2;
-
-          array1basicoejer[2]+=tpoejer1;
-          array1basicoejer2[2]+=tpoejer2;
-
-          array1basicovid[2]+=tpovid1;
-          array1basicovid2[2]+=tpovid2;
-        }
-        if (level==2){
-          array2basico[2]+=cntdd1;
-
-          array2basico2[2]+=cntdd2;
-
-          array2basicoejer[2]+=tpoejer1;
-          array2basicoejer2[2]+=tpoejer2;
-
-          array2basicovid[2]+=tpovid1;
-          array2basicovid2[2]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[2]+=cntdd1;
-
-          array3basico2[2]+=cntdd2;
-
-          array3basicoejer[2]+=tpoejer1;
-          array3basicoejer2[2]+=tpoejer2;
-
-          array3basicovid[2]+=tpovid1;
-          array3basicovid2[2]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[2]+=cntdd1;
-
-          array4basico2[2]+=cntdd2;
-
-          array4basicoejer[2]+=tpoejer1;
-          array4basicoejer2[2]+=tpoejer2;
-
-          array4basicovid[2]+=tpovid1;
-          array4basicovid2[2]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[2]+=cntdd1;
-
-          array5basico2[2]+=cntdd2;
-
-          array5basicoejer[2]+=tpoejer1;
-          array5basicoejer2[2]+=tpoejer2;
-
-          array5basicovid[2]+=tpovid1;
-          array5basicovid2[2]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[2]+=cntdd1;
-
-          array6basico2[2]+=cntdd2;
-
-          array6basicoejer[2]+=tpoejer1;
-          array6basicoejer2[2]+=tpoejer2;
-
-          array6basicovid[2]+=tpovid1;
-          array6basicovid2[2]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[2]+=cntdd1;
-
-          array7basico2[2]+=cntdd2;
-
-          array7basicoejer[2]+=tpoejer1;
-          array7basicoejer2[2]+=tpoejer2;
-
-          array7basicovid[2]+=tpovid1;
-          array7basicovid2[2]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[2]+=cntdd1;
-
-          array8basico2[2]+=cntdd2;
-
-          array8basicoejer[2]+=tpoejer1;
-          array8basicoejer2[2]+=tpoejer2;
-
-          array8basicovid[2]+=tpovid1;
-          array8basicovid2[2]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[2]+=cntdd1;
-
-          array1medio2[2]+=cntdd2;
-
-          array1medioejer[2]+=tpoejer1;
-          array1medioejer2[2]+=tpoejer2;
-
-          array1mediovid[2]+=tpovid1;
-          array1mediovid2[2]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[2]+=cntdd1;
-
-          array2medio2[2]+=cntdd2;
-
-          array2medioejer[2]+=tpoejer1;
-          array2medioejer2[2]+=tpoejer2;
-
-          array2mediovid[2]+=tpovid1;
-          array2mediovid2[2]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[2]+=cntdd1;
-
-          array3medio2[2]+=cntdd2;
-
-          array3medioejer[2]+=tpoejer1;
-          array3medioejer2[2]+=tpoejer2;
-
-          array3mediovid[2]+=tpovid1;
-          array3mediovid2[2]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[2]+=cntdd1;
-
-          array4medio2[2]+=cntdd2;
-
-          array4medioejer[2]+=tpoejer1;
-          array4medioejer2[2]+=tpoejer2;
-
-          array4mediovid[2]+=tpovid1;
-          array4mediovid2[2]+=tpovid2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 2,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
       if (ee=="L.A.V."){
         arraylav[level-1]+=cntdd1;
@@ -5062,141 +4852,19 @@ function graficarcompara(json, clase){
         arraylavvid[level-1]+=tpovid1;
         arraylavvid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[3]+=cntdd1;
-
-          array1basico2[3]+=cntdd2;
-
-          array1basicoejer[3]+=tpoejer1;
-          array1basicoejer2[3]+=tpoejer2;
-
-          array1basicovid[3]+=tpovid1;
-          array1basicovid2[3]+=tpovid2;
-        }
-        if (level==2){
-          array2basico[3]+=cntdd1;
-
-          array2basico2[3]+=cntdd2;
-
-          array2basicoejer[3]+=tpoejer1;
-          array2basicoejer2[3]+=tpoejer2;
-
-          array2basicovid[3]+=tpovid1;
-          array2basicovid2[3]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[3]+=cntdd1;
-
-          array3basico2[3]+=cntdd2;
-
-          array3basicoejer[3]+=tpoejer1;
-          array3basicoejer2[3]+=tpoejer2;
-
-          array3basicovid[3]+=tpovid1;
-          array3basicovid2[3]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[3]+=cntdd1;
-
-          array4basico2[3]+=cntdd2;
-
-          array4basicoejer[3]+=tpoejer1;
-          array4basicoejer2[3]+=tpoejer2;
-
-          array4basicovid[3]+=tpovid1;
-          array4basicovid2[3]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[3]+=cntdd1;
-
-          array5basico2[3]+=cntdd2;
-
-          array5basicoejer[3]+=tpoejer1;
-          array5basicoejer2[3]+=tpoejer2;
-
-          array5basicovid[3]+=tpovid1;
-          array5basicovid2[3]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[3]+=cntdd1;
-
-          array6basico2[3]+=cntdd2;
-
-          array6basicoejer[3]+=tpoejer1;
-          array6basicoejer2[3]+=tpoejer2;
-
-          array6basicovid[3]+=tpovid1;
-          array6basicovid2[3]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[3]+=cntdd1;
-
-          array7basico2[3]+=cntdd2;
-
-          array7basicoejer[3]+=tpoejer1;
-          array7basicoejer2[3]+=tpoejer2;
-
-          array7basicovid[3]+=tpovid1;
-          array7basicovid2[3]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[3]+=cntdd1;
-
-          array8basico2[3]+=cntdd2;
-
-          array8basicoejer[3]+=tpoejer1;
-          array8basicoejer2[3]+=tpoejer2;
-
-          array8basicovid[3]+=tpovid1;
-          array8basicovid2[3]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[3]+=cntdd1;
-
-          array1medio2[3]+=cntdd2;
-
-          array1medioejer[3]+=tpoejer1;
-          array1medioejer2[3]+=tpoejer2;
-
-          array1mediovid[3]+=tpovid1;
-          array1mediovid2[3]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[3]+=cntdd1;
-
-          array2medio2[3]+=cntdd2;
-
-          array2medioejer[3]+=tpoejer1;
-          array2medioejer2[3]+=tpoejer2;
-
-          array2mediovid[3]+=tpovid1;
-          array2mediovid2[3]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[3]+=cntdd1;
-
-          array3medio2[3]+=cntdd2;
-
-          array3medioejer[3]+=tpoejer1;
-          array3medioejer2[3]+=tpoejer2;
-
-          array3mediovid[3]+=tpovid1;
-          array3mediovid2[3]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[3]+=cntdd1;
-
-          array4medio2[3]+=cntdd2;
-
-          array4medioejer[3]+=tpoejer1;
-          array4medioejer2[3]+=tpoejer2;
-
-          array4mediovid[3]+=tpovid1;
-          array4mediovid2[3]+=tpovid2;
-
-          array4mediovidprom[3]+=tpovidprom1;
-          array4mediovidprom2[3]+=tpovidprom2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 3,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
       if (ee=="R.A.P."){
         arrayrap[level-1]+=cntdd1;
@@ -5210,138 +4878,19 @@ function graficarcompara(json, clase){
         arrayrapvid[level-1]+=tpovid1;
         arrayrapvid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[4]+=cntdd1;
-
-          array1basico2[4]+=cntdd2;
-
-          array1basicoejer[4]+=tpoejer1;
-          array1basicoejer2[4]+=tpoejer2;
-
-          array1basicovid[4]+=tpovid1;
-          array1basicovid2[4]+=tpovid2;
-        }
-        if (level==2){
-          array2basico[4]+=cntdd1;
-
-          array2basico2[4]+=cntdd2;
-
-          array2basicoejer[4]+=tpoejer1;
-          array2basicoejer2[4]+=tpoejer2;
-
-          array2basicovid[4]+=tpovid1;
-          array2basicovid2[4]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[4]+=cntdd1;
-
-          array3basico2[4]+=cntdd2;
-
-          array3basicoejer[4]+=tpoejer1;
-          array3basicoejer2[4]+=tpoejer2;
-
-          array3basicovid[4]+=tpovid1;
-          array3basicovid2[4]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[4]+=cntdd1;
-
-          array4basico2[4]+=cntdd2;
-
-          array4basicoejer[4]+=tpoejer1;
-          array4basicoejer2[4]+=tpoejer2;
-
-          array4basicovid[4]+=tpovid1;
-          array4basicovid2[4]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[4]+=cntdd1;
-
-          array5basico2[4]+=cntdd2;
-
-          array5basicoejer[4]+=tpoejer1;
-          array5basicoejer2[4]+=tpoejer2;
-
-          array5basicovid[4]+=tpovid1;
-          array5basicovid2[4]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[4]+=cntdd1;
-
-          array6basico2[4]+=cntdd2;
-
-          array6basicoejer[4]+=tpoejer1;
-          array6basicoejer2[4]+=tpoejer2;
-
-          array6basicovid[4]+=tpovid1;
-          array6basicovid2[4]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[4]+=cntdd1;
-
-          array7basico2[4]+=cntdd2;
-
-          array7basicoejer[4]+=tpoejer1;
-          array7basicoejer2[4]+=tpoejer2;
-
-          array7basicovid[4]+=tpovid1;
-          array7basicovid2[4]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[4]+=cntdd1;
-
-          array8basico2[4]+=cntdd2;
-
-          array8basicoejer[4]+=tpoejer1;
-          array8basicoejer2[4]+=tpoejer2;
-
-          array8basicovid[4]+=tpovid1;
-          array8basicovid2[4]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[4]+=cntdd1;
-
-          array1medio2[4]+=cntdd2;
-
-          array1medioejer[4]+=tpoejer1;
-          array1medioejer2[4]+=tpoejer2;
-
-          array1mediovid[4]+=tpovid1;
-          array1mediovid2[4]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[4]+=cntdd1;
-
-          array2medio2[4]+=cntdd2;
-
-          array2medioejer[4]+=tpoejer1;
-          array2medioejer2[4]+=tpoejer2;
-
-          array2mediovid[4]+=tpovid1;
-          array2mediovid2[4]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[4]+=cntdd1;
-
-          array3medio2[4]+=cntdd2;
-
-          array3medioejer[4]+=tpoejer1;
-          array3medioejer2[4]+=tpoejer2;
-
-          array3mediovid[4]+=tpovid1;
-          array3mediovid2[4]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[4]+=cntdd1;
-
-          array4medio2[4]+=cntdd2;
-
-          array4medioejer[4]+=tpoejer1;
-          array4medioejer2[4]+=tpoejer2;
-
-          array4mediovid[4]+=tpovid1;
-          array4mediovid2[4]+=tpovid2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 4,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
       if (ee=="L.G.M."){
         arraygm[level-1]+=cntdd1;
@@ -5355,140 +4904,19 @@ function graficarcompara(json, clase){
         arraygmvid[level-1]+=tpovid1;
         arraygmvid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[5]+=cntdd1;
-
-          array1basico2[5]+=cntdd2;
-
-          array1basicoejer[5]+=tpoejer1;
-          array1basicoejer2[5]+=tpoejer2;
-
-          array1basicovid[5]+=tpovid1;
-          array1basicovid2[5]+=tpovid2;
-
-          array1basicovidprom[5]+=tpovidprom1;
-          array1basicovidprom2[5]+=tpovidprom2;
-        }
-        if (level==2){
-          array2basico[5]+=cntdd1;
-
-          array2basico2[5]+=cntdd2;
-
-          array2basicoejer[5]+=tpoejer1;
-          array2basicoejer2[5]+=tpoejer2;
-
-          array2basicovid[5]+=tpovid1;
-          array2basicovid2[5]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[5]+=cntdd1;
-
-          array3basico2[5]+=cntdd2;
-
-          array3basicoejer[5]+=tpoejer1;
-          array3basicoejer2[5]+=tpoejer2;
-
-          array3basicovid[5]+=tpovid1;
-          array3basicovid2[5]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[5]+=cntdd1;
-
-          array4basico2[5]+=cntdd2;
-
-          array4basicoejer[5]+=tpoejer1;
-          array4basicoejer2[5]+=tpoejer2;
-
-          array4basicovid[5]+=tpovid1;
-          array4basicovid2[5]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[5]+=cntdd1;
-
-          array5basico2[5]+=cntdd2;
-
-          array5basicoejer[5]+=tpoejer1;
-          array5basicoejer2[5]+=tpoejer2;
-
-          array5basicovid[5]+=tpovid1;
-          array5basicovid2[5]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[5]+=cntdd1;
-
-          array6basico2[5]+=cntdd2;
-
-          array6basicoejer[5]+=tpoejer1;
-          array6basicoejer2[5]+=tpoejer2;
-
-          array6basicovid[5]+=tpovid1;
-          array6basicovid2[5]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[5]+=cntdd1;
-
-          array7basico2[5]+=cntdd2;
-
-          array7basicoejer[5]+=tpoejer1;
-          array7basicoejer2[5]+=tpoejer2;
-
-          array7basicovid[5]+=tpovid1;
-          array7basicovid2[5]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[5]+=cntdd1;
-
-          array8basico2[5]+=cntdd2;
-
-          array8basicoejer[5]+=tpoejer1;
-          array8basicoejer2[5]+=tpoejer2;
-
-          array8basicovid[5]+=tpovid1;
-          array8basicovid2[5]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[5]+=cntdd1;
-
-          array1medio2[5]+=cntdd2;
-
-          array1medioejer[5]+=tpoejer1;
-          array1medioejer2[5]+=tpoejer2;
-
-          array1mediovid[5]+=tpovid1;
-          array1mediovid2[5]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[5]+=cntdd1;
-
-          array2medio2[5]+=cntdd2;
-          array2medioejer[5]+=tpoejer1;
-          array2medioejer2[5]+=tpoejer2;
-
-          array2mediovid[5]+=tpovid1;
-          array2mediovid2[5]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[5]+=cntdd1;
-
-          array3medio2[5]+=cntdd2;
-
-          array3medioejer[5]+=tpoejer1;
-          array3medioejer2[5]+=tpoejer2;
-
-          array3mediovid[5]+=tpovid1;
-          array3mediovid2[5]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[5]+=cntdd1;
-
-          array4medio2[5]+=cntdd2;
-
-          array4medioejer[5]+=tpoejer1;
-          array4medioejer2[5]+=tpoejer2;
-
-          array4mediovid[5]+=tpovid1;
-          array4mediovid2[5]+=tpovid2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 5,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
       if (ee=="BA-Khan"){
         arraybakhan[level-1]+=cntdd1;
@@ -5502,138 +4930,19 @@ function graficarcompara(json, clase){
         arraybakhanvid[level-1]+=tpovid1;
         arraybakhanvid2[level-1]+=tpovid2;
 
-        if (level==1){
-          array1basico[6]+=cntdd1;
-
-          array1basico2[6]+=cntdd2;
-
-          array1basicoejer[6]+=tpoejer1;
-          array1basicoejer2[6]+=tpoejer2;
-
-          array1basicovid[6]+=tpovid1;
-          array1basicovid2[6]+=tpovid2;
-        }
-        if (level==2){
-          array2basico[6]+=cntdd1;
-
-          array2basico2[6]+=cntdd2;
-
-          array2basicoejer[6]+=tpoejer1;
-          array2basicoejer2[6]+=tpoejer2;
-
-          array2basicovid[6]+=tpovid1;
-          array2basicovid2[6]+=tpovid2;
-        }
-        if (level==3){
-          array3basico[6]+=cntdd1;
-
-          array3basico2[6]+=cntdd2;
-
-          array3basicoejer[6]+=tpoejer1;
-          array3basicoejer2[6]+=tpoejer2;
-
-          array3basicovid[6]+=tpovid1;
-          array3basicovid2[6]+=tpovid2;
-        }
-        if (level==4){
-          array4basico[6]+=cntdd1;
-
-          array4basico2[6]+=cntdd2;
-
-          array4basicoejer[6]+=tpoejer1;
-          array4basicoejer2[6]+=tpoejer2;
-
-          array4basicovid[6]+=tpovid1;
-          array4basicovid2[6]+=tpovid2;
-        }
-        if (level==5){
-          array5basico[6]+=cntdd1;
-
-          array5basico2[6]+=cntdd2;
-
-          array5basicoejer[6]+=tpoejer1;
-          array5basicoejer2[6]+=tpoejer2;
-
-          array5basicovid[6]+=tpovid1;
-          array5basicovid2[6]+=tpovid2;
-        }
-        if (level==6){
-          array6basico[6]+=cntdd1;
-
-          array6basico2[6]+=cntdd2;
-
-          array6basicoejer[6]+=tpoejer1;
-          array6basicoejer2[6]+=tpoejer2;
-
-          array6basicovid[6]+=tpovid1;
-          array6basicovid2[6]+=tpovid2;
-        }
-        if (level==7){
-          array7basico[6]+=cntdd1;
-
-          array7basico2[6]+=cntdd2;
-
-          array7basicoejer[6]+=tpoejer1;
-          array7basicoejer2[6]+=tpoejer2;
-
-          array7basicovid[6]+=tpovid1;
-          array7basicovid2[6]+=tpovid2;
-        }
-        if (level==8){
-          array8basico[6]+=cntdd1;
-
-          array8basico2[6]+=cntdd2;
-
-          array8basicoejer[6]+=tpoejer1;
-          array8basicoejer2[6]+=tpoejer2;
-
-          array8basicovid[6]+=tpovid1;
-          array8basicovid2[6]+=tpovid2;
-        }
-        if (level==9){
-          array1medio[6]+=cntdd1;
-
-          array1medio2[6]+=cntdd2;
-
-          array1medioejer[6]+=tpoejer1;
-          array1medioejer2[6]+=tpoejer2;
-
-          array1mediovid[6]+=tpovid1;
-          array1mediovid2[6]+=tpovid2;
-        }
-        if (level==10){
-          array2medio[6]+=cntdd1;
-
-          array2medio2[6]+=cntdd2;
-
-          array2medioejer[6]+=tpoejer1;
-          array2medioejer2[6]+=tpoejer2;
-
-          array2mediovid[6]+=tpovid1;
-          array2mediovid2[6]+=tpovid2;
-        }
-        if (level==11){
-          array3medio[6]+=cntdd1;
-
-          array3medio2[6]+=cntdd2;
-
-          array3medioejer[6]+=tpoejer1;
-          array3medioejer2[6]+=tpoejer2;
-
-          array3mediovid[6]+=tpovid1;
-          array3mediovid2[6]+=tpovid2;
-        }
-        if (level==12){
-          array4medio[6]+=cntdd1;
-
-          array4medio2[6]+=cntdd2;
-
-          array4medioejer[6]+=tpoejer1;
-          array4medioejer2[6]+=tpoejer2;
-
-          array4mediovid[6]+=tpovid1;
-          array4mediovid2[6]+=tpovid2;
-        }
+        statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, 6,
+          array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
+          array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
+          array3basico, array3basicoejer, array3basicovid, array3basico2, array3basicoejer2, array3basicovid2,
+          array4basico, array4basicoejer, array4basicovid, array4basico2, array4basicoejer2, array4basicovid2,
+          array5basico, array5basicoejer, array5basicovid, array5basico2, array5basicoejer2, array5basicovid2,
+          array6basico, array6basicoejer, array6basicovid, array6basico2, array6basicoejer2, array6basicovid2,
+          array7basico, array7basicoejer, array7basicovid, array7basico2, array7basicoejer2, array7basicovid2,
+          array8basico, array8basicoejer, array8basicovid, array8basico2, array8basicoejer2, array8basicovid2,
+          array1medio, array1medioejer, array1mediovid, array1medio2, array1medioejer2, array1mediovid2,
+          array2medio, array2medioejer, array2mediovid, array2medio2, array2medioejer2, array2mediovid2,
+          array3medio, array3medioejer, array3mediovid, array3medio2, array3medioejer2, array3mediovid2,
+          array4medio, array4medioejer, array4mediovid, array4medio2, array4medioejer2, array4mediovid2);
       }
 
       totaltodos1+=clase[i]["tiempo_ejercicios_clase_1"];
