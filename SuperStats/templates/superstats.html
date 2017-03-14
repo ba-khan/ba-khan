@@ -1116,7 +1116,7 @@ function graficar(json, clase){
       arraynombres[i]=nombre;
 
       var arrayskill;
-      var misiones = clase[i]["misiones"];
+      /*var misiones = clase[i]["misiones"];
       var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
 
       if (clase[i]["estudiantes_out_vid"]==0){
@@ -1124,7 +1124,7 @@ function graficar(json, clase){
       }
       else{
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
-      }
+      }*/
       
       if (clase[i]["estudiantes_out"]==0){
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
@@ -1132,7 +1132,7 @@ function graficar(json, clase){
       else{
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_out}</b>';
       }
-      
+      /*
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -1189,7 +1189,7 @@ function graficar(json, clase){
       }
       arregloclase[i]=arreglocurso;
       //console.log(estNivelEstablecimiento);
-    }
+    }*/
 
     arraycontainertodo[0]={'name': 'Cantidad de Ejercicios', 'data': arraycantidad, 'type':'column', 'yAxis': 1};0
     arraycontainertodo[1]={'name': 'Tiempo de Ejercicios', 'data': arraytpoejercicios, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
@@ -2157,8 +2157,8 @@ function graficar(json, clase){
     var pointarraycantest = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
   // AQUI SE DEBIERA INVOCAR LA FUNCION QUE GRAFICARA LAS MISIONES SELECCIONADAS
-  console.log("linea 2160");
-  console.log(arregloclase);
+  /*console.log("linea 2160");
+  console.log(arregloclase);*/
   /*
   try{
     var nombremision = 'sin nombre';
