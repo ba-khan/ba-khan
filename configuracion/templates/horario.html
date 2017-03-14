@@ -658,9 +658,14 @@ function fillParameters(id, kaid) {
 
 };
 function cambiarPestanna(pestanna, kaid_teacher) {
+	
+	for (var i = 0; i < label_input_teach.length; i++) {
+		$("input[value='"+label_input_teach[i]+"']").show();
+	};
+	$(".label_input").remove();
 
 
-	$('.testschedos').hide();
+	//$('.testschedos').hide();
 	$('.testsched').show();
 	$('#comboBox'+kaid_teacher).val($("#comboBox"+kaid_teacher+" option:first").val());
 	console.log($('input:checkbox'));
