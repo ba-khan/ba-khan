@@ -440,7 +440,7 @@ function crearEstadisticas(){
         data: {selcurso, selinst, desde, hasta, radioselect, selhorario, typechapter},
           success: function(response){
             jsonResponse = JSON.parse(response);
-            console.log(jsonResponse);
+            //console.log(jsonResponse);
             hideDivMain();
             showDiv();
             $('#button_last').show();
@@ -1483,52 +1483,49 @@ function graficar(json, clase){
 
 
     var arraypromedioinst= new Array(6).fill(0);
-    console.log("linea 1486");
-    console.log(estudiantesnivelesinst);
-    console.log(estudiantesniveles);
+    var auxEsts = ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'BA-Khan'];
     for (var i = 0; i < array1basico.length; i++) {
       var average=(array1basico[i]+array2basico[i]+array3basico[i]+array4basico[i]+array5basico[i]+array6basico[i]+array7basico[i]+array8basico[i]+array1medio[i]+array2medio[i]+array3medio[i]+array4medio[i])/estudiantesnivelesinst[i];
-      console.log(average);
-      array1basicoprom[i] = Math.round(array1basico[i]/estudiantesniveles[0]*100)/100;
-      array2basicoprom[i] = Math.round(array2basico[i]/estudiantesniveles[1]*100)/100;
-      array3basicoprom[i] = Math.round(array3basico[i]/estudiantesniveles[2]*100)/100;
-      array4basicoprom[i] = Math.round(array4basico[i]/estudiantesniveles[3]*100)/100;
-      array5basicoprom[i] = Math.round(array5basico[i]/estudiantesniveles[4]*100)/100;
-      array6basicoprom[i] = Math.round(array6basico[i]/estudiantesniveles[5]*100)/100;
-      array7basicoprom[i] = Math.round(array7basico[i]/estudiantesniveles[6]*100)/100;
-      array8basicoprom[i] = Math.round(array8basico[i]/estudiantesniveles[7]*100)/100;
-      array1medioprom[i] = Math.round(array1medio[i]/estudiantesniveles[8]*100)/100;
-      array2medioprom[i] = Math.round(array2medio[i]/estudiantesniveles[9]*100)/100;
-      array3medioprom[i] = Math.round(array3medio[i]/estudiantesniveles[10]*100)/100;
-      array4medioprom[i] = Math.round(array4medio[i]/estudiantesniveles[11]*100)/100;
+      //DIVIDIR POR CANTIDAD DE EST DEL NIVEL 8 DE LA INST i
+      array1basicoprom[i] = Math.round(array1basico[i]/estNivelEstablecimiento[auxEsts[i]][1]*100)/100;
+      array2basicoprom[i] = Math.round(array2basico[i]/estNivelEstablecimiento[auxEsts[i]][2]*100)/100;
+      array3basicoprom[i] = Math.round(array3basico[i]/estNivelEstablecimiento[auxEsts[i]][3]*100)/100;
+      array4basicoprom[i] = Math.round(array4basico[i]/estNivelEstablecimiento[auxEsts[i]][4]*100)/100;
+      array5basicoprom[i] = Math.round(array5basico[i]/estNivelEstablecimiento[auxEsts[i]][5]*100)/100;
+      array6basicoprom[i] = Math.round(array6basico[i]/estNivelEstablecimiento[auxEsts[i]][6]*100)/100;
+      array7basicoprom[i] = Math.round(array7basico[i]/estNivelEstablecimiento[auxEsts[i]][7]*100)/100;
+      array8basicoprom[i] = Math.round(array8basico[i]/estNivelEstablecimiento[auxEsts[i]][8]*100)/100;
+      array1medioprom[i] = Math.round(array1medio[i]/estNivelEstablecimiento[auxEsts[i]][9]*100)/100;
+      array2medioprom[i] = Math.round(array2medio[i]/estNivelEstablecimiento[auxEsts[i]][10]*100)/100;
+      array3medioprom[i] = Math.round(array3medio[i]/estNivelEstablecimiento[auxEsts[i]][11]*100)/100;
+      array4medioprom[i] = Math.round(array4medio[i]/estNivelEstablecimiento[auxEsts[i]][12]*100)/100;
 
-      array1basicoejerprom[i] = Math.round(array1basicoejer[i]/estudiantesniveles[0]*100)/100;
-      array2basicoejerprom[i] = Math.round(array2basicoejer[i]/estudiantesniveles[1]*100)/100;
-      array3basicoejerprom[i] = Math.round(array3basicoejer[i]/estudiantesniveles[2]*100)/100;
-      array4basicoejerprom[i] = Math.round(array4basicoejer[i]/estudiantesniveles[3]*100)/100;
-      array5basicoejerprom[i] = Math.round(array5basicoejer[i]/estudiantesniveles[4]*100)/100;
-      array6basicoejerprom[i] = Math.round(array6basicoejer[i]/estudiantesniveles[5]*100)/100;
-      array7basicoejerprom[i] = Math.round(array7basicoejer[i]/estudiantesniveles[6]*100)/100;
-      array8basicoejerprom[i] = Math.round(array8basicoejer[i]/estudiantesniveles[7]*100)/100;
-      array1medioejerprom[i] = Math.round(array1medioejer[i]/estudiantesniveles[8]*100)/100;
-      array2medioejerprom[i] = Math.round(array2medioejer[i]/estudiantesniveles[9]*100)/100;
-      array3medioejerprom[i] = Math.round(array3medioejer[i]/estudiantesniveles[10]*100)/100;
-      array4medioejerprom[i] = Math.round(array4medioejer[i]/estudiantesniveles[11]*100)/100;
+      array1basicoejerprom[i] = Math.round(array1basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][1]*100)/100;
+      array2basicoejerprom[i] = Math.round(array2basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][2]*100)/100;
+      array3basicoejerprom[i] = Math.round(array3basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][3]*100)/100;
+      array4basicoejerprom[i] = Math.round(array4basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][4]*100)/100;
+      array5basicoejerprom[i] = Math.round(array5basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][5]*100)/100;
+      array6basicoejerprom[i] = Math.round(array6basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][6]*100)/100;
+      array7basicoejerprom[i] = Math.round(array7basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][7]*100)/100;
+      array8basicoejerprom[i] = Math.round(array8basicoejer[i]/estNivelEstablecimiento[auxEsts[i]][8]*100)/100;
+      array1medioejerprom[i] = Math.round(array1medioejer[i]/estNivelEstablecimiento[auxEsts[i]][9]*100)/100;
+      array2medioejerprom[i] = Math.round(array2medioejer[i]/estNivelEstablecimiento[auxEsts[i]][10]*100)/100;
+      array3medioejerprom[i] = Math.round(array3medioejer[i]/estNivelEstablecimiento[auxEsts[i]][11]*100)/100;
+      array4medioejerprom[i] = Math.round(array4medioejer[i]/estNivelEstablecimiento[auxEsts[i]][12]*100)/100;
 
-      array1basicovidprom[i] = Math.round(array1basicovid[i]/estudiantesniveles[0]*100)/100;
-      array2basicovidprom[i] = Math.round(array2basicovid[i]/estudiantesniveles[1]*100)/100;
-      array3basicovidprom[i] = Math.round(array3basicovid[i]/estudiantesniveles[2]*100)/100;
-      array4basicovidprom[i] = Math.round(array4basicovid[i]/estudiantesniveles[3]*100)/100;
-      array5basicovidprom[i] = Math.round(array5basicovid[i]/estudiantesniveles[4]*100)/100;
-      array6basicovidprom[i] = Math.round(array6basicovid[i]/estudiantesniveles[5]*100)/100;
-      array7basicovidprom[i] = Math.round(array7basicovid[i]/estudiantesniveles[6]*100)/100;
-      array8basicovidprom[i] = Math.round(array8basicovid[i]/estudiantesniveles[7]*100)/100;
-      array1mediovidprom[i] = Math.round(array1mediovid[i]/estudiantesniveles[8]*100)/100;
-      array2mediovidprom[i] = Math.round(array2mediovid[i]/estudiantesniveles[9]*100)/100;
-      array3mediovidprom[i] = Math.round(array3mediovid[i]/estudiantesniveles[10]*100)/100;
-      array4mediovidprom[i] = Math.round(array4mediovid[i]/estudiantesniveles[11]*100)/100;
+      array1basicovidprom[i] = Math.round(array1basicovid[i]/estNivelEstablecimiento[auxEsts[i]][1]*100)/100;
+      array2basicovidprom[i] = Math.round(array2basicovid[i]/estNivelEstablecimiento[auxEsts[i]][2]*100)/100;
+      array3basicovidprom[i] = Math.round(array3basicovid[i]/estNivelEstablecimiento[auxEsts[i]][3]*100)/100;
+      array4basicovidprom[i] = Math.round(array4basicovid[i]/estNivelEstablecimiento[auxEsts[i]][4]*100)/100;
+      array5basicovidprom[i] = Math.round(array5basicovid[i]/estNivelEstablecimiento[auxEsts[i]][5]*100)/100;
+      array6basicovidprom[i] = Math.round(array6basicovid[i]/estNivelEstablecimiento[auxEsts[i]][6]*100)/100;
+      array7basicovidprom[i] = Math.round(array7basicovid[i]/estNivelEstablecimiento[auxEsts[i]][7]*100)/100;
+      array8basicovidprom[i] = Math.round(array8basicovid[i]/estNivelEstablecimiento[auxEsts[i]][8]*100)/100;
+      array1mediovidprom[i] = Math.round(array1mediovid[i]/estNivelEstablecimiento[auxEsts[i]][9]*100)/100;
+      array2mediovidprom[i] = Math.round(array2mediovid[i]/estNivelEstablecimiento[auxEsts[i]][10]*100)/100;
+      array3mediovidprom[i] = Math.round(array3mediovid[i]/estNivelEstablecimiento[auxEsts[i]][11]*100)/100;
+      array4mediovidprom[i] = Math.round(array4mediovid[i]/estNivelEstablecimiento[auxEsts[i]][12]*100)/100;
 
-      //console.log(estudiantesnivelesinst);
       if (isNaN(array1basicoprom[i])){
         array1basicoprom[i]=0;
       }
@@ -1647,8 +1644,6 @@ function graficar(json, clase){
         arraypromedioinst[i]=Math.round(average*100)/100;
       }
     }
-    //console.log(array1medioprom);
-    //console.log(array2medioprom);
 
     var categoriasdxi = ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'BA-Khan'];
     var realarray1basico=[];
@@ -1743,8 +1738,6 @@ function graficar(json, clase){
         arraypromedioejerinst[i]=Math.round(average*100)/100;
       }
     }
-    console.log("linea 1746");
-    console.log(arraypromedioejerinst);
 
     var arraypromediovidinst= new Array(6).fill(0);
     for (var i = 0; i < array1basicoejer.length; i++) {
@@ -1756,8 +1749,6 @@ function graficar(json, clase){
         arraypromediovidinst[i]=Math.round(average*100)/100;
       }
     }
-    console.log("linea 1759");
-    console.log(arraypromediovidinst);
 
     for (var i = 0; i < estudiantesnivelesinst.length; i++) {
       if(estudiantesnivelesinst[i]!=0){
@@ -1877,8 +1868,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinst.length; i++) {
       distxinst.splice(elementremoveinst[i]-i,1);
     };
-    console.log("linea 1880");
-    console.log(distxinst);
 
     distxinstprom[0]={'name':'1ro basico', 'data':realarray1basicoprom, 'type':'column', 'yAxis':1};
     distxinstprom[1]={'name':'2do basico', 'data':realarray2basicoprom, 'type':'column', 'yAxis':1};
@@ -1895,7 +1884,6 @@ function graficar(json, clase){
     distxinstprom[12]={'name':'Promedio Ejercicios', 'data':realarraypromedioinst, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
     distxinstprom[13]={'name':'Cantidad de Estudiantes', 'data':realestudiantesxnivelinst, 'type':'spline', 'color':'#89A54E', 'marker':{'enabled':true}, 'lineWidth': 0};
 
-    //console.log(distxinstprom);
     var contadorinstprom=0;
     for (var i = 0; i < distxinstprom.length; i++) {
       var verificador = true;
@@ -1912,8 +1900,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstprom.length; i++) {
       distxinstprom.splice(elementremoveinstprom[i]-i,1);
     };
-    console.log("linea 1915");
-    console.log(distxinstprom);
 
     distxnivelejer[0]={'name':'LSMB', 'data':realarraylsmbejer, 'type':'column', 'yAxis':1};
     distxnivelejer[1]={'name':'E.A.', 'data':realarrayeaejer, 'type':'column', 'yAxis':1};
@@ -1941,8 +1927,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveejer.length; i++) {
       distxnivelejer.splice(elementremoveejer[i]-i,1);
     };
-    console.log("linea 1944");
-    console.log(distxnivelejer);
 
     distxnivelejerprom[0]={'name':'LSMB', 'data':realarraylsmbejerprom, 'type':'column', 'yAxis':1};
     distxnivelejerprom[1]={'name':'E.A.', 'data':realarrayeaejerprom, 'type':'column', 'yAxis':1};
@@ -1969,10 +1953,7 @@ function graficar(json, clase){
     };
     for (var i = 0; i < elementremoveejerprom.length; i++) {
       distxnivelejerprom.splice(elementremoveejerprom[i]-i,1);
-    };
-    console.log("linea 1973");
-    console.log(distxnivelejerprom);
-    
+    };    
 
     distxinstejer[0]={'name':'1ro basico', 'data':realarray1basicoejer, 'type':'column', 'yAxis':1};
     distxinstejer[1]={'name':'2do basico', 'data':realarray2basicoejer, 'type':'column', 'yAxis':1};
@@ -2005,8 +1986,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstejer.length; i++) {
       distxinstejer.splice(elementremoveinstejer[i]-i,1);
     };
-    console.log("linea 2008");
-    console.log(distxinstejer);
 
     distxinstejerprom[0]={'name':'1ro basico', 'data':realarray1basicoejerprom, 'type':'column', 'yAxis':1};
     distxinstejerprom[1]={'name':'2do basico', 'data':realarray2basicoejerprom, 'type':'column', 'yAxis':1};
@@ -2039,8 +2018,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstejerprom.length; i++) {
       distxinstejerprom.splice(elementremoveinstejerprom[i]-i,1);
     };
-    console.log("linea 2042");
-    console.log(distxinstejerprom);
 
     distxnivelvid[0]={'name':'LSMB', 'data':realarraylsmbvid, 'type':'column', 'yAxis':1};
     distxnivelvid[1]={'name':'E.A.', 'data':realarrayeavid, 'type':'column', 'yAxis':1};
@@ -2068,8 +2045,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremovevid.length; i++) {
       distxnivelvid.splice(elementremovevid[i]-i,1);
     };
-    console.log("linea 2071");
-    console.log(distxnivelvid);
 
     distxnivelvidprom[0]={'name':'LSMB', 'data':realarraylsmbvidprom, 'type':'column', 'yAxis':1};
     distxnivelvidprom[1]={'name':'E.A.', 'data':realarrayeavidprom, 'type':'column', 'yAxis':1};
@@ -2097,8 +2072,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremovevidprom.length; i++) {
       distxnivelvidprom.splice(elementremovevidprom[i]-i,1);
     };
-    console.log("linea 2100");
-    console.log(distxnivelvidprom);
 
     distxinstvid[0]={'name':'1ro basico', 'data':realarray1basicovid, 'type':'column', 'yAxis':1};
     distxinstvid[1]={'name':'2do basico', 'data':realarray2basicovid, 'type':'column', 'yAxis':1};
@@ -2131,8 +2104,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstvid.length; i++) {
       distxinstvid.splice(elementremoveinstvid[i]-i,1);
     };
-    console.log("linea 2134");
-    console.log(distxinstvid);
 
     distxinstvidprom[0]={'name':'1ro basico', 'data':realarray1basicovidprom, 'type':'column', 'yAxis':1};
     distxinstvidprom[1]={'name':'2do basico', 'data':realarray2basicovidprom, 'type':'column', 'yAxis':1};
@@ -2165,8 +2136,6 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstvidprom.length; i++) {
       distxinstvidprom.splice(elementremoveinstvidprom[i]-i,1);
     };
-    console.log("linea 2168");
-    console.log(distxinstvidprom);
 
   }
   else{
