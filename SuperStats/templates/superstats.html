@@ -1131,8 +1131,8 @@ function graficar(json, clase){
       }
       else{
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_out}</b>';
-      }
-      /*
+      }/*
+      
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -1188,8 +1188,8 @@ function graficar(json, clase){
         }
       }
       arregloclase[i]=arreglocurso;
-      //console.log(estNivelEstablecimiento);
-    }*/
+      //console.log(estNivelEstablecimiento);*/
+    }
 
     arraycontainertodo[0]={'name': 'Cantidad de Ejercicios', 'data': arraycantidad, 'type':'column', 'yAxis': 1};0
     arraycontainertodo[1]={'name': 'Tiempo de Ejercicios', 'data': arraytpoejercicios, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'marker':{'enabled':true}, 'lineWidth': 0};
