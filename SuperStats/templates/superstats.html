@@ -1743,6 +1743,8 @@ function graficar(json, clase){
         arraypromedioejerinst[i]=Math.round(average*100)/100;
       }
     }
+    console.log("linea 1746");
+    console.log(arraypromedioejerinst);
 
     var arraypromediovidinst= new Array(6).fill(0);
     for (var i = 0; i < array1basicoejer.length; i++) {
@@ -1754,6 +1756,8 @@ function graficar(json, clase){
         arraypromediovidinst[i]=Math.round(average*100)/100;
       }
     }
+    console.log("linea 1759");
+    console.log(arraypromediovidinst);
 
     for (var i = 0; i < estudiantesnivelesinst.length; i++) {
       if(estudiantesnivelesinst[i]!=0){
@@ -1873,6 +1877,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinst.length; i++) {
       distxinst.splice(elementremoveinst[i]-i,1);
     };
+    console.log("linea 1880");
+    console.log(distxinst);
 
     distxinstprom[0]={'name':'1ro basico', 'data':realarray1basicoprom, 'type':'column', 'yAxis':1};
     distxinstprom[1]={'name':'2do basico', 'data':realarray2basicoprom, 'type':'column', 'yAxis':1};
@@ -1906,6 +1912,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstprom.length; i++) {
       distxinstprom.splice(elementremoveinstprom[i]-i,1);
     };
+    console.log("linea 1915");
+    console.log(distxinstprom);
 
     distxnivelejer[0]={'name':'LSMB', 'data':realarraylsmbejer, 'type':'column', 'yAxis':1};
     distxnivelejer[1]={'name':'E.A.', 'data':realarrayeaejer, 'type':'column', 'yAxis':1};
@@ -1933,6 +1941,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveejer.length; i++) {
       distxnivelejer.splice(elementremoveejer[i]-i,1);
     };
+    console.log("linea 1944");
+    console.log(distxnivelejer);
 
     distxnivelejerprom[0]={'name':'LSMB', 'data':realarraylsmbejerprom, 'type':'column', 'yAxis':1};
     distxnivelejerprom[1]={'name':'E.A.', 'data':realarrayeaejerprom, 'type':'column', 'yAxis':1};
@@ -1960,7 +1970,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveejerprom.length; i++) {
       distxnivelejerprom.splice(elementremoveejerprom[i]-i,1);
     };
-
+    console.log("linea 1973");
+    console.log(distxnivelejerprom);
     
 
     distxinstejer[0]={'name':'1ro basico', 'data':realarray1basicoejer, 'type':'column', 'yAxis':1};
@@ -1994,6 +2005,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstejer.length; i++) {
       distxinstejer.splice(elementremoveinstejer[i]-i,1);
     };
+    console.log("linea 2008");
+    console.log(distxinstejer);
 
     distxinstejerprom[0]={'name':'1ro basico', 'data':realarray1basicoejerprom, 'type':'column', 'yAxis':1};
     distxinstejerprom[1]={'name':'2do basico', 'data':realarray2basicoejerprom, 'type':'column', 'yAxis':1};
@@ -2026,6 +2039,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstejerprom.length; i++) {
       distxinstejerprom.splice(elementremoveinstejerprom[i]-i,1);
     };
+    console.log("linea 2042");
+    console.log(distxinstejerprom);
 
     distxnivelvid[0]={'name':'LSMB', 'data':realarraylsmbvid, 'type':'column', 'yAxis':1};
     distxnivelvid[1]={'name':'E.A.', 'data':realarrayeavid, 'type':'column', 'yAxis':1};
@@ -2053,6 +2068,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremovevid.length; i++) {
       distxnivelvid.splice(elementremovevid[i]-i,1);
     };
+    console.log("linea 2071");
+    console.log(distxnivelvid);
 
     distxnivelvidprom[0]={'name':'LSMB', 'data':realarraylsmbvidprom, 'type':'column', 'yAxis':1};
     distxnivelvidprom[1]={'name':'E.A.', 'data':realarrayeavidprom, 'type':'column', 'yAxis':1};
@@ -2080,6 +2097,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremovevidprom.length; i++) {
       distxnivelvidprom.splice(elementremovevidprom[i]-i,1);
     };
+    console.log("linea 2100");
+    console.log(distxnivelvidprom);
 
     distxinstvid[0]={'name':'1ro basico', 'data':realarray1basicovid, 'type':'column', 'yAxis':1};
     distxinstvid[1]={'name':'2do basico', 'data':realarray2basicovid, 'type':'column', 'yAxis':1};
@@ -2112,6 +2131,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstvid.length; i++) {
       distxinstvid.splice(elementremoveinstvid[i]-i,1);
     };
+    console.log("linea 2134");
+    console.log(distxinstvid);
 
     distxinstvidprom[0]={'name':'1ro basico', 'data':realarray1basicovidprom, 'type':'column', 'yAxis':1};
     distxinstvidprom[1]={'name':'2do basico', 'data':realarray2basicovidprom, 'type':'column', 'yAxis':1};
@@ -2144,6 +2165,8 @@ function graficar(json, clase){
     for (var i = 0; i < elementremoveinstvidprom.length; i++) {
       distxinstvidprom.splice(elementremoveinstvidprom[i]-i,1);
     };
+    console.log("linea 2168");
+    console.log(distxinstvidprom);
 
   }
   else{
