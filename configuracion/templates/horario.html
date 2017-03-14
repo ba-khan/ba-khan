@@ -166,6 +166,9 @@ input{
 .redBackground{
     background-color: gray;  
 }
+.inputWithoutLabel{
+    background-color: #E0E0E0;  
+}
 </style>
 
 
@@ -268,6 +271,7 @@ input{
 				{% endfor %}
 			</select>
 			</div>
+			<div id= "table_sch">
 			<table class="testsched">
 				<tr>
 					<th width="15%">Hora Inicio</th>
@@ -294,32 +298,8 @@ input{
 			</tr>
 			{% endfor %}
 			</table>
-			<table class="testschedos">
-				<tr>
-					<th width="11.5%">Hora Inicio</th>
-					<th width="11.5%">Hora Término</th>
-					<th width="11%" id="monday">Lunes</th>
-					<th width="11%" id="tuesday">Martes</th>
-					<th width="11%" id="wednesday">Miércoles</th>
-					<th width="11%" id="thursday">Jueves</th>
-					<th width="11%" id="friday">Viernes</th>
-					<th width="11%" id="saturday">Sábado</th>
-					<th width="11%" id="sunday">Domingo</th>
-				</tr>
-			{% for sch in schedules %}
-			<tr id="R{{ forloop.counter }}">
-				<td>{% if sch.start_time == None %}{{ "" }}{% else %}{{ sch.start_time }}{% endif %}</td>
-				<td id="sPhone{{ forloop.counter }}">{% if sch.end_time == None %}{{ "" }}{% else %}{{ sch.end_time }}{% endif %}</td>
-				<td><input type="checkbox" value="Monday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-				<td><input type="checkbox" value="Tuesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-				<td><input type="checkbox" value="Wednesday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-				<td><input type="checkbox" value="Thursday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-				<td><input type="checkbox" value="Friday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-				<td><input type="checkbox" value="Saturday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-				<td><input type="checkbox" value="Sunday_{{sch.id_schedule}}_{{teach.kaid_teacher}}_D" name="day"></td>
-			</tr>
-			{% endfor %}
-			</table>
+			</div>
+			
 
 			<a onclick="saveTeacherSchedule('day', '{{teach.kaid_teacher}}')" class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:130px; height: 35px; padding:8px; margin-top:10px" id="guardared">Guardar edición</a>
 		</div>
@@ -353,6 +333,9 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
 	    var days=values;
 	    var teacher = kaid_teacher;
 	    var datos={days, teacher, curso};
+
+	    console.log("datos");
+	    console.log(datos);
 	    $.ajax({
 	    	url: "{% url 'configuracion:guardar_horario' %}",
 	    	type: "POST",
@@ -365,6 +348,7 @@ function saveTeacherSchedule(checkboxName, kaid_teacher) {
 	    			$("#popup").append("<p class='response'>"+response+"</p>");
 	    			auxResponse = response;
 	    			if (auxResponse == "Horario para el profesor guardado"){
+	    				console.log("guardado");
 	    				$("#hover").css('pointer-events','none');
 						$("#close").css('pointer-events','none');
 						window.setTimeout(function(){location.reload()},1000);
@@ -517,120 +501,186 @@ function validar(){
 	return flag;
 }
 $(document).ready(function(){
-	  //chiusura al click sulla parte scura
 	  $("#hover").click(function(){
 	        $(this).fadeOut();
 	    $("#popup").fadeOut();
 	    });
 	  
-	  //chiusura al click sul pulsante
 	  $("#close").click(function(){
-	        $("#hover").fadeOut();
+	     $("#hover").fadeOut();
 	    $("#popup").fadeOut();
 	    });
 	  
 	});
 	$('#configuraciones').addClass('active selected');
 
+var label_input_teach = [];
 
 function fillParameters(id, kaid) {
+
+	for (var i = 0; i < label_input_teach.length; i++) {
+			$("input[value='"+label_input_teach[i]+"']").show();
+		};
+		$(".label_input").remove();
+
+	
 	if(id=="-1"){
-		$('.testsched').show();
-		$('.testschedos').hide();
+
+		
+		$('#comboBox'+kaid).val($("#comboBox"+kaid+" option:first").val());
+		console.log($('input:checkbox'));
+
 		$('input:checkbox').removeAttr('checked');
 		$('input[value*="day_"]').prop("disabled", false);
-		$("input[value*='day_']").prop("checked", true);
-		$("input[value*='Saturday_']").prop("checked", false);
-		$("input[value*='Sunday_']").prop("checked", false);
+
+
+		{% for csh in class_schedule %}
+			var kaid_t = "{{csh.kaid_teacher_id}}"
+			var day = "{{csh.day}}"
+			var id_schedule = "{{csh.id_schedule_id}}"
+			var idcheckbox=day+"_"+id_schedule+"_"+kaid_t
+			
+			if (kaid==kaid_t){
+				$('input[value*="'+idcheckbox+'"]').prop("disabled", false);
+				$("input[value*='"+idcheckbox+"']").prop("checked", true);
+			}
+
+			{% endfor %}
+
 	}
 	else if(id=="0"){
-		$('.testsched').hide();
-		$('.testschedos').show();
-		$('input[value*="day_"]').prop("disabled", true);
 		$('input:checkbox').removeAttr('checked');
+		$('input[value*="day"]').prop("disabled", true);
+
+
+		{% for csh in class_schedule %}
+
+			var kaid_t = "{{csh.kaid_teacher_id}}"
+			var day = "{{csh.day}}"
+			var id_schedule = "{{csh.id_schedule_id}}"
+			var id_class = "{{csh.id_class_id}}"
+
+			var idcheckbox=day+"_"+id_schedule+"_"+kaid_t
+			console.log("idcheckbox");
+			console.log(idcheckbox);
+			console.log("kaid");
+			console.log(kaid);
+			
+			if (kaid==kaid_t){
+					$("input[value*='"+idcheckbox+"']").prop("checked", false);
+
+
+				if (kaid == "None"){
+					$("input[value*='"+idcheckbox+"']").prop("checked", false);
+				}
+				else{
+					{% for teach in teachers %}
+					{% for clase in teach.classes %}
+						var idc = "{{clase.id_class}}"
+
+						if (idc == id_class){
+							{% if clase.additional %}
+							$("input[value='"+idcheckbox+"']").parent().append("<label class='label_input' style=' font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+							{% else %}
+							$("input[value='"+idcheckbox+"']").parent().append("<label class='label_input' style=' font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }}</label>")
+							{% endif %}
+							$("input[value='"+idcheckbox+"']").hide();
+							label_input_teach.push(idcheckbox);
+
+							$("input[value*='"+kaid+"']").prop("disabled", true);
+						}
+					{% endfor %}
+					{% endfor %}
+				}	
+			}
+
+			{% endfor %}
 	}
 	else{
-		$('.testsched').hide();
-		$('.testschedos').show();
-		$('input[value*="day_"]').prop("disabled", false);
+
+		console.log($('input:checkbox'));
+
 		$('input:checkbox').removeAttr('checked');
-	}
+		$('input[value*="day"]').prop("disabled", true);
 
-	{% for csh in class_schedule %}
-	var kaid_teacher = "{{csh.kaid_teacher_id}}"
-	var day = "{{csh.day}}"
-	var id_schedule = "{{csh.id_schedule_id}}"
-	var id_class = "{{csh.id_class_id}}"
-	var idcheckbox=day+"_"+id_schedule+"_"+kaid
-	var idcheckboxdos=day+"_"+id_schedule+"_"+kaid+"_D"
 
-	if (kaid==kaid_teacher){
-		if (id==id_class){
-			$("input[value='"+idcheckbox+"']").prop("checked", true);
-			$('input[value*="day_"]').prop("disabled", false);
-			$('.testsched').hide();
-			$('.testschedos').show();
-		}
-		if (id=="0"){
-			$('.testschedos').show();
-			$('.testsched').hide();
-			
-			//$("input[value='"+idcheckbox+"']").prop("checked", true);
-			//$('input[value*="day_"]').prop("disabled", true);
-			//aqui van los nombres de los cursos
-			
-			{% for teach in teachers %}
-			{% for clase in teach.classes %}
-			//console.log('algo')
-			var idc = "{{clase.id_class}}"
-			//console.log(idc)
-			if (idc == id_class){
-				$("input[value='"+idcheckboxdos+"']").parent().addClass("redBackground")
-				{% if clase.additional %}
-				$("input[value='"+idcheckboxdos+"']").parent().append("<label style='color:white; font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
-				{% else %}
-				$("input[value='"+idcheckboxdos+"']").parent().append("<label style='color:white; font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }}</label>")
-				{% endif %}
-				$("input[value='"+idcheckboxdos+"']").remove()
-				$("input[value*='"+kaid+"_D']").prop("disabled", true);
+		{% for csh in class_schedule %}
+
+			var kaid_t = "{{csh.kaid_teacher_id}}"
+			var day = "{{csh.day}}"
+			var id_schedule = "{{csh.id_schedule_id}}"
+			var id_class = "{{csh.id_class_id}}"
+
+			var idcheckbox=day+"_"+id_schedule+"_"+kaid_t
+
+			if (kaid==kaid_t){
+					$('input[value*="'+idcheckbox+'"]').prop("disabled", false);
+					$("input[value*='"+idcheckbox+"']").prop("checked", false);
+
+
+				if (kaid == "None"){
+					$('input[value*="'+idcheckbox+'"]').prop("disabled", false);
+					$("input[value*='"+idcheckbox+"']").prop("checked", false);
+				}
+				else{
+					{% for teach in teachers %}
+					{% for clase in teach.classes %}
+
+						var idc = "{{clase.id_class}}"
+
+
+						if (idc == id_class){
+							if (idc == id){
+								$("input[value*='"+idcheckbox+"']").prop("checked", true);
+
+							}
+
+						else{
+							{% if clase.additional %}
+							$("input[value='"+idcheckbox+"']").parent().append("<label class='label_input' style=' font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }} {{ clase.additional }}</label>")
+							{% else %}
+							$("input[value='"+idcheckbox+"']").parent().append("<label class='label_input' style=' font-size:75%; width:62px; text-align:center;'>{{ clase.nivel }} {{ clase.letter }}</label>")
+							{% endif %}
+							$("input[value='"+idcheckbox+"']").hide();
+							label_input_teach.push(idcheckbox);
+							}
+						}
+					{% endfor %}
+					{% endfor %}
+
+				}	
 			}
 			{% endfor %}
-			{% endfor %}
-			
-		}
-		if (id=="-1"){
-			$('.testsched').show();
-			$('.testschedos').hide();
-			$('input[value*="day_"]').prop("disabled", false);
-			$("input[value*='day_']").prop("checked", true);
-			$("input[value*='Saturday_']").prop("checked", false);
-			$("input[value*='Sunday_']").prop("checked", false);
-		}
 	}
-	{% endfor %}
+
+
+	
+
 };
 function cambiarPestanna(pestanna, kaid_teacher) {
+
+
 	$('.testschedos').hide();
 	$('.testsched').show();
 	$('#comboBox'+kaid_teacher).val($("#comboBox"+kaid_teacher+" option:first").val());
+	console.log($('input:checkbox'));
+
 	$('input:checkbox').removeAttr('checked');
 
-	$('input[value*="day_"]').prop("disabled", false);
-	$("input[value*='day_']").prop("checked", true);
-	$("input[value*='Saturday_']").prop("checked", false);
-	$("input[value*='Sunday_']").prop("checked", false);
 
 	{% for csh in class_schedule %}
 	var kaid = "{{csh.kaid_teacher_id}}"
 	var day = "{{csh.day}}"
 	var id_schedule = "{{csh.id_schedule_id}}"
 	var idcheckbox=day+"_"+id_schedule+"_"+kaid
+	console.log("idcheckbox");
+	console.log(idcheckbox);
+	console.log("kaid");
+	console.log(kaid);
 	
 	if (kaid==kaid_teacher){
-		$('input[value*="day_"]').prop("disabled", false);
-		$("input[value*='day_']").prop("checked", true);
-		$("input[value*='Saturday_']").prop("checked", false);
-		$("input[value*='Sunday_']").prop("checked", false);
+		$('input[value*="'+idcheckbox+'"]').prop("disabled", false);
+		$("input[value*='"+idcheckbox+"']").prop("checked", true);
 	}
 
 	{% endfor %}
