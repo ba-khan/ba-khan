@@ -468,99 +468,63 @@ function statsPerLevel(level, cantidad, tpo_ejercicios, tpo_videos, indice,
           array4medio, array4medioejer, array4mediovid){
         if (level==1){
           array1basico[indice]+=cantidad;
-          //array1basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array1basicoejer[indice]+=tpo_ejercicios;
-          //array1basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array1basicovid[indice]+=tpo_videos;
-          //array1basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==2){
           array2basico[indice]+=cantidad;
-          //array2basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array2basicoejer[indice]+=tpo_ejercicios;
-          //array2basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array2basicovid[indice]+=tpo_videos;
-          //array2basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==3){
           array3basico[indice]+=cantidad;
-          //array3basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array3basicoejer[indice]+=tpo_ejercicios;
-          //array3basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array3basicovid[indice]+=tpo_videos;
-          //array3basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==4){
           array4basico[indice]+=cantidad;
-          //array4basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array4basicoejer[indice]+=tpo_ejercicios;
-          //array4basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array4basicovid[indice]+=tpo_videos;
-          //array4basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==5){
           array5basico[indice]+=cantidad;
-          //array5basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array5basicoejer[indice]+=tpo_ejercicios;
-          //array5basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array5basicovid[indice]+=tpo_videos;
-          //array5basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==6){
           array6basico[indice]+=cantidad;
-          //array6basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array6basicoejer[indice]+=tpo_ejercicios;
-          //array6basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array6basicovid[indice]+=tpo_videos;
-          //array6basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==7){
           array7basico[indice]+=cantidad;
-          //array7basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array7basicoejer[indice]+=tpo_ejercicios;
-          //array7basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array7basicovid[indice]+=tpo_videos;
-          //array7basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==8){
           array8basico[indice]+=cantidad;
-          //array8basicoprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array8basicoejer[indice]+=tpo_ejercicios;
-          //array8basicoejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array8basicovid[indice]+=tpo_videos;
-          //array8basicovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==9){
           array1medio[indice]+=cantidad;
-          //array1medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array1medioejer[indice]+=tpo_ejercicios;
-          //array1medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array1mediovid[indice]+=tpo_videos;
-          //array1mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==10){
           array2medio[indice]+=cantidad;
-          //array2medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array2medioejer[indice]+=tpo_ejercicios;
-          //array2medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array2mediovid[indice]+=tpo_videos;
-          //array2mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==11){
           array3medio[indice]+=cantidad;
-          //array3medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array3medioejer[indice]+=tpo_ejercicios;
-          //array3medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array3mediovid[indice]+=tpo_videos;
-          //array3mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
         if (level==12){
           array4medio[indice]+=cantidad;
-          //array4medioprom[1]+=Math.round(cantidad/estudiantes.length*100)/100;
           array4medioejer[indice]+=tpo_ejercicios;
-          //array4medioejerprom[1]+=Math.round(tpo_ejercicios/estudiantes.length*100)/100;
           array4mediovid[indice]+=tpo_videos;
-          //array4mediovidprom[1]+=Math.round(tpo_videos/estudiantes.length*100)/100;
         }
 }
 function graficar(json, clase){
@@ -4089,6 +4053,20 @@ function graficarcompara(json, clase){
   var arraygrande=[];
   var arraygrandevideo=[];
   var j;
+  // Objeto para guardar el total de estudiantes por nivel de cada establecimiento
+  var estNivelEstablecimiento2 = {};
+  estNivelEstablecimiento2["LSMB"]={};
+  estNivelEstablecimiento2["E.A."]={};
+  estNivelEstablecimiento2["C.E.I."]={};
+  estNivelEstablecimiento2["L.A.V."]={};
+  estNivelEstablecimiento2["R.A.P."]={};
+  estNivelEstablecimiento2["L.G.M."]={};
+  estNivelEstablecimiento2["BA-Khan"]={};
+  for (establecimiento in estNivelEstablecimiento2){
+    for (var i = 1; i < 13; i++) {
+      estNivelEstablecimiento2[establecimiento][i]=0;
+    };
+  };
   if(json["clases"]){
     var clase = json["clases"]
     var tipo1 = clase[0]["tipo1"]
@@ -4425,6 +4403,13 @@ function graficarcompara(json, clase){
       var estudtrabtpoejer2=0;
       var estudtrabtpovid2=0;
       var estudtrabcantejer2=0;
+      // Para ir contando la cantidad de estudiantes de cada nivel
+      if (estNivelEstablecimiento2[""+ee][level]){
+        estNivelEstablecimiento2[""+ee][level]+=estudiantes.length;
+      }
+      else{
+        estNivelEstablecimiento2[""+ee][level]=estudiantes.length;
+      }
       totalestudiantes+=estudiantes.length;
       estudiantesniveles[level-1]+=estudiantes.length;
       for (j=0;j<estudiantes.length;j++){
@@ -4808,6 +4793,7 @@ function graficarcompara(json, clase){
       cantidad1[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_1"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer1, "maximo":maxtotejer1, "minimo":mintotejer1, "promedio":clase[i]["total_ejercicios_clase_1"]/estudtrabcantejer1};
       cantidad2[i]={"name":clase[i]["nombre"]+' '+clase[i]["establecimiento"],"y":clase[i]["total_ejercicios_clase_2"], "cantidad":estudiantes.length, "trabajaron":estudtrabcantejer2, "maximo":maxtotejer2, "minimo":mintotejer2, "promedio":clase[i]["total_ejercicios_clase_2"]/estudtrabcantejer2};
     }
+    console.log(estNivelEstablecimiento2);
     arraycontainertodo[0]={'name':'Cantidad de Ejercicios "'+tipo1+'"', 'data':arraycantidad1, 'type':'column', 'yAxis':1, 'color':'#7CB5EC', 'stack':tipo1};
     arraycontainertodo[1]={'name':'Cantidad de Ejercicios "'+tipo2+'"', 'data':arraycantidad2, 'type':'column', 'yAxis':1, 'color':'#434348', 'stack':tipo2};
     arraycontainertodo[2]={'name':'Tiempo de Ejercicios', 'data':arraygrande, 'type':'spline', 'color':'#AA4643', 'yAxis':2, 'xAxis':1,'marker':{'enabled':true}, 'lineWidth': 0};
@@ -5058,48 +5044,54 @@ function graficarcompara(json, clase){
     var arraypromedio= new Array(12).fill(0);
     for (var i = 0; i < arraylsmb.length; i++) {
       var average=(arraylsmb[i]+arrayea[i]+arraycei[i]+arraylav[i]+arrayrap[i]+arraygm[i]+arraybakhan[i])/estudiantesniveles[i];
-      arraylsmbprom[i]=Math.round(arraylsmb[i]/estudiantesniveles[i]*100)/100;
-      arrayeaprom[i]=Math.round(arrayea[i]/estudiantesniveles[i]*100)/100;
-      arrayceiprom[i]=Math.round(arraycei[i]/estudiantesniveles[i]*100)/100;
-      arraylavprom[i]=Math.round(arraylav[i]/estudiantesniveles[i]*100)/100;
-      arrayrapprom[i]=Math.round(arrayrap[i]/estudiantesniveles[i]*100)/100;
-      arraygmprom[i]=Math.round(arraygm[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanprom[i]=Math.round(arraybakhan[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbprom2[i]=Math.round(arraylsmb2[i]/estudiantesniveles[i]*100)/100;
-      arrayeaprom2[i]=Math.round(arrayea2[i]/estudiantesniveles[i]*100)/100;
-      arrayceiprom2[i]=Math.round(arraycei2[i]/estudiantesniveles[i]*100)/100;
-      arraylavprom2[i]=Math.round(arraylav2[i]/estudiantesniveles[i]*100)/100;
-      arrayrapprom2[i]=Math.round(arrayrap2[i]/estudiantesniveles[i]*100)/100;
-      arraygmprom2[i]=Math.round(arraygm2[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanprom2[i]=Math.round(arraybakhan2[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbejerprom[i]=Math.round(arraylsmbejer[i]/estudiantesniveles[i]*100)/100;
-      arrayeaejerprom[i]=Math.round(arrayeaejer[i]/estudiantesniveles[i]*100)/100;
-      arrayceiejerprom[i]=Math.round(arrayceiejer[i]/estudiantesniveles[i]*100)/100;
-      arraylavejerprom[i]=Math.round(arraylavejer[i]/estudiantesniveles[i]*100)/100;
-      arrayrapejerprom[i]=Math.round(arrayrapejer[i]/estudiantesniveles[i]*100)/100;
-      arraygmejerprom[i]=Math.round(arraygmejer[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanejerprom[i]=Math.round(arraybakhanejer[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbejerprom2[i]=Math.round(arraylsmbejer2[i]/estudiantesniveles[i]*100)/100;
-      arrayeaejerprom2[i]=Math.round(arrayeaejer2[i]/estudiantesniveles[i]*100)/100;
-      arrayceiejerprom2[i]=Math.round(arrayceiejer2[i]/estudiantesniveles[i]*100)/100;
-      arraylavejerprom2[i]=Math.round(arraylavejer2[i]/estudiantesniveles[i]*100)/100;
-      arrayrapejerprom2[i]=Math.round(arrayrapejer2[i]/estudiantesniveles[i]*100)/100;
-      arraygmejerprom2[i]=Math.round(arraygmejer2[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanejerprom2[i]=Math.round(arraybakhanejer2[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbvidprom[i]=Math.round(arraylsmbvid[i]/estudiantesniveles[i]*100)/100;
-      arrayeavidprom[i]=Math.round(arrayeavid[i]/estudiantesniveles[i]*100)/100;
-      arrayceividprom[i]=Math.round(arrayceivid[i]/estudiantesniveles[i]*100)/100;
-      arraylavvidprom[i]=Math.round(arraylavvid[i]/estudiantesniveles[i]*100)/100;
-      arrayrapvidprom[i]=Math.round(arrayrapvid[i]/estudiantesniveles[i]*100)/100;
-      arraygmvidprom[i]=Math.round(arraygmvid[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanvidprom[i]=Math.round(arraybakhanvid[i]/estudiantesniveles[i]*100)/100;
-      arraylsmbvidprom2[i]=Math.round(arraylsmbvid2[i]/estudiantesniveles[i]*100)/100;
-      arrayeavidprom2[i]=Math.round(arrayeavid2[i]/estudiantesniveles[i]*100)/100;
-      arrayceividprom2[i]=Math.round(arrayceivid2[i]/estudiantesniveles[i]*100)/100;
-      arraylavvidprom2[i]=Math.round(arraylavvid2[i]/estudiantesniveles[i]*100)/100;
-      arrayrapvidprom2[i]=Math.round(arrayrapvid2[i]/estudiantesniveles[i]*100)/100;
-      arraygmvidprom2[i]=Math.round(arraygmvid2[i]/estudiantesniveles[i]*100)/100;
-      arraybakhanvidprom2[i]=Math.round(arraybakhanvid2[i]/estudiantesniveles[i]*100)/100;
+      j=i+1;
+      arraylsmbprom[i]=Math.round(arraylsmb[i]/estNivelEstablecimiento2["LSMB"][j]*100)/100;
+      arrayeaprom[i]=Math.round(arrayea[i]/estNivelEstablecimiento2["E.A."][j]*100)/100;
+      arrayceiprom[i]=Math.round(arraycei[i]/estNivelEstablecimiento2["C.E.I."][j]*100)/100;
+      arraylavprom[i]=Math.round(arraylav[i]/estNivelEstablecimiento2["L.A.V."][j]*100)/100;
+      arrayrapprom[i]=Math.round(arrayrap[i]/estNivelEstablecimiento2["R.A.P."][j]*100)/100;
+      arraygmprom[i]=Math.round(arraygm[i]/estNivelEstablecimiento2["L.G.M."][j]*100)/100;
+      arraybakhanprom[i]=Math.round(arraybakhan[i]/estNivelEstablecimiento2["BA-Khan"][j]*100)/100;
+
+      arraylsmbprom2[i]=Math.round(arraylsmb2[i]/estNivelEstablecimiento2["LSMB"][j]*100)/100;
+      arrayeaprom2[i]=Math.round(arrayea2[i]/estNivelEstablecimiento2["E.A."][j]*100)/100;
+      arrayceiprom2[i]=Math.round(arraycei2[i]/estNivelEstablecimient2o["C.E.I."][j]*100)/100;
+      arraylavprom2[i]=Math.round(arraylav2[i]/estNivelEstablecimiento2["L.A.V."][j]*100)/100;
+      arrayrapprom2[i]=Math.round(arrayrap2[i]/estNivelEstablecimiento2["R.A.P."][j]*100)/100;
+      arraygmprom2[i]=Math.round(arraygm2[i]/estNivelEstablecimiento2["L.G.M."][j]*100)/100;
+      arraybakhanprom2[i]=Math.round(arraybakhan2[i]/estNivelEstablecimiento2["BA-Khan"][j]*100)/100;
+
+      arraylsmbejerprom[i]=Math.round(arraylsmbejer[i]/estNivelEstablecimiento2["LSMB"][j]*100)/100;
+      arrayeaejerprom[i]=Math.round(arrayeaejer[i]/estNivelEstablecimiento2["E.A."][j]*100)/100;
+      arrayceiejerprom[i]=Math.round(arrayceiejer[i]/estNivelEstablecimiento2["C.E.I."][j]*100)/100;
+      arraylavejerprom[i]=Math.round(arraylavejer[i]/estNivelEstablecimiento2["L.A.V."][j]*100)/100;
+      arrayrapejerprom[i]=Math.round(arrayrapejer[i]/estNivelEstablecimiento2["R.A.P."][j]*100)/100;
+      arraygmejerprom[i]=Math.round(arraygmejer[i]/estNivelEstablecimiento2["L.G.M."][j]*100)/100;
+      arraybakhanejerprom[i]=Math.round(arraybakhanejer[i]/estNivelEstablecimiento2["BA-Khan"][j]*100)/100;
+
+      arraylsmbejerprom2[i]=Math.round(arraylsmbejer2[i]/estNivelEstablecimiento2["LSMB"][j]*100)/100;
+      arrayeaejerprom2[i]=Math.round(arrayeaejer2[i]/estNivelEstablecimiento2["E.A."][j]*100)/100;
+      arrayceiejerprom2[i]=Math.round(arrayceiejer2[i]/estNivelEstablecimiento2["C.E.I."][j]*100)/100;
+      arraylavejerprom2[i]=Math.round(arraylavejer2[i]/estNivelEstablecimiento2["L.A.V."][j]*100)/100;
+      arrayrapejerprom2[i]=Math.round(arrayrapejer2[i]/estNivelEstablecimiento2["R.A.P."][j]*100)/100;
+      arraygmejerprom2[i]=Math.round(arraygmejer2[i]/estNivelEstablecimiento2["L.G.M."][j]*100)/100;
+      arraybakhanejerprom2[i]=Math.round(arraybakhanejer2[i]/estNivelEstablecimiento2["BA-Khan"][j]*100)/100;
+
+      arraylsmbvidprom[i]=Math.round(arraylsmbvid[i]/estNivelEstablecimiento2["LSMB"][j]*100)/100;
+      arrayeavidprom[i]=Math.round(arrayeavid[i]/estNivelEstablecimiento2["E.A."][j]*100)/100;
+      arrayceividprom[i]=Math.round(arrayceivid[i]/estNivelEstablecimiento2["C.E.I."][j]*100)/100;
+      arraylavvidprom[i]=Math.round(arraylavvid[i]/estNivelEstablecimiento2["L.A.V."][j]*100)/100;
+      arrayrapvidprom[i]=Math.round(arrayrapvid[i]/estNivelEstablecimiento2["R.A.P."][j]*100)/100;
+      arraygmvidprom[i]=Math.round(arraygmvid[i]/estNivelEstablecimiento2["L.G.M."][j]*100)/100;
+      arraybakhanvidprom[i]=Math.round(arraybakhanvid[i]/estNivelEstablecimiento2["BA-Khan"][j]*100)/100;
+
+      arraylsmbvidprom2[i]=Math.round(arraylsmbvid2[i]/estNivelEstablecimiento2["LSMB"][j]*100)/100;
+      arrayeavidprom2[i]=Math.round(arrayeavid2[i]/estNivelEstablecimiento2["E.A."][j]*100)/100;
+      arrayceividprom2[i]=Math.round(arrayceivid2[i]/estNivelEstablecimiento2["C.E.I."][j]*100)/100;
+      arraylavvidprom2[i]=Math.round(arraylavvid2[i]/estNivelEstablecimiento2["L.A.V."][j]*100)/100;
+      arrayrapvidprom2[i]=Math.round(arrayrapvid2[i]/estNivelEstablecimiento2["R.A.P."][j]*100)/100;
+      arraygmvidprom2[i]=Math.round(arraygmvid2[i]/estNivelEstablecimiento2["L.G.M."][j]*100)/100;
+      arraybakhanvidprom2[i]=Math.round(arraybakhanvid2[i]/estNivelEstablecimiento2["BA-Khan"][j]*100)/100;
       if (isNaN(arraylsmbprom[i])){
         arraylsmbprom[i]=0;
       }
@@ -5386,80 +5378,81 @@ function graficarcompara(json, clase){
       }
     }
     var arraypromedioinst= new Array(6).fill(0);
+    var auxEsts = ['LSMB', 'E.A.', 'C.E.I.', 'L.A.V.', 'R.A.P.', 'L.G.M.', 'BA-Khan'];
     for (var i = 0; i < array1basico.length; i++) {
       var average=(array1basico[i]+array2basico[i]+array3basico[i]+array4basico[i]+array5basico[i]+array6basico[i]+array7basico[i]+array8basico[i]+array1medio[i]+array2medio[i]+array3medio[i]+array4medio[i])/estudiantesnivelesinst[i];
-      array1basicoprom[i]=Math.round(array1basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array2basicoprom[i]=Math.round(array2basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array3basicoprom[i]=Math.round(array3basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array4basicoprom[i]=Math.round(array4basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array5basicoprom[i]=Math.round(array5basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array6basicoprom[i]=Math.round(array6basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array7basicoprom[i]=Math.round(array7basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array8basicoprom[i]=Math.round(array8basico[i]/estudiantesnivelesinst[i]*100)/100;
-      array1medioprom[i]=Math.round(array1medio[i]/estudiantesnivelesinst[i]*100)/100;
-      array2medioprom[i]=Math.round(array2medio[i]/estudiantesnivelesinst[i]*100)/100;
-      array3medioprom[i]=Math.round(array3medio[i]/estudiantesnivelesinst[i]*100)/100;
-      array4medioprom[i]=Math.round(array4medio[i]/estudiantesnivelesinst[i]*100)/100;
-      array1basicoprom2[i]=Math.round(array1basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array2basicoprom2[i]=Math.round(array2basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array3basicoprom2[i]=Math.round(array3basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array4basicoprom2[i]=Math.round(array4basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array5basicoprom2[i]=Math.round(array5basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array6basicoprom2[i]=Math.round(array6basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array7basicoprom2[i]=Math.round(array7basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array8basicoprom2[i]=Math.round(array8basico2[i]/estudiantesnivelesinst[i]*100)/100;
-      array1medioprom2[i]=Math.round(array1medio2[i]/estudiantesnivelesinst[i]*100)/100;
-      array2medioprom2[i]=Math.round(array2medio2[i]/estudiantesnivelesinst[i]*100)/100;
-      array3medioprom2[i]=Math.round(array3medio2[i]/estudiantesnivelesinst[i]*100)/100;
-      array4medioprom2[i]=Math.round(array4medio2[i]/estudiantesnivelesinst[i]*100)/100;
-      array1basicoejerprom[i]=Math.round(array1basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array2basicoejerprom[i]=Math.round(array2basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array3basicoejerprom[i]=Math.round(array3basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array4basicoejerprom[i]=Math.round(array4basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array5basicoejerprom[i]=Math.round(array5basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array6basicoejerprom[i]=Math.round(array6basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array7basicoejerprom[i]=Math.round(array7basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array8basicoejerprom[i]=Math.round(array8basicoejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array1medioejerprom[i]=Math.round(array1medioejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array2medioejerprom[i]=Math.round(array2medioejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array3medioejerprom[i]=Math.round(array3medioejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array4medioejerprom[i]=Math.round(array4medioejer[i]/estudiantesnivelesinst[i]*100)/100;
-      array1basicoejerprom2[i]=Math.round(array1basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array2basicoejerprom2[i]=Math.round(array2basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array3basicoejerprom2[i]=Math.round(array3basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array4basicoejerprom2[i]=Math.round(array4basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array5basicoejerprom2[i]=Math.round(array5basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array6basicoejerprom2[i]=Math.round(array6basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array7basicoejerprom2[i]=Math.round(array7basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array8basicoejerprom2[i]=Math.round(array8basicoejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array1medioejerprom2[i]=Math.round(array1medioejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array2medioejerprom2[i]=Math.round(array2medioejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array3medioejerprom2[i]=Math.round(array3medioejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array4medioejerprom2[i]=Math.round(array4medioejer2[i]/estudiantesnivelesinst[i]*100)/100;
-      array1basicovidprom[i]=Math.round(array1basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array2basicovidprom[i]=Math.round(array2basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array3basicovidprom[i]=Math.round(array3basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array4basicovidprom[i]=Math.round(array4basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array5basicovidprom[i]=Math.round(array5basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array6basicovidprom[i]=Math.round(array6basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array7basicovidprom[i]=Math.round(array7basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array8basicovidprom[i]=Math.round(array8basicovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array1mediovidprom[i]=Math.round(array1mediovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array2mediovidprom[i]=Math.round(array2mediovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array3mediovidprom[i]=Math.round(array3mediovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array4mediovidprom[i]=Math.round(array4mediovid[i]/estudiantesnivelesinst[i]*100)/100;
-      array1basicovidprom2[i]=Math.round(array1basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array2basicovidprom2[i]=Math.round(array2basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array3basicovidprom2[i]=Math.round(array3basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array4basicovidprom2[i]=Math.round(array4basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array5basicovidprom2[i]=Math.round(array5basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array6basicovidprom2[i]=Math.round(array6basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array7basicovidprom2[i]=Math.round(array7basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array8basicovidprom2[i]=Math.round(array8basicovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array1mediovidprom2[i]=Math.round(array1mediovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array2mediovidprom2[i]=Math.round(array2mediovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array3mediovidprom2[i]=Math.round(array3mediovid2[i]/estudiantesnivelesinst[i]*100)/100;
-      array4mediovidprom2[i]=Math.round(array4mediovid2[i]/estudiantesnivelesinst[i]*100)/100;
+      array1basicoprom[i]=Math.round(array1basico[i]/estNivelEstablecimiento2[auxEsts[i]][1]*100)/100;
+      array2basicoprom[i]=Math.round(array2basico[i]/estNivelEstablecimiento2[auxEsts[i]][2]*100)/100;
+      array3basicoprom[i]=Math.round(array3basico[i]/estNivelEstablecimiento2[auxEsts[i]][3]*100)/100;
+      array4basicoprom[i]=Math.round(array4basico[i]/estNivelEstablecimiento2[auxEsts[i]][4]*100)/100;
+      array5basicoprom[i]=Math.round(array5basico[i]/estNivelEstablecimiento2[auxEsts[i]][5]*100)/100;
+      array6basicoprom[i]=Math.round(array6basico[i]/estNivelEstablecimiento2[auxEsts[i]][6]*100)/100;
+      array7basicoprom[i]=Math.round(array7basico[i]/estNivelEstablecimiento2[auxEsts[i]][7]*100)/100;
+      array8basicoprom[i]=Math.round(array8basico[i]/estNivelEstablecimiento2[auxEsts[i]][8]*100)/100;
+      array1medioprom[i]=Math.round(array1medio[i]/estNivelEstablecimiento2[auxEsts[i]][9]*100)/100;
+      array2medioprom[i]=Math.round(array2medio[i]/estNivelEstablecimiento2[auxEsts[i]][10]*100)/100;
+      array3medioprom[i]=Math.round(array3medio[i]/estNivelEstablecimiento2[auxEsts[i]][11]*100)/100;
+      array4medioprom[i]=Math.round(array4medio[i]/estNivelEstablecimiento2[auxEsts[i]][12]*100)/100;
+      array1basicoprom2[i]=Math.round(array1basico2[i]/estNivelEstablecimiento2[auxEsts[i]][1]*100)/100;
+      array2basicoprom2[i]=Math.round(array2basico2[i]/estNivelEstablecimiento2[auxEsts[i]][2]*100)/100;
+      array3basicoprom2[i]=Math.round(array3basico2[i]/estNivelEstablecimiento2[auxEsts[i]][3]*100)/100;
+      array4basicoprom2[i]=Math.round(array4basico2[i]/estNivelEstablecimiento2[auxEsts[i]][4]*100)/100;
+      array5basicoprom2[i]=Math.round(array5basico2[i]/estNivelEstablecimiento2[auxEsts[i]][5]*100)/100;
+      array6basicoprom2[i]=Math.round(array6basico2[i]/estNivelEstablecimiento2[auxEsts[i]][6]*100)/100;
+      array7basicoprom2[i]=Math.round(array7basico2[i]/estNivelEstablecimiento2[auxEsts[i]][7]*100)/100;
+      array8basicoprom2[i]=Math.round(array8basico2[i]/estNivelEstablecimiento2[auxEsts[i]][8]*100)/100;
+      array1medioprom2[i]=Math.round(array1medio2[i]/estNivelEstablecimiento2[auxEsts[i]][9]*100)/100;
+      array2medioprom2[i]=Math.round(array2medio2[i]/estNivelEstablecimiento2[auxEsts[i]][10]*100)/100;
+      array3medioprom2[i]=Math.round(array3medio2[i]/estNivelEstablecimiento2[auxEsts[i]][11]*100)/100;
+      array4medioprom2[i]=Math.round(array4medio2[i]/estNivelEstablecimiento2[auxEsts[i]][12]*100)/100;
+      array1basicoejerprom[i]=Math.round(array1basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][1]*100)/100;
+      array2basicoejerprom[i]=Math.round(array2basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][2]*100)/100;
+      array3basicoejerprom[i]=Math.round(array3basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][3]*100)/100;
+      array4basicoejerprom[i]=Math.round(array4basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][4]*100)/100;
+      array5basicoejerprom[i]=Math.round(array5basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][5]*100)/100;
+      array6basicoejerprom[i]=Math.round(array6basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][6]*100)/100;
+      array7basicoejerprom[i]=Math.round(array7basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][7]*100)/100;
+      array8basicoejerprom[i]=Math.round(array8basicoejer[i]/estNivelEstablecimiento2[auxEsts[i]][8]*100)/100;
+      array1medioejerprom[i]=Math.round(array1medioejer[i]/estNivelEstablecimiento2[auxEsts[i]][9]*100)/100;
+      array2medioejerprom[i]=Math.round(array2medioejer[i]/estNivelEstablecimiento2[auxEsts[i]][10]*100)/100;
+      array3medioejerprom[i]=Math.round(array3medioejer[i]/estNivelEstablecimiento2[auxEsts[i]][11]*100)/100;
+      array4medioejerprom[i]=Math.round(array4medioejer[i]/estNivelEstablecimiento2[auxEsts[i]][12]*100)/100;
+      array1basicoejerprom2[i]=Math.round(array1basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][1]*100)/100;
+      array2basicoejerprom2[i]=Math.round(array2basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][2]*100)/100;
+      array3basicoejerprom2[i]=Math.round(array3basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][3]*100)/100;
+      array4basicoejerprom2[i]=Math.round(array4basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][4]*100)/100;
+      array5basicoejerprom2[i]=Math.round(array5basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][5]*100)/100;
+      array6basicoejerprom2[i]=Math.round(array6basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][6]*100)/100;
+      array7basicoejerprom2[i]=Math.round(array7basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][7]*100)/100;
+      array8basicoejerprom2[i]=Math.round(array8basicoejer2[i]/estNivelEstablecimiento2[auxEsts[i]][8]*100)/100;
+      array1medioejerprom2[i]=Math.round(array1medioejer2[i]/estNivelEstablecimiento2[auxEsts[i]][9]*100)/100;
+      array2medioejerprom2[i]=Math.round(array2medioejer2[i]/estNivelEstablecimiento2[auxEsts[i]][10]*100)/100;
+      array3medioejerprom2[i]=Math.round(array3medioejer2[i]/estNivelEstablecimiento2[auxEsts[i]][11]*100)/100;
+      array4medioejerprom2[i]=Math.round(array4medioejer2[i]/estNivelEstablecimiento2[auxEsts[i]][12]*100)/100;
+      array1basicovidprom[i]=Math.round(array1basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][1]*100)/100;
+      array2basicovidprom[i]=Math.round(array2basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][2]*100)/100;
+      array3basicovidprom[i]=Math.round(array3basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][3]*100)/100;
+      array4basicovidprom[i]=Math.round(array4basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][4]*100)/100;
+      array5basicovidprom[i]=Math.round(array5basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][5]*100)/100;
+      array6basicovidprom[i]=Math.round(array6basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][6]*100)/100;
+      array7basicovidprom[i]=Math.round(array7basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][7]*100)/100;
+      array8basicovidprom[i]=Math.round(array8basicovid[i]/estNivelEstablecimiento2[auxEsts[i]][8]*100)/100;
+      array1mediovidprom[i]=Math.round(array1mediovid[i]/estNivelEstablecimiento2[auxEsts[i]][9]*100)/100;
+      array2mediovidprom[i]=Math.round(array2mediovid[i]/estNivelEstablecimiento2[auxEsts[i]][10]*100)/100;
+      array3mediovidprom[i]=Math.round(array3mediovid[i]/estNivelEstablecimiento2[auxEsts[i]][11]*100)/100;
+      array4mediovidprom[i]=Math.round(array4mediovid[i]/estNivelEstablecimiento2[auxEsts[i]][12]*100)/100;
+      array1basicovidprom2[i]=Math.round(array1basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][1]*100)/100;
+      array2basicovidprom2[i]=Math.round(array2basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][2]*100)/100;
+      array3basicovidprom2[i]=Math.round(array3basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][3]*100)/100;
+      array4basicovidprom2[i]=Math.round(array4basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][4]*100)/100;
+      array5basicovidprom2[i]=Math.round(array5basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][5]*100)/100;
+      array6basicovidprom2[i]=Math.round(array6basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][6]*100)/100;
+      array7basicovidprom2[i]=Math.round(array7basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][7]*100)/100;
+      array8basicovidprom2[i]=Math.round(array8basicovid2[i]/estNivelEstablecimiento2[auxEsts[i]][8]*100)/100;
+      array1mediovidprom2[i]=Math.round(array1mediovid2[i]/estNivelEstablecimiento2[auxEsts[i]][9]*100)/100;
+      array2mediovidprom2[i]=Math.round(array2mediovid2[i]/estNivelEstablecimiento2[auxEsts[i]][10]*100)/100;
+      array3mediovidprom2[i]=Math.round(array3mediovid2[i]/estNivelEstablecimiento2[auxEsts[i]][11]*100)/100;
+      array4mediovidprom2[i]=Math.round(array4mediovid2[i]/estNivelEstablecimiento2[auxEsts[i]][12]*100)/100;
       if (isNaN(array1basicoprom[i])){
         array1basicoprom[i]=0;
       }
