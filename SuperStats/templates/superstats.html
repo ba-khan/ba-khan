@@ -251,6 +251,21 @@
   </div>
 <div class="widget">
     <div class="header">Misiones</div>
+    <select id="levelMisiones" class="skill_search">
+          <OPTION VALUE="1">1ro Basico</OPTION>
+          <OPTION VALUE="2">2do Basico</OPTION>
+          <OPTION VALUE="3">3ro Basico</OPTION>
+          <OPTION VALUE="4">4ro Basico</OPTION>
+          <OPTION VALUE="5">5ro Basico</OPTION>
+          <OPTION VALUE="6">6ro Basico</OPTION>
+          <OPTION VALUE="7">7mo Basico</OPTION>
+          <OPTION VALUE="8">8vo Basico</OPTION>
+          <OPTION VALUE="9">1ro Medio</OPTION>
+          <OPTION VALUE="10">2do Medio</OPTION>
+          <OPTION VALUE="11">3ro Medio</OPTION>
+          <OPTION VALUE="12">4ro Medio</OPTION>
+    </select>
+    <input type="button" id="button_misiones" onClick="graficarMisiones()" class="kui-button kui-button-plain kui-button-primary" value="GraficarMisiones">
     <div id="chart" class="chart-container">
     
     </div>
@@ -408,18 +423,36 @@ function crearEstadisticas(){
     hasta = document.getElementById("hasta").value;
     //$('.principal').fadeOut();
     if (radioselect=="radio1" || radioselect=="radio2" || radioselect=="radio3" || radioselect=="radio4"){
+      /*var responsee = $.getJSON("{% static 'response.json' %}", function() {
+        
+        console.log( "success" );
+      });
+      console.log(responsee);
+      setTimeout(function(){
+          jsonResponse = responsee["responseJSON"];
+          console.log(jsonResponse);
+          hideDivMain();
+          showDiv();
+          $('#button_last').show();
+          $('.widget').hide();
+          stoploading();
+          graficar(jsonResponse, selinst);
+          $('.widget').show();
+      }, 2000);*/
+      
+      
       $.ajax({
         url: "{% url 'SuperStats:selectSuperStats' %}",
         type: "POST",
         data: {selcurso, selinst, desde, hasta, radioselect, selhorario, typechapter},
           success: function(response){
             jsonResponse = JSON.parse(response);
-            //console.log(jsonResponse);
+            console.log(jsonResponse);
             hideDivMain();
             showDiv();
             $('#button_last').show();
             $('.widget').hide();
-            //console.log(response);
+            console.log(response);
             //$('#loading').hide()
             stoploading();
             graficar(jsonResponse, selinst);
@@ -527,6 +560,9 @@ function statsPerLevel(level, cantidad, tpo_ejercicios, tpo_videos, indice,
           array4mediovid[indice]+=tpo_videos;
         }
 }
+var arregloclase=[];
+var mission=[];
+var listaEstablecimientos=[];
 function graficar(json, clase){
   //console.log(json);
   $('#ordenartot3').show();
@@ -695,7 +731,7 @@ function graficar(json, clase){
   var serietpo=[];
   var serievid=[];
   var j;
-  var mission=[];
+  //var mission=[];
   var estudianteslsmb=0;
   var estudiantesea=0;
   var estudiantescei=0;
@@ -738,7 +774,7 @@ function graficar(json, clase){
   if(json["clases"]){
     var clase = json["clases"]
     var colorcolumn=[];
-    var arregloclase=[];
+    //var arregloclase=[]; Se define fuera de la funcion, variable global
     for (var i=0;i<clase.length;i++){
       var datosest=[];
       var tpoest=[];
@@ -762,6 +798,9 @@ function graficar(json, clase){
       var estudtrabtpoejer=0;
       var estudtrabtpovid=0;
       var estudtrabcantejer=0;
+      if (listaEstablecimientos.includes(ee)==false){ //Identificar los nombres de establecimientos seleccionados
+        listaEstablecimientos.push(""+ee);
+      }
       // Para ir contando la cantidad de estudiantes de cada nivel
       if (estNivelEstablecimiento[""+ee][level]){
         estNivelEstablecimiento[""+ee][level]+=estudiantes.length;
@@ -980,14 +1019,14 @@ function graficar(json, clase){
       arraytpovideos[i]=tpo_videos;
       arraynombres[i]=nombre;
       var arrayskill;
-      //var misiones = clase[i]["misiones"];
-      //var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
-      /*if (clase[i]["estudiantes_out_vid"]==0){
+      var misiones = clase[i]["misiones"];
+      var pointarrayte = 'Tiempo de ejercicios: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Tiempo promedio esperado: <b>{point.tpo_esperado:,.0f} segundos</b>';
+      if (clase[i]["estudiantes_out_vid"]==0){
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
       }
       else{
         var pointarraytv = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo:,.0f} segundos</b><br> Mínimo: <b>{point.minimo:,.0f} segundos</b><br> Promedio: <b>{point.promedio:,.1f} segundos</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_vid_out}</b>';
-      }*/
+      }
       
       if (clase[i]["estudiantes_out"]==0){
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b>';
@@ -995,7 +1034,7 @@ function graficar(json, clase){
       else{
         var pointarraycant = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b><br> Cantidad de estudiantes: <b>{point.cantidad}</b><br> Estudiantes que trabajaron: <b>{point.trabajaron}</b> <br>Máximo: <b>{point.maximo} ejercicios</b><br> Mínimo: <b>{point.minimo} ejercicios</b><br> Promedio: <b>{point.promedio:,.1f} ejercicios</b> <br>Cantidad de clases: <b>{point.cantclase} clases</b> <br>Estudiantes fuera de horario de clase: <b>{point.est_out}</b>';
       }
-      /*
+      //if (clase[i].level == 9){ // IF NIVEL
       for (var k=0;k<misiones.length;k++){
         arrayskill = false;
         var habilidades=misiones[k]["habilidades"]
@@ -1048,7 +1087,16 @@ function graficar(json, clase){
           continue;
         }
       }
-      arregloclase[i]=arreglocurso;*/
+      arregloclase[i]=arreglocurso;
+      arregloclase[i]["level"]=clase[i].level;
+      arregloclase[i]["establecimiento"]=clase[i]["establecimiento"];
+      /*if (arreglocurso.length>0){
+        //console.log(arreglocurso);
+      arregloclase[i]=arreglocurso;
+      arregloclase[i]["level"]=clase[i].level;
+      }*/
+      
+    //} //ENDIF
       //console.log(estNivelEstablecimiento);
     }
     arraycontainertodo[0]={'name': 'Cantidad de Ejercicios', 'data': arraycantidad, 'type':'column', 'yAxis': 1};0
@@ -1958,133 +2006,7 @@ function graficar(json, clase){
     var pointarraytvest = 'Tiempo de videos: <b>{point.y:,.0f} segundos</b>';
     var pointarraycantest = 'Cantidad de ejercicios: <b>{point.y} ejercicios</b>';
   }
-  /*
-  try{
-    var nombremision = 'sin nombre';
-    var dataq=arregloclase;
-    for (var t = 0; t < mission.length; t++) {
-      //mission[i]
-      for (var i = 0; i < dataq.length; i++) {
-        //console.log(curso=dataq[i][0][0]["curso"]); //nombre curso
-        var misiones = dataq[i];
-        for (var j = 0; j < misiones.length; j++) {
-          //console.log(misiones[j][0]["mision"]); //nombre mision
-          
-          if (mission[t]==misiones[j][0]["mision"]){
-            var habilidades = misiones[j];
-            var data=[];
-            for (var k = 0; k < habilidades.length; k++) {
-              var id = habilidades[k]["id"];
-              var A = habilidades[k]["A"];
-              var B = habilidades[k]["B"];
-              var C = habilidades[k]["C"];
-              var D = habilidades[k]["D"];
-              var E = habilidades[k]["E"];
-              var F = habilidades[k]["F"];
-              var G = habilidades[k]["G"];
-              var mision = misiones[j][0]["mision"];
-              var curso = dataq[i][0][0]["curso"];
-              var nombre = habilidades[k]["nombre"];
-              var establecimiento = dataq[i][0][0]["establecimiento"];
-              //console.log(nombre)
-              data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso+" - "+establecimiento, "nombre":nombre}
-            }
-            var xData = ["A", "B", "C", "D", "E", "F", "G"];
-            var margin = {top: 10, right: 200, bottom: 0, left: 0},
-            width = 1200 - margin.left - margin.right,
-            height = 15;
-                  //height = 60 - margin.top - margin.bottom;
-            var x = d3.scale.ordinal()
-                  .rangeRoundBands([0, width], 0.09);
-            var y = d3.scale.linear()
-                  .rangeRound([height, 0]);
-            var color = d3.scale.ordinal()
-                  .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#B0B0B0"]);
-            var xAxis = d3.svg.axis()
-                  .scale(x)
-                  .orient("bottom");
-            var svg = d3.select("#chart").append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");       
-            var dataIntermediate = xData.map(function (c) {
-                return data.map(function (d) {
-                    return {x: d.id, y: d[c], nombre:d.nombre, A: d.A, B: d.B, C: d.C, D: d.D, E: d.E, F: d.F, G: d.G, cur: d.cur};
-                });
-            });
-            var dataStackLayout = d3.layout.stack()(dataIntermediate);
-            x.domain(dataStackLayout[0].map(function (d) {
-                return d.x;
-            }));
-            y.domain([0,
-                d3.max(dataStackLayout[dataStackLayout.length - 1],
-                        function (d) { return d.y0 + d.y;})
-                ])
-              .nice();
-            var layer = svg.selectAll(".stack")
-                    .data(dataStackLayout)
-                    .enter().append("g")
-                    .attr("class", "stack")
-                    .style("fill", function (d, i) {
-                        return color(i);
-                    });
-            if (nombremision==misiones[j][0]["mision"]){
-              nombremision = misiones[j][0]["mision"];
-            }
-            else{
-              var text = layer
-                    .append('text')
-                    .text(mission[t])
-                    .attr("y", height-5)
-                    .style('fill', 'black')
-              nombremision = misiones[j][0]["mision"];
-            }
-            layer.selectAll("rect")
-                    .data(function (d) {
-                      //console.log(d);
-                        return d;
-                    })
-                    .enter().append("rect")
-                    .attr("x", function (d, i) {
-                        return 4.2*i+200;
-                    })
-                    .attr("y", function (d) {
-                        return y(d.y + d.y0);
-                    })
-                    .attr("height", function (d) {
-                        return y(d.y0) - y(d.y + d.y0);
-                    })
-                    .attr("width", 3.2);
-            $('rect').tipsy({
-              gravity: $.fn.tipsy.autoNS,
-              opacity: 1,
-              html: true, 
-              title: function(){
-                var d = this.__data__;
-                tooltp =("<ul><li style='text-align:center;'><font color='#000000'>Curso: </font>"+d.cur+"</li><li style='text-align:left;'><strong><font color='#000000'>Habilidad: </font>"+d.nombre+"</li><li style='text-align:left;'><strong><font color='#1C758A'>Dominado: </font>"+d.A+"%</li><li style='text-align:left;'><strong><font color='#29ABCA'>Nivel 2: </font>"+d.B+"%</li><li style='text-align:left;'><strong><font color='#58C4DD'>Nivel 1: </font>"+d.C+"%</li><li style='text-align:left;'><strong><font color='#9CDCEB'>Practicado: </font>"+d.D+"%</li><li style='text-align:left;'><strong><font color='#808080'>Necesita práctica: </font>"+d.E+"%</li><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>"+d.F+"%</li><li style='text-align:left;'><strong><font color='#B0B0B0'>Sin datos: </font>"+d.G+"%</li></strong></ul>");
-                return tooltp
-              }
-            });
-            var textcurso = layer
-                    .append('text')
-                    .text(curso+' - '+establecimiento)
-                    .attr("x", 1000)
-                    .attr("y", height/2)
-                    .style("font-size", "12px")
-                    //.style("font-family", "sans-serif")
-                    .style('fill', 'black');
-            svg.append("g")
-                    .attr("class", "axis")
-                    .attr("transform", "translate(0," + height + ")");
-          }
-        }
-      }
-    }
-}
-  catch(e){
-    console.log(e);
-  }*/
+  
   var maxte=0;
   for (var j=0;j<arrayte.length;j++){
     if (arrayte[j]["y"]>maxte){
@@ -3912,6 +3834,143 @@ function graficar(json, clase){
   }
   
 }
+function graficarMisiones(){
+  levelMisiones = $('select#levelMisiones option:selected').val()
+  var auxArray = listaEstablecimientos;
+  console.log(auxArray);
+  try{
+    var nombremision = 'sin nombre';
+    var dataq=arregloclase;
+    console.log(dataq);
+    for (var t = 0; t < mission.length; t++) {
+      //mission[i]
+      for (var i = 0; i < dataq.length; i++) {
+        console.log(i);
+        if (dataq[i].length>0 && dataq[i].level==levelMisiones && auxArray.includes(dataq[i].establecimiento)){ // SI CORRESPONDE EL NIVEL
+          console.log(curso=dataq[i][0][0]["curso"]); //nombre curso
+          var misiones = dataq[i];
+          for (var j = 0; j < misiones.length; j++) {
+            //console.log(misiones[j][0]["mision"]); //nombre mision
+            
+            if (mission[t]==misiones[j][0]["mision"]){
+              var habilidades = misiones[j];
+              var data=[];
+              for (var k = 0; k < habilidades.length; k++) {
+                var id = habilidades[k]["id"];
+                var A = habilidades[k]["A"];
+                var B = habilidades[k]["B"];
+                var C = habilidades[k]["C"];
+                var D = habilidades[k]["D"];
+                var E = habilidades[k]["E"];
+                var F = habilidades[k]["F"];
+                var G = habilidades[k]["G"];
+                var mision = misiones[j][0]["mision"];
+                var curso = dataq[i][0][0]["curso"];
+                var nombre = habilidades[k]["nombre"];
+                var establecimiento = dataq[i][0][0]["establecimiento"];
+                //console.log(nombre)
+                data[k]={"id":id, "A":A, "B":B, "C":C, "D":D, "E":E, "F":F, "G":G, "mis":mision, "cur":curso+" - "+establecimiento, "nombre":nombre}
+              }
+              var xData = ["A", "B", "C", "D", "E", "F", "G"];
+              var margin = {top: 10, right: 200, bottom: 0, left: 0},
+              width = 1200 - margin.left - margin.right,
+              height = 15;
+                    //height = 60 - margin.top - margin.bottom;
+              var x = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], 0.09);
+              var y = d3.scale.linear()
+                    .rangeRound([height, 0]);
+              var color = d3.scale.ordinal()
+                    .range(["#1C758A", "#29ABCA", "#58C4DD", "#9CDCEB", "#808080", "#C30202","#B0B0B0"]);
+              var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+              var svg = d3.select("#chart").append("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                      .append("g")
+                      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");       
+              var dataIntermediate = xData.map(function (c) {
+                  return data.map(function (d) {
+                      return {x: d.id, y: d[c], nombre:d.nombre, A: d.A, B: d.B, C: d.C, D: d.D, E: d.E, F: d.F, G: d.G, cur: d.cur};
+                  });
+              });
+              var dataStackLayout = d3.layout.stack()(dataIntermediate);
+              x.domain(dataStackLayout[0].map(function (d) {
+                  return d.x;
+              }));
+              y.domain([0,
+                  d3.max(dataStackLayout[dataStackLayout.length - 1],
+                          function (d) { return d.y0 + d.y;})
+                  ])
+                .nice();
+              var layer = svg.selectAll(".stack")
+                      .data(dataStackLayout)
+                      .enter().append("g")
+                      .attr("class", "stack")
+                      .style("fill", function (d, i) {
+                          return color(i);
+                      });
+              if (nombremision==misiones[j][0]["mision"]){
+                nombremision = misiones[j][0]["mision"];
+              }
+              else{
+                var text = layer
+                      .append('text')
+                      .text(mission[t])
+                      .attr("y", height-5)
+                      .style('fill', 'black')
+                nombremision = misiones[j][0]["mision"];
+              }
+              layer.selectAll("rect")
+                      .data(function (d) {
+                        //console.log(d);
+                          return d;
+                      })
+                      .enter().append("rect")
+                      .attr("x", function (d, i) {
+                          return 4.2*i+200;
+                      })
+                      .attr("y", function (d) {
+                          return y(d.y + d.y0);
+                      })
+                      .attr("height", function (d) {
+                          return y(d.y0) - y(d.y + d.y0);
+                      })
+                      .attr("width", 3.2);
+              $('rect').tipsy({
+                gravity: $.fn.tipsy.autoNS,
+                opacity: 1,
+                html: true, 
+                title: function(){
+                  var d = this.__data__;
+                  tooltp =("<ul><li style='text-align:center;'><font color='#000000'>Curso: </font>"+d.cur+"</li><li style='text-align:left;'><strong><font color='#000000'>Habilidad: </font>"+d.nombre+"</li><li style='text-align:left;'><strong><font color='#1C758A'>Dominado: </font>"+d.A+"%</li><li style='text-align:left;'><strong><font color='#29ABCA'>Nivel 2: </font>"+d.B+"%</li><li style='text-align:left;'><strong><font color='#58C4DD'>Nivel 1: </font>"+d.C+"%</li><li style='text-align:left;'><strong><font color='#9CDCEB'>Practicado: </font>"+d.D+"%</li><li style='text-align:left;'><strong><font color='#808080'>Necesita práctica: </font>"+d.E+"%</li><li style='text-align:left;'><strong><font color='#C30202'>En dificultad: </font>"+d.F+"%</li><li style='text-align:left;'><strong><font color='#B0B0B0'>Sin datos: </font>"+d.G+"%</li></strong></ul>");
+                  return tooltp
+                }
+              });
+              var textcurso = layer
+                      .append('text')
+                      .text(curso+' - '+establecimiento)
+                      .attr("x", 1000)
+                      .attr("y", height/2)
+                      .style("font-size", "12px")
+                      //.style("font-family", "sans-serif")
+                      .style('fill', 'black');
+              svg.append("g")
+                      .attr("class", "axis")
+                      .attr("transform", "translate(0," + height + ")");
+            }
+          }
+        }
+        
+      }
+    }
+  }
+  catch(e){
+    console.log(e);
+  }
+}
+
 function statsPerLevel2(level, cntdd1, cntdd2, tpoejer1, tpoejer2, tpovid1, tpovid2, indice,
           array1basico, array1basicoejer, array1basicovid, array1basico2, array1basicoejer2, array1basicovid2,
           array2basico, array2basicoejer, array2basicovid, array2basico2, array2basicoejer2, array2basicovid2,
