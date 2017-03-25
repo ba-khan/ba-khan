@@ -1,0 +1,42 @@
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/budi
+#40 12 * * * python /var/www/html/bakhanproyecto/manage.py testCrontab
+#48 9 * * * python /var/www/html/bakhanproyecto/manage.py populateTest
+#00 10 * * * python /var/www/html/bakhanproyecto/manage.py populateData
+
+30 * * * * cd /var/www/html/bakhanprueba && python manage.py calculateGrade > /tmp/logCalculateCron.log 2>&1
+01 01 * * * cd /var/www/html/bakhanproyecto && python /var/www/html/bakhanproyecto/manage.py endAssesmentMail > /tmp/logEndAssesmentMail.log 2>&1
+06 01 * * * python /var/www/html/bakhanproyecto/manage.py sendResumenMail
+#* * * * * python /var/www/html/bakhanproyecto/manage.py populateTest
+#estan funcionando estas dos llamadas
+
+00 05 * * * /var/www/html/bakhanproyecto/dataLoad.sh
+#* * * * * /var/www/html/bakhanproyecto/dataLoadTest.sh
+#* * * * *  python /var/www/html/bakhanproyecto/manage.py populateTest
+
+#25 21 * * * python /var/www/html/bakhanproyecto/manage.py populateTree
+
+00 01 * * * cd /var/www/html/bakhanproyecto && python manage.py populateStudent > /tmp/logStudent.log 2>&1
+
+00 02 * * * cd /var/www/html/bakhanproyecto && python manage.py populateStudentSkill > /tmp/logStudentSkill.log 2>&1 
