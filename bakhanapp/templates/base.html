@@ -51,9 +51,11 @@
 		<script src="{% static 'highcharts/highcharts-more.js'%}"></script>
 		<script src="{% static 'highcharts/modules/exporting.js'%}"></script>
 		
-		<!-- Para utilizar d3 -->
+		<!-- Para utilizar d3 
 	    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	    <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>
+	    <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>-->
+	    <script src="{% static 'js/d3.v3.min.js'%}"></script>
+	    <script src="{% static 'js/d3-jetpack.js'%}"></script>
 		{% block head %}{% endblock %}
 	</head>
 	<div id="hover" style="display:none"></div>
