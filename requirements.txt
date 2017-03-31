@@ -9,4 +9,5 @@ selenium
 pyvirtualdisplay
 django_jenkins
 pep8
+pylint
 pyflakes
