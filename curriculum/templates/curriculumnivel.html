@@ -18,313 +18,301 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
 
 <style>
-
-input{
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
-}
-#popup{
-  height:150px;
-}
-#popuptree{
-  height:650px;
-}
-.ribbon {
-  position: relative;
-  left: 0px; top: -53px;
-  z-index: 1;
-  overflow: hidden;
-  width: 63px; height: 54px;
-  /*text-align: right;*/
-}
-.ribbon span {
-  font-size: 9px;
-  font-weight: bold;
-  color: #FFF;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 15px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  width: 97px;
-  display: block;
-  background: #79A70A;
-  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
-  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
-  position: absolute;
-  top: 13px; left: -25px;
-}
-.ribbon span::before {
-  content: "";
-  position: absolute; left: 0px; top: 100%;
-  z-index: -1;
-  /*border-left: 3px solid #79A70A;
-  border-right: 3px solid transparent;
-  border-bottom: 3px solid transparent;
-  border-top: 3px solid #79A70A;*/
-}
-.ribbon span::after {
-  content: "";
-  /*position: absolute; right: 0px; top: 100%;*/
-  z-index: -1;
-  /*border-left: 3px solid transparent;
-  border-right: 3px solid #79A70A;
-  border-bottom: 3px solid transparent;
-  border-top: 3px solid #79A70A;*/
-}
-#newChapter{
-  border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    display:none; 
-    height:220px; 
-    padding:15px;
-    padding-left: 33%;
-    padding-right: 33%;
-    text-align: center;
-}
-#newTopic{
-  /*border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    display:none; */
-    height:220px; 
-    padding:15px;
-    padding-left: 33%;
-    padding-right: 33%;
-    text-align: center;
-}
-#newSubtopic{
-  /*border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    display:none; */
-    height:220px; 
-    padding:15px;
-    padding-left: 33%;
-    padding-right: 33%;
-    text-align: center;
-}
-#newaccordion{
-  border: 1px solid #C6D1AD;
-  border-radius: 5px;
-  padding:15px;
-  padding-left: 10%;
-  padding-right: 10%;
-  text-align: left;
-}
-label{
-  width: 95px;
-}
-input{
-  margin-bottom: 10px;
-}
-
-#topbar {
-  float:left;
-  position: relative;
-    box-sizing: border-box;
-   -moz-box-sizing: border-box;
-   z-index: 2;
-   height: 50px;
-   /*margin-right: -1px;*/
-}
-#topbar ul.tab {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-#topbar ul.tab li {
-    margin: 0;
-}
-#topbar ul.tab li a {
-  padding: 15px 20px;
-  font-size: 14px;
-  font-weight: 100;
-  background: #EEEEEE;
-  text-decoration: none;
-  display: block;
-  border: 1px solid #ddd;
-  -webkit-transition:  background 0.3s ease-in-out;
-  -moz-transition:  background 0.3s ease-in-out;
-  -ms-transition:  background 0.3s ease-in-out;
-  -o-transition:  background 0.3s ease-in-out;
-  transition:  background 0.3s ease-in-out;
-}
-#topbar ul.tab li a.selectdos{
-  border-bottom: 1px solid #f7f7f7;
-  background: #f7f7f7;
-  color: #56861f;
-  
-}
-#topbar ul.tab li:hover a {
-    background: #f7f7f7;
-    color: #56861f;
-}
-#topbar ul.tab li:visited a {
-    background: #f7f7f7;
-    color: #56861f;
-}
-
-#topbar ul.tab li {float: left;}
-
-.redBackground{
-    background-color: gray;  
-}
-
-.topictree{
-  overflow: hidden;
-  overflow-y:scroll;
-  height: 550px;
-  width: 570px;
-  font-size: 12px;
-  padding: 5px 10px 10px 0px;
-  text-align: left;
-  margin: 10px;
-  border: 1px solid #ddd;
-}
-
-/*button.accordion {
-    background-color: #eee;
-    color: #444;
-    cursor: pointer;
-    padding: 18px;
+  input{
+    z-index: 1000;
     width: 100%;
-    text-align: left;
-    border: none;
-    outline: none;
-    transition: 0.4s;
-}*/
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-/*button.accordion.active, button.accordion:hover {
-    background-color: #ddd;
-}
-
-button.accordion:after {
-    content: '\02795'; 
-    font-size: 13px;
-    color: #777;
-    float: right;
-    margin-left: 5px;
-}
-
-button.accordion.active:after {
-    content: "\2796"; 
-}*/
-
-/* Style the accordion panel. Note: hidden by default */
-div.panel {
-    padding: 0 18px;
-    background-color: white;
-    display: none;
+    height: 100%;
+  }
+  #popup{
+    height:150px;
+  }
+  #popuptree{
+    height:650px;
+  }
+  #flex-div{
+    display: flex;
+    flex-direction: column;
+  }
+  .ribbon {
+    position: relative;
+    left: 0px; top: -53px;
+    z-index: 1;
     overflow: hidden;
-    transition: 0.6s ease-in-out;
-    opacity: 0;
-}
-
-/* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
-div.panel.show {
+    width: 63px; height: 54px;
+    /*text-align: right;*/
+  }
+  .ribbon span {
+    font-size: 9px;
+    font-weight: bold;
+    color: #FFF;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 15px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    width: 97px;
     display: block;
-    opacity: 1;
-}
-/*
-div.panel {
-    padding: 0 18px;
-    background-color: white;
-    max-height: 0;
+    background: #79A70A;
+    background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 13px; left: -25px;
+  }
+  .ribbon span::before {
+    content: "";
+    position: absolute; left: 0px; top: 100%;
+    z-index: -1;
+    /*border-left: 3px solid #79A70A;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #79A70A;*/
+  }
+  .ribbon span::after {
+    content: "";
+    /*position: absolute; right: 0px; top: 100%;*/
+    z-index: -1;
+    /*border-left: 3px solid transparent;
+    border-right: 3px solid #79A70A;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #79A70A;*/
+  }
+  #newChapter{
+    border: 1px solid #C6D1AD;
+      border-radius: 5px;
+      display:none; 
+      height:220px; 
+      padding:15px;
+      padding-left: 33%;
+      padding-right: 33%;
+      text-align: center;
+  }
+  #newTopic{
+    /*border: 1px solid #C6D1AD;
+      border-radius: 5px;
+      display:none; */
+      height:220px; 
+      padding:15px;
+      padding-left: 33%;
+      padding-right: 33%;
+      text-align: center;
+  }
+  #newSubtopic{
+    /*border: 1px solid #C6D1AD;
+      border-radius: 5px;
+      display:none; */
+      height:220px; 
+      padding:15px;
+      padding-left: 33%;
+      padding-right: 33%;
+      text-align: center;
+  }
+  #newaccordion{
+    border: 1px solid #C6D1AD;
+    border-radius: 5px;
+    padding:15px;
+    padding-left: 10%;
+    padding-right: 10%;
+    text-align: left;
+  }
+  label{
+    width: 95px;
+  }
+  input{
+    margin-bottom: 10px;
+  }
+  #below_topbar_field{
+    width: 660px;
+    float: left;
+    margin-top: 20px;
+  }
+
+  #topbar {
+    float:left;
+    position: relative;
+      box-sizing: border-box;
+     -moz-box-sizing: border-box;
+     z-index: 2;
+     height: 50px;
+     /*margin-right: -1px;*/
+  }
+  #topbar ul.tab {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+  }
+  #topbar ul.tab li {
+      margin: 0;
+      max-height: 50px;
+  }
+  #topbar ul.tab li a {
+    padding: 15px 20px;
+    font-size: 14px;
+    font-weight: 100;
+    background: #EEEEEE;
+    text-decoration: none;
+    display: block;
+    border: 1px solid #ddd;
+    -webkit-transition:  background 0.3s ease-in-out;
+    -moz-transition:  background 0.3s ease-in-out;
+    -ms-transition:  background 0.3s ease-in-out;
+    -o-transition:  background 0.3s ease-in-out;
+    transition:  background 0.3s ease-in-out;
+  }
+  #topbar ul.tab li a.selectdos{
+    border-bottom: 1px solid #f7f7f7;
+    background: #f7f7f7;
+    color: #56861f;
+    
+  }
+  #topbar ul.tab li:hover a {
+      background: #f7f7f7;
+      color: #56861f;
+  }
+  #topbar ul.tab li:visited a {
+      background: #f7f7f7;
+      color: #56861f;
+  }
+
+  #topbar ul.tab li {float: left;}
+
+  .redBackground{
+      background-color: gray;  
+  }
+
+  .topictree{
     overflow: hidden;
-    transition: 0.6s ease-in-out;
-    opacity: 0;
-}
-*/
+    overflow-y:scroll;
+    height: 550px;
+    width: 570px;
+    font-size: 12px;
+    padding: 5px 10px 10px 0px;
+    text-align: left;
+    margin: 10px;
+    border: 1px solid #ddd;
+  }
 
-.videos,.skills, .descripcion{
-  border: 1px solid #D9D9D9;
-  border-radius: 5px;
-  width: 395px;
-  height: 90px;
-  padding: 10px;
-  margin: 10px;
-  margin-left: 150px;
-  overflow: hidden;
-  overflow: scroll;
-  overflow: auto;
-  background: #F6F7F7;
-  float:left;
-  cursor: default;
-  -moz-user-select':-moz-none;
-    -moz-user-select:none;
-    -o-user-select:none;
-    -khtml-user-select:none; 
-    -webkit-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-}
+  /*button.accordion {
+      background-color: #eee;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      outline: none;
+      transition: 0.4s;
+  }*/
 
-.main-content li{
-  text-align:left;
-}
+  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+  /*button.accordion.active, button.accordion:hover {
+      background-color: #ddd;
+  }
 
-.main-content h2, h3{
-  text-align: center;
-}
+  button.accordion:after {
+      content: '\02795'; 
+      font-size: 13px;
+      color: #777;
+      float: right;
+      margin-left: 5px;
+  }
 
-.contenidodhv h2{
-  margin-bottom: 0px;
-}
+  button.accordion.active:after {
+      content: "\2796"; 
+  }*/
+
+  /* Style the accordion panel. Note: hidden by default */
+  div.panel {
+      padding: 0 18px;
+      background-color: white;
+      display: none;
+      overflow: hidden;
+      transition: 0.6s ease-in-out;
+      opacity: 0;
+  }
+
+  /* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
+  div.panel.show {
+      display: block;
+      opacity: 1;
+  }
+  /*
+  div.panel {
+      padding: 0 18px;
+      background-color: white;
+      max-height: 0;
+      overflow: hidden;
+      transition: 0.6s ease-in-out;
+      opacity: 0;
+  }
+  */
+
+  .videos,.skills, .descripcion{
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    min-width: 550px;
+    max-height: 300px
+    height: 90px;
+    padding: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+    overflow: scroll;
+    overflow: auto;
+    background: #F6F7F7;
+    float:left;
+    text-align: justify;
+    cursor: default;
+    -moz-user-select':-moz-none;
+      -moz-user-select:none;
+      -o-user-select:none;
+      -khtml-user-select:none; 
+      -webkit-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+  }
+
+  .main-content li{
+    text-align:left;
+  }
+
+  .main-content h2, h3{
+    text-align: center;
+  }
+
+  .contenidodhv h2{
+    margin-bottom: 0px;
+  }
 </style>
+
 <br>
 <div class="container">
     <div id="sidebar">
-      <ul>
-        <li id="pestana0"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Unidad</a></li>
-          {% for top in topic_mineduc %}
-            <li id="pestana{{ top.id_topic_mineduc }}"><a href='javascript:cambiarPestanna(pestana{{ top.id_topic_mineduc }}, {{ top.id_topic_mineduc }});' >{{ top.name }}</a></li>
-          {% endfor %}
+        <ul>
+            <li><a id='tab_unidad_0' style="cursor: pointer" onclick='cambiarPestanna(0);  return false;' ><i class="plus"></i> Nueva Unidad</a></li>
+            {% for top in lista_topicos %}
+                <li><a id='tab_unidad_{{ top.id_topic_mineduc }}' style="cursor: pointer" href='#' onclick="cambiarPestanna({{ top.id_topic_mineduc }}); return false;">
+                    Unidad {{ top.index }}</a>
+                </li>
+            {% endfor %}
         </ul>
     </div>
 
     <div class="todo" style="min-width: 700px;">
+        <div class="main-content" style="width: 100%; float: left; max-width: 700px">
+            <div id="contenido_pagina" style="margin-right: 20px; margin-left: 20px; margin-top: 20px; margin-bottom: 20px; width: 100%; float: left">
+                <h2>{{ nivel_curriculo }} ({{ anno_curriculo }}) - {{ asignatura }}</h2>
 
-    <div id="topbar" style="width: 100%; float: left; display: none">
-    </div>
+                <div id='above_topbar_field' class='flex-div' style="max-width: 660px; margin-bottom: 10px;"></div>
 
-    <div class="main-content" style="width: 100%; float: left;">
-      
-      <div id="contenidopestanas" style="margin-right: 200px;">
+                <div id="topbar" style="width: 660px; height: 52px; margin-bottom: 10px; margin-top: 10px"></div>
 
-       <div id="cpestana0" class="cpestanna">
-       <br>
-        <h2 id="namecurso">{{ nombrecapitulo }}</h2>
-        <div id="form00" class="form">
-          <form action="" method="post" id="form0">{% csrf_token %}
-            <h3>Datos de la Unidad:</h3>
-            <label for='name'>Nombre de la Unidad: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" id="newNameTopic"><br>
-            <label for="block" style="margin-top: -10px;">Descripción de la Unidad: </label><textarea id="textarea_coment" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
-            <br>
-            <div style="margin-left:200px"><a href='javascript:saveNewTopic()' class="kui-button kui-button-plain kui-button-primary">Guardar Unidad</a></div>
-          </form>
+                <div id="below_topbar_field" class="flex-div"></div>
+
+                
+            </div>
         </div>
-      </div>
-      </div>
-
-      <div id="contenidopestanastop" style="float: left; width: 100%;">
-
-       <div id="cpestanatop0" class="cpestannatop" style="max-width: 500px;">
-       <br>
-        <h2 id="nameunidad"></h2>
-        <p style="display: none;" id="idunidad"></p>
-        <div id="formtop00" class="form">
-          <form action="" method="post" id="formtop0">{% csrf_token %}
-            <h3>Datos del Objetivo de Aprendizaje:</h3>
-            <label for='name'>Nombre del OA: </label><input name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="" id="newNameSubtopic"><br>
-            <label for="block" style="margin-top: -10px;">Descripción del OA: </label><textarea id="textarea_coment_oa" class="ui-corner-all placeholder simple-input search-input blur-on-esc vaciar" style="width:160px; height:139px;"></textarea><br>
-            <br>
-            <div style="margin-left:200px"><a href='javascript:saveNewSubtopic()' class="kui-button kui-button-plain kui-button-primary">Guardar OA</a></div>
-          </form>
-        </div>
-      </div>
-      </div>
-    </div>
     </div>
 </div>
 
@@ -337,676 +325,682 @@ div.panel {
 </div>
 
 <script type="text/javascript">
+    $('#curriculum').addClass('active selected');
+    $('#breadcrumb').html('Nivel / {{ nivel_curriculo }}')
 
-$('#curriculum').addClass('active selected');
+    $(document).ready(function(){
+        $("#hover").click(function(){
+            $(this).fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+        
+        $("#close").click(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+        $('#contenido_pagina_top').css('display', 'none');
+     });
 
-$(document).ready(function(){
-    
-    $("#hover").click(function(){
-          $(this).fadeOut();
-      $("#popup").fadeOut();
-      $("#popuptree").fadeOut();
-      });
-    
-    $("#close").click(function(){
-          $("#hover").fadeOut();
-      $("#popup").fadeOut();
-      $("#popuptree").fadeOut();
-      });
-    $('#contenidopestanastop').css('display', 'none');
+    //Dibuja el contenido que va arriba de la barra de O.A. que incluye información de la Unidad. Si el valor edit
+    //es verdadero, se cargan los campos editables, si el idtopic es 0, los campos reflejan la creacion de una
+    //unidad nueva, si no, los campos reflejan la edición de la unidad cuyo id es idtopic.
+    function drawAboveTopBar(idtopic, edit = false){
+        var arbol = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = arbol["topicos"];
+        var text = "";
 
-    contenidoTop();
-  });
+        $('#above_topbar_field').empty();
 
-  function backChapter(){
-    $('.class-content').show();
-    $('.main-content').hide();
-    $('#namecurso').hide();
-    $('#sidebar').hide();
-    $('#buttonback').hide();
-  }
+        if (edit){
+            //Nueva Unidad.
+            if (idtopic == 0){
+                text = "<div class='form'>";
+                text += "<form action='' method='post' id='form0'>{% csrf_token %}";
+                text += "<h3>Datos de la Unidad:</h3>";
+                text += "<label for='newIndex_Topic'>Indice de la Unidad: </label>";
+                text += "<input id='newIndex_Topic' name='index_topic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='{{ unidad_siguiente }}' min='1'>";
+                text += "<br>";
+                text += "<label for='newDesc_Topic' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción de la Unidad: </label>";
+                text += "<br>";
+                text += "<textarea id='newDesc_Topic' name='description_topic' placeholder='Explica el objetivo de la unidad.'' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px' class='ui-corner-all simple-input search-input blur-on-esc'></textarea>";
+                text += "<br>";
+                text += "<a href='javascript:saveNewTopic()' style='margin-left:200px' class='kui-button kui-button-plain kui-button-primary'>Guardar Unidad</a>";
+                text += "</form>";
+                text += "</div>";
 
-  function contenidoTop(){
-    var conttop='';
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos=chapters[i]['topico'];
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos=topicos[j]['subtopico'];
-        for (var k = 0; k < subtopicos.length; k++) {
-          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv"><div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left;"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br><div id="todahabilidad"><h2>Habilidades</h2><div class="skills" style="float:left;"><ul>';
-          var skills = subtopicos[k]['skills'];
-          for (var l = 0; l < skills.length; l++) {
-            conttop+='<li><img style="width:15px;height:15px;" src={% static "img/ejercicios.png" %} alt="habs">'+skills[l]['nombre']+'</li>';
-          }
-          conttop+='</ul></div></div><br><br><div id="todovideo"><h2>Videos</h2><div class="videos" style="float:left;"><ul>';
-
-          var videos = subtopicos[k]['videos'];
-          for (var m = 0; m < videos.length; m++) {
-            conttop+='<li><img style="width:15px;height:15px;" src={% static "img/videos.png" %} alt="vids">'+videos[m]['nombre']+'</li>';
-          }
-
-          conttop+='</ul></div></div></div>';
-          //console.log(subtopicos[k]['id']);
-          //console.log(topicos[j]['id']);
-          conttop+='<a onclick=\'(addVideoExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botoncito0'+subtopicos[k]['id']+'">Agregar Ejercicios - Videos</a>';
-          conttop+='</div>';
+            }else{
+                //Editar Unidad.
+                for (var i = 0; i < topicos.length; i++) {
+                    if (topicos[i]['id'] == idtopic){
+                        text = "<div class='form'>";
+                        text += "<form action='' method='post' id='form0'>{% csrf_token %}";
+                        text += "<h3>Unidad: </h3>";
+                        text += "<input id='editIndex_Topic' name='index_topic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='" + topicos[i]['index'] + "' min='1'>";
+                        text += "<label for='editDesc_Topic' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción de la Unidad: </label>";
+                        text += "<textarea id='editDesc_Topic' name='description_topic' placeholder='Explica el objetivo de la unidad.'' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px' class='ui-corner-all simple-input search-input blur-on-esc'>" + topicos[i]['desc'] + "</textarea>";
+                        text += "<a href='#' onclick='javascript:updateTopic(" + idtopic + "); return false;' style='width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Confirmar</a>";
+                        text += "<a href='#' onclick='javascript:drawAboveTopBar(" + idtopic + "); return false;' style='width: 180px; margin-right: 100px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a>";
+                        text += "</form>";
+                        text += "</div>";
+                        i = topicos.length;
+                    }
+                }
+            }
+        }else{
+            //Mostrar Unidad.
+            for (var i = 0; i < topicos.length; i++) {
+                if (topicos[i]['id'] == idtopic){
+                    text += "<h3>Unidad "+topicos[i]['index']+"</h3>";
+                    text += "<p class='descripcion'>"+topicos[i]['desc']+"</p>";
+                    text += "<a href='#' onclick='javascript:drawAboveTopBar(" + idtopic + ", true); return false;' style='width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Editar Unidad</a>";
+                    text += "<a href='#' onclick='javascript:deleteTopic(" + idtopic + "); return false;' style='width: 180px; margin-right: 100px; margin-bottom: 10px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Borrar Unidad</a>";
+                    i = topicos.length;
+                }
+            }
         }
+        $('#above_topbar_field').append(text);
+    }
+
+    //Dibuja la barra de O.A. de la Unidad seleccionada.
+    function drawTopBar(idtopic){
+        var arbol = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = arbol["topicos"];
+        var newtopbar = '<ul class="tab">';
+        newtopbar += "<li>";
+        newtopbar += "<a id='tab_oa_0' href='#' onclick='javascript:cambiarPestannaTop("+idtopic+",0);' style='max-height: 51.6px; padding-bottom: 14.6px; padding-top: 13px'>";
+        newtopbar += "<i class='plus'></i>"
+        newtopbar += "Nuevo O.A.</a></li>";
+
+        for (var j = 0; j < topicos.length; j++) {
+            if (topicos[j]["id"] == idtopic){
+                var subtopicos = topicos[j]["subtopico"];
+                for (var k = 0; k < subtopicos.length; k++) {
+                    newtopbar+="<li><a id='tab_oa_"+subtopicos[k]["id"]+"' href='#' onclick='javascript:cambiarPestannaTop("+idtopic+","+subtopicos[k]["id"]+");'> O.A. "+subtopicos[k]["index"]+"</a></li>";
+                }
+            }
+        }
+
+        newtopbar+="</ul>";
+        $('#topbar').append(newtopbar);
+    }
+
+    //Dibuja el contenido que va debajo de la barra de O.A. que incluye información del objetivo de aprendizaje.
+    function drawBelowTopBar(idtopic, idsubtopic, edit = false){
+        var dump = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = dump["topicos"];
+        var text = "";
+
+        $('#below_topbar_field').empty();
+
+        if (edit){
+            //Nuevo O.A.
+            if (idsubtopic == 0){
+                text = "<br>"
+                text += "<div id='formtop00' class='form'>";
+                text += "<form action='' method='post' id='formtop0'>{% csrf_token %}";
+                text += "<h3>Datos del Objetivo de Aprendizaje:</h3>";
+                text += "<label for='newIndex_SubTopic'>Indice del O.A.: </label>";
+                text += "<input id='newIndex_SubTopic' name='index_subtopic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='" + checkNextSubTopic(idtopic) + "' min='1'>";
+                text += "<br>";
+                text += "<label for='block' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción del OA: </label>";
+                text += "<textarea id='newDesc_SubTopic' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; margin-bottom: 15px; height: 60px'></textarea>";
+                text += "<br>";
+                text += "<label for='block' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Resumen del OA: </label>";
+                text += "<textarea id='newSumm_SubTopic' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px'></textarea>";
+                text += "<br>";
+                text += "<div style='margin-left:200px'><a href='javascript:saveNewSubtopic(" + idtopic + ")' class='kui-button kui-button-plain kui-button-primary'>Guardar OA</a></div>";
+                text += "</form>";
+                text += "</div>";               
+            }else{
+                //Editar O.A.
+                for (var i = 0; i < topicos.length; i++) {
+                    if (topicos[i]['id'] == idtopic){
+                        var subtopicos = topicos[i]["subtopico"];
+                        for (var j = 0; j < subtopicos.length; j++){
+                            if (subtopicos[j]["id"] == idsubtopic){
+                                text = "<br>"
+                                text += "<div id='formtop00' class='form'>";
+                                text += "<form action='' method='post' id='formtop0'>{% csrf_token %}";
+                                text += "<h3>Datos del Objetivo de Aprendizaje:</h3>";
+                                text += "<label for='editIndex_SubTopic'>Indice del O.A.: </label>";
+                                text += "<input id='editIndex_SubTopic' name='index_subtopic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='" + subtopicos[j]['index'] + "' min='1'>";
+                                text += "<br>";
+                                text += "<label for='block' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción del OA: </label>";
+                                text += "<textarea id='editDesc_SubTopic' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; margin-bottom: 15px; height: 60px'>" + subtopicos[j]['desc'] + "</textarea>";
+                                text += "<br>";
+                                text += "<label for='block' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Resumen del OA: </label>";
+                                text += "<textarea id='editSumm_SubTopic' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px'>" + subtopicos[j]['resumen'] + "</textarea>";
+                                text += "<br>";
+                                text += "<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:updateSubtopic(" + idsubtopic + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Actualizar O.A.</a></div>";
+                                text += "<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:drawBelowTopBar(" + idtopic + ", " + idsubtopic + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a></div>";
+                                text += "</form>";
+                                text += "</div>";
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            //Mostrar O.A.
+            for (var i = 0; i < topicos.length; i++) {
+                if (topicos[i]['id'] == idtopic){
+                    var subtopicos = topicos[i]["subtopico"];
+                    for (var j = 0; j < subtopicos.length; j++){
+                        if (subtopicos[j]["id"] == idsubtopic){
+                            text += "<h3 style='text-align: center; margin-bottom:12px'> Objetivo de Aprendizaje " + subtopicos[j]["index"] + "</h3>";
+                            text += "<p class='descripcion'>" + subtopicos[j]['desc'] + "</p>";
+                            if(subtopicos[j]['resumen']){
+                                text += "<label style='margin-left: 50px; float: left; text-align: left;'>Resumen:</label>";
+                                text += "<p class='descripcion'>" + subtopicos[j]['resumen'] + "</p>";
+                            }text += "<br>";
+
+                            if (subtopicos[j]['skills'].length > 0) {
+                                text += "<div style='float:left;'>";
+                                text += "<label for='Skill_List_Block' style='margin-left: 50px; float: left; text-align: left''>Habilidades: </label>";
+                                text += "<div class='skills' style='max-height: 300px; height: auto'>";
+                                text += "<ul id='Skill_List_Block'>";
+
+                                var skills = subtopicos[j]['skills'];
+                                for (var s = 0; s < skills.length; s++){
+                                    text += "<li><img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>" + skills[s]['nombre'] + "</li>";
+                                }text += "</ul></div></div>";
+                            }
+                            if (subtopicos[j]['videos'].length > 0) {
+                                text += "<div style='float:left;'>";
+                                text += "<label for='Video_List_Block' style='margin-left: 50px; float: left; text-align: left;'>Videos: </label>";
+                                text += "<div class='videos' style='max-height: 300px; height: auto'>";
+                                text += "<ul id='Video_List_Block'>";
+
+                                var videos = subtopicos[j]['videos'];
+                                for (var v = 0; v < videos.length; v++){
+                                    text += "<li><img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>" + videos[v]['nombre'] + "</li>";
+                                }text += "</ul></div></div>";
+                            }
+                            text += "<a href='#' onclick='openContentTree(" + idtopic + "," + idsubtopic + "); return false;' style='width: 180px; margin-left:240px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Editar Contenidos</a>";
+                            text += "<br>";
+                            text += "<a href='#' onclick='drawBelowTopBar(" + idtopic + "," + idsubtopic + ", true); return false;' style='display: inline; width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Editar O.A.</a>";
+                            text += "<a href='#' onclick='deleteSubtopic(" + idsubtopic + "); return false;' style='display:inline; width: 180px; margin-right: 100px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Borrar O.A.</a>";
+                            i = topicos.length + 1;
+                        }
+                    }
+                }
+            }
+        }
+        $('#below_topbar_field').append(text);
+    }
+
+    //Revisa cual es el siguiente indice del O.A.
+    function checkNextSubTopic(idtopic){
+        var arbol = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = arbol["topicos"];
+        var missing_subtopic_index = 1;
+
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == idtopic){
+                var subtopicos = topicos[i]["subtopico"];
+                for (var j = 0; j < subtopicos.length; j++){
+                    if (missing_subtopic_index == subtopicos[j]["index"]) missing_subtopic_index++;
+                    else return missing_subtopic_index;
+                }
+            }
+        }return missing_subtopic_index;
+    }
+
+    function cambiarPestanna(topic_id){
+        $('#topbar').empty();
+        $('#below_topbar_field').empty();
+
+        if(topic_id == 0){
+            drawAboveTopBar(0,true);
+        }else{
+            drawAboveTopBar(topic_id);
+            drawTopBar(topic_id);
+        }
+
+        //Cambia estilo (colorea) la pestaña Unidad seleccionada.
+        $(document.getElementsByClassName("select")).removeClass("select");
+        $(document.getElementById("tab_unidad_" + topic_id)).addClass("select");
+    }
+
+    function cambiarPestannaTop(topic_id, subtopic_id){
+        if(subtopic_id == 0) drawBelowTopBar(topic_id, 0, true);
+        else drawBelowTopBar(topic_id, subtopic_id);
+
+
+        //Cambia estilo (colorea) la pestaña O.A. seleccionada.
+        $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
+        $(document.getElementById("tab_oa_" + subtopic_id)).addClass("selectdos");
+    }
+
+    function hideTree(){
+        $('#popuptree').hide();
+        $('#hover').hide();
+    }
+
+    function saveNewTopic(){
+        var nIndex = $('#newIndex_Topic').val();
+        var nDesc = $('#newDesc_Topic').val().replace(/[\r\n]/g, "<br />");
+        var currID = {{ curriculo_id }}
+
+        $.ajax({
+            url: "{% url 'curriculum:nuevo_topic' %}",
+            type: "POST",
+            data: {indice: nIndex, descr: nDesc, curr_id: currID},
+            success: function(response){
+                $("#popup").empty()
+                $("#close").hide();
+                $("#hover").fadeIn();
+                $("#popup").fadeIn();
+                $("#popup").append("<p class='response'>"+response+"</p>");
+                auxResponse = response;
+                if (auxResponse == "Unidad guardada correctamente"){
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){location.reload()},100);
+
+                }
+            },
+            error: function(response){
+                $("#popup").empty()
+                $("#hover").fadeIn().css('display', '');
+                $("#popup").fadeIn().css('display', '');
+                $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos, revise los campos ingresados</p>");
+            }
+        });
+    }
+
+    function updateTopic(topID){
+        var nIndex = $('#editIndex_Topic').val();
+        var nDesc = $('#editDesc_Topic').val().replace(/[\r\n]/g, "<br />");
+
+        $.ajax({
+            url: "{% url 'curriculum:mod_topic' %}",
+            type: "POST",
+            data: {indice: nIndex, descr: nDesc, topic_id: topID},
+            success: function(response){
+                $("#popup").empty()
+                $("#close").hide();
+                $("#hover").fadeIn();
+                $("#popup").fadeIn();
+                $("#popup").append("<p class='response'>"+response+"</p>");
+                auxResponse = response;
+                if (auxResponse == "Unidad actualizada correctamente"){
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){location.reload()},100);
+
+                }
+            },
+            error: function(response){
+                $("#popup").empty()
+                $("#hover").fadeIn().css('display', '');
+                $("#popup").fadeIn().css('display', '');
+                $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos, revise los campos ingresados</p>");
+            }
+        });
+    }
+
+    function saveNewSubtopic(topID){
+        var nIndex = $('#newIndex_SubTopic').val();
+        var nDesc = $('#newDesc_SubTopic').val().replace(/[\r\n]/g, "<br />");
+        var nSumm = $('#newSumm_SubTopic').val().replace(/[\r\n]/g, "<br />");
+
+        $.ajax({
+            url: "{% url 'curriculum:nuevo_subtopic' %}",
+            type: "POST",
+            data: {indice: nIndex, descr: nDesc, resum: nSumm, topic_id: topID},
+            success: function(response){
+                $("#popup").empty()
+                $("#close").hide();
+                $("#hover").fadeIn();
+                $("#popup").fadeIn();
+                $("#popup").append("<p class='response'>"+response+"</p>");
+                auxResponse = response;
+                if (auxResponse == "Objetivo de Aprendizaje guardado correctamente"){
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){location.reload()},200);
+                }
+            },
+            error: function(response){
+                $("#popup").empty()
+                $("#hover").fadeIn().css('display', '');
+                $("#popup").fadeIn().css('display', '');
+                $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos, revise los campos ingresados</p>");
+            }
+        });
+    }
+
+    function updateSubtopic(subtopID){
+        var nIndex = $('#editIndex_SubTopic').val();
+        var nDesc = $('#editDesc_SubTopic').val().replace(/[\r\n]/g, "<br />");
+        var nSumm = $('#editSumm_SubTopic').val().replace(/[\r\n]/g, "<br />");
+
+        $.ajax({
+            url: "{% url 'curriculum:mod_subtopic' %}",
+            type: "POST",
+            data: {indice: nIndex, descr: nDesc, resum: nSumm, subtopic_id: subtopID},
+            success: function(response){
+                $("#popup").empty()
+                $("#close").hide();
+                $("#hover").fadeIn();
+                $("#popup").fadeIn();
+                $("#popup").append("<p class='response'>"+response+"</p>");
+                auxResponse = response;
+                if (auxResponse == "Objetivo de Aprendizaje actualizado correctamente"){
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){location.reload()},200);
+                }
+            },
+            error: function(response){
+                $("#popup").empty()
+                $("#hover").fadeIn().css('display', '');
+                $("#popup").fadeIn().css('display', '');
+                $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos, revise los campos ingresados</p>");
+            }
+        });
+    }
+
+    function saveVideoExercise(idsubtopic){
+      var infodata=[];
+      var cont=0;
+      var select = $("#newTree"+idsubtopic).jstree("get_selected", true);
+      for (var i = 0; i < select.length; i++) {
+        if (typeof select[i]["data"] != "undefined"){
+          if(select[i]["data"]["skill_id"]){
+            infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["skill_id"], "icon":select[i]["icon"]}
+          }
+          else{
+            infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
+          }
+        }
+        cont++;
       }
-    }
-    $('#contenidopestanastop').append(conttop);
-  }
 
-  function drawTopBar(idtopic){
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    var chapters=arbol["capitulos"];
-    var newtopbar='';
-    newtopbar+='<ul class="tab"><li id="pestanatop0"><a href="javascript:cambiarPestannaTop(pestanatop0);" class="selectdos" id="apestanatop0"><i class="plus"></i> Nuevo Objetivo de Aprendizaje</a></li>';
-
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]['topico'];
-      for (var j = 0; j < topicos.length; j++) {
-        if (topicos[j]['id']==idtopic){
-          var subtopicos = topicos[j]['subtopico'];
-          for (var k = 0; k < subtopicos.length; k++) {
-            newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'">'+subtopicos[k]['nombre']+'</a></li>';
+      if (select.length>0){
+        $.ajax({
+        url: "{% url 'curriculum:save_videoexercise' %}",
+        type: "POST",
+        data: {infodata, subtopic:idsubtopic},
+          success: function(response){
+            $('#popuptree').hide();
+            $("#popup").empty()
+            $("#close").hide();
+            $("#hover").fadeIn();
+            $("#popup").fadeIn();
+            $("#popup").append("<p class='response'>"+response+"</p>");
+            auxResponse = response;
+            if (auxResponse == "Ejercicios y/o Videos guardados correctamente"){
+              $("#hover").css('pointer-events','none');
+              $("#close").css('pointer-events','none');
+              window.setTimeout(function(){location.reload()},500);
+            }    
           }
-        }
-      }
-    }
-
-    newtopbar+='</ul>';
-    $('#topbar').append(newtopbar);
-  }
-
-  $('#breadcrumb').html('Nivel / {{ nombrecapitulo }}')
-
-
-  function cambiarPestanna(pestanna, idtopic){
-    $('#topbar').empty();
-    id = (pestanna.id).substring(7);
-    pestanna = document.getElementById(pestanna.id);
-    cpestanna = document.getElementById('c' + pestanna.id);
-    cpestannas = document.getElementsByClassName('cpestanna');
-    contenidopestanas = document.getElementById('contenidopestanas');
-
-    drawTopBar(idtopic);
-
-    var texto = $('#pestana'+id+'').text();
-
-    $('#nameunidad').empty();
-    $('#nameunidad').append(texto);
-
-    $('#idunidad').empty();
-    $('#idunidad').append(id);
-
-    var namesubtopic = $('input[id*="newNameSubtopic"]');
-    namesubtopic.attr('id',"newNameSubtopic"+id+'');
-
-    for (i=0;i<cpestannas.length;i++){
-     $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
-    }
-    //console.log(cpestannas);
-
-    if (id!=0){
-      $('.main-content').css('position', 'relative');
-      $('#topbar').css('display','');
-      $('#contenidopestanastop').css('display', '');
-      $('[id*="cpestanatop0"]').css('display', 'none');
-      $('#cpestanatop0').css('display','');
-    }
-    else{
-      $('.main-content').css('position', 'relative');
-      $('#topbar').css('display','none');
-      $('#contenidopestanastop').css('display', 'none');
-    }
-
-    $(document).ready(function () {
-     $(document.getElementsByClassName("select")).removeClass("select");
-       $(cpestanna).css('display', '');
-       $(pestanna.getElementsByTagName('a')).addClass("select");
-
-       $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
-       $('#apestanatop0').addClass("selectdos");
-    });
-  }
-
-  function cambiarPestannaTop(pestanna){
-    id=(pestanna.id).substring(10);
-    pestannatop = document.getElementById(pestanna.id);
-    var psttop=pestanna.id;
-    cpestannatop = document.getElementById('c'+psttop);
-    cpestannastop = document.getElementsByClassName('cpestannatop');
-
-    //console.log(cpestannatop);
-
-    for (i=0;i<cpestannastop.length;i++){
-     $(contenidopestanastop.getElementsByClassName('cpestannatop')[i]).css('display', 'none');
-    }
-
-    if(id==0){
-      $('#cpestanatop0').css('display', '');
-    }
-    else{
-      $('#cpestanatop0').css('display', 'none');
-    }
-    //console.log('botoncito'+id+'');
-    //console.log($('#botoncito'+id+''));
-    $('[id*="botoncito"]').css('display', 'none');
-    $('#botoncito'+id+'').css('display', '');
-
-    //$('#cpestanatop0'+id+'').css('display', '');
-
-    $(document).ready(function () {
-     $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
-     $(cpestannatop).css('display', '');
-     $(pestanna.getElementsByTagName('a')).addClass("selectdos");
-    });
-  }
-
-
-  function showNewChapter(){
-  $('#newChapter').toggle('blind',10);
-  $('#buttonNewChapter').hide();
-  }
-
-  function hideNewChapter(){
-  $('#newChapter').toggle('blind',10);
-  $('#buttonNewChapter').show();
-  }
-
-  function showNewTopic(){
-  $('#newTopic').toggle('blind',10);
-  $('#buttonNewTopic').hide();
-  }
-
-  function hideNewTopic(){
-  $('#popup').hide();
-  $('#hover').hide();
-  }
-
-  function showNewSubtopic(){
-  $('#newSubtopic').toggle('blind',10);
-  $('#buttonNewSubtopic').hide();
-  }
-
-  function hideNewSubtopic(){
-  $('#popup').hide();
-  $('#hover').hide();
-  }
-
-  function hideTree(){
-  $('#popuptree').hide();
-  $('#hover').hide();
-  }
-
-  function saveNewChapter(){
-    var nName = $('#newName').val();
-    if(validar()){
-      $.ajax({
-      url: "{% url 'curriculum:nuevo_chapter' %}",
-      type: "POST",
-      data: {chapter: nName},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Nivel guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }
-        }
-      });
-    }else{
-      $("#popup").empty()
-      $("#hover").fadeIn().css('display', '');
-      $("#popup").fadeIn().css('display', '');
-      $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-    }
-  }
-
-function saveNewTopic(){
-  var nombretopic = $('#newNameTopic').val();
-  var desctopic = $('#textarea_coment').val();
-  var nombrecurso = $('#namecurso').text();
-  if(validarTopic()){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_topic' %}",
-      type: "POST",
-      data: {nombre: nombretopic, curso: nombrecurso, descripcion: desctopic},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Unidad guardada correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        }
-    });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }
-}
-
-
-function saveNewSubtopic(){
-  var idtopic = $('#idunidad').text();
-  var nombresubtopic = $('#newNameSubtopic'+idtopic+'').val();
-  var descripcionsubtopic = $('#textarea_coment_oa').val();
-
-  /*console.log(idtopic);
-  console.log(nombresubtopic);
-  console.log(descripcionsubtopic);*/
-
-  //console.log(descripcionsubtopic);
-  if(validarSubtopic(idtopic)){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_subtopic' %}",
-      type: "POST",
-      data: {nombre: nombresubtopic, topico: idtopic, descripcion: descripcionsubtopic},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Objetivo de Aprendizaje guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        
-        }
-    });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }
-}
-
-function saveVideoExercise(idsubtopic){
-  var infodata=[];
-  var cont=0;
-  var select = $("#newTree"+idsubtopic).jstree("get_selected", true);
-  for (var i = 0; i < select.length; i++) {
-    if (typeof select[i]["data"] != "undefined"){
-      if(select[i]["data"]["skill_id"]){
-        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["skill_id"], "icon":select[i]["icon"]}
+        });
       }
       else{
-        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
+        console.log('faltan datos por elegir');
       }
     }
-    cont++;
-  }
 
-  if (select.length>0){
-    $.ajax({
-    url: "{% url 'curriculum:save_videoexercise' %}",
-    type: "POST",
-    data: {infodata, subtopic:idsubtopic},
-      success: function(response){
-        $('#popuptree').hide();
-        $("#popup").empty()
-        $("#close").hide();
-        $("#hover").fadeIn();
-        $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-        if (auxResponse == "Ejercicios y/o Videos guardados correctamente"){
-          $("#hover").css('pointer-events','none');
-          $("#close").css('pointer-events','none');
-          window.setTimeout(function(){location.reload()},1000);
-        }    
-      }
-    });
-  }
-  else{
-    console.log('faltan datos por elegir');
-  }
-}
-
-/*function addTopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append("<div id='newTopic'><form action='' method='post' id='form1'>{% csrf_token %}<h3>Nueva Unidad</h3><label for='block'>Unidad: </label><input id='newNameTopic' onchange='validar()' onkeyup='validar()' name='nameTopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><a onclick='javascript:hideNewTopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewTopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
-}*/
-
-/*function addSubtopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append("<div id='newSubtopic'><form action='' method='post' id='form2'>{% csrf_token %}<h3>Nuevo Objetivo de Aprendizaje o Aprendizaje Esperado</h3><label for='block'>Número: </label><input id='newNameSubtopic' onchange='validar()' onkeyup='validar()' name='nameSubtopic' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' ><br><label for='block'>Descripción: </label><textarea id='textarea_coment' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:220px;height:50px;padding-top:5px'></textarea><br><a onclick='javascript:hideNewSubtopic()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveNewSubtopic('" + id + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a></form></div>");
-}*/
-
-function addVideoExercise(idsubtopic, idtopic){
-  var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  //console.log(tree);
-  $('#popuptree').empty();
-  $('#hover').fadeIn();
-  $('#popuptree').fadeIn();
-  $('#popuptree').append("<div id='filtrar' style='float:left;width:50%;'><label>Filtrar por: </label><select class='skill_search' onchange='valorfiltro(this, "+idsubtopic+")'><option value='todos'>Todos</option><option value='ejercicios'>Ejercicios</option><option value='videos'>Videos</option></select></div>")
-  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
-  $('#newTree'+idsubtopic+'').jstree(tree);
-  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
-
-  
-  setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);   
-}
-
-function valorfiltro(valor, id){
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  if(valor.value == "ejercicios"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-    var info = tree['core']['data'];
-    for (var i = 0; i < info.length; i++) {
-        if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined"){
-          delete info[i]
-        } 
-    }
-    try{
-      $('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-    }
-    catch(err){
-      $('#newTree'+id+'').jstree(tree);
-      console.log(err);
-    }
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },500);
-  }
-  if(valor.value == "videos"){
-    var tree = JSON.parse('{{ topictree_json_string_video | escapejs }}');
-    var info = tree['core']['data'];
-    //console.log(info);
-    for (var i = 0; i < info.length; i++) {
-        if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
-          delete info[i]
-          //console.log(info[i]['data']);
-        } 
-    }
-    //console.log(info)
-    try{
-      $('#newTree'+id+'').jstree("destroy");  
-      $('#newTree'+id+'').jstree(tree);  
-      //$('#newTree'+id+'').jstree(tree);
-      //$('#newTree'+id+'').jstree("refresh");
-      //console.log('paso el try');
-    }
-    catch(err){
-      //$('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-      //console.log('paso el catch');
-      //console.log(err);
-      //$('#newTree'+id+'').jstree(tree);
-    }
-    //console.log(tree);
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },500);
-  }
-  if (valor.value == "todos"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-    var info = tree['core']['data'];
-    try{
-      $('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-    }
-    catch(err){
-      $('#newTree'+id+'').jstree(tree);
-      console.log(err);
-    }
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);    
-  }
-}
-
-function deleteVideoExercise(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar los videos y ejercicios?</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteVideoExercise("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>')
-}
-
-function deleteSubtopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar el Objetivo de Aprendizaje? Perderá toda la información de videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteSubtopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function deleteTopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar la unidad? Perderá toda la información de objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function deleteChapter(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar el nivel? Perderá toda la información de unidades, objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function cancelDelete(){
-  $('#popup').hide();
-  $('#hover').hide();
-}
-
-function confirmDeleteVideoExercise(id){
-  //console.log(id)
-  $.ajax({
-    url: "{% url 'curriculum:deletevideoexercise' %}",
-    type: "POST",
-    data: {idsubtopic:id},
-      success: function(response){
-        $("#popup").empty()
-        $("#close").hide();
-        $("#hover").fadeIn();
-        $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Videos y Ejercicios borrados correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteSubtopic(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletesubtopic' %}",
-    type: "POST",
-    data: {idtopic: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
+    function openContentTree(idtopic, idsubtopic){
+        var tree = JSON.parse('{{ json_skill_tree | escapejs }}');
+        var chapter = JSON.parse('{{ json_data | escapejs }}');
+        //console.log(tree);
+        $('#popuptree').empty();
         $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Objetivo de Aprendizaje borrado correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
+        $('#popuptree').fadeIn();
+        $('#popuptree').append("<div id='filtrar' style='float:left;width:50%;'><label>Filtrar por: </label><select class='skill_search' onchange='valorfiltro(this, " + idtopic + "," + idsubtopic+")'><option value='todos'>Todos</option><option value='ejercicios'>Ejercicios</option><option value='videos'>Videos</option></select></div>")
+        $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
+        $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
+        $('#newTree'+idsubtopic).jstree(tree);
+        $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
+
+        $('#newTree'+idsubtopic).bind('ready.jstree',function(event){
+            var topicos = chapter["topicos"];
+            for (var j = 0; j < topicos.length; j++) {
+                if(topicos[j]['id'] == idtopic){
+                    var subtopicos = topicos[j]["subtopico"];
+                    for (var k = 0; k < subtopicos.length; k++) {
+                        if (subtopicos[k]['id'] == idsubtopic){
+                            var ejer = subtopicos[k]["skills"];
+                            for (var l = 0; l < ejer.length; l++) {
+                                $('#newTree'+idsubtopic).jstree('select_node', '#'+ejer[l]['idtree']);
+                            }
+                            var vid = subtopicos[k]["videos"];
+                            for (var m = 0; m < vid.length; m++) {
+                                $('#newTree'+idsubtopic).jstree('select_node', vid[m]['idtree']);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function valorfiltro(valor, idtopic, idsubtopic){
+        var chapter = JSON.parse('{{ json_data | escapejs }}');
+        if(valor.value == "ejercicios"){
+            var tree = JSON.parse('{{ json_skill_tree | escapejs }}');
+            var info = tree['core']['data'];
+            for (var i = 0; i < info.length; i++) {
+                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined") delete info[i];
+            }
+            try{
+                $('#newTree'+idsubtopic).jstree("destroy");
+                $('#newTree'+idsubtopic).jstree(tree);
+            }
+            catch(err){
+                console.log(err);
+            }
+            $('#newTree'+idsubtopic).bind('ready.jstree',function(event){
+                var topicos = chapter["topicos"];
+                for (var j = 0; j < topicos.length; j++) {
+                    if(topicos[j]['id'] == idtopic){
+                        var subtopicos = topicos[j]["subtopico"];
+                        for (var k = 0; k < subtopicos.length; k++) {
+                            if (subtopicos[k]['id'] == idsubtopic){
+                                var ejer = subtopicos[k]["skills"];
+                                for (var l = 0; l < ejer.length; l++){
+                                    $('#newTree'+idsubtopic).jstree('select_node', '#'+ejer[l]['idtree']);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        if(valor.value == "videos"){
+            var tree = JSON.parse('{{ json_video_tree | escapejs }}');
+            var info = tree['core']['data'];
+            //console.log(info);
+            for (var i = 0; i < info.length; i++) {
+                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined") delete info[i];
+            }
+            //console.log(info)
+            try{
+                $('#newTree'+idsubtopic).jstree("destroy");  
+                $('#newTree'+idsubtopic).jstree(tree);  
+
+            }
+            catch(err){
+                console.log(err);
+            }
+            $('#newTree'+idsubtopic).bind('ready.jstree',function(event){
+                var topicos = chapter["topicos"];
+                for (var j = 0; j < topicos.length; j++) {
+                    if(topicos[j]['id'] == idtopic){
+                        var subtopicos = topicos[j]["subtopico"];
+                        for (var k = 0; k < subtopicos.length; k++) {
+                            if (subtopicos[k]['id'] == idsubtopic){
+                                var vid = subtopicos[k]["videos"];
+                                for (var m = 0; m < vid.length; m++) {
+                                    $('#newTree'+idsubtopic).jstree('select_node', vid[m]['idtree']);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        if (valor.value == "todos"){
+            var tree = JSON.parse('{{ json_skill_tree | escapejs }}');
+            var info = tree['core']['data'];
+            try{
+                $('#newTree'+idsubtopic).jstree("destroy");
+                $('#newTree'+idsubtopic).jstree(tree);
+            }
+            catch(err){
+                console.log(err);
+            }
+            $('#newTree'+idsubtopic).bind('ready.jstree',function(event){
+                var topicos = chapter["topicos"];
+                for (var j = 0; j < topicos.length; j++) {
+                    if(topicos[j]['id'] == idtopic){
+                        var subtopicos = topicos[j]["subtopico"];
+                        for (var k = 0; k < subtopicos.length; k++) {
+                            if (subtopicos[k]['id'] == idsubtopic){
+                                var ejer = subtopicos[k]["skills"];
+                                for (var l = 0; l < ejer.length; l++) {
+                                    console.log(ejer[l]['idtree']);
+                                    $('#newTree'+idsubtopic).jstree('select_node', '#'+ejer[l]['idtree']);
+                                }
+                                var vid = subtopicos[k]["videos"];
+                                for (var m = 0; m < vid.length; m++) {
+                                    $('#newTree'+idsubtopic).jstree('select_node', vid[m]['idtree']);
+                                }
+                            }
+                        }
+                    }
+                }
+            });   
+        }
+    }
+
+    function deleteVideoExercise(id){
+      $('#popup').empty();
+      $('#hover').fadeIn();
+      $('#popup').fadeIn();
+      $('#popup').append('<div>¿Está seguro que desea eliminar los videos y ejercicios?</div>');
+      $('#popup').append('<a onclick=\'(confirmDeleteVideoExercise("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>')
+    }
+
+    function deleteSubtopic(id){
+      $('#popup').empty();
+      $('#hover').fadeIn();
+      $('#popup').fadeIn();
+      $('#popup').append('<div>¿Está seguro que desea eliminar el Objetivo de Aprendizaje? Perderá toda la información de videos y ejercicios asociados a él.</div>');
+      $('#popup').append('<a onclick=\'(confirmDeleteSubtopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
+    }
+
+    function deleteTopic(id){
+      $('#popup').empty();
+      $('#hover').fadeIn();
+      $('#popup').fadeIn();
+      $('#popup').append('<div>¿Está seguro que desea eliminar la unidad? Perderá toda la información de objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
+      $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px; margin-right:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px; margin-left:10px">Cancelar</a>');
+    }
+
+    function deleteChapter(id){
+      $('#popup').empty();
+      $('#hover').fadeIn();
+      $('#popup').fadeIn();
+      $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar el nivel? Perderá toda la información de unidades, objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
+      $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
+    }
+
+    function cancelDelete(){
+      $('#popup').hide();
+      $('#hover').hide();
+    }
+
+    function confirmDeleteVideoExercise(id){
+      //console.log(id)
+      $.ajax({
+        url: "{% url 'curriculum:deletevideoexercise' %}",
+        type: "POST",
+        data: {idsubtopic:id},
+          success: function(response){
+            $("#popup").empty()
+            $("#close").hide();
+            $("#hover").fadeIn();
+            $("#popup").fadeIn();
+            $("#popup").append("<p class='response'>"+response+"</p>");
+            auxResponse = response;
+              if (auxResponse == "Videos y Ejercicios borrados correctamente"){
+                $("#hover").css('pointer-events','none');
+                $("#close").css('pointer-events','none');
+                window.setTimeout(function(){location.reload()},100);
+              }
           }
-      }
-  });
-}
+      });
+    }
 
-function confirmDeleteTopic(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletetopic' %}",
-    type: "POST",
-    data: {idchapter: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Unidad borrada correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
+    function confirmDeleteSubtopic(id){
+      $.ajax({
+        url: "{% url 'curriculum:deletesubtopic' %}",
+        type: "POST",
+        data: {idtopic: id},
+          success: function(response){
+            $('#popup').empty();
+            $('#close').hide();
+            $('#hover').fadeIn();
+            $('#popup').fadeIn();
+            $('#popup').append("<p class='response'>"+response+"</p>");
+            auxResponse = response;
+              if (auxResponse == "Objetivo de Aprendizaje borrado correctamente"){
+                $("#hover").css('pointer-events', 'none');
+                $('#close').css('pointer-events', 'none');
+                window.setTimeout(function(){location.reload()}, 100);
+              }
           }
-      }
-  });
-}
+      });
+    }
 
-function confirmDeleteChapter(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletechapter' %}",
-    type: "POST",
-    data: {idchapter: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Nivel borrado correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
+    function confirmDeleteTopic(id){
+      $.ajax({
+        url: "{% url 'curriculum:deletetopic' %}",
+        type: "POST",
+        data: {topic_id: id},
+          success: function(response){
+            $('#popup').empty();
+            $('#close').hide();
+            $('#hover').fadeIn();
+            $('#popup').fadeIn();
+            $('#popup').append("<p class='response'>"+response+"</p>");
+            auxResponse = response;
+              if (auxResponse == "Unidad borrada correctamente"){
+                $("#hover").css('pointer-events', 'none');
+                $('#close').css('pointer-events', 'none');
+                window.setTimeout(function(){location.reload()}, 100);
+              }
           }
-      }
-  });
-}
+      });
+    }
 
-function validar(){
-  flag = true;
-  nName = document.getElementById("newName").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    $("#newName").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newName").css('color', '#000000');
-  }
-  return flag;
-}
-
-function validarTopic(){
-  flag = true;
-  nName = document.getElementById("newNameTopic").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    $("#newNameTopic").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newNameTopic").css('color', '#000000');
-  }
-  return flag;
-}
-
-function validarSubtopic(idtopic){
-  flag = true;
-  nName = document.getElementById("newNameSubtopic"+idtopic+"").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    console.log(nName);
-    $("#newNameSubtopic").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newNameSubtopic").css('color', '#000000');
-    console.log('entro en else');
-  }
-  return flag;
-}
+    function confirmDeleteChapter(id){
+      $.ajax({
+        url: "{% url 'curriculum:deletechapter' %}",
+        type: "POST",
+        data: {idchapter: id},
+          success: function(response){
+            $('#popup').empty();
+            $('#close').hide();
+            $('#hover').fadeIn();
+            $('#popup').fadeIn();
+            $('#popup').append("<p class='response'>"+response+"</p>");
+            auxResponse = response;
+              if (auxResponse == "Nivel borrado correctamente"){
+                $("#hover").css('pointer-events', 'none');
+                $('#close').css('pointer-events', 'none');
+                window.setTimeout(function(){location.reload()}, 100);
+              }
+          }
+      });
+    }
 </script>
 
 {% endblock %}

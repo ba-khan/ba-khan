@@ -4,8 +4,9 @@ from . import views
 
 urlpatterns = [
     # ex: /polls/
-    url(r'^$', views.getCurriculumProposed, name='curriculum_propuesto'),
-    url(r'^guardar$', views.savePlanning, name='guardarplan'),
-    url(r'^eliminar$', views.deletePlanning, name='eliminarplan'),
-    url(r'^nivel/(?P<level>[0-9]+)/$', views.getCurriculumPropuesto, name='getCurriculumPropuesto'),
+    url(r'^$', views.getClassList, name='curriculum_propuesto'),
+    url(r'^guardar$', views.savePlanning, name='guardar_plan'),
+    url(r'^editar$', views.editPlanning, name='editar_plan'),
+    url(r'^eliminar$', views.deletePlanning, name='borrar_plan'),
+    url(r'^nivel/(?P<class_subj_id>[0-9]+)/$', views.getPlan, name='acceder_plan'),
 ]

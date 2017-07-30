@@ -18,1379 +18,1125 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
 
 <style>
-th a:hover { text-decoration: underline; }
-  table.tablaplanning { border-collapse: collapse; border: 1px solid #CCB; width:950px;}
-  table.tablaplanning td, table.tablaplanning th { padding: 5px; border: 1px solid #E0E0E0;}
-  table.tablaplanning th { background: #E5E5E5; text-align: left;}
-  input.tablaplanning { background: red; color: #FDFDFD; }
+    th a:hover { text-decoration: underline; }
+    table.tablaplanning { border-collapse: collapse; border: 1px solid #CCB; width:950px;}
+    table.tablaplanning td, table.tablaplanning th { padding: 5px; border: 1px solid #E0E0E0;}
+    table.tablaplanning th { background: #E5E5E5; text-align: left;}
+    input.tablaplanning { background: red; color: #FDFDFD; }
 
-  table.tablaplanning th {
-    color: #555;
-    background-color: #ccc;
-    border: 1px solid #bbb;
-    text-shadow: 0 1px 0 #eee;
-    vertical-align: bottom;
-    padding: 5px;
-    text-align:center;
-}
-table.tablaplanning td {
-  text-align: left;
-}
-
-table#tablaplan { border-collapse: collapse; border: 1px solid #CCB; width:800px;}
-table#tablaplan td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
-table#tablaplan th { background: #E5E5E5; text-align: left;}
-table#tablaplan th {
-    color: #555;
-    background-color: #ccc;
-    border: 1px solid #bbb;
-    text-shadow: 0 1px 0 #eee;
-    vertical-align: bottom;
-    padding: 5px;
-    text-align:center;
-}
-table#tablaplan td {
-  text-align: left;
-}
-
-input{
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
-}
-#popup{
-  height:150px;
-}
-#popuptree{
-  height:650px;
-}
-.ribbon {
-  position: relative;
-  left: 0px; top: -53px;
-  z-index: 1;
-  overflow: hidden;
-  width: 63px; height: 54px;
-  /*text-align: right;*/
-}
-.ribbon span {
-  font-size: 9px;
-  font-weight: bold;
-  color: #FFF;
-  text-transform: uppercase;
-  text-align: center;
-  line-height: 15px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  width: 97px;
-  display: block;
-  background: #79A70A;
-  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
-  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
-  position: absolute;
-  top: 13px; left: -25px;
-}
-.ribbon span::before {
-  content: "";
-  position: absolute; left: 0px; top: 100%;
-  z-index: -1;
-  /*border-left: 3px solid #79A70A;
-  border-right: 3px solid transparent;
-  border-bottom: 3px solid transparent;
-  border-top: 3px solid #79A70A;*/
-}
-.ribbon span::after {
-  content: "";
-  /*position: absolute; right: 0px; top: 100%;*/
-  z-index: -1;
-  /*border-left: 3px solid transparent;
-  border-right: 3px solid #79A70A;
-  border-bottom: 3px solid transparent;
-  border-top: 3px solid #79A70A;*/
-}
-#newChapter{
-  border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    display:none; 
-    height:220px; 
-    padding:15px;
-    padding-left: 33%;
-    padding-right: 33%;
-    text-align: center;
-}
-#newTopic{
-  /*border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    display:none; */
-    height:220px; 
-    padding:15px;
-    padding-left: 33%;
-    padding-right: 33%;
-    text-align: center;
-}
-#newSubtopic{
-  /*border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    display:none; */
-    height:220px; 
-    padding:15px;
-    padding-left: 33%;
-    padding-right: 33%;
-    text-align: center;
-}
-#newaccordion{
-  border: 1px solid #C6D1AD;
-  border-radius: 5px;
-  padding:15px;
-  padding-left: 10%;
-  padding-right: 10%;
-  text-align: left;
-}
-label{
-  width: 95px;
-}
-input{
-  margin-bottom: 10px;
-}
-
-#topbar {
-  float:left;
-  position: relative;
-    box-sizing: border-box;
-   -moz-box-sizing: border-box;
-   z-index: 2;
-   height: 50px;
-   /*margin-right: -1px;*/
-}
-#topbar ul.tab {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-#topbar ul.tab li {
-    margin: 0;
-}
-#topbar ul.tab li a {
-  padding: 15px 20px;
-  font-size: 14px;
-  font-weight: 100;
-  background: #EEEEEE;
-  text-decoration: none;
-  display: block;
-  border: 1px solid #ddd;
-  -webkit-transition:  background 0.3s ease-in-out;
-  -moz-transition:  background 0.3s ease-in-out;
-  -ms-transition:  background 0.3s ease-in-out;
-  -o-transition:  background 0.3s ease-in-out;
-  transition:  background 0.3s ease-in-out;
-}
-#topbar ul.tab li a.selectdos{
-  border-bottom: 1px solid #f7f7f7;
-  background: #f7f7f7;
-  color: #56861f;
-  
-}
-#topbar ul.tab li:hover a {
-    background: #f7f7f7;
-    color: #56861f;
-}
-#topbar ul.tab li:visited a {
-    background: #f7f7f7;
-    color: #56861f;
-}
-
-#topbar ul.tab li {float: left;}
-
-.redBackground{
-    background-color: gray;  
-}
-
-.topictree{
-  overflow: hidden;
-  overflow-y:scroll;
-  height: 550px;
-  width: 570px;
-  font-size: 12px;
-  padding: 5px 10px 10px 0px;
-  text-align: left;
-  margin: 10px;
-  border: 1px solid #ddd;
-}
-
-button.accordion {
-    background-color: #444;
-    color: #aaa;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
+    table.tablaplanning th {
+      color: #555;
+      background-color: #ccc;
+      border: 1px solid #bbb;
+      text-shadow: 0 1px 0 #eee;
+      vertical-align: bottom;
+      padding: 5px;
+      text-align:center;
+    }
+    table.tablaplanning td {
     text-align: left;
-    outline: none;
-    font-size: 15px;
-    transition: 0.4s;
-}
+    }
 
-button.accordion.active, button.accordion:hover {
-    background-color: #777;
-}
+    table#tablaplan { border-collapse: collapse; border: 1px solid #CCB; width:800px;}
+    table#tablaplan td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
+    table#tablaplan th { background: #E5E5E5; text-align: left;}
+    table#tablaplan th {
+      color: #555;
+      background-color: #ccc;
+      border: 1px solid #bbb;
+      text-shadow: 0 1px 0 #eee;
+      vertical-align: bottom;
+      padding: 5px;
+      text-align:center;
+    }
+    table#tablaplan td {
+    text-align: left;
+    }
 
-/*button.accordion:after {
-    content: '\002B';
-    color: #777;
-    font-weight: bold;
-    float: right;
-    margin-left: 5px;
-}
+    input{
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    }
+    label{
+    margin-right: 10px;
+    }
 
-button.accordion.active:after {
-    content: "\2212";
-}*/
+    #popup{
+    height:150px;
+    }
+    #popuptree{
+    height:650px;
+    }
+    #flex-div{
+    display: flex;
+    flex-direction: column;
+    }
+    #newChapter{
+    border: 1px solid #C6D1AD;
+      border-radius: 5px;
+      display:none; 
+      height:220px; 
+      padding:15px;
+      padding-left: 33%;
+      padding-right: 33%;
+      text-align: center;
+    }
+    #newTopic{
+    /*border: 1px solid #C6D1AD;
+      border-radius: 5px;
+      display:none; */
+      height:220px; 
+      padding:15px;
+      padding-left: 33%;
+      padding-right: 33%;
+      text-align: center;
+    }
+    #newSubtopic{
+    /*border: 1px solid #C6D1AD;
+      border-radius: 5px;
+      display:none; */
+      height:220px; 
+      padding:15px;
+      padding-left: 33%;
+      padding-right: 33%;
+      text-align: center;
+    }
+    label{
+    width: 95px;
+    }
+    input{
+    margin-bottom: 10px;
+    }
 
-/*div.panel {
-    padding: 0 18px;
-    background-color: white;
-    max-height: 0;
+    #topbar {
+    float:left;
+    position: relative;
+      box-sizing: border-box;
+     -moz-box-sizing: border-box;
+     z-index: 2;
+     height: 50px;
+     /*margin-right: -1px;*/
+    }
+    #topbar ul.tab {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    #topbar ul.tab li {
+      margin: 0;
+    }
+    #topbar ul.tab li a {
+        padding: 15px 20px;
+        font-size: 14px;
+        font-weight: 100;
+        background: #EEEEEE;
+        text-decoration: none;
+        display: block;
+        border: 1px solid #ddd;
+        -webkit-transition:  background 0.3s ease-in-out;
+        -moz-transition:  background 0.3s ease-in-out;
+        -ms-transition:  background 0.3s ease-in-out;
+        -o-transition:  background 0.3s ease-in-out;
+        transition:  background 0.3s ease-in-out;
+    }
+    #topbar ul.tab li a.tab_select{
+        border-bottom: 1px solid #f7f7f7;
+        background: #f7f7f7;
+        color: #56861f;
+
+    }
+    #topbar ul.tab li:hover a {
+        background: #f7f7f7;
+        color: #56861f;
+    }
+    #topbar ul.tab li:visited a {
+        background: #f7f7f7;
+        color: #56861f;
+    }
+
+    #topbar ul.tab li {
+        float: left;
+    }
+
+    .topictree{
+        overflow: hidden;
+        overflow-y:scroll;
+        height: 500px;
+        width: 570px;
+        font-size: 12px;
+        padding: 5px 10px 10px 0px;
+        text-align: left;
+        margin: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .videos,.skills, .descripcion{
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    width: 800px;
+    height: 100px;
+    max-height: 400px;
+    text-align: left;
+    padding: 10px;
+    margin: 10px;
+    margin-left: 150px;
     overflow: hidden;
-    transition: 0.6s ease-in-out;
-    opacity: 0;
-}
+    overflow: scroll;
+    overflow: auto;
+    background: #F6F7F7;
+    float:left;
+    cursor: default;
+    -moz-user-select':-moz-none;
+      -moz-user-select:none;
+      -o-user-select:none;
+      -khtml-user-select:none; 
+      -webkit-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+    }
 
-div.panel.show {
-    opacity: 1;
-    min-width: 800px;
-    min-height: 800px;
-}*/
+    .bloque-info{
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        width: 84%;
+        height: 100px;
+        max-height: 400px;
+        text-align: left;
+        padding: 10px;
+        margin: 10px;
+        margin-left: 0px;
+        overflow: hidden;
+        overflow: scroll;
+        overflow: auto;
+        background: #F6F7F7;
+        float:left;
+        cursor: default;
+        -moz-user-select':-moz-none;
+          -moz-user-select:none;
+          -o-user-select:none;
+          -khtml-user-select:none; 
+          -webkit-user-select:none;
+          -ms-user-select:none;
+          user-select:none;   
+    }
 
+    .flex-div{
+        display: flex;
+        flex-direction: column;
+    }
+    .class-block{
+        float: left;
+        width: 320px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 
-.videos,.skills, .descripcion{
-  border: 1px solid #D9D9D9;
-  border-radius: 5px;
-  width: 395px;
-  height: 90px;
-  padding: 10px;
-  margin: 10px;
-  margin-left: 150px;
-  overflow: hidden;
-  overflow: scroll;
-  overflow: auto;
-  background: #F6F7F7;
-  float:left;
-  cursor: default;
-  -moz-user-select':-moz-none;
-    -moz-user-select:none;
-    -o-user-select:none;
-    -khtml-user-select:none; 
-    -webkit-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-}
+    .class-row{
+        margin-top: 6px;
+        margin-bottom: 6px;
+        min-height: 32px;
+    }
 
+    .class-window{
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        width: 800px;
+        min-height: 600px;
+        text-align: left;
+        padding: 20px;
+        margin: 10px;
+        margin-left: 0px;
+        background: #F6F7F7;
+        float:left;
+        cursor: default;
+        -moz-user-select':-moz-none;
+        -moz-user-select:none;
+        -o-user-select:none;
+        -khtml-user-select:none; 
+        -webkit-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+    .desc_label{
+        margin-left: 0px;
+        float: left;
+        width: 300px;
+        text-align: left;
+    }
 
-.main-content li{
-  text-align:left;
-}
+    .main-content li{
+    text-align:left;
+    }
 
-.main-content h2, h3{
-  text-align: center;
-}
+    .main-content h2, h3{
+    text-align: center;
+    }
 
-.contenidodhv h2{
-  margin-bottom: 0px;
-}
+    .contenidodhv h2{
+    margin-bottom: 0px;
+    }
 
-td.mousepointer{
-    cursor: pointer;
+    td.mousepointer{
+      cursor: pointer;
+    }
+
+    .class-list{
+        margin-top: 10px;
+        max-height: 700px;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .class-list:hover{
+        margin-top: 10px;
+        max-height: 700px;
+        margin-bottom: 10px;
+        overflow: auto;
+    }
   }
 </style>
+
+<div style="float: right">
+    Curriculo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
+</div>
+
+<div id="topbar" style="min-width: 1200px; height: 52px; margin-bottom: -2px; margin-top: 15px">
+    <ul class="tab">
+        {% for top in lista_topicos %}
+            <li><a id='tab_unidad_{{ top.id_topic_mineduc }}' style="cursor: pointer; min-height 55px" href='#' onclick="cambiarUnidad({{ top.id_topic_mineduc }}); return false;">
+                Unidad {{ top.index }}
+            </a></li>
+        {% endfor %}
+    </ul>
+</div>
 <br>
-<div class="container">
-    <div id="sidebar">
-      <ul>
-        <li id="pestana0" style="visibility: hidden;"><a href='javascript:cambiarPestanna(pestana0);'><i class="plus"></i> Nueva Unidad</a></li>
-          {% for top in topic_mineduc %}
-          {% if forloop.first %}
-            <li id="pestana{{ top.id_topic_mineduc }}"><a href='javascript:cambiarPestanna(pestana{{ top.id_topic_mineduc }}, {{ top.id_topic_mineduc }});' class="select">{{ top.name }}</a></li>
-          {% else %}
-            <li id="pestana{{ top.id_topic_mineduc }}"><a href='javascript:cambiarPestanna(pestana{{ top.id_topic_mineduc }}, {{ top.id_topic_mineduc }});'>{{ top.name }}</a></li>
-          {% endif %}
-          {% endfor %}
-        </ul>
-    </div>
 
-    <div class="todo" style="min-width: 700px;">
-      <h3 style="display: none;" id="mensajeun">No existen Unidades para este nivel.</h3>
+<div class="container" style="min-width: 1200px;">
+    <div class="main-content" style="min-height: 1000px; margin-right: 20px; padding-left: 20px; padding-top: 20px; padding-bottom: 20px; width: 100%; float: left; min-width: 700px">
+            <div id="header" class="flex-div"></div>
+            <div id="subheader" class="flex-div"></div>
 
-    <div id="topbar" style="width: 100%; float: left; display: none">
-    </div>
+            <div class="container" id="class-panel">
+                <div id="sidebar" class="class-list"></div>
+                <div id="class-window" class="flex-div">
+                    <div id='form-window' class='form' style='overflow: hidden; display: none'>
+                        <form action='' method='post' id='newClass_Form'>{% csrf_token %}
+                        <h3 id='formTitle'>Crear nueva clase</h3>
 
-    <div class="main-content" style="width: 100%; float: left;">
-    <h3 style="display: none;" id="mensajeoa">No existen Objetivos de Aprendizaje para esta unidad.</h3>
-      
-      <div id="contenidopestanas" style="margin-right: 200px;">
-      </div>
+                        <div class='class-row' style='margin-left: 20px;'>
+                            <label for='newName'>Nombre de la clase: </label>
+                            <input required id='newName' name='class_name_input' type='text' style='width: 74%; float:right; margin-right: 20px;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                        </div>
 
-      <div id="contenidopestanastop" style="float: left; width: 100%;">
-      </div>
-    </div>
+                        <div class='class-block'>
+                            <div class='class-row'>
+                                <label for='newOA'> Objetivo Asignado: </label>
+                                <select id='newOA' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px; float:right; width: auto;'>
+                                
+                                </select>
+                                <br>
+                            </div>
+                            <div class='class-row'>
+                                <label for='newState'>Estado: </label>
+                                <select id='newState' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                                    <option value='False'>No realizado</option>
+                                    <option value='True'>Realizado</option>
+                                </select>
+                            </div>
+                            <div class='class-row'>
+                                <label for='newOpening' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Inicio de la clase: </label>
+                                <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
+                            </div>
+                            <div class='class-row'>
+                                <label for='skill_block'>Habilidades:</label>
+                                <div id='skill_block' style='width: 300px; ' class='bloque-info'>
+                                    <ul id='skill_list'></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='class-block' style='float:right'>
+                            <div class='class-row'>
+                                <label for='newDate'>Fecha: </label>
+                                <select id='newDate_Y' name='class_year_input' style='float:right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                                
+                                </select>
+
+                                <select id='newDate_M' name='class_month_input' onchange='monthChanged(); return false;' style='float:right; margin-right: 8px; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                                
+                                </select>
+
+                                <select id='newDate_D' name='class_day_input' style='float:right; margin-right: 8px; padding-left: 0px; width: auto; margin-left: 10px' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                                
+                                </select>
+                            </div>
+                            <div class='class-row'>
+                                <label for='newDuration'>Duración: </label>
+                                <select id='newDuration' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                                
+                                </select>
+                            </div>
+
+                            <div class='class-row'>
+                                <label for='newClosure' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Cierre de la clase: </label>
+                                <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
+                            </div>
+                            <div class='class-row'>
+                                <label for='video_block'>Videos:</label>
+                                <div id='video_block' style='width: 300px;' class='bloque-info'>
+                                    <ul id='video_list'></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div id='buttonFieldForm'></div>
+                        </form>
+                    </div>
+                    <div id='info-window' style='overflow: hidden; display:none'>
+                        <h3 id="labelTitle"></h3>
+
+                        <div class='class-block'>
+                            <div class='class-row'>
+                                <label id="labelOA"></label>
+                            </div>
+                            <div class='class-row'>
+                                <label id="labelStatus"></label>
+                            </div>
+                            <div class='class-row'>
+                                <label for='blockInicio'>Descripción de inicio:</label>
+                                <p id='blockInicio' style='width: 300px;' class='bloque-info'></p>
+                            </div>
+                            <div class='class-row'>
+                                <label for='blockSkill'>Habilidades:</label>
+                                <div id='blockSkill' style='width: 300px;' class='bloque-info'>
+                                    <ul id='skill_info'></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='class-block' style='float:right'>
+                            <div class='class-row'>
+                                <label id="labelDate"></label>
+                            </div>
+                            <div class='class-row'>
+                                <label id='labelDuration'></label>
+                            </div>
+
+                            <div class='class-row'>
+                                <label for='blockCierre'>Descripción de cierre:</label>
+                                <p id='blockCierre' style='width: 300px;' class='bloque-info'></p>
+                            </div>
+                                <div class='class-row'>
+                                <label for='video_block'>Videos:</label>
+                                <div id='video_block' style='width: 300px;' class='bloque-info'>
+                                    <ul id='video_info'>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="buttonFieldInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div id="popup" style="display:none">
-  
-</div>
+<div id="popup" style="display:none"></div>
 
-<div id="popuptree" style="display:none">
-  
-</div>
+<div id="popuptree" style="display:none"></div>
 
 <script type="text/javascript">
 
-$('#planificacion').addClass('active selected');
+    $(document).ready(function(){
+        $("#hover").click(function(){
+            $(this).fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+        
+        $("#close").click(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+        $('#contenido_pagina_top').css('display', 'none');
+     });
 
-$(document).ready(function(){
-  if (typeof $('a.select')[0] !== "undefined"){
-    setTimeout(function(){
-      $('a.select')[0].click();
-    }, 100);
-  }
-  else{
-    $('#mensajeun').css('display', '');
-  }
-  
-  
-    
-    $("#hover").click(function(){
-          $(this).fadeOut();
-      $("#popup").fadeOut();
-      $("#popuptree").fadeOut();
-      });
-    
-    $("#close").click(function(){
-          $("#hover").fadeOut();
-      $("#popup").fadeOut();
-      $("#popuptree").fadeOut();
-      });
-    $('#contenidopestanastop').css('display', 'none');
+    function cambiarUnidad(unitid){
+        $('#header').empty();
+        $('#subheader').empty();
+        $('#class-window').hide();
 
-    contenidoTop();
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = curriculo["topicos"];
+        var text = "";
 
-  });
-
-  function backChapter(){
-    $('.class-content').show();
-    $('.main-content').hide();
-    $('#namecurso').hide();
-    $('#sidebar').hide();
-    $('#buttonback').hide();
-  }
-
-  function contenidoTop(){
-    var conttop='';
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos=chapters[i]['topico'];
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos=topicos[j]['subtopico'];
-        for (var k = 0; k < subtopicos.length; k++) {
-          conttop+='<div id="cpestanatop0'+subtopicos[k]['id']+'" class="cpestannatop" style="max-width: 500px;display:none;"><br><div class="contenidodhv">';
-
-          conttop+='<div id="tablamiplanning"><h2>Mis Planificaciones</h2><br><table id="tablaplan"><tr id="cabecera"><th style="width: 16.5%;">Clase</th><th style="width: 16.5%;">Objetivo de la Clase</th><th style="width: 16.5%;">Inicio de la Clase</th><th style="width: 16.5%;">Cierre de la Clase</th><th style="width: 17%;">Ejercicios Khan</th><th style="width: 17%;">Videos Khan</th></tr>';
-          {% for miplan in miplanificacion %}
-          if ("{{ miplan.oa }}" == subtopicos[k]['aeoe']) {
-            conttop+='<tr id="idcurso{{ miplan.curso }}__" class="for{{"forloop.counter"}}loop"><td id="{{forloop.counter}}__clase">{{ miplan.clase }}</td><td id="{{forloop.counter}}__objetivo">{{ miplan.objetivo }}</td><td id="{{forloop.counter}}__inicio">{{ miplan.inicio }}</td><td id="{{forloop.counter}}__cierre">{{ miplan.cierre }}</td>';
-            conttop+='<td id="khanexercise"><ul>'
-            {% for exercise in miplan.ejerciciokhan %}
-              conttop+='<a href="{{exercise.urlskill}}" target="_blank"><li>{{exercise.namespanish}}</li></a><br>'
-            {% endfor %}
-            conttop+='</ul></td>';
-            conttop+='<td id="khanvideo"><ul>'
-            {% for video in miplan.videokhan %}
-              conttop+='<a href="{{video.urlvideo}}" target="_blank"><li>{{video.namespanish}}</li></a><br>'
-            {% endfor %}
-            conttop+='</ul></td>';
-          conttop+='</tr>';
-          }
-          {% endfor %}
-          conttop+='</table></div><br><br>';
-
-          conttop+='<div id="todadescripcion"><h2>Descripción:</h2><div class="descripcion" style="float:left"><ul><li>'+subtopicos[k]['aeoe']+'</li></ul></div></div><br><br>';
-
-          conttop+='<div id="contenidoplanning'+subtopicos[k]['id']+'" style="display:none;">';
-
-          conttop+='<button class="accordion" style="margin-left:100px;" onclick="mostrarEjercicios();">Definir Ejercicios</button><br><br>';
-
-          conttop+='<div id="todahabilidad" class="todahabilidad" style="display:none;">';
-          conttop+='<a onclick=\'(addExercise("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonexer0'+subtopicos[k]['id']+'">Agregar Ejercicios</a>';
-          conttop+='<h2>Habilidades Propuestas</h2><div class="skills" id="skillpropuesta'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)">';
-          var skills = subtopicos[k]['skills'];
-          for (var l = 0; l < skills.length; l++) { 
-            conttop+='<div title="'+skills[l]['nombre']+'" class="cuadradito" id="'+skills[l]['idtree']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+skills[l]['nombre']+'</div>';
-          }
-          conttop+='</div><h2>Habilidades para mi clase</h2><div class="skills" id="skillmiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return over(event)" ondragleave="return leave(event)" ondrop="return drop(event)"></div></div>';
-
-          conttop+='<br><br>';
-          conttop+='<button class="accordion" style="margin-left:100px;" onclick="mostrarVideos();">Definir Videos</button><br><br>';
-
-          conttop+='<div id="todovideo" class="todovideo" style="display:none;">';
-          conttop+='<a onclick=\'(addVideo("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonvid0'+subtopicos[k]['id']+'">Agregar Videos</a>';
-          conttop+='<h2>Videos Propuestos</h2><div class="videos" id="videopropuesto'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)">';
-
-          var videos = subtopicos[k]['videos'];
-          for (var m = 0; m < videos.length; m++) {
-            conttop+='<div title="'+videos[m]['nombre']+'" class="cuadradito" id="'+videos[m]['idtree']+'" draggable="true" ondragstart="startvid(event)" ondragend="endvid(event)">'+videos[m]['nombre']+'</div>';
-          }
-          conttop+='</div><h2>Videos para mi clase</h2><div class="videos" id="videomiclase'+subtopicos[k]['id']+'" style="float:left;" ondragenter="return enter(event)" ondragover="return overvid(event)" ondragleave="return leavevid(event)" ondrop="return dropvid(event)"></div></div>';
-
-          conttop+='<a onclick=\'(setPlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonplan0'+subtopicos[k]['id']+'">Empezar Planificación</a>';
-
-          conttop+='</div>';
-          conttop+='</div>';
-          conttop+='<br><br>';
-          conttop+='<a onclick=\'(newPlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonnp0'+subtopicos[k]['id']+'">Nueva Planificación</a>';
-          conttop+='<div id="tablaplanning'+subtopicos[k]['id']+'" style="display:none;width:700px;" class="tablaplanning"></div><br><br>';
-
-          conttop+='<a onclick=\'(savePlanning("'+subtopicos[k]['id']+'","'+topicos[j]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; display:none;" class="kui-button kui-button-plain kui-button-primary" id="botonsave0'+subtopicos[k]['id']+'">Guardar Planificación</a>'
-          conttop+='</div>';
-        }
-      }
-    }
-    $('#contenidopestanastop').append(conttop);
-  }
-
-  function mostrarEjercicios(){
-    $('.todovideo').css('display', 'none');
-    if( !($('.todahabilidad').is(":visible")) ){
-      $('.todahabilidad').toggle('blind',1000)
-    }
-  }
-
-  function mostrarVideos(){
-    $('.todahabilidad').css('display', 'none');
-    if( !($('.todovideo').is(":visible")) ){
-      $('.todovideo').toggle('blind',1000)
-    }
-  }
-
-  function start(e) {
-          e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
-          e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
-          e.dataTransfer.setDragImage(e.target, 0, 0); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
-          e.target.style.opacity = '0.4'; 
-      };
-
-      function end(e){
-          e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
-          e.dataTransfer.clearData("Data");
-      };
-
-      function enter(e) {
-          e.target.style.border = '3px dotted #555'; 
-      };
-
-      function leave(e) {
-          e.target.style.border = ''; 
-      };
-
-      function over(e) {
-          var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
-          var id = e.target.id; // Elemento sobre el que se arrastra
-          
-          // return false para que se pueda soltar
-          if (id.indexOf('skillpropuesta')>-1){
-              return false; // Cualquier elemento se puede soltar sobre el div destino 1
-          }
-
-          if (id.indexOf('skillmiclase')>-1){
-              return false; // En el Evaluados se puede soltar cualquier elemento menos el elemento con id=arrastrable3
-          }   
-      };
-
-      function drop(e){
-
-          var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
-          e.target.appendChild(document.getElementById(elementoArrastrado));
-          e.target.style.border = '';  // Quita el borde
-          tamContX = $('#'+e.target.id).width();
-          tamContY = $('#'+e.target.id).height();
-
-          tamElemX = $('#'+elementoArrastrado).width();
-          tamElemY = $('#'+elementoArrastrado).height();
-
-          posXCont = $('#'+e.target.id).position().left;
-          posYCont = $('#'+e.target.id).position().top;
-
-      }
-
-  function startvid(e) {
-          e.dataTransfer.effecAllowed = 'move'; // Define el efecto como mover (Es el por defecto)
-          e.dataTransfer.setData("Data", e.target.id); // Coje el elemento que se va a mover
-          e.dataTransfer.setDragImage(e.target, 0, 0); // Define la imagen que se vera al ser arrastrado el elemento y por donde se coje el elemento que se va a mover (el raton aparece en la esquina sup_izq con 0,0)
-          e.target.style.opacity = '0.4'; 
-      };
-
-      function endvid(e){
-          e.target.style.opacity = ''; // Pone la opacidad del elemento a 1           
-          e.dataTransfer.clearData("Data");
-      };
-
-      function entervid(e) {
-          e.target.style.border = '3px dotted #555'; 
-      };
-
-      function leavevid(e) {
-          e.target.style.border = ''; 
-      };
-
-      function overvid(e) {
-          var elemArrastrable = e.dataTransfer.getData("Data"); // Elemento arrastrado
-          var id = e.target.id; // Elemento sobre el que se arrastra
-          
-          // return false para que se pueda soltar
-          if (id.indexOf('videopropuesto')>-1){
-              return false; // Cualquier elemento se puede soltar sobre el div destino 1
-          }
-
-          if (id.indexOf('videomiclase')>-1){
-              return false; // En el Evaluados se puede soltar cualquier elemento menos el elemento con id=arrastrable3
-          }   
-      };
-
-      function dropvid(e){
-
-          var elementoArrastrado = e.dataTransfer.getData("Data"); // Elemento arrastrado
-          e.target.appendChild(document.getElementById(elementoArrastrado));
-          e.target.style.border = '';  // Quita el borde
-          tamContX = $('#'+e.target.id).width();
-          tamContY = $('#'+e.target.id).height();
-
-          tamElemX = $('#'+elementoArrastrado).width();
-          tamElemY = $('#'+elementoArrastrado).height();
-
-          posXCont = $('#'+e.target.id).position().left;
-          posYCont = $('#'+e.target.id).position().top;
-
-      }
-
-  function savePlanning(idsubtopico, idtopico){
-    var oa = $('tr#id'+idsubtopico+' td#oa').text();
-    var clase = $('tr#id'+idsubtopico+' td#clase').text();
-    var objetivo = $('tr#id'+idsubtopico+' td#objetivo').text();
-    var inicio = $('tr#id'+idsubtopico+' td#inicio').text();
-    var cierre = $('tr#id'+idsubtopico+' td#cierre').text();
-    var ejercicios = $('tr#id'+idsubtopico+' td#ejercicios').text();
-    var videos = $('tr#id'+idsubtopico+' td#videos').text();
-
-    var nivel = "{{ nivel }}";
-
-    $.ajax({
-      url: "{% url 'planificacion:guardarplan' %}",
-      type: "POST",
-      data: {oa:oa, clase:clase, objetivo:objetivo, inicio:inicio, cierre:cierre, ejercicios:ejercicios, videos:videos, nivel:nivel},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-            if (auxResponse == "Planificacion guardada correctamente"){
-              $("#hover").css('pointer-events','none');
-              $("#close").css('pointer-events','none');
-              window.setTimeout(function(){location.reload()},1000);
+        //Dibuja la caja de descripcion de la Unidad.
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == unitid){
+                var subtopicos = topicos[i]["subtopico"];
+                text += "<label class='desc_label' style='margin-left: 150px;'>Descripción de la Unidad: </label>";
+                text += "<p class='descripcion'>"+topicos[i]['desc']+"</p>";
+                text += "<br>";
+                break;
             }
         }
-    });
-  }
 
-  function setPlanning(idsubtopico, idtopico){
-    //$('#botonplan0'+idsubtopico).css('display', 'none');
-    $('#tablaplanning'+idsubtopico+'').empty();
-    var mitabla='';
+        $('#header').append(text);
+        text = "";
 
-    $('#botonsave0'+idsubtopico+'').css('display', '');
-
-    var openDiv = document.getElementById('skillmiclase'+idsubtopico+''); 
-    var cuadritos = openDiv.getElementsByClassName('cuadradito');
-    var ids =[];
-    for (var i = 0; i < cuadritos.length; i++) {
-          ids.push({
-            title_skill:cuadritos[i].title,
-            id_skill:cuadritos[i].id
-          });
+        text += "<div style='margin-right: 180px; margin-bottom: 10px'>";
+        text += "<label for='oa_select'>Objetivo de Aprendizaje: </label>";
+        text += "<select id='oa_select' onchange='filtrarOA(" + unitid + ");' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px'>";
+        text += "<option value='0' onclick='listarClases(" + unitid + ")'>Mostrar Todo</option>";
+        for (var s = 0; s < subtopicos.length; s++){
+            text += "<option value='" + subtopicos[s]["id"] + "'> Objetivo de aprendizaje " + subtopicos[s]["index"] + "</option>";
         }
-    
-    var openDivVid = document.getElementById('videomiclase'+idsubtopico+''); 
-    var cuadritosvid = openDivVid.getElementsByClassName('cuadradito');
-    var idsvids =[];
-    for (var i = 0; i < cuadritosvid.length; i++) {
-          idsvids.push({
-            title_video:cuadritosvid[i].title,
-            id_video:cuadritosvid[i].id
-          });
+        text += "</select></div>";
+        
+        $('#header').append(text);
+
+        listarClases(unitid);
+
+        //Cambia estilo (colorea) la pestaña Unidad seleccionada.
+        $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
+        $(document.getElementById("tab_unidad_" + unitid)).addClass("tab_select");
+        $(document.getElementById("class-window")).addClass("class-window");
+    }
+
+    function filtrarOA(unitid){
+        $('#subheader').empty();
+
+        var filtered_oa_id = $('#oa_select').val();
+        var text = "";
+
+        if(filtered_oa_id){
+            var curriculo = JSON.parse('{{ json_data | escapejs }}');
+            var topicos = curriculo["topicos"];
+            
+            //Dibuja la caja de descripcion de los OA.
+            for (var t = 0; t < topicos.length; t++) {
+                if (topicos[t]['id'] == unitid){
+                    var subtopicos = topicos[t]["subtopico"];
+                    for (var s = 0; s < subtopicos.length; s++){
+                        if(subtopicos[s]['id'] == filtered_oa_id){
+                            if (subtopicos[s]['resumen']){
+                                text += "<div style='margin-left: 140px; margin-right: 185px;'>";
+                                    text += "<div style='float: left; width: 400px;'>";
+                                        text += "<label class='desc_label'>Descripcion del Objetivo de Aprendizaje: </label>";
+                                        text += "<p class='descripcion' style='margin-left: 10px; width: 94%'>"+subtopicos[s]['desc']+"</p>";
+                                    text += "</div><div style='float: right; width: 400px;'>";
+                                        text += "<label class='desc_label'>Información adicional: </label>";
+                                        text += "<p class='descripcion' style='width: 94%; margin-left: 10px'>"+subtopicos[s]['resumen']+"</p>";
+                                    text += "</div>";
+                                text += "</div>";
+                            }else{
+                                text += "<label style='margin-left: 5px; width: 400px;'>Descripcion del Objetivo de Aprendizaje: </label>";
+                                text += "<p class='descripcion'>"+subtopicos[s]['desc']+"</p>";
+                            }
+                            text += "<br>";
+                            break; break;
+                        }
+                    }
+                }
+            }$('#subheader').append(text);
         }
+        listarClases(unitid, filtered_oa_id);
+    }
 
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    var chapters=arbol["capitulos"];
+    function listarClases(unitid, selected_oa_id = 0){
+        $('#sidebar').empty();
 
-    mitabla+='<table><thead><tr id="cabecera"><th style="width: 15%;">Objetivo de Aprendizaje</th><th style="width: 14%;">Clase</th><th style="width: 15%;">Objetivo de la Clase</th><th style="width: 14%;">Inicio de la Clase</th><th style="width: 14%;">Cierre de la Clase</th><th style="width: 14%;">Ejercicios Khan</th><th style="width: 14%;">Videos Khan</th></thead></tr>';
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = curriculo["topicos"];
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var text = "";
+        text += "<ul>";
+        text += "<li><a id='tab_clase_0' style='cursor: pointer' onclick='cambiarClase(0," + unitid + "); return false;'><i class='plus'></i> Nueva Clase</a></li>";
 
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]['topico'];
-      for (var j = 0; j < topicos.length; j++) {
-        if(topicos[j]['id']==idtopico){
-          var subtopicos = topicos[j]['subtopico'];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==idsubtopico){
-              mitabla+='<tbody><tr id="id'+idsubtopico+'"><td id="oa">'+subtopicos[k]['aeoe']+'</td><td id="clase" contenteditable="true" class="mousepointer"></td><td id="objetivo" contenteditable="true" class="mousepointer"></td><td id="inicio" contenteditable="true" class="mousepointer"></td><td id="cierre" contenteditable="true" class="mousepointer"></td><td id="ejercicios"><ul>';
-              for (var l = 0; l < ids.length; l++) {
-                mitabla+='<li id="'+ids[l]['id_skill']+'"><img src={% static "img/ejercicios.png" %} alt="ejercicios" height="15px;" width="15px;">'+ids[l]['title_skill']+'</li><div style="display:none;">##</div>'
-              }
-              mitabla+='</ul></td><td id="videos"><ul>';
-              for (var m = 0; m < idsvids.length; m++) {
-                mitabla+='<li id="'+idsvids[m]['id_video']+'"><img src={% static "img/videos.png" %} alt="videos" height="15px;" width="15px;">'+idsvids[m]['title_video']+'</li><div style="display:none;">##</div>'
-              }
-
-              mitabla+='</ul></td></tr></tbody></table>';
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == unitid){
+                var subtopicos = topicos[i]["subtopico"];
+                break;
             }
-          }
         }
-      }
-    }
-
-    $('#tablaplanning'+idsubtopico+'').append(mitabla);
-    $('#tablaplanning'+idsubtopico+'').css('display', '');
-  }
-
-  function newPlanning(idsubtopico, idtopico){
-    $('[id*="contenidoplanning"]').css('display', 'none');
-    $('[id*="botonnp0"]').css('display', 'none');
-    if( !($('#contenidoplanning'+idsubtopico+'').is(":visible")) ){
-      $('#contenidoplanning'+idsubtopico+'').toggle('blind',1000)
-    }
-  }
-
-  function drawTopBar(idtopic){
-    var arbol = JSON.parse('{{ json_data | escapejs }}');
-    var chapters=arbol["capitulos"];
-    var newtopbar='';
-    var idsubtopico;
-    newtopbar+='<ul class="tab">';
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]['topico'];
-      for (var j = 0; j < topicos.length; j++) {
-        if (topicos[j]['id']==idtopic){
-          var subtopicos = topicos[j]['subtopico'];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (k==0){
-              idsubtopico=subtopicos[k]['id'];
-              newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'" class="selectdos">'+subtopicos[k]['nombre']+'</a></li>'; 
+        
+        if (selected_oa_id == 0){
+            for (var i = 0; i < plan_list.length; i++){
+                for (var s = 0; s < subtopicos.length; s++){
+                    if (plan_list[i]['class_subtopic'] == subtopicos[s]['id']){
+                        text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                        text += plan_list[i]['class_name'];
+                        text += "</a></li>";
+                    }
+                }
             }
-            else{
-              newtopbar+='<li id="pestanatop0'+subtopicos[k]['id']+'"><a href="javascript:cambiarPestannaTop(pestanatop0'+subtopicos[k]['id']+');" id="apestanatop0'+subtopicos[k]['id']+'">'+subtopicos[k]['nombre']+'</a></li>'; 
+        }else{
+            for (var i = 0; i < plan_list.length; i++){
+                if (plan_list[i]['class_subtopic'] == selected_oa_id){
+                    text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                    text += plan_list[i]['class_name'];
+                    text += "</a></li>";
+                }
             }
-          }
         }
-      }
+        text += "</ul>";
+
+        $('#sidebar').append(text);
     }
 
-    newtopbar+='</ul>';
-    $('#topbar').append(newtopbar);
-    return idsubtopico
-  }
-
-  $('#breadcrumb').html('Nivel / {{ nivel }}')
-
-
-  function cambiarPestanna(pestanna, idtopic){
-    $('#topbar').empty();
-    id = (pestanna.id).substring(7);
-    //console.log(pestanna);
-    pestanna = document.getElementById(pestanna.id);
-    cpestanna = document.getElementById('c' + pestanna.id);
-    cpestannas = document.getElementsByClassName('cpestanna');
-    contenidopestanas = document.getElementById('contenidopestanas');
-
-    var x = drawTopBar(idtopic);
-
-    if (typeof x === 'undefined' || x === null){
-      //console.log(x);
-      $('#mensajeoa').css('display', '')
-    }
-    else{
-      $('#mensajeoa').css('display', 'none')
+    function limpiarCampos(){
+        $("#newName").val("");
+        $("#newDate_D").empty();
+        $("#newDate_M").empty();
+        $("#newDate_Y").empty();
+        $("#newDuration").empty();
+        $("#newStatus").val(0).change();
+        $("#newOpening").text("");
+        $("#newClosure").text("");
+        $("#newOA").empty();
+        $("#video_list").empty();
+        $("#skill_list").empty();
+        $("#video_info").empty();
+        $("#skill_info").empty();
+        $("#buttonFieldForm").empty();
+        $("#buttonFieldInfo").empty();
     }
 
-    //console.log(x);
+    function cambiarClase(classid, unitid, edit_existing = false){
+        $('#class-window').show();
+        $('#form-window').hide();
+        $('#info-window').hide();
+        limpiarCampos();
 
-    var texto = $('#pestana'+id+'').text();
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = curriculo["topicos"];
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var text = "";
 
-    $('#nameunidad').empty();
-    $('#nameunidad').append(texto);
-
-    $('#idunidad').empty();
-    $('#idunidad').append(id);
-
-    var namesubtopic = $('input[id*="newNameSubtopic"]');
-    namesubtopic.attr('id',"newNameSubtopic"+id+'');
-
-    for (i=0;i<cpestannas.length;i++){
-     $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
-    }
-    //console.log(cpestannas);
-
-    if (id!=0){
-      $('.main-content').css('position', 'relative');
-      $('#topbar').css('display','');
-      $('#contenidopestanastop').css('display', '');
-      $('[id*="cpestanatop0"]').css('display', 'none');
-      $('#cpestanatop0'+x+'').css('display','');
-    }
-    else{
-      $('.main-content').css('position', 'relative');
-      $('#topbar').css('display','none');
-      $('#contenidopestanastop').css('display', 'none');
-    }
-
-    $(document).ready(function () {
-     $(document.getElementsByClassName("select")).removeClass("select");
-       $(cpestanna).css('display', '');
-       $(pestanna.getElementsByTagName('a')).addClass("select");
-
-       $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
-       $('#apestanatop0'+x+'').addClass("selectdos");
-       $('#botonnp0'+x+'').css('display', '');
-       $('#botonexer0'+x+'').css('display', '');
-       $('#botonvid0'+x+'').css('display', '');
-       $('#botonmostrarej0'+x+'').css('display', '');
-       $('#botonmostrarvi0'+x+'').css('display', '');
-       $('#botonplan0'+x+'').css('display', '');
-    });
-  }
-
-  function cambiarPestannaTop(pestanna){
-    id=(pestanna.id).substring(10);
-    pestannatop = document.getElementById(pestanna.id);
-    var psttop=pestanna.id;
-    cpestannatop = document.getElementById('c'+psttop);
-    cpestannastop = document.getElementsByClassName('cpestannatop');
-
-    //console.log(cpestannatop);
-
-    for (i=0;i<cpestannastop.length;i++){
-     $(contenidopestanastop.getElementsByClassName('cpestannatop')[i]).css('display', 'none');
-    }
-
-    if(id==0){
-      $('#cpestanatop0').css('display', '');
-    }
-    else{
-      $('#cpestanatop0').css('display', 'none');
-    }
-    //console.log('botoncito'+id+'');
-    //console.log($('#botoncito'+id+''));
-    //$('[id*="botoncito"]').css('display', 'none');
-    //$('#botoncito'+id+'').css('display', '');
-    $('[id*="botonnp"]').css('display', 'none');
-    $('#botonnp'+id+'').css('display', '');
-
-    $('[id*="botonexer"]').css('display', 'none');
-    $('#botonexer'+id+'').css('display', '');
-
-    $('[id*="botonvid"]').css('display', 'none');
-    $('#botonvid'+id+'').css('display', '');
-
-
-    $('[id*="botonmostrarej"]').css('display', 'none');
-    $('#botonmostrarej0'+id+'').css('display', '');
-    $('[id*="botonmostrarvi"]').css('display', 'none');
-    $('#botonmostrarvi0'+id+'').css('display', '');
-
-    $('[id*="botonplan"]').css('display', 'none');
-    $('#botonplan0'+id+'').css('display', '');
-
-    //$('#cpestanatop0'+id+'').css('display', '');
-
-    $(document).ready(function () {
-     $(document.getElementsByClassName("selectdos")).removeClass("selectdos");
-     $(cpestannatop).css('display', '');
-     $(pestanna.getElementsByTagName('a')).addClass("selectdos");
-    });
-  }
-
-
-  function showNewChapter(){
-  $('#newChapter').toggle('blind',10);
-  $('#buttonNewChapter').hide();
-  }
-
-  function hideNewChapter(){
-  $('#newChapter').toggle('blind',10);
-  $('#buttonNewChapter').show();
-  }
-
-  function showNewTopic(){
-  $('#newTopic').toggle('blind',10);
-  $('#buttonNewTopic').hide();
-  }
-
-  function hideNewTopic(){
-  $('#popup').hide();
-  $('#hover').hide();
-  }
-
-  function showNewSubtopic(){
-  $('#newSubtopic').toggle('blind',10);
-  $('#buttonNewSubtopic').hide();
-  }
-
-  function hideNewSubtopic(){
-  $('#popup').hide();
-  $('#hover').hide();
-  }
-
-  function hideTree(){
-  $('#popuptree').hide();
-  $('#hover').hide();
-  }
-
-  function saveNewChapter(){
-    var nName = $('#newName').val();
-    if(validar()){
-      $.ajax({
-      url: "{% url 'curriculum:nuevo_chapter' %}",
-      type: "POST",
-      data: {chapter: nName},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Nivel guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == unitid){
+                var subtopicos = topicos[i]["subtopico"];
+                break;
+            }
         }
-      });
-    }else{
-      $("#popup").empty()
-      $("#hover").fadeIn().css('display', '');
-      $("#popup").fadeIn().css('display', '');
-      $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-    }
-  }
 
-function saveNewTopic(){
-  var nombretopic = $('#newNameTopic').val();
-  var desctopic = $('#textarea_coment').val();
-  var nombrecurso = $('#namecurso').text();
-  if(validarTopic()){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_topic' %}",
-      type: "POST",
-      data: {nombre: nombretopic, curso: nombrecurso, descripcion: desctopic},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Unidad guardada correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        }
-    });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }
-}
+        var Lista_Meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        var filtered_oa_id = $('#oa_select').val();
 
+        //Prepara el panel de formulario de clases, en caso de edición de una clase, completa los campos con los valores existentes.
+        if (classid == 0 || edit_existing){
+            for (var i = 0; i < subtopicos.length; i++){
+                if(subtopicos[i]['id'] == filtered_oa_id){
+                    $('#newOA').append("<option selected value='" + subtopicos[i]["id"] + "'> O.A. " + subtopicos[i]["index"] + "</option>");
+                }
+                else $('#newOA').append("<option value='" + subtopicos[i]["id"] + "'> O.A. " + subtopicos[i]["index"] + "</option>");
+            }
+            for (var y = {{ anno }}; y >= 2000; y--){
+                $('#newDate_Y').append("<option value='" + y + "'>" + y + "</option>");
+            }
+            for (var m = 0; m < Lista_Meses.length; m++){
+               $('#newDate_M').append("<option value='" + (m + 1) + "'>" + Lista_Meses[m] + "</option>");
+            }
+            for (var d = 1; d <= 31; d++){
+                $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
+            }
+            for (var n = 45; n <= 180; n = n +45){
+                $('#newDuration').append("<option value='" + n + "'>" + n +" min.</option>");
+            }
+            //Si se esta creando un plan nuevo, coloca los botones "Contenidos Khan y Crear".
+            if(classid == 0){
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree(0," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveNewPlan(); return false;' class='kui-button kui-button-plain kui-button-primary'>Crear");
+            }
+            //Si se edita un plan, se colocan los datos del plan a editar.
+            else if(edit_existing){
+                for(var i = 0; i < plan_list.length; i++){
+                    if(plan_list[i]["id"] == classid){
+                        break;
+                    }
+                }
 
-function saveNewSubtopic(){
-  var idtopic = $('#idunidad').text();
-  var nombresubtopic = $('#newNameSubtopic'+idtopic+'').val();
-  var descripcionsubtopic = $('#textarea_coment_oa').val();
+                $("#formTitle").html('Editar plan "' + plan_list[i]["class_name"] + '"');
+                $("#newName").val(plan_list[i]["class_name"]);
+                $("#newDate_D").val(plan_list[i]["class_date"][2]).change();
+                $("#newDate_M").val(plan_list[i]["class_date"][1]).change();
+                $("#newDate_Y").val(plan_list[i]["class_date"][0]).change();
+                $("#newDuration").val(plan_list[i]["minutes"]).change();
+                $("#newStatus").val(plan_list[i]["status"]).change();
+                $("#newOpening").text(plan_list[i]["desc_inicio"]);
+                $("#newClosure").text(plan_list[i]["desc_cierre"]);
+                $("#newOA").val(plan_list[i]['class_subtopic']).change();
 
-  /*console.log(idtopic);
-  console.log(nombresubtopic);
-  console.log(descripcionsubtopic);*/
+                for (var v = 0; v < plan_list[i]["videos"].length; v++){
+                    text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
+                    text += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
+                    text += plan_list[i]["videos"][v]["nombre"];
+                    text += "</li>";
+                    $("#video_list").append(text);
+                }
 
-  //console.log(descripcionsubtopic);
-  if(validarSubtopic(idtopic)){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_subtopic' %}",
-      type: "POST",
-      data: {nombre: nombresubtopic, topico: idtopic, descripcion: descripcionsubtopic},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Objetivo de Aprendizaje guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        
+                for (var s = 0; s < plan_list[i]["skills"].length; s++){
+                    text = "<li key=" + plan_list[i]["skills"][s]["id"] + " tree='" + plan_list[i]["skills"][s]["tree"] + "'>";
+                    text += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
+                    text += plan_list[i]["skills"][s]["nombre"];
+                    text += "</li>";
+                    $("#skill_list").append(text);
+                }
+
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree("+ classid + "," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 50px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveEditedPlan(" + classid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Guardar</a></div>");
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid +"); return false;' class='kui-button kui-button-plain kui-button-primary'>Volver</a></div>");
+            }
+            $("#form-window").show();
         }
-    });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }
-}
+        //Inserta en la ventana que muestra contenido los datos de la clase.
+        else{
+            for(var i = 0; i < plan_list.length; i++){
+                if(plan_list[i]["id"] == classid){
+                    //Busca el index del O.A.
+                    for(var s = 0; s < subtopicos.length; s++){
+                        if(subtopicos[s]['id'] == plan_list[i]['class_subtopic']){
+                            var oa_index = subtopicos[s]['index'];
+                            break;
+                        }
+                    }
+                    $('#labelTitle').html(plan_list[i]["class_name"]);
+                    $('#labelOA').html("Objetivo de aprendizaje: " + oa_index);                    
+                    $('#blockInicio').html(plan_list[i]["desc_inicio"]);
+                    $('#blockCierre').html(plan_list[i]["desc_cierre"]);
+                    $('#labelDate').html("Fecha: " + plan_list[i]["class_date"][2] + " de " + Lista_Meses[plan_list[i]["class_date"][1]-1] + " de " + plan_list[i]["class_date"][0]);
+                    $('#labelDuration').html("Duración: " + plan_list[i]["minutes"] + " minutos");
 
-function saveVideoExercise(idsubtopic){
-  var infodata=[];
-  var cont=0;
-  var select = $("#newTree"+idsubtopic).jstree("get_selected", true);
-  for (var i = 0; i < select.length; i++) {
-    if (typeof select[i]["data"] != "undefined"){
-      if(select[i]["data"]["skill_id"]){
-        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["skill_id"], "icon":select[i]["icon"]}
-      }
-      else{
-        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
-      }
+                    if (plan_list[i]["status"] == true) $('#labelStatus').html("<label>Estado: Realizado");
+                    else $('#labelStatus').html("Estado: No realizado");
+
+                    for (var v = 0; v < plan_list[i]["videos"].length; v++){
+                        text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
+                        text += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
+                        text += plan_list[i]["videos"][v]["nombre"];
+                        text += "</li>";
+                        $("#video_info").append(text);
+                    }
+
+                    for (var s = 0; s < plan_list[i]["skills"].length; s++){
+                        text = "<li key=" + plan_list[i]["skills"][s]["id"] + " tree='" + plan_list[i]["skills"][s]["tree"] + "'>";
+                        text += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
+                        text += plan_list[i]["skills"][s]["nombre"];
+                        text += "</li>";
+                        $("#skill_info").append(text);
+                    }
+                    $("#buttonFieldInfo").append("<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:deleteWarning(" + classid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Borrar</a></div>");
+                    $("#buttonFieldInfo").append("<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid + "," + true + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Editar</a></div>");
+
+                    $("#info-window").show();
+                    break;
+                }
+            }
+        }
+
+        $(document.getElementsByClassName("select")).removeClass("select");
+        $(document.getElementById("tab_clase_" + classid)).addClass("select");
     }
-    cont++;
-  }
 
-  if (select.length>0){
-    $.ajax({
-    url: "{% url 'curriculum:save_videoexercise' %}",
-    type: "POST",
-    data: {infodata, subtopic:idsubtopic},
-      success: function(response){
+    function saveNewPlan(){
+        var nName = $('#newName').val();
+        var nOA = $('#newOA').val();
+        var nDay =  $('#newDate_D').val();
+        var nMonth = $('#newDate_M').val();
+        var nYear = $('#newDate_Y').val();
+        var nDuration = $('#newDuration').val();
+        var nState  = $('#newState').val();
+        var nOpen = $('#newOpening').val().replace(/[\r\n]/g, "<br />");
+        var nClos = $('#newClosure').val().replace(/[\r\n]/g, "<br />");
+        var subID = {{ class_subject }};
+
+        if(nName.length < 1){
+            $("#popup").empty()
+            $("#hover").fadeIn().css('display', '');
+            $("#popup").fadeIn().css('display', '');
+            $("#popup").append("<p>Hubo un error en el ingreso de datos. Debe ingresar un nombre a la clase.</p>");
+        }else{
+            var sList = [];
+            var vList = [];
+
+            $("#skill_list li").each(function(){
+                var dict = [];
+                dict.push($(this).attr('key'));
+                dict.push($(this).attr('tree'));
+                sList.push(dict);
+            });
+            $("#video_list li").each(function(){
+                var dict = [];
+                dict.push($(this).attr('key'));
+                dict.push($(this).attr('tree'));
+                vList.push(dict);
+            });
+
+            $.ajax({
+                url: "{% url 'planificacion:guardar_plan' %}",
+                type: "POST",
+                data: {nombre: nName,
+                        oa: nOA,
+                        dia: nDay,
+                        mes: nMonth,
+                        anno: nYear,
+                        duracion: nDuration,
+                        estado: nState,
+                        desc_inicio: nOpen,
+                        desc_cierre: nClos,
+                        id_tema_clase: subID,
+                        'lista_vid[]': vList,
+                        'lista_hab[]': sList
+                    },
+                success: function(response){
+                    $("#popup").empty()
+                    $("#close").hide();
+                    $("#hover").fadeIn();
+                    $("#popup").fadeIn();
+                    $("#popup").append("<p class='response'>"+response+"</p>");
+                    auxResponse = response;
+                    if (auxResponse == "Planificación guardada correctamente"){
+                        $("#hover").css('pointer-events','none');
+                        $("#close").css('pointer-events','none');
+                        window.setTimeout(function(){
+                            location.reload()
+                        },500);
+                    }
+                },
+                error: function(response){
+                    $("#popup").empty()
+                    $("#hover").fadeIn().css('display', '');
+                    $("#popup").fadeIn().css('display', '');
+                    $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos. Asegurece que no exista una clase con el mismo nombre.</p>");
+                }
+            });
+        }
+    }
+
+    function saveEditedPlan(classid){
+        var nName = $('#newName').val();
+        var nOA = $('#newOA').val();
+        var nDay =  $('#newDate_D').val();
+        var nMonth = $('#newDate_M').val();
+        var nYear = $('#newDate_Y').val();
+        var nDuration = $('#newDuration').val();
+        var nState  = $('#newState').val();
+        var nOpen = $('#newOpening').val().replace(/[\r\n]/g, "<br />");
+        var nClos = $('#newClosure').val().replace(/[\r\n]/g, "<br />");
+        var subID = {{ class_subject }};
+
+        if(nName.length < 1){
+            $("#popup").empty()
+            $("#hover").fadeIn().css('display', '');
+            $("#popup").fadeIn().css('display', '');
+            $("#popup").append("<p>Hubo un error en el ingreso de datos. Debe ingresar un nombre a la clase.</p>");
+        }else{
+            var sList = [];
+            var vList = [];
+
+            $("#skill_list li").each(function(){
+                var dict = [];
+                dict.push($(this).attr('key'));
+                dict.push($(this).attr('tree'));
+                sList.push(dict);
+            });
+            $("#video_list li").each(function(){
+                var dict = [];
+                dict.push($(this).attr('key'));
+                dict.push($(this).attr('tree'));
+                vList.push(dict);
+            });
+
+            $.ajax({
+                url: "{% url 'planificacion:editar_plan' %}",
+                type: "POST",
+                data: {nombre: nName,
+                        oa: nOA,
+                        dia: nDay,
+                        mes: nMonth,
+                        anno: nYear,
+                        duracion: nDuration,
+                        estado: nState,
+                        desc_inicio: nOpen,
+                        desc_cierre: nClos,
+                        id_tema_clase: subID,
+                        id: classid,
+                        'lista_vid[]': vList,
+                        'lista_hab[]': sList
+                    },
+                success: function(response){
+                    $("#popup").empty()
+                    $("#close").hide();
+                    $("#hover").fadeIn();
+                    $("#popup").fadeIn();
+                    $("#popup").append("<p class='response'>"+response+"</p>");
+                    auxResponse = response;
+                    if (auxResponse == "Planificación guardada correctamente"){
+                        $("#hover").css('pointer-events','none');
+                        $("#close").css('pointer-events','none');
+                        window.setTimeout(function(){
+                            location.reload()
+                        },500);
+                    }
+                },
+                error: function(response){
+                    $("#popup").empty()
+                    $("#hover").fadeIn().css('display', '');
+                    $("#popup").fadeIn().css('display', '');
+                    console.log(response);
+                    $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos, revise los campos ingresados</p>");
+                }
+            });
+        }
+    }
+
+    function openTree(classid, unitid){
+        var tree = JSON.parse('{{ json_khan_tree | escapejs }}');
+        var text = "";
+
+        var oatext = $("#newOA option:selected").text();
+        if (oatext == "undefined") oaid = $("#editOA option:selected").text();
+        oatext = oatext.substring(5);
+
+        $('#popuptree').empty();
+        $('#hover').fadeIn();
+        $('#popuptree').fadeIn();
+
+        text += "<div id='filtrar' style='float:left;width:48%;'>";
+            text += "<label>Filtrar por: </label>";
+            text += "<select id='filtro' class='skill_search' onchange='filterTree(" + classid + "," + unitid + ")'>";
+                text += "<option value='all'>Todos</option>";
+                text += "<option value='skills'>Ejercicios</option>";
+                text += "<option value='videos'>Videos</option>";
+            text += "</select>";
+        text += "</div>";
+
+        text += "<div id='search' style='float:left;width: 48%;'>";
+            text += "<label for='skill_search'>Buscar: </label>";
+            text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'>";
+        text += "</div>";
+
+        text += "<div id='checkbox' style='float:left; width: 48%'; text-align: left; margin-left: -120px>";
+            text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 8px'>";
+            text += "Mostrar Recomendados";
+        text += "</div>";
+
+        text += "<div style='float:right; width: 48%; text-align: right; margin-right: 30px'>";
+            text += "Objetivo de aprendizaje seleccionado" + oatext;
+        text += "</div>";
+        
+        text += "<div id='newTree" + classid + "' class='topictree'></div>";
+
+        text += "<br>";
+        text += "<a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Cancelar</a>";
+        text += "<a onclick='javascript:appendKhanContent(" + classid + ");' class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
+
+        var selected_skills = [];
+        var selected_videos = [];
+
+        $("#skill_list li").each(function(){selected_skills.push($(this).attr('tree'));});
+        $("#video_list li").each(function(){selected_videos.push($(this).attr('tree'));});
+
+        $('#popuptree').append(text);
+        $('#newTree' + classid).jstree(tree);
+
+        $('#newTree' + classid).bind('ready.jstree',function(event){
+            $('#newTree' + classid).jstree("select_node", selected_videos);
+            $('#newTree' + classid).jstree("select_node", selected_skills);
+        });
+    }
+
+    function filterTree(classid, unitid){
+        var REC = $("#filtro").val();
+        var CAT = $("#recomendar").prop('checked');
+        var tree = JSON.parse('{{ json_khan_tree | escapejs }}');
+        var info = tree['core']['data'];
+
+        //Esconde todos los nodos
+        $("#newTree" + classid).jstree("hide_all");
+
+        //Con Recomendados = TRUE, se muestran solo los nodos presentes en los curriculos MINEDUC
+        if(CAT){
+            var curriculo = JSON.parse('{{ json_data | escapejs }}');
+            var unidades = curriculo["topicos"];
+
+            var oaid = $("#newOA").val();
+            if (oaid == "undefined") oaid = $("#editOA").val();
+
+            for (var u = 0; u < unidades.length; u++) {
+                if(unidades[u]['id'] == unitid){
+                    var objetivos = unidades[u]["subtopico"];
+                    for (var ob = 0; ob < objetivos.length; ob++) {
+                        if (objetivos[ob]['id'] == oaid){
+                            var ejercicios = objetivos[ob]["skills"];
+                            for (var l = 0; l < ejercicios.length; l++){
+                                var node = $('#newTree' + classid).jstree('get_node', '#' + ejercicios[l]['idtree']);
+                                $('#newTree' + classid).jstree('show_node', node);
+                                $('#newTree' + classid).jstree('show_node', node.parents);
+                            }
+                            var videos = objetivos[ob]["videos"];
+                            for (var v = 0; v < videos.length; v++){
+                                var node = $('#newTree' + classid).jstree('get_node', '#' + videos[v]['idtree']);
+                                $('#newTree' + classid).jstree('show_node', node);
+                                $('#newTree' + classid).jstree('show_node', node.parents);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //Con Recomendados = FALSE, se muestran todos los nodos.
+        else if(!CAT){
+            $("#newTree" + classid).jstree("show_all");
+        }
+
+        //Si se filtra por habilidades, esconde todos los nodos tipo video.
+        if(REC == "skills"){
+            for (var i = 0; i < info.length; i++) {
+                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined"){
+                    $("#newTree" + classid).jstree("hide_node","#" + info[i]['id']);
+                }
+            }        
+        }
+        //Si se filtra por videos, esconde todos los nodos tipo habilidad.
+        else if(REC == "videos"){
+            for (var i = 0; i < info.length; i++) {
+                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
+                    $("#newTree" + classid).jstree("hide_node","#" + info[i]['id']);
+
+                }
+            }
+        }
+    }
+
+    function appendKhanContent(classid){
+        var select = $("#newTree" + classid).jstree("get_bottom_selected", true);
+        var text_skill = "";
+        var text_video = "";
+
+        text_skill += "<ul id='skill_list'>";
+        text_video += "<ul id='video_list'>";
+
+        for (var i = 0; i < select.length; i++) {
+            if (typeof select[i]["data"] != "undefined"){
+                if(select[i]["data"]["skill_id"]){
+                    text_skill += "<li key=" + select[i]["data"]["skill_id"] + " tree='" + select[i]["id"] + "'>";
+                    text_skill += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
+                    text_skill += select[i]["text"];
+                    text_skill += "</li>";
+                }else{
+                    text_video += "<li key=" + select[i]["data"]["video_id"] + " tree='" + select[i]["id"] + "'>";
+                    text_video += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
+                    text_video += select[i]["text"];
+                    text_video += "</li>";
+                }
+            }
+        }
+
+        text_skill += "</ul>";
+        text_video += "</ul>";
+
+        $("#skill_block").empty();
+        $("#video_block").empty();
+
+        $("#skill_block").append(text_skill);
+        $("#video_block").append(text_video);
+
+        hideTree();
+    }
+
+    function monthChanged(){
+        var month = $('#newDate_M').val();
+        var day = $('#newDate_D').val();
+
+        if(!month){
+            var month = $('#editDate_M').val();
+            var day = $('#editDate_D').val();
+
+            $('#editDate_D').children('option:not(:first)').remove();
+
+            if (month == 4 || month == 6 || month == 9 || month == 11){
+                for (var d = 1; d <= 30; d++){
+                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
+                }if (day > 30) day = 30;
+                $('#editDate_D').val(day);
+            }else if (month == 2){
+                for (var d = 1; d <= 28; d++){
+                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
+                }if (day > 27) day = 27;
+                $('#editDate_D').val(day);
+            }else{
+                for (var d = 1; d <= 31; d++){
+                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
+                }
+                $('#editDate_D').val(day);
+            }
+        }else{
+            $('#newDate_D').children('option:not(:first)').remove();
+
+            if (month == 4 || month == 6 || month == 9 || month == 11){
+                for (var d = 1; d <= 30; d++){
+                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
+                }if (day > 30) day = 30;
+                $('#newDate_D').val(day);
+            }else if (month == 2){
+                for (var d = 1; d <= 28; d++){
+                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
+                }if (day > 27) day = 27;
+                $('#newDate_D').val(day);
+            }else{
+                for (var d = 1; d <= 31; d++){
+                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
+                }
+                $('#newDate_D').val(day);
+            }
+        }
+    }
+
+    function hideTree(){
         $('#popuptree').hide();
-        $("#popup").empty()
-        $("#close").hide();
-        $("#hover").fadeIn();
-        $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-        if (auxResponse == "Ejercicios y/o Videos guardados correctamente"){
-          $("#hover").css('pointer-events','none');
-          $("#close").css('pointer-events','none');
-          window.setTimeout(function(){location.reload()},1000);
-        }    
-      }
-    });
-  }
-  else{
-    console.log('faltan datos por elegir');
-  }
-}
-
-function showExercise(idsubtopic){
-  $('#skillpropuesta'+idsubtopic+'').empty();
-  var select = $('#newTree'+idsubtopic).jstree("get_selected", true);
-  for (var i = 0; i < select.length; i++) {
-    if(typeof select[i]["data"] != 'undefined'){
-      $('#skillpropuesta'+idsubtopic+'').append('<div title="'+select[i]['text']+'" class="cuadradito" id="'+select[i]['id']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+select[i]['text']+'</div>');
+        $('#hover').hide();
     }
-  }
-  $('#popuptree').hide();
-  $('#hover').fadeOut();
-}
 
-function showVideo(idsubtopic){
-  $('#videopropuesto'+idsubtopic+'').empty();
-  var select = $('#newTree'+idsubtopic).jstree("get_selected", true);
-  for (var i = 0; i < select.length; i++) {
-    if(typeof select[i]["data"] != 'undefined'){
-      $('#videopropuesto'+idsubtopic+'').append('<div title="'+select[i]['text']+'" class="cuadradito" id="'+select[i]['id']+'" draggable="true" ondragstart="start(event)" ondragend="end(event)">'+select[i]['text']+'</div>');
+    function hidePopup(){
+        $('#popup').hide();
+        $('#hover').hide();
     }
-  }
-  $('#popuptree').hide();
-  $('#hover').fadeOut();
-}
 
-function addExercise(idsubtopic, idtopic){
-  var tree = JSON.parse('{{ topictree_exercise | escapejs }}');
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  //console.log(tree);
-  $('#popuptree').empty();
-  $('#hover').fadeIn();
-  $('#popuptree').fadeIn();
-  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
-  $('#newTree'+idsubtopic+'').jstree(tree);
-  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(showExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
-  
-  setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==idsubtopic){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);   
-}
-
-function addVideo(idsubtopic, idtopic){
-  var tree = JSON.parse('{{ topictree_video | escapejs }}');
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  //console.log(tree);
-  $('#popuptree').empty();
-  $('#hover').fadeIn();
-  $('#popuptree').fadeIn();
-  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
-  $('#newTree'+idsubtopic+'').jstree(tree);
-  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(showVideo('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
-  
-  setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==idsubtopic){
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);   
-}
-
-/*function addVideoExercise(idsubtopic, idtopic){
-  var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  //console.log(tree);
-  $('#popuptree').empty();
-  $('#hover').fadeIn();
-  $('#popuptree').fadeIn();
-  $('#popuptree').append("<div id='filtrar' style='float:left;width:50%;'><label>Filtrar por: </label><select class='skill_search' onchange='valorfiltro(this, "+idsubtopic+")'><option value='todos'>Todos</option><option value='ejercicios'>Ejercicios</option><option value='videos'>Videos</option></select></div>")
-  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
-  $('#newTree'+idsubtopic+'').jstree(tree);
-  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
-
-  
-  setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+idsubtopic+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);   
-}*/
-
-function valorfiltro(valor, id){
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  if(valor.value == "ejercicios"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-    var info = tree['core']['data'];
-    for (var i = 0; i < info.length; i++) {
-        if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined"){
-          delete info[i]
-        } 
+    function deleteWarning(classid){
+      $('#popup').empty();
+      $('#hover').fadeIn();
+      $('#popup').fadeIn();
+      $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar esta planificación? Perderá toda la información relacionada a esta, incluyendo videos y ejercicios listados.</div>');
+      $('#popup').append('<a onclick=\'(deletePlan("'+classid+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Aceptar</a><a onclick="javascript:hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>');
     }
-    try{
-      $('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-    }
-    catch(err){
-      $('#newTree'+id+'').jstree(tree);
-      console.log(err);
-    }
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },500);
-  }
-  if(valor.value == "videos"){
-    var tree = JSON.parse('{{ topictree_json_string_video | escapejs }}');
-    var info = tree['core']['data'];
-    //console.log(info);
-    for (var i = 0; i < info.length; i++) {
-        if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
-          delete info[i]
-          //console.log(info[i]['data']);
-        } 
-    }
-    //console.log(info)
-    try{
-      $('#newTree'+id+'').jstree("destroy");  
-      $('#newTree'+id+'').jstree(tree);  
-      //$('#newTree'+id+'').jstree(tree);
-      //$('#newTree'+id+'').jstree("refresh");
-      //console.log('paso el try');
-    }
-    catch(err){
-      //$('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-      //console.log('paso el catch');
-      //console.log(err);
-      //$('#newTree'+id+'').jstree(tree);
-    }
-    //console.log(tree);
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },500);
-  }
-  if (valor.value == "todos"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-    var info = tree['core']['data'];
-    try{
-      $('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-    }
-    catch(err){
-      $('#newTree'+id+'').jstree(tree);
-      console.log(err);
-    }
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);    
-  }
-}
 
-function deleteVideoExercise(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar los videos y ejercicios?</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteVideoExercise("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>')
-}
-
-function deleteSubtopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar el Objetivo de Aprendizaje? Perderá toda la información de videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteSubtopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function deleteTopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar la unidad? Perderá toda la información de objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function deleteChapter(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar el nivel? Perderá toda la información de unidades, objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function cancelDelete(){
-  $('#popup').hide();
-  $('#hover').hide();
-}
-
-function confirmDeleteVideoExercise(id){
-  //console.log(id)
-  $.ajax({
-    url: "{% url 'curriculum:deletevideoexercise' %}",
-    type: "POST",
-    data: {idsubtopic:id},
-      success: function(response){
-        $("#popup").empty()
-        $("#close").hide();
-        $("#hover").fadeIn();
-        $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Videos y Ejercicios borrados correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteSubtopic(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletesubtopic' %}",
-    type: "POST",
-    data: {idtopic: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Objetivo de Aprendizaje borrado correctamente"){
+    function deletePlan(classid){
+      $.ajax({
+        url: "{% url 'planificacion:borrar_plan' %}",
+        type: "POST",
+        data: {id: classid},
+          success: function(response){
+            $('#popup').empty();
+            $('#close').hide();
+            $('#hover').fadeIn();
+            $('#popup').fadeIn();
+            $('#popup').append("<p class='response'>"+response+"</p>");
             $("#hover").css('pointer-events', 'none');
             $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteTopic(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletetopic' %}",
-    type: "POST",
-    data: {idchapter: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Unidad borrada correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteChapter(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletechapter' %}",
-    type: "POST",
-    data: {idchapter: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Nivel borrado correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
-          }
-      }
-  });
-}
-
-function validar(){
-  flag = true;
-  nName = document.getElementById("newName").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    $("#newName").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newName").css('color', '#000000');
-  }
-  return flag;
-}
-
-function validarTopic(){
-  flag = true;
-  nName = document.getElementById("newNameTopic").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    $("#newNameTopic").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newNameTopic").css('color', '#000000');
-  }
-  return flag;
-}
-
-function validarSubtopic(idtopic){
-  flag = true;
-  nName = document.getElementById("newNameSubtopic"+idtopic+"").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    console.log(nName);
-    $("#newNameSubtopic").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newNameSubtopic").css('color', '#000000');
-    console.log('entro en else');
-  }
-  return flag;
-}
+            window.setTimeout(function(){location.reload()}, 500);
+          },
+          error: function(response){
+                    $("#popup").empty()
+                    $("#hover").fadeIn().css('display', '');
+                    $("#popup").fadeIn().css('display', '');
+                    $("#popup").append("<p class='response'>Hubo un error al borrar el plan seleccionado.</p>");
+                }
+      });
+    }
 </script>
-
 {% endblock %}

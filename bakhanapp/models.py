@@ -4,37 +4,75 @@ from django.contrib.auth.models import User
 
 from django.db.models.fields.related import ForeignKey
 
-class User_Profile(models.Model):
-    kaid = models.CharField(max_length=40)
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
+class AuthGroup(models.Model):
+    name = models.CharField(unique=True, max_length=80)
 
-class Institution(models.Model):
-    id_institution = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    city = models.CharField(max_length=30)
-    address = models.CharField(max_length=100,null=True)
-    phone = models.CharField(max_length=15,null=True)
-    last_load = models.CharField(max_length=25)
-    key = models.CharField(max_length=20)
-    secret = models.CharField(max_length=20)
-    identifier = models.CharField(max_length=50)
-    password = models.CharField(max_length=20)
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name
-    
-class Administrator(models.Model):
-    kaid_administrator = models.CharField(max_length=40,primary_key=True)
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50,null=True)
-    phone = models.IntegerField(null=True)
-    id_institution = models.ForeignKey(Institution)
-    
     class Meta:
+        db_table = 'auth_group'
+
+
+class AuthGroupPermissions(models.Model):
+    group = models.ForeignKey(AuthGroup)
+    permission = models.ForeignKey('AuthPermission')
+
+    class Meta:
+        db_table = 'auth_group_permissions'
+        unique_together = (('group', 'permission'),)
+
+
+class AuthPermission(models.Model):
+    name = models.CharField(max_length=255)
+    content_type = models.ForeignKey('DjangoContentType')
+    codename = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'auth_permission'
+        unique_together = (('content_type', 'codename'),)
+
+
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.BooleanField()
+    username = models.CharField(unique=True, max_length=50)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.CharField(max_length=254)
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField()
+    date_joined = models.DateTimeField()
+
+    class Meta:
+        db_table = 'auth_user'
+
+
+class AuthUserGroups(models.Model):
+    user = models.ForeignKey(AuthUser)
+    group = models.ForeignKey(AuthGroup)
+
+    class Meta:
+        db_table = 'auth_user_groups'
+        unique_together = (('user', 'group'),)
+
+
+class AuthUserUserPermissions(models.Model):
+    user = models.ForeignKey(AuthUser)
+    permission = models.ForeignKey(AuthPermission)
+
+    class Meta:
+        db_table = 'auth_user_user_permissions'
+        unique_together = (('user', 'permission'),)
+
+
+class Administrator(models.Model):
+    kaid_administrator = models.CharField(primary_key=True, max_length=50)
+    name = models.CharField(max_length=50)
+    email = models.CharField(max_length=254, blank=True, null=True)
+    id_institution = models.ForeignKey('Institution')
+    phone = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_administrator'
         permissions = ( 
             ( "isAdmin", "Is Admin" ),
         )
@@ -45,218 +83,340 @@ class Administrator(models.Model):
     class Admin:
         pass
 
-class Student(models.Model):
-    kaid_student = models.CharField(max_length=40,primary_key=True)
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50,null=True)
-    phone = models.IntegerField(null=True)
-    points = models.IntegerField()
-    id_institution = models.ForeignKey(Institution)
-    nickname = models.CharField(max_length=100)
-    last_update = models.DateField()
-    new_student = models.BooleanField()
-    
+
+class Assesment(models.Model):
+    id_assesment = models.AutoField(primary_key=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    id_assesment_conf = models.ForeignKey('Assesment_Config')
+    name = models.CharField(max_length=150)
+    max_grade = models.IntegerField(blank=True, null=True)
+    min_grade = models.IntegerField(blank=True, null=True)
+    id_class = models.ForeignKey('Class', blank=True, null=True)
+    approval_grade = models.IntegerField(blank=True, null=True)
+    max_effort_bonus = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_assesment'
+
     def __unicode__(self): # __unicode__ on Python 2
-        return self.name
-    
-        
-    class Admin:
-        pass
-    
-class Tutor(models.Model):
-    id_tutor = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50,null=True)
-    phone = models.IntegerField(null=True)
-    kaid_student_child = models.ForeignKey(Student)
-    
-class Group(models.Model):
-    id_group = models.AutoField(primary_key=True)
-    type = models.CharField(max_length=50)
-    kaid_student_tutor = models.ForeignKey(Student,null=True)
-    master = models.IntegerField()
-    
+        return self.name_spanish
+
+
+class Assesment_Config(models.Model):
+    id_assesment_config = models.AutoField(primary_key=True)
+    approval_percentage = models.IntegerField()
+    name = models.CharField(max_length=100)
+    id_subject_name = models.ForeignKey('Subject')
+    kaid_teacher = models.ForeignKey('Teacher')
+    importance_skill_level = models.IntegerField()
+    importance_completed_rec = models.IntegerField()
+    applied = models.NullBooleanField()
+    top_score = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_assesment_config'
+
+
+class Assesment_Skill(models.Model):
+    id_assesment_skill = models.AutoField(primary_key=True)
+    id_assesment_config = models.ForeignKey(Assesment_Config)
+    id_skill_name = models.ForeignKey('Skill')
+    id_subtopic_skill = models.ForeignKey('Subtopic_Skill', blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_assesment_skill'
+        unique_together = (('id_assesment_config', 'id_skill_name', 'id_subtopic_skill'),)
+
+
+class Chapter(models.Model):
+    id_chapter_name = models.CharField(primary_key=True, max_length=150)
+    name_spanish = models.CharField(max_length=150)
+    id_subject_name = models.ForeignKey('Subject')
+    index = models.IntegerField(blank=True, null=True)
+    type_chapter = models.CharField(max_length=10, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_chapter'
+
     def __unicode__(self): # __unicode__ on Python 2
-        return self.type
-    
-class Group_Student(models.Model):
-    id_group = models.ForeignKey(Group)
-    kaid_student = models.ForeignKey(Student)
-    
-class Teacher(models.Model):
-    kaid_teacher = models.CharField(max_length=40,primary_key=True)
-    name = models.CharField(max_length=50)
-    id_institution = models.ForeignKey(Institution)
-    email = models.EmailField(max_length=50)
-    
+        return self.name_spanish
+
+
+class Chapter_Mineduc(models.Model):
+    id_chapter_mineduc = models.AutoField(primary_key=True)
+    id_subject = models.ForeignKey('Subject')
+    level = models.IntegerField()
+    year = models.IntegerField()
+    additional = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_chapter_mineduc'
+        unique_together = (('level','year','id_subject'),)
+
     def __unicode__(self): # __unicode__ on Python 2
-        return self.name
+        return self.level
+
 
 class Class(models.Model):
     id_class = models.AutoField(primary_key=True)
-    id_institution = models.ForeignKey(Institution, related_name='id_institution_class')
     level = models.IntegerField()
     letter = models.CharField(max_length=2)
     year = models.IntegerField()
-    additional = models.CharField(max_length=30)
+    id_institution = models.ForeignKey('Institution')
+    additional = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
-        unique_together = ('id_institution', 'level', 'letter', 'year', 'additional')
-    
-class Student_Class(models.Model):
-    id_student_class = models.AutoField(primary_key=True)
-    id_class = models.ForeignKey(Class)
-    kaid_student = models.ForeignKey(Student)
-    
-    class Meta:
-        unique_together = ('id_class', 'kaid_student')
+        db_table = 'bakhanapp_class'
+        unique_together = (('id_institution', 'level', 'letter', 'year', 'additional'),)    #Se debe borrar Additional del listado.
 
-class Subject(models.Model):
-    id_subject_name = models.CharField(max_length=50,primary_key=True)
-    name_spanish = models.CharField(max_length=50)
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
+
+class Class_Schedule(models.Model):
+    id_class_schedule = models.AutoField(primary_key=True)
+    id_schedule = models.ForeignKey('Schedule', blank=True, null=True)
+    day = models.CharField(max_length=20, blank=True, null=True)
+    kaid_teacher = models.ForeignKey('Teacher', blank=True, null=True)
+    id_class = models.ForeignKey(Class, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_class_schedule'
+        unique_together = (('id_schedule', 'day', 'kaid_teacher'),)
+
 
 class Class_Subject(models.Model):
     id_class_subject = models.AutoField(primary_key=True)
     id_class = models.ForeignKey(Class)
-    id_subject_name = models.ForeignKey(Subject)
-    kaid_teacher = models.ForeignKey(Teacher)
-    
-    class Meta:
-        unique_together = ('id_class', 'id_subject_name')
-
-class Schedule(models.Model):
-    id_schedule = models.AutoField(primary_key=True)
-    start_time = models.CharField(max_length=10)
-    end_time = models.CharField(max_length=10)
-    id_institution = models.ForeignKey(Institution)
-    name_block = models.CharField(max_length=50)
+    id_subject_name = models.ForeignKey('Subject')
+    kaid_teacher = models.ForeignKey('Teacher')
+    curriculum = models.ForeignKey(Chapter_Mineduc, blank=True, null=True)
 
     class Meta:
-        unique_together = ('start_time', 'end_time', 'id_institution')
+        db_table = 'bakhanapp_class_subject'
+        unique_together = (('id_class', 'id_subject_name'),)
 
-class Class_Schedule(models.Model):
-    id_class_schedule = models.AutoField(primary_key=True)
-    id_schedule = models.ForeignKey(Schedule)
-    kaid_teacher = models.ForeignKey(Teacher)
-    id_class = models.ForeignKey(Class)
-    day = models.CharField(max_length=20)
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name_spanish
+
+
+class Config_Skill(models.Model):
+    id_assesment_config_id = models.IntegerField(blank=True, null=True)
+    id_subtopic_skill_id = models.IntegerField(blank=True, null=True)
+    id_config_skill = models.AutoField(primary_key=True)
 
     class Meta:
-        unique_together = ('id_schedule', 'day', 'kaid_teacher')
+        db_table = 'bakhanapp_config_skill'
 
-class Chapter(models.Model):
-    id_chapter_name = models.CharField(max_length=150,primary_key=True)
-    id_subject_name = models.ForeignKey(Subject)
-    name_spanish = models.CharField(max_length=150)
-    index = models.IntegerField()
-    type_chapter = models.CharField(max_length=10)
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
-
-class Topic(models.Model):
-    id_topic_name = models.CharField(max_length=150,primary_key=True)
-    id_chapter_name = models.ForeignKey(Chapter)
-    name_spanish = models.CharField(max_length=150)
-    index = models.IntegerField()
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
-
-    
-class Subtopic(models.Model):
-    id_subtopic_name = models.CharField(max_length=150,primary_key=True)
-    id_topic_name = models.ForeignKey(Topic)
-    name_spanish = models.CharField(max_length=150)
-    index = models.IntegerField()
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
-
-class Skill(models.Model):
-    id_skill_name = models.CharField(max_length=150,primary_key=True)
-    name_spanish = models.CharField(max_length=150,null=True)
-    name = models.CharField(max_length=150,null=True)
-    index = models.IntegerField()
-    url_skill = models.CharField(max_length=200)
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
-
-class Assesment_Config(models.Model):
-    id_assesment_config = models.AutoField(primary_key=True)
-    kaid_teacher = models.ForeignKey(Teacher)
-    id_subject_name = models.ForeignKey(Subject)
-    approval_percentage = models.IntegerField()
-    top_score = models.IntegerField()
-    name = models.CharField(max_length=100)
-    importance_skill_level=models.IntegerField()
-    importance_completed_rec=models.IntegerField()
-    applied=models.BooleanField()
-    
-
-    
-class Assesment(models.Model):
-    id_assesment = models.AutoField(primary_key=True)
-    id_assesment_conf = models.ForeignKey(Assesment_Config)
-    id_class = models.ForeignKey(Class)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    name = models.CharField(max_length=150)
-    max_grade = models.IntegerField()
-    min_grade = models.IntegerField()
-    approval_grade = models.IntegerField()
-    max_effort_bonus = models.IntegerField()
-
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name
 
 class Grade(models.Model):
     id_grade = models.AutoField(primary_key=True)
-    kaid_student = models.ForeignKey(Student)
-    id_assesment = models.ForeignKey(Assesment)
     grade = models.FloatField()
-    teacher_grade = models.FloatField(null=True)
-    performance_points = models.FloatField()
-    effort_points = models.FloatField()
-    recomended_complete = models.IntegerField(null=True)
-    excercice_time = models.IntegerField(null=True, default=0)
-    video_time = models.IntegerField(null=True, default=0)
-    correct = models.IntegerField(null=True, default=0)
-    incorrect = models.IntegerField(null=True, default=0)
-    hints = models.IntegerField(null=True, default=0)
-    videos = models.IntegerField(null=True, default=0)
-    nothing = models.IntegerField(null=True, default=0)
-    struggling = models.IntegerField(null=True, default=0)
-    practiced = models.IntegerField(null=True, default=0)
-    mastery1 = models.IntegerField(null=True, default=0)
-    mastery2 = models.IntegerField(null=True, default=0)
-    mastery3 = models.IntegerField(null=True, default=0)
-    comment = models.CharField(max_length=300,null=True)
-    evaluated = models.BooleanField(default=False)
-    bonus_grade = models.FloatField(null=True, default=0.0)
-    unstarted = models.IntegerField(null=True, default=0)
-    total_recomended = models.IntegerField(null=True, default=0)
-    
-    class Meta:
-        unique_together = ('kaid_student', 'id_assesment')
+    teacher_grade = models.FloatField(blank=True, null=True)
+    performance_points = models.FloatField(blank=True, null=True)
+    effort_points = models.FloatField(blank=True, null=True)
+    id_assesment = models.ForeignKey(Assesment)
+    kaid_student = models.ForeignKey('Student')
+    comment = models.CharField(max_length=300, blank=True, null=True)
+    evaluated = models.NullBooleanField()
+    recomended_complete = models.IntegerField(blank=True, null=True)
+    excercice_time = models.IntegerField(blank=True, null=True)
+    video_time = models.IntegerField(blank=True, null=True)
+    correct = models.IntegerField(blank=True, null=True)
+    incorrect = models.IntegerField(blank=True, null=True)
+    struggling = models.IntegerField(blank=True, null=True)
+    practiced = models.IntegerField(blank=True, null=True)
+    mastery1 = models.IntegerField(blank=True, null=True)
+    mastery2 = models.IntegerField(blank=True, null=True)
+    mastery3 = models.IntegerField(blank=True, null=True)
+    hints = models.IntegerField(blank=True, null=True)
+    videos = models.IntegerField(blank=True, null=True)
+    nothing = models.IntegerField(blank=True, null=True)
+    bonus_grade = models.FloatField(blank=True, null=True)
+    unstarted = models.IntegerField(blank=True, null=True)
+    total_recomended = models.IntegerField(blank=True, null=True)
 
-class Video(models.Model):
-    id_video_name = models.CharField(max_length=150,primary_key=True)
-    name_spanish = models.CharField(max_length=150,null=True)
-    index = models.IntegerField()
-    url_video = models.CharField(max_length=200)
-    
+    class Meta:
+        db_table = 'bakhanapp_grade'
+        unique_together = (('kaid_student', 'id_assesment'),)
+
+
+class Group(models.Model):
+    id_group = models.AutoField(primary_key=True)
+    type = models.CharField(max_length=50)
+    kaid_student_tutor_id = models.CharField(max_length=40, blank=True, null=True)
+    master = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_group'
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.type
+
+
+class Group_Student(models.Model):
+    id_group = models.ForeignKey(Group)
+    kaid_student = models.ForeignKey('Student')
+
+    class Meta:
+        db_table = 'bakhanapp_group_student'
+
+
+class Institution(models.Model):
+    id_institution = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    city = models.CharField(max_length=30)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    last_load = models.CharField(max_length=50, blank=True, null=True)
+    key = models.CharField(max_length=20, blank=True, null=True)
+    secret = models.CharField(max_length=20, blank=True, null=True)
+    identifier = models.CharField(max_length=50, blank=True, null=True)
+    password = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_institution'
+
+
+class Planning(models.Model):
+    id_planning = models.AutoField(primary_key=True)
+    class_subject = models.ForeignKey(Class_Subject)
+    class_subtopic = models.ForeignKey('Subtopic_Mineduc')
+    class_date = models.DateField(blank=True, null=True)
+    minutes = models.IntegerField(blank=True, null=True)
+    status = models.BooleanField(default= False)
+    desc_inicio = models.TextField(blank=True, null=True)
+    desc_cierre = models.TextField(blank=True, null=True)
+    share_class = models.NullBooleanField(default=False)
+    class_name = models.TextField(blank=False, null=False)
+
+    class Meta:
+        db_table = 'bakhanapp_planning'
+        unique_together = (('class_name', 'class_subject'),)
+
+
+class Related_Video_Exercise(models.Model):
+    id_related = models.AutoField(primary_key=True)
+    id_video = models.CharField(max_length=150, blank=True, null=True)
+    id_exercise = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_related_video_exercise'
+
+
+class Schedule(models.Model):
+    id_schedule = models.AutoField(primary_key=True)
+    start_time = models.CharField(max_length=10, blank=True, null=True)
+    end_time = models.CharField(max_length=10, blank=True, null=True)
+    id_institution = models.ForeignKey(Institution, blank=True, null=True)
+    name_block = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_schedule'
+        unique_together = (('start_time', 'end_time', 'id_institution'),)
+
+
+class Skill(models.Model):
+    id_skill_name = models.CharField(primary_key=True, max_length=150)
+    name_spanish = models.CharField(max_length=150, blank=True, null=True)
+    name = models.CharField(max_length=150, blank=True, null=True)
+    index = models.IntegerField(blank=True, null=True)
+    url_skill = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_skill'
+
     def __unicode__(self): # __unicode__ on Python 2
         return self.name_spanish
 
+
+class Skill_Attempt(models.Model):
+    id_skill_attempt = models.AutoField(primary_key=True)
+    count_attempts = models.IntegerField()
+    mission = models.CharField(max_length=150, blank=True, null=True)
+    time_taken = models.IntegerField()
+    count_hints = models.IntegerField()
+    skipped = models.BooleanField()
+    points_earned = models.IntegerField()
+    date = models.DateTimeField()
+    correct = models.BooleanField()
+    id_skill_name = models.ForeignKey(Skill)
+    kaid_student = models.ForeignKey('Student')
+    problem_number = models.IntegerField()
+    video = models.NullBooleanField()
+    task_type = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_skill_attempt'
+        unique_together = (('id_skill_name', 'kaid_student', 'problem_number'),)
+
+
+class Skill_Log(models.Model):
+    id_skill_log = models.AutoField(primary_key=True)
+    correct = models.IntegerField(blank=True, null=True)
+    incorrect = models.IntegerField(blank=True, null=True)
+    id_grade = models.ForeignKey(Grade, blank=True, null=True)
+    id_skill_name = models.ForeignKey(Skill, blank=True, null=True)
+    skill_progress = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_skill_log'
+
+
+class Skill_Planning(models.Model):
+    id_skill_planning = models.AutoField(primary_key=True)
+    id_planning = models.ForeignKey(Planning)
+    id_skill = models.ForeignKey(Skill)
+    id_subtopic = models.ForeignKey("Subtopic_Skill")
+
+    class Meta:
+        db_table = 'bakhanapp_skill_planning'
+        unique_together = (('id_planning','id_skill'),('id_planning','id_subtopic'),)
+
+
+class Skill_Progress(models.Model):
+    id_skill_progress = models.AutoField(primary_key=True)
+    to_level = models.CharField(max_length=50)
+    from_level = models.CharField(max_length=50)
+    date = models.DateTimeField()
+    id_student_skill = models.ForeignKey('Student_Skill')
+
+    class Meta:
+        db_table = 'bakhanapp_skill_progress'
+        unique_together = (('to_level', 'from_level', 'date', 'id_student_skill'),)
+
+
+class Student(models.Model):
+    kaid_student = models.CharField(primary_key=True, max_length=40)
+    name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    points = models.IntegerField(blank=True, null=True)
+    phone = models.IntegerField(blank=True, null=True)
+    id_institution = models.ForeignKey(Institution, blank=True, null=True)
+    nickname = models.CharField(max_length=100, blank=True, null=True)
+    last_update = models.DateField(blank=True, null=True)
+    new_student = models.NullBooleanField()
+
+    class Meta:
+        db_table = 'bakhanapp_student'
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+          
+    class Admin:
+        pass
+
+
+class Student_Class(models.Model):
+    id_student_class = models.AutoField(primary_key=True)
+    id_class = models.ForeignKey(Class)
+    kaid_student = models.ForeignKey(Student)
+
+    class Meta:
+        db_table = 'bakhanapp_student_class'
+        unique_together = (('id_class', 'kaid_student'),)
+
+
 class Student_Skill(models.Model):
     id_student_skill = models.AutoField(primary_key=True)
-    id_skill_name = models.ForeignKey(Skill)
-    kaid_student = models.ForeignKey(Student)
     total_done = models.IntegerField()
     total_correct = models.IntegerField()
     streak = models.IntegerField()
@@ -264,175 +424,232 @@ class Student_Skill(models.Model):
     last_skill_progress = models.CharField(max_length=50)
     total_hints = models.IntegerField()
     struggling = models.BooleanField()
-    
+    id_skill_name = models.ForeignKey(Skill)
+    kaid_student_id = models.CharField(max_length=40)
+
     class Meta:
-        unique_together = ('id_skill_name', 'kaid_student')
-        
+        db_table = 'bakhanapp_student_skill'
+
+
 class Student_Video(models.Model):
     id_student_video = models.AutoField(primary_key=True)
-    id_video_name = models.ForeignKey(Video)
-    kaid_student = models.ForeignKey(Student)
     total_seconds_watched = models.IntegerField()
     total_points_earned = models.IntegerField()
     last_second_watched = models.IntegerField()
     is_video_complete = models.BooleanField()
+    id_video_name = models.ForeignKey('Video')
+    kaid_student = models.ForeignKey(Student)
     youtube_id = models.CharField(max_length=15)
-    
-    class Meta:
-        unique_together = ('id_video_name', 'kaid_student')
 
-class Skill_Attempt(models.Model):
-    id_skill_attempt = models.AutoField(primary_key=True)
-    id_skill_name = models.ForeignKey(Skill)
-    kaid_student = models.ForeignKey(Student)
-    problem_number = models.IntegerField()
-    count_attempts = models.IntegerField()
-    mission = models.CharField(max_length=150,null=True)
-    time_taken = models.IntegerField()
-    count_hints = models.IntegerField()
-    skipped = models.BooleanField()
-    points_earned = models.IntegerField()
-    date = models.DateTimeField()
-    correct = models.BooleanField()
-    video = models.BooleanField(default=False)
-    task_type = models.CharField(max_length=150, null=True)
-    
     class Meta:
-        unique_together = ('id_skill_name', 'kaid_student', 'problem_number')
-    
-class Video_Playing(models.Model):
-    id_video_playing = models.AutoField(primary_key=True)
-    id_video_name = models.ForeignKey(Video)
-    kaid_student = models.ForeignKey(Student)
-    seconds_watched = models.IntegerField()
-    points_earned = models.IntegerField()
-    last_second_watched = models.IntegerField()
-    is_video_complete = models.BooleanField()
-    date = models.DateTimeField()
+        db_table = 'bakhanapp_student_video'
+        unique_together = (('id_video_name', 'kaid_student'),)
 
-class Skill_Progress(models.Model):
-    id_skill_progress = models.AutoField(primary_key=True)
-    id_student_skill = models.ForeignKey(Student_Skill)
-    to_level = models.CharField(max_length=50)
-    from_level = models.CharField(max_length=50)
-    date = models.DateTimeField()
-    
-    class Meta:
-      ordering = ['-date']
 
-class Subtopic_Video(models.Model):
-    id_subtopic_video = models.AutoField(primary_key=True)
-    id_video_name = models.ForeignKey(Video)
-    id_subtopic_name = models.ForeignKey(Subtopic)
-    
+class Subject(models.Model):
+    id_subject_name = models.CharField(primary_key=True, max_length=50)
+    name_spanish = models.CharField(max_length=50)
+
     class Meta:
-        unique_together = ('id_video_name', 'id_subtopic_name')
-        
+        db_table = 'bakhanapp_subject'
+
+
+class Subtopic(models.Model):
+    id_subtopic_name = models.CharField(primary_key=True, max_length=150)
+    name_spanish = models.CharField(max_length=150)
+    id_topic_name = models.ForeignKey('Topic')
+    index = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_subtopic'
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name_spanish
+
+
+class Subtopic_Mineduc(models.Model):
+    id_subtopic_mineduc = models.AutoField(primary_key=True)
+    id_topic = models.ForeignKey('Topic_Mineduc')
+    index = models.IntegerField()
+    description = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_subtopic_mineduc'
+        unique_together = (('index', 'id_topic'),)
+
+
 class Subtopic_Skill(models.Model):
     id_subtopic_skill = models.AutoField(primary_key=True)
     id_skill_name = models.ForeignKey(Skill)
     id_subtopic_name = models.ForeignKey(Subtopic)
-    
-    class Meta:
-        unique_together = ('id_skill_name', 'id_subtopic_name')
-        
-class Assesment_Skill(models.Model):
-    id_assesment_skill = models.AutoField(primary_key=True)
-    id_assesment_config = models.ForeignKey(Assesment_Config)
-    id_skill_name = models.ForeignKey(Skill)
-    id_subtopic_skill = models.ForeignKey(Subtopic_Skill)
-    
-    class Meta:
-        unique_together = ('id_assesment_config', 'id_skill_name', 'id_subtopic_skill')
-
-
-class Skill_Log(models.Model):
-    id_skill_log = models.AutoField(primary_key=True)
-    id_skill_name = models.ForeignKey(Skill)
-    correct = models.IntegerField(null=True)
-    incorrect =  models.IntegerField(null=True)
-    id_grade = models.ForeignKey(Grade)
-    skill_progress = models.CharField(max_length=20)
-
-class Chapter_Mineduc(models.Model):
-    id_chapter_mineduc = models.AutoField(primary_key=True)
-    index = models.IntegerField()
-    name = models.CharField(max_length=50, unique=True)
-       
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name
-
-class Topic_Mineduc(models.Model):
-    id_topic_mineduc = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    id_chapter = models.ForeignKey(Chapter_Mineduc, on_delete=models.CASCADE)
-    index = models.IntegerField()
-    descripcion_topic = models.CharField(max_length=250)
-    
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name
 
     class Meta:
-        unique_together = ('name', 'id_chapter')
+        db_table = 'bakhanapp_subtopic_skill'
+        unique_together = (('id_skill_name', 'id_subtopic_name'),)
 
-class Subtopic_Mineduc(models.Model):
-    id_subtopic_mineduc = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    id_topic = models.ForeignKey(Topic_Mineduc, on_delete=models.CASCADE)
-    AE_OE = models.CharField(max_length=500)
-    index = models.IntegerField()
-    
-    def __unicode__(self):
-        return self.name
-
-    class Meta:
-        unique_together = ('name', 'id_topic')
 
 class Subtopic_Skill_Mineduc(models.Model):
     id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
-    id_skill_name = models.ForeignKey(Skill)
-    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, on_delete=models.CASCADE)
-    id_tree = models.CharField(max_length=50)
-    
+    id_skill_name = models.ForeignKey(Skill, blank=True, null=True)
+    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True)
+    id_tree = models.CharField(max_length=50, blank=True, null=True)    #Esto deberia ser un ForeignKey a Subtopic_Skill.
+
     class Meta:
-        unique_together = ('id_skill_name', 'id_subtopic_mineduc')
+        db_table = 'bakhanapp_subtopic_skill_mineduc'
+
+
+class Subtopic_Video(models.Model):
+    id_subtopic_video = models.AutoField(primary_key=True)
+    id_subtopic_name = models.ForeignKey(Subtopic)
+    id_video_name = models.ForeignKey('Video')
+
+    class Meta:
+        db_table = 'bakhanapp_subtopic_video'
+        unique_together = (('id_video_name', 'id_subtopic_name'),)
+
 
 class Subtopic_Video_Mineduc(models.Model):
     id_subtopic_video_mineduc = models.AutoField(primary_key=True)
-    id_video_name = models.ForeignKey(Video)
-    id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc, on_delete=models.CASCADE)
-    id_tree = models.CharField(max_length=50)
-    
-    class Meta:
-        unique_together = ('id_video_name', 'id_subtopic_name_mineduc')
-
-class Related_Video_Exercise(models.Model):
-    id_related = models.AutoField(primary_key=True)
-    id_video = models.CharField(max_length=150)
-    id_exercise = models.CharField(max_length=150)
-
-class Planning(models.Model):
-    id_planning = models.AutoField(primary_key=True)
-    curso = models.CharField(max_length=20)
-    oa = models.CharField(max_length=20)
-    clase = models.CharField(max_length=50)
-    objetivo = models.CharField(max_length=500)
-    inicio = models.CharField(max_length=500)
-    ejerciciokhan = models.CharField(max_length=500)
-    videokhan = models.CharField(max_length=500)
-    descripcion = models.CharField(max_length=500)
-    cierre = models.CharField(max_length=500)
-    teacher = models.ForeignKey(Teacher)
+    id_video_name = models.ForeignKey('Video', blank=True, null=True)
+    id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True)
+    id_tree = models.CharField(max_length=50, blank=True, null=True)    #Esto deberia ser un ForeignKey a Subtopic_Video.
 
     class Meta:
-        unique_together = ('curso', 'oa')
+        db_table = 'bakhanapp_subtopic_video_mineduc'
 
-class Skill_Planning(models.Model):
-    id_skill_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Planning)
-    id_skill = models.ForeignKey(Skill)
+
+class Teacher(models.Model):
+    kaid_teacher = models.CharField(primary_key=True, max_length=40)
+    name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    id_institution = models.ForeignKey(Institution)
+
+    class Meta:
+        db_table = 'bakhanapp_teacher'
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name
+
+
+class Topic(models.Model):
+    id_topic_name = models.CharField(primary_key=True, max_length=150)
+    name_spanish = models.CharField(max_length=150)
+    id_chapter_name = models.ForeignKey(Chapter)
+    index = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_topic'
+
+
+class Topic_Mineduc(models.Model):
+    id_topic_mineduc = models.AutoField(primary_key=True)
+    id_chapter = models.ForeignKey(Chapter_Mineduc)
+    index = models.IntegerField()
+    descripcion_topic = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_topic_mineduc'
+        unique_together = (('index','id_chapter'),)
+
+
+class Tutor(models.Model):
+    id_tutor = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=150)
+    email = models.CharField(max_length=150, blank=True, null=True)
+    phone = models.IntegerField(blank=True, null=True)
+    kaid_student_child = models.ForeignKey(Student)
+
+    class Meta:
+        db_table = 'bakhanapp_tutor'
+
+
+class User_Profile(models.Model):
+    kaid = models.CharField(max_length=40, blank=True, null=True)
+    user = user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+
+    class Meta:
+        db_table = 'bakhanapp_user_profile'
+
+
+class Video(models.Model):
+    id_video_name = models.CharField(primary_key=True, max_length=150)
+    name_spanish = models.CharField(max_length=150, blank=True, null=True)
+    index = models.IntegerField(blank=True, null=True)
+    url_video = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        db_table = 'bakhanapp_video'
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name_spanish
+
 
 class Video_Planning(models.Model):
     id_video_planning = models.AutoField(primary_key=True)
     id_planning = models.ForeignKey(Planning)
     id_video = models.ForeignKey(Video)
+    id_subtopic = models.ForeignKey(Subtopic_Video)
+
+    class Meta:
+        db_table = 'bakhanapp_video_planning'
+        unique_together = (('id_planning','id_video'),('id_planning','id_subtopic'),)
+
+
+class Video_Playing(models.Model):
+    id_video_playing = models.AutoField(primary_key=True)
+    seconds_watched = models.IntegerField()
+    points_earned = models.IntegerField()
+    last_second_watched = models.IntegerField()
+    is_video_complete = models.BooleanField()
+    date = models.DateTimeField()
+    id_video_name = models.ForeignKey(Video)
+    kaid_student = models.ForeignKey(Student)
+
+    class Meta:
+        db_table = 'bakhanapp_video_playing'
+        unique_together = (('date', 'id_video_name', 'kaid_student'),)
+
+
+class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.SmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', blank=True, null=True)
+    user = models.ForeignKey(AuthUser)
+
+    class Meta:
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        db_table = 'django_session'
