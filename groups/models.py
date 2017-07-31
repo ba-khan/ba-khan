@@ -2,6 +2,7 @@ from django.db import models
 
 from bakhanapp.models import Group,Skill,Student
 
+#Este modelo tiene discrepancias con la BD en permitir Nulls. (La BD los permite pero los modelos no), arreglar de ser posible.
 class Master_Group(models.Model):
 	id_group = models.AutoField(primary_key=True)
 	name = models.CharField(max_length=50)

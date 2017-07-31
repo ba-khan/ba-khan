@@ -37,6 +37,7 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'django_jenkins',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
