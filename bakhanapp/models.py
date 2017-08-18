@@ -188,10 +188,14 @@ class Class_Subject(models.Model):
     id_class = models.ForeignKey(Class)
     id_subject_name = models.ForeignKey('Subject')
     kaid_teacher = models.ForeignKey('Teacher')
+    curriculum = models.ForeignKey(Chapter_Mineduc, blank=True, null=True)
 
     class Meta:
         db_table = 'bakhanapp_class_subject'
         unique_together = (('id_class', 'id_subject_name'),)
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name_spanish
 
 
 #Al parecer este modelo no es usado ya que solo existia en la BD y no en Django(?)
@@ -363,11 +367,13 @@ class Skill_Log(models.Model):
 
 class Skill_Planning(models.Model):
     id_skill_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Planning, blank=True, null=True)
-    id_skill = models.ForeignKey(Skill, blank=True, null=True)
+    id_planning = models.ForeignKey(Planning)
+    id_skill = models.ForeignKey(Skill)
+    id_subtopic = models.ForeignKey("Subtopic_Skill")
 
     class Meta:
         db_table = 'bakhanapp_skill_planning'
+        unique_together = (('id_planning','id_skill'),('id_planning','id_subtopic'),)
 
 
 class Skill_Progress(models.Model):
@@ -598,11 +604,13 @@ class Video(models.Model):
 
 class Video_Planning(models.Model):
     id_video_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Planning, blank=True, null=True)
-    id_video = models.ForeignKey(Video, blank=True, null=True)
+    id_planning = models.ForeignKey(Planning)
+    id_video = models.ForeignKey(Video)
+    id_subtopic = models.ForeignKey(Subtopic_Video)
 
     class Meta:
         db_table = 'bakhanapp_video_planning'
+        unique_together = (('id_planning','id_video'),('id_planning','id_subtopic'),)
 
 
 class Video_Playing(models.Model):

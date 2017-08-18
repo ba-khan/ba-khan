@@ -8,20 +8,95 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/myAssesmentConfigs.css'%}">
 
+<style>
+	#topbar {
+		float:left;
+		position: relative;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		z-index: 2;
+		height: 40px;
+		/*margin-right: -1px;*/
+	}
+
+	#topbar ul.tab {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	#topbar ul.tab li {
+		margin: 0;
+		max-height: 50px;
+	}
+
+	#topbar ul.tab li a {
+		padding: 4px 27px;
+		font-size: 14px;
+		font-weight: 100;
+		background: #EEEEEE;
+		text-decoration: none;
+		display: block;
+		border: 1px solid #ddd;
+		color: black;
+		-webkit-transition:  background 0.3s ease-in-out;
+		-moz-transition:  background 0.3s ease-in-out;
+		-ms-transition:  background 0.3s ease-in-out;
+		-o-transition:  background 0.3s ease-in-out;
+		transition:  background 0.3s ease-in-out;
+	}
+
+	#topbar ul.tab li a.select{
+		border-bottom: 1px solid #f7f7f7;
+		background: #f7f7f7;
+		color: #56861f;
+	}
+
+	#topbar ul.tab li:hover a {
+		background: #f7f7f7;
+		color: #56861f;
+	}
+
+	#topbar ul.tab li:visited a {
+		background: #f7f7f7;
+		color: #56861f;
+	}
+
+	#topbar ul.tab li {
+		float: left;
+	}
+
+</style>
+
 <script>
-trees = [];
-function getTopicTree(id){
-	var topictree = JSON.parse('{{ topictree | escapejs }}');
+	// var cache = [];
+	var trees = [];
+
+	function getTopicTree(id, content=""){
+		var data = JSON.parse('{{ json_data | escapejs }}');
+
+		console.log(data["assesmentConfigs"][0]["config_skills"][0]);
+
+		if (content == "") var topictree = JSON.parse('{{ topictree | escapejs }}');	
+		else var topictree = content;
+		/*
+		if (id == 0){
+			console.log(cache);
+			$('#topictree0').bind('ready.jstree',function(event){
+	            $('#topictree0').jstree("select_node", cache);
+        	});
+		}
+		*/
 		$('#topictree'+id).on('changed.jstree', function (e, data) {
-		    selected_skills=$('#topictree'+id).jstree().get_bottom_selected(true);
-		    selected_skills_id=new Array();
-		    //selected_subtopic_skill=new Array();
+		    selected_skills = $('#topictree'+id).jstree().get_bottom_selected(true);
+		    selected_skills_id = new Array();
+		    cache = [];
+
 		    //Get selected skills (leaves of the topictree json)
 		    for (i=0;i< selected_skills.length;i++){
 		    	if (selected_skills[i].data){
-		    		//console.log(selected_skills[i].data["skill_id"])
-		    		selected_skills_id.push({'skill_id':selected_skills[i].data["skill_id"],id:selected_skills[i].id});
-		    		//selected_subtopic_skill.push(selected_skills[i].id);
+		    		//cache.push(selected_skills[i].id);
+		    		selected_skills_id.push( {'skill_id':selected_skills[i].data["skill_id"], id:selected_skills[i].id} );
 		    	}
 		    }
 		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
@@ -30,96 +105,114 @@ function getTopicTree(id){
 										return inputArray.indexOf(item) == index;
 									});
 			$('input[name="skills'+id+'"]').val(JSON.stringify(selected_skills_id));
-			//$('input[name="subtopic_skill'+id+'"]').val(JSON.stringify(selected_subtopic_skill));
+
 	    }).jstree(topictree);
 		
-		var to=false;
+		var to = false;
 	    $('#skill_search'+id).keyup(function () {
-		    if(to) { clearTimeout(to); }
+		    if (to) clearTimeout(to);
 		    to = setTimeout(function () {
 		      var v = $('#skill_search'+id).val();
 		      $('#topictree'+id).jstree(true).search(v);
 		    }, 250);
-	});
-	$('#topictree'+id).jstree(true).hide_icons();
-}
-var json_configs = JSON.parse('{{ json_data | escapejs }}');
-var configs = json_configs.assesmentConfigs;
-var totalTree = 0
-function slidear(id){
-	if (id==0){
-		var selected_value=50;
-		starting_values=[50];
+		});
+
+		$('#topictree'+id).jstree(true).hide_icons();
+
+		$('#topictree'+id).bind('ready.jstree',function(event){
+			console.log("ready");
+			if (id != 0){
+				for (i = 0; i < data["assesmentConfigs"].length; i++){
+					if (data["assesmentConfigs"][i] == id){
+						console.log("paso!");
+						for (k = 0; k < data["assesmentConfigs"][i]["config_skills"]; k++){
+							$('#topictree'+id).jstree("select_node", data["assesmentConfigs"][i]["config_skills"][k]["id_subtopic_skill_id"]);
+							break; break;
+						}
+					}
+				}
+			}
+		});
 	}
-	else{
-		var selected_value=configs[id-1]["importance_skill_level"];
-		starting_values=[configs[id-1]["importance_skill_level"]];
-		$("input[name='importance_skill_level"+id+"']").val(starting_values);
-		$("input[name='importance_completed_rec"+id+"']").val(100-starting_values);
+
+	var json_configs = JSON.parse('{{ json_data | escapejs }}');
+	var configs = json_configs.assesmentConfigs;
+	var totalTree = 0;
+
+	function slidear(id){
+		if (id==0){
+			var selected_value=50;
+			starting_values=[50];
+		}
+		else{
+			var selected_value=configs[id-1]["importance_skill_level"];
+			starting_values=[configs[id-1]["importance_skill_level"]];
+			$("input[name='importance_skill_level"+id+"']").val(starting_values);
+			$("input[name='importance_completed_rec"+id+"']").val(100-starting_values);
+		}
+		$( "#slider"+id ).slider({
+			min: 0,
+			max: 100,
+			values: starting_values,
+				slide: function (event, ui) {
+		        onSlide(ui,id)
+		    },
+		    create: function (event, ui) {
+		        onSlide({
+		            values: starting_values
+		        });
+		    }
+		});
+		if (id!=0){
+			$( "#slider"+id ).slider( "disable" );
+		}
+		refreshSlider(id);
 	}
-	$( "#slider"+id ).slider({
-		min: 0,
-		max: 100,
-		values: starting_values,
-			slide: function (event, ui) {
-	        onSlide(ui,id)
-	    },
-	    create: function (event, ui) {
-	        onSlide({
-	            values: starting_values
-	        });
-	    }
-	});
-	if (id!=0){
-		$( "#slider"+id ).slider( "disable" );
+
+	function refreshSlider(id){
+		var total_width = $("#slider"+id).width();
+		if (id!=0){
+		    selected_value = configs[id-1]["importance_skill_level"];
+		}
+	    importance_skill_level = selected_value;
+	    importance_completed_rec = 100 - selected_value; 
+	    $("#importance_skill_level"+id).html(importance_skill_level);
+	    $('input[name="importance_skill_level"]').val(importance_skill_level);
+	    $("#importance_completed_rec"+id).html(importance_completed_rec);
+	    $('input[name="importance_completed_rec"]').val(importance_completed_rec);
+	    $("#left-color"+id).width(selected_value / 100 * total_width);
 	}
-	refreshSlider(id);
-}
-function refreshSlider(id){
-	var total_width = $("#slider"+id).width();
-	if (id!=0){
-	    selected_value = configs[id-1]["importance_skill_level"];
+
+	function onSlide(ui,id) {
+	    var total_width = $("#slider"+id).width();
+	    selected_value = ui.values[0];
+	    importance_skill_level = selected_value;
+	    importance_completed_rec = 100 - selected_value; 
+	    $("#importance_skill_level"+id).html(importance_skill_level);
+	    $('input[name="importance_skill_level'+id+'"]').val(importance_skill_level);
+	    $("#importance_completed_rec"+id).html(importance_completed_rec);
+	    $('input[name="importance_completed_rec'+id+'"]').val(importance_completed_rec);
+	    $("#left-color"+id).width(selected_value / 100 * total_width);
 	}
-    importance_skill_level = selected_value;
-    importance_completed_rec = 100 - selected_value; 
-    $("#importance_skill_level"+id).html(importance_skill_level);
-    $('input[name="importance_skill_level"]').val(importance_skill_level);
-    $("#importance_completed_rec"+id).html(importance_completed_rec);
-    $('input[name="importance_completed_rec"]').val(importance_completed_rec);
-    $("#left-color"+id).width(selected_value / 100 * total_width);
-}
-function onSlide(ui,id) {
-    var total_width = $("#slider"+id).width();
-    selected_value = ui.values[0];
-    importance_skill_level = selected_value;
-    importance_completed_rec = 100 - selected_value; 
-    $("#importance_skill_level"+id).html(importance_skill_level);
-    $('input[name="importance_skill_level'+id+'"]').val(importance_skill_level);
-    $("#importance_completed_rec"+id).html(importance_completed_rec);
-    $('input[name="importance_completed_rec'+id+'"]').val(importance_completed_rec);
-    $("#left-color"+id).width(selected_value / 100 * total_width);
-}
+
 </script>
-
-
-<br>
 
 <div class="container">
 	<div id="sidebar">
     	<ul>
     		<li id="pestana0" style="display:none"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Pauta</a></li>
         	{% for config in assesment_configs %}  
-			<li id="pestana{{ forloop.counter }}" style="display:none"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
+				<li id="pestana{{ forloop.counter }}" style="display:none"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
 			{% endfor %}
         </ul>
     </div>
+
     <div class="main-content" style="height:545px">
     	{% block new %} {% endblock %}
     	
-    	
-	 <div id="contenidopestanas" style="display:none">
-	 
-			 <!-- ------------------Nueva Pauta------------------------------------- -->
+	 	<div id="contenidopestanas" style="display:none">
+
+			 <!-- Nueva Pauta -->
 			 <div id="cpestana0" class="cpestanna">
 				<h2>Nueva Pauta de Evaluación</h2>
 				<div id="form00" class="form">
@@ -141,183 +234,274 @@ function onSlide(ui,id) {
 						</div>
 						<div id="slider_up">
 							<div id="slider0" class="slider">
-								<div id="left-color0" class="left-color" style="width: 50%">
-								</div>
+								<div id="left-color0" class="left-color" style="width: 50%"></div>
 							</div>
 						</div>
+
 						<div id="completed_rec_div0" class="percentage">
 							<span id="importance_completed_rec0">50</span>%</br>
 							<!-- Recomendaciones Completadas -->
-						</div><br>
+						</div>
+						<br>
 						<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Habilidades Practicadas</p></div>
 						<script>slidear(0);</script>
 						<div style="float:left;margin-left:125px"><a href='javascript:confirmSaveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
 					</form>
 				</div>
 				<div id="skills">
-					<h3>Habilidades</h3>
-					<div id="search">
-					<label for='skill_search0'>Buscar: </label><input id="skill_search0" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" >
+					<h3>Habilidades:</h3>
+					<div id="topbar" >
+						<ul class="tab">
+							<li><a href='#' id="khanTreeButton" onclick='javascript:showNewTree(0);' class="select">Por Contenidos</a></li>
+							<li><a href='#' id="currTreeButton" onclick='javascript:showNewTree(1);'>Por Curriculo</a></li>
+							<li><a href='#' id="classTreeButton" onclick='javascript:showNewTree(2);'>Por Plan</a></li>
+						</ul>
 					</div>
-					<div id="topictree0" class="topictree"><script>getTopicTree(0);</script></div>
+					<br>
+					<div id="class_combo">
+						<select id="class_select" onchange="classSelect();" class='ui-corner-all simple-input search-input blur-on-esc approvalName'  style="min-width: 400px; margin: 10px 2px;">
+						<option selected value="-1"><i>Selecciona un curso</i></option>
+						{% for class in class_list %}
+							<option value="{{ class.class_subject__id_class_subject }}">{{ class.level }} {{ class.letter }} {{ class.year }}</option>
+						{% endfor %}
+						</select>
+					</div>
+					<div id="curriculum_combo">
+						<select id="curriculum_select" onchange="curriculumSelect()" class='ui-corner-all simple-input search-input blur-on-esc approvalName' style="width: 100%; margin: 10px 2px;">
+						<i><option selected value="-1">Selecciona un Curriculo</option></i>
+						{% for curr in curriculum_list %}
+							<option value="{{ curr.id_chapter_mineduc }}"> {{ curr.level }} {{ curr.year }}</option>
+						{% endfor %}
+						</select>
+					</div>
+					<div id="search">
+						<label for='skill_search0'>Buscar: </label><input id="skill_search0" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" >
+					</div>
+					<div id="topictree0" class="topictree">
+						<script>getTopicTree(0);</script>
+					</div>
 				</div>
 			</div>
-			 <!-- ------------------FIN Nueva Pauta------------------------------------- -->
-
+			 <!-- FIN Nueva Pauta -->
 
     	{% for config in assesment_configs %}
     	
-	<div id="cpestana{{ forloop.counter }}" style="display:none" class="cpestanna">
-	<h2>{{ config.name }}</h2>
-	<div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
-		<form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
-			<h3>Datos de la Pauta:</h3>
-			<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="{{ config.name }}" disabled><br>
-			<br>
-			<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100"  onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" disabled><br>
-			<br>
-			<input name="forloop" value="{{ forloop.counter }}" type="hidden">
-			<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
-	    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
-	        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
-	        <!--<input name="subtopic_skill{{ forloop.counter }}" id="subtopic_skillInput{{ forloop.counter }}" type="hidden" value="[]">-->
-	        
-			<br>
-			<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
-			<div id="skill_level_div{{ forloop.counter }}" class="percentage">
-				<span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
-
-			</div>
-			
-			<div id="slider_up">
-				<div id="slider{{ forloop.counter }}" class="slider">
-					<div id="left-color{{ forloop.counter }}" class="left-color" style="width: 50%">
+		<div id="cpestana{{ forloop.counter }}" style="display:none" class="cpestanna">
+			<h2>{{ config.name }}</h2>
+			<div id="form{{ forloop.counter }}{{ forloop.counter }}" class="form">
+				<form action="" method="post" id="form{{ forloop.counter }}">{% csrf_token %}
+					<h3>Datos de la Pauta:</h3>
+					<label for='name'>Nombre de la Pauta: </label><input name="name" type="text" onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalName" value="{{ config.name }}" disabled><br>
+					<br>
+					<label for='approval_percentage'>Porcentaje de Aprobación: </label><input type="number" name="approval_percentage" value="{{ config.approval_percentage }}" min="0" max="100"  onchange="validar()" onkeyup="validar()" class="ui-corner-all placeholder simple-input search-input blur-on-esc approvalPercentage" disabled><br>
+					<br>
+					<input name="forloop" value="{{ forloop.counter }}" type="hidden">
+					<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
+			    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
+			        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
+			        <!--<input name="subtopic_skill{{ forloop.counter }}" id="subtopic_skillInput{{ forloop.counter }}" type="hidden" value="[]">-->
+			        
+					<br>
+					<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
+					<div id="skill_level_div{{ forloop.counter }}" class="percentage">
+						<span id="importance_skill_level{{ forloop.counter }}">50</span>%</br>
 					</div>
+					
+					<div id="slider_up">
+						<div id="slider{{ forloop.counter }}" class="slider">
+							<div id="left-color{{ forloop.counter }}" class="left-color" style="width: 50%"></div>
+						</div>
+					</div>
+					
+					<div id="completed_rec_div{{ forloop.counter }}" class="percentage">
+						<span id="importance_completed_rec{{ forloop.counter }}">50</span>%</br>
+					</div>
+					<br>
+					<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
+					<script>slidear({{ forloop.counter }});</script>
+					
+					{% if config.applied %}
+
+					<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
+				</form>
+			</div>
+			
+			<div id="skills">
+				<h3>Habilidades</h3>
+				<div id="topictree{{ forloop.counter }}" class="scroll topictree">
+				<ul class='ulSkill' id='ulSkill{{ forloop.counter }}'></ul></div>
+				<script>
+					skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+					for (i=0;i<skills.length;i++){ 
+						$("#ulSkill{{ forloop.counter }}").append("<li class='liSkill'>"+(skills[i].name_spanish)+"</li>");
+					}
+		        </script>  
+			</div>
+
+					{% else %}
+
+					<div style="float:left;margin-left:50px">
+						<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="editConfigButton{{ forloop.counter }}">Editar Pauta</a>
+						<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="deleteConfigButton{{ forloop.counter }}">Eliminar Pauta</a>
+					</div>
+					<div style="float:left;margin-left:50px">
+						<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
+						<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
+					</div>
+				</form>
+			</div>
+
+			<div id="skills">
+				<h3>Habilidades</h3>
+				<div id="search">
+					<label for='skill_search{{ forloop.counter }}'>Buscar: </label><input id="skill_search{{ forloop.counter }}" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled>
 				</div>
+
+				<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
+				<script>
+					totalTree+=1;
+					aux = {{ forloop.counter }}
+					trees.push(aux);
+					skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
+					id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
+					config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
+					var skills{{ forloop.counter }} = []
+					for (i=0;i<config_skills.length;i++){ 
+						//alert(id_skills[i].id_skill_name_id);
+						skills{{ forloop.counter }}.push(config_skills[i])
+						//$("#topictree1").jstree('select_node', '#skill98')
+					//alert('hola')
+						//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
+					}
+					document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);				
+				</script>
 			</div>
-			
-			<div id="completed_rec_div{{ forloop.counter }}" class="percentage">
-				<span id="importance_completed_rec{{ forloop.counter }}">50</span>%</br>
 
-			</div><br>
-			<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Recomendaciones Completadas</p></div>
-			<script>slidear({{ forloop.counter }});</script>
-			
-		{% if config.applied %}
+					{% endif %}
 
-			<p class="applied" style="float:left"> Pauta aplicada. No editable. </p>
-			</form>
+		</div> 
+
+		{% endfor %}
+
 	</div>
-	
-	<div id="skills">
-		<h3>Habilidades</h3>
-		<div id="topictree{{ forloop.counter }}" class="scroll topictree">
-		<ul class='ulSkill' id='ulSkill{{ forloop.counter }}'></ul></div>
-		<script>
-	        	skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
-	        	for (i=0;i<skills.length;i++){ 
-	        		$("#ulSkill{{ forloop.counter }}").append("<li class='liSkill'>"+(skills[i].name_spanish)+"</li>")
-	        	}
-	        </script>
+</div>
+
+<div id="popup" style="display:none">
+	<div id="close">X</div>
+	<div id="deleteConfig" style="display:none">
+		<p>¿Desea eliminar la pauta?</p>
+		
+	</div>
+	<div id="editConfig" style="display:none">
+		<p>¿Desea guardar los cambios de la pauta?</p>
+	</div>
+	<div id="saveNewConfig" style="display:none">
+		<p>¿Desea guardar la nueva pauta?</p>
+	</div>
+</div>
+
+<div style="display: none;" id="profile-throbber2" class="profile-throbber">
+	<div class="throbber-grid">   
+	    <!--[if lte IE 9]>
+	    <img class="throbber-fallback" src="/images/throbber-full.gif" />
+	    <![endif]-->
 	    
+	    <div class="throbber-row clearfix">
+	         <div class="block-0 throbber-block"></div>
+	         <div class="block-1 throbber-block"></div>
+	         <div class="block-2 throbber-block"></div>
+	    </div>
+	    <div class="throbber-row clearfix">
+	         <div class="block-7 throbber-block"></div>
+	         <div class="block-8 throbber-block"></div>
+	         <div class="block-3 throbber-block"></div>
+	    </div>
+	    <div class="throbber-row clearfix">
+	         <div class="block-6 throbber-block"></div>
+	         <div class="block-5 throbber-block"></div>
+	         <div class="block-4 throbber-block"></div>
+	    </div>
 	</div>
-
-		{% else %}
-		<div style="float:left;margin-left:50px">
-				<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="editConfigButton{{ forloop.counter }}">Editar Pauta</a>
-				<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="deleteConfigButton{{ forloop.counter }}">Eliminar Pauta</a>
-			</div>
-			<div style="float:left;margin-left:50px">
-				<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
-				<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
-			</div>
-		</form>
-
-	</div>
-	<div id="skills">
-		<h3>Habilidades</h3>
-		<div id="search">
-		<label for='skill_search{{ forloop.counter }}'>Buscar: </label><input id="skill_search{{ forloop.counter }}" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled>
-		</div>
-		<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
-		<script>
-				totalTree+=1;
-				aux = {{ forloop.counter }}
-				trees.push(aux);
-				skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
-				id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
-				config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
-				var skills{{ forloop.counter }} = []
-	        	for (i=0;i<config_skills.length;i++){ 
-	        		//alert(id_skills[i].id_skill_name_id);
-	        		skills{{ forloop.counter }}.push(config_skills[i])
-	        		//$("#topictree1").jstree('select_node', '#skill98')
-	        	//alert('hola')
-	        		//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
-	        	}
-	        	document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);
-	        	
-	        </script>
-	</div>
-
-		{% endif %} 
-
-</div> 
-{% endfor %}
-
-
-</div>
 </div>
 
-	<div id="popup" style="display:none">
-    	<div id="close">X</div>
-    	<div id="deleteConfig" style="display:none">
-    		<p>¿Desea eliminar la pauta?</p>
-    		
-    	</div>
-    	<div id="editConfig" style="display:none">
-    		<p>¿Desea guardar los cambios de la pauta?</p>
-    	</div>
-    	<div id="saveNewConfig" style="display:none">
-    		<p>¿Desea guardar la nueva pauta?</p>
-    	</div>
-    </div>
-
-    <div style="display: none;" id="profile-throbber2" class="profile-throbber">
-		<div class="throbber-grid">   
-		    <!--[if lte IE 9]>
-		    <img class="throbber-fallback" src="/images/throbber-full.gif" />
-		    <![endif]-->
-		    
-		    <div class="throbber-row clearfix">
-		         <div class="block-0 throbber-block"></div>
-		         <div class="block-1 throbber-block"></div>
-		         <div class="block-2 throbber-block"></div>
-		    </div>
-		    <div class="throbber-row clearfix">
-		         <div class="block-7 throbber-block"></div>
-		         <div class="block-8 throbber-block"></div>
-		         <div class="block-3 throbber-block"></div>
-		    </div>
-		    <div class="throbber-row clearfix">
-		         <div class="block-6 throbber-block"></div>
-		         <div class="block-5 throbber-block"></div>
-		         <div class="block-4 throbber-block"></div>
-		    </div>
-		</div>
-	</div>
-    
 </div>
-
 </div> <!-- cerrar div principal del home  -->
 
 <script>
-function FilterInput(event){
-	var keyCode = ('which' in event) ? event.which : event.keyCode;
+	function showNewTree(value){
+		$("#curriculum_combo").hide();
+		$("#class_combo").hide();
 
-	isNotWanted = (keyCode == 69 || keyCode == 109 || keyCode == 107 || keyCode == 189 || keyCode == 187);
-	return !isNotWanted;
-}
+		$(document.getElementsByClassName("select")).removeClass("select");
+
+		$("#topictree0").empty().jstree("destroy");
+
+		//Orden tipo Khan.
+		if (value == 0){
+			$("#khanTreeButton").addClass("select");
+			$("#topictree0").css("height","400px")
+			getTopicTree(0);
+		}
+		//Curriculum
+		else if (value == 1){
+			$("#curriculum_combo").show();
+			$("#topictree0").css("height","350px")
+			$("#currTreeButton").addClass("select");
+		}
+		//Clases
+		else if (value == 2){
+			$("#class_combo").show();
+			$("#topictree0").css("height","350px")
+			$("#classTreeButton").addClass("select");
+		}
+	}
+
+	function curriculumSelect(){
+		var id = $("#curriculum_select").val();
+
+		if (id == -1) return;
+
+		$.ajax({
+			url: "{% url 'AssesmentConfigs:recibir_curriculo' %}",
+			type: "GET",
+			data: { "curriculum_id" : id,
+			},
+			success: function(response){
+				$("#topictree0").empty().jstree("destroy");
+				getTopicTree(0,response);
+			},
+			error: function(response){
+				alert("Error: " + response[0]);
+			}
+		});
+	}
+
+	function classSelect(){
+		var id = $("#class_select").val();
+
+		if (id == -1) return;
+
+		$.ajax({
+			url: "{% url 'AssesmentConfigs:recibir_clase' %}",
+			type: "GET",
+			data: { "class_subject_id" : id,
+			},
+			success: function(response){
+				$("#topictree0").empty().jstree("destroy");
+				getTopicTree(0,response);
+			},
+			error: function(response){
+				alert("Error: " + response[0]);
+			}
+		});
+	}
+
+	function FilterInput(event){
+		var keyCode = ('which' in event) ? event.which : event.keyCode;
+
+		isNotWanted = (keyCode == 69 || keyCode == 109 || keyCode == 107 || keyCode == 189 || keyCode == 187);
+		return !isNotWanted;
+	}
 
 	function setMainContentHeight(){
 		sidebar = document.getElementById('sidebar');
@@ -334,373 +518,348 @@ function FilterInput(event){
 		mainContent[0].style.height = height2+"px";
 	}
 	
-function cambiarPestanna(pestanna) {
-	id = (pestanna.id).substring(7);
-	 pestanna = document.getElementById(pestanna.id);
-	 cpestanna = document.getElementById('c' + pestanna.id);
-	 cpestannas = document.getElementsByClassName('cpestanna');
-	 contenidopestanas = document.getElementById('contenidopestanas');
-	 
-	 for (i=0;i<cpestannas.length;i++){
-		 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
+	function cambiarPestanna(pestanna) {
+		id = (pestanna.id).substring(7);
+		 pestanna = document.getElementById(pestanna.id);
+		 cpestanna = document.getElementById('c' + pestanna.id);
+		 cpestannas = document.getElementsByClassName('cpestanna');
+		 contenidopestanas = document.getElementById('contenidopestanas');
 		 
-	 }
-	 $(document).ready(function () {
-		 $(document.getElementsByClassName("select")).removeClass("select");
-	     $(cpestanna).css('display', '');
-	     $(pestanna.getElementsByTagName('a')).addClass("select");
-	 });
-	 $(".topictree").getNiceScroll().hide();
-	 $("#topictree"+id).getNiceScroll().show();
-	 $("#topictree"+id).getNiceScroll().resize();
-}
-function reloadLocation(){
-	//chiusura al click sulla parte scura
-	  $("#hover").click(function(){
-	        $(this).fadeOut();
-	    $("#popup").fadeOut();
-	    location.reload();
-	    });
-	  //chiusura al click sul pulsante
-	  $("#close").click(function(){
-	        $("#hover").fadeOut();
-	    $("#popup").fadeOut();
-	    location.reload();
-	    });
-}
-
-function confirmSaveConfig(){
-	$("#close").hide();
-	$("#hover").fadeIn().css('display', '');
-	$("#popup").fadeIn().css('display', '');
-	$('.response').remove();
-	$('#deleteConfig').css('display', 'none');
-	$('#editConfig').css('display', 'none');
-	$("#acceptEdit").remove();
-	$("#cancelEdit").remove();
-	$("#saveNewConfig").css('display','');
-	$("#saveNewConfig").append("<a href='javascript:saveConfig(1)' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
-	$("#saveNewConfig").append("<a href='javascript:saveConfig(0)' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
-}
-
-var auxResponse;
-function saveConfig(answer){
-	//alert("intentando guardar");
-	if(answer==1){
-		$("#popup").append($('#profile-throbber2').css('display',''));
-		$("#saveNewConfig").css('display','none');
-		$.ajax({
-			url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
-			type: "POST",
-			data: $("#form0").serialize(),
-				success: function(response){
-					//alert(response);
-					$("#popup").append($('#profile-throbber2').css('display','none'));
-					$('#deleteConfig').css('display', 'none');
-					$('#editConfig').css('display', 'none');
-					$('.response').remove();
-					$("#hover").fadeIn();
-					$("#popup").fadeIn();
-					$("#popup").append("<p class='response'>"+response+"</p>");
-					auxResponse = response;
-					if (auxResponse == "Pauta guardada correctamente"){
-						$("#hover").css('pointer-events','none');
-						$("#close").css('pointer-events','none');
-						$("a").css('pointer-events','none');
-						reloadPage();
-						
-					}
-					else{
-						$("#close").fadeIn();
-					}
-				}
-		});
+		 for (i=0;i<cpestannas.length;i++){
+			 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
+			 
+		 }
+		 $(document).ready(function () {
+			 $(document.getElementsByClassName("select")).removeClass("select");
+		     $(cpestanna).css('display', '');
+		     $(pestanna.getElementsByTagName('a')).addClass("select");
+		 });
+		 $(".topictree").getNiceScroll().hide();
+		 $("#topictree"+id).getNiceScroll().show();
+		 $("#topictree"+id).getNiceScroll().resize();
 	}
-	else{
-		$("#hover").fadeOut();
-		$("#popup").fadeOut();
-		$("#saveNewConfig").fadeOut();
-	}
-}
 
-function reloadPage(){
-	setTimeout(function(){
-		$('.response').fadeOut();
-		$('#close').hide();
-		$("#popup").append($('#profile-throbber2').css('display','none'));
-		$('#profile-throbber2').fadeIn();
-		$("#hover").fadeIn();
-		$("#popup").fadeIn();
-		document.location.reload(true);
-	}, 750); 
-	
-}
-
-function openEditConfig(id){
-	//if (configs[id-1]["applied"]==false){
-		cpestana = document.getElementById('cpestana'+id);
-		inputs = cpestana.getElementsByTagName('input');
-		for (i=0;i<inputs.length;i++){
-			inputs[i].removeAttribute("disabled");
-		}
-		$( "#slider"+id ).slider( "enable" );
-		$(document.getElementById('cancelEditConfigButton'+id)).css('display', '');
-		$(document.getElementById('saveConfigButton'+id)).css('display', '');
-		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
-		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
-		topictreeId='#topictree'+id
-		$(topictreeId+(" ul")).css('pointer-events', '');
-		$(topictreeId).css('opacity', '1');
-	//}
-	/*else{
-		$('.response').remove();
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
-		$("#popup").append("<p class='response'>Pauta aplicada, no se puede modificar</p>");
-	}*/
-}
-function cancelEditConfig(id){
-	cpestana = document.getElementById('cpestana'+id);
-	inputs = cpestana.getElementsByTagName('input');
-	for (i=0;i<inputs.length;i++){
-		inputs[i].setAttribute("disabled","");
+	function reloadLocation(){
+		//chiusura al click sulla parte scura
+		  $("#hover").click(function(){
+		        $(this).fadeOut();
+		    $("#popup").fadeOut();
+		    location.reload();
+		    });
+		  //chiusura al click sul pulsante
+		  $("#close").click(function(){
+		        $("#hover").fadeOut();
+		    $("#popup").fadeOut();
+		    location.reload();
+		    });
 	}
-	
-	$( "#slider"+id ).slider( "disable" );
-	$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
-	$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
-	$(document.getElementById('editConfigButton'+id)).css('display', '');
-	$(document.getElementById('deleteConfigButton'+id)).css('display', '');
-	slidear(id);
-	topictreeId='#topictree'+id
-	$(topictreeId+(" ul")).css('pointer-events', 'none');
-	$(topictreeId).css('opacity', '0.8');
-	
-	inputs[1].removeAttribute("value");
-	var name = document.createAttribute("value");
-	name.value = configs[id-1]["name"];
-	inputs[1].setAttributeNode(name);
-}
-function editConfig(id){
-	if (configs[id-1]["applied"]==false){
+
+	function confirmSaveConfig(){
 		$("#close").hide();
 		$("#hover").fadeIn().css('display', '');
 		$("#popup").fadeIn().css('display', '');
 		$('.response').remove();
 		$('#deleteConfig').css('display', 'none');
-		$('#saveNewConfig').css('display', 'none');
+		$('#editConfig').css('display', 'none');
 		$("#acceptEdit").remove();
 		$("#cancelEdit").remove();
-		$("#editConfig").css('display','');
-		$("#editConfig").append("<a href='javascript:confirmEdit(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
-		$("#editConfig").append("<a href='javascript:confirmEdit(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
+		$("#saveNewConfig").css('display','');
+		$("#saveNewConfig").append("<a href='javascript:saveConfig(1)' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
+		$("#saveNewConfig").append("<a href='javascript:saveConfig(0)' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
 	}
-	else{
-		alert("no se puede borrar");
-	}
-}
-function confirmEdit(answer,id){
-	if (answer==1){
-		$("#popup").append($('#profile-throbber2').css('display',''));
-		$("#editConfig").css('display','none');
-		$.ajax({
-			url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
-			type: "POST",
-			data: $("#form"+id).serialize(),
-				success: function(response){
-					$('#profile-throbber2').fadeOut(750);
-					$('.response').remove();
-					$("#hover").fadeIn();
-					$("#popup").fadeIn();
-					setTimeout(function(){
-  						$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
-						$('.response').fadeIn();
-						$("#close").fadeIn();
-						cancelEditConfig(id);
-					}, 750); 
-					
-				}
-		});
-	}
-	else{
-		$("#hover").fadeOut();
-		$("#popup").fadeOut();
-		$("#editConfig").fadeOut();
-		setTimeout(function() {
-		  $("#close").show();
-		}, 750);
-		cancelEditConfig(id);
-	}
-	/*cpestana = document.getElementById('cpestana'+id);
-	inputs = cpestana.getElementsByTagName('input');
-	for (i=0;i<inputs.length;i++){
-		inputs[i].setAttribute("disabled","");
-	}
-	$( "#slider"+id ).slider( "disable" );
-	topictreeId='#topictree'+id;
-	$(topictreeId+(" ul")).css('pointer-events', 'none');
-	$(topictreeId).css('opacity', '0.8');*/
 
-}
-function deleteConfig(id){
-	if (configs[id-1]["applied"]==false){
-		$("#close").hide();
-		$("#hover").fadeIn();
-		$("#popup").fadeIn();
-		$("#deleteConfig").css('display','');
-		$('.response').remove();
-		$('#editConfig').css('display', 'none');
-		$('#saveNewConfig').css('display', 'none');
-		$("#acceptDelete").remove();
-		$("#cancelDelete").remove();
-		$("#deleteConfig").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
-		$("#deleteConfig").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
-	}
-	else{
-		$('.response').remove();
-		$("#hover").fadeIn().css('display', '');
-		$("#popup").fadeIn().css('display', '');
-		$("#popup").append("<p class='response'>Pauta aplicada, no se puede eliminar</p>");
-	}
-}
-function confirmDelete(answer,id){
-	if (answer==1){
-		$.ajax({
-			url: "/inicio/pautas/eliminar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
-			type: "POST",
-				success: function(response){
-					$('.response').remove();
-					$("#hover").fadeIn();
-					$("#popup").fadeIn();
-					$("#popup").append("<p class='response'>"+response+"</p>");
-				}
-		});
-		$("#deleteConfig").fadeOut();
-		$("#hover").css('pointer-events','none');
-		$("#close").css('pointer-events','none');
-		$("a").css('pointer-events','none');
-		reloadPage();
-	}
-	else{
-		$("#hover").fadeOut();
-		$("#popup").fadeOut();
-		$("#deleteConfig").fadeOut();
-		setTimeout(function() {
-		  $("#close").show();
-		}, 750);
-	}
-}
-function validar(){
-	flag = true
-	approval_percentage = document.getElementsByClassName("approvalPercentage");
-	//alert(approval_percentage)
-	for (var a=0;a<approval_percentage.length;a++){
-		//alert(approval_percentage[a].value)
-		if(approval_percentage[a].value == null || approval_percentage[a].value<0 || approval_percentage[a].value>100 || approval_percentage[a].value.length == 0 || /^\s+$/.test(approval_percentage[a].value)) {
-			$(approval_percentage[a]).css('color', '#C30202');
-			flag = false
-		}else{
-			$(approval_percentage[a]).css('color', '#898989');
+	var auxResponse;
+	function saveConfig(answer){
+		//alert("intentando guardar");
+		if(answer==1){
+			$("#popup").append($('#profile-throbber2').css('display',''));
+			$("#saveNewConfig").css('display','none');
+			$.ajax({
+				url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
+				type: "POST",
+				data: $("#form0").serialize(),
+					success: function(response){
+						//alert(response);
+						$("#popup").append($('#profile-throbber2').css('display','none'));
+						$('#deleteConfig').css('display', 'none');
+						$('#editConfig').css('display', 'none');
+						$('.response').remove();
+						$("#hover").fadeIn();
+						$("#popup").fadeIn();
+						$("#popup").append("<p class='response'>"+response+"</p>");
+						auxResponse = response;
+						if (auxResponse == "Pauta guardada correctamente"){
+							$("#hover").css('pointer-events','none');
+							$("#close").css('pointer-events','none');
+							$("a").css('pointer-events','none');
+							reloadPage();
+							
+						}
+						else{
+							$("#close").fadeIn();
+						}
+					}
+			});
 		}
+		else{
+			$("#hover").fadeOut();
+			$("#popup").fadeOut();
+			$("#saveNewConfig").fadeOut();
+		}
+	}
+
+	function reloadPage(){
+		setTimeout(function(){
+			$('.response').fadeOut();
+			$('#close').hide();
+			$("#popup").append($('#profile-throbber2').css('display','none'));
+			$('#profile-throbber2').fadeIn();
+			$("#hover").fadeIn();
+			$("#popup").fadeIn();
+			document.location.reload(true);
+		}, 750); 
 		
-		/*isDisabled = $(approval_percentage[a]).is(':disabled');
-		if (isDisabled){
-			$(approval_percentage[a]).css('color', '#999');
+	}
+
+	function openEditConfig(id){
+		//if (configs[id-1]["applied"]==false){
+			cpestana = document.getElementById('cpestana'+id);
+			inputs = cpestana.getElementsByTagName('input');
+			for (i=0;i<inputs.length;i++){
+				inputs[i].removeAttribute("disabled");
+			}
+			$( "#slider"+id ).slider( "enable" );
+			$(document.getElementById('cancelEditConfigButton'+id)).css('display', '');
+			$(document.getElementById('saveConfigButton'+id)).css('display', '');
+			$(document.getElementById('editConfigButton'+id)).css('display', 'none');
+			$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
+			topictreeId='#topictree'+id
+			$(topictreeId+(" ul")).css('pointer-events', '');
+			$(topictreeId).css('opacity', '1');
+		//}
+		/*else{
+			$('.response').remove();
+			$("#hover").fadeIn().css('display', '');
+			$("#popup").fadeIn().css('display', '');
+			$("#popup").append("<p class='response'>Pauta aplicada, no se puede modificar</p>");
 		}*/
 	}
-	return flag
-}
-$(document).ready(function(){
-	setMainContentHeight();
-	$("#contenidopestanas").fadeIn();
-	$("li").fadeIn();
-  //chiusura al click sulla parte scura
-  $("#hover").click(function(){
-        $(this).fadeOut();
-    $("#popup").fadeOut();
-    });
-  
-  //chiusura al click sul pulsante
-  $("#close").click(function(){
-        $("#hover").fadeOut();
-    $("#popup").fadeOut();
-    });
-  window.setTimeout(selectTree, 500);
-  
-});
+	function cancelEditConfig(id){
+		cpestana = document.getElementById('cpestana'+id);
+		inputs = cpestana.getElementsByTagName('input');
+		for (i=0;i<inputs.length;i++){
+			inputs[i].setAttribute("disabled","");
+		}
+		
+		$( "#slider"+id ).slider( "disable" );
+		$(document.getElementById('cancelEditConfigButton'+id)).css('display', 'none');
+		$(document.getElementById('saveConfigButton'+id)).css('display', 'none');
+		$(document.getElementById('editConfigButton'+id)).css('display', '');
+		$(document.getElementById('deleteConfigButton'+id)).css('display', '');
+		slidear(id);
+		topictreeId='#topictree'+id
+		$(topictreeId+(" ul")).css('pointer-events', 'none');
+		$(topictreeId).css('opacity', '0.8');
+		
+		inputs[1].removeAttribute("value");
+		var name = document.createAttribute("value");
+		name.value = configs[id-1]["name"];
+		inputs[1].setAttributeNode(name);
+	}
+	function editConfig(id){
+		if (configs[id-1]["applied"]==false){
+			$("#close").hide();
+			$("#hover").fadeIn().css('display', '');
+			$("#popup").fadeIn().css('display', '');
+			$('.response').remove();
+			$('#deleteConfig').css('display', 'none');
+			$('#saveNewConfig').css('display', 'none');
+			$("#acceptEdit").remove();
+			$("#cancelEdit").remove();
+			$("#editConfig").css('display','');
+			$("#editConfig").append("<a href='javascript:confirmEdit(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
+			$("#editConfig").append("<a href='javascript:confirmEdit(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
+		}
+		else{
+			alert("no se puede borrar");
+		}
+	}
+	function confirmEdit(answer,id){
+		if (answer==1){
+			$("#popup").append($('#profile-throbber2').css('display',''));
+			$("#editConfig").css('display','none');
+			$.ajax({
+				url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
+				type: "POST",
+				data: $("#form"+id).serialize(),
+					success: function(response){
+						$('#profile-throbber2').fadeOut(750);
+						$('.response').remove();
+						$("#hover").fadeIn();
+						$("#popup").fadeIn();
+						setTimeout(function(){
+	  						$("#popup").append("<p class='response' style='display:none'>"+response+"</p>");
+							$('.response').fadeIn();
+							$("#close").fadeIn();
+							cancelEditConfig(id);
+						}, 750); 
+						
+					}
+			});
+		}
+		else{
+			$("#hover").fadeOut();
+			$("#popup").fadeOut();
+			$("#editConfig").fadeOut();
+			setTimeout(function() {
+			  $("#close").show();
+			}, 750);
+			cancelEditConfig(id);
+		}
+		/*cpestana = document.getElementById('cpestana'+id);
+		inputs = cpestana.getElementsByTagName('input');
+		for (i=0;i<inputs.length;i++){
+			inputs[i].setAttribute("disabled","");
+		}
+		$( "#slider"+id ).slider( "disable" );
+		topictreeId='#topictree'+id;
+		$(topictreeId+(" ul")).css('pointer-events', 'none');
+		$(topictreeId).css('opacity', '0.8');*/
+
+	}
+	function deleteConfig(id){
+		if (configs[id-1]["applied"]==false){
+			$("#close").hide();
+			$("#hover").fadeIn();
+			$("#popup").fadeIn();
+			$("#deleteConfig").css('display','');
+			$('.response').remove();
+			$('#editConfig').css('display', 'none');
+			$('#saveNewConfig').css('display', 'none');
+			$("#acceptDelete").remove();
+			$("#cancelDelete").remove();
+			$("#deleteConfig").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+			$("#deleteConfig").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+		}
+		else{
+			$('.response').remove();
+			$("#hover").fadeIn().css('display', '');
+			$("#popup").fadeIn().css('display', '');
+			$("#popup").append("<p class='response'>Pauta aplicada, no se puede eliminar</p>");
+		}
+	}
+	function confirmDelete(answer,id){
+		if (answer==1){
+			$.ajax({
+				url: "/inicio/pautas/eliminar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
+				type: "POST",
+					success: function(response){
+						$('.response').remove();
+						$("#hover").fadeIn();
+						$("#popup").fadeIn();
+						$("#popup").append("<p class='response'>"+response+"</p>");
+					}
+			});
+			$("#deleteConfig").fadeOut();
+			$("#hover").css('pointer-events','none');
+			$("#close").css('pointer-events','none');
+			$("a").css('pointer-events','none');
+			reloadPage();
+		}
+		else{
+			$("#hover").fadeOut();
+			$("#popup").fadeOut();
+			$("#deleteConfig").fadeOut();
+			setTimeout(function() {
+			  $("#close").show();
+			}, 750);
+		}
+	}
+	function validar(){
+		flag = true
+		approval_percentage = document.getElementsByClassName("approvalPercentage");
+		//alert(approval_percentage)
+		for (var a=0;a<approval_percentage.length;a++){
+			//alert(approval_percentage[a].value)
+			if(approval_percentage[a].value == null || approval_percentage[a].value<0 || approval_percentage[a].value>100 || approval_percentage[a].value.length == 0 || /^\s+$/.test(approval_percentage[a].value)) {
+				$(approval_percentage[a]).css('color', '#C30202');
+				flag = false
+			}else{
+				$(approval_percentage[a]).css('color', '#898989');
+			}
+			
+			/*isDisabled = $(approval_percentage[a]).is(':disabled');
+			if (isDisabled){
+				$(approval_percentage[a]).css('color', '#999');
+			}*/
+		}
+		return flag
+	}
+	$(document).ready(function(){
+		setMainContentHeight();
+		$("#curriculum_combo").hide();
+		$("#class_combo").hide();
+
+		$("#contenidopestanas").fadeIn();
+		$("li").fadeIn();
+		//chiusura al click sulla parte scura
+		$("#hover").click(function(){
+			$(this).fadeOut();
+			$("#popup").fadeOut();
+	    });
+	  
+	  //chiusura al click sul pulsante
+		$("#close").click(function(){
+	        $("#hover").fadeOut();
+	    	$("#popup").fadeOut();
+	    });
+	  	window.setTimeout(selectTree, 500);  
+	});
+
 </script>
+
 <script type="text/javascript" src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+
 <script type="text/javascript"> 
     $(document).ready(function () {
-    $(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
+    	$(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
     });
+
     function selectTree(){
-    //alert(totalTree)
-    for(j=0;j<trees.length;j++){
-    //alert(skills1.length);
-    	skillsId = eval('skills'+trees[j]);
-    	//alert(skillsId)
-    	topictreeId = '#topictree'+trees[j];
-    	//alert(topictreeId);
-	    for(k=0;k<skillsId.length;k++){
-	    	//alert(k);
-	    	//alert(skills1[k].id_subtopic_skill_id);
+	    //alert(totalTree)
+	    for(j=0;j<trees.length;j++){
+	    //alert(skills1.length);
+	    	skillsId = eval('skills'+trees[j]);
 	    	//alert(skillsId)
-	    	skill = '#'+skillsId[k].id_subtopic_skill_id;
-	    	//alert(skill)
-	    	//console.log(skill);
-	    	$(topictreeId).jstree('select_node', skill);
-	    	//alert(k);
-	    }
-	    $(topictreeId).css('opacity', '0.8');
-	    $(topictreeId+(" ul")).css('pointer-events', 'none');
-	    $(topictreeId+(" li")).css('pointer-events', '');
+	    	topictreeId = '#topictree'+trees[j];
+	    	//alert(topictreeId);
+		    for(k=0;k<skillsId.length;k++){
+		    	//alert(k);
+		    	//alert(skills1[k].id_subtopic_skill_id);
+		    	//alert(skillsId)
+		    	skill = '#'+skillsId[k].id_subtopic_skill_id;
+		    	//alert(skill)
+		    	//console.log(skill);
+		    	$(topictreeId).jstree('select_node', skill);
+		    	//alert(k);
+		    }
+		    $(topictreeId).css('opacity', '0.8');
+		    $(topictreeId+(" ul")).css('pointer-events', 'none');
+		    $(topictreeId+(" li")).css('pointer-events', '');
+		}
 	}
-}
 
-$('#pautas').addClass('active selected');
+	$('#pautas').addClass('active selected');
 
-$("#apprPer").tipsy({ 
-	        gravity: $.fn.tipsy.autoNS,
-	        opacity: 1,
-	        html: true, 
-	        title: function() {
-	          return '<label>Corresponde al porcentaje con que se alcanza la nota de aprobación. Ej 60%</label>';
-	        }
-	      });
+	$("#apprPer").tipsy({ 
+        gravity: $.fn.tipsy.autoNS,
+        opacity: 1,
+        html: true, 
+        title: function() {
+          return '<label>Corresponde al porcentaje con que se alcanza la nota de aprobación. Ej 60%</label>';
+        }
+    });
 
 </script>
+
 {% endblock %}
-
-
-<!--
-	<div id="popup_evaluacion" class="popup" style="display:none">
-    	<div style="align:left;">
-	    	<p>Cargando los datos, por favor espere un momento</p>
-	    	<div style="display: none;" id="profile-throbber2" class="profile-throbber">
-				<div class="throbber-grid">   
-				    <!--[if lte IE 9]>
-				    <img class="throbber-fallback" src="/images/throbber-full.gif" />
-				    <![endif]-->
-
-				    <!--
-				    <div class="throbber-row clearfix">
-				         <div class="block-0 throbber-block"></div>
-				         <div class="block-1 throbber-block"></div>
-				         <div class="block-2 throbber-block"></div>
-				    </div>
-				    <div class="throbber-row clearfix">
-				         <div class="block-7 throbber-block"></div>
-				         <div class="block-8 throbber-block"></div>
-				         <div class="block-3 throbber-block"></div>
-				    </div>
-				    <div class="throbber-row clearfix">
-				         <div class="block-6 throbber-block"></div>
-				         <div class="block-5 throbber-block"></div>
-				         <div class="block-4 throbber-block"></div>
-				    </div>
-				</div>
-			</div>
-    	</div>
-    </div>
--->

@@ -81,7 +81,7 @@ Nominas
 	</div>
 
 	<div id="classesDiv" align="center">
-		<h1>Ver Cursos</h1>
+		<h1 style="margin-top:1%">Ver Cursos</h1>
 		<label for="selectClass">Curso: </label>
 		<select id="selectClass" class="ui-corner-all placeholder simple-input blur-on-esc">
 			{% for class in classes %}
@@ -106,7 +106,7 @@ Nominas
 <br>
 <h1 style="padding-top: 125px;">Crear Curso</h1>
 
-	<div id="teachersDiv" align="center">
+	<div id="teachersDiv" style="height: 450px" align="center">
 		<h3>Seleccionar Profesor</h3>
 		<label for="searchTeacher">Buscar: </label><input type="text" id="searchTeacher" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
 		<div class="teacherTable">
@@ -132,7 +132,7 @@ Nominas
 		</div>
 	</div>
 
-	<div id="studentsDiv" align="center">
+	<div id="studentsDiv" style="height: 450px" align="center">
 		<h3>Seleccionar Estudiantes</h3>
 		<label for="searchStudent">Buscar: </label><input type="text" id="searchStudent" class="ui-corner-all placeholder simple-input search-input blur-on-esc"/>
 		<div class="studentTable">
@@ -153,8 +153,8 @@ Nominas
 		</div>
 	</div>
 
-	<div id="classDiv" align="center">
-		<h3>Curso</h3>
+	<div id="classDiv" style="height: 450px" align="center">
+		<h3 style="margin-bottom: 8px">Curso</h3>
 		<label for="levels">Nivel: </label>
 		<select id="levels" class="ui-corner-all placeholder simple-input blur-on-esc">
 			<option value="1">1° Básico</option>
@@ -186,7 +186,17 @@ Nominas
 		<label for="additional">Adicional: </label>
 		<input type="text" id="additional" placeholder="Opcional" class="ui-corner-all placeholder simple-input blur-on-esc"></input>
 		<label for="teacher">Profesor: </label>
-		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input> <br>
+		<input id="teacher" value="" disabled class="ui-corner-all placeholder simple-input blur-on-esc"></input>
+		<br>
+
+		<label for="curriculum">Curriculo: </label>
+		<select id="curriculum" style="margin-top: 12px; margin-left: 12px; width: 366px" class="ui-corner-all placeholder simple-input blur-on-esc">
+		{% for curriculum in curriculums %}
+			<option value="{{ curriculum.id_chapter_mineduc }}">{{ curriculum.year }} - {{ curriculum.level }}<option>
+		{% endfor %}
+		</select>
+
+		<br>
 		<h5>Estudiantes: <p id="counter">0</p></h5>
 		
 		<div id="studentsClass"></div>
@@ -314,6 +324,7 @@ var classJson = new Object();
 function confirmSaveClass(){
 	classJson.additional = $("#additional").val();
 	classJson.year = $("#year").val();
+	classJson.curriculum = $("#curriculum").val();
 	if (classJson.year<2016){
 		$('.response').remove();
 		$("#hover").fadeIn();
@@ -418,8 +429,8 @@ function resetClass(){
 	$("#letter").val("A"); $("#letter").prop('disabled', false);
 	$("#year").val(2016); $("#year").prop('disabled', false);
 	$("#additional").val(null); $("#additional").prop('disabled', false);
-	var studentsLen = $(".student_li").length;
-	$("#counter").html(studentsLen);
+	
+	
 
 	$("#confirmSaveButton").show();
 	$("#confirmEditButton").hide();
@@ -427,6 +438,8 @@ function resetClass(){
 	$(".student_li_div").each(function (index){ 
 		$(this).remove();
 	})
+	var studentsLen = $(".student_li").length;
+	$("#counter").html(studentsLen);
 }
 
 function resetExcelClass(){
@@ -502,50 +515,60 @@ function viewClass(){
 
 	selectClass = $("#selectClass").val();
 	
-	id_class = selectClass.substring(0,selectClass.indexOf(","))
-	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf("."))
-	var letter = selectClass.substring(selectClass.indexOf(".")+1,selectClass.indexOf("-"))
-	var year = selectClass.substring(selectClass.indexOf("-")+1,selectClass.indexOf("_"))
-	var additional = selectClass.substring(selectClass.indexOf("_")+1,selectClass.length)
-	if (additional==""){additional=" "}
+	id_class = selectClass.substring(0,selectClass.indexOf(","));
+	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf("."));
+	var letter = selectClass.substring(selectClass.indexOf(".")+1,selectClass.indexOf("-"));
+	var year = selectClass.substring(selectClass.indexOf("-")+1,selectClass.indexOf("_"));
+	var additional = selectClass.substring(selectClass.indexOf("_")+1,selectClass.length);
+	if (additional == "") additional = " ";
 
 	var classObj = new Object();
 	classObj.idClass = id_class;
 	$.ajax({
-			url: "{% url 'classRoster:viewClass' %}",
-			type: "POST",
-			data: classObj,
-			dataType: "json",
-			success: function(response){
-				for (a=0;a<response.length-1;a++){
-					$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
-					$("#studentsClass").append("<div id=std"+(a+1)+" class='student_li_div'><li id='"+response[a]['fields']['name']+"' class='student_li'>"+response[a]['fields']['name']+"</li><a onclick='javascript:uncheckStudent2(std"+(a+1)+")' id='uncheckStudent'>X</a></div>");
+		url: "{% url 'classRoster:viewClass' %}",
+		type: "POST",
+		data: classObj,
+		dataType: "json",
+		success: function(response){
+			for (var a = 0; a < response.length - 2; a++){
+				$("input:checkbox[value='"+response[a]['fields']['name']+"']").prop("checked", true);
+				$("#studentsClass").append("<div id=std"+(a+1)+" class='student_li_div'><li id='"+response[a]['fields']['name']+"' class='student_li'>"+response[a]['fields']['name']+"</li><a onclick='javascript:uncheckStudent2(std"+(a+1)+")' id='uncheckStudent'>X</a></div>");
 
-					$("#levels").val(level); // $("#levels").prop('disabled', true);
-					$("#letter").val(letter); // $("#letter").prop('disabled', true);
-					$("#year").val(year); // $("#year").prop('disabled', true);
-					$("#additional").val(additional); // $("#additional").prop('disabled', true);
-					var studentsLen = $(".student_li").length;
-					$("#counter").html(studentsLen);
-				}
-				$("input:radio[value='"+response[response.length-1][0]['fields']['name']+"']").prop("checked", true);
-				$("#teacher").val(response[response.length-1][0]['fields']['name']);
-			
-				setTimeout(function(){
-					$(".response").remove();
-					$('#loading').css('display','none');
-					$("#hover").css('pointer-events','');
-					$("#close").css('pointer-events','');
-					$("#hover").fadeOut();
-					$("#popup").fadeOut();
-				}, 750); 
+				var studentsLen = $(".student_li").length;
+				$("#counter").html(studentsLen);
 			}
-		});
-	
+			$("#levels").val(level); // $("#levels").prop('disabled', true);
+			$("#letter").val(letter); // $("#letter").prop('disabled', true);
+			$("#year").val(year); // $("#year").prop('disabled', true);
+			$("#additional").val(additional); // $("#additional").prop('disabled', true);
+
+			if(response[response.length-1][0] != null){
+				$("#curriculum").val(response[response.length-1][0]['fields']['id_chapter_mineduc']).change();
+				console.log("CURRICULO ENCONTRADO!");
+			}
+			
+			$("input:radio[value='"+response[response.length-2][0]['fields']['name']+"']").prop("checked", true);
+			$("#teacher").val(response[response.length-2][0]['fields']['name']);
+			console.log("END");
+		
+			setTimeout(function(){
+				$(".response").remove();
+				$('#loading').css('display','none');
+				$("#hover").css('pointer-events','');
+				$("#close").css('pointer-events','');
+				$("#hover").fadeOut();
+				$("#popup").fadeOut();
+			}, 750); 
+		},
+		error: function(response,error){
+			console.log(error);
+		}
+	});
 }
 
 function confirmEditClass(){
 	classJson.idClass = id_class;
+	classJson.curriculum = $("#curriculum").val();
 	classJson.additional = $("#additional").val();
 	if (classJson.additional == " "){ classJson.additional=null}
 	classJson.year = $("#year").val();

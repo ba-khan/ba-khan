@@ -1,3 +1,5 @@
+#!usr/bin/env python
+# -*- coding: utf-8 -*-
 """ """
 from django.shortcuts import render,HttpResponseRedirect,render_to_response, redirect, HttpResponse
 from django.template.context import RequestContext
@@ -10,7 +12,7 @@ from django.contrib import auth
 from django.db.models import Count
 
 from django import template
-from bakhanapp.models import Assesment_Skill,Class_Subject
+from bakhanapp.models import Assesment_Skill,Class_Subject,Chapter_Mineduc,Topic_Mineduc,Subtopic_Mineduc,Subtopic_Skill_Mineduc,Class,Subject,Planning,Skill_Planning
 
 register = template.Library()
 
@@ -30,7 +32,7 @@ import json
 ##
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
-    request.session.set_expiry(300)#5 minutos de inactividad
+    request.session.set_expiry(1000)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid).order_by('-id_assesment_config')
 
     json_array=[]
@@ -71,11 +73,23 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
     json_data = json.dumps(json_dict)
     #print (json_data)
     topictree= getTopictree('math')
+
+    curriculum_list =  Chapter_Mineduc.objects.all().values('id_chapter_mineduc','level','year').order_by('-year','level')
+
     if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
+        class_list = Class.objects.filter(class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'class_subject__id_class_subject').order_by('-year','level','letter').exclude(class_subject__curriculum__isnull=True)
     else:
         isTeacher = False
-    return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data,'isTeacher':isTeacher}, context_instance=RequestContext(request))
+
+    N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
+    for i in range(len(class_list)):
+        class_list[i]['level'] = N[int(class_list[i]['level'])]
+
+    for i in range(len(curriculum_list)):
+        curriculum_list[i]['level'] = N[int(curriculum_list[i]['level'])]
+
+    return render_to_response('myAssesmentConfigs.html', {'assesment_configs': assesment_configs, 'topictree':topictree,'json_data': json_data,'isTeacher':isTeacher, 'class_list': class_list, 'curriculum_list': curriculum_list}, context_instance=RequestContext(request))
 
 ##-------------------------------------------------------------------------------
 ## Esta funcion edita una pauta de un profesor
@@ -106,8 +120,7 @@ def editAssesmentConfig(request,id_assesment_config):
         Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
 
         for skill in skills_selected:
-                new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config,
-                                                    id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
+                new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config, id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
     return HttpResponse("Pauta editada correctamente")
 
 
@@ -152,16 +165,111 @@ def newAssesmentConfig(request):
                                    )
 
             for skill in skills_selected:
-                #print skill['skill_id']
                 try:
-                    new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config,
-                                                        id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
-                except:
+                    print skill
+                    new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=new_assesment_config, id_skill_name_id=skill['skill_id'], id_subtopic_skill_id=skill['id'])
+                except Exception as e:
+                    print "Error en guardar habilidad: AssesmentConfigs/view.py:newAssesmentConfig"
+                    print repr(e) 
+                    print "Se continuara con la ejecución..."
                     continue
                 
             return HttpResponse("Pauta guardada correctamente")
         else:
+            print args['name']
+            print args['approval_percentage']
+            print args['importance_skill_level'+id]
+            print args['importance_completed_rec'+id]
+            print eval(args['skills'+id])
             return HttpResponse("Faltan datos. Pauta no ingresada")
-        
-    
     return HttpResponse()
+
+def retrieveCurriculumTree(request):
+    try:
+        curriculum_id = request.GET.get('curriculum_id', None)
+        Curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=curriculum_id)
+        Plan_Subject = Subject.objects.get(id_subject_name = Curriculum.id_subject.id_subject_name)
+        
+        topictree_json={}
+        topictree_json['checkbox']={'keep_selected_style':False, 'cascade_to_hidden':False, 'cascade_to_disabled':False}
+        topictree_json['plugins']=['checkbox','search']
+        topictree=[]
+        
+        subject_obj={"id": Plan_Subject.id_subject_name, "parent":"#", "text": Plan_Subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
+        topictree.append(subject_obj)
+        
+        unit_list = Topic_Mineduc.objects.filter(id_chapter=Curriculum.id_chapter_mineduc).order_by('index')
+        for unit in unit_list:
+            unit_obj = {"id": unit.id_topic_mineduc, "parent": Plan_Subject.id_subject_name, "text": "Unidad "+str(unit.index), "icon":"false"}
+            topictree.append(unit_obj)
+
+            oa_list = Subtopic_Mineduc.objects.filter(id_topic=unit.id_topic_mineduc).order_by('index')
+            for oa in oa_list:
+                oa_obj = {"id": oa.id_subtopic_mineduc, "parent": unit.id_topic_mineduc, "text": "Objetivo de aprendizaje "+str(oa.index), "icon":"false"}
+                topictree.append(oa_obj)
+
+                skill_list = Subtopic_Skill_Mineduc.objects.filter(id_subtopic_mineduc=oa.id_subtopic_mineduc).select_related('id_skill_name')
+                for skill in skill_list:
+                    subtopic_skill = Subtopic_Skill.objects.filter(id_skill_name=skill.id_skill_name.id_skill_name).values("id_subtopic_skill")
+                    skill_obj = {"id": subtopic_skill[0]["id_subtopic_skill"], "parent": oa.id_subtopic_mineduc, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false", "index":skill.id_skill_name.index}
+                    sorted(skill_obj, key=skill_obj.get)
+                    topictree.append(skill_obj)
+
+        topictree_json['core'] = {'data':topictree}
+        topictree_json_string = json.dumps(topictree_json)
+
+        return HttpResponse(topictree_json_string, content_type="application/json")
+
+    except Exception as e:
+        print "Error en obtener los curriculos: AssesmentConfigs/view.py:retrieveCurriculumTree"
+        print repr(e)
+        return HttpResponse('No se pudieron obtener los datos del curriculo.')
+
+def retrievePlanTree(request):
+    try:
+        subject_id = request.GET.get('class_subject_id', None)
+        Subj = Class_Subject.objects.get(id_class_subject=subject_id)
+        Curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=Subj.curriculum_id)
+        Plan_Subject = Subject.objects.get(id_subject_name=Subj.id_subject_name.id_subject_name)
+        plan_list = Planning.objects.filter(class_subject=Subj).order_by('class_date')
+
+        topictree_json={}
+        topictree_json['checkbox']={'keep_selected_style':False, 'cascade_to_hidden':False, 'cascade_to_disabled':False}
+        topictree_json['plugins']=['checkbox','search']
+        topictree=[]
+        
+        subject_obj={"id": Plan_Subject.id_subject_name, "parent":"#", "text": Plan_Subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
+        topictree.append(subject_obj)
+
+        unit_list = Topic_Mineduc.objects.filter(id_chapter=Curriculum.id_chapter_mineduc).order_by('index')
+        for unit in unit_list:
+            unit_obj = {"id": unit.id_topic_mineduc, "parent": Plan_Subject.id_subject_name, "text": "Unidad "+str(unit.index), "icon":"false"}
+            topictree.append(unit_obj)
+
+            oa_list = Subtopic_Mineduc.objects.filter(id_topic=unit.id_topic_mineduc).order_by('index')
+            for oa in oa_list:
+                oa_obj = {"id": oa.id_subtopic_mineduc, "parent": unit.id_topic_mineduc, "text": "Objetivo de aprendizaje "+str(oa.index), "icon":"false"}
+                topictree.append(oa_obj)
+
+                for plan in plan_list:
+                    if (plan.class_subtopic.id_subtopic_mineduc == oa.id_subtopic_mineduc):
+                        plan_obj = {"id": plan.id_planning, "parent": oa.id_subtopic_mineduc, "text": plan.class_name, "icon":"false"}
+                        topictree.append(plan_obj)
+
+                        skill_list = Skill_Planning.objects.filter(id_planning=plan.id_planning).select_related('id_skill')
+                        for skill in skill_list:
+                            subtopic_skill = Subtopic_Skill.objects.filter(id_skill_name=skill.id_skill.id_skill_name).values("id_subtopic_skill")
+                            skill_obj = {"id": subtopic_skill[0]["id_subtopic_skill"], "parent": plan.id_planning , "text": skill.id_skill.name_spanish, "data":{"skill_id":skill.id_skill.id_skill_name}, "icon":"false", "index": skill.id_skill.index}
+                            sorted(skill_obj, key=skill_obj.get)
+                            topictree.append(skill_obj)
+
+        topictree_json['core'] = {'data':topictree}
+        topictree_json_string = json.dumps(topictree_json)
+
+        return HttpResponse(topictree_json_string, content_type="application/json")
+
+    except Exception as e:
+        print "Error en obtener los curriculos: AssesmentConfigs/view.py:retrievePlanTree"
+        print repr(e)
+        return HttpResponse('No se pudieron obtener los datos del curso.')
+

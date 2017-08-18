@@ -44,10 +44,12 @@ def getClassList(request):
 	request.session.set_expiry(timeSleep)
 	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
 		isTeacher = True
+		classes = Class.objects.filter(class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum').order_by('-year','level','letter')
 	else:
 		isTeacher = False
+		##classes = Class.objects.filter(INSTITUCION)
 
-	classes = Class.objects.filter(class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum').order_by('-year','level','letter')
+	
 	N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
 	for i in range(len(classes)):
 		classes[i]['level'] = N[int(classes[i]['level'])]		 
@@ -59,6 +61,12 @@ def getClassList(request):
 def getPlan(request, class_subj_id):
 	request.session.set_expiry(timeSleep)
 	current_year = date.today().year
+
+	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+		isTeacher = True
+	else:
+		isTeacher = False
+
 	try:
 		plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
 

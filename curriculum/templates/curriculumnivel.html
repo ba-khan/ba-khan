@@ -753,11 +753,30 @@
         $('#popuptree').empty();
         $('#hover').fadeIn();
         $('#popuptree').fadeIn();
-        $('#popuptree').append("<div id='filtrar' style='float:left;width:50%;'><label>Filtrar por: </label><select class='skill_search' onchange='valorfiltro(this, " + idtopic + "," + idsubtopic+")'><option value='todos'>Todos</option><option value='ejercicios'>Ejercicios</option><option value='videos'>Videos</option></select></div>")
-        $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-        $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
+
+        text = "<div id='filtrar' style='float:left;width:48%;'>";
+            text += "<label>Filtrar por: </label>";
+            text += "<select id='filtro' class='skill_search' onchange='filterTree(" + idsubtopic + ")'>";
+                text += "<option value='all'>Todos</option>";
+                text += "<option value='skills'>Ejercicios</option>";
+                text += "<option value='videos'>Videos</option>";
+            text += "</select>";
+        text += "</div>";
+
+        text += "<div id='search' style='float:left;width: 48%;'>";
+            text += "<label for='skill_search'>Buscar: </label>";
+            text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'>";
+        text += "</div>";
+        
+        text += "<div id='newTree" + idsubtopic + "' class='topictree'></div>";
+
+        text += "<br>";
+        text += "<a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Cancelar</a>";
+        text += "<a onclick='javascript:saveVideoExercise(" + idsubtopic + ");' class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
+
+        $('#popuptree').append(text);
         $('#newTree'+idsubtopic).jstree(tree);
-        $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
+
 
         $('#newTree'+idsubtopic).bind('ready.jstree',function(event){
             var topicos = chapter["topicos"];
@@ -779,6 +798,33 @@
                 }
             }
         });
+    }
+
+    function filterTree(idsubtopic){
+        var REC = $("#filtro").val();
+        var tree = JSON.parse('{{ json_skill_tree | escapejs }}');
+        var info = tree['core']['data'];
+
+        //Muestra todos los nodos
+        $("#newTree" + idsubtopic).jstree("show_all");
+
+        //Si se filtra por habilidades, esconde todos los nodos tipo video.
+        if(REC == "skills"){
+            for (var i = 0; i < info.length; i++) {
+                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined"){
+                    $("#newTree" + idsubtopic).jstree("hide_node","#" + info[i]['id']);
+                }
+            }        
+        }
+        //Si se filtra por videos, esconde todos los nodos tipo habilidad.
+        else if(REC == "videos"){
+            for (var i = 0; i < info.length; i++) {
+                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
+                    $("#newTree" + idsubtopic).jstree("hide_node","#" + info[i]['id']);
+
+                }
+            }
+        }
     }
 
     function valorfiltro(valor, idtopic, idsubtopic){
