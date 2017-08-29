@@ -46,10 +46,11 @@
 		transition:  background 0.3s ease-in-out;
 	}
 
-	#topbar ul.tab li a.select{
+	#topbar ul.tab li a.select2{
 		border-bottom: 1px solid #f7f7f7;
 		background: #f7f7f7;
 		color: #56861f;
+		pointer-events: none;
 	}
 
 	#topbar ul.tab li:hover a {
@@ -69,44 +70,16 @@
 </style>
 
 <script>
-	// var cache = [];
-	var trees = [];
+	var json_configs = JSON.parse('{{ json_data | escapejs }}');
+	var configs = json_configs.assesmentConfigs;
 
 	function getTopicTree(id, content=""){
 		var data = JSON.parse('{{ json_data | escapejs }}');
 
-		console.log(data["assesmentConfigs"][0]["config_skills"][0]);
-
 		if (content == "") var topictree = JSON.parse('{{ topictree | escapejs }}');	
 		else var topictree = content;
-		/*
-		if (id == 0){
-			console.log(cache);
-			$('#topictree0').bind('ready.jstree',function(event){
-	            $('#topictree0').jstree("select_node", cache);
-        	});
-		}
-		*/
-		$('#topictree'+id).on('changed.jstree', function (e, data) {
-		    selected_skills = $('#topictree'+id).jstree().get_bottom_selected(true);
-		    selected_skills_id = new Array();
-		    cache = [];
-
-		    //Get selected skills (leaves of the topictree json)
-		    for (i=0;i< selected_skills.length;i++){
-		    	if (selected_skills[i].data){
-		    		//cache.push(selected_skills[i].id);
-		    		selected_skills_id.push( {'skill_id':selected_skills[i].data["skill_id"], id:selected_skills[i].id} );
-		    	}
-		    }
-		    //Remove duplicate skill id's in case they have been associated to more than one selected subskill
-		    selected_skills_id = selected_skills_id.filter(
-		    						function( item, index, inputArray ) {
-										return inputArray.indexOf(item) == index;
-									});
-			$('input[name="skills'+id+'"]').val(JSON.stringify(selected_skills_id));
-
-	    }).jstree(topictree);
+		
+		$('#topictree'+id).jstree(topictree);
 		
 		var to = false;
 	    $('#skill_search'+id).keyup(function () {
@@ -118,26 +91,9 @@
 		});
 
 		$('#topictree'+id).jstree(true).hide_icons();
-
-		$('#topictree'+id).bind('ready.jstree',function(event){
-			console.log("ready");
-			if (id != 0){
-				for (i = 0; i < data["assesmentConfigs"].length; i++){
-					if (data["assesmentConfigs"][i] == id){
-						console.log("paso!");
-						for (k = 0; k < data["assesmentConfigs"][i]["config_skills"]; k++){
-							$('#topictree'+id).jstree("select_node", data["assesmentConfigs"][i]["config_skills"][k]["id_subtopic_skill_id"]);
-							break; break;
-						}
-					}
-				}
-			}
-		});
 	}
 
-	var json_configs = JSON.parse('{{ json_data | escapejs }}');
-	var configs = json_configs.assesmentConfigs;
-	var totalTree = 0;
+	
 
 	function slidear(id){
 		if (id==0){
@@ -200,9 +156,9 @@
 <div class="container">
 	<div id="sidebar">
     	<ul>
-    		<li id="pestana0" style="display:none"><a href='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Pauta</a></li>
+    		<li id="pestana0" style="display:none"><a href='#' onclick='javascript:cambiarPestanna(pestana0);' class="select"><i class="plus"></i> Nueva Pauta</a></li>
         	{% for config in assesment_configs %}  
-				<li id="pestana{{ forloop.counter }}" style="display:none"><a href='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
+				<li id="pestana{{ forloop.counter }}" style="display:none"><a href='#' onclick='javascript:cambiarPestanna(pestana{{ forloop.counter }});' >{{ config.name }}</a></li>
 			{% endfor %}
         </ul>
     </div>
@@ -225,7 +181,6 @@
 						<input name="importance_skill_level0" value="50" type="hidden">
 				    	<input name="importance_completed_rec0" value="50" type="hidden">
 				    	<input name="id" type="hidden" value="0">
-				        <input name="skills0" type="hidden" value="[]">
 						<br>
 						<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
 						<div id="skill_level_div0" class="percentage">
@@ -245,30 +200,30 @@
 						<br>
 						<div id="legends" style="margin-top:0px;width:100%;height:50px"><p style="text-align:left;float:left;width:120px;margin-top:0px">Nivel de Dominio Logrado</p><p style="text-align:right;float:right;width:110px;margin-top:0px;margin-right:7%">Habilidades Practicadas</p></div>
 						<script>slidear(0);</script>
-						<div style="float:left;margin-left:125px"><a href='javascript:confirmSaveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
+						<div style="float:left;margin-left:125px"><a href='#' onclick='javascript:confirmSaveConfig()' class="kui-button kui-button-plain kui-button-primary">Guardar Pauta</a></div>
 					</form>
 				</div>
 				<div id="skills">
 					<h3>Habilidades:</h3>
 					<div id="topbar" >
 						<ul class="tab">
-							<li><a href='#' id="khanTreeButton" onclick='javascript:showNewTree(0);' class="select">Por Contenidos</a></li>
-							<li><a href='#' id="currTreeButton" onclick='javascript:showNewTree(1);'>Por Curriculo</a></li>
-							<li><a href='#' id="classTreeButton" onclick='javascript:showNewTree(2);'>Por Plan</a></li>
+							<li><a id="khanTreeButton0" href='#' onclick='javascript:showNewTree(0,0);' class="select2">Por Contenidos</a></li>
+							<li><a id="currTreeButton0" href='#' onclick='javascript:showNewTree(1,0);'>Por Curriculo</a></li>
+							<li><a id="classTreeButton0" href='#' onclick='javascript:showNewTree(2,0);'>Por Plan</a></li>
 						</ul>
 					</div>
 					<br>
-					<div id="class_combo">
-						<select id="class_select" onchange="classSelect();" class='ui-corner-all simple-input search-input blur-on-esc approvalName'  style="min-width: 400px; margin: 10px 2px;">
+					<div id="class_combo0" style="display:none">
+						<select id="class_select0" onchange="classSelect(0);" class='ui-corner-all simple-input search-input blur-on-esc approvalName'  style="min-width: 400px; margin: 10px 2px;">
 						<option selected value="-1"><i>Selecciona un curso</i></option>
 						{% for class in class_list %}
 							<option value="{{ class.class_subject__id_class_subject }}">{{ class.level }} {{ class.letter }} {{ class.year }}</option>
 						{% endfor %}
 						</select>
 					</div>
-					<div id="curriculum_combo">
-						<select id="curriculum_select" onchange="curriculumSelect()" class='ui-corner-all simple-input search-input blur-on-esc approvalName' style="width: 100%; margin: 10px 2px;">
-						<i><option selected value="-1">Selecciona un Curriculo</option></i>
+					<div id="curriculum_combo0" style="display:none">
+						<select id="curriculum_select0" onchange="curriculumSelect(0)" class='ui-corner-all simple-input search-input blur-on-esc approvalName' style="width: 100%; margin: 10px 2px;">
+						<i><option selected value="-1">Selecciona un curriculo</option></i>
 						{% for curr in curriculum_list %}
 							<option value="{{ curr.id_chapter_mineduc }}"> {{ curr.level }} {{ curr.year }}</option>
 						{% endfor %}
@@ -298,8 +253,6 @@
 					<input name="forloop" value="{{ forloop.counter }}" type="hidden">
 					<input name="importance_skill_level{{ forloop.counter }}" type="hidden">
 			    	<input name="importance_completed_rec{{ forloop.counter }}" type="hidden">
-			        <input name="skills{{ forloop.counter }}" id="skillsInput{{ forloop.counter }}" type="hidden" value="[]">
-			        <!--<input name="subtopic_skill{{ forloop.counter }}" id="subtopic_skillInput{{ forloop.counter }}" type="hidden" value="[]">-->
 			        
 					<br>
 					<h4 style="text-align:center">% de Importancia para la Evaluación</h4>
@@ -327,13 +280,14 @@
 			</div>
 			
 			<div id="skills">
-				<h3>Habilidades</h3>
+				<h3>Habilidades:</h3>
+				
 				<div id="topictree{{ forloop.counter }}" class="scroll topictree">
 				<ul class='ulSkill' id='ulSkill{{ forloop.counter }}'></ul></div>
 				<script>
 					skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
-					for (i=0;i<skills.length;i++){ 
-						$("#ulSkill{{ forloop.counter }}").append("<li class='liSkill'>"+(skills[i].name_spanish)+"</li>");
+					for (i = 0; i < skills.length; i++){
+						$("#ulSkill{{ forloop.counter }}").append("<li class='liSkill'>" + skills[i] + "</li>");
 					}
 		        </script>  
 			</div>
@@ -341,46 +295,52 @@
 					{% else %}
 
 					<div style="float:left;margin-left:50px">
-						<a href='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="editConfigButton{{ forloop.counter }}">Editar Pauta</a>
-						<a href='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="deleteConfigButton{{ forloop.counter }}">Eliminar Pauta</a>
+						<a href='#' onclick='javascript:openEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="editConfigButton{{ forloop.counter }}">Editar Pauta</a>
+						<a href='#' onclick='javascript:deleteConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" id="deleteConfigButton{{ forloop.counter }}">Eliminar Pauta</a>
 					</div>
 					<div style="float:left;margin-left:50px">
-						<a href='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
-						<a href='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
+						<a href='#' onclick='javascript:cancelEditConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="cancelEditConfigButton{{ forloop.counter }}">Cancelar</a>
+						<a href='#' onclick='javascript:editConfig({{ forloop.counter }})' class="kui-button kui-button-plain kui-button-primary" style="display:none" id="saveConfigButton{{ forloop.counter }}">Guardar Cambios</a>
 					</div>
 				</form>
+				<input id="isEditable{{ forloop.counter }}" type="hidden" value="false">
 			</div>
 
 			<div id="skills">
 				<h3>Habilidades</h3>
+				<div id="topbar" >
+					<ul class="tab">
+						<li><a id="khanTreeButton{{ forloop.counter }}" href='#' onclick='javascript:showNewTree(0,{{ forloop.counter }});' class="select2">Por Contenidos</a></li>
+						<li><a id="currTreeButton{{ forloop.counter }}" href='#' onclick='javascript:showNewTree(1,{{ forloop.counter }});'>Por Curriculo</a></li>
+						<li><a id="classTreeButton{{ forloop.counter }}" href='#' onclick='javascript:showNewTree(2,{{ forloop.counter }});'>Por Plan</a></li>
+					</ul>
+				</div>
+				<br>
+				<div id="class_combo{{ forloop.counter }}" style="display:none">
+					<select id="class_select{{ forloop.counter }}" onchange="classSelect({{ forloop.counter }});" class='ui-corner-all simple-input search-input blur-on-esc approvalName'  style="min-width: 400px; margin: 10px 2px;">
+					<option selected value="-1"><i>Selecciona un curso</i></option>
+					{% for class in class_list %}
+						<option value="{{ class.class_subject__id_class_subject }}">{{ class.level }} {{ class.letter }} {{ class.year }}</option>
+					{% endfor %}
+					</select>
+				</div>
+				<div id="curriculum_combo{{ forloop.counter }}" style="display:none">
+					<select id="curriculum_select{{ forloop.counter }}" onchange="curriculumSelect({{ forloop.counter }})" class='ui-corner-all simple-input search-input blur-on-esc approvalName' style="width: 100%; margin: 10px 2px;">
+					<i><option selected value="-1">Selecciona un Curriculo</option></i>
+					{% for curr in curriculum_list %}
+						<option value="{{ curr.id_chapter_mineduc }}"> {{ curr.level }} {{ curr.year }}</option>
+					{% endfor %}
+					</select>
+				</div>
 				<div id="search">
 					<label for='skill_search{{ forloop.counter }}'>Buscar: </label><input id="skill_search{{ forloop.counter }}" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" disabled>
 				</div>
 
-				<div id="topictree{{ forloop.counter }}" class="scroll topictree"><script>getTopicTree({{ forloop.counter }});</script></div>
-				<script>
-					totalTree+=1;
-					aux = {{ forloop.counter }}
-					trees.push(aux);
-					skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
-					id_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"];
-					config_skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["config_skills"];
-					var skills{{ forloop.counter }} = []
-					for (i=0;i<config_skills.length;i++){ 
-						//alert(id_skills[i].id_skill_name_id);
-						skills{{ forloop.counter }}.push(config_skills[i])
-						//$("#topictree1").jstree('select_node', '#skill98')
-					//alert('hola')
-						//$("#topictree{{ forloop.counter }}").append("<li>"+(skills[i].name_spanish)+"</li>")
-					}
-					document.getElementById("skillsInput{{ forloop.counter }}").value = JSON.stringify(json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills"]);				
-				</script>
+				<div id="topictree{{ forloop.counter }}" class="scroll topictree"></div>
 			</div>
-
 					{% endif %}
 
 		</div> 
-
 		{% endfor %}
 
 	</div>
@@ -428,47 +388,61 @@
 </div> <!-- cerrar div principal del home  -->
 
 <script>
-	function showNewTree(value){
-		$("#curriculum_combo").hide();
-		$("#class_combo").hide();
+	//Muestra el arbol de la pauta id, dependiendo el tipo del arbol (Khan, Curriculo Ministerial o Planificaciones).
+	function showNewTree(type, id){
+		$("#curriculum_combo" + id).hide();
+		$("#class_combo" + id).hide();
 
-		$(document.getElementsByClassName("select")).removeClass("select");
+		$(document.getElementsByClassName("select2")).removeClass("select2");
 
-		$("#topictree0").empty().jstree("destroy");
+		$("#topictree" + id).empty().jstree("destroy");
+
+		$("#curriculum_select" + id).val(-1);
+		$("#class_select" + id).val(-1);
 
 		//Orden tipo Khan.
-		if (value == 0){
-			$("#khanTreeButton").addClass("select");
-			$("#topictree0").css("height","400px")
-			getTopicTree(0);
+		if (type == 0){
+			$("#khanTreeButton" + id).addClass("select2");
+			$("#topictree" + id).css("height","400px");
+			getTopicTree(id);
+			if(id != 0){
+				$('#topictree' + id).bind('ready.jstree',function(event){
+					fillTreeNodes(id);
+				});
+			}
 		}
 		//Curriculum
-		else if (value == 1){
-			$("#curriculum_combo").show();
-			$("#topictree0").css("height","350px")
-			$("#currTreeButton").addClass("select");
+		else if (type == 1){
+			$("#curriculum_combo" + id).show();
+			$("#currTreeButton" + id).addClass("select2");
+			$("#topictree" + id).css("height","350px");
 		}
 		//Clases
-		else if (value == 2){
-			$("#class_combo").show();
-			$("#topictree0").css("height","350px")
-			$("#classTreeButton").addClass("select");
+		else if (type == 2){
+			$("#classTreeButton" + id).addClass("select2");
+			$("#class_combo" + id).show();
+			$("#topictree" + id).css("height","350px");	
 		}
 	}
 
-	function curriculumSelect(){
-		var id = $("#curriculum_select").val();
-
-		if (id == -1) return;
+	//Recrea el arbol de id con la estructura curricular
+	function curriculumSelect(id = 0){
+		var selection = $("#curriculum_select" +  id).val();
+		if (selection == -1) return;		
 
 		$.ajax({
 			url: "{% url 'AssesmentConfigs:recibir_curriculo' %}",
 			type: "GET",
-			data: { "curriculum_id" : id,
+			data: { "curriculum_id" : selection,
 			},
 			success: function(response){
-				$("#topictree0").empty().jstree("destroy");
-				getTopicTree(0,response);
+				$("#topictree" + id).empty().jstree("destroy");
+				getTopicTree(id,response);
+				if(id != 0){
+					$('#topictree' + id).bind('ready.jstree',function(event){
+						fillTreeNodes(id);
+					});
+				}
 			},
 			error: function(response){
 				alert("Error: " + response[0]);
@@ -476,19 +450,52 @@
 		});
 	}
 
-	function classSelect(){
-		var id = $("#class_select").val();
+	//Llena el arbol de id con sus habilidades respectivas.
+	function fillTreeNodes(id){
+		config_skills = json_configs["assesmentConfigs"][id-1]["config_skills"];
+		var skills = [];
 
-		if (id == -1) return;
+		for (i = 0; i < config_skills.length; i++){ 
+			skills.push(config_skills[i]["id_subtopic_skill_id"]);
+		}
+		$('#topictree' + id).jstree("select_node", skills);
+
+		if ($("#isEditable" + id).val() == "false"){
+			disableTree(id);
+		}
+	}
+
+	//Deshabilita los nodos del arbol para impedir seleccionarlos.
+	function disableTree(id){
+		$('#topictree' + id + ' li').each(function(){
+			$('#topictree' + id).jstree("disable_checkbox",this.id);
+		});
+	}
+
+	//Habilita los nodos del arbol para poder editarlos.
+	function enableTree(id){
+		$('#topictree' + id + ' li').each(function(){
+			$('#topictree' + id).jstree("enable_checkbox",this.id);
+		});
+	}
+
+	function classSelect(id = 0){
+		var selection = $("#class_select" +  id).val();
+		if (selection == -1) return;	
 
 		$.ajax({
 			url: "{% url 'AssesmentConfigs:recibir_clase' %}",
 			type: "GET",
-			data: { "class_subject_id" : id,
+			data: { "class_subject_id" : selection,
 			},
 			success: function(response){
-				$("#topictree0").empty().jstree("destroy");
-				getTopicTree(0,response);
+				$("#topictree" + id).empty().jstree("destroy");
+				getTopicTree(id,response);
+				if(id != 0){
+					$('#topictree' + id).bind('ready.jstree',function(event){
+						fillTreeNodes(id);
+					});
+				}
 			},
 			error: function(response){
 				alert("Error: " + response[0]);
@@ -518,25 +525,33 @@
 		mainContent[0].style.height = height2+"px";
 	}
 	
-	function cambiarPestanna(pestanna) {
+	function cambiarPestanna(pestanna){
 		id = (pestanna.id).substring(7);
-		 pestanna = document.getElementById(pestanna.id);
-		 cpestanna = document.getElementById('c' + pestanna.id);
-		 cpestannas = document.getElementsByClassName('cpestanna');
-		 contenidopestanas = document.getElementById('contenidopestanas');
-		 
-		 for (i=0;i<cpestannas.length;i++){
-			 $(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
-			 
-		 }
-		 $(document).ready(function () {
-			 $(document.getElementsByClassName("select")).removeClass("select");
-		     $(cpestanna).css('display', '');
-		     $(pestanna.getElementsByTagName('a')).addClass("select");
-		 });
-		 $(".topictree").getNiceScroll().hide();
-		 $("#topictree"+id).getNiceScroll().show();
-		 $("#topictree"+id).getNiceScroll().resize();
+
+		$("#curriculum_combo" + id).hide();
+		$("#class_combo" + id).hide();
+		
+		if ($('#topictree' + id).length != 0){
+			showNewTree(0,id);
+		}
+
+		pestanna = document.getElementById(pestanna.id);
+		cpestanna = document.getElementById('c' + pestanna.id);
+		cpestannas = document.getElementsByClassName('cpestanna');
+		contenidopestanas = document.getElementById('contenidopestanas');
+
+		for (i=0;i<cpestannas.length;i++){
+			$(contenidopestanas.getElementsByClassName('cpestanna')[i]).css('display', 'none');
+
+		}
+		$(document).ready(function(){
+			$(document.getElementsByClassName("select")).removeClass("select");
+			$(cpestanna).css('display', '');
+			$(pestanna.getElementsByTagName('a')).addClass("select");
+		});
+		$(".topictree").getNiceScroll().hide();
+		$("#topictree"+id).getNiceScroll().show();
+		$("#topictree"+id).getNiceScroll().resize();
 	}
 
 	function reloadLocation(){
@@ -564,16 +579,29 @@
 		$("#acceptEdit").remove();
 		$("#cancelEdit").remove();
 		$("#saveNewConfig").css('display','');
-		$("#saveNewConfig").append("<a href='javascript:saveConfig(1)' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
-		$("#saveNewConfig").append("<a href='javascript:saveConfig(0)' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
+		$("#saveNewConfig").append("<a href='#' onclick='javascript:saveConfig(1)' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
+		$("#saveNewConfig").append("<a href='#' onclick='javascript:saveConfig(0)' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
 	}
 
-	var auxResponse;
 	function saveConfig(answer){
 		//alert("intentando guardar");
 		if(answer==1){
 			$("#popup").append($('#profile-throbber2').css('display',''));
 			$("#saveNewConfig").css('display','none');
+
+			var select = $("#topictree0").jstree("get_bottom_selected", true);
+			var dictionary = [];
+
+			for (i = 0; i < select.length; i++) {
+	            if (typeof select[i]["data"] != "undefined"){
+	            	dictionary.push({
+	            		skill_id: select[i]["data"]["skill_id"],
+	            		id: select[i]["id"]
+	            	});
+	            }
+            }
+
+            $("#form0").append("<input name='skills0' type='hidden' value='" + JSON.stringify(dictionary) + "'>")
 			$.ajax({
 				url: "{% url 'AssesmentConfigs:nueva_configuracion' %}",
 				type: "POST",
@@ -587,8 +615,7 @@
 						$("#hover").fadeIn();
 						$("#popup").fadeIn();
 						$("#popup").append("<p class='response'>"+response+"</p>");
-						auxResponse = response;
-						if (auxResponse == "Pauta guardada correctamente"){
+						if (response == "Pauta guardada correctamente"){
 							$("#hover").css('pointer-events','none');
 							$("#close").css('pointer-events','none');
 							$("a").css('pointer-events','none');
@@ -622,28 +649,24 @@
 	}
 
 	function openEditConfig(id){
-		//if (configs[id-1]["applied"]==false){
-			cpestana = document.getElementById('cpestana'+id);
-			inputs = cpestana.getElementsByTagName('input');
-			for (i=0;i<inputs.length;i++){
-				inputs[i].removeAttribute("disabled");
-			}
-			$( "#slider"+id ).slider( "enable" );
-			$(document.getElementById('cancelEditConfigButton'+id)).css('display', '');
-			$(document.getElementById('saveConfigButton'+id)).css('display', '');
-			$(document.getElementById('editConfigButton'+id)).css('display', 'none');
-			$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
-			topictreeId='#topictree'+id
-			$(topictreeId+(" ul")).css('pointer-events', '');
-			$(topictreeId).css('opacity', '1');
-		//}
-		/*else{
-			$('.response').remove();
-			$("#hover").fadeIn().css('display', '');
-			$("#popup").fadeIn().css('display', '');
-			$("#popup").append("<p class='response'>Pauta aplicada, no se puede modificar</p>");
-		}*/
+		cpestana = document.getElementById('cpestana'+id);
+		inputs = cpestana.getElementsByTagName('input');
+		for (i=0;i<inputs.length;i++){
+			inputs[i].removeAttribute("disabled");
+		}
+		$( "#slider"+id ).slider( "enable" );
+		$(document.getElementById('cancelEditConfigButton'+id)).css('display', '');
+		$(document.getElementById('saveConfigButton'+id)).css('display', '');
+		$(document.getElementById('editConfigButton'+id)).css('display', 'none');
+		$(document.getElementById('deleteConfigButton'+id)).css('display', 'none');
+		topictreeId = '#topictree'+id
+		$(topictreeId+(" ul")).css('pointer-events', '');
+		$(topictreeId).css('opacity', '1');
+
+		$("#isEditable" + id).val("true");
+		enableTree(id);
 	}
+
 	function cancelEditConfig(id){
 		cpestana = document.getElementById('cpestana'+id);
 		inputs = cpestana.getElementsByTagName('input');
@@ -658,14 +681,20 @@
 		$(document.getElementById('deleteConfigButton'+id)).css('display', '');
 		slidear(id);
 		topictreeId='#topictree'+id
-		$(topictreeId+(" ul")).css('pointer-events', 'none');
+		$(topictreeId + " ul").css('pointer-events', 'none');
 		$(topictreeId).css('opacity', '0.8');
 		
 		inputs[1].removeAttribute("value");
 		var name = document.createAttribute("value");
 		name.value = configs[id-1]["name"];
 		inputs[1].setAttributeNode(name);
+
+		$(topictreeId).jstree("deselect_all");
+		
+		$("#isEditable" + id).val("false");
+		fillTreeNodes(id);
 	}
+
 	function editConfig(id){
 		if (configs[id-1]["applied"]==false){
 			$("#close").hide();
@@ -677,21 +706,38 @@
 			$("#acceptEdit").remove();
 			$("#cancelEdit").remove();
 			$("#editConfig").css('display','');
-			$("#editConfig").append("<a href='javascript:confirmEdit(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
-			$("#editConfig").append("<a href='javascript:confirmEdit(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
+			$("#editConfig").append("<a href='#' onclick='javascript:confirmEdit(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptEdit'>Aceptar</a>");
+			$("#editConfig").append("<a href='#' onclick='javascript:confirmEdit(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelEdit'>Cancelar</a>");
 		}
 		else{
 			alert("no se puede borrar");
 		}
 	}
+
 	function confirmEdit(answer,id){
 		if (answer==1){
 			$("#popup").append($('#profile-throbber2').css('display',''));
 			$("#editConfig").css('display','none');
+
+			var select = $("#topictree" + id).jstree("get_bottom_selected", true);
+			var dictionary = [];
+
+			for (i = 0; i < select.length; i++) {
+	            if (typeof select[i]["data"] != "undefined"){
+	            	dictionary.push({
+	            		skill_id: select[i]["data"]["skill_id"],
+	            		id: select[i]["id"]
+	            	});
+	            }
+            }
+
+            $("#form"+id).append("<input name='skills"+id+"' id='skillsInput" + id + "' type='hidden' value='" + JSON.stringify(dictionary) + "'>")
+
 			$.ajax({
 				url: "/inicio/pautas/editar/"+(configs[id-1]["id_assesment_config"].toString()).concat("/"),
 				type: "POST",
 				data: $("#form"+id).serialize(),
+
 					success: function(response){
 						$('#profile-throbber2').fadeOut(750);
 						$('.response').remove();
@@ -738,8 +784,8 @@
 			$('#saveNewConfig').css('display', 'none');
 			$("#acceptDelete").remove();
 			$("#cancelDelete").remove();
-			$("#deleteConfig").append("<a href='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
-			$("#deleteConfig").append("<a href='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
+			$("#deleteConfig").append("<a href='#' onclick='javascript:confirmDelete(1,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='acceptDelete'>Aceptar</a>");
+			$("#deleteConfig").append("<a href='#' onclick='javascript:confirmDelete(0,"+id+")' class='kui-button kui-button-plain kui-button-primary' id='cancelDelete'>Cancelar</a>");
 		}
 		else{
 			$('.response').remove();
@@ -797,8 +843,6 @@
 	}
 	$(document).ready(function(){
 		setMainContentHeight();
-		$("#curriculum_combo").hide();
-		$("#class_combo").hide();
 
 		$("#contenidopestanas").fadeIn();
 		$("li").fadeIn();
@@ -813,7 +857,6 @@
 	        $("#hover").fadeOut();
 	    	$("#popup").fadeOut();
 	    });
-	  	window.setTimeout(selectTree, 500);  
 	});
 
 </script>
@@ -824,30 +867,6 @@
     $(document).ready(function () {
     	$(".topictree").niceScroll({ cursorwidth:'10px', autohidemode: true, cursorcolor:'#D9D9D9', zindex:'1000' })
     });
-
-    function selectTree(){
-	    //alert(totalTree)
-	    for(j=0;j<trees.length;j++){
-	    //alert(skills1.length);
-	    	skillsId = eval('skills'+trees[j]);
-	    	//alert(skillsId)
-	    	topictreeId = '#topictree'+trees[j];
-	    	//alert(topictreeId);
-		    for(k=0;k<skillsId.length;k++){
-		    	//alert(k);
-		    	//alert(skills1[k].id_subtopic_skill_id);
-		    	//alert(skillsId)
-		    	skill = '#'+skillsId[k].id_subtopic_skill_id;
-		    	//alert(skill)
-		    	//console.log(skill);
-		    	$(topictreeId).jstree('select_node', skill);
-		    	//alert(k);
-		    }
-		    $(topictreeId).css('opacity', '0.8');
-		    $(topictreeId+(" ul")).css('pointer-events', 'none');
-		    $(topictreeId+(" li")).css('pointer-events', '');
-		}
-	}
 
 	$('#pautas').addClass('active selected');
 

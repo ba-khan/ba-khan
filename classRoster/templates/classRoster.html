@@ -87,15 +87,15 @@ Nominas
 			{% for class in classes %}
 			{% if class.level > 8 %}
 				{% if class.additional %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} {{class.additional}} </option>
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}};{{class.class_subject__curriculum}}">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} {{class.additional}} </option>
 				{% else %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} </option>
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_;{{class.class_subject__curriculum}}">{{class.level|add:-8}} Medio {{class.letter}} {{class.year}} </option>
 				{% endif %}
 			{% else %}
 				{% if class.additional %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}}">{{class.level}} Básico {{class.letter}} {{class.year}} {{class.additional}} </option>
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_{{class.additional}};{{class.class_subject__curriculum}}">{{class.level}} Básico {{class.letter}} {{class.year}} {{class.additional}} </option>
 				{% else %}
-				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_">{{class.level}} Básico {{class.letter}} {{class.year}} </option>
+				<option value="{{class.id_class}},{{class.level}}.{{class.letter}}-{{class.year}}_;{{class.class_subject__curriculum}}">{{class.level}} Básico {{class.letter}} {{class.year}} </option>
 				{% endif %}
 			{% endif %}
 			{% endfor %}
@@ -192,7 +192,7 @@ Nominas
 		<label for="curriculum">Curriculo: </label>
 		<select id="curriculum" style="margin-top: 12px; margin-left: 12px; width: 366px" class="ui-corner-all placeholder simple-input blur-on-esc">
 		{% for curriculum in curriculums %}
-			<option value="{{ curriculum.id_chapter_mineduc }}">{{ curriculum.year }} - {{ curriculum.level }}<option>
+			<option value="{{ curriculum.id_chapter_mineduc }}">{{ curriculum.year }} - {{ curriculum.level }}</option>
 		{% endfor %}
 		</select>
 
@@ -254,6 +254,8 @@ $(document).ready(function(){
 	    $("#hover").fadeOut();
 		$("#popup").fadeOut();
 	});
+
+	$("#curriculum").prop("selectedIndex",-1);
 
 	drawNiceScrolls();
 
@@ -519,8 +521,12 @@ function viewClass(){
 	var level = selectClass.substring(selectClass.indexOf(",")+1,selectClass.indexOf("."));
 	var letter = selectClass.substring(selectClass.indexOf(".")+1,selectClass.indexOf("-"));
 	var year = selectClass.substring(selectClass.indexOf("-")+1,selectClass.indexOf("_"));
-	var additional = selectClass.substring(selectClass.indexOf("_")+1,selectClass.length);
+	var additional = selectClass.substring(selectClass.indexOf("_")+1,selectClass.indexOf(";"));
+	var curriculum_id = selectClass.substring(selectClass.indexOf(";")+1,selectClass.length);
 	if (additional == "") additional = " ";
+
+	console.log(selectClass);
+	console.log(id_class);
 
 	var classObj = new Object();
 	classObj.idClass = id_class;
@@ -541,11 +547,8 @@ function viewClass(){
 			$("#letter").val(letter); // $("#letter").prop('disabled', true);
 			$("#year").val(year); // $("#year").prop('disabled', true);
 			$("#additional").val(additional); // $("#additional").prop('disabled', true);
-
-			if(response[response.length-1][0] != null){
-				$("#curriculum").val(response[response.length-1][0]['fields']['id_chapter_mineduc']).change();
-				console.log("CURRICULO ENCONTRADO!");
-			}
+			if(curriculum_id != "") $("#curriculum").val(curriculum_id).change();
+			else $("#curriculum").val(-1).change();
 			
 			$("input:radio[value='"+response[response.length-2][0]['fields']['name']+"']").prop("checked", true);
 			$("#teacher").val(response[response.length-2][0]['fields']['name']);
@@ -561,7 +564,7 @@ function viewClass(){
 			}, 750); 
 		},
 		error: function(response,error){
-			console.log(error);
+			console.log("Error en la funcion viewClass():" + error);
 		}
 	});
 }

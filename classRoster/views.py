@@ -198,7 +198,7 @@ def getRoster(request):
     institution = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
     students = Student.objects.filter(id_institution_id=institution).order_by('name')
 
-    classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
+    classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).values('id_class','level', 'letter', 'year', 'additional', 'class_subject__curriculum').order_by('-year','level','letter')
     #for clas in classes:
         #a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
         #for b in a:
@@ -311,6 +311,7 @@ def viewClass(request):
     if request.method == 'POST':
         try:
             classObj = request.POST
+
             clas = Class.objects.get(id_class=classObj['idClass'])
             students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id')).order_by('name')
             teacher = Teacher.objects.filter(kaid_teacher=Class_Subject.objects.filter(id_class_id=classObj['idClass']).values('kaid_teacher_id'))
@@ -351,10 +352,12 @@ def editClass(request):
             year = int(newClass["year"])
             additional = newClass["additional"]
             id_class = newClass["idClass"]
-            if additional=="":
+            if additional == "":
                 additional = None
-            print newClass["curriculum"]
-            curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=newClass["curriculum"])
+            if newClass["curriculum"] == "":
+                curriculum = None
+            else:
+                curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=newClass["curriculum"])
             teacher = Teacher.objects.get(name=newClass["teacher"])
             kaid_teacher = teacher.kaid_teacher
             students = newClass.getlist("students[]")
@@ -388,7 +391,7 @@ def editClass(request):
         except Exception as e:
             print "Error en: classRoster/view.py:editClass"
             print repr(e)
-            return HttpResponse('El curso no se pudo editar')
+            return HttpResponse('El curso no se pudo editar.')
 
 
 ##

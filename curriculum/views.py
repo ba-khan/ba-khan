@@ -230,7 +230,7 @@ def newSubtopic(request):
 			return HttpResponse('Objetivo de Aprendizaje guardado correctamente')
 		except Exception as e:
 			print e
-			return HttpResponse("Error al guardar, compruebe que no existe el Objetivo de Aprendizaje")
+			return HttpResponse("Error al guardar, compruebe que no existe el objetivo de aprendizaje")
 	return HttpResponse("Error al guardar")
 
 def updateSubtopic(request):
@@ -239,7 +239,7 @@ def updateSubtopic(request):
 		args = request.POST
 		try:
 			Subtopic_Mineduc.objects.filter(id_subtopic_mineduc=args['subtopic_id']).update(index=args['indice'], description=args['descr'], summary=args['resum'])
-			return HttpResponse('Objetivo de Aprendizaje actualizado correctamente')
+			return HttpResponse('Objetivo de aprendizaje actualizado correctamente')
 		except Exception as e:
 			print e
 			return HttpResponse("Error al guardar, compruebe que no este en uso el indice del Objetivo de aprendizaje")
@@ -265,7 +265,7 @@ def saveVideoExercise(request):
 				except Exception as e:
 					print e
 					continue
-			return HttpResponse('Ejercicios y/o Videos guardados correctamente')
+			return HttpResponse('Ejercicios y videos guardados correctamente')
 		except Exception as e:
 			print e
 			return HttpResponse("Error al guardar")
@@ -281,8 +281,8 @@ def deleteVideoExercise(request):
 			Subtopic_Video_Mineduc.objects.filter(id_subtopic_name_mineduc_id=args['idsubtopic']).delete()
 		except Exception as e:
 			print e
-			return HttpResponse('No se ha podido borrar los videos y/o ejercicios')
-		return HttpResponse('Videos y Ejercicios borrados correctamente')
+			return HttpResponse('No se ha podido borrar los videos o ejercicios')
+		return HttpResponse('Videos y ejercicios borrados correctamente')
 	return HttpResponse("Error al eliminar")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -295,7 +295,7 @@ def deleteSubtopic(request):
 		except Exception as e:
 			print e
 			return HttpResponse('No se ha podido borrar el objetivo de aprendizaje')
-		return HttpResponse('Objetivo de Aprendizaje borrado correctamente')
+		return HttpResponse('Objetivo de aprendizaje borrado correctamente')
 	return HttpResponse('Error al eliminar')
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -385,9 +385,7 @@ def topicTree():
 		skill_id=skill.id_subtopic_skill
 		skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false", "index":skill.id_skill_name.index}
 		sorted(skill_obj, key=skill_obj.get)
-		topictree.append(skill_obj)
-		#id=id+1
-		
+		topictree.append(skill_obj)		
 	
 	topictree_json['core']={'data':topictree}
 	topictree_json_string=json.dumps(topictree_json)

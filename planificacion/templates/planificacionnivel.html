@@ -18,60 +18,31 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
 
 <style>
-    th a:hover { text-decoration: underline; }
-    table.tablaplanning { border-collapse: collapse; border: 1px solid #CCB; width:950px;}
-    table.tablaplanning td, table.tablaplanning th { padding: 5px; border: 1px solid #E0E0E0;}
-    table.tablaplanning th { background: #E5E5E5; text-align: left;}
-    input.tablaplanning { background: red; color: #FDFDFD; }
-
-    table.tablaplanning th {
-      color: #555;
-      background-color: #ccc;
-      border: 1px solid #bbb;
-      text-shadow: 0 1px 0 #eee;
-      vertical-align: bottom;
-      padding: 5px;
-      text-align:center;
-    }
-    table.tablaplanning td {
-    text-align: left;
-    }
-
-    table#tablaplan { border-collapse: collapse; border: 1px solid #CCB; width:800px;}
-    table#tablaplan td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
-    table#tablaplan th { background: #E5E5E5; text-align: left;}
-    table#tablaplan th {
-      color: #555;
-      background-color: #ccc;
-      border: 1px solid #bbb;
-      text-shadow: 0 1px 0 #eee;
-      vertical-align: bottom;
-      padding: 5px;
-      text-align:center;
-    }
-    table#tablaplan td {
-    text-align: left;
-    }
-
     input{
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+        margin-bottom: 10px;
     }
+
     label{
-    margin-right: 10px;
+        margin-right: 10px;
+        width: 95px;
     }
 
     #popup{
-    height:150px;
+        height:150px;
     }
+
     #popuptree{
-    height:650px;
+        height:650px;
     }
+
     #flex-div{
-    display: flex;
-    flex-direction: column;
+        display: flex;
+        flex-direction: column;
     }
+
     #newChapter{
     border: 1px solid #C6D1AD;
       border-radius: 5px;
@@ -102,22 +73,17 @@
       padding-right: 33%;
       text-align: center;
     }
-    label{
-    width: 95px;
-    }
-    input{
-    margin-bottom: 10px;
-    }
 
     #topbar {
-    float:left;
-    position: relative;
-      box-sizing: border-box;
-     -moz-box-sizing: border-box;
-     z-index: 2;
-     height: 50px;
-     /*margin-right: -1px;*/
+        float:left;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        z-index: 2;
+        height: 50px;
+        /*margin-right: -1px;*/
     }
+
     #topbar ul.tab {
       margin: 0;
       padding: 0;
@@ -144,7 +110,7 @@
         border-bottom: 1px solid #f7f7f7;
         background: #f7f7f7;
         color: #56861f;
-
+        pointer-events: none;
     }
     #topbar ul.tab li:hover a {
         background: #f7f7f7;
@@ -172,28 +138,28 @@
     }
 
     .videos,.skills, .descripcion{
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-    width: 800px;
-    height: 100px;
-    max-height: 400px;
-    text-align: left;
-    padding: 10px;
-    margin: 10px;
-    margin-left: 150px;
-    overflow: hidden;
-    overflow: scroll;
-    overflow: auto;
-    background: #F6F7F7;
-    float:left;
-    cursor: default;
-    -moz-user-select':-moz-none;
-      -moz-user-select:none;
-      -o-user-select:none;
-      -khtml-user-select:none; 
-      -webkit-user-select:none;
-      -ms-user-select:none;
-      user-select:none;
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        width: 800px;
+        height: 100px;
+        max-height: 400px;
+        text-align: left;
+        padding: 10px;
+        margin: 10px;
+        margin-left: 150px;
+        overflow: hidden;
+        overflow: scroll;
+        overflow: auto;
+        background: #F6F7F7;
+        float:left;
+        cursor: default;
+        -moz-user-select':-moz-none;
+        -moz-user-select:none;
+        -o-user-select:none;
+        -khtml-user-select:none; 
+        -webkit-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
     }
 
     .bloque-info{
@@ -306,6 +272,13 @@
             <li><a id='tab_unidad_{{ top.id_topic_mineduc }}' style="cursor: pointer; min-height 55px" href='#' onclick="cambiarUnidad({{ top.id_topic_mineduc }}); return false;">
                 Unidad {{ top.index }}
             </a></li>
+            {% if forloop.first %}
+                <script>
+                    $(document).ready(function(){
+                        cambiarUnidad({{ top.id_topic_mineduc }});
+                    });
+                </script>
+            {% endif %}
         {% endfor %}
     </ul>
 </div>
@@ -325,7 +298,7 @@
 
                         <div class='class-row' style='margin-left: 20px;'>
                             <label for='newName'>Nombre de la clase: </label>
-                            <input required id='newName' name='class_name_input' type='text' style='width: 74%; float:right; margin-right: 20px;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                            <input id='newName' name='class_name_input' type='text' style='width: 74%; float:right; margin-right: 20px;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
                         </div>
 
                         <div class='class-block'>
@@ -460,7 +433,6 @@
             $("#popup").fadeOut();
             $("#popuptree").fadeOut();
         });
-        $('#contenido_pagina_top').css('display', 'none');
      });
 
     function cambiarUnidad(unitid){
@@ -689,7 +661,7 @@
 
                 $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree("+ classid + "," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
                 $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 50px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveEditedPlan(" + classid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Guardar</a></div>");
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid +"); return false;' class='kui-button kui-button-plain kui-button-primary'>Volver</a></div>");
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid +"); return false;' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a></div>");
             }
             $("#form-window").show();
         }
@@ -920,12 +892,15 @@
             text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'>";
         text += "</div>";
 
-        text += "<div id='checkbox' style='float:left; width: 48%'; text-align: left; margin-left: -120px>";
-            text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 8px'>";
-            text += "Mostrar Recomendados";
+        text += "<div id='checkbox' style='float:left; vertical-align: middle; width: 40%; height:32px; text-align: left; margin-bottom: 4px; margin-left: 16px'>";
+            text += "<span style='vertical-align: middle'>";
+            text += "<label for='recomendar' style='vertical-align: middle'>";
+            text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 18px; height: 18px; vertical-align: top;'>";
+            text += "Mostrar Recomendados</label>";
+            text += "</span>";
         text += "</div>";
 
-        text += "<div style='float:right; width: 48%; text-align: right; margin-right: 30px'>";
+        text += "<div style='float:right; width: 47%; height:32px; text-align: right; margin-right: 30px; margin-bottom: 4px'>";
             text += "Objetivo de aprendizaje seleccionado" + oatext;
         text += "</div>";
         

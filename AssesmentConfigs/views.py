@@ -32,7 +32,6 @@ import json
 ##
 @login_required()
 def getTeacherAssesmentConfigs(request):#url configuraciones
-    request.session.set_expiry(1000)
     assesment_configs = Assesment_Config.objects.filter(kaid_teacher=request.user.user_profile.kaid).order_by('-id_assesment_config')
 
     json_array=[]
@@ -56,17 +55,16 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
         config_json["assesment_skills"]=[]
         config_json["assesment_skills_spanish"]=[]
         config_json["config_skills"]=[]
+
         for i in range(len(assesment_skills)):
             #print config_skills[i]
             skills = Skill.objects.filter(id_skill_name=assesment_skills[i]['id_skill_name_id']).values('name_spanish')
             config_json["assesment_skills"].append(assesment_skills[i])
-            #config_json["assesment_skills_spanish"].append(skills[i])
             config_json["assesment_skills_spanish"].append(skills[0]['name_spanish'])
-            #config_json["config_skills"].append(config_skills[i])
+
         for j in range(len(config_skills)):
-            #print config_skills[j]
             config_json["config_skills"].append(config_skills[j])
-        #print config_json["assesment_skills"]
+            
         json_array.append(config_json)
     
     json_dict={"assesmentConfigs":json_array}
@@ -101,28 +99,33 @@ def getTeacherAssesmentConfigs(request):#url configuraciones
 ##
 def editAssesmentConfig(request,id_assesment_config):
     if request.method == 'POST':
-        args = request.POST
-        aux= args['forloop']
-        assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
-        skills_selected = eval(args['skills'+aux])
-        #print skills_selected
-        assesment_config.name=args['name']
-        assesment_config.approval_percentage=args['approval_percentage']
-        assesment_config.importance_skill_level=args['importance_skill_level'+aux]
-        assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
+        try:
+            args = request.POST
+            aux= args['forloop']
+            assesment_config = Assesment_Config.objects.get(id_assesment_config=id_assesment_config)
 
-        assesment_config.kaid_teacher_id=request.user.user_profile.kaid
-        assesment_config.top_score=0
-        assesment_config.id_subject_name_id='math'
-        assesment_config.applied=False
+            skills_selected = eval(args['skills'+aux])
 
-        assesment_config.save()
-        Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
+            assesment_config.name=args['name']
+            assesment_config.approval_percentage=args['approval_percentage']
+            assesment_config.importance_skill_level=args['importance_skill_level'+aux]
+            assesment_config.importance_completed_rec=args['importance_completed_rec'+aux]
 
-        for skill in skills_selected:
+            assesment_config.kaid_teacher_id=request.user.user_profile.kaid
+            assesment_config.top_score=0
+            assesment_config.id_subject_name_id='math'
+            assesment_config.applied=False
+
+            assesment_config.save()
+            Assesment_Skill.objects.filter(id_assesment_config_id=id_assesment_config).delete()
+            for skill in skills_selected:
+                print skill
                 new_assesment_skill=Assesment_Skill.objects.create(id_assesment_config=assesment_config, id_skill_name_id=skill['skill_id'],id_subtopic_skill_id=skill['id'])
-    return HttpResponse("Pauta editada correctamente")
-
+            return HttpResponse("Pauta editada correctamente")
+        except Exception as e:
+            print "Error en la modificacion de una pauta: AssesmentConfigs/view.py:editAssesmentConfig"
+            print repr(e)
+            return HttpResponse('La pauta no se puede guardar!')
 
 ##
 ## @brief      Esta funcion borra una determinada pauta
