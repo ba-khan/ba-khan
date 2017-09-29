@@ -16,6 +16,7 @@
 <!--<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">-->
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
+<script src="http://d3js.org/d3.v4.js"></script>
 
 <style>
     input{
@@ -74,6 +75,23 @@
       text-align: center;
     }
 
+    #summary-container{
+        display: none;
+        width: 1180px;
+        min-height: 500px;
+        margin-left: 320px;
+        text-align: left;
+    }
+
+    #summary-content{
+        padding-left: 20px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        margin-right: 20px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
     #topbar {
         float:left;
         position: relative;
@@ -92,6 +110,7 @@
     #topbar ul.tab li {
       margin: 0;
     }
+
     #topbar ul.tab li a {
         padding: 15px 20px;
         font-size: 14px;
@@ -231,20 +250,31 @@
         text-align: left;
     }
 
+    .main-content{
+        min-height: 1000px;
+        margin-right: 20px;
+        padding-left: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        width: 100%;
+        float: left;
+        min-width: 700px
+    }
+
     .main-content li{
-    text-align:left;
+        text-align:left;
     }
 
     .main-content h2, h3{
-    text-align: center;
+        text-align: center;
     }
 
     .contenidodhv h2{
-    margin-bottom: 0px;
+        margin-bottom: 0px;
     }
 
     td.mousepointer{
-      cursor: pointer;
+        cursor: pointer;
     }
 
     .class-list{
@@ -253,13 +283,59 @@
         margin-bottom: 10px;
         overflow: hidden;
     }
+
     .class-list:hover{
         margin-top: 10px;
         max-height: 700px;
         margin-bottom: 10px;
         overflow: auto;
     }
-  }
+
+    .box{
+        float: left;
+        width: 9px;
+        height: 9px;
+        margin: 5px;
+        margin-right: 8px;
+        outline: #444444 solid 1px;
+    }
+
+    .late{
+        background: #FF5656;
+    }
+
+    .done{
+        background: green;
+    }
+
+    .not-done{
+        background: blue;
+    }
+
+    .chart rect:first-of-type {
+        color: #fff;
+        stroke: #3994b6;
+        fill: white;
+    }
+
+    text:first-of-type {
+        fill: white;
+        font-family: sans-serif;
+        font-size: 12px;
+    }
+
+    .chart rect:nth-of-type(2) {
+        color: #fff;
+        stroke: transparent;
+        fill: #3994b6;
+    }
+
+    text:nth-of-type(2) {
+        fill: white;
+        font-family: sans-serif;
+        font-size: 12px;
+    }
+
 </style>
 
 <div style="float: right">
@@ -280,138 +356,166 @@
                 </script>
             {% endif %}
         {% endfor %}
+        <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
+            Resumen
+        </a></li>
     </ul>
 </div>
 <br>
 
-<div class="container" style="min-width: 1200px;">
-    <div class="main-content" style="min-height: 1000px; margin-right: 20px; padding-left: 20px; padding-top: 20px; padding-bottom: 20px; width: 100%; float: left; min-width: 700px">
-            <div id="header" class="flex-div"></div>
-            <div id="subheader" class="flex-div"></div>
+<div id="class-container" class="container" style="min-width: 1200px;">
+    <div class="main-content">
+        <div id="header" class="flex-div"></div>
+        <div id="subheader" class="flex-div"></div>
 
-            <div class="container" id="class-panel">
-                <div id="sidebar" class="class-list"></div>
-                <div id="class-window" class="flex-div">
-                    <div id='form-window' class='form' style='overflow: hidden; display: none'>
-                        <form action='' method='post' id='newClass_Form'>{% csrf_token %}
-                        <h3 id='formTitle'>Crear nueva clase</h3>
+        <div class="container" id="class-panel">
+            <div id="sidebar" class="class-list"></div>
+            <div id="class-window" class="flex-div">
+                <div id='form-window' class='form' style='overflow: hidden; display: none'>
+                    <form action='' method='post' id='newClass_Form' autocomplete="off">{% csrf_token %}
+                    <h3 id='formTitle'>Crear nueva clase</h3>
 
-                        <div class='class-row' style='margin-left: 20px;'>
-                            <label for='newName'>Nombre de la clase: </label>
-                            <input id='newName' name='class_name_input' type='text' style='width: 74%; float:right; margin-right: 20px;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                    <div class='class-row' style='margin-left: 20px;'>
+                        <label for='newName'>Nombre de la clase: </label>
+                        <input id='newName' name='class_name_input' type='text' style='width: 74%; float:right; margin-right: 20px;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                    </div>
+
+                    <div class='class-block'>
+                        <div class='class-row'>
+                            <label for='newOA'> Objetivo Asignado: </label>
+                            <select id='newOA' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px; float:right; width: auto;'>
+                            
+                            </select>
+                            <br>
                         </div>
-
-                        <div class='class-block'>
-                            <div class='class-row'>
-                                <label for='newOA'> Objetivo Asignado: </label>
-                                <select id='newOA' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px; float:right; width: auto;'>
-                                
-                                </select>
-                                <br>
-                            </div>
-                            <div class='class-row'>
+                        <div class='class-row'>
+                            {% if isAdmin %}
+                                <input hidden id='newState' value="False">
+                            {% else %}
                                 <label for='newState'>Estado: </label>
                                 <select id='newState' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
                                     <option value='False'>No realizado</option>
                                     <option value='True'>Realizado</option>
                                 </select>
-                            </div>
-                            <div class='class-row'>
-                                <label for='newOpening' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Inicio de la clase: </label>
-                                <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
-                            </div>
-                            <div class='class-row'>
-                                <label for='skill_block'>Habilidades:</label>
-                                <div id='skill_block' style='width: 300px; ' class='bloque-info'>
-                                    <ul id='skill_list'></ul>
-                                </div>
+                            {% endif %}
+                        </div>
+                        <div class='class-row'>
+                            <label for='newOpening' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Inicio de la clase: </label>
+                            <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
+                        </div>
+                        <div class='class-row'>
+                            <label for='skill_block'>Habilidades:</label>
+                            <div id='skill_block' style='width: 300px; ' class='bloque-info'>
+                                <ul id='skill_list'></ul>
                             </div>
                         </div>
-                        <div class='class-block' style='float:right'>
-                            <div class='class-row'>
-                                <label for='newDate'>Fecha: </label>
-                                <select id='newDate_Y' name='class_year_input' style='float:right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                                
-                                </select>
-
-                                <select id='newDate_M' name='class_month_input' onchange='monthChanged(); return false;' style='float:right; margin-right: 8px; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                                
-                                </select>
-
-                                <select id='newDate_D' name='class_day_input' style='float:right; margin-right: 8px; padding-left: 0px; width: auto; margin-left: 10px' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                                
-                                </select>
-                            </div>
-                            <div class='class-row'>
-                                <label for='newDuration'>Duración: </label>
-                                <select id='newDuration' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                                
-                                </select>
-                            </div>
-
-                            <div class='class-row'>
-                                <label for='newClosure' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Cierre de la clase: </label>
-                                <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
-                            </div>
-                            <div class='class-row'>
-                                <label for='video_block'>Videos:</label>
-                                <div id='video_block' style='width: 300px;' class='bloque-info'>
-                                    <ul id='video_list'></ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div id='buttonFieldForm'></div>
-                        </form>
                     </div>
-                    <div id='info-window' style='overflow: hidden; display:none'>
-                        <h3 id="labelTitle"></h3>
+                    <div class='class-block' style='float:right'>
+                        <div class='class-row'>
+                            <label for='newDate'>Fecha: </label>
+                            <select id='newDate_Y' name='class_year_input' style='float:right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                            
+                            </select>
 
-                        <div class='class-block'>
-                            <div class='class-row'>
-                                <label id="labelOA"></label>
+                            <select id='newDate_M' name='class_month_input' onchange='monthChanged(); return false;' style='float:right; margin-right: 8px; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                            
+                            </select>
+
+                            <select id='newDate_D' name='class_day_input' style='float:right; margin-right: 8px; padding-left: 0px; width: auto; margin-left: 10px' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                            
+                            </select>
+                        </div>
+                        <div class='class-row'>
+                            <label for='newDuration'>Duración: </label>
+                            <select id='newDuration' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
+                            
+                            </select>
+                        </div>
+
+                        <div class='class-row'>
+                            <label for='newClosure' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Cierre de la clase: </label>
+                            <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
+                        </div>
+                        <div class='class-row'>
+                            <label for='video_block'>Videos:</label>
+                            <div id='video_block' style='width: 300px;' class='bloque-info'>
+                                <ul id='video_list'></ul>
                             </div>
-                            <div class='class-row'>
+                        </div>
+                    </div>
+                    <div id='buttonFieldForm'></div>
+                    </form>
+                </div>
+                <div id='info-window' style='overflow: hidden; display:none'>
+                    <h3 id="labelTitle"></h3>
+
+                    <div class='class-block'>
+                        <div class='class-row'>
+                            <label id="labelOA"></label>
+                        </div>
+                        <div class='class-row'>
+                            {% if isAdmin %}
+                                <label id="labelStatus" hidden></label>
+                            {% else %}
                                 <label id="labelStatus"></label>
-                            </div>
-                            <div class='class-row'>
-                                <label for='blockInicio'>Descripción de inicio:</label>
-                                <p id='blockInicio' style='width: 300px;' class='bloque-info'></p>
-                            </div>
-                            <div class='class-row'>
-                                <label for='blockSkill'>Habilidades:</label>
-                                <div id='blockSkill' style='width: 300px;' class='bloque-info'>
-                                    <ul id='skill_info'></ul>
-                                </div>
+                            {% endif %}
+                        </div>
+                        <div class='class-row'>
+                            <label for='blockInicio'>Descripción de inicio:</label>
+                            <p id='blockInicio' style='width: 300px;' class='bloque-info'></p>
+                        </div>
+                        <div class='class-row'>
+                            <label for='blockSkill'>Habilidades:</label>
+                            <div id='blockSkill' style='width: 300px;' class='bloque-info'>
+                                <ul id='skill_info'></ul>
                             </div>
                         </div>
-
-                        <div class='class-block' style='float:right'>
-                            <div class='class-row'>
-                                <label id="labelDate"></label>
-                            </div>
-                            <div class='class-row'>
-                                <label id='labelDuration'></label>
-                            </div>
-
-                            <div class='class-row'>
-                                <label for='blockCierre'>Descripción de cierre:</label>
-                                <p id='blockCierre' style='width: 300px;' class='bloque-info'></p>
-                            </div>
-                                <div class='class-row'>
-                                <label for='video_block'>Videos:</label>
-                                <div id='video_block' style='width: 300px;' class='bloque-info'>
-                                    <ul id='video_info'>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div id="buttonFieldInfo"></div>
                     </div>
+
+                    <div class='class-block' style='float:right'>
+                        <div class='class-row'>
+                            <label id="labelDate"></label>
+                        </div>
+                        <div class='class-row'>
+                            <label id='labelDuration'></label>
+                        </div>
+
+                        <div class='class-row'>
+                            <label for='blockCierre'>Descripción de cierre:</label>
+                            <p id='blockCierre' style='width: 300px;' class='bloque-info'></p>
+                        </div>
+                            <div class='class-row'>
+                            <label for='video_block'>Videos:</label>
+                            <div id='video_block' style='width: 300px;' class='bloque-info'>
+                                <ul id='video_info'>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="buttonFieldInfo"></div>
                 </div>
             </div>
         </div>
+    </div>
 
+    </div>
+</div>
+
+<div id="summary-container" class="container">
+    <div id="summary-content" class="main-contentt" style="max-height: 200px;">
+        <h3>Resumen</h3>
+        <label id="teacher_rpLabel"></label><br>
+        <label id="student_count_rpLabel"></label><br>
+        <label id="plan_count_rpLabel"></label><br>
+        <label id="plan_start_date_rpLabel"></label><br>
+        <label id="plan_end_date_rpLabel"></label><br>
+    </div>
+
+    <div id="summary-content" class="main-content" style="height: auto;">
+        <h3>Progreso de unidades</h3>
+        <div id="plan-progress">
+        </div>
     </div>
 </div>
 
@@ -439,6 +543,9 @@
         $('#header').empty();
         $('#subheader').empty();
         $('#class-window').hide();
+
+        $("#class-container").show();
+        $("#summary-container").hide();
 
         var curriculo = JSON.parse('{{ json_data | escapejs }}');
         var topicos = curriculo["topicos"];
@@ -475,6 +582,42 @@
         $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
         $(document.getElementById("tab_unidad_" + unitid)).addClass("tab_select");
         $(document.getElementById("class-window")).addClass("class-window");
+    }
+
+    var firstTimeOpen = true;
+    function mostrarResumen(){
+        $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
+        $(document.getElementById("tab_resumen")).addClass("tab_select");
+        $(document.getElementById("class-window")).addClass("class-window");
+
+        $("#class-container").hide();
+        $("#summary-container").show();
+
+        if(firstTimeOpen){
+            retrieveReport();
+            //firstTimeOpen = false;
+        }
+    }
+
+    function retrieveReport(){
+        $.ajax({
+            url: "{% url 'planificacion:obtener_datos' %}",
+            type: "GET",
+            data: { "subj_class_id" : {{ class_subject }},
+            },
+            success: function(response){
+                $("#teacher_rpLabel").html("Profesor: " + response["teacher_name"])
+                $("#student_count_rpLabel").html("Número de estudiantes: " + response["nStudents"]);
+                $("#plan_count_rpLabel").html("Número de planes realizados: " + response["nPlans"]);
+                $("#plan_start_date_rpLabel").html("Fecha de inicio: " + response["start_date"].join("/"));
+                $("#plan_end_date_rpLabel").html("Fecha final: " + response["end_date"].join("/"));
+
+                loadPlanBar();
+            },
+            error: function(response, error){
+                alert("Error: " + response.length);
+            }
+        });
     }
 
     function filtrarOA(unitid){
@@ -540,6 +683,13 @@
                 for (var s = 0; s < subtopicos.length; s++){
                     if (plan_list[i]['class_subtopic'] == subtopicos[s]['id']){
                         text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                        if(plan_list[i]["late"]){
+                            text += "<div class='box late'></div>";
+                        }else if(plan_list[i]["status"]){
+                            text += "<div class='box done'></div>";
+                        }else{
+                            text += "<div class='box not-done'></div>";
+                        }
                         text += plan_list[i]['class_name'];
                         text += "</a></li>";
                     }
@@ -549,6 +699,13 @@
             for (var i = 0; i < plan_list.length; i++){
                 if (plan_list[i]['class_subtopic'] == selected_oa_id){
                     text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                    if(plan_list[i]["late"]){
+                        text += "<div class='box late'></div>";
+                    }else if(plan_list[i]["status"]){
+                        text += "<div class='box done'></div>";
+                    }else{
+                        text += "<div class='box not-done'></div>";
+                    }
                     text += plan_list[i]['class_name'];
                     text += "</a></li>";
                 }
@@ -622,7 +779,7 @@
             //Si se esta creando un plan nuevo, coloca los botones "Contenidos Khan y Crear".
             if(classid == 0){
                 $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree(0," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveNewPlan(); return false;' class='kui-button kui-button-plain kui-button-primary'>Crear");
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveNewPlan(); return false;' class='kui-button kui-button-submit kui-button-primary'>Crear");
             }
             //Si se edita un plan, se colocan los datos del plan a editar.
             else if(edit_existing){
@@ -660,7 +817,7 @@
                 }
 
                 $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree("+ classid + "," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 50px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveEditedPlan(" + classid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Guardar</a></div>");
+                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 50px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveEditedPlan(" + classid + "); return false;' class='kui-button kui-button-submit kui-button-primary'>Guardar</a></div>");
                 $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid +"); return false;' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a></div>");
             }
             $("#form-window").show();
@@ -684,7 +841,10 @@
                     $('#labelDuration').html("Duración: " + plan_list[i]["minutes"] + " minutos");
 
                     if (plan_list[i]["status"] == true) $('#labelStatus').html("<label>Estado: Realizado");
-                    else $('#labelStatus').html("Estado: No realizado");
+                    else{
+                        if (plan_list[i]["late"] == true) $('#labelStatus').html("Estado: Atrasado");
+                        else $('#labelStatus').html("Estado: No realizado");
+                    } 
 
                     for (var v = 0; v < plan_list[i]["videos"].length; v++){
                         text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
@@ -712,6 +872,72 @@
 
         $(document.getElementsByClassName("select")).removeClass("select");
         $(document.getElementById("tab_clase_" + classid)).addClass("select");
+    }
+
+    function loadPlanBar(){
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var unidades = curriculo["topicos"];
+        var hora_unidades = new Array();
+        var hora_planeadas = Array.apply(null, Array(unidades.length)).map(Number.prototype.valueOf,0);
+
+        for (var u = 0; u < unidades.length; u++){
+            hora_unidades.push(unidades[u]["horas"]);
+            
+            var objetivos = unidades[u]["subtopico"];
+            for (var ob = 0; ob < objetivos.length; ob++){
+                for (var p = 0; p < plan_list.length; p++){
+                    if(plan_list[p]["class_subtopic"] == objetivos[ob]['id']){
+                        hora_planeadas[u] += plan_list[p]["minutes"]/45;
+                        console.log(plan_list[p]["minutes"]/45);
+                    }
+                }
+            }
+        }
+
+        $("#plan-progress").empty();
+
+        for (var i = 0; i < hora_unidades.length; i++){
+            var data = [hora_unidades[i], hora_planeadas[i]];
+            if (hora_unidades[i] <= hora_planeadas[i]) data[1] = hora_unidades[i];
+
+            var percent = Math.round(data[1] * 100 / data[0]);
+
+            $("#plan-progress").append("Unidad " + (i + 1) + ": ");
+
+            var chart = d3.select("#plan-progress").append("svg") // creating the svg object inside the container div
+                .attr("class", "chart")
+                .attr("width", 400) // bar has a fixed width
+                .attr("height", 24)
+                .attr("margin-top", 10);
+            
+            var x = d3.scale.linear() // takes the fixed width and creates the percentage from the data values
+                .domain([0, data[0]])
+                .range([0, 400]); 
+              
+            chart.selectAll("rect") // this is what actually creates the bars
+                .data(data)
+            .enter().append("rect")
+                .attr("width", x)
+                .attr("height", 24)
+                .attr("rx", 5) // rounded corners
+                .attr("ry", 5);
+                
+            chart.selectAll("text") // adding the text labels to the bar
+                .data(data)
+            .enter().append("text")
+                .attr("x", x)
+                .attr("y", 10) // y position of the text inside bar
+                .attr("dx", -3) // padding-right
+                .attr("dy", ".35em") // vertical-align: middle
+                .attr("text-anchor", "end") // text-align: right
+                .text(percent + "%");
+
+            $("#plan-progress").append("Horas planificadas: " + hora_planeadas[i] + " Horas sugeridas: " + hora_unidades[i] + "<br>");
+        }
+        
+
     }
 
     function saveNewPlan(){
@@ -908,7 +1134,7 @@
 
         text += "<br>";
         text += "<a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Cancelar</a>";
-        text += "<a onclick='javascript:appendKhanContent(" + classid + ");' class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
+        text += "<a onclick='javascript:appendKhanContent(" + classid + ");' class='kui-button kui-button-submit kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
 
         var selected_skills = [];
         var selected_videos = [];
@@ -1087,7 +1313,7 @@
       $('#hover').fadeIn();
       $('#popup').fadeIn();
       $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar esta planificación? Perderá toda la información relacionada a esta, incluyendo videos y ejercicios listados.</div>');
-      $('#popup').append('<a onclick=\'(deletePlan("'+classid+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Aceptar</a><a onclick="javascript:hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>');
+      $('#popup').append('<a onclick=\'(deletePlan("'+classid+'"))\' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Aceptar</a><a onclick="javascript:hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>');
     }
 
     function deletePlan(classid){

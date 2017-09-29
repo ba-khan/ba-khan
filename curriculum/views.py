@@ -69,6 +69,7 @@ def getCurriculumInfo(request, id_chapter_mineduc):
 			topico["id"] = top.id_topic_mineduc
 			topico["index"] = top.index
 			topico["desc"] = top.descripcion_topic
+			topico["time"] = top.suggested_time
 			if last_missing_topic == topico["index"]:
 				last_missing_topic = last_missing_topic + 1
 			aprendizaje = []
@@ -116,50 +117,36 @@ def getCurriculumInfo(request, id_chapter_mineduc):
 		topictree_json_vid={}
 		topictree_json_vid['checkbox']={'keep_selected_style':False}
 		topictree_json_vid['plugins']=['checkbox','search']
-		topictree_vid=[]
 		
 		selected_subject = Subject.objects.filter(chapter_mineduc__id_chapter_mineduc=id_chapter_mineduc)
 		subject_obj={"id": selected_subject[0].id_subject_name, "parent":"#", "text": selected_subject[0].name_spanish, "state": {"opened":"true"}, "icon":"false"}
 		topictree.append(subject_obj)
-		topictree_vid.append(subject_obj)
 		
 		subject_chapter=Chapter.objects.exclude(index=None).order_by('index')
 		for chapter in subject_chapter:
 			chapter_obj={"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "icon":"false"}
 			topictree.append(chapter_obj)
-			topictree_vid.append(chapter_obj)
 		chapter_topic=Topic.objects.exclude(index=None).order_by('index')
 		for topic in chapter_topic:
 			topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
 			topictree.append(topic_obj)
-			topictree_vid.append(topic_obj)
 		topic_subtopic=Subtopic.objects.exclude(index=None).order_by('index')
 		for subtopic in topic_subtopic:
 			subtopic_obj={"id":subtopic.id_subtopic_name, "parent": subtopic.id_topic_name_id, "text":subtopic.name_spanish, "icon":"false"}
 			topictree.append(subtopic_obj)
-			topictree_vid.append(subtopic_obj)
 		subtopic_skill=Subtopic_Skill.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_skill_name')
 		subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
-		for video in subtopic_video:
-			video_id=video.id_subtopic_video
-			video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "index":video.id_video_name.index}
-			sorted(video_obj, key=video_obj.get)
-			topictree_vid.append(video_obj)
 		for skill in subtopic_skill:
 			skill_id=skill.id_subtopic_skill
 			skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false", "index":skill.id_skill_name.index}
 			sorted(skill_obj, key=skill_obj.get)
 			topictree.append(skill_obj)
-			topictree_vid.append(skill_obj)
 		subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
 		for video in subtopic_video:
 			video_id=video.id_subtopic_video
 			video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "index":video.id_video_name.index}
 			sorted(video_obj, key=video_obj.get)
 			topictree.append(video_obj)
-
-		topictree_json_vid['core']={'data':topictree_vid}
-		topictree_json_string_video=json.dumps(topictree_json_vid)
 
 		topictree_json['core']={'data':topictree}
 		topictree_json_string=json.dumps(topictree_json)
@@ -172,8 +159,7 @@ def getCurriculumInfo(request, id_chapter_mineduc):
 								'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
 								'unidad_siguiente': last_missing_topic,								#La proxima Unidad que sigue por crear
 								'json_data':json_data,												#Dump del diccionario de datos Mineduc
-								'json_skill_tree':topictree_json_string, 							#Dump del diccionario de habilidades Khan
-								'json_video_tree':topictree_json_string_video, 						#Dump del diccionario de videos Khan
+								'json_skill_tree':topictree_json_string, 							#Dump del diccionario de Khan
 							}, context_instance=RequestContext(request))
 	except Exception as e:
 		print "Error en la apertura de curriculo: curriculum/view.py:getCurriculumInfo"
@@ -186,7 +172,7 @@ def newChapter(request):
 	if request.method == 'POST':
 		try:
 			args = request.POST
-			Chapter_Mineduc.objects.create(id_subject=Subject.objects.get(id_subject_name=args['subj']),year=args['year'],level=args['level'], additional=args['additional'])
+			Chapter_Mineduc.objects.create(id_subject=Subject.objects.get(id_subject_name=args['subj']), year=args['year'], level=args['level'] ,additional=args['additional'])
 			return HttpResponse('Nuevo curriculo guardado correctamente')
 
 		except Exception as e:
@@ -200,7 +186,7 @@ def newTopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			Topic_Mineduc.objects.create(id_chapter=Chapter_Mineduc.objects.get(id_chapter_mineduc=args['curr_id']), index=args['indice'], descripcion_topic=args['descr'])
+			Topic_Mineduc.objects.create(id_chapter=Chapter_Mineduc.objects.get(id_chapter_mineduc=args['curr_id']), index=args['indice'], suggested_time=args['horas'], descripcion_topic=args['descr'])
 			return HttpResponse('Unidad guardada correctamente')
 		except Exception as e:
 			print e
@@ -213,7 +199,7 @@ def updateTopic(request):
 	if request.method == 'POST':
 		args = request.POST
 		try:
-			Topic_Mineduc.objects.filter(id_topic_mineduc=args['topic_id']).update(index=args['indice'], descripcion_topic=args['descr'])
+			Topic_Mineduc.objects.filter(id_topic_mineduc=args['topic_id']).update(index=args['indice'], suggested_time=args['horas'], descripcion_topic=args['descr'])
 			return HttpResponse('Unidad actualizada correctamente')
 		except Exception as e:
 			print e

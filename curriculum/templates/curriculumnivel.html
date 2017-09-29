@@ -18,272 +18,173 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
 
 <style>
-  input{
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-  }
-  #popup{
-    height:150px;
-  }
-  #popuptree{
-    height:650px;
-  }
-  #flex-div{
-    display: flex;
-    flex-direction: column;
-  }
-  .ribbon {
-    position: relative;
-    left: 0px; top: -53px;
-    z-index: 1;
-    overflow: hidden;
-    width: 63px; height: 54px;
-    /*text-align: right;*/
-  }
-  .ribbon span {
-    font-size: 9px;
-    font-weight: bold;
-    color: #FFF;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 15px;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    width: 97px;
-    display: block;
-    background: #79A70A;
-    background: linear-gradient(#9BC90D 0%, #79A70A 100%);
-    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
-    position: absolute;
-    top: 13px; left: -25px;
-  }
-  .ribbon span::before {
-    content: "";
-    position: absolute; left: 0px; top: 100%;
-    z-index: -1;
-    /*border-left: 3px solid #79A70A;
-    border-right: 3px solid transparent;
-    border-bottom: 3px solid transparent;
-    border-top: 3px solid #79A70A;*/
-  }
-  .ribbon span::after {
-    content: "";
-    /*position: absolute; right: 0px; top: 100%;*/
-    z-index: -1;
-    /*border-left: 3px solid transparent;
-    border-right: 3px solid #79A70A;
-    border-bottom: 3px solid transparent;
-    border-top: 3px solid #79A70A;*/
-  }
-  #newChapter{
-    border: 1px solid #C6D1AD;
-      border-radius: 5px;
-      display:none; 
-      height:220px; 
-      padding:15px;
-      padding-left: 33%;
-      padding-right: 33%;
-      text-align: center;
-  }
-  #newTopic{
-    /*border: 1px solid #C6D1AD;
-      border-radius: 5px;
-      display:none; */
-      height:220px; 
-      padding:15px;
-      padding-left: 33%;
-      padding-right: 33%;
-      text-align: center;
-  }
-  #newSubtopic{
-    /*border: 1px solid #C6D1AD;
-      border-radius: 5px;
-      display:none; */
-      height:220px; 
-      padding:15px;
-      padding-left: 33%;
-      padding-right: 33%;
-      text-align: center;
-  }
-  #newaccordion{
-    border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    padding:15px;
-    padding-left: 10%;
-    padding-right: 10%;
-    text-align: left;
-  }
-  label{
-    width: 95px;
-  }
-  input{
-    margin-bottom: 10px;
-  }
-  #below_topbar_field{
-    width: 660px;
-    float: left;
-    margin-top: 20px;
-  }
+    input{
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+    }
 
-  #topbar {
-    float:left;
-    position: relative;
-      box-sizing: border-box;
-     -moz-box-sizing: border-box;
-     z-index: 2;
-     height: 50px;
-     /*margin-right: -1px;*/
-  }
-  #topbar ul.tab {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-  }
-  #topbar ul.tab li {
-      margin: 0;
-      max-height: 50px;
-  }
-  #topbar ul.tab li a {
-    padding: 15px 20px;
-    font-size: 14px;
-    font-weight: 100;
-    background: #EEEEEE;
-    text-decoration: none;
-    display: block;
-    border: 1px solid #ddd;
-    -webkit-transition:  background 0.3s ease-in-out;
-    -moz-transition:  background 0.3s ease-in-out;
-    -ms-transition:  background 0.3s ease-in-out;
-    -o-transition:  background 0.3s ease-in-out;
-    transition:  background 0.3s ease-in-out;
-  }
-  #topbar ul.tab li a.selectdos{
-    border-bottom: 1px solid #f7f7f7;
-    background: #f7f7f7;
-    color: #56861f;
-    
-  }
-  #topbar ul.tab li:hover a {
-      background: #f7f7f7;
-      color: #56861f;
-  }
-  #topbar ul.tab li:visited a {
-      background: #f7f7f7;
-      color: #56861f;
-  }
+    #popup{
+        height:150px;
+    }
 
-  #topbar ul.tab li {float: left;}
+    #popuptree{
+        height:650px;
+    }
 
-  .redBackground{
-      background-color: gray;  
-  }
+    #flex-div{
+        display: flex;
+        flex-direction: column;
+    }
 
-  .topictree{
-    overflow: hidden;
-    overflow-y:scroll;
-    height: 550px;
-    width: 570px;
-    font-size: 12px;
-    padding: 5px 10px 10px 0px;
-    text-align: left;
-    margin: 10px;
-    border: 1px solid #ddd;
-  }
+    #contenido_pagina{
+        margin: 20px;
+        width: 100%;
+        float: left;
+    }
 
-  /*button.accordion {
-      background-color: #eee;
-      color: #444;
-      cursor: pointer;
-      padding: 18px;
-      width: 100%;
-      text-align: left;
-      border: none;
-      outline: none;
-      transition: 0.4s;
-  }*/
+    #topic_form input{
+        width: 40px;
+        height: 24px;
+        margin-bottom: 6px;
+    }
 
-  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  /*button.accordion.active, button.accordion:hover {
-      background-color: #ddd;
-  }
+    .topic{
+        max-width: 660px;
+        margin-bottom: 10px;
+    }
 
-  button.accordion:after {
-      content: '\02795'; 
-      font-size: 13px;
-      color: #777;
-      float: right;
-      margin-left: 5px;
-  }
+    label{
+        width: 95px;
+    }
 
-  button.accordion.active:after {
-      content: "\2796"; 
-  }*/
+    input{
+        margin-bottom: 10px;
+    }
 
-  /* Style the accordion panel. Note: hidden by default */
-  div.panel {
-      padding: 0 18px;
-      background-color: white;
-      display: none;
-      overflow: hidden;
-      transition: 0.6s ease-in-out;
-      opacity: 0;
-  }
+    #below_topbar_field{
+        width: 660px;
+        float: left;
+        margin-top: 20px;
+    }
 
-  /* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
-  div.panel.show {
-      display: block;
-      opacity: 1;
-  }
-  /*
-  div.panel {
-      padding: 0 18px;
-      background-color: white;
-      max-height: 0;
-      overflow: hidden;
-      transition: 0.6s ease-in-out;
-      opacity: 0;
-  }
-  */
+    #topbar {
+        float:left;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        z-index: 2;
+        height: 50px;
+        /*margin-right: -1px;*/
+    }
 
-  .videos,.skills, .descripcion{
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-    min-width: 550px;
-    max-height: 300px
-    height: 90px;
-    padding: 10px;
-    margin-left: 50px;
-    margin-right: 50px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    overflow: hidden;
-    overflow: scroll;
-    overflow: auto;
-    background: #F6F7F7;
-    float:left;
-    text-align: justify;
-    cursor: default;
-    -moz-user-select':-moz-none;
-      -moz-user-select:none;
-      -o-user-select:none;
-      -khtml-user-select:none; 
-      -webkit-user-select:none;
-      -ms-user-select:none;
-      user-select:none;
-  }
+    #topbar ul.tab {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
 
-  .main-content li{
-    text-align:left;
-  }
+    #topbar ul.tab li {
+        margin: 0;
+        max-height: 50px;
+    }
 
-  .main-content h2, h3{
-    text-align: center;
-  }
+    #topbar ul.tab li a {
+        padding: 15px 20px;
+        font-size: 14px;
+        font-weight: 100;
+        background: #EEEEEE;
+        text-decoration: none;
+        display: block;
+        border: 1px solid #ddd;
+        -webkit-transition:  background 0.3s ease-in-out;
+        -moz-transition:  background 0.3s ease-in-out;
+        -ms-transition:  background 0.3s ease-in-out;
+        -o-transition:  background 0.3s ease-in-out;
+        transition:  background 0.3s ease-in-out;
+    }
 
-  .contenidodhv h2{
-    margin-bottom: 0px;
-  }
+    #topbar ul.tab li a.selectdos{
+        border-bottom: 1px solid #f7f7f7;
+        background: #f7f7f7;
+        color: #56861f;    
+    }
+
+    #topbar ul.tab li:hover a {
+        background: #f7f7f7;
+        color: #56861f;
+    }
+
+    #topbar ul.tab li:visited a {
+        background: #f7f7f7;
+        color: #56861f;
+    }
+
+    #topbar ul.tab li {
+        float: left;
+    }
+
+
+    .topictree{
+        overflow: hidden;
+        overflow-y:scroll;
+        height: 550px;
+        width: 570px;
+        font-size: 12px;
+        padding: 5px 10px 10px 0px;
+        text-align: left;
+        margin: 10px;
+        border: 1px solid #ddd;
+    }
+
+    div.panel {
+        padding: 0 18px;
+        background-color: white;
+        display: none;
+        overflow: hidden;
+        transition: 0.6s ease-in-out;
+        opacity: 0;
+    }
+
+
+    .videos, .skills, .descripcion{
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        min-width: 550px;
+        max-height: 300px
+        height: 90px;
+        padding: 10px;
+        margin-left: 50px;
+        margin-right: 50px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        overflow: hidden;
+        overflow: scroll;
+        overflow: auto;
+        background: #F6F7F7;
+        float:left;
+        text-align: justify;
+        cursor: default;
+        -moz-user-select':-moz-none;
+        -moz-user-select:none;
+        -o-user-select:none;
+        -khtml-user-select:none; 
+        -webkit-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+
+    .main-content li{
+        text-align:left;
+    }
+
+    .main-content h2, h3{
+        text-align: center;
+    }
+
+    .contenidodhv h2{
+        margin-bottom: 0px;
+    }
 </style>
 
 <br>
@@ -301,10 +202,39 @@
 
     <div class="todo" style="min-width: 700px;">
         <div class="main-content" style="width: 100%; float: left; max-width: 700px">
-            <div id="contenido_pagina" style="margin-right: 20px; margin-left: 20px; margin-top: 20px; margin-bottom: 20px; width: 100%; float: left">
+            <div id="contenido_pagina">
                 <h2>{{ nivel_curriculo }} ({{ anno_curriculo }}) - {{ asignatura }}</h2>
 
-                <div id='above_topbar_field' class='flex-div' style="max-width: 660px; margin-bottom: 10px;"></div>
+                <div id='above_topbar_field' class='flex-div topic'>
+                    <div id="topic_form" style="display:none" class='form'>
+                        <form action='POST' method='post' id='form0'>{% csrf_token %}
+                            <h3>Datos de la Unidad:</h3>
+                            <div style="float: left">
+                                <label for='newTime_Topic'>Horas pedagogicas sugeridas: </label>
+                                <input id='newTime_Topic' name='index_topic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' min='1'>
+                            </div>
+                            <div style="float: right">
+                                <label for='newIndex_Topic'>Indice de la Unidad: </label>
+                                <input id='newIndex_Topic' name='index_topic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='{{ unidad_siguiente }}' min='1'>
+                            </div>
+                            <br>
+                            <div style="margin-top: 14px">
+                                <label for='newDesc_Topic' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción de la Unidad: </label>
+                                <br>
+                                <textarea id='newDesc_Topic' name='description_topic' placeholder='Explica el objetivo de la unidad.' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px' class='ui-corner-all simple-input search-input blur-on-esc'></textarea>
+                            </div>
+                            <br>
+                            <div id="topic_form_btn"></div>
+                        </form>
+                    </div>
+
+                    <div id="topic_panel" style="display:none">
+                        <h3 id="topicHeader"></h3>
+                        <label id="topicTime"></label>
+                        <p id="topicDesc" class='descripcion'></p>
+                        <div id="topic_panel_btn"></div>
+                    </div>
+                </div>
 
                 <div id="topbar" style="width: 660px; height: 52px; margin-bottom: 10px; margin-top: 10px"></div>
 
@@ -349,58 +279,50 @@
     function drawAboveTopBar(idtopic, edit = false){
         var arbol = JSON.parse('{{ json_data | escapejs }}');
         var topicos = arbol["topicos"];
-        var text = "";
 
-        $('#above_topbar_field').empty();
+        $("#topic_form").hide();
+        $("#topic_panel").hide();
 
         if (edit){
             //Nueva Unidad.
             if (idtopic == 0){
-                text = "<div class='form'>";
-                text += "<form action='' method='post' id='form0'>{% csrf_token %}";
-                text += "<h3>Datos de la Unidad:</h3>";
-                text += "<label for='newIndex_Topic'>Indice de la Unidad: </label>";
-                text += "<input id='newIndex_Topic' name='index_topic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='{{ unidad_siguiente }}' min='1'>";
-                text += "<br>";
-                text += "<label for='newDesc_Topic' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción de la Unidad: </label>";
-                text += "<br>";
-                text += "<textarea id='newDesc_Topic' name='description_topic' placeholder='Explica el objetivo de la unidad.'' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px' class='ui-corner-all simple-input search-input blur-on-esc'></textarea>";
-                text += "<br>";
-                text += "<a href='javascript:saveNewTopic()' style='margin-left:200px' class='kui-button kui-button-plain kui-button-primary'>Guardar Unidad</a>";
-                text += "</form>";
-                text += "</div>";
+                $("#newIndex_Topic").val("");
+                $("#newTime_Topic").val("");
+                $("#newDesc_Topic").val("");    
+                $("#topic_form_btn").html("<a href='javascript:saveNewTopic()' style='margin-left:200px' class='kui-button kui-button-submit kui-button-primary'>Guardar Unidad</a>");
 
             }else{
                 //Editar Unidad.
                 for (var i = 0; i < topicos.length; i++) {
                     if (topicos[i]['id'] == idtopic){
-                        text = "<div class='form'>";
-                        text += "<form action='' method='post' id='form0'>{% csrf_token %}";
-                        text += "<h3>Unidad: </h3>";
-                        text += "<input id='editIndex_Topic' name='index_topic' type='number' class='ui-corner-all placeholder simple-input search-input blur-on-esc approvalName' value='" + topicos[i]['index'] + "' min='1'>";
-                        text += "<label for='editDesc_Topic' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Descripción de la Unidad: </label>";
-                        text += "<textarea id='editDesc_Topic' name='description_topic' placeholder='Explica el objetivo de la unidad.'' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px' class='ui-corner-all simple-input search-input blur-on-esc'>" + topicos[i]['desc'] + "</textarea>";
-                        text += "<a href='#' onclick='javascript:updateTopic(" + idtopic + "); return false;' style='width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Confirmar</a>";
-                        text += "<a href='#' onclick='javascript:drawAboveTopBar(" + idtopic + "); return false;' style='width: 180px; margin-right: 100px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a>";
-                        text += "</form>";
-                        text += "</div>";
-                        i = topicos.length;
+                        $("#newIndex_Topic").val(topicos[i]['index']);
+                        $("#newTime_Topic").val(topicos[i]['time']);
+                        $("#newDesc_Topic").val(topicos[i]['desc'].replace(/<br\s*[\/]?>/gi, "\n"));
+                        $("#topic_form_btn").html("<a href='#' onclick='javascript:updateTopic(" + idtopic + "); return false;' style='width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-submit kui-button-primary'>Confirmar</a>");
+                        $("#topic_form_btn").append("<a href='#' onclick='javascript:drawAboveTopBar(" + idtopic + "); return false;' style='width: 180px; margin-right: 100px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a>");
+                        break;
                     }
                 }
             }
-        }else{
+            $("#topic_form").show();
+        }
+        else{
             //Mostrar Unidad.
             for (var i = 0; i < topicos.length; i++) {
                 if (topicos[i]['id'] == idtopic){
-                    text += "<h3>Unidad "+topicos[i]['index']+"</h3>";
-                    text += "<p class='descripcion'>"+topicos[i]['desc']+"</p>";
-                    text += "<a href='#' onclick='javascript:drawAboveTopBar(" + idtopic + ", true); return false;' style='width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Editar Unidad</a>";
-                    text += "<a href='#' onclick='javascript:deleteTopic(" + idtopic + "); return false;' style='width: 180px; margin-right: 100px; margin-bottom: 10px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Borrar Unidad</a>";
-                    i = topicos.length;
+                    $("#topicHeader").html("Unidad " + topicos[i]['index']);
+                    $("#topicTime").html("Horas pedagogicas recomendadas: " + topicos[i]["time"]);
+                    $("#topicDesc").html(topicos[i]['desc']);
+
+                    $("#topic_panel_btn").html("<a href='#' onclick='javascript:drawAboveTopBar(" + idtopic + ", true); return false;' style='width: 180px; margin-left:100px; cursor: pointer; float: left' class='kui-button kui-button-plain kui-button-primary'>Editar Unidad</a>");
+                    $("#topic_panel_btn").append("<a href='#' onclick='javascript:deleteTopic(" + idtopic + "); return false;' style='width: 180px; margin-right: 100px; margin-bottom: 10px; cursor: pointer; float: right' class='kui-button kui-button-plain kui-button-primary'>Borrar Unidad</a>");
+
+                    break;
                 }
             }
+            $("#topic_panel").show();
         }
-        $('#above_topbar_field').append(text);
+
     }
 
     //Dibuja la barra de O.A. de la Unidad seleccionada.
@@ -450,7 +372,7 @@
                 text += "<label for='block' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Resumen del OA: </label>";
                 text += "<textarea id='newSumm_SubTopic' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px'></textarea>";
                 text += "<br>";
-                text += "<div style='margin-left:200px'><a href='javascript:saveNewSubtopic(" + idtopic + ")' class='kui-button kui-button-plain kui-button-primary'>Guardar OA</a></div>";
+                text += "<div style='margin-left:200px'><a href='javascript:saveNewSubtopic(" + idtopic + ")' class='kui-button kui-button-submit kui-button-primary'>Guardar O.A.</a></div>";
                 text += "</form>";
                 text += "</div>";               
             }else{
@@ -473,7 +395,7 @@
                                 text += "<label for='block' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Resumen del OA: </label>";
                                 text += "<textarea id='editSumm_SubTopic' class='ui-corner-all placeholder simple-input search-input blur-on-esc vaciar' style='width:97%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px'>" + subtopicos[j]['resumen'] + "</textarea>";
                                 text += "<br>";
-                                text += "<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:updateSubtopic(" + idsubtopic + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Actualizar O.A.</a></div>";
+                                text += "<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:updateSubtopic(" + idsubtopic + "); return false;' class='kui-button kui-button-submit kui-button-primary'>Actualizar O.A.</a></div>";
                                 text += "<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:drawBelowTopBar(" + idtopic + ", " + idsubtopic + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a></div>";
                                 text += "</form>";
                                 text += "</div>";
@@ -582,12 +504,17 @@
     function saveNewTopic(){
         var nIndex = $('#newIndex_Topic').val();
         var nDesc = $('#newDesc_Topic').val().replace(/[\r\n]/g, "<br />");
+        var nTime = $("#newTime_Topic").val();
         var currID = {{ curriculo_id }}
 
         $.ajax({
             url: "{% url 'curriculum:nuevo_topic' %}",
             type: "POST",
-            data: {indice: nIndex, descr: nDesc, curr_id: currID},
+            data: {indice: nIndex,
+                    descr: nDesc,
+                    horas: nTime,
+                    curr_id: currID
+            },
             success: function(response){
                 $("#popup").empty()
                 $("#close").hide();
@@ -612,13 +539,18 @@
     }
 
     function updateTopic(topID){
-        var nIndex = $('#editIndex_Topic').val();
-        var nDesc = $('#editDesc_Topic').val().replace(/[\r\n]/g, "<br />");
+        var nIndex = $('#newIndex_Topic').val();
+        var nDesc = $('#newDesc_Topic').val().replace(/[\r\n]/g, "<br />");
+        var nTime = $("#newTime_Topic").val();
 
         $.ajax({
             url: "{% url 'curriculum:mod_topic' %}",
             type: "POST",
-            data: {indice: nIndex, descr: nDesc, topic_id: topID},
+            data: {indice: nIndex,
+                    descr: nDesc,
+                    horas: nTime,
+                    topic_id: topID
+            },
             success: function(response){
                 $("#popup").empty()
                 $("#close").hide();
@@ -772,7 +704,7 @@
 
         text += "<br>";
         text += "<a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Cancelar</a>";
-        text += "<a onclick='javascript:saveVideoExercise(" + idsubtopic + ");' class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
+        text += "<a onclick='javascript:saveVideoExercise(" + idsubtopic + ");' class='kui-button kui-button-submit kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
 
         $('#popuptree').append(text);
         $('#newTree'+idsubtopic).jstree(tree);
@@ -860,7 +792,7 @@
             });
         }
         if(valor.value == "videos"){
-            var tree = JSON.parse('{{ json_video_tree | escapejs }}');
+            var tree = JSON.parse('{{ json_skill_tree | escapejs }}');
             var info = tree['core']['data'];
             //console.log(info);
             for (var i = 0; i < info.length; i++) {

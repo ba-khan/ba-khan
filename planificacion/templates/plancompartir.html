@@ -1,0 +1,78 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Planificación Curriculum{% endblock %}
+
+{% block body2 %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
+
+<style>
+    .container{
+        max-width: 1500px;
+    }
+    .class-block{
+        display: flex;
+        flex-direction: column;
+        width: 1000px;
+        height: auto;
+        min-height: 80px;
+        margin-bottom: 10px;
+        background-color: white;
+        border: 1px solid #C6D1AD;
+        border-radius: 5px;
+    }
+    #flex-div{
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
+<br>
+<div class="container">
+    <div class="class-content" style="padding-left: 100px;padding-right: 100px; align-content: center">
+        <div><div>
+        {% for class in classes %}
+            {% ifchanged class.class_subject__kaid_teacher__name %}
+                <div style="height: 16px; margin-bottom: 4px">
+                    <h2>{{ class.class_subject__kaid_teacher__name }}</h2>
+                </div>
+            {% endifchanged %}
+            {% ifchanged class.year  %}
+                </div></div>
+                <br>
+                <div style="display: block; width: 1000px; height: auto; min-height: 28px">
+                    <h3 style="float: left; margin-left: 47%"> {{ class.year }} </h3>
+                </div>
+                <div><div>
+            {% endifchanged %}
+
+            {% ifchanged class.level %}
+                </div></div>
+                <div class="class-block">
+                <h4 style="text-align: left; margin: 10px; margin-bottom: 0px; width: 100%">{{ class.level }}</h4>
+                <div>
+            {% endifchanged %}
+
+            {% if class.class_subject__curriculum %}
+                <a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan_compartido' class.class_subject__id_class_subject %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso {{ class.letter }}
+                {% if class.additional %}
+                    <br>({{class.additional}})
+                {% endif %}
+                </a>
+            {% else %}
+                <a role="button" style="color:darkred; display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="#" class="kui-button kui-button-plain kui-button-primary"> Curso {{ class.letter }}
+                {% if class.additional %}
+                    <br>({{class.additional}})
+                {% endif %}
+                </a>
+            {% endif %}    
+        {% endfor %}
+        </div></div>
+    </div>
+</div>
+
+<div id="popup" style="display:none"></div>
+
+{% endblock %}

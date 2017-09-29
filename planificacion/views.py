@@ -16,11 +16,7 @@ from django.core import serializers
 
 
 from django import template
-from bakhanapp.models import Assesment_Skill
-from bakhanapp.models import Administrator
-from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
-from bakhanapp.models import Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc
-from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Skill_Planning, Video_Planning
+from bakhanapp.models import Assesment_Skill, Administrator, Teacher, Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution, Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc, Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Skill_Planning, Video_Planning, Institutional_Plan, Skill_Institution_Plan, Video_Institution_Plan
 from django.db import connection
 
 register = template.Library()
@@ -29,7 +25,8 @@ from configs import timeSleep
 import json
 from datetime import datetime, timedelta, date
 
-import sys, os
+from functools import wraps
+import sys, os, traceback
 
 
 ##
@@ -42,46 +39,155 @@ import sys, os
 @login_required()
 def getClassList(request):
 	request.session.set_expiry(timeSleep)
-	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+
+	N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
+
+	isAdmin = False
+	isTeacher = False
+
+	inst_id = Teacher.objects.get(kaid_teacher=request.user.user_profile.kaid).id_institution
+	teacher = Teacher.objects.filter(class_subject__planning__share_class=True, id_institution=inst_id).distinct("kaid_teacher").values("kaid_teacher","name").exclude(kaid_teacher=request.user.user_profile.kaid)
+
+	#Si es admin, obtiene todos los curriculos
+	if(request.user.has_perm('bakhanapp.isAdmin')):
+		isTeacher = True
+		curriculums = Chapter_Mineduc.objects.all().values('id_chapter_mineduc','level','year').order_by('-year','level')
+
+		for i in range(len(curriculums)):
+			curriculums[i]['level'] = N[int(curriculums[i]['level'])]
+
+			if (Institutional_Plan.objects.filter(curriculum=curriculums[i]['id_chapter_mineduc'], share_class=True)):
+				curriculums[i]['share'] = "On"
+			elif (Institutional_Plan.objects.filter(curriculum=curriculums[i]['id_chapter_mineduc'], share_class=False)):
+				curriculums[i]['share'] = "Off"
+			else:
+				curriculums[i]['share'] = "Null"
+
+		return render_to_response('planinstituto.html', { 'isTeacher':isTeacher, 'curriculums':curriculums, 'teachers':teacher, 'institucion':inst_id} ,context_instance=RequestContext(request))
+
+	#Si solo es profesor, obtiene sus cursos
+	elif (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
 		isTeacher = True
 		classes = Class.objects.filter(class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum').order_by('-year','level','letter')
-	else:
-		isTeacher = False
-		##classes = Class.objects.filter(INSTITUCION)
 
-	
-	N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
-	for i in range(len(classes)):
-		classes[i]['level'] = N[int(classes[i]['level'])]		 
+		instHasPlan = False;
+		if (Institutional_Plan.objects.filter(share_class=True)):
+			instHasPlan = True;
 
-	return render_to_response('planificacion.html', { 'isTeacher':isTeacher, 'classes':classes} ,context_instance=RequestContext(request))
+		for i in range(len(classes)):
+			classes[i]['level'] = N[int(classes[i]['level'])]
 
+			if (Planning.objects.filter(class_subject_id=classes[i]['class_subject__id_class_subject'], share_class=True)):
+				classes[i]['share'] = "On"
+			elif (Planning.objects.filter(class_subject_id=classes[i]['class_subject__id_class_subject'], share_class=False)):
+				classes[i]['share'] = "Off"
+			else:
+				classes[i]['share'] = "Null"
+
+		return render_to_response('planificacion.html', { 'isTeacher':isTeacher, 'classes':classes, 'teachers':teacher, 'institucion':inst_id, 'planExist':instHasPlan} ,context_instance=RequestContext(request))
+
+@login_required()
+def saveShareConfig(request):
+	if request.method == "POST":
+		try:
+			args = request.POST.getlist('data[]')
+
+			if(request.user.has_perm('bakhanapp.isAdmin')):
+				for value in args:
+					plan_list = Institutional_Plan.objects.filter(curriculum=value, share_class=False)
+					if (plan_list):
+						plan_list.update(share_class=True)
+					else:
+						plan_list = Institutional_Plan.objects.filter(curriculum=value).update(share_class=False)
+
+			else:
+				for value in args:
+					plan_list = Planning.objects.filter(class_subject_id=value, share_class=False)
+					if (plan_list):
+						plan_list.update(share_class=True)
+					else:
+						plan_list = Planning.objects.filter(class_subject_id=value).update(share_class=False)
+
+			return HttpResponse('Configuración guardada correctamente')
+
+		except Exception as e:
+			print "Error en la modificacion de la configuración de planes: planificacion/view.py:saveShareConfig"
+			print traceback.print_exc()
+			return HttpResponse('La configuración no se puede guardar')
+
+@login_required()
+def getSharedClassList(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == "GET":
+		try:
+			teacher = request.GET.get("id", None)
+			inst_id = Teacher.objects.get(kaid_teacher=request.user.user_profile.kaid).id_institution
+
+			N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
+
+			if teacher == "0":
+				classes = Chapter_Mineduc.objects.filter(institutional_plan__share_class=True, institutional_plan__institution=inst_id).values('level', 'year', 'additional', 'id_chapter_mineduc').order_by('-year','level').distinct()
+				
+			else:
+				classes = Class.objects.filter(class_subject__planning__share_class=True, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+
+			for i in range(len(classes)):
+				classes[i]['level'] = N[int(classes[i]['level'])]
+
+			json_class = json.dumps(list(classes))
+
+			return HttpResponse(json_class, content_type="application/json")
+		except Exception as e:
+			print "Error en la obtencion de las clases compartidas: planificacion/view.py:getSharedClassList"
+			print traceback.print_exc()
+			return HttpResponse('No se pudo obtener la información.')
 
 @login_required()
 def getPlan(request, class_subj_id):
 	request.session.set_expiry(timeSleep)
-	current_year = date.today().year
+	current_time = date.today()
+
+	isAdmin = False
+	isTeacher = False
+
+	level_names = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
 
 	if (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
 		isTeacher = True
-	else:
-		isTeacher = False
 
 	try:
-		plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
-
-		id_chapter_mineduc = Class_Subject.objects.filter(id_class_subject=class_subj_id, kaid_teacher=request.user.user_profile.kaid).values('curriculum_id')
+		#Si el usuario es Institución.
+		if request.user.has_perm('bakhanapp.isAdmin'):
+			isAdmin = True
+			#Iteración para un Instituto accediendo a una clase compartida.
+			if "compartido" in request.path:
+				plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
+				id_chapter_mineduc = Class_Subject.objects.filter(id_class_subject=class_subj_id).values('curriculum_id')
+				teacher_name = Teacher.objects.filter(class_subject__id_class_subject=class_subj_id).values('name')
+			#Si no, esta accediendo al plan institucional.
+			else:
+				plan_list = Institutional_Plan.objects.filter(curriculum=class_subj_id).order_by('class_date')
+				id_chapter_mineduc = [{'curriculum_id':class_subj_id}]
+		#Si es un profesor accediendo.
+		else:
+			#Iteración para un profesor accediendo a un plan institucional.
+			if "inst" in request.path:
+				plan_list = Institutional_Plan.objects.filter(curriculum=class_subj_id).order_by('class_date')
+				id_chapter_mineduc = [{'curriculum_id':class_subj_id}]
+				teacher_name = "Institución"
+			#Si no, esta accediendo al algun plan de profesor (Suyo o compartido).
+			else:
+				plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
+				id_chapter_mineduc = Class_Subject.objects.filter(id_class_subject=class_subj_id).values('curriculum_id')
+				
 		selected_topic = Topic_Mineduc.objects.filter(id_chapter_id=id_chapter_mineduc[0]['curriculum_id']).order_by('index')
-		
-		level_names = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
-		current_curriculum = Chapter_Mineduc.objects.filter(id_chapter_mineduc = id_chapter_mineduc).values('level','year')
-		current_subject = Subject.objects.filter(chapter_mineduc__id_chapter_mineduc = id_chapter_mineduc).values()
+		current_curriculum = Chapter_Mineduc.objects.filter(id_chapter_mineduc = id_chapter_mineduc[0]['curriculum_id']).values('level','year')
+		current_subject = Subject.objects.filter(chapter_mineduc__id_chapter_mineduc = id_chapter_mineduc[0]['curriculum_id']).values()
 
 		planes = []
 		for plan in plan_list:
 			clase = {}
 			clase["id"] = plan.id_planning
-			clase["class_subject"] = plan.class_subject.id_class_subject
 			clase["class_subtopic"] = plan.class_subtopic.id_subtopic_mineduc
 			clase["class_date"] = []
 			clase["class_date"].append(plan.class_date.year)
@@ -93,8 +199,15 @@ def getPlan(request, class_subj_id):
 			clase["desc_cierre"] = plan.desc_cierre
 			clase["share_class"] = plan.share_class
 			clase["class_name"] = plan.class_name
+			clase["late"] = False
+			if plan.class_date < current_time:
+				clase["late"] = True
 			plan_skills = []
-			skillplanning = Skill_Planning.objects.filter(id_planning=plan.id_planning)
+			if(request.user.has_perm('bakhanapp.isAdmin') or ("inst" in request.path)):
+				skillplanning = Skill_Institution_Plan.objects.filter(id_planning=plan.id_planning)
+			else:
+				skillplanning = Skill_Planning.objects.filter(id_planning=plan.id_planning)
+
 			for skill in skillplanning:
 				skilldict = {}
 				skilldict["id"] = skill.id_skill.id_skill_name
@@ -103,8 +216,13 @@ def getPlan(request, class_subj_id):
 				skilldict["tree"] = skill.id_subtopic.id_subtopic_skill
 				plan_skills.append(skilldict)
 			clase["skills"] = plan_skills
+
 			plan_videos =[]
-			videoplanning = Video_Planning.objects.filter(id_planning=plan.id_planning)
+			if(request.user.has_perm('bakhanapp.isAdmin') or ("inst" in request.path)):
+				videoplanning = Video_Institution_Plan.objects.filter(id_planning=plan.id_planning)
+			else:
+				videoplanning = Video_Planning.objects.filter(id_planning=plan.id_planning)
+
 			for video in videoplanning:
 				videodict = {}
 				videodict["id"] = video.id_video.id_video_name
@@ -123,6 +241,7 @@ def getPlan(request, class_subj_id):
 			topico["id"] = top.id_topic_mineduc
 			topico["index"] = top.index
 			topico["desc"] = top.descripcion_topic
+			topico["horas"]= top.suggested_time
 			aprendizaje = []
 			subtopic = Subtopic_Mineduc.objects.filter(id_topic_id=top.id_topic_mineduc).order_by('index')
 			for sub in subtopic:
@@ -158,55 +277,90 @@ def getPlan(request, class_subj_id):
 		json_dict = {"topicos":unidad}
 		json_data = json.dumps(json_dict)
 
-		topictree_json={}
-		topictree_json['checkbox']={'keep_selected_style':False, 'cascade_to_hidden':False, 'cascade_to_disabled':False}
-		topictree_json['plugins']=['checkbox','search']
-		topictree=[]
-		
-		subject_obj={"id": current_subject[0]['id_subject_name'], "parent":"#", "text": current_subject[0]['name_spanish'], "state": {"opened":"true"}, "icon":"false"}
-		topictree.append(subject_obj)
-		
-		subject_chapter = Chapter.objects.filter(id_subject_name=current_subject[0]['id_subject_name']).exclude(index=None).order_by('index')
-		for chapter in subject_chapter:
-			chapter_obj = {"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "type":chapter.type_chapter,"icon":"false"}
-			topictree.append(chapter_obj)
-		chapter_topic=Topic.objects.filter(id_chapter_name_id__in=subject_chapter).exclude(index=None).order_by('index')
-		for topic in chapter_topic:
-			topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
-			topictree.append(topic_obj)
-		topic_subtopic=Subtopic.objects.filter(id_topic_name_id__in=chapter_topic).exclude(index=None).order_by('index')
-		for subtopic in topic_subtopic:
-			subtopic_obj={"id":subtopic.id_subtopic_name, "parent": subtopic.id_topic_name_id, "text":subtopic.name_spanish, "icon":"false"}
-			topictree.append(subtopic_obj)
-		subtopic_skill=Subtopic_Skill.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_skill_name')
-		subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
-		for video in subtopic_video:
-			video_obj={"id":video.id_subtopic_video, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "index":video.id_video_name.index}
-			sorted(video_obj, key=video_obj.get)
-			topictree.append(video_obj)
-		for skill in subtopic_skill:
-			skill_obj={"id":skill.id_subtopic_skill, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "index":skill.id_skill_name.index, "icon":"false"}
-			sorted(skill_obj, key=skill_obj.get)
-			topictree.append(skill_obj)
+		#Revisa si la redirección es hacia un plan compartido.
+		if "compartido" in request.path:
+			classes = Class.objects.filter(class_subject__curriculum_id=id_chapter_mineduc[0]['curriculum_id'], class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject').order_by('-year','level','letter')
+			class_name = Class.objects.filter(class_subject__id_class_subject=class_subj_id).values('level','letter','year','additional')
 
-		topictree_json['core']={'data':topictree}
-		topictree_json_string=json.dumps(topictree_json)
-		
-		return render_to_response('planificacionnivel.html', {
+			for i in range(len(class_name)):
+				class_name[i]['level'] = level_names[int(class_name[i]['level'])]
+
+			for i in range(len(classes)):
+				classes[i]['level'] = level_names[int(classes[i]['level'])]
+
+			isInstitution = False
+			if "inst" in request.path:
+				isInstitution = True
+
+			return render_to_response('plancompartirnivel.html', {
+								'id': class_subj_id,												#ID del Class Suject
 								'plan':plan_dump,													#Diccionario de planificaciones
-								'class_subject':class_subj_id,	 									#ID del Class Subject
+								'autor':teacher_name,												#Nombre del dueño del curriculo
+								'clase':class_name,													#Datos del curso compartido.
+								'cursos_usuario':classes,											#Lista de los cursos del usuario que coinsiden con el curriculo actual.
 								'curriculo_id':id_chapter_mineduc, 									#ID del Curriculo actual
-								'lista_topicos':selected_topic,										#Lista de topicos en el curriculo
+								'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
 								'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
 								'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
-								'anno': current_year,												#Año actual
+								'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
+								'json_data':json_data,												#Dump del diccionario de datos Mineduc
+								'isTeacher': isTeacher,
+								'isInstitution':isInstitution
+							}, context_instance=RequestContext(request))
+
+		#Si no es compartido, primero obtiene los datos para el arbol de habilidades/videos de khan.
+		else:		
+			topictree_json={}
+			topictree_json['checkbox']={'keep_selected_style':False, 'cascade_to_hidden':False, 'cascade_to_disabled':False}
+			topictree_json['plugins']=['checkbox','search']
+			topictree=[]
+			
+			subject_obj={"id": current_subject[0]['id_subject_name'], "parent":"#", "text": current_subject[0]['name_spanish'], "state": {"opened":"true"}, "icon":"false"}
+			topictree.append(subject_obj)
+			
+			subject_chapter = Chapter.objects.filter(id_subject_name=current_subject[0]['id_subject_name']).exclude(index=None).order_by('index')
+			for chapter in subject_chapter:
+				chapter_obj = {"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "type":chapter.type_chapter,"icon":"false"}
+				topictree.append(chapter_obj)
+			chapter_topic=Topic.objects.filter(id_chapter_name_id__in=subject_chapter).exclude(index=None).order_by('index')
+			for topic in chapter_topic:
+				topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
+				topictree.append(topic_obj)
+			topic_subtopic=Subtopic.objects.filter(id_topic_name_id__in=chapter_topic).exclude(index=None).order_by('index')
+			for subtopic in topic_subtopic:
+				subtopic_obj={"id":subtopic.id_subtopic_name, "parent": subtopic.id_topic_name_id, "text":subtopic.name_spanish, "icon":"false"}
+				topictree.append(subtopic_obj)
+			subtopic_skill=Subtopic_Skill.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_skill_name')
+			subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
+			for video in subtopic_video:
+				video_obj={"id":video.id_subtopic_video, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "index":video.id_video_name.index}
+				sorted(video_obj, key=video_obj.get)
+				topictree.append(video_obj)
+			for skill in subtopic_skill:
+				skill_obj={"id":skill.id_subtopic_skill, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "index":skill.id_skill_name.index, "icon":"false"}
+				sorted(skill_obj, key=skill_obj.get)
+				topictree.append(skill_obj)
+
+			topictree_json['core']={'data':topictree}
+			topictree_json_string=json.dumps(topictree_json)
+
+		
+			return render_to_response('planificacionnivel.html', {
+								'plan':plan_dump,													#Diccionario de planificaciones
+								'class_subject':class_subj_id,	 									#ID del Class Subject (Curriculo en caso de ser Institucion)
+								'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
+								'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
+								'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
+								'anno': current_time.year,											#Año actual
 								'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
 								'json_data':json_data,												#Dump del diccionario de datos Mineduc
 								'json_khan_tree':topictree_json_string, 							#Dump del diccionario de habilidades Khan
+								'isTeacher': isTeacher,
+								'isAdmin':isAdmin,
 							}, context_instance=RequestContext(request))
 	except Exception as e:
 		print "Error en la apertura del plan: planificacion/view.py:getPlan"
-		print repr(e)
+		print traceback.print_exc()
 		return HttpResponseRedirect("/inicio")
 
 @login_required()
@@ -215,8 +369,7 @@ def savePlanning(request):
 		try:
 			teacher = request.user.user_profile.kaid
 			args = request.POST
-
-			class_sub = Class_Subject.objects.get(id_class_subject=args['id_tema_clase'])
+			
 			oa = Subtopic_Mineduc.objects.get(id_subtopic_mineduc=args['oa'])
 
 			habilidades = request.POST.getlist('lista_hab[]')
@@ -228,21 +381,82 @@ def savePlanning(request):
 				status = True
 
 			class_date = date(int(args['anno']), int(args['mes']), int(args['dia']))
-			p = Planning.objects.create(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subject=class_sub,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 
-			for habilidad in habilidades:
-				arr = habilidad.split(',')
-				Skill_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+			#Si el usuario es Admin, guarda el plan en Institutional_Plan
+			if(request.user.has_perm('bakhanapp.isAdmin')):
+				#En este caso, id_tema_clase' es el PK del curriculo en Chapter_Mineduc
+				curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=args['id_tema_clase'])
+				institution = Teacher.objects.get(kaid_teacher=teacher).id_institution
 
-			for video in videos:
-				arr = video.split(',')
-				Video_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+				p = Institutional_Plan.objects.create(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date, curriculum=curriculum,class_subtopic=oa, minutes=args['duracion'],share_class=False,status=status, institution=institution)
+
+				for habilidad in habilidades:
+					arr = habilidad.split(',')
+					Skill_Institution_Plan.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+
+				for video in videos:
+					arr = video.split(',')
+					Video_Institution_Plan.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+
+			#Caso contrario, el usuario es solamente profesor.
+			else:
+				#'id_tema_clase' es el PK de Class_Subject en este caso.
+				class_sub = Class_Subject.objects.get(id_class_subject=args['id_tema_clase'])
+
+				p = Planning.objects.create(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subject=class_sub,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
+
+				for habilidad in habilidades:
+					arr = habilidad.split(',')
+					Skill_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+
+				for video in videos:
+					arr = video.split(',')
+					Video_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
 
 			return HttpResponse('Planificación guardada correctamente')
 		except Exception as e:
-			print "Error en el guardado de un plan: planificacion/view.py:savePlanning"
-			print repr(e)
-			return HttpResponse('La planificacion no se puede guardar')
+			if "duplicate key value violates unique constraint" in e:
+				return HttpResponse('La planificacion no se puede editar. El nombre de la clase ya existe.')
+			print "Error en la modificacion de un plan: planificacion/view.py:savePlanning"
+			print traceback.print_exc()
+			return HttpResponse('La planificacion no se puede editar, favor revisar los campos ingresados.')
+
+@login_required()
+def copyPlanning(request):
+	if request.method=="POST":
+		try:
+			teacher = request.user.user_profile.kaid
+			args = request.POST
+
+			Planning.objects.filter(class_subject=args['owner_class_id']).delete()
+			#Si existe "inst" en el URL, esta copiando desde un plan institucional, se hace la Query en la tabla relacionada.
+			if args["is_institution"] == "True":
+				plan_list = Institutional_Plan.objects.filter(curriculum=args['copied_class_id'])
+			else:
+				plan_list = Planning.objects.filter(class_subject=args['copied_class_id'])
+
+			for plan in plan_list:
+				new = Planning.objects.create(class_name=plan.class_name, desc_inicio=plan.desc_inicio, desc_cierre=plan.desc_cierre, class_date=plan.class_date, class_subject=Class_Subject.objects.get(id_class_subject=args['owner_class_id']), class_subtopic=plan.class_subtopic, minutes=plan.minutes, share_class=False, status=plan.status)
+
+				if args["is_institution"] == "True":
+					habilidades = Skill_Institution_Plan.objects.filter(id_planning=plan)
+				else:
+					habilidades = Skill_Planning.objects.filter(id_planning=plan)
+				for habilidad in habilidades:
+					Skill_Planning.objects.create(id_planning=new, id_subtopic=habilidad.id_subtopic, id_skill=habilidad.id_skill)
+
+				if args["is_institution"] == "True":
+					videos = Video_Institution_Plan.objects.filter(id_planning=plan)
+				else:
+					videos = Video_Planning.objects.filter(id_planning=plan)
+				for video in videos:
+					Video_Planning.objects.create(id_planning=new, id_subtopic=video.id_subtopic, id_video=video.id_video)
+
+			return HttpResponse('Planificación copiada correctamente')
+		except Exception as e:
+			print "Error en el copiado de un plan: planificacion/view.py:copyPlanning"
+			print traceback.print_exc()
+			return HttpResponse('La planificacion no se puede copiar')
 
 @login_required()
 def editPlanning(request):
@@ -251,39 +465,54 @@ def editPlanning(request):
 			teacher = request.user.user_profile.kaid
 			args = request.POST
 
-			class_sub = Class_Subject.objects.get(id_class_subject=args['id_tema_clase'])
 			oa = Subtopic_Mineduc.objects.get(id_subtopic_mineduc=args['oa'])
 
 			class_date = date(int(args['anno']), int(args['mes']), int(args['dia']))
+
+			habilidades = request.POST.getlist('lista_hab[]')
+			videos = request.POST.getlist('lista_vid[]')
 
 			if (args['estado'] == "False"):
 				status = False
 			else:
 				status = True
-			
-			Planning.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 
-			Skill_Planning.objects.filter(id_planning=args['id']).delete();
-			Video_Planning.objects.filter(id_planning=args['id']).delete();
+			if(request.user.has_perm('bakhanapp.isAdmin')):
+				Institutional_Plan.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 
-			habilidades = request.POST.getlist('lista_hab[]')
-			videos = request.POST.getlist('lista_vid[]')
+				Skill_Institution_Plan.objects.filter(id_planning=args['id']).delete();
+				Video_Institution_Plan.objects.filter(id_planning=args['id']).delete();
 
-			print videos
+				for habilidad in habilidades:
+					arr = habilidad.split(',')
+					Skill_Institution_Plan.objects.create(id_planning=Institutional_Plan.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
 
-			for habilidad in habilidades:
-				arr = habilidad.split(',')
-				Skill_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+				for video in videos:
+					arr = video.split(',')
+					Video_Institution_Plan.objects.create(id_planning=Institutional_Plan.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
 
-			for video in videos:
-				arr = video.split(',')
-				Video_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+			else:	
+				Planning.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
+
+				Skill_Planning.objects.filter(id_planning=args['id']).delete();
+				Video_Planning.objects.filter(id_planning=args['id']).delete();
+
+				for habilidad in habilidades:
+					arr = habilidad.split(',')
+					Skill_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+
+				for video in videos:
+					arr = video.split(',')
+					Video_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
 
 			return HttpResponse('Planificación guardada correctamente')
 		except Exception as e:
-			print "Error en la modificacion de un plan: planificacion/view.py:editPlanning"
-			print repr(e)
-			return HttpResponse('La planificacion no se puede guardar')
+			if "duplicate key" in str(e):
+				return HttpResponse('La planificacion no se puede editar. El nombre de la clase ya existe.')
+			else:
+				print "Error en la modificacion de un plan: planificacion/view.py:editPlanning"
+				print traceback.print_exc()
+				return HttpResponse('La planificacion no se puede editar, favor revisar los campos ingresados.')
 
 @login_required()
 def deletePlanning(request):
@@ -291,9 +520,39 @@ def deletePlanning(request):
 		try:
 			args = request.POST
 			plan_id = args['id']
-			Planning.objects.filter(id_planning=plan_id).delete()
+			if(request.user.has_perm('bakhanapp.isAdmin')):
+				#Borrado logico
+				#Institutional_Plan.objects.filter(id_planning=plan_id).update(is_deleted=True)
+				Institutional_Plan.objects.filter(id_planning=plan_id).delete()
+			else:
+				#Planning.objects.filter(id_planning=plan_id).update(is_deleted=True)
+				Planning.objects.filter(id_planning=plan_id).delete()
 			return HttpResponse('Planificacion borrada correctamente')
 		except Exception as e:
 			print "Error en el borrado de un plan: planificacion/view.py:deletePlanning"
-			print repr(e)
+			print traceback.print_exc()
 			return HttpResponse('La planificacion no se pudo borrar.')
+
+@login_required()
+def getReport(request):
+	if request.method=="GET":
+		try:
+			subj_id = request.GET.get("subj_class_id",None)
+			class_subject = Class_Subject.objects.filter(id_class_subject=subj_id).values("id_class")
+			plan_list = plan_list = Planning.objects.filter(class_subject_id=subj_id).order_by('class_date').values("class_date")
+
+			data = {}
+
+			data['nStudents'] = Student.objects.filter(student_class__id_class_id=class_subject[0]["id_class"]).count()
+			data['nPlans'] = Planning.objects.filter(class_subject__id_class_subject=subj_id).count()
+			data['teacher_name'] = Teacher.objects.get(class_subject__id_class_subject=subj_id).name
+			data['start_date'] = [plan_list[0]["class_date"].day, plan_list[0]["class_date"].month, plan_list[0]["class_date"].year]
+			data['end_date'] = [plan_list[len(plan_list)-1]["class_date"].day, plan_list[len(plan_list)-1]["class_date"].month, plan_list[len(plan_list)-1]["class_date"].year]
+
+			json_data = json.dumps(data)
+
+			return HttpResponse(json_data, content_type="application/json")
+		except Exception as e:
+			print "Error en la obtencion de los datos del resumen: planificacion/view.py:getReport"
+			print traceback.print_exc()
+			return HttpResponse('No se pudo obtener la información.')
