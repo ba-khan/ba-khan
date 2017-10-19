@@ -6,17 +6,8 @@
 
 {% block body2 %}
 
-<!--<script src="{% static 'js/editablegrid.js' %}"></script>
-<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
-<script src="{% static 'js/editablegrid_editors.js' %}"></script>
-<script src="{% static 'js/editablegrid_validators.js' %}"></script>
-<script src="{% static 'js/editablegrid_utils.js' %}"></script>
-<script src="{% static 'js/editablegrid_charts.js' %}"></script>-->
-
-<!--<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">-->
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
-<script src="http://d3js.org/d3.v4.js"></script>
+<script src="{% static 'd3-timeline.js'%}"></script>
 
 <style>
     input{
@@ -77,7 +68,7 @@
 
     #summary-container{
         display: none;
-        width: 1180px;
+        width: 1600px;
         min-height: 500px;
         margin-left: 320px;
         text-align: left;
@@ -261,6 +252,26 @@
         min-width: 700px
     }
 
+    .sum-content{
+        margin-right: 20px;
+        margin-left: 3px;
+        padding: 24px;
+        width: 70%;
+        float: left;
+        min-width: 700px;
+        background-color: rgb(247, 247, 247);
+        border: 1px solid rgb(221, 221, 221);
+
+    }
+
+    .main-content li{
+        text-align:left;
+    }
+
+    .main-content h2, h3{
+        text-align: center;
+    }
+
     .main-content li{
         text-align:left;
     }
@@ -304,12 +315,12 @@
         background: #FF5656;
     }
 
-    .done{
-        background: green;
+    .not-done{
+        background: #FFDF42;
     }
 
-    .not-done{
-        background: blue;
+    .done{
+        background: #0094FF;
     }
 
     .chart rect:first-of-type {
@@ -327,13 +338,92 @@
     .chart rect:nth-of-type(2) {
         color: #fff;
         stroke: transparent;
-        fill: #3994b6;
+        fill: #1C758A;
     }
 
     text:nth-of-type(2) {
         fill: white;
         font-family: sans-serif;
         font-size: 12px;
+    }
+
+    path {
+        stroke: #fff;
+    }
+
+    path:hover{ 
+        opacity:0.9;
+    }
+
+    rect:hover {
+        fill:blue;
+    }
+
+    .legend tr{
+        border-bottom:1px solid gray;
+    }
+
+    .legend tr:first-child{    border-top:1px solid gray; }
+
+    .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+    .legend{
+        margin-bottom:76px;
+        display:inline-block;
+        border-collapse: collapse;
+        border-spacing: 0px;
+    }
+    .legend td{
+        padding:4px 5px;
+        vertical-align:bottom;
+    }
+    .legendFreq, .legendPerc{
+        align:right;
+        width:50px;
+    }
+    .piechart{
+        height: 280px;
+        margin: 50px 100px;
+    }
+    .piechart h3{
+        width: 100px;
+        margin-left: 300px;
+    }
+    .d3-tip {
+    line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        border-radius: 2px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
     }
 
 </style>
@@ -503,8 +593,8 @@
 </div>
 
 <div id="summary-container" class="container">
-    <div id="summary-content" class="main-contentt" style="max-height: 200px;">
-        <h3>Resumen</h3>
+    <div id="summary-content" class="sum-content">
+        <h2>Resumen</h2>
         <label id="teacher_rpLabel"></label><br>
         <label id="student_count_rpLabel"></label><br>
         <label id="plan_count_rpLabel"></label><br>
@@ -512,10 +602,19 @@
         <label id="plan_end_date_rpLabel"></label><br>
     </div>
 
-    <div id="summary-content" class="main-content" style="height: auto;">
-        <h3>Progreso de unidades</h3>
-        <div id="plan-progress">
-        </div>
+    <div id="summary-content" class="sum-content">
+        <h2>Progreso de unidades</h2>
+        <div id="plan-progress"></div>
+    </div>
+
+    <div id="timeline-content" class="sum-content">
+        <h2>Linea de tiempo</h2>
+        <div id="timeline-progress"></div>
+    </div>
+
+    <div id="piechart-content" class="sum-content">
+        <h2>Habilidades dominadas por unidad</h2>
+        <div id="piechart-progress"></div>
     </div>
 </div>
 
@@ -524,7 +623,6 @@
 <div id="popuptree" style="display:none"></div>
 
 <script type="text/javascript">
-
     $(document).ready(function(){
         $("#hover").click(function(){
             $(this).fadeOut();
@@ -595,7 +693,7 @@
 
         if(firstTimeOpen){
             retrieveReport();
-            //firstTimeOpen = false;
+            firstTimeOpen = false;
         }
     }
 
@@ -613,6 +711,8 @@
                 $("#plan_end_date_rpLabel").html("Fecha final: " + response["end_date"].join("/"));
 
                 loadPlanBar();
+                loadTimeline(response["time"]);
+                loadPieChart(response["skills"]);
             },
             error: function(response, error){
                 alert("Error: " + response.length);
@@ -683,10 +783,10 @@
                 for (var s = 0; s < subtopicos.length; s++){
                     if (plan_list[i]['class_subtopic'] == subtopicos[s]['id']){
                         text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
-                        if(plan_list[i]["late"]){
-                            text += "<div class='box late'></div>";
-                        }else if(plan_list[i]["status"]){
+                        if(plan_list[i]["status"]){
                             text += "<div class='box done'></div>";
+                        }else if(plan_list[i]["late"]){
+                            text += "<div class='box late'></div>";
                         }else{
                             text += "<div class='box not-done'></div>";
                         }
@@ -699,10 +799,10 @@
             for (var i = 0; i < plan_list.length; i++){
                 if (plan_list[i]['class_subtopic'] == selected_oa_id){
                     text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
-                    if(plan_list[i]["late"]){
-                        text += "<div class='box late'></div>";
-                    }else if(plan_list[i]["status"]){
+                    if(plan_list[i]["status"]){
                         text += "<div class='box done'></div>";
+                    }else if(plan_list[i]["late"]){
+                        text += "<div class='box late'></div>";
                     }else{
                         text += "<div class='box not-done'></div>";
                     }
@@ -795,7 +895,11 @@
                 $("#newDate_M").val(plan_list[i]["class_date"][1]).change();
                 $("#newDate_Y").val(plan_list[i]["class_date"][0]).change();
                 $("#newDuration").val(plan_list[i]["minutes"]).change();
-                $("#newStatus").val(plan_list[i]["status"]).change();
+                if(plan_list[i]["status"] == true){
+                    $("#newState").val("True").change();
+                }else{
+                    $("#newState").val("False").change();
+                }
                 $("#newOpening").text(plan_list[i]["desc_inicio"]);
                 $("#newClosure").text(plan_list[i]["desc_cierre"]);
                 $("#newOA").val(plan_list[i]['class_subtopic']).change();
@@ -890,7 +994,6 @@
                 for (var p = 0; p < plan_list.length; p++){
                     if(plan_list[p]["class_subtopic"] == objetivos[ob]['id']){
                         hora_planeadas[u] += plan_list[p]["minutes"]/45;
-                        console.log(plan_list[p]["minutes"]/45);
                     }
                 }
             }
@@ -904,13 +1007,14 @@
 
             var percent = Math.round(data[1] * 100 / data[0]);
 
-            $("#plan-progress").append("Unidad " + (i + 1) + ": ");
+            $("#plan-progress").append("<div id='percentbar-" + i + "' style='display: block; width: 100%; height: 30px'>")
+            $("#percentbar-" + i).append("<div style='position:absolute; margin-top: 2px; margin-right: 6px;'> Unidad " + (i + 1) + ": ");
 
-            var chart = d3.select("#plan-progress").append("svg") // creating the svg object inside the container div
+            var chart = d3.select("#percentbar-" + i).append("svg") // creating the svg object inside the container div
                 .attr("class", "chart")
+                .attr("style", "margin-left: 80px")
                 .attr("width", 400) // bar has a fixed width
-                .attr("height", 24)
-                .attr("margin-top", 10);
+                .attr("height", 24);
             
             var x = d3.scale.linear() // takes the fixed width and creates the percentage from the data values
                 .domain([0, data[0]])
@@ -923,21 +1027,238 @@
                 .attr("height", 24)
                 .attr("rx", 5) // rounded corners
                 .attr("ry", 5);
-                
-            chart.selectAll("text") // adding the text labels to the bar
-                .data(data)
-            .enter().append("text")
-                .attr("x", x)
-                .attr("y", 10) // y position of the text inside bar
-                .attr("dx", -3) // padding-right
-                .attr("dy", ".35em") // vertical-align: middle
-                .attr("text-anchor", "end") // text-align: right
-                .text(percent + "%");
+            
+            if(percent > 5){
+                chart.selectAll("text") // adding the text labels to the bar
+                    .data(data)
+                .enter().append("text")
+                    .attr("x", x)
+                    .attr("y", 10) // y position of the text inside bar
+                    .attr("dx", -3) // padding-right
+                    .attr("dy", ".35em") // vertical-align: middle
+                    .attr("text-anchor", "end") // text-align: right
+                    .text(percent + "%");
+            }
 
-            $("#plan-progress").append("Horas planificadas: " + hora_planeadas[i] + " Horas sugeridas: " + hora_unidades[i] + "<br>");
+            $("#percentbar-" + i).append("<div style='position:absolute; margin-top: -28px; margin-left: 500px;'> Horas planificadas: " + hora_planeadas[i] + " Horas sugeridas: " + hora_unidades[i] + "<br>");
+        }
+    }
+
+    function loadTimeline(tD){
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var Mes = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        var colorScale = d3.scale.ordinal().range(['#0094FF','#FF5656','#FFDF42'])
+            .domain(['done','late','not-done']);
+
+        var margin = {left: 90, right: 10, top: 10, bottom: 40};
+
+        var chart = d3.timeline()
+                .colors( colorScale )
+                .colorProperty('ctype')
+                .showTimeAxisTick()
+                .stack()
+                .margin(margin)
+                .showToday()
+                .hover(function(d, i, datum){
+                    this.style("fill","red");   
+                })
+                .display("circle")
+                .tickFormat({
+                        format: d3.time.format("%B"),
+                        tickTime: d3.time.months,
+                        tickSize: 16
+                });
+
+        chart.click(function(d, i, datum){
+            cambiarUnidad(datum.unit_id);
+            cambiarClase(d.plan_id,datum.unit_id);
+        });
+
+
+        var svg = d3.select("#timeline-progress").append("svg").attr("width", 1100)
+                    .datum(tD)
+                    .call(chart);
+
+        //Pinta el texto de los labels a negro.
+        $(".timeline-label").css("fill", "black");
+        $("g .axis .tick text").css("fill", "black");
+        for (var u = 0; u < tD.length; u++){
+            $(".timelineSeries_"+u).attr("r",8);
+            $(".timelineSeries_"+u).qtip({
+                content: function() {
+                    $(this).attr("fill", "red");
+                    var b = $(this).prop("__data__");
+
+                    var tooltip = "<ul>";
+                    for (var i = 0; i < plan_list.length; i++){
+                        if(plan_list[i]["id"] == b.plan_id){
+                            var date = String(plan_list[i]["class_date"]).split(",");
+
+                            tooltip += "<li style='text-align:left;'><strong>Clase: </strong>" + plan_list[i]["class_name"] + "</li>";
+                            tooltip += "<li style='text-align:left;'><strong>Fecha: </strong>" + date[2] + " de " + Mes[date[1]-1] + " de " + date[0] + "</li>";
+                            tooltip += "<li style='text-align:left;'><strong>Duración: </strong>" + plan_list[i]["minutes"] + " minutos</li>";
+                            if(plan_list[i]["status"]){
+                                tooltip += "<li style='text-align:left;'><strong>Estado: </strong>Realizada</li>";
+                            }
+                            else if(plan_list[i]["late"]){
+                                tooltip += "<li style='text-align:left;'><strong>Estado: </strong>Atraasdo</li>";
+                            }
+                            else{
+                                tooltip += "<li style='text-align:left;'><strong>Estado: </strong>No realizada</li>";
+                            }
+                        }
+                    }
+                    tooltip += '</ul>';
+                    return tooltip
+                },
+                show: { 
+                    event: 'mouseenter', 
+                    delay: 10, 
+                    solo: true,   
+                    effect: function(offset) {$(this).slideDown(100);}  
+                },
+                   
+                hide: { 
+                    event: 'mouseleave', 
+                    delay: 90, 
+                    fixed: true 
+                },
+
+                position: { 
+                    my: 'bottomLeft',
+                    at: 'topMiddle',
+                    adjust: {y: 10}
+                }
+            });
+        }
+    }
+
+    var pieArray = [];
+    var legendArray = [];
+    function loadPieChart(data){
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var unidades = curriculo["topicos"];
+        
+        for(var unidad = 0; unidad < data.length; unidad++){
+            if (data[unidad].length != 0){
+                data[unidad].forEach(function(d){ d.total = d.level.mastery3 + d.level.mastery2 + d.level.mastery1 + d.level.practiced;});
+
+                var tF = ["mastery3", "mastery2", "mastery1", "practiced", "unstarted"].map(function(d){ 
+                    return {
+                        type:d, freq: d3.sum(data[unidad].map(function(t){
+                            return t.level[d];
+                        }))
+                    }; 
+                });
+
+                $("#piechart-progress").append("<div class='piechart'><h3>Unidad " + (unidad+1) + "</h3><div id='piechart-graph-" + unidad + "' style='float:left'></div><div id='piechart-leg-" + unidad + "' style='float:right'></div><br>");
+
+                pieArray.push(drawPiechart(tF, unidad));
+                legendArray.push(drawLegend(tF, unidad));
+            }
+        }
+    }
+
+    function drawPiechart(pD, index){
+        var id = "#piechart-graph-" + index;
+        var segColor = {mastery3:"#1C758A", mastery2:"#29ABCA", mastery1:"#58C4DD", practiced:"#9CDCEB", unstarted:"#A0A0A0", struggling:"#C30202"};
+        var pC ={}, pieDim ={w:250, h: 250};
+        pieDim.r = Math.min(pieDim.w, pieDim.h) / 2;
+                
+        // create svg for pie chart.
+        var piesvg = d3.select(id).append("svg")
+            .attr("width", pieDim.w).attr("height", pieDim.h).append("g")
+            .attr("transform", "translate("+pieDim.w/2+","+pieDim.h/2+")");
+        
+        // create function to draw the arcs of the pie slices.
+        var arc = d3.svg.arc().outerRadius(pieDim.r - 10).innerRadius(0);
+
+        // create a function to compute the pie slice angles.
+        var pie = d3.layout.pie().sort(null).value(function(d) { return d.freq; });
+
+        // Draw the pie slices.
+        piesvg.selectAll("path").data(pie(pD)).enter().append("path").attr("d", arc)
+            .each(function(d) { this._current = d; })
+            .style("fill", function(d) { return segColor[d.data.type]; });
+
+        // create function to update pie-chart. This will be used by histogram.
+        pC.update = function(nD){
+            piesvg.selectAll("path").data(pie(nD)).transition().duration(500)
+                .attrTween("d", arcTween);
+        }        
+        // Animating the pie-slice requiring a custom function which specifies
+        // how the intermediate paths should be drawn.
+        function arcTween(a) {
+            var i = d3.interpolate(this._current, a);
+            this._current = i(0);
+            return function(t) { return arc(i(t));    };
+        }
+
+        return pC;
+    }
+    
+    function drawLegend(lD, index){
+        var id = "#piechart-leg-" + index;
+        var segColor = {mastery3:"#1C758A", mastery2:"#29ABCA", mastery1:"#58C4DD", practiced:"#9CDCEB", unstarted:"#A0A0A0", struggling:"#C30202"}
+        var leg = {};
+            
+        // create table for legend.
+        var legend = d3.select(id).append("table").attr('class','legend');
+        
+        // create one row per segment.
+        var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
+            
+        // create the first column for each segment.
+        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
+            .attr("width", '16').attr("height", '16')
+            .attr("fill",function(d){ return segColor[d.type]; });
+            
+        // create the second column for each segment.
+        tr.append("td").text(function(d){
+            switch (d.type){
+                case "mastery3":
+                    return "Dominado";
+                case "mastery2":
+                    return "Nivel 2";
+                case "mastery1":
+                    return "Nivel 1";
+                case "practiced":
+                    return "Practicado";
+                case "unstarted":
+                    return "Sin realizar";
+                case "struggling":
+                    return "Con problema";
+            }
+        });
+
+        // create the third column for each segment.
+        tr.append("td").attr("class",'legendFreq')
+            .text(function(d){ return d3.format(",")(d.freq);});
+
+        // create the fourth column for each segment.
+        tr.append("td").attr("class",'legendPerc')
+            .text(function(d){ return getLegend(d,lD);});
+
+        // Utility function to be used to update the legend.
+        leg.update = function(nD){
+            // update the data attached to the row elements.
+            var l = legend.select("tbody").selectAll("tr").data(nD);
+
+            // update the frequencies.
+            l.select(".legendFreq").text(function(d){ return d3.format(",")(d.freq);});
+
+            // update the percentage column.
+            l.select(".legendPerc").text(function(d){ return getLegend(d,nD);});        
         }
         
+        function getLegend(d,aD){ // Utility function to compute percentage.
+            return String(Math.round(d.freq * 1000/d3.sum(aD.map(function(v){ return v.freq; })))/10) + "%";
+        }
 
+        return leg;
     }
 
     function saveNewPlan(){

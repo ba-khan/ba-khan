@@ -145,11 +145,17 @@ class Chapter(models.Model):
 
 class Chapter_Mineduc(models.Model):
     id_chapter_mineduc = models.AutoField(primary_key=True)
-    index = models.IntegerField(blank=True, null=True)
-    name = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    id_subject = models.ForeignKey('Subject')
+    level = models.IntegerField()
+    year = models.IntegerField()
+    additional = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'bakhanapp_chapter_mineduc'
+        unique_together = (('level','year','id_subject'),)
+
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.level
 
 
 class Class(models.Model):
@@ -182,6 +188,7 @@ class Class_Subject(models.Model):
     id_class = models.ForeignKey(Class)
     id_subject_name = models.ForeignKey('Subject')
     kaid_teacher = models.ForeignKey('Teacher')
+    curriculum = models.ForeignKey(Chapter_Mineduc, blank=True, null=True)
 
     class Meta:
         db_table = 'bakhanapp_class_subject'
@@ -272,21 +279,49 @@ class Institution(models.Model):
 
 class Planning(models.Model):
     id_planning = models.AutoField(primary_key=True)
-    curso = models.CharField(max_length=20, blank=True, null=True)
-    oa = models.CharField(max_length=500, blank=True, null=True)
-    clase = models.CharField(max_length=50, blank=True, null=True)
-    objetivo = models.CharField(max_length=500, blank=True, null=True)
-    inicio = models.CharField(max_length=500, blank=True, null=True)
-    ejerciciokhan = models.CharField(max_length=500, blank=True, null=True)
-    videokhan = models.CharField(max_length=500, blank=True, null=True)
-    descripcion = models.CharField(max_length=500, blank=True, null=True)
-    cierre = models.CharField(max_length=500, blank=True, null=True)
-    teacher = models.ForeignKey('Teacher', blank=True, null=True)
+    class_subject = models.ForeignKey(Class_Subject)
+    class_subtopic = models.ForeignKey('Subtopic_Mineduc')
+    class_date = models.DateField(blank=True, null=True)
+    minutes = models.IntegerField(blank=True, null=True)
+    status = models.BooleanField(default= False)
+    desc_inicio = models.TextField(blank=True, null=True)
+    desc_cierre = models.TextField(blank=True, null=True)
+    share_class = models.NullBooleanField(default=False)
+    class_name = models.TextField(blank=False, null=False)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'bakhanapp_planning'
-        unique_together = (('curso', 'oa'),)
+        unique_together = (('class_name', 'class_subject'),)
 
+class Planning_Log(models.Model):
+    id_log = models.AutoField(primary_key=True)
+    id_planning = models.ForeignKey(Planning)
+    field = models.TextField()
+    old_value = models.TextField()
+    new_value = models.TextField()
+    date = models.DateField()
+
+    class Meta:
+        db_table = 'bakhanapp_planning_log'
+
+class Institutional_Plan(models.Model):
+    id_planning = models.AutoField(primary_key=True)
+    curriculum = models.ForeignKey('Chapter_Mineduc')
+    institution = models.ForeignKey('Institution')
+    class_subtopic = models.ForeignKey('Subtopic_Mineduc')
+    class_date = models.DateField(blank=True, null=True)
+    minutes = models.IntegerField(blank=True, null=True)
+    status = models.BooleanField(default= False)
+    desc_inicio = models.TextField(blank=True, null=True)
+    desc_cierre = models.TextField(blank=True, null=True)
+    share_class = models.NullBooleanField(default=False)
+    class_name = models.TextField(blank=False, null=False)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'bakhanapp_institutional_plan'
+        unique_together = (('class_name', 'curriculum'),)
 
 class Related_Video_Exercise(models.Model):
     id_related = models.AutoField(primary_key=True)
@@ -358,11 +393,23 @@ class Skill_Log(models.Model):
 
 class Skill_Planning(models.Model):
     id_skill_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Planning, blank=True, null=True)
-    id_skill = models.ForeignKey(Skill, blank=True, null=True)
+    id_planning = models.ForeignKey(Planning)
+    id_skill = models.ForeignKey(Skill)
+    id_subtopic = models.ForeignKey("Subtopic_Skill")
 
     class Meta:
         db_table = 'bakhanapp_skill_planning'
+        unique_together = (('id_planning','id_skill'),('id_planning','id_subtopic'),)
+
+class Skill_Institution_Plan(models.Model):
+    id_skill_planning = models.AutoField(primary_key=True)
+    id_planning = models.ForeignKey(Institutional_Plan)
+    id_skill = models.ForeignKey(Skill)
+    id_subtopic = models.ForeignKey("Subtopic_Skill")
+
+    class Meta:
+        db_table = 'bakhanapp_skill_institution_plan'
+        unique_together = (('id_planning','id_skill'),('id_planning','id_subtopic'),)
 
 
 class Skill_Progress(models.Model):
@@ -421,7 +468,7 @@ class Student_Skill(models.Model):
     total_hints = models.IntegerField()
     struggling = models.BooleanField()
     id_skill_name = models.ForeignKey(Skill)
-    kaid_student_id = models.CharField(max_length=40)
+    kaid_student = models.ForeignKey(Student)
 
     class Meta:
         db_table = 'bakhanapp_student_skill'
@@ -468,14 +515,14 @@ class Subtopic(models.Model):
 
 class Subtopic_Mineduc(models.Model):
     id_subtopic_mineduc = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True)
-    id_topic = models.ForeignKey('Topic_Mineduc', blank=True, null=True)
-    ae_oe = models.CharField(db_column='AE_OE', max_length=500, blank=True, null=True)  # Field name made lowercase.
-    index = models.IntegerField(blank=True, null=True)
+    id_topic = models.ForeignKey('Topic_Mineduc', related_name="topic_mineduc")
+    index = models.IntegerField()
+    description = models.TextField(blank=True, null=True)
+    summary = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'bakhanapp_subtopic_mineduc'
-        unique_together = (('name', 'id_topic'),)
+        unique_together = (('index', 'id_topic'),)
 
 
 class Subtopic_Skill(models.Model):
@@ -491,7 +538,7 @@ class Subtopic_Skill(models.Model):
 class Subtopic_Skill_Mineduc(models.Model):
     id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
     id_skill_name = models.ForeignKey(Skill, blank=True, null=True)
-    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True)
+    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True, related_name="subtopic_mineduc")
     id_tree = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
@@ -546,14 +593,14 @@ class Topic(models.Model):
 
 class Topic_Mineduc(models.Model):
     id_topic_mineduc = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50, blank=True, null=True)
-    id_chapter = models.ForeignKey(Chapter_Mineduc, blank=True, null=True)
-    index = models.IntegerField(blank=True, null=True)
-    descripcion_topic = models.CharField(max_length=250, blank=True, null=True)
+    id_chapter = models.ForeignKey(Chapter_Mineduc,related_name="topic_mineduc")
+    index = models.IntegerField()
+    descripcion_topic = models.TextField(blank=True, null=True)
+    suggested_time = models.IntegerField()
 
     class Meta:
         db_table = 'bakhanapp_topic_mineduc'
-        unique_together = (('name', 'id_chapter'),)
+        unique_together = (('index','id_chapter'),)
 
 
 class Tutor(models.Model):
@@ -594,11 +641,24 @@ class Video(models.Model):
 
 class Video_Planning(models.Model):
     id_video_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Planning, blank=True, null=True)
-    id_video = models.ForeignKey(Video, blank=True, null=True)
+    id_planning = models.ForeignKey(Planning)
+    id_video = models.ForeignKey(Video)
+    id_subtopic = models.ForeignKey(Subtopic_Video)
 
     class Meta:
         db_table = 'bakhanapp_video_planning'
+        unique_together = (('id_planning','id_video'),('id_planning','id_subtopic'),)
+
+
+class Video_Institution_Plan(models.Model):
+    id_video_planning = models.AutoField(primary_key=True)
+    id_planning = models.ForeignKey(Institutional_Plan)
+    id_video = models.ForeignKey(Video)
+    id_subtopic = models.ForeignKey(Subtopic_Video)
+
+    class Meta:
+        db_table = 'bakhanapp_video_institution_plan'
+        unique_together = (('id_planning','id_video'),('id_planning','id_subtopic'),)
 
 
 class Video_Playing(models.Model):
@@ -614,4 +674,3 @@ class Video_Playing(models.Model):
     class Meta:
         db_table = 'bakhanapp_video_playing'
         unique_together = (('date', 'id_video_name', 'kaid_student'),)
-

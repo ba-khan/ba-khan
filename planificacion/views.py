@@ -16,8 +16,8 @@ from django.core import serializers
 
 
 from django import template
-from bakhanapp.models import Assesment_Skill, Administrator, Teacher, Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution, Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc, Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Skill_Planning, Video_Planning, Institutional_Plan, Skill_Institution_Plan, Video_Institution_Plan
-from django.db import connection
+from bakhanapp.models import Assesment_Skill, Administrator, Teacher, Class_Subject, Class_Schedule, Class, Student_Class, Student, Institution, Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc, Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Skill_Planning, Video_Planning, Institutional_Plan, Skill_Institution_Plan, Video_Institution_Plan, Student_Skill
+from django.db import connection, IntegrityError
 
 register = template.Library()
 from configs import timeSleep
@@ -392,11 +392,17 @@ def savePlanning(request):
 
 				for habilidad in habilidades:
 					arr = habilidad.split(',')
-					Skill_Institution_Plan.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					try:
+						Skill_Institution_Plan.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 				for video in videos:
 					arr = video.split(',')
-					Video_Institution_Plan.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					try:
+						Video_Institution_Plan.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 			#Caso contrario, el usuario es solamente profesor.
 			else:
@@ -407,11 +413,17 @@ def savePlanning(request):
 
 				for habilidad in habilidades:
 					arr = habilidad.split(',')
-					Skill_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					try:
+						Skill_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 				for video in videos:
 					arr = video.split(',')
-					Video_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					try:
+						Video_Planning.objects.create(id_planning=p, id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 			return HttpResponse('Planificación guardada correctamente')
 		except Exception as e:
@@ -485,11 +497,17 @@ def editPlanning(request):
 
 				for habilidad in habilidades:
 					arr = habilidad.split(',')
-					Skill_Institution_Plan.objects.create(id_planning=Institutional_Plan.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					try:
+						Skill_Institution_Plan.objects.create(id_planning=Institutional_Plan.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 				for video in videos:
 					arr = video.split(',')
-					Video_Institution_Plan.objects.create(id_planning=Institutional_Plan.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					try:
+						Video_Institution_Plan.objects.create(id_planning=Institutional_Plan.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 			else:	
 				Planning.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
@@ -499,11 +517,17 @@ def editPlanning(request):
 
 				for habilidad in habilidades:
 					arr = habilidad.split(',')
-					Skill_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					try:
+						Skill_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Skill.objects.get(id_subtopic_skill=arr[1]), id_skill=Skill.objects.get(id_skill_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 				for video in videos:
 					arr = video.split(',')
-					Video_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					try:
+						Video_Planning.objects.create(id_planning=Planning.objects.get(id_planning=args['id']), id_subtopic=Subtopic_Video.objects.get(id_subtopic_video=arr[1]), id_video=Video.objects.get(id_video_name=arr[0]))
+					except IntegrityError as e:
+						pass
 
 			return HttpResponse('Planificación guardada correctamente')
 		except Exception as e:
@@ -538,17 +562,73 @@ def getReport(request):
 	if request.method=="GET":
 		try:
 			subj_id = request.GET.get("subj_class_id",None)
-			class_subject = Class_Subject.objects.filter(id_class_subject=subj_id).values("id_class")
-			plan_list = plan_list = Planning.objects.filter(class_subject_id=subj_id).order_by('class_date').values("class_date")
+			class_subject = Class_Subject.objects.get(id_class_subject=subj_id)
+			selected_class = Class.objects.get(id_class=class_subject.id_class.id_class)
+			plan_list = Planning.objects.filter(class_subject=subj_id).order_by('class_date').values("class_date", "status", "class_subtopic__id_topic__index","id_planning")
 
 			data = {}
+			t0 = datetime(1,1,1)
+			now = date.today()
 
-			data['nStudents'] = Student.objects.filter(student_class__id_class_id=class_subject[0]["id_class"]).count()
+			data['nStudents'] = Student.objects.filter(student_class__id_class_id=class_subject.id_class).count()
 			data['nPlans'] = Planning.objects.filter(class_subject__id_class_subject=subj_id).count()
 			data['teacher_name'] = Teacher.objects.get(class_subject__id_class_subject=subj_id).name
 			data['start_date'] = [plan_list[0]["class_date"].day, plan_list[0]["class_date"].month, plan_list[0]["class_date"].year]
 			data['end_date'] = [plan_list[len(plan_list)-1]["class_date"].day, plan_list[len(plan_list)-1]["class_date"].month, plan_list[len(plan_list)-1]["class_date"].year]
 
+			unit_list = Topic_Mineduc.objects.filter(id_chapter=class_subject.curriculum_id).order_by("index","id_topic_mineduc")
+			time_data = []
+			
+			skill_list = []
+			for unit in unit_list:
+				skill_sublist = []
+
+				time_data.append({"label":"Unidad " + str(unit.index), "index":unit.index, "unit_id":unit.id_topic_mineduc, "times":[]})
+
+				skills = Skill.objects.filter(skill_planning__id_planning=Planning.objects.filter(class_subtopic__id_topic=unit, class_subject=subj_id))
+				skill_mastery = Student_Skill.objects.filter(kaid_student_id__student_class__id_class=selected_class, id_skill_name=skills).values('last_skill_progress','struggling','id_skill_name','kaid_student__name', 'id_skill_name__name_spanish')
+
+				for skill in skills:
+					found_skills = 0
+					skill_data = {}
+					skill_data["level"] = {"total": 0, "unstarted": 0, "practiced": 0, "mastery1": 0, "mastery2": 0, "mastery3": 0, "struggling": 0}
+					skill_data["name"] = skill.name_spanish
+
+					for mastery in skill_mastery:						
+						if (mastery['id_skill_name'] == skill.id_skill_name):
+							found_skills += 1
+							skill_data["level"][mastery['last_skill_progress']] += 1
+							if (mastery['struggling'] == True):
+								skill_data["level"]["struggling"] += 1
+
+					skill_data["level"]["unstarted"] += data['nStudents'] - found_skills
+
+					skill_data["level"]["total"] = data['nStudents']
+					skill_sublist.append(skill_data)
+				skill_list.append(skill_sublist)
+			data["skills"] = skill_list
+
+			for i in range(len(plan_list)-1):
+				#Obtain the planned class dates in Ticks format as required by Timeline.js d3 plugin.
+				colortype = ""
+				tx = datetime(1, plan_list[i]["class_date"].month, plan_list[i]["class_date"].day)
+				ty = datetime(1, plan_list[i+1]["class_date"].month, plan_list[i+1]["class_date"].day)
+				tfx = (tx - t0).total_seconds() * 1000.0
+				tfy = (ty - t0).total_seconds() * 1000.0
+
+				if (plan_list[i]["status"] == True):
+					colortype = "done"
+				elif plan_list[i]["class_date"] < now:
+					colortype = "late"
+				else:
+					colortype = "not-done"
+
+				for time in time_data:
+					if time["index"] == plan_list[i]["class_subtopic__id_topic__index"]:
+						time["times"].append({"starting_time":tfx, "ending_time":tfy, "ctype":colortype, "plan_id":plan_list[i]["id_planning"]})
+
+			print time_data
+			data["time"] = time_data
 			json_data = json.dumps(data)
 
 			return HttpResponse(json_data, content_type="application/json")
