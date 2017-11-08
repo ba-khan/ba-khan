@@ -4,24 +4,23 @@ from django.contrib.auth.models import User
 
 from django.db.models.fields.related import ForeignKey
 
-'''
-class Auth_Group(models.Model):
+class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
 
     class Meta:
         db_table = 'auth_group'
 
 
-class Auth_Group_Permissions(models.Model):
-    group = models.ForeignKey(Auth_Group)
-    permission = models.ForeignKey('Auth_Permission')
+class AuthGroupPermissions(models.Model):
+    group = models.ForeignKey(AuthGroup)
+    permission = models.ForeignKey('AuthPermission')
 
     class Meta:
         db_table = 'auth_group_permissions'
         unique_together = (('group', 'permission'),)
 
 
-class Auth_Permission(models.Model):
+class AuthPermission(models.Model):
     name = models.CharField(max_length=255)
     content_type = models.ForeignKey('DjangoContentType')
     codename = models.CharField(max_length=100)
@@ -31,7 +30,7 @@ class Auth_Permission(models.Model):
         unique_together = (('content_type', 'codename'),)
 
 
-class Auth_User(models.Model):
+class AuthUser(models.Model):
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField(blank=True, null=True)
     is_superuser = models.BooleanField()
@@ -47,24 +46,24 @@ class Auth_User(models.Model):
         db_table = 'auth_user'
 
 
-class Auth_User_Groups(models.Model):
-    user = models.ForeignKey(Auth_User)
-    group = models.ForeignKey(Auth_Group)
+class AuthUserGroups(models.Model):
+    user = models.ForeignKey(AuthUser)
+    group = models.ForeignKey(AuthGroup)
 
     class Meta:
         db_table = 'auth_user_groups'
         unique_together = (('user', 'group'),)
 
 
-class Auth_User_User_Permissions(models.Model):
-    user = models.ForeignKey(Auth_User)
-    permission = models.ForeignKey(Auth_Permission)
+class AuthUserUserPermissions(models.Model):
+    user = models.ForeignKey(AuthUser)
+    permission = models.ForeignKey(AuthPermission)
 
     class Meta:
         db_table = 'auth_user_user_permissions'
         unique_together = (('user', 'permission'),)
 
-'''
+
 class Administrator(models.Model):
     kaid_administrator = models.CharField(primary_key=True, max_length=50)
     name = models.CharField(max_length=50)
@@ -84,6 +83,7 @@ class Administrator(models.Model):
     class Admin:
         pass
 
+
 class Assesment(models.Model):
     id_assesment = models.AutoField(primary_key=True)
     start_date = models.DateField()
@@ -100,7 +100,7 @@ class Assesment(models.Model):
         db_table = 'bakhanapp_assesment'
 
     def __unicode__(self): # __unicode__ on Python 2
-        return self.name
+        return self.name_spanish
 
 
 class Assesment_Config(models.Model):
@@ -109,7 +109,7 @@ class Assesment_Config(models.Model):
     name = models.CharField(max_length=100)
     id_subject_name = models.ForeignKey('Subject')
     kaid_teacher = models.ForeignKey('Teacher')
-    importance_skill_level = models.IntegerField(blank=True, null=True)
+    importance_skill_level = models.IntegerField()
     importance_completed_rec = models.IntegerField()
     applied = models.NullBooleanField()
     top_score = models.IntegerField(blank=True, null=True)
@@ -168,7 +168,7 @@ class Class(models.Model):
 
     class Meta:
         db_table = 'bakhanapp_class'
-        unique_together = (('id_institution', 'level', 'letter', 'additional'),)
+        unique_together = (('id_institution', 'level', 'letter', 'year', 'additional'),)    #Se debe borrar Additional del listado.
 
 
 class Class_Schedule(models.Model):
@@ -194,8 +194,10 @@ class Class_Subject(models.Model):
         db_table = 'bakhanapp_class_subject'
         unique_together = (('id_class', 'id_subject_name'),)
 
+    def __unicode__(self): # __unicode__ on Python 2
+        return self.name_spanish
 
-#Al parecer este modelo no es usado ya que solo existia en la BD y no en Django(?)
+
 class Config_Skill(models.Model):
     id_assesment_config_id = models.IntegerField(blank=True, null=True)
     id_subtopic_skill_id = models.IntegerField(blank=True, null=True)
@@ -270,9 +272,6 @@ class Institution(models.Model):
     identifier = models.CharField(max_length=50, blank=True, null=True)
     password = models.CharField(max_length=20, blank=True, null=True)
 
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name
-
     class Meta:
         db_table = 'bakhanapp_institution'
 
@@ -288,40 +287,11 @@ class Planning(models.Model):
     desc_cierre = models.TextField(blank=True, null=True)
     share_class = models.NullBooleanField(default=False)
     class_name = models.TextField(blank=False, null=False)
-    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'bakhanapp_planning'
         unique_together = (('class_name', 'class_subject'),)
 
-class Planning_Log(models.Model):
-    id_log = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Planning)
-    field = models.TextField()
-    old_value = models.TextField(null=True)
-    new_value = models.TextField()
-    date = models.DateField()
-
-    class Meta:
-        db_table = 'bakhanapp_planning_log'
-
-class Institutional_Plan(models.Model):
-    id_planning = models.AutoField(primary_key=True)
-    curriculum = models.ForeignKey('Chapter_Mineduc')
-    institution = models.ForeignKey('Institution')
-    class_subtopic = models.ForeignKey('Subtopic_Mineduc')
-    class_date = models.DateField(blank=True, null=True)
-    minutes = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(default= False)
-    desc_inicio = models.TextField(blank=True, null=True)
-    desc_cierre = models.TextField(blank=True, null=True)
-    share_class = models.NullBooleanField(default=False)
-    class_name = models.TextField(blank=False, null=False)
-    is_deleted = models.BooleanField(default=False)
-
-    class Meta:
-        db_table = 'bakhanapp_institutional_plan'
-        unique_together = (('class_name', 'curriculum'),)
 
 class Related_Video_Exercise(models.Model):
     id_related = models.AutoField(primary_key=True)
@@ -401,16 +371,6 @@ class Skill_Planning(models.Model):
         db_table = 'bakhanapp_skill_planning'
         unique_together = (('id_planning','id_skill'),('id_planning','id_subtopic'),)
 
-class Skill_Institution_Plan(models.Model):
-    id_skill_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Institutional_Plan)
-    id_skill = models.ForeignKey(Skill)
-    id_subtopic = models.ForeignKey("Subtopic_Skill")
-
-    class Meta:
-        db_table = 'bakhanapp_skill_institution_plan'
-        unique_together = (('id_planning','id_skill'),('id_planning','id_subtopic'),)
-
 
 class Skill_Progress(models.Model):
     id_skill_progress = models.AutoField(primary_key=True)
@@ -422,9 +382,6 @@ class Skill_Progress(models.Model):
     class Meta:
         db_table = 'bakhanapp_skill_progress'
         unique_together = (('to_level', 'from_level', 'date', 'id_student_skill'),)
-
-    class Meta:
-        ordering = ['-date']
 
 
 class Student(models.Model):
@@ -443,7 +400,7 @@ class Student(models.Model):
 
     def __unicode__(self): # __unicode__ on Python 2
         return self.name
-
+          
     class Admin:
         pass
 
@@ -468,7 +425,7 @@ class Student_Skill(models.Model):
     total_hints = models.IntegerField()
     struggling = models.BooleanField()
     id_skill_name = models.ForeignKey(Skill)
-    kaid_student = models.ForeignKey(Student)
+    kaid_student_id = models.CharField(max_length=40)
 
     class Meta:
         db_table = 'bakhanapp_student_skill'
@@ -496,9 +453,6 @@ class Subject(models.Model):
     class Meta:
         db_table = 'bakhanapp_subject'
 
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
-
 
 class Subtopic(models.Model):
     id_subtopic_name = models.CharField(primary_key=True, max_length=150)
@@ -515,7 +469,7 @@ class Subtopic(models.Model):
 
 class Subtopic_Mineduc(models.Model):
     id_subtopic_mineduc = models.AutoField(primary_key=True)
-    id_topic = models.ForeignKey('Topic_Mineduc', related_name="topic_mineduc")
+    id_topic = models.ForeignKey('Topic_Mineduc')
     index = models.IntegerField()
     description = models.TextField(blank=True, null=True)
     summary = models.TextField(blank=True, null=True)
@@ -538,8 +492,8 @@ class Subtopic_Skill(models.Model):
 class Subtopic_Skill_Mineduc(models.Model):
     id_subtopic_skill_mineduc = models.AutoField(primary_key=True)
     id_skill_name = models.ForeignKey(Skill, blank=True, null=True)
-    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True, related_name="subtopic_mineduc")
-    id_tree = models.CharField(max_length=50, blank=True, null=True)
+    id_subtopic_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True)
+    id_tree = models.CharField(max_length=50, blank=True, null=True)    #Esto deberia ser un ForeignKey a Subtopic_Skill.
 
     class Meta:
         db_table = 'bakhanapp_subtopic_skill_mineduc'
@@ -559,7 +513,7 @@ class Subtopic_Video_Mineduc(models.Model):
     id_subtopic_video_mineduc = models.AutoField(primary_key=True)
     id_video_name = models.ForeignKey('Video', blank=True, null=True)
     id_subtopic_name_mineduc = models.ForeignKey(Subtopic_Mineduc, blank=True, null=True)
-    id_tree = models.CharField(max_length=50, blank=True, null=True)
+    id_tree = models.CharField(max_length=50, blank=True, null=True)    #Esto deberia ser un ForeignKey a Subtopic_Video.
 
     class Meta:
         db_table = 'bakhanapp_subtopic_video_mineduc'
@@ -587,16 +541,12 @@ class Topic(models.Model):
     class Meta:
         db_table = 'bakhanapp_topic'
 
-    def __unicode__(self): # __unicode__ on Python 2
-        return self.name_spanish
-
 
 class Topic_Mineduc(models.Model):
     id_topic_mineduc = models.AutoField(primary_key=True)
-    id_chapter = models.ForeignKey(Chapter_Mineduc,related_name="topic_mineduc")
+    id_chapter = models.ForeignKey(Chapter_Mineduc)
     index = models.IntegerField()
     descripcion_topic = models.TextField(blank=True, null=True)
-    suggested_time = models.IntegerField()
 
     class Meta:
         db_table = 'bakhanapp_topic_mineduc'
@@ -616,7 +566,7 @@ class Tutor(models.Model):
 
 class User_Profile(models.Model):
     kaid = models.CharField(max_length=40, blank=True, null=True)
-    user = models.OneToOneField(
+    user = user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         primary_key=True,
@@ -650,17 +600,6 @@ class Video_Planning(models.Model):
         unique_together = (('id_planning','id_video'),('id_planning','id_subtopic'),)
 
 
-class Video_Institution_Plan(models.Model):
-    id_video_planning = models.AutoField(primary_key=True)
-    id_planning = models.ForeignKey(Institutional_Plan)
-    id_video = models.ForeignKey(Video)
-    id_subtopic = models.ForeignKey(Subtopic_Video)
-
-    class Meta:
-        db_table = 'bakhanapp_video_institution_plan'
-        unique_together = (('id_planning','id_video'),('id_planning','id_subtopic'),)
-
-
 class Video_Playing(models.Model):
     id_video_playing = models.AutoField(primary_key=True)
     seconds_watched = models.IntegerField()
@@ -674,3 +613,43 @@ class Video_Playing(models.Model):
     class Meta:
         db_table = 'bakhanapp_video_playing'
         unique_together = (('date', 'id_video_name', 'kaid_student'),)
+
+
+class DjangoAdminLog(models.Model):
+    action_time = models.DateTimeField()
+    object_id = models.TextField(blank=True, null=True)
+    object_repr = models.CharField(max_length=200)
+    action_flag = models.SmallIntegerField()
+    change_message = models.TextField()
+    content_type = models.ForeignKey('DjangoContentType', blank=True, null=True)
+    user = models.ForeignKey(AuthUser)
+
+    class Meta:
+        db_table = 'django_admin_log'
+
+
+class DjangoContentType(models.Model):
+    app_label = models.CharField(max_length=100)
+    model = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = 'django_content_type'
+        unique_together = (('app_label', 'model'),)
+
+
+class DjangoMigrations(models.Model):
+    app = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    applied = models.DateTimeField()
+
+    class Meta:
+        db_table = 'django_migrations'
+
+
+class DjangoSession(models.Model):
+    session_key = models.CharField(primary_key=True, max_length=40)
+    session_data = models.TextField()
+    expire_date = models.DateTimeField()
+
+    class Meta:
+        db_table = 'django_session'

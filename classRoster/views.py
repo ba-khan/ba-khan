@@ -28,6 +28,7 @@ from bakhanapp.models import Student
 from bakhanapp.models import Student_Class
 from bakhanapp.models import Class_Subject
 from bakhanapp.models import Institution
+from bakhanapp.models import Chapter_Mineduc
 
 register = template.Library()
 from configs import timeSleep
@@ -197,16 +198,21 @@ def getRoster(request):
     institution = Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')
     students = Student.objects.filter(id_institution_id=institution).order_by('name')
 
-    classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).order_by('level','letter')
+    classes = Class.objects.filter(id_institution_id=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id')).values('id_class','level', 'letter', 'year', 'additional', 'class_subject__curriculum').order_by('-year','level','letter')
     #for clas in classes:
         #a = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=clas.id_class).values('kaid_student_id'))
         #for b in a:
             #students.append(b)
+    curriculum = Chapter_Mineduc.objects.filter().values('id_chapter_mineduc','year','level').order_by('year','level')
+    N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
+    for i in range(len(curriculum)):
+        curriculum[i]['level'] = N[int(curriculum[i]['level'])]
+
     if (Administrator.objects.filter(kaid_administrator=request.user.user_profile.kaid) or Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
         isTeacher = True
     else:
         isTeacher = False
-    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes,'isTeacher':isTeacher}, context_instance=RequestContext(request))
+    return render_to_response('classRoster.html', {'students':students, 'teachers':teachers, 'classes':classes,'curriculums':curriculum ,'isTeacher':isTeacher}, context_instance=RequestContext(request))
 
 
 ##
@@ -270,7 +276,7 @@ def newClass(request):
             additional = newClass["additional"]
             if additional=="":
                 additional = None
-            #teacher = newClass["teacher"]
+            curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=newClass["curriculum"])
             teacher = Teacher.objects.get(name=newClass["teacher"])
             kaid_teacher = teacher.kaid_teacher
             students = newClass.getlist("students[]")
@@ -283,13 +289,15 @@ def newClass(request):
             except:
                 curso = Class.objects.create(level=level, letter=letter, id_institution_id=id_institution, year=year, additional=additional)
                 id_curso = int(curso.id_class)
-                class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher)
+                class_subject = Class_Subject.objects.create(id_class_id=id_curso, id_subject_name_id='math', kaid_teacher_id=kaid_teacher, curriculum=curriculum)
                 for student in students:
                     aux = Student.objects.get(name=student)
                     student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
                 return HttpResponse("Nuevo curso creado")
         except Exception as e:
-            print e
+            print "Error en: classRoster/view.py:viewClass"
+            print repr(e)
+            return HttpResponse('El curso no se pudo crear')
 
 ##
 ## @brief      { function_description }
@@ -301,20 +309,31 @@ def newClass(request):
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def viewClass(request):
     if request.method == 'POST':
-        classObj = request.POST
-        clas = Class.objects.get(id_class=classObj['idClass'])
-        students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id')).order_by('name')
-        teacher = Teacher.objects.filter(kaid_teacher=Class_Subject.objects.filter(id_class_id=classObj['idClass']).values('kaid_teacher_id'))
-        data_teacher = serializers.serialize('json', teacher)
-        struct_teacher = json.loads(data_teacher)
+        try:
+            classObj = request.POST
 
-        data_students = serializers.serialize('json', students)
-        struct_students = json.loads(data_students)
-        struct_students.append(struct_teacher)
-        students = json.dumps(struct_students)
+            clas = Class.objects.get(id_class=classObj['idClass'])
+            students = Student.objects.filter(kaid_student__in=Student_Class.objects.filter(id_class_id=classObj['idClass']).values('kaid_student_id')).order_by('name')
+            teacher = Teacher.objects.filter(kaid_teacher=Class_Subject.objects.filter(id_class_id=classObj['idClass']).values('kaid_teacher_id'))
+            curriculum = Chapter_Mineduc.objects.filter(class_subject__id_class_id=classObj['idClass'])
+            data_teacher = serializers.serialize('json', teacher)
+            struct_teacher = json.loads(data_teacher)
 
-        return HttpResponse(students)
+            data_students = serializers.serialize('json', students)
+            struct_students = json.loads(data_students)
 
+            data_curriculum = serializers.serialize('json',curriculum)
+            struct_curriculum = json.loads(data_curriculum)
+
+            struct_students.append(struct_teacher)
+            struct_students.append(struct_curriculum)
+            students = json.dumps(struct_students)
+
+            return HttpResponse(students)
+        except Exception as e:
+            print "Error en: classRoster/view.py:viewClass"
+            print repr(e)
+            return HttpResponse('El curso no se pudo visualizar')
 
 ##
 ## @brief      { function_description }
@@ -326,21 +345,26 @@ def viewClass(request):
 @permission_required('bakhanapp.isAdmin', login_url="/")
 def editClass(request):
     if request.method == 'POST':
-        newClass = request.POST
-        level = int(newClass["level"])
-        letter = newClass["letter"]
-        year = int(newClass["year"])
-        additional = newClass["additional"]
-        id_class = newClass["idClass"]
-        if additional=="":
-            additional = None
-        teacher = Teacher.objects.get(name=newClass["teacher"])
-        kaid_teacher = teacher.kaid_teacher
-        students = newClass.getlist("students[]")
-
-        inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
-        id_institution = int(inst.id_institution)
         try:
+            newClass = request.POST
+            level = int(newClass["level"])
+            letter = newClass["letter"]
+            year = int(newClass["year"])
+            additional = newClass["additional"]
+            id_class = newClass["idClass"]
+            if additional == "":
+                additional = None
+            if newClass["curriculum"] == "":
+                curriculum = None
+            else:
+                curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=newClass["curriculum"])
+            teacher = Teacher.objects.get(name=newClass["teacher"])
+            kaid_teacher = teacher.kaid_teacher
+            students = newClass.getlist("students[]")
+
+            inst = Institution.objects.get(id_institution=Teacher.objects.filter(kaid_teacher=request.user.user_profile.kaid).values('id_institution_id'))
+            id_institution = int(inst.id_institution)
+            
 
             curso = Class.objects.get(id_class=id_class)
             #level=level,letter=letter,id_institution_id=id_institution, year=year, additional=additional
@@ -353,6 +377,7 @@ def editClass(request):
             #id_class=curso.id_class
             class_subject = Class_Subject.objects.get(id_class_id=id_class)
             class_subject.kaid_teacher_id = kaid_teacher
+            class_subject.curriculum_id = curriculum
             class_subject.save() #GUARDA EL PROFESOR
 
             student_class = Student_Class.objects.filter(id_class_id=id_class)
@@ -363,8 +388,10 @@ def editClass(request):
                 student_class = Student_Class.objects.create(id_class_id=id_class, kaid_student_id=aux.kaid_student)
 
             return HttpResponse("Curso editado correctamente")
-        except:
-            return HttpResponse("Error al editar")
+        except Exception as e:
+            print "Error en: classRoster/view.py:editClass"
+            print repr(e)
+            return HttpResponse('El curso no se pudo editar.')
 
 
 ##

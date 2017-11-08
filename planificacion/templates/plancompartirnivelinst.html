@@ -7,7 +7,6 @@
 {% block body2 %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
-<script src="{% static 'd3-timeline.js'%}"></script>
 
 <style>
     input{
@@ -216,6 +215,17 @@
         margin-right: 20px;
     }
 
+    .class-wide-block{
+        float: left;
+        width: 760px;
+        height: 100%;
+        margin: 20px;
+    }
+
+    .class-wide-block table{
+        width: 100%;
+    }
+
     .class-row{
         margin-top: 6px;
         margin-bottom: 6px;
@@ -289,8 +299,9 @@
         text-align: center;
     }
 
-    .contenidodhv h2{
-        margin-bottom: 0px;
+    .log-table{
+        overflow-y: auto;
+        height: 500px;
     }
 
     td.mousepointer{
@@ -441,8 +452,16 @@
 
 </style>
 
+<div style="float: left">
+    Autor de la planificación: {{ autor.0.name }}
+</div>
+
 <div style="float: right">
     Curriculo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
+</div>
+<br>
+<div class="copy-button">
+    <a href='#' onclick='javascript:copyWarning(); return false;' class='kui-button kui-button-plain kui-button-primary'>Copiar Plan</a>
 </div>
 
 <div id="topbar" style="min-width: 1200px; height: 52px; margin-bottom: -2px; margin-top: 15px">
@@ -459,98 +478,21 @@
                 </script>
             {% endif %}
         {% endfor %}
-        {% if not isAdmin %}
-            <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
-                Resumen
-            </a></li>
-        {% endif %}
+        <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
+            Resumen
+        </a></li>
     </ul>
 </div>
 <br>
 
 <div id="class-container" class="container" style="min-width: 1200px;">
-    <div class="main-content">
+    <div class="main-content" style="min-height: 1000px; margin-right: 20px; padding-left: 20px; padding-top: 20px; padding-bottom: 20px; width: 100%; float: left; min-width: 700px">
         <div id="header" class="flex-div"></div>
         <div id="subheader" class="flex-div"></div>
 
         <div class="container" id="class-panel">
             <div id="sidebar" class="class-list"></div>
             <div id="class-window" class="flex-div">
-                <div id='form-window' class='form' style='overflow: hidden; display: none'>
-                    <form action='' method='post' id='newClass_Form' autocomplete="off">{% csrf_token %}
-                    <h3 id='formTitle'>Crear nueva clase</h3>
-
-                    <div class='class-row' style='margin-left: 20px;'>
-                        <label for='newName'>Nombre de la clase: </label>
-                        <input id='newName' name='class_name_input' type='text' style='width: 74%; float:right; margin-right: 20px;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                    </div>
-
-                    <div class='class-block'>
-                        <div class='class-row'>
-                            <label for='newOA'> Objetivo Asignado: </label>
-                            <select id='newOA' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px; float:right; width: auto;'>
-                            
-                            </select>
-                            <br>
-                        </div>
-                        <div class='class-row'>
-                            {% if isAdmin %}
-                                <input hidden id='newState' value="False">
-                            {% else %}
-                                <label for='newState'>Estado: </label>
-                                <select id='newState' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                                    <option value='False'>No realizado</option>
-                                    <option value='True'>Realizado</option>
-                                </select>
-                            {% endif %}
-                        </div>
-                        <div class='class-row'>
-                            <label for='newOpening' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Inicio de la clase: </label>
-                            <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
-                        </div>
-                        <div class='class-row'>
-                            <label for='skill_block'>Habilidades:</label>
-                            <div id='skill_block' style='width: 300px; ' class='bloque-info'>
-                                <ul id='skill_list'></ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class='class-block' style='float:right'>
-                        <div class='class-row'>
-                            <label for='newDate'>Fecha: </label>
-                            <select id='newDate_Y' name='class_year_input' style='float:right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
-
-                            <select id='newDate_M' name='class_month_input' onchange='monthChanged(); return false;' style='float:right; margin-right: 8px; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
-
-                            <select id='newDate_D' name='class_day_input' style='float:right; margin-right: 8px; padding-left: 0px; width: auto; margin-left: 10px' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
-                        </div>
-                        <div class='class-row'>
-                            <label for='newDuration'>Duración: </label>
-                            <select id='newDuration' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
-                        </div>
-
-                        <div class='class-row'>
-                            <label for='newClosure' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Cierre de la clase: </label>
-                            <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
-                        </div>
-                        <div class='class-row'>
-                            <label for='video_block'>Videos:</label>
-                            <div id='video_block' style='width: 300px;' class='bloque-info'>
-                                <ul id='video_list'></ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div id='buttonFieldForm'></div>
-                    </form>
-                </div>
                 <div id='info-window' style='overflow: hidden; display:none'>
                     <h3 id="labelTitle"></h3>
 
@@ -559,11 +501,7 @@
                             <label id="labelOA"></label>
                         </div>
                         <div class='class-row'>
-                            {% if isAdmin %}
-                                <label id="labelStatus" hidden></label>
-                            {% else %}
-                                <label id="labelStatus"></label>
-                            {% endif %}
+                            <label id="labelStatus"></label>
                         </div>
                         <div class='class-row'>
                             <label for='blockInicio'><strong>Descripción de inicio:</strong></label>
@@ -589,7 +527,7 @@
                             <label for='blockCierre'><strong>Descripción de cierre:</strong></label>
                             <p id='blockCierre' style='width: 300px;' class='bloque-info'></p>
                         </div>
-                            <div class='class-row'>
+                        <div class='class-row'>
                             <label for='video_block'><strong>Videos:</strong></label>
                             <div id='video_block' style='width: 300px;' class='bloque-info'>
                                 <ul id='video_info'>
@@ -598,9 +536,11 @@
                         </div>
                     </div>
                     <br>
-                    <div id="buttonFieldInfo"></div>
+                    <div id="log-container" class="class-wide-block">
+
+                    </div>
                 </div>
-            </div>
+            </div>  
         </div>
     </div>
 </div>
@@ -639,11 +579,32 @@
     </div>
 </div>
 
-<div id="popup" style="display:none"></div>
-
-<div id="popuptree" style="display:none"></div>
+<div id="popup" style="display:none">
+    <div style="max-width:500px;margin-left:50px;">
+        <h3 style="text-align: center; color: red">Advertencia</h3>
+        <p>Esta opción creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
+    </div>
+    <div style="margin-bottom: 10px; max-width:500px;margin-left:50px;">
+        Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
+        {% if clase.0.additional %}
+            ( {{clase.0.additional}} )
+        {% endif %}
+        del año {{ clase.0.year }}.
+    </div>
+    <div style="margin-bottom: 10px">
+        <select id="owner_class">
+        <option value=-1>Seleccione un curso</option>
+        {% for curso in cursos_usuario %}
+            <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
+        {% endfor %}
+        </select>
+    </div>
+    <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
+    <a onclick="hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>
+</div>
 
 <script type="text/javascript">
+
     $(document).ready(function(){
         $("#hover").click(function(){
             $(this).fadeOut();
@@ -701,46 +662,6 @@
         $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
         $(document.getElementById("tab_unidad_" + unitid)).addClass("tab_select");
         $(document.getElementById("class-window")).addClass("class-window");
-    }
-
-    var firstTimeOpen = true;
-    function mostrarResumen(){
-        $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
-        $(document.getElementById("tab_resumen")).addClass("tab_select");
-        $(document.getElementById("class-window")).addClass("class-window");
-
-        $("#class-container").hide();
-        $("#summary-container").show();
-
-        if(firstTimeOpen){
-            retrieveReport();
-            firstTimeOpen = false;
-        }
-    }
-
-    function retrieveReport(){
-        $.ajax({
-            url: "{% url 'planificacion:obtener_datos' %}",
-            type: "GET",
-            data: { "subj_class_id" : {{ class_subject }},
-            },
-            success: function(response){
-                $("#teacher_rpLabel").html("Profesor: " + response["teacher_name"])
-                $("#student_count_rpLabel").html("Número de estudiantes: " + response["nStudents"]);
-                $("#plan_count_rpLabel").html("Número de planes realizados: " + response["nPlans"]);
-                $("#plan_start_date_rpLabel").html("Fecha de inicio: " + response["start_date"].join("/"));
-                $("#plan_end_date_rpLabel").html("Fecha final: " + response["end_date"].join("/"));
-
-                loadPlanBar();
-                loadTimeline(response["time"]);
-                loadPieChart(response["skills"]);
-                cambiarPiechart(0);
-                loadToolkit();
-            },
-            error: function(response, error){
-                alert("Error: " + response.length);
-            }
-        });
     }
 
     function filtrarOA(unitid){
@@ -810,7 +731,7 @@
                             text += "<div class='box done'></div>";
                         }else if(plan_list[i]["late"]){
                             text += "<div class='box late'></div>";
-                        }else if(plan_list[i]["status"] == false){
+                        }else{
                             text += "<div class='box not-done'></div>";
                         }
                         text += plan_list[i]['class_name'];
@@ -839,35 +760,16 @@
         $('#sidebar').append(text);
     }
 
-    function limpiarCampos(){
-        $("#newName").val("");
-        $("#newDate_D").empty();
-        $("#newDate_M").empty();
-        $("#newDate_Y").empty();
-        $("#newDuration").empty();
-        $("#newStatus").val(0).change();
-        $("#newOpening").text("");
-        $("#newClosure").text("");
-        $("#newOA").empty();
-        $("#video_list").empty();
-        $("#skill_list").empty();
-        $("#video_info").empty();
-        $("#skill_info").empty();
-        $("#buttonFieldForm").empty();
-        $("#buttonFieldInfo").empty();
-    }
-
-    function cambiarClase(classid, unitid, edit_existing = false){
+    function cambiarClase(classid, unitid){
         $('#class-window').show();
-        $('#form-window').hide();
         $('#info-window').hide();
-        limpiarCampos();
 
-        var curriculo = JSON.parse('{{ json_data | escapejs }}');
-        var topicos = curriculo["topicos"];
-        var planificacion = JSON.parse('{{ plan | escapejs}}');
-        var plan_list = planificacion["plan"];
-        var text = "";
+        var topic_dump = JSON.parse('{{ json_data | escapejs }}');
+        var plan_dump = JSON.parse('{{ plan | escapejs}}');
+        var log_dump = JSON.parse("{{ log | escapejs }}");
+        var topicos = topic_dump["topicos"];
+        var plan_list = plan_dump["plan"];
+        var logs = log_dump["info"];
 
         for (var i = 0; i < topicos.length; i++) {
             if (topicos[i]['id'] == unitid){
@@ -878,128 +780,108 @@
 
         var Lista_Meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         var filtered_oa_id = $('#oa_select').val();
+        
+        //Inserta en la ventana que muestra contenido los datos de la clase.
 
-        //Prepara el panel de formulario de clases, en caso de edición de una clase, completa los campos con los valores existentes.
-        if (classid == 0 || edit_existing){
-            for (var i = 0; i < subtopicos.length; i++){
-                if(subtopicos[i]['id'] == filtered_oa_id){
-                    $('#newOA').append("<option selected value='" + subtopicos[i]["id"] + "'> O.A. " + subtopicos[i]["index"] + "</option>");
-                }
-                else $('#newOA').append("<option value='" + subtopicos[i]["id"] + "'> O.A. " + subtopicos[i]["index"] + "</option>");
-            }
-            for (var y = {{ anno }}; y >= 2000; y--){
-                $('#newDate_Y').append("<option value='" + y + "'>" + y + "</option>");
-            }
-            for (var m = 0; m < Lista_Meses.length; m++){
-               $('#newDate_M').append("<option value='" + (m + 1) + "'>" + Lista_Meses[m] + "</option>");
-            }
-            for (var d = 1; d <= 31; d++){
-                $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-            }
-            for (var n = 45; n <= 180; n = n +45){
-                $('#newDuration').append("<option value='" + n + "'>" + n +" min.</option>");
-            }
-            //Si se esta creando un plan nuevo, coloca los botones "Contenidos Khan y Crear".
-            if(classid == 0){
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree(0," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveNewPlan(); return false;' class='kui-button kui-button-submit kui-button-primary'>Crear");
-            }
-            //Si se edita un plan, se colocan los datos del plan a editar.
-            else if(edit_existing){
-                for(var i = 0; i < plan_list.length; i++){
-                    if(plan_list[i]["id"] == classid){
+        for(var i = 0; i < plan_list.length; i++){
+            if(plan_list[i]["id"] == classid){
+                //Busca el index del O.A.
+                for(var s = 0; s < subtopicos.length; s++){
+                    if(subtopicos[s]['id'] == plan_list[i]['class_subtopic']){
+                        var oa_index = subtopicos[s]['index'];
                         break;
                     }
                 }
+                $('#labelTitle').html(plan_list[i]["class_name"]);
+                $('#labelOA').html("<strong>Objetivo de aprendizaje:</strong> " + oa_index);                    
+                $('#blockInicio').html(plan_list[i]["desc_inicio"]);
+                $('#blockCierre').html(plan_list[i]["desc_cierre"]);
+                $('#labelDate').html("<strong>Fecha:</strong> " + plan_list[i]["class_date"][2] + " de " + Lista_Meses[plan_list[i]["class_date"][1]-1] + " de " + plan_list[i]["class_date"][0]);
+                $('#labelDuration').html("<strong>Duración:</strong> " + plan_list[i]["minutes"] + " minutos");
 
-                $("#formTitle").html('Editar plan "' + plan_list[i]["class_name"] + '"');
-                $("#newName").val(plan_list[i]["class_name"]);
-                $("#newDate_D").val(plan_list[i]["class_date"][2]).change();
-                $("#newDate_M").val(plan_list[i]["class_date"][1]).change();
-                $("#newDate_Y").val(plan_list[i]["class_date"][0]).change();
-                $("#newDuration").val(plan_list[i]["minutes"]).change();
-                if(plan_list[i]["status"] == true){
-                    $("#newState").val("True").change();
-                }else{
-                    $("#newState").val("False").change();
+                $('#labelStatus').html("<strong>Estado: </strong>");
+                if (plan_list[i]["status"] == true) $('#labelStatus').append("Realizado");
+                else{
+                    if (plan_list[i]["late"] == true) $('#labelStatus').append("Atrasado");
+                    else $('#labelStatus').append("No realizado");
                 }
-                $("#newOpening").text(plan_list[i]["desc_inicio"]);
-                $("#newClosure").text(plan_list[i]["desc_cierre"]);
-                $("#newOA").val(plan_list[i]['class_subtopic']).change();
-
                 for (var v = 0; v < plan_list[i]["videos"].length; v++){
-                    text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
+                    var text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
                     text += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
                     text += plan_list[i]["videos"][v]["nombre"];
                     text += "</li>";
-                    $("#video_list").append(text);
+                    $("#video_info").append(text);
                 }
 
                 for (var s = 0; s < plan_list[i]["skills"].length; s++){
-                    text = "<li key=" + plan_list[i]["skills"][s]["id"] + " tree='" + plan_list[i]["skills"][s]["tree"] + "'>";
+                    var text = "<li key=" + plan_list[i]["skills"][s]["id"] + " tree='" + plan_list[i]["skills"][s]["tree"] + "'>";
                     text += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
                     text += plan_list[i]["skills"][s]["nombre"];
                     text += "</li>";
-                    $("#skill_list").append(text);
+                    $("#skill_info").append(text);
                 }
 
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:openTree("+ classid + "," + unitid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Contenidos Khan");
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-right: 50px; cursor: pointer; float: right'><a href='#' onclick='javascript:saveEditedPlan(" + classid + "); return false;' class='kui-button kui-button-submit kui-button-primary'>Guardar</a></div>");
-                $("#buttonFieldForm").append("<div style='min-width: 180px; margin-left: 50px; cursor: pointer; float: left'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid +"); return false;' class='kui-button kui-button-plain kui-button-primary'>Cancelar</a></div>");
-            }
-            $("#form-window").show();
-        }
-        //Inserta en la ventana que muestra contenido los datos de la clase.
-        else{
-            for(var i = 0; i < plan_list.length; i++){
-                if(plan_list[i]["id"] == classid){
-                    //Busca el index del O.A.
-                    for(var s = 0; s < subtopicos.length; s++){
-                        if(subtopicos[s]['id'] == plan_list[i]['class_subtopic']){
-                            var oa_index = subtopicos[s]['index'];
-                            break;
-                        }
+                var log_exist = false
+                $("#log-container").html("<h3>Historial de cambios");
+                $("#log-container").append("<table id='log-table' class='log-table'>");
+                $("#log-table").append("<tr><th>Fecha del cambio</th><th>Campo editado</th><th>Valor original</th><th>Valor nuevo</th>");
+
+                for (var l = 0; l < logs.length; l++){
+
+                    if(logs[l]["id_planning"] == classid){
+                        log_exist = true;
+                        $("#log-table").append("<tr><td>" + logs[l]["date"] + "</td><td>" + logs[l]["field"] + "</td><td>" + logs[l]["old_value"] + "</td><td>" + logs[l]["new_value"] + "</td>");
                     }
-                    $('#labelTitle').html(plan_list[i]["class_name"]);
-                    $('#labelOA').html("<strong>Objetivo de aprendizaje:</strong> " + oa_index);                    
-                    $('#blockInicio').html(plan_list[i]["desc_inicio"]);
-                    $('#blockCierre').html(plan_list[i]["desc_cierre"]);
-                    $('#labelDate').html("<strong>Fecha:</strong> " + plan_list[i]["class_date"][2] + " de " + Lista_Meses[plan_list[i]["class_date"][1]-1] + " de " + plan_list[i]["class_date"][0]);
-                    $('#labelDuration').html("<strong>Duración:</strong> " + plan_list[i]["minutes"] + " minutos");
-
-                    $('#labelStatus').html("<strong>Estado: </strong>");
-                    if (plan_list[i]["status"] == true) $('#labelStatus').append("Realizado");
-                    else{
-                        if (plan_list[i]["late"] == true) $('#labelStatus').append("Atrasado");
-                        else $('#labelStatus').append("No realizado");
-                    } 
-
-                    for (var v = 0; v < plan_list[i]["videos"].length; v++){
-                        text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
-                        text += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
-                        text += plan_list[i]["videos"][v]["nombre"];
-                        text += "</li>";
-                        $("#video_info").append(text);
-                    }
-
-                    for (var s = 0; s < plan_list[i]["skills"].length; s++){
-                        text = "<li key=" + plan_list[i]["skills"][s]["id"] + " tree='" + plan_list[i]["skills"][s]["tree"] + "'>";
-                        text += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
-                        text += plan_list[i]["skills"][s]["nombre"];
-                        text += "</li>";
-                        $("#skill_info").append(text);
-                    }
-                    $("#buttonFieldInfo").append("<div style='min-width: 180px; margin-left: 100px; cursor: pointer; float: left'><a href='#' onclick='javascript:deleteWarning(" + classid + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Borrar</a></div>");
-                    $("#buttonFieldInfo").append("<div style='min-width: 180px; margin-right: 100px; cursor: pointer; float: right'><a href='#' onclick='javascript:cambiarClase(" + classid + "," + unitid + "," + true + "); return false;' class='kui-button kui-button-plain kui-button-primary'>Editar</a></div>");
-
-                    $("#info-window").show();
-                    break;
                 }
+                if(!log_exist) $("#log-container").empty();
+
+                $("#info-window").show();
+                break;
             }
         }
 
         $(document.getElementsByClassName("select")).removeClass("select");
         $(document.getElementById("tab_clase_" + classid)).addClass("select");
+    }
+
+    var firstTimeOpen = true;
+    function mostrarResumen(){
+        $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
+        $(document.getElementById("tab_resumen")).addClass("tab_select");
+        $(document.getElementById("class-window")).addClass("class-window");
+
+        $("#class-container").hide();
+        $("#summary-container").show();
+
+        if(firstTimeOpen){
+            retrieveReport();
+            firstTimeOpen = false;
+        }
+    }
+
+    function retrieveReport(){
+        $.ajax({
+            url: "{% url 'planificacion:obtener_datos' %}",
+            type: "GET",
+            data: { "subj_class_id" : {{ id }},
+            },
+            success: function(response){
+                $("#teacher_rpLabel").html("Profesor: " + response["teacher_name"])
+                $("#student_count_rpLabel").html("Número de estudiantes: " + response["nStudents"]);
+                $("#plan_count_rpLabel").html("Número de planes realizados: " + response["nPlans"]);
+                $("#plan_start_date_rpLabel").html("Fecha de inicio: " + response["start_date"].join("/"));
+                $("#plan_end_date_rpLabel").html("Fecha final: " + response["end_date"].join("/"));
+
+                loadPlanBar();
+                loadTimeline(response["time"]);
+                loadPieChart(response["skills"]);
+                cambiarPiechart(0);
+                loadToolkit();
+            },
+            error: function(response, error){
+                alert("Error: " + response.length);
+            }
+        });
     }
 
     function loadPlanBar(){
@@ -1529,55 +1411,17 @@
         });
     }
 
-    function saveNewPlan(){
-        var nName = $('#newName').val();
-        var nOA = $('#newOA').val();
-        var nDay =  $('#newDate_D').val();
-        var nMonth = $('#newDate_M').val();
-        var nYear = $('#newDate_Y').val();
-        var nDuration = $('#newDuration').val();
-        var nState  = $('#newState').val();
-        var nOpen = $('#newOpening').val().replace(/[\r\n]/g, "<br />");
-        var nClos = $('#newClosure').val().replace(/[\r\n]/g, "<br />");
-        var subID = {{ class_subject }};
+    function copyPlan(){
+        class_id = $("#owner_class").val();
+        original_id = {{ id }};
+        institution = false;
 
-        if(nName.length < 1){
-            $("#popup").empty()
-            $("#hover").fadeIn().css('display', '');
-            $("#popup").fadeIn().css('display', '');
-            $("#popup").append("<p>Hubo un error en el ingreso de datos. Debe ingresar un nombre a la clase.</p>");
-        }else{
-            var sList = [];
-            var vList = [];
-
-            $("#skill_list li").each(function(){
-                var dict = [];
-                dict.push($(this).attr('key'));
-                dict.push($(this).attr('tree'));
-                sList.push(dict);
-            });
-            $("#video_list li").each(function(){
-                var dict = [];
-                dict.push($(this).attr('key'));
-                dict.push($(this).attr('tree'));
-                vList.push(dict);
-            });
-
-            $.ajax({
-                url: "{% url 'planificacion:guardar_plan' %}",
+        $.ajax({
+                url: "{% url 'planificacion:copiar_plan' %}",
                 type: "POST",
-                data: {nombre: nName,
-                        oa: nOA,
-                        dia: nDay,
-                        mes: nMonth,
-                        anno: nYear,
-                        duracion: nDuration,
-                        estado: nState,
-                        desc_inicio: nOpen,
-                        desc_cierre: nClos,
-                        id_tema_clase: subID,
-                        'lista_vid[]': vList,
-                        'lista_hab[]': sList
+                data: {owner_class_id: class_id,
+                    copied_class_id: original_id,
+                    is_institution: institution
                     },
                 success: function(response){
                     $("#popup").empty()
@@ -1585,306 +1429,21 @@
                     $("#hover").fadeIn();
                     $("#popup").fadeIn();
                     $("#popup").append("<p class='response'>"+response+"</p>");
-                    auxResponse = response;
-                    if (auxResponse == "Planificación guardada correctamente"){
-                        $("#hover").css('pointer-events','none');
-                        $("#close").css('pointer-events','none');
-                        window.setTimeout(function(){
-                            location.reload()
-                        },500);
-                    }
-                },
-                error: function(response){
-                    $("#popup").empty()
-                    $("#hover").fadeIn().css('display', '');
-                    $("#popup").fadeIn().css('display', '');
-                    $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos. Asegurece que no exista una clase con el mismo nombre.</p>");
-                }
-            });
-        }
-    }
 
-    function saveEditedPlan(classid){
-        var nName = $('#newName').val();
-        var nOA = $('#newOA').val();
-        var nDay =  $('#newDate_D').val();
-        var nMonth = $('#newDate_M').val();
-        var nYear = $('#newDate_Y').val();
-        var nDuration = $('#newDuration').val();
-        var nState  = $('#newState').val();
-        var nOpen = $('#newOpening').val().replace(/[\r\n]/g, "<br />");
-        var nClos = $('#newClosure').val().replace(/[\r\n]/g, "<br />");
-        var subID = {{ class_subject }};
-
-        if(nName.length < 1){
-            $("#popup").empty()
-            $("#hover").fadeIn().css('display', '');
-            $("#popup").fadeIn().css('display', '');
-            $("#popup").append("<p>Hubo un error en el ingreso de datos. Debe ingresar un nombre a la clase.</p>");
-        }else{
-            var sList = [];
-            var vList = [];
-
-            $("#skill_list li").each(function(){
-                var dict = [];
-                dict.push($(this).attr('key'));
-                dict.push($(this).attr('tree'));
-                sList.push(dict);
-            });
-            $("#video_list li").each(function(){
-                var dict = [];
-                dict.push($(this).attr('key'));
-                dict.push($(this).attr('tree'));
-                vList.push(dict);
-            });
-
-            $.ajax({
-                url: "{% url 'planificacion:editar_plan' %}",
-                type: "POST",
-                data: {nombre: nName,
-                        oa: nOA,
-                        dia: nDay,
-                        mes: nMonth,
-                        anno: nYear,
-                        duracion: nDuration,
-                        estado: nState,
-                        desc_inicio: nOpen,
-                        desc_cierre: nClos,
-                        id_tema_clase: subID,
-                        id: classid,
-                        'lista_vid[]': vList,
-                        'lista_hab[]': sList
-                    },
-                success: function(response){
-                    $("#popup").empty()
-                    $("#close").hide();
-                    $("#hover").fadeIn();
-                    $("#popup").fadeIn();
-                    $("#popup").append("<p class='response'>"+response+"</p>");
-                    auxResponse = response;
-                    if (auxResponse == "Planificación guardada correctamente"){
-                        $("#hover").css('pointer-events','none');
-                        $("#close").css('pointer-events','none');
-                        window.setTimeout(function(){
-                            location.reload()
-                        },500);
-                    }
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){
+                        location.reload()
+                    },500);
                 },
                 error: function(response){
                     $("#popup").empty()
                     $("#hover").fadeIn().css('display', '');
                     $("#popup").fadeIn().css('display', '');
                     console.log(response);
-                    $("#popup").append("<p class='response'>Hubo un error en el ingreso de datos, revise los campos ingresados</p>");
+                    $("#popup").append("<p class='response'>Hubo un error en el copiado de datos.</p>");
                 }
             });
-        }
-    }
-
-    function openTree(classid, unitid){
-        var tree = JSON.parse('{{ json_khan_tree | escapejs }}');
-        var text = "";
-
-        var oatext = $("#newOA option:selected").text();
-        if (oatext == "undefined") oaid = $("#editOA option:selected").text();
-        oatext = oatext.substring(5);
-
-        $('#popuptree').empty();
-        $('#hover').fadeIn();
-        $('#popuptree').fadeIn();
-
-        text += "<div id='filtrar' style='float:left;width:48%;'>";
-            text += "<label>Filtrar por: </label>";
-            text += "<select id='filtro' class='skill_search' onchange='filterTree(" + classid + "," + unitid + ")'>";
-                text += "<option value='all'>Todos</option>";
-                text += "<option value='skills'>Ejercicios</option>";
-                text += "<option value='videos'>Videos</option>";
-            text += "</select>";
-        text += "</div>";
-
-        text += "<div id='search' style='float:left;width: 48%;'>";
-            text += "<label for='skill_search'>Buscar: </label>";
-            text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'>";
-        text += "</div>";
-
-        text += "<div id='checkbox' style='float:left; vertical-align: middle; width: 40%; height:32px; text-align: left; margin-bottom: 4px; margin-left: 16px'>";
-            text += "<span style='vertical-align: middle'>";
-            text += "<label for='recomendar' style='vertical-align: middle'>";
-            text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 18px; height: 18px; vertical-align: top;'>";
-            text += "Mostrar Recomendados</label>";
-            text += "</span>";
-        text += "</div>";
-
-        text += "<div style='float:right; width: 47%; height:32px; text-align: right; margin-right: 30px; margin-bottom: 4px'>";
-            text += "Objetivo de aprendizaje seleccionado" + oatext;
-        text += "</div>";
-        
-        text += "<div id='newTree" + classid + "' class='topictree'></div>";
-
-        text += "<br>";
-        text += "<a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Cancelar</a>";
-        text += "<a onclick='javascript:appendKhanContent(" + classid + ");' class='kui-button kui-button-submit kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
-
-        var selected_skills = [];
-        var selected_videos = [];
-
-        $("#skill_list li").each(function(){selected_skills.push($(this).attr('tree'));});
-        $("#video_list li").each(function(){selected_videos.push($(this).attr('tree'));});
-
-        $('#popuptree').append(text);
-        $('#newTree' + classid).jstree(tree);
-
-        $('#newTree' + classid).bind('ready.jstree',function(event){
-            $('#newTree' + classid).jstree("select_node", selected_videos);
-            $('#newTree' + classid).jstree("select_node", selected_skills);
-        });
-    }
-
-    function filterTree(classid, unitid){
-        var REC = $("#filtro").val();
-        var CAT = $("#recomendar").prop('checked');
-        var tree = JSON.parse('{{ json_khan_tree | escapejs }}');
-        var info = tree['core']['data'];
-
-        //Esconde todos los nodos
-        $("#newTree" + classid).jstree("hide_all");
-
-        //Con Recomendados = TRUE, se muestran solo los nodos presentes en los curriculos MINEDUC
-        if(CAT){
-            var curriculo = JSON.parse('{{ json_data | escapejs }}');
-            var unidades = curriculo["topicos"];
-
-            var oaid = $("#newOA").val();
-            if (oaid == "undefined") oaid = $("#editOA").val();
-
-            for (var u = 0; u < unidades.length; u++) {
-                if(unidades[u]['id'] == unitid){
-                    var objetivos = unidades[u]["subtopico"];
-                    for (var ob = 0; ob < objetivos.length; ob++) {
-                        if (objetivos[ob]['id'] == oaid){
-                            var ejercicios = objetivos[ob]["skills"];
-                            for (var l = 0; l < ejercicios.length; l++){
-                                var node = $('#newTree' + classid).jstree('get_node', '#' + ejercicios[l]['idtree']);
-                                $('#newTree' + classid).jstree('show_node', node);
-                                $('#newTree' + classid).jstree('show_node', node.parents);
-                            }
-                            var videos = objetivos[ob]["videos"];
-                            for (var v = 0; v < videos.length; v++){
-                                var node = $('#newTree' + classid).jstree('get_node', '#' + videos[v]['idtree']);
-                                $('#newTree' + classid).jstree('show_node', node);
-                                $('#newTree' + classid).jstree('show_node', node.parents);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        //Con Recomendados = FALSE, se muestran todos los nodos.
-        else if(!CAT){
-            $("#newTree" + classid).jstree("show_all");
-        }
-
-        //Si se filtra por habilidades, esconde todos los nodos tipo video.
-        if(REC == "skills"){
-            for (var i = 0; i < info.length; i++) {
-                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined"){
-                    $("#newTree" + classid).jstree("hide_node","#" + info[i]['id']);
-                }
-            }        
-        }
-        //Si se filtra por videos, esconde todos los nodos tipo habilidad.
-        else if(REC == "videos"){
-            for (var i = 0; i < info.length; i++) {
-                if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
-                    $("#newTree" + classid).jstree("hide_node","#" + info[i]['id']);
-
-                }
-            }
-        }
-    }
-
-    function appendKhanContent(classid){
-        var select = $("#newTree" + classid).jstree("get_bottom_selected", true);
-        var text_skill = "";
-        var text_video = "";
-
-        text_skill += "<ul id='skill_list'>";
-        text_video += "<ul id='video_list'>";
-
-        for (var i = 0; i < select.length; i++) {
-            if (typeof select[i]["data"] != "undefined"){
-                if(select[i]["data"]["skill_id"]){
-                    text_skill += "<li key=" + select[i]["data"]["skill_id"] + " tree='" + select[i]["id"] + "'>";
-                    text_skill += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
-                    text_skill += select[i]["text"];
-                    text_skill += "</li>";
-                }else{
-                    text_video += "<li key=" + select[i]["data"]["video_id"] + " tree='" + select[i]["id"] + "'>";
-                    text_video += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
-                    text_video += select[i]["text"];
-                    text_video += "</li>";
-                }
-            }
-        }
-
-        text_skill += "</ul>";
-        text_video += "</ul>";
-
-        $("#skill_block").empty();
-        $("#video_block").empty();
-
-        $("#skill_block").append(text_skill);
-        $("#video_block").append(text_video);
-
-        hideTree();
-    }
-
-    function monthChanged(){
-        var month = $('#newDate_M').val();
-        var day = $('#newDate_D').val();
-
-        if(!month){
-            var month = $('#editDate_M').val();
-            var day = $('#editDate_D').val();
-
-            $('#editDate_D').children('option:not(:first)').remove();
-
-            if (month == 4 || month == 6 || month == 9 || month == 11){
-                for (var d = 1; d <= 30; d++){
-                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 30) day = 30;
-                $('#editDate_D').val(day);
-            }else if (month == 2){
-                for (var d = 1; d <= 28; d++){
-                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 27) day = 27;
-                $('#editDate_D').val(day);
-            }else{
-                for (var d = 1; d <= 31; d++){
-                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }
-                $('#editDate_D').val(day);
-            }
-        }else{
-            $('#newDate_D').children('option:not(:first)').remove();
-
-            if (month == 4 || month == 6 || month == 9 || month == 11){
-                for (var d = 1; d <= 30; d++){
-                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 30) day = 30;
-                $('#newDate_D').val(day);
-            }else if (month == 2){
-                for (var d = 1; d <= 28; d++){
-                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 27) day = 27;
-                $('#newDate_D').val(day);
-            }else{
-                for (var d = 1; d <= 31; d++){
-                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }
-                $('#newDate_D').val(day);
-            }
-        }
     }
 
     function hideTree(){
@@ -1897,36 +1456,10 @@
         $('#hover').hide();
     }
 
-    function deleteWarning(classid){
-      $('#popup').empty();
+    function copyWarning(classid){
       $('#hover').fadeIn();
       $('#popup').fadeIn();
-      $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar esta planificación? Perderá toda la información relacionada a esta, incluyendo videos y ejercicios listados.</div>');
-      $('#popup').append('<a onclick=\'(deletePlan("'+classid+'"))\' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Aceptar</a><a onclick="javascript:hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>');
     }
 
-    function deletePlan(classid){
-      $.ajax({
-        url: "{% url 'planificacion:borrar_plan' %}",
-        type: "POST",
-        data: {id: classid},
-          success: function(response){
-            $('#popup').empty();
-            $('#close').hide();
-            $('#hover').fadeIn();
-            $('#popup').fadeIn();
-            $('#popup').append("<p class='response'>"+response+"</p>");
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 500);
-          },
-          error: function(response){
-                    $("#popup").empty()
-                    $("#hover").fadeIn().css('display', '');
-                    $("#popup").fadeIn().css('display', '');
-                    $("#popup").append("<p class='response'>Hubo un error al borrar el plan seleccionado.</p>");
-                }
-      });
-    }
 </script>
 {% endblock %}

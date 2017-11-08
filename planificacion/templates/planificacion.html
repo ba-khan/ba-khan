@@ -6,469 +6,306 @@
 
 {% block body2 %}
 
-<script src="{% static 'js/editablegrid.js' %}"></script>
-<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
-<script src="{% static 'js/editablegrid_editors.js' %}"></script>
-<script src="{% static 'js/editablegrid_validators.js' %}"></script>
-<script src="{% static 'js/editablegrid_utils.js' %}"></script>
-<script src="{% static 'js/editablegrid_charts.js' %}"></script>
-
-<link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
 
 <style>
-/*table#tablaplan { border-collapse: collapse; border: 1px solid #CCB; width:100%;}
-table#tablaplan td, table.testclass th { padding: 5px; border: 1px solid #E0E0E0;}
-table#tablaplan th { background: #E5E5E5; text-align: left;}
-table#tablaplan th {
-    color: #555;
-    background-color: #ccc;
-    border: 1px solid #bbb;
-    text-shadow: 0 1px 0 #eee;
-    vertical-align: bottom;
-    padding: 5px;
-    text-align:center;
-}
-table#tablaplan td {
-  text-align: left;
-}
-
-#popup{
-  height:200px;
-}
-
-#newaccordion{
-  border: 1px solid #C6D1AD;
-  border-radius: 5px;
-  padding:15px;
-  padding-left: 10%;
-  padding-right: 10%;
-  text-align: left;
-}
-
-.container{
-  max-width: 1500px;
-}
-
-#tablaplan{
-  max-width: :1200px;
-}
-
-table#tablaplan th{
-  text-align: center;
-}
-
-.topictree{
-  overflow: hidden;
-  overflow-y:scroll;
-  height: 550px;
-  width: 570px;
-  font-size: 12px;
-  padding: 5px 10px 10px 0px;
-  text-align: left;
-  margin: 10px;
-  border: 1px solid #ddd;
-}
-
-button.accordion {
-    background-color: #eee;
-    color: #444;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    text-align: left;
-    border: none;
-    outline: none;
-    transition: 0.4s;
-}
-
-button.accordion.active, button.accordion:hover {
-    background-color: #ddd;
-}
-
-button.accordion:after {
-    content: '\02795'; 
-    font-size: 13px;
-    color: #777;
-    float: right;
-    margin-left: 5px;
-}
-
-button.accordion.active:after {
-    content: "\2796";
-}
-
-div.panel {
-    padding: 0 18px;
-    background-color: white;
-    display: none;
-    overflow: hidden;
-    transition: 0.6s ease-in-out;
-    opacity: 0;
-}
-
-div.panel.show {
-    display: block;
-    opacity: 1;
-}*/
+    .container{
+        max-width: 1500px;
+    }
+    .class-block{
+        display: flex;
+        flex-direction: column;
+        width: 1000px;
+        height: auto;
+        min-height: 80px;
+        margin-bottom: 10px;
+        background-color: white;
+        border: 1px solid #C6D1AD;
+        border-radius: 5px;
+    }
+    #flex-div{
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 
-<br>
+<div style="min-width: 1000px; margin-bottom: 20px">
+    <div style="float: left">
+        <a role="button" style="width: 120px; height: 26px; font-size: 80%; padding: 2px 4px" onclick="openConfig()" class="kui-button kui-button-plain kui-button-primary">Compartir Clases</a>
+    </div>
+    <div style="float: right">
+        <label for="shareFilter">Ver planes de: </label>
+        <select id="shareFilter" onchange="openShareClass()" autocomplete="off">
+        <option selected value="-1">No mostrar clases compartidas</option>
+        {% if planExist %}
+             <optgroup label="------------------------"></optgroup>
+            <option value="0">Institución</option>
+        {% endif %}
+        {% for teacher in teachers %}
+            {%if forlopp.first %}
+                 <optgroup label="------------------------"></optgroup>
+            {% endif %}
+            <option value="{{ teacher.kaid_teacher }}">{{ teacher.name }}</option>
+        {% endfor %}
+        </select>
+    </div>
+</div>
+
 <div class="container">
-
-<div class="main-content">
-{% for class in classes %}
-<a role="button" href="{% url 'planificacion:getCurriculumPropuesto' class.level %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()">{{ class.nivel }}</a>
-    <br>
-{% endfor %}
+    <div id="shareContainer" class="class-content" style="padding-left: 100px;padding-right: 100px; align-content: center; margin-bottom: 20px; display: none">
+    </div>
 </div>
 
-  <!--<br>
-  <h1 style="text-align:center;">Planificación Curriculum</h1>
-  <div id="newaccordion">
-    <h2 style="text-align:center;">Curriculum Propuesto</h2>
-  </div>
-  <div id="miplanificacion">
-  <a onclick="cargaAcordeon()" style="cursor:pointer; width:250px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Volver a Curriculum Propuesto</a>
-  <table id="tablaplan">
-    <tr id="cabecera">
-      <th style="width: 10%;">Curso</th>
-      <th style="width: 10%;">OA</th>
-      <th style="width: 10%;">Clase</th>
-      <th style="width: 10%;">Objetivo de la Clase</th>
-      <th style="width: 10%;">Inicio de la Clase</th>
-      <th style="width: 10%;">Videos Khan</th>
-      <th style="width: 10%;">Ejercicios Khan</th>
-      <th style="width: 10%;">Descripción Material</th>
-      <th style="width: 10%;">Cierre de la Clase</th>
-      <th style="width: 10%;">Acciones</th>
-    </tr>
-  {% for miplan in miplanificacion %}
-    <tr id="idcurso{{ miplan.curso }}__" class="for{{forloop.counter}}loop">
-      <td id="{{ miplan.curso }}" class="flcurso">{{ miplan.nombrecurso }}</td>
-      <td id="{{ miplan.oa }}" class="floa">{{ miplan.nombreoa }}</td>
-      <td id="{{forloop.counter}}__clase">{{ miplan.clase }}</td>
-      <td id="{{forloop.counter}}__objetivo">{{ miplan.objetivo }}</td>
-      <td id="{{forloop.counter}}__inicio">{{ miplan.inicio }}</td>
-      <td id="khanvideo">
-      {% for video in miplan.videokhan %}
-        <a href="{{video.urlskill}}" target="_blank"><li>{{video.namespanish}}</li></a><br>
-      {% endfor %}
-      </td>
-      <td id="khanexercise">
-      {% for exercise in miplan.ejerciciokhan %}
-        <a href="{{exercise.urlskill}}" target="_blank"><li>{{exercise.namespanish}}</li></a><br>
-      {% endfor %}
-      </td>
-      <td id="{{forloop.counter}}__descripcion">{{ miplan.descripcion }}</td>
-      <td id="{{forloop.counter}}__cierre">{{ miplan.cierre }}</td>
-      <td id="{{forloop.counter}}__accion"><a onclick="eliminarPlan({{forloop.counter}})" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Eliminar</a></td>
-    </tr>
-  {% endfor %}
-    <tr id="id0">
-      <td id="nombrecurso"></td>
-      <td id="elegiroa"></td>
-      <td id="clase" contenteditable="true"></td>
-      <td id="objetivo" contenteditable="true"></td>
-      <td id="inicio" contenteditable="true"></td>
-      <td id="videokhan"><div id="videodiv"></td>
-      <td id="ejerciciokhan"><div id="ejerciciodiv"></td>
-      <td id="descripcion" contenteditable="true"></td>
-      <td id="cierre" contenteditable="true"></td>
-      <td><a onclick="javascript:guardarPlan('id0')" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Guardar</a></td>
-    </tr>
-  </table>
-  </div>
-    
-  </div>
+<div class="container">
+    <div class="class-content" style="padding-left: 100px;padding-right: 100px; align-content: center">
+        <div><div>
+        {% for class in classes %}
+            {% ifchanged class.year  %}
+                </div></div>
+                <br>
+                <div style="display: block; width: 1000px; height: auto; min-height: 28px">
+                    <h3 style="float: left; margin-left: 47%"> {{ class.year }} </h3>
+                </div>
+                <div><div>
+            {% endifchanged %}
 
-</div>-->
+            {% ifchanged class.level %}
+                </div></div>
+                <div class="class-block">
+                <h4 style="text-align: left; margin: 10px; margin-bottom: 0px; width: 100%">{{ class.level }}</h4>
+                <div>
+            {% endifchanged %}
+
+            {% if class.class_subject__curriculum %}
+                <a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan' class.class_subject__id_class_subject %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso {{ class.letter }}
+                {% if class.additional %}
+                    <br>({{class.additional}})
+                {% endif %}
+                </a>
+            {% else %}
+                <a role="button" style="color:darkred; display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="#" class="kui-button kui-button-plain kui-button-primary"> Curso {{ class.letter }}
+                {% if class.additional %}
+                    <br>({{class.additional}})
+                {% endif %}
+                </a>
+            {% endif %}    
+        {% endfor %}
+        </div></div>
+    </div>
 </div>
-<div id="popup" style="display:none">
-  
+
+<div id="popup" class="flex-div" style="display:none; margin-top: -360px; height: 540px; padding: 30px 30px">
+    <h3>Seleccione los cursos que desea compartir con otros usuarios</h3>
+    <p>Al compartir cursos, sus planificaciones asociadas a ese curso seran visibles para otros usuarios y podran crear una copia de su planificación a las suyas, compartir cursos no permitira que otros usuarios editen los datos de su planificación. Necesita haber creado un plan antes de poder compartirlo.</p>
+    <div style="text-align: left; border: 1px solid #C6D1AD; margin: 20px 0px; overflow-y: scroll; height: 300px;">
+    {% for class in classes %}
+        <input class="checkbox" autocomplete="off" type='checkbox' value={{ class.class_subject__id_class_subject }}
+        {% if class.share == "On" %}
+            onclick="changeCheckbox(this,true)"
+            checked
+        {% elif class.share == "Off" %}
+            onclick="changeCheckbox(this,false)"
+        {% else %}
+            disabled
+        {% endif %}
+        >{{ class.level }} {{ class.letter }} {{ class.year }}
+        {% if class.additional %}
+            ({{class.additional}})
+        {% endif %}
+        <br>
+    {% endfor %}
+    </div>
+    <div>
+        <a role="button" onclick="saveConfig()" style="margin-right: 20px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+        <a role="button" onclick="closeConfig()" class="kui-button kui-button-plain kui-button-primary">Cancelar</a>
+    </div>
+    <p id="infoLabel"> </p>
 </div>
 
 <script type="text/javascript">
-/*$(document).ready(function(){
-    $('#newplanning').hide();
-    $("#hover").click(function(){
-      $(this).fadeOut();
-      $("#popup").fadeOut();
-      });
-    
-    $("#close").click(function(){
-      $("#hover").fadeOut();
-      $("#popup").fadeOut();
-      });
-    $('#tablaplan').hide();
-    accordionMineduc();
-    var acc = document.getElementsByClassName("accordion");
-    var i;
+    var modShare = [];
 
-    for (i = 0; i < acc.length; i++) {
-        acc[i].onclick = function(){
-            this.classList.toggle("active");
-            this.nextElementSibling.classList.toggle("show");
-        }
+    $(document).ready(function(){
+        $("#hover").click(function(){
+            closeConfig();
+        });
+        
+        $("#close").click(function(){
+            closeConfig();
+        });
+     });
+
+    function openConfig(){
+        $("#hover").fadeIn();
+        $("#popup").fadeIn();
     }
 
-  });
+    //Cierra la ventana de configuración, restaura los checkboxes a sus valores originales.
+    //Tambien limpia el array.
+    function closeConfig(){
+        $("#hover").fadeOut();
+        $("#popup").fadeOut();
 
-  var arbol = JSON.parse('{{ json_data | escapejs }}');
-  //console.log(arbol);
+        $(".checkbox:checkbox").each(function(){
+            $(this).prop('checked', this.defaultChecked);
+        });
 
-  function accordionMineduc(){
-    var newaccordion='';
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      newaccordion += '<button class="accordion">'+chapters[i]["nombre"]+'</button><div class="panel">';
-      newaccordion += '<a onclick=\'(setPlanning("'+chapters[i]['id']+'"))\' style="cursor:pointer; width:200px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Generar Planificación</a>';
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        newaccordion += '<button class="accordion">'+topicos[j]["nombre"]+'</button><div class="panel">';
-        var subtopicos = topicos[j]["subtopico"];
-        for (var k = 0; k < subtopicos.length; k++) {
-          newaccordion += '<button class="accordion">'+subtopicos[k]["nombre"]+'</button><div class="panel">'
-          newaccordion += '<p>'+subtopicos[k]['aeoa']+'</p>'
-          var ejer = subtopicos[k]["skills"];
-          newaccordion += '<button class="accordion">Ejercicios</button><div class="panel">';
-          for (var m = 0; m < ejer.length; m++) {
-            newaccordion += '<img src={% static "img/ejercicios.png" %} alt="ejercicios"><a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>';
-          }
-          newaccordion += '</div>';
-          var vid = subtopicos[k]["videos"];
-          newaccordion += '<button class="accordion">Videos</button><div class="panel">';
-          for (var l = 0; l < vid.length; l++) {
-            newaccordion += '<img src={% static "img/videos.png" %} alt="videos"><a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>';
-            $('#newTree'+subtopicos[k]["id"]).jstree('select_node', vid[l]["video"]);
-          }
-          newaccordion += '</div>';
-          newaccordion += '</div>';
-        }
-        newaccordion += '</div>'
-      }
-      newaccordion+='</div>';
-    }
-    $('#newaccordion').append(newaccordion);
-  }
-
-  function setPlanning(id){
-    $('#tablaplan').show();
-    $('td#elegiroa').text('');
-    elegiroa ='';
-    $('#newaccordion').hide();
-
-    $('#tablaplan tr').not('[id*="idcurso'+id+'__"]').hide();
-    if($('#tablaplan tr#idcurso'+id+'__').attr('id')=="idcurso"+id+"__"){
-      var result_style = document.getElementById('idcurso'+id+'__').style;
-      result_style.display = 'table-row';
+        modShare = [];
     }
 
-    $('#tablaplan tr#cabecera').show();
-    $('#tablaplan tr#id0').show();
-    var chapters=arbol["capitulos"];
-    elegiroa+='<select id="seleccionar" onchange="getval(this);">';
-    elegiroa+='<option value="">Seleccione una opción</option>';
-    for (var i = 0; i < chapters.length; i++) {
-      if (chapters[i]['id']==id){
-        var nombrecurso = chapters[i]['nombre'];
-        var idcurso = chapters[i]['id'];
-        var topicos = chapters[i]["topico"];
-        for (var k = 0; k < topicos.length; k++) {
-          var subtopicos = topicos[k]["subtopico"];
-          for (var j = 0; j < subtopicos.length; j++) {
-            elegiroa+='<option value="'+subtopicos[j]["nombre"]+'">'+subtopicos[j]["nombre"]+'</option>';
-          }
-        }
-      }
-    }
-    elegiroa+='</select>';
-    $('td#nombrecurso').text(nombrecurso);
-    $('td#nombrecurso').val(idcurso);
-    $('td#elegiroa').append(elegiroa);
-  }
+    //Registra un cambio en un checkbox comparandolo con su valor original, si el checkbox cambio
+    //y es diferente a su valor original, se agrega el valor a un array, si el checkbox vuelve a
+    //su estado de origen, el valor se borra del array.
+    function changeCheckbox(checkbox, original_state){
+        if(checkbox.checked){
+            if (original_state == true){
+                modShare.splice(modShare.indexOf(checkbox.value), 1);
 
-  function getval(sel){
-    var aeoa=sel.value;
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos = topicos[j]["subtopico"];
-        for (var k = 0; k < subtopicos.length; k++) {
-          //$('td#elegiroa').text('');
-          if (subtopicos[k]["nombre"]==aeoa){
-            var OA = subtopicos[k]["aeoa"];
-            //console.log(subtopicos[k]);
-            //console.log(OA);
-            $('td#elegiroa').text('');
-            $('td#elegiroa').append(OA);
-            $('td#elegiroa').val(subtopicos[k]['nombre'])
-            var ejer = subtopicos[k]["skills"];
-            
-
-            
-            var vid = subtopicos[k]["videos"];
-            //console.log(subtopicos[k])
-            $('td#videokhan').append('<a onclick=\'(selectVideos("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Seleccionar Videos</a>')
-            $('td#ejerciciokhan').append('<a onclick=\'(selectEjercicios("'+subtopicos[k]['id']+'"))\' style="cursor:pointer; width:100px; height: 50px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Seleccionar Ejercicios</a>')
-            //for (var m = 0; m < vid.length; m++) {
-              //$('#videokhan').append('<select><option>primera opcion</option><option>segunda opcion</option></select>')
-              //idvideos += '**'+vid[m]["video"];
-              //$('#videokhan').append('**<a href="'+vid[m]["url"]+'" target="_blank">'+vid[m]["nombre"]+'</a><br>');
-            //}
-            //$('td#videokhan').val(idvideos);
-          }
-        }
-      }
-    }
-  }
-
-  function selectEjercicios(idsubtopic){
-    //$('td#ejerciciokhan').text('');
-    var idskills='';
-    $('#popup').empty();
-    $('#hover').fadeIn();
-    $('#popup').fadeIn();
-    $('#popup').append('<div id="ejercicioskhan">');
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos = topicos[j]["subtopico"];
-        for (var k = 0; k < subtopicos.length; k++) {
-          if(subtopicos[k]['id']==idsubtopic){
-            var ejer = subtopicos[k]["skills"];
-            for (var m = 0; m < ejer.length; m++) {
-              idskills += '**'+ejer[m]["skill"];
-              $('#popup').append('<input type="checkbox" name="skill" value="'+ejer[m]["nombre"]+'" id="skillscb"> <a href="'+ejer[m]["url"]+'" target="_blank">'+ejer[m]["nombre"]+'</a><br>');
-            }
-            $('td#ejerciciokhan').val(idskills);
-          }
-        }
-      }
-    }
-    $('#popup').append('<a onclick="mostrarEjercicios()" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Aceptar</a>')
-  }
-
-  function selectVideos(idsubtopic){
-    //console.log(idsubtopic);
-    var idvideos='';
-    $('#popup').empty();
-    $('#hover').fadeIn();
-    $('#popup').fadeIn();
-    $('#popup').append('<div id="videoskhan">');
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        var subtopicos = topicos[j]["subtopico"];
-        for (var k = 0; k < subtopicos.length; k++) {
-          if(subtopicos[k]['id']==idsubtopic){
-            var vid = subtopicos[k]["videos"]
-            for (var l = 0; l < vid.length; l++) {
-              idvideos += '**'+vid[l]["video"];
-              $('#popup').append('<input type="checkbox" name="video" value="'+vid[l]["nombre"]+'" id="videoscb"> <a href="'+vid[l]["url"]+'" target="_blank">'+vid[l]["nombre"]+'</a><br>');
-            }
-            $('td#videokhan').val(idvideos);
-          }
-        }
-      }
-    }
-    $('#popup').append('<a onclick="mostrarVideos()" style="cursor:pointer; width:100px; height: 35px; padding:8px; " class="kui-button kui-button-plain kui-button-primary">Aceptar</a>')
-  }
-
-  function mostrarEjercicios(){
-    $('div#ejerciciodiv').text('');
-    $('#popup').hide();
-    $('#hover').hide();
-    var selejercicios = $('input[name="skill"]:checked').map(function(_,el){
-      return $(el).val();
-    }).get();
-    for (var i = 0; i < selejercicios.length; i++) {
-      $('div#ejerciciodiv').append('<br><li>'+selejercicios[i]+'</li>');
-    }
-    $('input[name="skill"]').prop("checked", false); 
-  }
-
-  function mostrarVideos(){
-    $('div#videodiv').text('');
-    $('#popup').hide();
-    $('#hover').hide();
-    var selvideos = $('input[name="video"]:checked').map(function(_,el){
-      return $(el).val();
-    }).get();
-    for (var i = 0; i < selvideos.length; i++) {
-      $('div#videodiv').append('<br><li>'+selvideos[i]+'</li>');
-    }
-    $('input[name="video"]').prop("checked", false);
-  }
-
-  function guardarPlan(id){
-    var cla = $('tr#'+id+' td#clase').text();
-    var obj = $('tr#'+id+' td#objetivo').text();
-    var ini = $('tr#'+id+' td#inicio').text();
-    var des = $('tr#'+id+' td#descripcion').text();
-    var cie = $('tr#'+id+' td#cierre').text();
-    var nom = $('td#nombrecurso').val();
-    var oap = $('td#elegiroa').val();
-    var eje = $('td#ejerciciokhan').val();
-    var vid = $('td#videokhan').val();
-
-    $.ajax({
-      url: "{% url 'planificacion:guardarplan' %}",
-      type: "POST",
-      data: {clase: cla, objetivo:obj, inicio:ini, descripcion:des, cierre:cie, nombre:nom, oa:oap, ejercicio:eje, video:vid},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-            if (auxResponse == "Planificacion guardada correctamente"){
-              $("#hover").css('pointer-events','none');
-              $("#close").css('pointer-events','none');
-              window.setTimeout(function(){location.reload()},1000);
+            }else if (original_state == false){
+                modShare.push(checkbox.value);
             }
         }
-    });
-  }
+        else{
+            if (original_state == false){
+                modShare.splice(modShare.indexOf(checkbox.value), 1);
 
-  function eliminarPlan(id){
-    var cursoelim = $('tr.for'+id+'loop td.flcurso').attr('id');
-    var oaelim = $('tr.for'+id+'loop td.floa').attr('id');
-
-    console.log(cursoelim);
-    console.log(oaelim);
-
-    $.ajax({
-      url: "{% url 'planificacion:eliminarplan' %}",
-      type: "POST",
-      data: {curso: cursoelim, oa: oaelim},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-            if (auxResponse == "Planificacion borrada correctamente"){
-              $("#hover").css('pointer-events','none');
-              $("#close").css('pointer-events','none');
-              window.setTimeout(function(){location.reload()},1000);
+            }else if (original_state == true){
+                modShare.push(checkbox.value);
             }
         }
-    });
-  }
+        console.log(modShare);
+    }
 
-  function cargaAcordeon(){
-    $('#newaccordion').show();
-    $('#tablaplan').hide();
-  }*/
+    function openShareClass(){
+        kaid = $("#shareFilter").val();
 
-  $('#planificacion').addClass('active selected');
+        if(kaid == -1){
+            if( $("#shareContainer").is(":visible") ){
+                $("#shareContainer").toggle('blind',500);
+            }
+        }else{
+            if( $("#shareContainer").is(":visible") ){
+                $("#shareContainer").toggle('blind',500,function(){
+                    appendSharedContent(kaid);
+                    $("#shareContainer").toggle('blind',500);
+                });
+            }else{
+                appendSharedContent(kaid);
+                $("#shareContainer").toggle('blind',500);
+            }
+        }
 
+    }
+
+    function appendSharedContent(id){
+        $.ajax({
+            url: "{% url 'planificacion:planes_compartidos' %}",
+            type: "GET",
+            data: { "id" : id,
+            },
+            success: function(response){
+                $("#shareContainer").empty();
+                console.log(response[0]);
+
+                if (id == 0){
+                    var year_changed;
+                     $("#shareContainer").append('<div style="float: left; width: 1000px; text-align: left; margin-bottom: 8px"> <h2>Viendo clases compartidas del instituto</h2>');
+
+                    for(var i = 0; i < response.length; i++){
+                        if (year_changed != response[i]['year']){
+                            $("#shareContainer").append('<div id="shared_classyr_' + response[i]['year'] +'" class="class-block">');
+                            $("#shared_classyr_" + response[i]['year']).append('<h4 style="text-align: left; margin: 10px; margin-bottom: 0px; width: 100%">' + response[i]['year']);
+                            $("#shared_classyr_" + response[i]['year']).append('<div id="shared_class_inyr_' + response[i]['year'] + '">');
+                            year_changed = response[i]['year'];
+                        }
+
+                        var href_value = "{% url 'planificacion:acceder_plan_compartido_inst' 0 %}".replace(/0/, response[i]['id_chapter_mineduc'].toString());
+                        if(response[i]["additional"]){
+                            $("#shared_class_inyr_" + year_changed).append('<a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="' + href_value + '" onclick="loading()" class="kui-button kui-button-plain kui-button-primary" title="' + response[i]["additional"] + '"">' + response[i]['level']);
+                        }else{
+                            $("#shared_class_inyr_" + year_changed).append('<a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="' + href_value + '" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso ' + response[i]['level']);
+                        }
+                    }
+                }else{
+                    var teacher_changed;
+                    var level_changed;
+                    var year_changed;
+                    for(var i = 0; i < response.length; i++){
+                        if(teacher_changed != response[i]["class_subject__kaid_teacher__name"]){
+                            $("#shareContainer").append('<div style="float: left; height: 16px; width: 1000px; text-align: left; margin-bottom: 4px"> <h2> Viendo clases compartidas de ' + response[i]['class_subject__kaid_teacher__name'] + '</h2>');
+                            subject_changed = response[i]["class_subject__kaid_teacher__name"]
+                        }
+
+                        if (year_changed != response[i]['year']){
+                            $("#shareContainer").append('<div style="display: block; width: 1000px; height: auto; min-height: 28px"><h3 style="float: left; margin-left: 47%">' + response[i]['year']);
+                            $("#shareContainer").append('<div id="shared_classyr_' + response[i]['year'] +'" class="class-block">');
+                            year_changed = response[i]['year'];
+                        }
+
+                        if (level_changed != response[i]['level']){ 
+                            temp_i = i;                      
+                            $("#shared_classyr_" + response[i]['year']).append('<h4 style="text-align: left; margin: 10px; margin-bottom: 0px; width: 100%">' + response[i]['level']);
+                            $("#shared_classyr_" + response[i]['year']).append('<div id="shared_classlvl_' + temp_i + '">');
+                            level_changed = response[i]['level'];
+                        }
+
+                        var href_value = "{% url 'planificacion:acceder_plan_compartido' 0 %}".replace(/0/, response[i]['class_subject__id_class_subject'].toString());
+                        if(response[i]["additional"]){
+                            $("#shared_classlvl_" + temp_i).append('<a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="' + href_value + '" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso ' + response[i]['letter'] + '<br>(' + response[i]["additional"] + ')');
+                        }else{
+                            $("#shared_classlvl_" + temp_i).append('<a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="' + href_value + '" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso ' + response[i]['letter']);
+                        }
+                    }
+                }
+            },
+            error: function(response){
+                alert("Error: " + response[0]);
+            }
+        });
+    }
+
+    function showDiv(div){
+        if( !($(div).is(":visible")) ){
+            $(div).toggle('blind',200,function(){
+                setTimeout(function(){return;},300);
+            });
+        }
+    }
+
+    function hideDiv(div){
+        if( $(div).is(":visible") ){
+            $(div).toggle('blind',200,function(){
+                setTimeout(function(){return;},300);
+            });
+        }
+    }
+
+    function saveConfig(){
+        $("#infoLabel").empty();
+
+        if(modShare.length == 0){
+            $("#infoLabel").append("No ha habido cambios en la configuración.");
+        }
+        else{
+            $.ajax({
+                url: "{% url 'planificacion:editar_config' %}",
+                type: "POST",
+                data: {'data': modShare},
+                success: function(response){
+                    $("#infoLabel").append(response);
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){
+                        location.reload()
+                    },500);
+                },
+                error: function(response){
+                    console.log(response);
+                    $("#infoLabel").append(response);
+                }
+            });
+        }
+    }
 </script>
-
 
 {% endblock %}

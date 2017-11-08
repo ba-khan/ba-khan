@@ -1,0 +1,289 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Planificación Curriculum{% endblock %}
+
+{% block body2 %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
+
+<style>
+    .container{
+        max-width: 1500px;
+    }
+    .class-block{
+        display: flex;
+        flex-direction: column;
+        width: 1000px;
+        height: auto;
+        min-height: 80px;
+        margin-bottom: 10px;
+        background-color: white;
+        border: 1px solid #C6D1AD;
+        border-radius: 5px;
+    }
+    #flex-div{
+        display: flex;
+        flex-direction: column;
+    }
+    .class-content{
+        padding-left: 100px;
+        padding-right: 100px;
+        align-content: center;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+</style>
+
+<div style="min-width: 1000px; margin-bottom: 20px">
+    <div style="float: left">
+        <a role="button" style="width: 120px; height: 26px; font-size: 80%; padding: 2px 4px" onclick="openConfig()" class="kui-button kui-button-plain kui-button-primary">Compartir Clases</a>
+    </div>
+    <div style="float: right">
+        <label for="shareFilter">Desplegar cursos de: </label>
+        <select id="shareFilter" onchange="openShareClass()" autocomplete="off">
+            <option selected value="-1">Ningun profesor seleccionado</option>
+            {% for teacher in teachers %}
+                <option value="{{ teacher.kaid_teacher }}">{{ teacher.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
+<div class="container">
+    <div id="shareContainer" class="class-content" style="display: none">
+    </div>
+</div>
+
+<div class="container">
+    <div class="class-content">
+        <h3>Planes institucionales asociados <img id="plan_info" style='width:16px; height:16px;' src={% static 'img/info.png' %}></h3>
+        <div><div>
+            {% for curr in curriculums %}
+                {% ifchanged curr.year  %}
+                    </div></div>
+                    <div class="class-block">
+                    <h4 style="text-align: left; margin: 10px; margin-bottom: 0px; width: 100%">{{ curr.year }}</h4>
+                    <div>
+                {% endifchanged %}
+
+                <a role="button" style="display: inline; float: left;{% if curr.share == 'Null' %} color: gray;{% endif %} margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan_inst' curr.id_chapter_mineduc %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">{{ curr.level }}</a>   
+            {% endfor %}
+        </div></div>
+    </div>
+</div>
+
+<div id="popup" class="flex-div" style="display:none; margin-top: -360px; height: 540px; padding: 30px 30px">
+    <h3>Seleccione los cursos que desea compartir con otros usuarios</h3>
+    <p>Al compartir cursos, sus planificaciones asociadas a ese curso seran visibles para otros usuarios y podran crear una copia de su planificación a las suyas, compartir cursos no permitira que otros usuarios editen los datos de su planificación. Necesita haber creado un plan antes de poder compartirlo.</p>
+    <div style="text-align: left; border: 1px solid #C6D1AD; margin: 20px 0px; overflow-y: scroll; height: 300px;">
+    {% for curr in curriculums %}
+        <input class="checkbox" autocomplete="off" type='checkbox' value={{ curr.id_chapter_mineduc }}
+        {% if curr.share == "On" %}
+            onclick="changeCheckbox(this,true)"
+            checked
+        {% elif curr.share == "Off" %}
+            onclick="changeCheckbox(this,false)"
+        {% else %}
+            disabled
+        {% endif %}
+        >{{ curr.level }} {{ curr.year }}
+
+        <br>
+    {% endfor %}
+    </div>
+    <div>
+        <a role="button" onclick="saveConfig()" style="margin-right: 20px" class="kui-button kui-button-plain kui-button-primary">Guardar</a>
+        <a role="button" onclick="closeConfig()" class="kui-button kui-button-plain kui-button-primary">Cancelar</a>
+    </div>
+    <p id="infoLabel"> </p>
+</div>
+
+<script type="text/javascript">
+    var modShare = [];
+
+    $(document).ready(function(){
+        $("#hover").click(function(){
+            closeConfig();
+        });
+        
+        $("#close").click(function(){
+            closeConfig();
+        });
+
+        $("#plan_info").qtip({
+                content: function() {
+                    return "Puede asociar un plan de clases a un currículo para que todos los profesores puedan verla, y los profesores que tengan su curso asociado a ese currículo podrían hacer una copia del plan de clases en sus planificaciones personales.";
+                },
+                show: { 
+                    event: 'mouseenter', 
+                    delay: 10, 
+                    solo: true,   
+                    effect: function(offset) {$(this).slideDown(100);}  
+                },
+                   
+                hide: { 
+                    event: 'mouseleave', 
+                    delay: 90, 
+                    fixed: true 
+                },
+
+                position: { 
+                    my: 'bottomLeft',
+                    at: 'topMiddle',
+                    adjust: {y: 10}
+                }
+            });
+     });
+
+    function openConfig(){
+        $("#hover").fadeIn();
+        $("#popup").fadeIn();
+    }
+
+    //Cierra la ventana de configuración, restaura los checkboxes a sus valores originales.
+    //Tambien limpia el array.
+    function closeConfig(){
+        $("#hover").fadeOut();
+        $("#popup").fadeOut();
+
+        $(".checkbox:checkbox").each(function(){
+            $(this).prop('checked', this.defaultChecked);
+        });
+
+        modShare = [];
+    }
+
+    //Registra un cambio en un checkbox comparandolo con su valor original, si el checkbox cambio
+    //y es diferente a su valor original, se agrega el valor a un array, si el checkbox vuelve a
+    //su estado de origen, el valor se borra del array.
+    function changeCheckbox(checkbox, original_state){
+        if(checkbox.checked){
+            if (original_state == true){
+                modShare.splice(modShare.indexOf(checkbox.value), 1);
+
+            }else if (original_state == false){
+                modShare.push(checkbox.value);
+            }
+        }
+        else{
+            if (original_state == false){
+                modShare.splice(modShare.indexOf(checkbox.value), 1);
+
+            }else if (original_state == true){
+                modShare.push(checkbox.value);
+            }
+        }
+        console.log(modShare);
+    }
+
+    function openShareClass(){
+        kaid = $("#shareFilter").val();
+
+        if(kaid == -1){
+            if( $("#shareContainer").is(":visible") ){
+                $("#shareContainer").toggle('blind',500);
+            }
+        }else{
+            if( $("#shareContainer").is(":visible") ){
+                $("#shareContainer").toggle('blind',500,function(){
+                    appendSharedContent(kaid);
+                    $("#shareContainer").toggle('blind',500);
+                });
+            }else{
+                appendSharedContent(kaid);
+                $("#shareContainer").toggle('blind',500);
+            }
+        }
+
+    }
+
+    function appendSharedContent(id){
+        $.ajax({
+            url: "{% url 'planificacion:planes_compartidos' %}",
+            type: "GET",
+            data: { "id" : id,
+            },
+            success: function(response){
+                $("#shareContainer").empty();
+
+                var level_changed;
+                var year_changed;
+                var temp_i;
+
+                $("#shareContainer").append('<div style="float: left; height: 16px; width: 1000px; text-align: left; margin-bottom: 8px"> <h2> Viendo los cursos de ' + response[0]['class_subject__kaid_teacher__name']);
+
+                for(var i = 0; i < response.length; i++){
+                    if (year_changed != response[i]['year']){
+                        $("#shareContainer").append('<div style="display: block; width: 1000px; height: auto; min-height: 28px"><h3 style="float: left; margin-left: 47%">' + response[i]['year']);
+                        $("#shareContainer").append('<div id="shared_classyr_' + response[i]['year'] +'" class="class-block">');
+                        year_changed = response[i]['year'];
+                    }
+
+                    if (level_changed != response[i]['level']){ 
+                        temp_i = i;                      
+                        $("#shared_classyr_" + response[i]['year']).append('<h4 style="text-align: left; margin: 10px; margin-bottom: 0px; width: 100%">' + response[i]['level']);
+                        $("#shared_classyr_" + response[i]['year']).append('<div id="shared_classlvl_' + temp_i + '">');
+                        level_changed = response[i]['level'];
+                    }
+
+                    var href_value = "{% url 'planificacion:acceder_plan_compartido' 0 %}".replace(/0/, response[i]['class_subject__id_class_subject'].toString());
+                    if(response[i]["additional"]){
+                        $("#shared_classlvl_" + temp_i).append('<a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="' + href_value + '" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso ' + response[i]['letter'] + '<br>(' + response[i]["additional"] + ')');
+                    }else{
+                        $("#shared_classlvl_" + temp_i).append('<a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="' + href_value + '" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso ' + response[i]['letter']);
+                    }
+                }return;
+            },
+            error: function(response){
+                alert("Error: " + response[0]);
+            }
+        });
+    }
+
+    function showDiv(div){
+        if( !($(div).is(":visible")) ){
+            $(div).toggle('blind',200,function(){
+                setTimeout(function(){return;},300);
+            });
+        }
+    }
+
+    function hideDiv(div){
+        if( $(div).is(":visible") ){
+            $(div).toggle('blind',200,function(){
+                setTimeout(function(){return;},300);
+            });
+        }
+    }
+
+    function saveConfig(){
+        $("#infoLabel").empty();
+
+        if(modShare.length == 0){
+            $("#infoLabel").append("No ha habido cambios en la configuración.");
+        }
+        else{
+            $.ajax({
+                url: "{% url 'planificacion:editar_config' %}",
+                type: "POST",
+                data: {'data': modShare},
+                success: function(response){
+                    $("#infoLabel").append(response);
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){
+                        location.reload()
+                    },500);
+                },
+                error: function(response){
+                    console.log(response);
+                    $("#infoLabel").append(response);
+                }
+            });
+        }
+    }
+</script>
+
+{% endblock %}

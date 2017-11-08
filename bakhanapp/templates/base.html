@@ -30,7 +30,7 @@
 		<!-- Agregados por Javier-->
   		<script src="{% static 'js/jquery-latest.min.js'%}"></script>
   		<script src="{% static 'DjangoAjax.js' %}"></script>
-	  	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  		<script src="{% static 'js/d3.v3.min.js'%}"></script>
 	  	<script src="{% static 'd3-timeline.js'%}"></script>
 	  	<link rel="stylesheet" href="{% static 'css/home.css'%}" />
 		<script type="text/javascript" src="{% static 'jquery.qtip.js'%}"></script>
@@ -55,7 +55,7 @@
 		<!-- Para utilizar d3 
 	    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	    <script src="https://rawgit.com/gka/d3-jetpack/master/d3-jetpack.js"></script>-->
-	    <script src="{% static 'js/d3.v3.min.js'%}"></script>
+	    
 	    <script src="{% static 'js/d3-jetpack.js'%}"></script>
 		{% block head %}{% endblock %}
 	</head>

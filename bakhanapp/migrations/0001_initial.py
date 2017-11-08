@@ -622,3 +622,4 @@ class Migration(migrations.Migration):
             unique_together=set([('id_assesment_config', 'id_skill_name', 'id_subtopic_skill')]),
         ),
     ]
+

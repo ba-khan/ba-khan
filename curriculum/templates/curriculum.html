@@ -18,281 +18,149 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/superstats.css'%}">
 
 <style>
-  table.testsched { border-collapse: collapse; border: 1px solid #CCB; width:650px;}
-  table.testsched td, table.testsched th { padding: 5px; border: 1px solid #E0E0E0;}
-  table.testsched th { background: #E5E5E5; text-align: left;}
-  table.testsched th {
-      color: #555;
-      background-color: #ccc;
-      border: 1px solid #bbb;
-      text-shadow: 0 1px 0 #eee;
-      vertical-align: bottom;
-      padding: 5px;
-      text-align:center;
-  }
-  table.testsched td {
-    text-align: left;
-  }
+    #popup{
+        height:150px;
+    }
 
-  table.testschedos { border-collapse: collapse; border: 1px solid #CCB; width:650px;table-layout: fixed;}
-  table.testschedos td, table.testschedos th { padding: 5px; border: 1px solid #E0E0E0;overflow: hidden;}
-  table.testschedos th { background: #E5E5E5; text-align: left;}
-  table.testschedos th {
-      color: #555;
-      background-color: #ccc;
-      border: 1px solid #bbb;
-      text-shadow: 0 1px 0 #eee;
-      vertical-align: bottom;
-      padding: 5px;
-      text-align:center;
-  }
-  table.testschedos td {
-    text-align: left;
-  }
-  input{
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-  }
-  #popup{
-    height:150px;
-  }
-  #popuptree{
-    height:650px;
-  }
-  .ribbon {
-    position: relative;
-    left: 0px; top: -53px;
-    z-index: 1;
-    overflow: hidden;
-    width: 63px; height: 54px;
-    text-align: right;
-  }
-  .ribbon span {
-    font-size: 9px;
-    font-weight: bold;
-    color: #FFF;
-    text-transform: uppercase;
-    text-align: center;
-    line-height: 15px;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    width: 97px;
-    display: block;
-    background: #79A70A;
-    background: linear-gradient(#9BC90D 0%, #79A70A 100%);
-    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
-    position: absolute;
-    top: 13px; left: -25px;
-  }
-  .ribbon span::before {
-    content: "";
-    position: absolute; left: 0px; top: 100%;
-    z-index: -1;
-    /*border-left: 3px solid #79A70A;
-    border-right: 3px solid transparent;
-    border-bottom: 3px solid transparent;
-    border-top: 3px solid #79A70A;*/
-  }
-  .ribbon span::after {
-    content: "";
-    position: absolute; right: 0px; top: 100%;
-    z-index: -1;
-    /*border-left: 3px solid transparent;
-    border-right: 3px solid #79A70A;
-    border-bottom: 3px solid transparent;
-    border-top: 3px solid #79A70A;*/
-  }
-  #newChapter{
-    border: 1px solid #C6D1AD;
-      border-radius: 5px;
-      display:none; 
-      height:220px; 
-      padding:15px;
-      padding-left: 33%;
-      padding-right: 33%;
-      text-align: center;
-  }
-  #newTopic{
-    /*border: 1px solid #C6D1AD;
-      border-radius: 5px;
-      display:none; */
-      height:220px; 
-      padding:15px;
-      padding-left: 33%;
-      padding-right: 33%;
-      text-align: center;
-  }
-  #newSubtopic{
-    /*border: 1px solid #C6D1AD;
-      border-radius: 5px;
-      display:none; */
-      height:220px; 
-      padding:15px;
-      padding-left: 33%;
-      padding-right: 33%;
-      text-align: center;
-  }
-  #newaccordion{
-    border: 1px solid #C6D1AD;
-    border-radius: 5px;
-    padding:15px;
-    padding-left: 10%;
-    padding-right: 10%;
-    text-align: left;
-  }
-  label{
-    width: 95px;
-  }
-  input{
-    margin-bottom: 10px;
-  }
+    #popuptree{
+        height:650px;
+    }
 
-  #topbar {
-    float:left;
-    position: relative;
-      box-sizing: border-box;
-     -moz-box-sizing: border-box;
-     z-index: 2;
-     height: 80px;
-     /*margin-right: -1px;*/
-  }
-  #topbar ul.tab {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-  }
-  #topbar ul.tab li {
-      margin: 0;
-  }
-  #topbar ul.tab li a {
-    /*margin: 1px 0px 1px 1px;*/
-    padding: 15px 20px;
-    font-size: 14px;
-    font-weight: 100;
-    background: #EEEEEE;
-    text-decoration: none;
-    display: block;
-    /*border-radius: 10px 1px 1px 10px;*/
-    border: 1px solid #ddd;
-    -webkit-transition:  background 0.3s ease-in-out;
-    -moz-transition:  background 0.3s ease-in-out;
-    -ms-transition:  background 0.3s ease-in-out;
-    -o-transition:  background 0.3s ease-in-out;
-    transition:  background 0.3s ease-in-out;
-  }
-  #topbar ul.tab li a.selectdos{
-    border-bottom: 1px solid #f7f7f7;
-    background: #f7f7f7;
-    color: #56861f;
-    
-  }
-  #topbar ul.tab li:hover a {
-      background: #f7f7f7;
-      color: #56861f;
-  }
-  #topbar ul.tab li:visited a {
-      background: #f7f7f7;
-      color: #56861f;
-  }
+    label{
+        width: 95px;
+    }
 
-  #topbar ul.tab li {float: left;}
+    input{
+        margin-bottom: 10px;
+    }
 
-  .redBackground{
-      background-color: gray;  
-  }
+    button{
+        width: 240px;
+        cursor:pointer;
+        height: 40px;
+        padding:8px; 
+        margin-top:5px;
+        margin-right:10px;
+    }
 
-  .topictree{
-    overflow: hidden;
-    overflow-y:scroll;
-    height: 550px;
-    width: 570px;
-    font-size: 12px;
-    padding: 5px 10px 10px 0px;
-    text-align: left;
-    margin: 10px;
-    border: 1px solid #ddd;
-  }
+    .class-button{
+        display:inline;
+        cursor:pointer;
+        width: 200px;
+        height: 42px;
+        padding:8px;
+        margin: 5px; 
+    }
 
-  /*button.accordion {
-      background-color: #eee;
-      color: #444;
-      cursor: pointer;
-      padding: 18px;
-      width: 100%;
-      text-align: left;
-      border: none;
-      outline: none;
-      transition: 0.4s;
-  }*/
+    .from-button{
+        display:inline;
+        cursor:pointer;
+        width:80px;
+        height: 32px;
+        padding:8px;
+        margin: 10px; 
+    }
 
-  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  /*button.accordion.active, button.accordion:hover {
-      background-color: #ddd;
-  }
+    .class-content{
+        padding-left: 100px;
+        padding-right: 100px;
+        align-content: center;
+    }
 
-  button.accordion:after {
-      content: '\02795'; 
-      font-size: 13px;
-      color: #777;
-      float: right;
-      margin-left: 5px;
-  }
+    .xls-content{
+        float: left;
+        text-align: center;
+    }
 
-  button.accordion.active:after {
-      content: "\2796"; 
-  }*/
-
-  /* Style the accordion panel. Note: hidden by default */
-  div.panel {
-      padding: 0 18px;
-      background-color: white;
-      display: none;
-      overflow: hidden;
-      transition: 0.6s ease-in-out;
-      opacity: 0;
-  }
-
-  /* The "show" class is added to the accordion panel when the user clicks on one of the buttons. This will show the panel content */
-  div.panel.show {
-      display: block;
-      opacity: 1;
-  }
-  /*
-  div.panel {
-      padding: 0 18px;
-      background-color: white;
-      max-height: 0;
-      overflow: hidden;
-      transition: 0.6s ease-in-out;
-      opacity: 0;
-  }
-  */
-  /*.class-content a{
-    text-align: center;
-  }*/
+    #newChapter{
+        height:300px;
+        border: 1px solid #C6D1AD;
+        border-radius: 5px;
+        display:none; 
+        padding:15px 100px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 </style>
+
 <br>
 <div class="container">
-<div class="class-content">
-  <h1 style="text-align:center;">Curriculum MINEDUC - En Desarrollo</h1>
-  <div style="width:100%; height:55px; margin-left: 50%; float: left;"> <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" style="cursor:pointer; width:200px; height: 35px; padding:8px; float:left; margin-top:10px; margin-right:10px;" class="kui-button kui-button-plain kui-button-primary"><i class="plus"></i> Nuevo Nivel</button> </div>
+    <div class="class-content">
+        <h1 style="text-align:center;">Curriculum MINEDUC</h1>
+        
+        <div style="float:left; padding-left: 40%;">
+            <button type='input' id='buttonNewChapter' onclick="javascript:showNewChapter()" class="kui-button kui-button-plain kui-button-primary class-button"><i class="plus"></i> Nuevo Nivel</button>
+        </div>
 
-  <div id="newChapter">
-    <form action="" method="post" id="form0">{% csrf_token %}
-      <h3>Nuevo Nivel</h3>
-      <label for='block'>Nombre: </label><input id="newName" onchange="validar()" onkeyup="validar()" name="name" type="text" class="ui-corner-all placeholder simple-input search-input blur-on-esc" ><br>
-      <a onclick='javascript:hideNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>
-      <a onclick='javascript:saveNewChapter()' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Guardar</a>
-    </form>
-  </div>
+        <div id="newChapter">
+            <form action="" method="post" id="form0">{% csrf_token %}
+                <h3 style="height:30px">Nuevo Curriculo</h3>
+                <div style="display: inline;width:auto; float:left; padding-left: 10px; margin-left: 70px">
+                    <label for='newLevel'>Nivel: </label>
+                    <select id="newLevel" name="level" class="ui-corner-all placeholder simple-input search-input blur-on-esc" required>
+                        <option value="1">Primero Básico</option>
+                        <option value="2">Segundo Básico</option>
+                        <option value="3">Tercero Básico</option>
+                        <option value="4">Cuartro Básico</option>
+                        <option value="5">Quinto Básico</option>
+                        <option value="6">Sexto Básico</option>
+                        <option value="7">Septimo Básico</option>
+                        <option value="8">Octavo Básico</option>
+                        <option value="9">Primero Medio</option>
+                        <option value="10">Segundo Medio</option>
+                        <option value="11">Tercero Medio</option>
+                        <option value="12">Cuarto Medio</option>
+                    </select>
+                </div>
 
-  {% for chap in capitulos %}
-    <a role="button" href="{% url 'curriculum:getCurriculumNivel' chap.id_chapter_mineduc %}" class="kui-button kui-button-plain kui-button-primary" onClick="loading()">{{ chap.name }}</a>
-    <br>
-  {% endfor %}
+                <div style="display: inline;width:auto; float:left; padding-left: 10px; margin-left: 30px">
+                    <label for='newSubject'>Asignatura: </label>
+                    <select id="newSubject" name="subject" class="ui-corner-all placeholder simple-input search-input blur-on-esc" required>
+                        {% for sub in lista_asign %}
+                            <option value={{ sub.id_subject_name }}>{{ sub.name_spanish }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div style="display: inline; width:auto; float:left; padding-left: 10px; margin-left: 30px">
+                    <label for="newYear">Año: </label>
+                    <input type="number" id="newYear" name="year" min="2000" max="{{ a_actual }}" value="{{ a_actual }}" style="max-width:80px" class="ui-corner-all simple-input search-input blur-on-esc" required>
+                </div>
+                <br>
+                <div style="padding-left: 10%;padding-right: 10%;padding-top: 10px">
+                    <label>Comentario: </label><br>
+                    <textarea id="newCom" name="additional" placeholder="Opcional" style="width:100%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 100px" class="ui-corner-all simple-input search-input blur-on-esc"></textarea>
+                    <br>
+                </div>
+                <a onclick='javascript:hideNewChapter()' class="form-button kui-button kui-button-plain kui-button-primary" style="float: left; margin-left: 200px;">Cancelar</a>
+                <a onclick='javascript:saveNewChapter()' class="form-button kui-button kui-button-submit kui-button-primary"style="float: right; margin-right: 200px;">Guardar</a>
+            </form>
+        </div>
+
+        <div style="float: left; padding-left: 40%">
+            {% for chap in capitulos %}
+            <a role="button" href= "{% url 'curriculum:getCurriculumInfo' chap.id_chapter_mineduc %}" class="class-button kui-button kui-button-plain kui-button-primary" onClick="loading()"
+                {% if chap.additional%}
+                    title= "{{ chap.additional }}"
+                {% endif %}
+            >{{ chap.level }} ({{ chap.year }})</a>
+            <br>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
+<div class="container" style="margin-top: 30px">
+    <div class="class-content xls-content">
+        <h3>Subir excel curicular</h3>
+        <div id="uploadExcel">
+            <form id="miexcelForm" name="miexcelForm">
+            <label for="selectClass">Excel: </label><input type="file" id="miexcel" name="miexcel" accept=".csv, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+            <a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div id="popup" style="display:none">
@@ -305,519 +173,173 @@
 
 <script type="text/javascript">
 
-$(document).ready(function(){
-    
-    $("#hover").click(function(){
-          $(this).fadeOut();
-      $("#popup").fadeOut();
-      $("#popuptree").fadeOut();
-      });
-    
-    $("#close").click(function(){
-          $("#hover").fadeOut();
-      $("#popup").fadeOut();
-      $("#popuptree").fadeOut();
-      });
-    $('#contenidopestanas').hide();
-  });
+    $(document).ready(function(){
+        $("#hover").click(function(){
+            $(this).fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
 
-$('#curriculum').addClass('active selected');
-
-
-  function backChapter(){
-
-    $('.class-content').show();
-    $('.main-content').hide();
-    $('#namecurso').hide();
-    $('#sidebar').hide();
-    $('#buttonback').hide();
-  }
-
-
-  function showNewChapter(){
-  $('#newChapter').toggle('blind',10);
-  $('#buttonNewChapter').hide();
-  }
-
-  function hideNewChapter(){
-  $('#newChapter').toggle('blind',10);
-  $('#buttonNewChapter').show();
-  }
-
-  function showNewTopic(){
-  $('#newTopic').toggle('blind',10);
-  $('#buttonNewTopic').hide();
-  }
-
-  function hideNewTopic(){
-  $('#popup').hide();
-  $('#hover').hide();
-  }
-
-  function showNewSubtopic(){
-  $('#newSubtopic').toggle('blind',10);
-  $('#buttonNewSubtopic').hide();
-  }
-
-  function hideNewSubtopic(){
-  $('#popup').hide();
-  $('#hover').hide();
-  }
-
-  function hideTree(){
-  $('#popuptree').hide();
-  $('#hover').hide();
-  }
-
-  function saveNewChapter(){
-    var nName = $('#newName').val();
-    if(validar()){
-      $.ajax({
-      url: "{% url 'curriculum:nuevo_chapter' %}",
-      type: "POST",
-      data: {chapter: nName},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Nivel guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }
-        }
-      });
-    }else{
-      $("#popup").empty()
-      $("#hover").fadeIn().css('display', '');
-      $("#popup").fadeIn().css('display', '');
-      $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-    }
-  }
-
-function saveNewTopic(){
-  var nombretopic = $('#newNameTopic').val();
-  var nombrecurso = $('#namecurso').text();
-  //console.log(nombrecurso);
-  if(validarTopic()){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_topic' %}",
-      type: "POST",
-      data: {nombre: nombretopic, curso: nombrecurso},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Unidad guardada correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        }
+        $("#close").click(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+        $('#contenidopestanas').hide();
     });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }
-}
 
+    $('#curriculum').addClass('active selected');
 
-function saveNewSubtopic(idtopic){
-  var nombresubtopic = $('#newNameSubtopic'+idtopic+'').val();
-  var descripcionsubtopic = $('#textarea_coment').val();
-
-  //console.log(descripcionsubtopic);
-  if(validarSubtopic(idtopic)){
-    $.ajax({
-      url: "{% url 'curriculum:nuevo_subtopic' %}",
-      type: "POST",
-      data: {nombre: nombresubtopic, topico: idtopic, descripcion: descripcionsubtopic},
-        success: function(response){
-          $("#popup").empty()
-          $("#close").hide();
-          $("#hover").fadeIn();
-          $("#popup").fadeIn();
-          $("#popup").append("<p class='response'>"+response+"</p>");
-          auxResponse = response;
-          if (auxResponse == "Objetivo de Aprendizaje guardado correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }        
-        }
-    });
-  }
-  else{
-    $("#popup").empty()
-    $("#hover").fadeIn().css('display', '');
-    $("#popup").fadeIn().css('display', '');
-    $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
-  }
-}
-
-function saveVideoExercise(idsubtopic){
-  var infodata=[];
-  var cont=0;
-  var select = $("#newTree"+idsubtopic).jstree("get_selected", true);
-  for (var i = 0; i < select.length; i++) {
-    if (typeof select[i]["data"] != "undefined"){
-      if(select[i]["data"]["skill_id"]){
-        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["skill_id"], "icon":select[i]["icon"]}
-      }
-      else{
-        infodata[cont]={"id":select[i]["id"],"id_sv":select[i]["data"]["video_id"], "icon":select[i]["icon"]}
-      }
+    function showNewChapter(){
+        $('#newChapter').toggle('blind',10);
+        $('#buttonNewChapter').hide();
     }
 
-    cont++;
-  }
-  console.log(infodata);
+    function hideNewChapter(){
+        $('#newChapter').toggle('blind',10);
+        $('#buttonNewChapter').show();
+    }
 
-  if (select.length>0){
-    $.ajax({
-    url: "{% url 'curriculum:save_videoexercise' %}",
-    type: "POST",
-    data: {infodata, subtopic:idsubtopic},
-      success: function(response){
-        $('#popuptree').hide();
-        $("#popup").empty()
-        $("#close").hide();
+    function saveNewChapter(){
+        var nLevel = $('#newLevel').val();
+        var nYear = $('#newYear').val();
+        var nAdd = $('#newCom').val();
+        var nSubj = $('#newSubject').val();
+
+        $.ajax({
+            url: "{% url 'curriculum:nuevo_chapter' %}",
+            type: "POST",
+            data: {level: nLevel, year: nYear, additional: nAdd, subj: nSubj},
+            success: function(response){
+                $('#newCom').val('');
+                $("#popup").empty();
+                $("#close").hide();
+                $("#hover").fadeIn();
+                $("#popup").fadeIn();
+                $("#popup").append("<p class='response'>"+response+"</p>");
+                auxResponse = response;
+                if (auxResponse == "Nuevo curriculo guardado correctamente"){
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){location.reload()},1000);
+                }
+            },
+            error: function(response){
+                $("#popup").empty()
+                $("#hover").fadeIn().css('display', '');
+                $("#popup").fadeIn().css('display', '');
+                $("#popup").append("<p class='response'>Revise los campos ingresados</p>");
+            }
+        });
+    }
+
+
+    function deleteChapter(id){
+        $('#popup').empty();
+        $('#hover').fadeIn();
+        $('#popup').fadeIn();
+        $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar el nivel? Perderá toda la información de unidades, objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
+        $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
+    }
+
+    function cancelDelete(){
+        $('#popup').hide();
+        $('#hover').hide();
+    }
+
+    function confirmDeleteChapter(id){
+        $.ajax({
+            url: "{% url 'curriculum:deletechapter' %}",
+            type: "POST",
+            data: {idchapter: id},
+            success: function(response){
+                $('#popup').empty();
+                $('#close').hide();
+                $('#hover').fadeIn();
+                $('#popup').fadeIn();
+                $('#popup').append("<p class='response'>"+response+"</p>");
+                auxResponse = response;
+                if (auxResponse == "Nivel borrado correctamente"){
+                    $("#hover").css('pointer-events', 'none');
+                    $('#close').css('pointer-events', 'none');
+                    window.setTimeout(function(){location.reload()}, 1000);
+                }
+            }
+        });
+    }
+
+    function validarTopic(){
+        flag = true;
+        nName = document.getElementById("newNameTopic").value;
+        if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
+            $("#newNameTopic").css('color', '#C30202');
+            flag = false;
+        }else{
+            $("#newNameTopic").css('color', '#000000');
+        }
+        return flag;
+    }
+
+    function uploadExcel(){
+        var filename = $("#miexcel").val();
+        var extension = filename.replace(/^.*\./, '');
+        if (extension!="xlsx") {
+            $('.response').remove();
+            $("#hover").fadeIn();
+            $("#popup").fadeIn();
+            $("#popup").append("<p class='response'>Formato de archivo no válido. Debe ser .xlsx</p>");
+            return;
+        };
+
+        $(".response").remove();
+        $("#popup").append("<p class='response'>Cargando el excel. Espere un momento por favor...</p>");
+        $("#popup").append($('#loading').css('display',''));
+        $("#hover").css('pointer-events','none');
+        $("#close").css('pointer-events','none');
         $("#hover").fadeIn();
         $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-        if (auxResponse == "Ejercicios y/o Videos guardados correctamente"){
-          $("#hover").css('pointer-events','none');
-          $("#close").css('pointer-events','none');
-          window.setTimeout(function(){location.reload()},1000);
-        }    
-      }
-    });
-  }
-  else{
-    console.log('faltan datos por elegir');
-  }
-}
 
-
-function addVideoExercise(idsubtopic, idtopic){
-  var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-  //console.log(tree);
-  $('#popuptree').empty();
-  $('#hover').fadeIn();
-  $('#popuptree').fadeIn();
-  $('#popuptree').append("<div id='filtrar' style='float:left;width:50%;'><label>Filtrar por: </label><select class='skill_search' onchange='valorfiltro(this, "+idsubtopic+")'><option value='todos'>Todos</option><option value='ejercicios'>Ejercicios</option><option value='videos'>Videos</option></select></div>")
-  $('#popuptree').append("<div id='search' style='float:left;width:50%;'><label for='skill_search'>Buscar: </label><input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'></div>")
-  $('#popuptree').append("<div id='newTree"+idsubtopic+"' class='topictree'></div>")
-  $('#newTree'+idsubtopic+'').jstree(tree);
-  $('#popuptree').append("<br><a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Cancelar</a><a onclick=\"(saveVideoExercise('" + idsubtopic + " '))\" class='kui-button kui-button-plain kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px'>Guardar</a>");
-  
-  setTimeout(function(){
-    var chapters=arbol["capitulos"];
-    for (var i = 0; i < chapters.length; i++) {
-      var topicos = chapters[i]["topico"];
-      for (var j = 0; j < topicos.length; j++) {
-        if (topicos[j]['id']==idtopic){
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==idsubtopic){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
+        var data = new FormData();
+        $.each($('#miexcel')[0].files, function(i, file) {
+            data.append('file-'+i, file);
+        });
+        
+        $.ajax({
+            url: "{% url 'curriculum:subir_excel' %}",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response){
+                if (response == "False") {
+                    $("#hover").css('pointer-events','');
+                    $("#close").css('pointer-events','');
+                    $("#hover").fadeOut();
+                    $("#popup").fadeOut();
+                    $('#loading').fadeOut();
+                    $('.response').remove();
+                    $("#popup").append("<p class='response'>Archivo no válido</p>");
+                    $("#hover").fadeIn();
+                    $("#popup").fadeIn();
+                    return;
+                    
+                }
+                else{
+                    jsonResponse = response;
+                    drawClasses(jsonResponse[1], jsonResponse[0]);
+                    $("#hover").css('pointer-events','');
+                    $("#close").css('pointer-events','');
+                    $("#hover").fadeOut();
+                    $("#popup").fadeOut();
+                    $('#loading').fadeOut();
+                };
+                
             }
-          }
-        }   
-      }
+        });
     }
-  },1000);
-}
 
-function valorfiltro(valor, id){
-  if(valor.value == "ejercicios"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-    var info = tree['core']['data'];
-    for (var i = 0; i < info.length; i++) {
-        if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['video_id']!= "undefined"){
-          delete info[i]
-        } 
-    }
-    try{
-      $('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-    }
-    catch(err){
-      $('#newTree'+id+'').jstree(tree);
-      console.log(err);
-    }
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },500);
-  }
-  if(valor.value == "videos"){
-    var tree = JSON.parse('{{ topictree_json_string_video | escapejs }}');
-    var info = tree['core']['data'];
-    //console.log(info);
-    for (var i = 0; i < info.length; i++) {
-        if(typeof info[i]['data']!= "undefined" && typeof info[i]['data']['skill_id']!= "undefined"){
-          delete info[i]
-          //console.log(info[i]['data']);
-        } 
-    }
-    //console.log(info)
-    try{
-      $('#newTree'+id+'').jstree("destroy");  
-      $('#newTree'+id+'').jstree(tree);  
-      //$('#newTree'+id+'').jstree(tree);
-      //$('#newTree'+id+'').jstree("refresh");
-      //console.log('paso el try');
-    }
-    catch(err){
-      //$('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-      //console.log('paso el catch');
-      //console.log(err);
-      //$('#newTree'+id+'').jstree(tree);
-    }
-    //console.log(tree);
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },500);
-  }
-  if (valor.value == "todos"){
-    var tree = JSON.parse('{{ topictree_json_string | escapejs }}');
-    var info = tree['core']['data'];
-    try{
-      $('#newTree'+id+'').jstree("destroy");
-      $('#newTree'+id+'').jstree(tree);
-    }
-    catch(err){
-      $('#newTree'+id+'').jstree(tree);
-      console.log(err);
-    }
-    setTimeout(function(){
-      var chapters=arbol["capitulos"];
-      for (var i = 0; i < chapters.length; i++) {
-        var topicos = chapters[i]["topico"];
-        for (var j = 0; j < topicos.length; j++) {
-          var subtopicos = topicos[j]["subtopico"];
-          for (var k = 0; k < subtopicos.length; k++) {
-            if (subtopicos[k]['id']==id){
-              var ejer = subtopicos[k]["skills"];
-              for (var l = 0; l < ejer.length; l++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+ejer[l]['idtree']+'');
-              }
-              var vid = subtopicos[k]["videos"];
-              for (var m = 0; m < vid.length; m++) {
-                $('#newTree'+id+'').jstree('select_node', '#'+vid[m]['idtree']+'');
-              }
-            }
-          }
-        }
-      }
-    },1000);    
-  }
-}
-
-function deleteVideoExercise(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar los videos y ejercicios?</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteVideoExercise("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>')
-}
-
-function deleteSubtopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar el Objetivo de Aprendizaje? Perderá toda la información de videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteSubtopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function deleteTopic(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div>¿Está seguro que desea eliminar la unidad? Perderá toda la información de objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteTopic("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function deleteChapter(id){
-  $('#popup').empty();
-  $('#hover').fadeIn();
-  $('#popup').fadeIn();
-  $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar el nivel? Perderá toda la información de unidades, objetivos de aprendizaje, videos y ejercicios asociados a él.</div>');
-  $('#popup').append('<a onclick=\'(confirmDeleteChapter("'+id+'"))\' class="kui-button kui-button-plain kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Aceptar</a><a onclick="javascript:cancelDelete()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin-top:10px">Cancelar</a>');
-}
-
-function cancelDelete(){
-  $('#popup').hide();
-  $('#hover').hide();
-}
-
-function confirmDeleteVideoExercise(id){
-  //console.log(id)
-  $.ajax({
-    url: "{% url 'curriculum:deletevideoexercise' %}",
-    type: "POST",
-    data: {idsubtopic:id},
-      success: function(response){
-        $("#popup").empty()
-        $("#close").hide();
-        $("#hover").fadeIn();
-        $("#popup").fadeIn();
-        $("#popup").append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Videos y Ejercicios borrados correctamente"){
-            $("#hover").css('pointer-events','none');
-            $("#close").css('pointer-events','none');
-            window.setTimeout(function(){location.reload()},1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteSubtopic(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletesubtopic' %}",
-    type: "POST",
-    data: {idtopic: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Objetivo de Aprendizaje borrado correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteTopic(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletetopic' %}",
-    type: "POST",
-    data: {idchapter: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Unidad borrada correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
-          }
-      }
-  });
-}
-
-function confirmDeleteChapter(id){
-  $.ajax({
-    url: "{% url 'curriculum:deletechapter' %}",
-    type: "POST",
-    data: {idchapter: id},
-      success: function(response){
-        $('#popup').empty();
-        $('#close').hide();
-        $('#hover').fadeIn();
-        $('#popup').fadeIn();
-        $('#popup').append("<p class='response'>"+response+"</p>");
-        auxResponse = response;
-          if (auxResponse == "Nivel borrado correctamente"){
-            $("#hover").css('pointer-events', 'none');
-            $('#close').css('pointer-events', 'none');
-            window.setTimeout(function(){location.reload()}, 1000);
-          }
-      }
-  });
-}
-
-function validar(){
-  flag = true;
-  nName = document.getElementById("newName").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    $("#newName").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newName").css('color', '#000000');
-  }
-  return flag;
-}
-
-function validarTopic(){
-  flag = true;
-  nName = document.getElementById("newNameTopic").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    $("#newNameTopic").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newNameTopic").css('color', '#000000');
-  }
-  return flag;
-}
-
-function validarSubtopic(idtopic){
-  flag = true;
-  nName = document.getElementById("newNameSubtopic"+idtopic+"").value;
-  if(nName == null || nName.length == 0 || /^\s+$/.test(nName)) {
-    console.log(nName);
-    $("#newNameSubtopic").css('color', '#C30202');
-    flag = false;
-  }else{
-    $("#newNameSubtopic").css('color', '#000000');
-    console.log('entro en else');
-  }
-  return flag;
-}
 </script>
 
 {% endblock %}

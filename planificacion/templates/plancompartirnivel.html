@@ -1,0 +1,599 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block title %}Planificación Curriculum{% endblock %}
+
+{% block body2 %}
+
+<!--<script src="{% static 'js/editablegrid.js' %}"></script>
+<script src="{% static 'js/editablegrid_renderers.js' %}"></script>
+<script src="{% static 'js/editablegrid_editors.js' %}"></script>
+<script src="{% static 'js/editablegrid_validators.js' %}"></script>
+<script src="{% static 'js/editablegrid_utils.js' %}"></script>
+<script src="{% static 'js/editablegrid_charts.js' %}"></script>-->
+
+<!--<link rel="stylesheet" type="text/css" href="{% static 'css/editablegrid.css'%}">-->
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
+
+<style>
+    input{
+        z-index: 1000;
+        width: 100%;
+        height: 100%;
+        margin-bottom: 10px;
+    }
+
+    label{
+        margin-right: 10px;
+        width: 95px;
+    }
+
+    #popup{
+        max-height: 250px;
+        padding: 20px 10px;
+    }
+
+    .copy-button{
+        float: right;
+        margin-right: -40px;
+        min-width: 180px;
+    }
+
+    #flex-div{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #topbar {
+        float:left;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        z-index: 2;
+        height: 50px;
+        /*margin-right: -1px;*/
+    }
+
+    #topbar ul.tab {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    #topbar ul.tab li {
+      margin: 0;
+    }
+    #topbar ul.tab li a {
+        padding: 15px 20px;
+        font-size: 14px;
+        font-weight: 100;
+        background: #EEEEEE;
+        text-decoration: none;
+        display: block;
+        border: 1px solid #ddd;
+        -webkit-transition:  background 0.3s ease-in-out;
+        -moz-transition:  background 0.3s ease-in-out;
+        -ms-transition:  background 0.3s ease-in-out;
+        -o-transition:  background 0.3s ease-in-out;
+        transition:  background 0.3s ease-in-out;
+    }
+    #topbar ul.tab li a.tab_select{
+        border-bottom: 1px solid #f7f7f7;
+        background: #f7f7f7;
+        color: #56861f;
+        pointer-events: none;
+    }
+    #topbar ul.tab li:hover a {
+        background: #f7f7f7;
+        color: #56861f;
+    }
+    #topbar ul.tab li:visited a {
+        background: #f7f7f7;
+        color: #56861f;
+    }
+
+    #topbar ul.tab li {
+        float: left;
+    }
+
+    .topictree{
+        overflow: hidden;
+        overflow-y:scroll;
+        height: 500px;
+        width: 570px;
+        font-size: 12px;
+        padding: 5px 10px 10px 0px;
+        text-align: left;
+        margin: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .videos,.skills, .descripcion{
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        width: 800px;
+        height: 100px;
+        max-height: 400px;
+        text-align: left;
+        padding: 10px;
+        margin: 10px;
+        margin-left: 150px;
+        overflow: hidden;
+        overflow: scroll;
+        overflow: auto;
+        background: #F6F7F7;
+        float:left;
+        cursor: default;
+        -moz-user-select':-moz-none;
+        -moz-user-select:none;
+        -o-user-select:none;
+        -khtml-user-select:none; 
+        -webkit-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+
+    .bloque-info{
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        width: 84%;
+        height: 100px;
+        max-height: 400px;
+        text-align: left;
+        padding: 10px;
+        margin: 10px;
+        margin-left: 0px;
+        overflow: hidden;
+        overflow: scroll;
+        overflow: auto;
+        background: #F6F7F7;
+        float:left;
+        cursor: default;
+        -moz-user-select':-moz-none;
+          -moz-user-select:none;
+          -o-user-select:none;
+          -khtml-user-select:none; 
+          -webkit-user-select:none;
+          -ms-user-select:none;
+          user-select:none;   
+    }
+
+    .flex-div{
+        display: flex;
+        flex-direction: column;
+    }
+    .class-block{
+        float: left;
+        width: 320px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .class-row{
+        margin-top: 6px;
+        margin-bottom: 6px;
+        min-height: 32px;
+    }
+
+    .class-window{
+        border: 1px solid #D9D9D9;
+        border-radius: 5px;
+        width: 800px;
+        min-height: 500px;
+        text-align: left;
+        padding: 20px;
+        margin: 10px;
+        margin-left: 0px;
+        background: #F6F7F7;
+        float:left;
+        cursor: default;
+        -moz-user-select':-moz-none;
+        -moz-user-select:none;
+        -o-user-select:none;
+        -khtml-user-select:none; 
+        -webkit-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+    .desc_label{
+        margin-left: 0px;
+        float: left;
+        width: 300px;
+        text-align: left;
+    }
+
+    .main-content li{
+    text-align:left;
+    }
+
+    .main-content h2, h3{
+    text-align: center;
+    }
+
+    .contenidodhv h2{
+    margin-bottom: 0px;
+    }
+
+    td.mousepointer{
+      cursor: pointer;
+    }
+
+    .class-list{
+        margin-top: 10px;
+        max-height: 700px;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .class-list:hover{
+        margin-top: 10px;
+        max-height: 700px;
+        margin-bottom: 10px;
+        overflow: auto;
+    }
+  }
+</style>
+
+<div style="float: left">
+    Autor de la planificación: {{ autor.0.name }}
+</div>
+
+<div style="float: right">
+    Curriculo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
+</div>
+<br>
+<div class="copy-button">
+    <a href='#' onclick='javascript:copyWarning(); return false;' class='kui-button kui-button-plain kui-button-primary'>Copiar Plan</a>
+</div>
+
+<div id="topbar" style="min-width: 1200px; height: 52px; margin-bottom: -2px; margin-top: 15px">
+    <ul class="tab">
+        {% for top in lista_topicos %}
+            <li><a id='tab_unidad_{{ top.id_topic_mineduc }}' style="cursor: pointer; min-height 55px" href='#' onclick="cambiarUnidad({{ top.id_topic_mineduc }}); return false;">
+                Unidad {{ top.index }}
+            </a></li>
+            {% if forloop.first %}
+                <script>
+                    $(document).ready(function(){
+                        cambiarUnidad({{ top.id_topic_mineduc }});
+                    });
+                </script>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+<br>
+
+<div class="container" style="min-width: 1200px;">
+    <div class="main-content" style="min-height: 1000px; margin-right: 20px; padding-left: 20px; padding-top: 20px; padding-bottom: 20px; width: 100%; float: left; min-width: 700px">
+        <div id="header" class="flex-div"></div>
+        <div id="subheader" class="flex-div"></div>
+
+        <div class="container" id="class-panel">
+            <div id="sidebar" class="class-list"></div>
+            <div id="class-window" class="flex-div">
+                <div id='info-window' style='overflow: hidden; display:none'>
+                    <h3 id="labelTitle"></h3>
+
+                    <div class='class-block'>
+                        <div class='class-row' style="margin-bottom: 46px">
+                            <label id="labelOA"></label>
+                        </div>
+                        <div class='class-row'>
+                            <label for='blockInicio'><strong>Descripción de inicio:</strong></label>
+                            <p id='blockInicio' style='width: 300px;' class='bloque-info'></p>
+                        </div>
+                        <div class='class-row'>
+                            <label for='blockSkill'><strong>Habilidades:</strong></label>
+                            <div id='blockSkill' style='width: 300px;' class='bloque-info'>
+                                <ul id='skill_info'></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='class-block' style='float:right'>
+                        <div class='class-row'>
+                            <label id="labelDate"></label>
+                        </div>
+                        <div class='class-row'>
+                            <label id='labelDuration'></label>
+                        </div>
+
+                        <div class='class-row'>
+                            <label for='blockCierre'><strong>Descripción de cierre:</strong></label>
+                            <p id='blockCierre' style='width: 300px;' class='bloque-info'></p>
+                        </div>
+                        <div class='class-row'>
+                            <label for='video_block'><strong>Videos:</strong></label>
+                            <div id='video_block' style='width: 300px;' class='bloque-info'>
+                                <ul id='video_info'>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+<div id="popup" style="display:none">
+    <div style="max-width:500px;margin-left:50px;">
+        <h3 style="text-align: center; color: red">Advertencia</h3>
+        <p>Esta operación creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
+    </div>
+    <div style="margin-bottom: 10px; max-width:500px;margin-left:50px;">
+        Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
+        {% if clase.0.additional %}
+            ( {{clase.0.additional}} )
+        {% endif %}
+        del año {{ clase.0.year }}.
+    </div>
+    <div style="margin-bottom: 10px">
+        <select id="owner_class">
+        <option value=-1>Seleccione un curso</option>
+        {% for curso in cursos_usuario %}
+            <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
+        {% endfor %}
+        </select>
+    </div>
+    <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
+    <a onclick="hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $("#hover").click(function(){
+            $(this).fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+        
+        $("#close").click(function(){
+            $("#hover").fadeOut();
+            $("#popup").fadeOut();
+            $("#popuptree").fadeOut();
+        });
+     });
+
+    function cambiarUnidad(unitid){
+        $('#header').empty();
+        $('#subheader').empty();
+        $('#class-window').hide();
+
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = curriculo["topicos"];
+        var text = "";
+
+        //Dibuja la caja de descripcion de la Unidad.
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == unitid){
+                var subtopicos = topicos[i]["subtopico"];
+                text += "<label class='desc_label' style='margin-left: 150px;'>Descripción de la Unidad: </label>";
+                text += "<p class='descripcion'>"+topicos[i]['desc']+"</p>";
+                text += "<br>";
+                break;
+            }
+        }
+
+        $('#header').append(text);
+        text = "";
+
+        text += "<div style='margin-right: 180px; margin-bottom: 10px'>";
+        text += "<label for='oa_select'>Objetivo de Aprendizaje: </label>";
+        text += "<select id='oa_select' onchange='filtrarOA(" + unitid + ");' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px'>";
+        text += "<option value='0' onclick='listarClases(" + unitid + ")'>Mostrar Todo</option>";
+        for (var s = 0; s < subtopicos.length; s++){
+            text += "<option value='" + subtopicos[s]["id"] + "'> Objetivo de aprendizaje " + subtopicos[s]["index"] + "</option>";
+        }
+        text += "</select></div>";
+        
+        $('#header').append(text);
+
+        listarClases(unitid);
+
+        //Cambia estilo (colorea) la pestaña Unidad seleccionada.
+        $(document.getElementsByClassName("tab_select")).removeClass("tab_select");
+        $(document.getElementById("tab_unidad_" + unitid)).addClass("tab_select");
+        $(document.getElementById("class-window")).addClass("class-window");
+    }
+
+    function filtrarOA(unitid){
+        $('#subheader').empty();
+
+        var filtered_oa_id = $('#oa_select').val();
+        var text = "";
+
+        if(filtered_oa_id){
+            var curriculo = JSON.parse('{{ json_data | escapejs }}');
+            var topicos = curriculo["topicos"];
+            
+            //Dibuja la caja de descripcion de los OA.
+            for (var t = 0; t < topicos.length; t++) {
+                if (topicos[t]['id'] == unitid){
+                    var subtopicos = topicos[t]["subtopico"];
+                    for (var s = 0; s < subtopicos.length; s++){
+                        if(subtopicos[s]['id'] == filtered_oa_id){
+                            if (subtopicos[s]['resumen']){
+                                text += "<div style='margin-left: 140px; margin-right: 185px;'>";
+                                    text += "<div style='float: left; width: 400px;'>";
+                                        text += "<label class='desc_label'>Descripcion del Objetivo de Aprendizaje: </label>";
+                                        text += "<p class='descripcion' style='margin-left: 10px; width: 94%'>"+subtopicos[s]['desc']+"</p>";
+                                    text += "</div><div style='float: right; width: 400px;'>";
+                                        text += "<label class='desc_label'>Información adicional: </label>";
+                                        text += "<p class='descripcion' style='width: 94%; margin-left: 10px'>"+subtopicos[s]['resumen']+"</p>";
+                                    text += "</div>";
+                                text += "</div>";
+                            }else{
+                                text += "<label style='margin-left: 5px; width: 400px;'>Descripcion del Objetivo de Aprendizaje: </label>";
+                                text += "<p class='descripcion'>"+subtopicos[s]['desc']+"</p>";
+                            }
+                            text += "<br>";
+                            break; break;
+                        }
+                    }
+                }
+            }$('#subheader').append(text);
+        }
+        listarClases(unitid, filtered_oa_id);
+    }
+
+    function listarClases(unitid, selected_oa_id = 0){
+        $('#sidebar').empty();
+
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = curriculo["topicos"];
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var text = "";
+        text += "<ul>";
+
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == unitid){
+                var subtopicos = topicos[i]["subtopico"];
+                break;
+            }
+        }
+        
+        if (selected_oa_id == 0){
+            for (var i = 0; i < plan_list.length; i++){
+                for (var s = 0; s < subtopicos.length; s++){
+                    if (plan_list[i]['class_subtopic'] == subtopicos[s]['id']){
+                        text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                        text += plan_list[i]['class_name'];
+                        text += "</a></li>";
+                    }
+                }
+            }
+        }else{
+            for (var i = 0; i < plan_list.length; i++){
+                if (plan_list[i]['class_subtopic'] == selected_oa_id){
+                    text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                    text += plan_list[i]['class_name'];
+                    text += "</a></li>";
+                }
+            }
+        }
+        text += "</ul>";
+
+        $('#sidebar').append(text);
+    }
+
+    function cambiarClase(classid, unitid){
+        $('#class-window').show();
+        $('#info-window').hide();
+
+        var curriculo = JSON.parse('{{ json_data | escapejs }}');
+        var topicos = curriculo["topicos"];
+        var planificacion = JSON.parse('{{ plan | escapejs}}');
+        var plan_list = planificacion["plan"];
+        var text = "";
+
+        for (var i = 0; i < topicos.length; i++) {
+            if (topicos[i]['id'] == unitid){
+                var subtopicos = topicos[i]["subtopico"];
+                break;
+            }
+        }
+
+        var Lista_Meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        var filtered_oa_id = $('#oa_select').val();
+        
+        //Inserta en la ventana que muestra contenido los datos de la clase.
+
+        for(var i = 0; i < plan_list.length; i++){
+            if(plan_list[i]["id"] == classid){
+                //Busca el index del O.A.
+                for(var s = 0; s < subtopicos.length; s++){
+                    if(subtopicos[s]['id'] == plan_list[i]['class_subtopic']){
+                        var oa_index = subtopicos[s]['index'];
+                        break;
+                    }
+                }
+                $('#labelTitle').html(plan_list[i]["class_name"]);
+                    $('#labelOA').html("<strong>Objetivo de aprendizaje:</strong> " + oa_index);
+                    $('#blockInicio').html(plan_list[i]["desc_inicio"]);
+                    $('#blockCierre').html(plan_list[i]["desc_cierre"]);
+                    $('#labelDate').html("<strong>Fecha:</strong> " + plan_list[i]["class_date"][2] + " de " + Lista_Meses[plan_list[i]["class_date"][1]-1] + " de " + plan_list[i]["class_date"][0]);
+                    $('#labelDuration').html("<strong>Duración:</strong> " + plan_list[i]["minutes"] + " minutos");
+
+                for (var v = 0; v < plan_list[i]["videos"].length; v++){
+                    text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";
+                    text += "<img style='width:15px; height:15px;' src={% static 'img/videos.png' %} alt='Videos'>";
+                    text += plan_list[i]["videos"][v]["nombre"];
+                    text += "</li>";
+                    $("#video_info").append(text);
+                }
+
+                for (var s = 0; s < plan_list[i]["skills"].length; s++){
+                    text = "<li key=" + plan_list[i]["skills"][s]["id"] + " tree='" + plan_list[i]["skills"][s]["tree"] + "'>";
+                    text += "<img style='width:15px; height:15px;' src={% static 'img/ejercicios.png' %} alt='Habilidades'>";
+                    text += plan_list[i]["skills"][s]["nombre"];
+                    text += "</li>";
+                    $("#skill_info").append(text);
+                }
+
+                $("#info-window").show();
+                break;
+            }
+        }
+
+
+        $(document.getElementsByClassName("select")).removeClass("select");
+        $(document.getElementById("tab_clase_" + classid)).addClass("select");
+    }
+
+    function copyPlan(){
+        class_id = $("#owner_class").val();
+        original_id = {{ id }};
+        institution = "{{ isInstitution }}";
+
+        $.ajax({
+                url: "{% url 'planificacion:copiar_plan' %}",
+                type: "POST",
+                data: {owner_class_id: class_id,
+                    copied_class_id: original_id,
+                    is_institution: institution
+                    },
+                success: function(response){
+                    $("#popup").empty()
+                    $("#close").hide();
+                    $("#hover").fadeIn();
+                    $("#popup").fadeIn();
+                    $("#popup").append("<p class='response'>"+response+"</p>");
+
+                    $("#hover").css('pointer-events','none');
+                    $("#close").css('pointer-events','none');
+                    window.setTimeout(function(){
+                        location.reload()
+                    },500);
+                },
+                error: function(response){
+                    $("#popup").empty()
+                    $("#hover").fadeIn().css('display', '');
+                    $("#popup").fadeIn().css('display', '');
+                    console.log(response);
+                    $("#popup").append("<p class='response'>Hubo un error en el copiado de datos.</p>");
+                }
+            });
+    }
+
+    function hideTree(){
+        $('#popuptree').hide();
+        $('#hover').hide();
+    }
+
+    function hidePopup(){
+        $('#popup').hide();
+        $('#hover').hide();
+    }
+
+    function copyWarning(classid){
+      $('#hover').fadeIn();
+      $('#popup').fadeIn();
+    }
+
+</script>
+{% endblock %}
