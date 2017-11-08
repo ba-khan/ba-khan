@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^eliminar$', views.deletePlanning, name='borrar_plan'),
     url(r'^report$', views.getReport, name='obtener_datos'),
     url(r'^nivel/(?P<class_subj_id>[0-9]+)/$', views.getPlan, name='acceder_plan'),
+    url(r'^nivel/inst/(?P<class_subj_id>[0-9]+)/$', views.getPlan, name='acceder_plan_inst'),
     url(r'^nivel/compartido/inst/(?P<class_subj_id>[0-9]+)/$', views.getPlan, name='acceder_plan_compartido_inst'),
     url(r'^nivel/compartido/(?P<class_subj_id>[0-9]+)/$', views.getPlan, name='acceder_plan_compartido'),
 ]

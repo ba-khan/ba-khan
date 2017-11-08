@@ -276,18 +276,15 @@
                     <h3 id="labelTitle"></h3>
 
                     <div class='class-block'>
-                        <div class='class-row'>
+                        <div class='class-row' style="margin-bottom: 46px">
                             <label id="labelOA"></label>
                         </div>
                         <div class='class-row'>
-                            <label id="labelStatus"></label>
-                        </div>
-                        <div class='class-row'>
-                            <label for='blockInicio'>Descripción de inicio:</label>
+                            <label for='blockInicio'><strong>Descripción de inicio:</strong></label>
                             <p id='blockInicio' style='width: 300px;' class='bloque-info'></p>
                         </div>
                         <div class='class-row'>
-                            <label for='blockSkill'>Habilidades:</label>
+                            <label for='blockSkill'><strong>Habilidades:</strong></label>
                             <div id='blockSkill' style='width: 300px;' class='bloque-info'>
                                 <ul id='skill_info'></ul>
                             </div>
@@ -303,11 +300,11 @@
                         </div>
 
                         <div class='class-row'>
-                            <label for='blockCierre'>Descripción de cierre:</label>
+                            <label for='blockCierre'><strong>Descripción de cierre:</strong></label>
                             <p id='blockCierre' style='width: 300px;' class='bloque-info'></p>
                         </div>
                         <div class='class-row'>
-                            <label for='video_block'>Videos:</label>
+                            <label for='video_block'><strong>Videos:</strong></label>
                             <div id='video_block' style='width: 300px;' class='bloque-info'>
                                 <ul id='video_info'>
                                 </ul>
@@ -324,7 +321,7 @@
 <div id="popup" style="display:none">
     <div style="max-width:500px;margin-left:50px;">
         <h3 style="text-align: center; color: red">Advertencia</h3>
-        <p>Esta opción creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
+        <p>Esta operación creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
     </div>
     <div style="margin-bottom: 10px; max-width:500px;margin-left:50px;">
         Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
@@ -516,14 +513,11 @@
                     }
                 }
                 $('#labelTitle').html(plan_list[i]["class_name"]);
-                $('#labelOA').html("Objetivo de aprendizaje: " + oa_index);                    
-                $('#blockInicio').html(plan_list[i]["desc_inicio"]);
-                $('#blockCierre').html(plan_list[i]["desc_cierre"]);
-                $('#labelDate').html("Fecha: " + plan_list[i]["class_date"][2] + " de " + Lista_Meses[plan_list[i]["class_date"][1]-1] + " de " + plan_list[i]["class_date"][0]);
-                $('#labelDuration').html("Duración: " + plan_list[i]["minutes"] + " minutos");
-
-                if (plan_list[i]["status"] == true) $('#labelStatus').html("<label>Estado: Realizado");
-                else $('#labelStatus').html("Estado: No realizado");
+                    $('#labelOA').html("<strong>Objetivo de aprendizaje:</strong> " + oa_index);
+                    $('#blockInicio').html(plan_list[i]["desc_inicio"]);
+                    $('#blockCierre').html(plan_list[i]["desc_cierre"]);
+                    $('#labelDate').html("<strong>Fecha:</strong> " + plan_list[i]["class_date"][2] + " de " + Lista_Meses[plan_list[i]["class_date"][1]-1] + " de " + plan_list[i]["class_date"][0]);
+                    $('#labelDuration').html("<strong>Duración:</strong> " + plan_list[i]["minutes"] + " minutos");
 
                 for (var v = 0; v < plan_list[i]["videos"].length; v++){
                     text = "<li key=" + plan_list[i]["videos"][v]["id"] + " tree='" + plan_list[i]["videos"][v]["tree"] + "'>";

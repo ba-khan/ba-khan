@@ -298,7 +298,7 @@ class Planning_Log(models.Model):
     id_log = models.AutoField(primary_key=True)
     id_planning = models.ForeignKey(Planning)
     field = models.TextField()
-    old_value = models.TextField()
+    old_value = models.TextField(null=True)
     new_value = models.TextField()
     date = models.DateField()
 

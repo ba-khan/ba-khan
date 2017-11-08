@@ -310,7 +310,6 @@ def deleteChapter(request):
 		return HttpResponse('Nivel borrado correctamente')
 	return HttpResponse('Error al eliminar')
 
-
 @permission_required('bakhanapp.isSuper', login_url="/")
 def downloadCurriculum(request):
 	print "download curriculum"
@@ -332,47 +331,10 @@ def downloadCurriculum(request):
 		return HttpResponse('entro al descarga excel')
 	return HttpResponse('no entro en descarga excel')
 
+@permission_required('bakhanapp.isSuper', login_url="/")
+def loadSpreadsheet(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == 'POST':
+		return 0
+	return 1
 
-def strip_acent(s):
-   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
-
-def topicTree():
-	topictree_json={}
-	topictree_json['checkbox']={'keep_selected_style':False}
-	topictree_json['plugins']=['checkbox','search']
-	topictree=[]
-	start_time=time.time()
-	subjects=Subject.objects.all()
-	for subject in subjects:
-		subject_obj={"id": subject.id_subject_name, "parent":"#", "text": subject.name_spanish, "state": {"opened":"true"}, "icon":"false"}
-		topictree.append(subject_obj)
-	subject_chapter=Chapter.objects.exclude(index=None).order_by('index')
-	for chapter in subject_chapter:
-		chapter_obj={"id":chapter.id_chapter_name, "parent": chapter.id_subject_name_id, "text":chapter.name_spanish, "icon":"false"}
-		topictree.append(chapter_obj)
-	chapter_topic=Topic.objects.exclude(index=None).order_by('index')
-	for topic in chapter_topic:
-		topic_obj={"id":topic.id_topic_name, "parent": topic.id_chapter_name_id, "text":topic.name_spanish, "icon":"false"}
-		topictree.append(topic_obj)
-	topic_subtopic=Subtopic.objects.exclude(index=None).order_by('index')
-	for subtopic in topic_subtopic:
-		subtopic_obj={"id":subtopic.id_subtopic_name, "parent": subtopic.id_topic_name_id, "text":subtopic.name_spanish, "icon":"false"}
-		topictree.append(subtopic_obj)
-	subtopic_skill=Subtopic_Skill.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_skill_name')
-	#id=0
-	subtopic_video=Subtopic_Video.objects.filter(id_subtopic_name_id__in=topic_subtopic).select_related('id_video_name')
-	for video in subtopic_video:
-		video_id=video.id_subtopic_video
-		video_obj={"id":video_id, "parent":video.id_subtopic_name_id, "text": video.id_video_name.name_spanish, "data":{"video_id":video.id_video_name.id_video_name}, "icon":"false", "index":video.id_video_name.index}
-		sorted(video_obj, key=video_obj.get)
-		topictree.append(video_obj)
-		
-	for skill in subtopic_skill:
-		skill_id=skill.id_subtopic_skill
-		skill_obj={"id":skill_id, "parent":skill.id_subtopic_name_id, "text": skill.id_skill_name.name_spanish, "data":{"skill_id":skill.id_skill_name.id_skill_name}, "icon":"false", "index":skill.id_skill_name.index}
-		sorted(skill_obj, key=skill_obj.get)
-		topictree.append(skill_obj)		
-	
-	topictree_json['core']={'data':topictree}
-	topictree_json_string=json.dumps(topictree_json)
-	return topictree_json_string

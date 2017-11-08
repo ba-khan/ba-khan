@@ -16,7 +16,7 @@ from django.core import serializers
 
 
 from django import template
-from bakhanapp.models import Assesment_Skill, Administrator, Teacher, Class_Subject, Class_Schedule, Class, Student_Class, Student, Institution, Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc, Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Skill_Planning, Video_Planning, Institutional_Plan, Skill_Institution_Plan, Video_Institution_Plan, Student_Skill
+from bakhanapp.models import Assesment_Skill, Administrator, Teacher, Class_Subject, Class_Schedule, Class, Student_Class, Student, Institution, Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc, Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject, Planning, Planning_Log, Skill_Planning, Video_Planning, Institutional_Plan, Skill_Institution_Plan, Video_Institution_Plan, Student_Skill
 from django.db import connection, IntegrityError
 
 register = template.Library()
@@ -46,10 +46,11 @@ def getClassList(request):
 	isTeacher = False
 
 	inst_id = Teacher.objects.get(kaid_teacher=request.user.user_profile.kaid).id_institution
-	teacher = Teacher.objects.filter(class_subject__planning__share_class=True, id_institution=inst_id).distinct("kaid_teacher").values("kaid_teacher","name").exclude(kaid_teacher=request.user.user_profile.kaid)
 
 	#Si es admin, obtiene todos los curriculos
 	if(request.user.has_perm('bakhanapp.isAdmin')):
+		teacher = Teacher.objects.filter(class_subject__curriculum_id__isnull=False, id_institution=inst_id).distinct("kaid_teacher").values("kaid_teacher","name").exclude(kaid_teacher=request.user.user_profile.kaid)
+
 		isTeacher = True
 		curriculums = Chapter_Mineduc.objects.all().values('id_chapter_mineduc','level','year').order_by('-year','level')
 
@@ -67,6 +68,8 @@ def getClassList(request):
 
 	#Si solo es profesor, obtiene sus cursos
 	elif (Class_Subject.objects.filter(kaid_teacher=request.user.user_profile.kaid)):
+		teacher = Teacher.objects.filter(class_subject__planning__share_class=True, id_institution=inst_id).distinct("kaid_teacher").values("kaid_teacher","name").exclude(kaid_teacher=request.user.user_profile.kaid)
+
 		isTeacher = True
 		classes = Class.objects.filter(class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum').order_by('-year','level','letter')
 
@@ -125,11 +128,17 @@ def getSharedClassList(request):
 
 			N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
 
-			if teacher == "0":
-				classes = Chapter_Mineduc.objects.filter(institutional_plan__share_class=True, institutional_plan__institution=inst_id).values('level', 'year', 'additional', 'id_chapter_mineduc').order_by('-year','level').distinct()
-				
+			#El instituto tiene acceso a todos los cursos, independiente de la configuración de compartir que tengan los profesores en sus cursos.
+			if(request.user.has_perm('bakhanapp.isAdmin')):
+				classes = Class.objects.filter(class_subject__curriculum_id__isnull=False, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+
 			else:
-				classes = Class.objects.filter(class_subject__planning__share_class=True, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+				#El valor 0 esta asignado a las clases sugeridas por la institución.
+				if teacher == "0":
+					classes = Chapter_Mineduc.objects.filter(institutional_plan__share_class=True, institutional_plan__institution=inst_id).values('level', 'year', 'additional', 'id_chapter_mineduc').order_by('-year','level').distinct()
+					
+				else:
+					classes = Class.objects.filter(class_subject__planning__share_class=True, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
 
 			for i in range(len(classes)):
 				classes[i]['level'] = N[int(classes[i]['level'])]
@@ -161,6 +170,7 @@ def getPlan(request, class_subj_id):
 			isAdmin = True
 			#Iteración para un Instituto accediendo a una clase compartida.
 			if "compartido" in request.path:
+				print "Correcto"
 				plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
 				id_chapter_mineduc = Class_Subject.objects.filter(id_class_subject=class_subj_id).values('curriculum_id')
 				teacher_name = Teacher.objects.filter(class_subject__id_class_subject=class_subj_id).values('name')
@@ -171,10 +181,10 @@ def getPlan(request, class_subj_id):
 		#Si es un profesor accediendo.
 		else:
 			#Iteración para un profesor accediendo a un plan institucional.
-			if "inst" in request.path:
+			if ("inst" in request.path) and ("compartido" in request.path):
 				plan_list = Institutional_Plan.objects.filter(curriculum=class_subj_id).order_by('class_date')
 				id_chapter_mineduc = [{'curriculum_id':class_subj_id}]
-				teacher_name = "Institución"
+				teacher_name = [{"name":"Institución"}]
 			#Si no, esta accediendo al algun plan de profesor (Suyo o compartido).
 			else:
 				plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
@@ -203,10 +213,17 @@ def getPlan(request, class_subj_id):
 			if plan.class_date < current_time:
 				clase["late"] = True
 			plan_skills = []
-			if(request.user.has_perm('bakhanapp.isAdmin') or ("inst" in request.path)):
+
+			#Si "inst" esta en la URL, implica que se esta accediendo al curriculo instituciónal.
+			if("inst" in request.path):
+				#El plan institucional no se realiza por lo que no puede estar "atrasado".
+				clase.pop("late", None)
+				clase.pop("status", None)
 				skillplanning = Skill_Institution_Plan.objects.filter(id_planning=plan.id_planning)
+				videoplanning = Video_Institution_Plan.objects.filter(id_planning=plan.id_planning)
 			else:
 				skillplanning = Skill_Planning.objects.filter(id_planning=plan.id_planning)
+				videoplanning = Video_Planning.objects.filter(id_planning=plan.id_planning)
 
 			for skill in skillplanning:
 				skilldict = {}
@@ -218,10 +235,6 @@ def getPlan(request, class_subj_id):
 			clase["skills"] = plan_skills
 
 			plan_videos =[]
-			if(request.user.has_perm('bakhanapp.isAdmin') or ("inst" in request.path)):
-				videoplanning = Video_Institution_Plan.objects.filter(id_planning=plan.id_planning)
-			else:
-				videoplanning = Video_Planning.objects.filter(id_planning=plan.id_planning)
 
 			for video in videoplanning:
 				videodict = {}
@@ -288,25 +301,51 @@ def getPlan(request, class_subj_id):
 			for i in range(len(classes)):
 				classes[i]['level'] = level_names[int(classes[i]['level'])]
 
-			isInstitution = False
-			if "inst" in request.path:
-				isInstitution = True
+			#Si es institución, accede al plan con acceso al Resumen.
+			if request.user.has_perm('bakhanapp.isAdmin'):
+				log_data = []
+				for plan in plan_list:
+					logs = Planning_Log.objects.filter(id_planning=plan).values("id_planning", "field", "old_value", "new_value", "date").order_by("date")
+					if (logs):
+						for log in logs:
+							log["date"] = str(log["date"].year) + "-" +  str(log["date"].month) + "-" + str(log["date"].day)
+							log_data.append(log)
 
-			return render_to_response('plancompartirnivel.html', {
-								'id': class_subj_id,												#ID del Class Suject
-								'plan':plan_dump,													#Diccionario de planificaciones
-								'autor':teacher_name,												#Nombre del dueño del curriculo
-								'clase':class_name,													#Datos del curso compartido.
-								'cursos_usuario':classes,											#Lista de los cursos del usuario que coinsiden con el curriculo actual.
-								'curriculo_id':id_chapter_mineduc, 									#ID del Curriculo actual
-								'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
-								'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
-								'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
-								'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
-								'json_data':json_data,												#Dump del diccionario de datos Mineduc
-								'isTeacher': isTeacher,
-								'isInstitution':isInstitution
-							}, context_instance=RequestContext(request))
+				log_dict = {"info":log_data}
+				log_dump = json.dumps(log_dict)
+
+				return render_to_response('plancompartirnivelinst.html', {
+					'id': class_subj_id,												#ID del Class Suject
+					'plan':plan_dump,													#Diccionario de planificaciones
+					'log': log_dump,															#Historial de cambios
+					'autor':teacher_name,												#Nombre del dueño del curriculo
+					'clase':class_name,													#Datos del curso compartido.
+					'cursos_usuario':classes,											#Lista de los cursos del usuario que coinsiden con el curriculo actual.
+					'curriculo_id':id_chapter_mineduc, 									#ID del Curriculo actual
+					'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
+					'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
+					'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
+					'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
+					'json_data':json_data,												#Dump del diccionario de datos Mineduc
+					'isTeacher': isTeacher
+				}, context_instance=RequestContext(request))
+
+			#Si es profesor, solo se accede al listado de clases.
+			else:
+				return render_to_response('plancompartirnivel.html', {
+					'id': class_subj_id,												#ID del Class Suject
+					'plan':plan_dump,													#Diccionario de planificaciones
+					'autor':teacher_name,												#Nombre del dueño del curriculo
+					'clase':class_name,													#Datos del curso compartido.
+					'cursos_usuario':classes,											#Lista de los cursos del usuario que coinsiden con el curriculo actual.
+					'curriculo_id':id_chapter_mineduc, 									#ID del Curriculo actual
+					'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
+					'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
+					'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
+					'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
+					'json_data':json_data,												#Dump del diccionario de datos Mineduc
+					'isTeacher': isTeacher
+				}, context_instance=RequestContext(request))
 
 		#Si no es compartido, primero obtiene los datos para el arbol de habilidades/videos de khan.
 		else:		
@@ -346,18 +385,18 @@ def getPlan(request, class_subj_id):
 
 		
 			return render_to_response('planificacionnivel.html', {
-								'plan':plan_dump,													#Diccionario de planificaciones
-								'class_subject':class_subj_id,	 									#ID del Class Subject (Curriculo en caso de ser Institucion)
-								'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
-								'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
-								'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
-								'anno': current_time.year,											#Año actual
-								'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
-								'json_data':json_data,												#Dump del diccionario de datos Mineduc
-								'json_khan_tree':topictree_json_string, 							#Dump del diccionario de habilidades Khan
-								'isTeacher': isTeacher,
-								'isAdmin':isAdmin,
-							}, context_instance=RequestContext(request))
+				'plan':plan_dump,													#Diccionario de planificaciones
+				'class_subject':class_subj_id,	 									#ID del Class Subject (Curriculo en caso de ser Institucion)
+				'lista_topicos':selected_topic,										#Lista de unidades/topicos en el curriculo
+				'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
+				'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
+				'anno': current_time.year,											#Año actual
+				'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
+				'json_data':json_data,												#Dump del diccionario de datos Mineduc
+				'json_khan_tree':topictree_json_string, 							#Dump del diccionario de habilidades Khan
+				'isTeacher': isTeacher,
+				'isAdmin':isAdmin,
+			}, context_instance=RequestContext(request))
 	except Exception as e:
 		print "Error en la apertura del plan: planificacion/view.py:getPlan"
 		print traceback.print_exc()
@@ -509,7 +548,25 @@ def editPlanning(request):
 					except IntegrityError as e:
 						pass
 
-			else:	
+			else:
+				current_plan = Planning.objects.get(id_planning=args['id'])
+				current_time = datetime.now()
+
+				if (current_plan.class_name != args["nombre"]):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Nombre", old_value=current_plan.class_name, new_value=args["nombre"])
+				if (current_plan.desc_inicio != args['desc_inicio']):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Descripción de inicio", old_value=current_plan.desc_inicio, new_value=args["desc_inicio"])
+				if (current_plan.desc_cierre != args['desc_cierre']):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Descripción de cierre", old_value=current_plan.desc_cierre, new_value=args["desc_cierre"])
+				if (current_plan.class_date != class_date):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Fecha", old_value=str(current_plan.class_date), new_value=str(class_date))
+				if (current_plan.class_subtopic != oa):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Objetivo de Aprendizaje", old_value=str(current_plan.class_subtopic.index), new_value=str(oa.index))
+				if (int(current_plan.minutes) != int(args['duracion'])):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Duración", old_value=str(current_plan.minutes) + "minutos", new_value=str(args["duracion"]) + "minutos")
+				if (current_plan.status != status):
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Estado", old_value=str(current_plan.status), new_value=str(args["estado"]))
+
 				Planning.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 
 				Skill_Planning.objects.filter(id_planning=args['id']).delete();
@@ -597,9 +654,10 @@ def getReport(request):
 					for mastery in skill_mastery:						
 						if (mastery['id_skill_name'] == skill.id_skill_name):
 							found_skills += 1
-							skill_data["level"][mastery['last_skill_progress']] += 1
 							if (mastery['struggling'] == True):
 								skill_data["level"]["struggling"] += 1
+							else:
+								skill_data["level"][mastery['last_skill_progress']] += 1
 
 					skill_data["level"]["unstarted"] += data['nStudents'] - found_skills
 
@@ -608,26 +666,23 @@ def getReport(request):
 				skill_list.append(skill_sublist)
 			data["skills"] = skill_list
 
-			for i in range(len(plan_list)-1):
+			for plan in plan_list:
 				#Obtain the planned class dates in Ticks format as required by Timeline.js d3 plugin.
 				colortype = ""
-				tx = datetime(1, plan_list[i]["class_date"].month, plan_list[i]["class_date"].day)
-				ty = datetime(1, plan_list[i+1]["class_date"].month, plan_list[i+1]["class_date"].day)
+				tx = datetime(1, plan["class_date"].month, plan["class_date"].day)
 				tfx = (tx - t0).total_seconds() * 1000.0
-				tfy = (ty - t0).total_seconds() * 1000.0
 
-				if (plan_list[i]["status"] == True):
+				if (plan["status"] == True):
 					colortype = "done"
-				elif plan_list[i]["class_date"] < now:
+				elif plan["class_date"] < now:
 					colortype = "late"
 				else:
 					colortype = "not-done"
 
 				for time in time_data:
-					if time["index"] == plan_list[i]["class_subtopic__id_topic__index"]:
-						time["times"].append({"starting_time":tfx, "ending_time":tfy, "ctype":colortype, "plan_id":plan_list[i]["id_planning"]})
+					if time["index"] == plan["class_subtopic__id_topic__index"]:
+						time["times"].append({"starting_time":tfx, "ending_time":tfx, "ctype":colortype, "plan_id":plan["id_planning"]})
 
-			print time_data
 			data["time"] = time_data
 			json_data = json.dumps(data)
 

@@ -6,6 +6,7 @@ urlpatterns = [
     # ex: /polls/
     url(r'^$', views.getCurriculum, name='getCurriculum'),
     url(r'^nuevo$', views.newChapter, name='nuevo_chapter'),
+    url(r'^excel$', views.loadSpreadsheet, name='subir_excel'),
     url(r'^nuevotopic$', views.newTopic, name='nuevo_topic'),
     url(r'^modtopic$', views.updateTopic, name='mod_topic'),
     url(r'^nuevosubtopic$', views.newSubtopic, name='nuevo_subtopic'),

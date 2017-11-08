@@ -218,6 +218,9 @@
         }
       }
 
+      beginning -= (12 * 60 * 60 * 1000);
+      ending += (12 * 60 * 60 * 1000);
+
       var scaleFactor = (1/(ending - beginning)) * (width - margin.left - margin.right);
 
       // draw the axis

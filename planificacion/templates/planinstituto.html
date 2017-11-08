@@ -27,6 +27,13 @@
         display: flex;
         flex-direction: column;
     }
+    .class-content{
+        padding-left: 100px;
+        padding-right: 100px;
+        align-content: center;
+        margin-bottom: 20px;
+        text-align: center;
+    }
 </style>
 
 <div style="min-width: 1000px; margin-bottom: 20px">
@@ -34,9 +41,9 @@
         <a role="button" style="width: 120px; height: 26px; font-size: 80%; padding: 2px 4px" onclick="openConfig()" class="kui-button kui-button-plain kui-button-primary">Compartir Clases</a>
     </div>
     <div style="float: right">
-        <label for="shareFilter">Mostrar planes de: </label>
+        <label for="shareFilter">Desplegar cursos de: </label>
         <select id="shareFilter" onchange="openShareClass()" autocomplete="off">
-            <option selected value="-1">Nadie</option>
+            <option selected value="-1">Ningun profesor seleccionado</option>
             {% for teacher in teachers %}
                 <option value="{{ teacher.kaid_teacher }}">{{ teacher.name }}</option>
             {% endfor %}
@@ -45,12 +52,13 @@
 </div>
 
 <div class="container">
-    <div id="shareContainer" class="class-content" style="padding-left: 100px;padding-right: 100px; align-content: center; margin-bottom: 20px; display: none">
+    <div id="shareContainer" class="class-content" style="display: none">
     </div>
 </div>
 
 <div class="container">
-    <div class="class-content" style="padding-left: 100px;padding-right: 100px; align-content: center">
+    <div class="class-content">
+        <h3>Planes institucionales asociados <img id="plan_info" style='width:16px; height:16px;' src={% static 'img/info.png' %}></h3>
         <div><div>
             {% for curr in curriculums %}
                 {% ifchanged curr.year  %}
@@ -60,7 +68,7 @@
                     <div>
                 {% endifchanged %}
 
-                <a role="button" style="display: inline; float: left;{% if curr.share == 'Null' %} color: gray;{% endif %} margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan' curr.id_chapter_mineduc %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">{{ curr.level }}</a>   
+                <a role="button" style="display: inline; float: left;{% if curr.share == 'Null' %} color: gray;{% endif %} margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan_inst' curr.id_chapter_mineduc %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">{{ curr.level }}</a>   
             {% endfor %}
         </div></div>
     </div>
@@ -103,6 +111,30 @@
         $("#close").click(function(){
             closeConfig();
         });
+
+        $("#plan_info").qtip({
+                content: function() {
+                    return "Puede asociar un plan de clases a un currículo para que todos los profesores puedan verla, y los profesores que tengan su curso asociado a ese currículo podrían hacer una copia del plan de clases en sus planificaciones personales.";
+                },
+                show: { 
+                    event: 'mouseenter', 
+                    delay: 10, 
+                    solo: true,   
+                    effect: function(offset) {$(this).slideDown(100);}  
+                },
+                   
+                hide: { 
+                    event: 'mouseleave', 
+                    delay: 90, 
+                    fixed: true 
+                },
+
+                position: { 
+                    my: 'bottomLeft',
+                    at: 'topMiddle',
+                    adjust: {y: 10}
+                }
+            });
      });
 
     function openConfig(){
@@ -180,7 +212,7 @@
                 var year_changed;
                 var temp_i;
 
-                $("#shareContainer").append('<div style="float: left; height: 16px; width: 1000px; text-align: left; margin-bottom: 8px"> <h2> Viendo clases compartidas de ' + response[0]['class_subject__kaid_teacher__name']);
+                $("#shareContainer").append('<div style="float: left; height: 16px; width: 1000px; text-align: left; margin-bottom: 8px"> <h2> Viendo los cursos de ' + response[0]['class_subject__kaid_teacher__name']);
 
                 for(var i = 0; i < response.length; i++){
                     if (year_changed != response[i]['year']){
