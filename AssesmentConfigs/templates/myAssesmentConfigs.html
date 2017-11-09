@@ -67,6 +67,14 @@
 		float: left;
 	}
 
+	.container{
+		margin-top: 20px;
+	}
+
+	.main-content{
+		height: 600px;
+	}
+
 </style>
 
 <script>
@@ -163,7 +171,7 @@
         </ul>
     </div>
 
-    <div class="main-content" style="height:545px">
+    <div class="main-content" style="height: 600px;">
     	{% block new %} {% endblock %}
     	
 	 	<div id="contenidopestanas" style="display:none">
@@ -282,7 +290,7 @@
 			<div id="skills">
 				<h3>Habilidades:</h3>
 				
-				<div id="topictree{{ forloop.counter }}" class="scroll topictree">
+				<div id="topiclist{{ forloop.counter }}" class="scroll topictree">
 				<ul class='ulSkill' id='ulSkill{{ forloop.counter }}'></ul></div>
 				<script>
 					skills = json_configs["assesmentConfigs"][{{ forloop.counter }}-1]["assesment_skills_spanish"];
@@ -514,7 +522,7 @@
 		sidebar = document.getElementById('sidebar');
 		var lis = sidebar.getElementsByTagName('li');
 		var mainContent = document.getElementsByClassName("main-content");
-		var height1 = 545;
+
 		if (lis.length>8){
 			for(i=8;i<lis.length;i++){
 				height1 = height1+(i*4);
@@ -549,9 +557,12 @@
 			$(cpestanna).css('display', '');
 			$(pestanna.getElementsByTagName('a')).addClass("select");
 		});
-		$(".topictree").getNiceScroll().hide();
-		$("#topictree"+id).getNiceScroll().show();
-		$("#topictree"+id).getNiceScroll().resize();
+
+		if ($('#topictree' + id).length != 0){
+			$(".topictree").getNiceScroll().hide();
+			$("#topictree"+id).getNiceScroll().show();
+			$("#topictree"+id).getNiceScroll().resize();
+		}
 	}
 
 	function reloadLocation(){
@@ -842,8 +853,6 @@
 		return flag
 	}
 	$(document).ready(function(){
-		setMainContentHeight();
-
 		$("#contenidopestanas").fadeIn();
 		$("li").fadeIn();
 		//chiusura al click sulla parte scura
