@@ -1,5 +1,4 @@
 *.pyc
-/bakhanapp/migrations/*
 log-populateTest.txt
 *populate.log
 *populateTest.log
