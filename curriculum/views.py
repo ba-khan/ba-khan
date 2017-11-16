@@ -20,16 +20,17 @@ from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
 from bakhanapp.models import Teacher,Class_Subject, Class_Schedule, Class, Student_Class, Skill_Attempt, Student, Video_Playing, Institution
 from bakhanapp.models import Chapter_Mineduc, Topic_Mineduc, Subtopic_Mineduc, Subtopic_Skill_Mineduc, Subtopic_Video_Mineduc
-from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Skill, Video, Subject
+from bakhanapp.models import Subtopic_Video, Chapter, Topic, Subtopic, Subtopic_Skill, Video, Skill, Subject
 from django.db import connection
 
 register = template.Library()
 from configs import timeSleep
 
 import json
+import xlrd
 from datetime import datetime, timedelta
 
-import sys, os
+import sys, os, traceback
 
 
 ##
@@ -163,7 +164,7 @@ def getCurriculumInfo(request, id_chapter_mineduc):
 							}, context_instance=RequestContext(request))
 	except Exception as e:
 		print "Error en la apertura de curriculo: curriculum/view.py:getCurriculumInfo"
-		print e
+		print traceback.print_exc()
 		return HttpResponseRedirect("/inicio")
 
 @permission_required('bakhanapp.isSuper', login_url="/")
@@ -219,6 +220,7 @@ def newSubtopic(request):
 			return HttpResponse("Error al guardar, compruebe que no existe el objetivo de aprendizaje")
 	return HttpResponse("Error al guardar")
 
+@permission_required('bakhanapp.isSuper', login_url="/")
 def updateSubtopic(request):
 	request.session.set_expiry(timeSleep)
 	if request.method == 'POST':
@@ -335,6 +337,130 @@ def downloadCurriculum(request):
 def loadSpreadsheet(request):
 	request.session.set_expiry(timeSleep)
 	if request.method == 'POST':
-		return 0
-	return 1
+		try:
+			excel = request.FILES
+			wb = xlrd.open_workbook(file_contents=excel['file-0'].read())
+
+		except Exception as e:
+			print "Error en la lectura de archivo XLS: curriculum/view.py:loadSpreadsheet."
+			print traceback.print_exc()
+			return HttpResponse("Error! El archivo cargado no es valido.")
+
+		try:
+			#Construye el diccionario
+			curriculum_list = []
+
+			for sheet in wb.sheets():
+				row = sheet.row_values(0)
+
+				curriculum = {}
+				u_dict = {}
+				oa_dict = {}
+
+				video_list = []
+				skill_list = []
+				oa_list = []
+				u_list = []
+
+				curriculum["year"] = int(row[1])
+				curriculum["subject"] = row[5]
+				curriculum["level"] = int(row[3])
+
+				for rownum in range(2, sheet.nrows):
+					row = sheet.row_values(rownum)
+					
+					if row[0] != '':
+						if "index" in u_dict:
+							u_dict["oa"] = oa_list
+							u_list.append(u_dict)
+
+							oa_list = []
+							u_dict = {}
+
+						u_dict["index"] = int(row[0])
+						u_dict["desc"] = row[1]
+						u_dict["time"] = int(row[2])
+
+					if row[3] != '':
+						if "index" in oa_dict:
+							oa_dict["videos"] = video_list
+							oa_dict["skills"] = skill_list
+
+							oa_list.append(oa_dict)
+
+							video_list = []
+							skill_list = []
+							oa_dict = {}
+
+						oa_dict["index"] = int(row[3])
+						oa_dict["desc"] = row[4]
+
+					if row[5] != '':
+						video_list.append(row[5])
+
+					if row[6] != '':
+						skill_list.append(row[6])
+
+				#Agrega a la lista OA el ultimo OA
+				oa_dict["videos"] = video_list
+				oa_dict["skills"] = skill_list
+				oa_list.append(oa_dict)
+
+				#Agrega a la lista Unidad la ultima Unidad
+				u_dict["oa"] = oa_list
+				u_list.append(u_dict)
+
+				curriculum["unit"] = u_list
+				curriculum_list.append(curriculum)
+		except Exception as e:
+			print "Error en la creación de la base de datos: curriculum/view.py:loadSpreadsheet."
+			print traceback.print_exc()
+			return HttpResponse("Error! Hubo un error en la lectura del archivo, asegurese que tenga el formato correcto.")
+
+		hit = {}
+		hit["v"] = 0
+		hit["tv"] = 0
+		hit["s"] = 0
+		hit["ts"] = 0
+		try:
+			for curr in curriculum_list:
+				Chapter_Mineduc.objects.filter(id_subject=Subject.objects.get(name_spanish=curr["subject"]), year=curr['year'], level=curr['level']).delete()
+				new_curr = Chapter_Mineduc.objects.create(id_subject=Subject.objects.get(name_spanish=curr["subject"]), year=curr['year'], level=curr['level'])
+
+				for unit in curr["unit"]:
+					new_unit = Topic_Mineduc.objects.create(id_chapter=new_curr, index=unit['index'], suggested_time=unit['time'], descripcion_topic=unit['desc'])
+					for oa in unit["oa"]:
+						new_oa = Subtopic_Mineduc.objects.create(id_topic=new_unit, index=oa['index'], description=oa['desc'])
+						for v in oa["videos"]:
+							video = Video.objects.filter(name_spanish=v)
+							hit["tv"] = hit["tv"] + 1
+							if (video):
+								idtree = Subtopic_Video.objects.filter(id_video_name=video[0]).values("id_subtopic_video")
+								Subtopic_Video_Mineduc.objects.create(id_video_name=video[0], id_tree=int(idtree[0]["id_subtopic_video"]), id_subtopic_name_mineduc=new_oa)
+								hit["v"] = hit["v"] + 1
+
+						for s in oa["skills"]:
+							skill = Skill.objects.filter(name_spanish=s)
+							hit["ts"] = hit["ts"] + 1
+							if (skill):
+								idtree = Subtopic_Skill.objects.filter(id_skill_name=skill[0]).values("id_subtopic_skill")
+								Subtopic_Skill_Mineduc.objects.create(id_skill_name=skill[0], id_tree=idtree[0]["id_subtopic_skill"], id_subtopic_mineduc=new_oa)
+								hit["s"] = hit["s"] + 1
+							#Por si coincide el nombre en Ingles.
+							else:
+								s = s.replace(" ","_")
+								skill = Skill.objects.filter(name=s)
+								if (skill):
+									idtree = Subtopic_Skill.objects.filter(id_skill_name=skill[0]).values("id_subtopic_skill")
+									Subtopic_Skill_Mineduc.objects.create(id_skill_name=skill[0], id_tree=idtree[0]["id_subtopic_skill"], id_subtopic_mineduc=new_oa)
+									hit["s"] = hit["s"] + 1
+
+		except Exception as e:
+			print "Error en la creación de la base de datos: curriculum/view.py:loadSpreadsheet."
+			print traceback.print_exc()
+			return HttpResponse("Error! No se logro crear la base de datos. Favor contactar con el administrador.")
+
+		print "done"
+		response = "Se han cargado los datos con exito, de un total de " + str(hit["tv"]) + " videos, se reconocieron " + str(hit["v"]) +". De un total de " + str(hit["s"]) + " habilidades, se reconocieron " + str(hit["ts"]) + ". Si la cantidad es muy baja asegurese de que los nombres en las tablas coinsidan con el enunciado que se muestra en la pagina de Khan Academy."
+		return HttpResponse(response)
 

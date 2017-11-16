@@ -691,3 +691,43 @@ def getReport(request):
 			print "Error en la obtencion de los datos del resumen: planificacion/view.py:getReport"
 			print traceback.print_exc()
 			return HttpResponse('No se pudo obtener la información.')
+
+@login_required()
+def generateClassExcel(request, id_plan):
+    #funcion que genera el excel de un curso completo con todas sus evaluaciones
+    request.session.set_expiry(timeSleep)
+    if request.method == 'GET':
+        #funcion que genera el excel de una evaluacion
+        assesment = Assesment.objects.filter(id_class=id_class)
+        rClass = Class.objects.get(id_class=id_class)
+        
+        nameClass= N[int(rClass.level)]  +' '+ rClass.letter
+        #print nameClass
+        try:#id1004
+            #create multi-sheet book with array
+            arrayAssesment={}
+            arrayAssesment['General'] = getArrayClassDetail(id_class)
+            for a in assesment:
+                name_sheet = strip_acent(a.name)
+                if len(name_sheet) > 22:
+                    words = name_sheet.split()
+                    #print len(words)
+                    length = 22/len(words)
+                    name_sheet=''
+                    for w in words:
+                        name_sheet += w[:length]
+                name_sheet = name_sheet.replace(' ','')
+                #print a.id_assesment
+                arrayAssesment[name_sheet+'_detalle']=getArrayAssesmentDetail(a.id_assesment) 
+                arrayAssesment[name_sheet+'_resumen'] = getArrayAssesmentResumen(a.id_assesment)   
+            book = pe.Book(arrayAssesment)
+        except Exception as e:
+            print '***ERROR*** problemas al crear multiples hojas excel con dataTest try id1004'
+            print e
+        try:
+            response = excel.make_response(book, 'xls', file_name=nameClass)
+        except Exception as e:
+            print '***ERROR*** no se ha podido generar la respuesta excel en generateClassExcel'
+            print e
+            response = False
+        return response
