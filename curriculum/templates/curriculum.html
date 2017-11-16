@@ -159,6 +159,7 @@
 
             <a onclick="javascript:uploadExcel()" id="uploadExcelButton" class="kui-button kui-button-plain kui-button-primary">Subir Archivo</a>
             </form>
+            <p>ADVERTENCIA: Los datos en la plantilla de excel eliminara cualquier curriculo actual en el sistema que coincida con el mismo año, nivel y asignatura.</p>
         </div>
     </div>
 </div>
@@ -290,10 +291,8 @@
             $("#popup").append("<p class='response'>Formato de archivo no válido. Debe ser .xlsx</p>");
             return;
         };
-
         $(".response").remove();
-        $("#popup").append("<p class='response'>Cargando el excel. Espere un momento por favor...</p>");
-        $("#popup").append($('#loading').css('display',''));
+        $("#popup").append("<p class='response'>Cargando el excel. Este proceso puede tardar dependiento el tamaño del archivo...</p>");
         $("#hover").css('pointer-events','none');
         $("#close").css('pointer-events','none');
         $("#hover").fadeIn();
@@ -311,30 +310,22 @@
             contentType: false,
             processData: false,
             type: 'POST',
-            dataType: 'json',
             success: function(response){
-                if (response == "False") {
+                $("#hover").fadeOut();
+                $("#popup").fadeOut();
+                $('#loading').fadeOut();
+                $('.response').remove();
+                $("#popup").append("<p class='response'>"+response+"</p>");
+                $("#hover").fadeIn();
+                $("#popup").fadeIn();
+                if(response.substring(0,5) != "Error"){
+                    window.setTimeout(function(){
+                        location.reload()
+                    },500);  
+                }else{
                     $("#hover").css('pointer-events','');
                     $("#close").css('pointer-events','');
-                    $("#hover").fadeOut();
-                    $("#popup").fadeOut();
-                    $('#loading').fadeOut();
-                    $('.response').remove();
-                    $("#popup").append("<p class='response'>Archivo no válido</p>");
-                    $("#hover").fadeIn();
-                    $("#popup").fadeIn();
-                    return;
-                    
                 }
-                else{
-                    jsonResponse = response;
-                    drawClasses(jsonResponse[1], jsonResponse[0]);
-                    $("#hover").css('pointer-events','');
-                    $("#close").css('pointer-events','');
-                    $("#hover").fadeOut();
-                    $("#popup").fadeOut();
-                    $('#loading').fadeOut();
-                };
                 
             }
         });
