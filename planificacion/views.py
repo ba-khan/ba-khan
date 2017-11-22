@@ -517,6 +517,7 @@ def editPlanning(request):
 			args = request.POST
 
 			oa = Subtopic_Mineduc.objects.get(id_subtopic_mineduc=args['oa'])
+			print args["dia"]
 
 			class_date = date(int(args['anno']), int(args['mes']), int(args['dia']))
 
@@ -549,6 +550,7 @@ def editPlanning(request):
 						pass
 
 			else:
+				#Logging...
 				current_plan = Planning.objects.get(id_planning=args['id'])
 				current_time = datetime.now()
 
