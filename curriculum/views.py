@@ -378,7 +378,7 @@ def loadSpreadsheet(request):
 							u_dict = {}
 
 						u_dict["index"] = int(row[0])
-						u_dict["desc"] = row[1]
+						u_dict["desc"] = row[1].replace("\n", "<br><br>")
 						u_dict["time"] = int(row[2])
 
 					if row[3] != '':
@@ -393,7 +393,7 @@ def loadSpreadsheet(request):
 							oa_dict = {}
 
 						oa_dict["index"] = int(row[3])
-						oa_dict["desc"] = row[4]
+						oa_dict["desc"] = row[4].replace("\n", "<br><br>")
 
 					if row[5] != '':
 						video_list.append(row[5])

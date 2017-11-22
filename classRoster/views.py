@@ -18,7 +18,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 
-
 from django import template
 from bakhanapp.models import Assesment_Skill
 from bakhanapp.models import Administrator
@@ -45,7 +44,7 @@ import requests
 from collections import OrderedDict
 import json
 import simplejson
-import sys
+import sys, traceback
 from pprint import pprint
 import codecs
 from lib2to3.fixer_util import String
@@ -238,8 +237,9 @@ def newTeacherClass(request):
         data = searchTeacher(sessions,newTeacher)
 
         try:
-
             #if data["is_child_account"]==False and data["nickname"]==newTeacher: FALTA UNA VALIDACION MAS
+            print data["username"]
+            print newTeacher
             if data["username"]==newTeacher:
                 try:
                     teacher = Teacher.objects.get(kaid_teacher=data["kaid"])
@@ -254,7 +254,8 @@ def newTeacherClass(request):
             else:
                 return HttpResponse("No se encuentra el profesor.")
         except Exception as e:
-            print e
+            print "Error en agregar a un profesor: classRoster/view.py:newTeacherClass"
+            print traceback.print_exc()
             return HttpResponse("Compruebe que el profesor no esté asociado a otra Institución.")
 
 

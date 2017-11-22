@@ -6,8 +6,10 @@
 
 {% block body2 %}
 
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/planning.css'%}">
 <script src="{% static 'd3-timeline.js'%}"></script>
+<script src="{% static 'js/jquery-ui.js' %}"></script>
 
 <style>
     input{
@@ -19,7 +21,6 @@
 
     label{
         margin-right: 10px;
-        width: 95px;
     }
 
     #popup{
@@ -438,8 +439,34 @@
         top: 100%;
         left: 0;
     }
-
 </style>
+
+<script>
+    $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['es']);
+        $(function () {
+        $("#fecha").datepicker();
+    });
+    $( function() {
+        $("#newDate").datepicker();
+    });
+</script>
 
 <div style="float: right">
     Curriculo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
@@ -506,7 +533,7 @@
                         </div>
                         <div class='class-row'>
                             <label for='newOpening' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Inicio de la clase: </label>
-                            <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
+                            <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='resize: horizontal; width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
                         </div>
                         <div class='class-row'>
                             <label for='skill_block'>Habilidades:</label>
@@ -518,28 +545,16 @@
                     <div class='class-block' style='float:right'>
                         <div class='class-row'>
                             <label for='newDate'>Fecha: </label>
-                            <select id='newDate_Y' name='class_year_input' style='float:right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
-
-                            <select id='newDate_M' name='class_month_input' onchange='monthChanged(); return false;' style='float:right; margin-right: 8px; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
-
-                            <select id='newDate_D' name='class_day_input' style='float:right; margin-right: 8px; padding-left: 0px; width: auto; margin-left: 10px' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
+                            <input id="newDate" class='ui-corner-all simple-input search-input blur-on-esc approvalName' type="text" name="date" style='float:right; width: auto; margin-bottom: 0px'>
                         </div>
                         <div class='class-row'>
                             <label for='newDuration'>Duración: </label>
-                            <select id='newDuration' style='float: right; padding-left: 0px; width: auto;' class='ui-corner-all simple-input search-input blur-on-esc approvalName'>
-                            
-                            </select>
+                            <select id='newDuration' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='float: right; padding-left: 0px; width: auto;'></select>
                         </div>
 
                         <div class='class-row'>
                             <label for='newClosure' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Cierre de la clase: </label>
-                            <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
+                            <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='resize: horizontal; width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
                         </div>
                         <div class='class-row'>
                             <label for='video_block'>Videos:</label>
@@ -840,10 +855,9 @@
     }
 
     function limpiarCampos(){
+        $("#formTitle").val("Crear nueva clase");
         $("#newName").val("");
-        $("#newDate_D").empty();
-        $("#newDate_M").empty();
-        $("#newDate_Y").empty();
+        $("#newDate").val("");
         $("#newDuration").empty();
         $("#newStatus").val(0).change();
         $("#newOpening").text("");
@@ -887,15 +901,6 @@
                 }
                 else $('#newOA').append("<option value='" + subtopicos[i]["id"] + "'> O.A. " + subtopicos[i]["index"] + "</option>");
             }
-            for (var y = {{ anno }}; y >= 2000; y--){
-                $('#newDate_Y').append("<option value='" + y + "'>" + y + "</option>");
-            }
-            for (var m = 0; m < Lista_Meses.length; m++){
-               $('#newDate_M').append("<option value='" + (m + 1) + "'>" + Lista_Meses[m] + "</option>");
-            }
-            for (var d = 1; d <= 31; d++){
-                $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-            }
             for (var n = 45; n <= 180; n = n +45){
                 $('#newDuration').append("<option value='" + n + "'>" + n +" min.</option>");
             }
@@ -914,9 +919,7 @@
 
                 $("#formTitle").html('Editar plan "' + plan_list[i]["class_name"] + '"');
                 $("#newName").val(plan_list[i]["class_name"]);
-                $("#newDate_D").val(plan_list[i]["class_date"][2]).change();
-                $("#newDate_M").val(plan_list[i]["class_date"][1]).change();
-                $("#newDate_Y").val(plan_list[i]["class_date"][0]).change();
+                $("#newDate").val(plan_list[i]["class_date"][2] + "/" + plan_list[i]["class_date"][1] + "/" + plan_list[i]["class_date"][0]);
                 $("#newDuration").val(plan_list[i]["minutes"]).change();
                 if(plan_list[i]["status"] == true){
                     $("#newState").val("True").change();
@@ -1163,7 +1166,7 @@
     var histArray = [];
     var pieArray = [];
     var legendArray = [];
-    var barColor = "#41ab5d";
+    var barColor = "#9CB53B";
     var segColor = {mastery3:"#1C758A", mastery2:"#29ABCA", mastery1:"#58C4DD", practiced:"#9CDCEB", unstarted:"#A0A0A0", struggling:"#C30202"};
     function loadPieChart(data){
         var planificacion = JSON.parse('{{ plan | escapejs}}');
@@ -1530,11 +1533,12 @@
     }
 
     function saveNewPlan(){
+        var date = $('#newDate').val().split("/");
         var nName = $('#newName').val();
         var nOA = $('#newOA').val();
-        var nDay =  $('#newDate_D').val();
-        var nMonth = $('#newDate_M').val();
-        var nYear = $('#newDate_Y').val();
+        var nDay = date[0];
+        var nMonth = date[1];
+        var nYear = date[2];
         var nDuration = $('#newDuration').val();
         var nState  = $('#newState').val();
         var nOpen = $('#newOpening').val().replace(/[\r\n]/g, "<br />");
@@ -1605,11 +1609,12 @@
     }
 
     function saveEditedPlan(classid){
+        var date = $("#newDate").val().split("/");
         var nName = $('#newName').val();
         var nOA = $('#newOA').val();
-        var nDay =  $('#newDate_D').val();
-        var nMonth = $('#newDate_M').val();
-        var nYear = $('#newDate_Y').val();
+        var nDay = date[0];
+        var nMonth = date[1];
+        var nYear = date[2];
         var nDuration = $('#newDuration').val();
         var nState  = $('#newState').val();
         var nOpen = $('#newOpening').val().replace(/[\r\n]/g, "<br />");
@@ -1839,54 +1844,6 @@
         hideTree();
     }
 
-    function monthChanged(){
-        var month = $('#newDate_M').val();
-        var day = $('#newDate_D').val();
-
-        if(!month){
-            var month = $('#editDate_M').val();
-            var day = $('#editDate_D').val();
-
-            $('#editDate_D').children('option:not(:first)').remove();
-
-            if (month == 4 || month == 6 || month == 9 || month == 11){
-                for (var d = 1; d <= 30; d++){
-                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 30) day = 30;
-                $('#editDate_D').val(day);
-            }else if (month == 2){
-                for (var d = 1; d <= 28; d++){
-                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 27) day = 27;
-                $('#editDate_D').val(day);
-            }else{
-                for (var d = 1; d <= 31; d++){
-                    $('#editDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }
-                $('#editDate_D').val(day);
-            }
-        }else{
-            $('#newDate_D').children('option:not(:first)').remove();
-
-            if (month == 4 || month == 6 || month == 9 || month == 11){
-                for (var d = 1; d <= 30; d++){
-                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 30) day = 30;
-                $('#newDate_D').val(day);
-            }else if (month == 2){
-                for (var d = 1; d <= 28; d++){
-                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }if (day > 27) day = 27;
-                $('#newDate_D').val(day);
-            }else{
-                for (var d = 1; d <= 31; d++){
-                    $('#newDate_D').append("<option value='" + d + "'>" + d + "</option>");
-                }
-                $('#newDate_D').val(day);
-            }
-        }
-    }
-
     function hideTree(){
         $('#popuptree').hide();
         $('#hover').hide();
@@ -1901,7 +1858,7 @@
       $('#popup').empty();
       $('#hover').fadeIn();
       $('#popup').fadeIn();
-      $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar esta planificación? Perderá toda la información relacionada a esta, incluyendo videos y ejercicios listados.</div>');
+      $('#popup').append('<div style="max-width:500px;margin-left:50px;">¿Está seguro que desea eliminar esta clase? Perderá toda la información relacionada a esta, incluyendo videos y ejercicios asignados.</div>');
       $('#popup').append('<a onclick=\'(deletePlan("'+classid+'"))\' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Aceptar</a><a onclick="javascript:hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>');
     }
 
