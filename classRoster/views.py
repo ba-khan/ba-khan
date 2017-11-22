@@ -238,8 +238,7 @@ def newTeacherClass(request):
 
         try:
             #if data["is_child_account"]==False and data["nickname"]==newTeacher: FALTA UNA VALIDACION MAS
-            print data["username"]
-            print newTeacher
+
             if data["username"]==newTeacher:
                 try:
                     teacher = Teacher.objects.get(kaid_teacher=data["kaid"])
@@ -252,6 +251,7 @@ def newTeacherClass(request):
                     teacher = Teacher.objects.create(kaid_teacher=data["kaid"], name=data["username"], email=email, id_institution_id=inst.id_institution)
                     return HttpResponse("Nuevo profesor creado.")
             else:
+                print traceback.print_exc()
                 return HttpResponse("No se encuentra el profesor.")
         except Exception as e:
             print "Error en agregar a un profesor: classRoster/view.py:newTeacherClass"
