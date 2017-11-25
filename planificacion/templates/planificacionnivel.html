@@ -805,9 +805,11 @@
         var topicos = curriculo["topicos"];
         var planificacion = JSON.parse('{{ plan | escapejs}}');
         var plan_list = planificacion["plan"];
-        var text = "";
-        text += "<ul>";
-        text += "<li><a id='tab_clase_0' style='cursor: pointer' onclick='cambiarClase(0," + unitid + "); return false;'><i class='plus'></i> Nueva Clase</a></li>";
+
+        $('#sidebar').append("<ul id='ul_class_list'>");
+        
+        var text = "<li><a id='tab_clase_0' style='cursor: pointer' onclick='cambiarClase(0," + unitid + "); return false;'><i class='plus'></i> Nueva Clase</a></li>";
+        $('#ul_class_list').append(text);
 
         for (var i = 0; i < topicos.length; i++) {
             if (topicos[i]['id'] == unitid){
@@ -820,7 +822,7 @@
             for (var i = 0; i < plan_list.length; i++){
                 for (var s = 0; s < subtopicos.length; s++){
                     if (plan_list[i]['class_subtopic'] == subtopicos[s]['id']){
-                        text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                        text = "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
                         if(plan_list[i]["status"]){
                             text += "<div class='box done'></div>";
                         }else if(plan_list[i]["late"]){
@@ -830,13 +832,14 @@
                         }
                         text += plan_list[i]['class_name'];
                         text += "</a></li>";
+                        $('#ul_class_list').append(text);
                     }
                 }
             }
         }else{
             for (var i = 0; i < plan_list.length; i++){
                 if (plan_list[i]['class_subtopic'] == selected_oa_id){
-                    text += "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
+                    text = "<li><a id='tab_clase_" + plan_list[i]['id'] + "' style='cursor: pointer' href='#' onclick='cambiarClase(" + plan_list[i]['id'] + ", " +  unitid + "); return false;'>";
                     if(plan_list[i]["status"]){
                         text += "<div class='box done'></div>";
                     }else if(plan_list[i]["late"]){
@@ -846,12 +849,10 @@
                     }
                     text += plan_list[i]['class_name'];
                     text += "</a></li>";
+                    $('#ul_class_list').append(text);
                 }
             }
         }
-        text += "</ul>";
-
-        $('#sidebar').append(text);
     }
 
     function limpiarCampos(){
