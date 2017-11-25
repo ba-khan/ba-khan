@@ -486,7 +486,7 @@
                 </script>
             {% endif %}
         {% endfor %}
-        {% if not isAdmin %}
+        {% if not isAdmin and not planIsEmpty %}
             <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
                 Resumen
             </a></li>
@@ -620,39 +620,41 @@
     </div>
 </div>
 
-<div id="summary-container" class="container">
-    <div id="summary-content" class="sum-content">
-        <h2>Resumen</h2>
-        <label id="teacher_rpLabel"></label><br>
-        <label id="student_count_rpLabel"></label><br>
-        <label id="plan_count_rpLabel"></label><br>
-        <label id="plan_start_date_rpLabel"></label><br>
-        <label id="plan_end_date_rpLabel"></label><br>
-    </div>
+{% if not isAdmin and not planIsEmpty %}
+    <div id="summary-container" class="container">
+        <div id="summary-content" class="sum-content">
+            <h2>Resumen</h2>
+            <label id="teacher_rpLabel"></label><br>
+            <label id="student_count_rpLabel"></label><br>
+            <label id="plan_count_rpLabel"></label><br>
+            <label id="plan_start_date_rpLabel"></label><br>
+            <label id="plan_end_date_rpLabel"></label><br>
+        </div>
 
-    <div id="bar-content" class="sum-content">
-        <h2>Progreso de unidades <img id="planbar_info" style='width:16px; height:16px;' src={% static 'img/info.png' %}></h2>
-        <div id="plan-progress"></div>
-    </div>
+        <div id="bar-content" class="sum-content">
+            <h2>Progreso de unidades <img id="planbar_info" style='width:16px; height:16px;' src={% static 'img/info.png' %}></h2>
+            <div id="plan-progress"></div>
+        </div>
 
-    <div id="timeline-content" class="sum-content">
-        <h2>Linea de tiempo <img id="timeline_info" style='width:16px; height:16px;' src={% static 'img/info.png' %}></h2>
-        <div id="timeline-progress"></div>
-    </div>
+        <div id="timeline-content" class="sum-content">
+            <h2>Linea de tiempo <img id="timeline_info" style='width:16px; height:16px;' src={% static 'img/info.png' %}></h2>
+            <div id="timeline-progress"></div>
+        </div>
 
-    <div id="topbar" style="min-width: 1200px; height: 52px; margin-bottom: -2px; margin-top: 15px; margin-left: 3px;">
-        <ul class="tab">
-            {% for top in lista_topicos %}
-                <li><a id='tab_piechart_{{ forloop.counter0 }}' style="cursor: pointer; min-height 55px" href='#' onclick="cambiarPiechart({{ forloop.counter0 }}); return false;">
-                    Unidad {{ top.index }}
-                </a></li>
-            {% endfor %}
-        </ul>
-    </div>
+        <div id="topbar" style="min-width: 1200px; height: 52px; margin-bottom: -2px; margin-top: 15px; margin-left: 3px;">
+            <ul class="tab">
+                {% for top in lista_topicos %}
+                    <li><a id='tab_piechart_{{ forloop.counter0 }}' style="cursor: pointer; min-height 55px" href='#' onclick="cambiarPiechart({{ forloop.counter0 }}); return false;">
+                        Unidad {{ top.index }}
+                    </a></li>
+                {% endfor %}
+            </ul>
+        </div>
 
-    <div id="piechart-content" class="sum-content">
+        <div id="piechart-content" class="sum-content">
+        </div>
     </div>
-</div>
+{% endif %}
 
 <div id="popup" style="display:none"></div>
 

@@ -248,6 +248,10 @@ def getPlan(request, class_subj_id):
 		plan_dict = {"plan":planes}
 		plan_dump = json.dumps(plan_dict)
 
+		empty_plan = True
+		if len(planes) > 0:
+			empty_plan = False
+
 		unidad = []
 		for top in selected_topic:
 			topico = {}
@@ -317,7 +321,7 @@ def getPlan(request, class_subj_id):
 				return render_to_response('plancompartirnivelinst.html', {
 					'id': class_subj_id,												#ID del Class Suject
 					'plan':plan_dump,													#Diccionario de planificaciones
-					'log': log_dump,															#Historial de cambios
+					'log': log_dump,													#Historial de cambios
 					'autor':teacher_name,												#Nombre del dueño del curriculo
 					'clase':class_name,													#Datos del curso compartido.
 					'cursos_usuario':classes,											#Lista de los cursos del usuario que coinsiden con el curriculo actual.
@@ -326,6 +330,7 @@ def getPlan(request, class_subj_id):
 					'nivel_curriculo': level_names[current_curriculum[0]['level']],		#Nivel del curriculo
 					'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
 					'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
+					'planIsEmpty':empty_plan,											#Bool si el plan no tiene clases.
 					'json_data':json_data,												#Dump del diccionario de datos Mineduc
 					'isTeacher': isTeacher
 				}, context_instance=RequestContext(request))
@@ -394,6 +399,7 @@ def getPlan(request, class_subj_id):
 				'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
 				'json_data':json_data,												#Dump del diccionario de datos Mineduc
 				'json_khan_tree':topictree_json_string, 							#Dump del diccionario de habilidades Khan
+				'planIsEmpty':empty_plan,											#Bool si el plan no tiene clases.
 				'isTeacher': isTeacher,
 				'isAdmin':isAdmin,
 			}, context_instance=RequestContext(request))
