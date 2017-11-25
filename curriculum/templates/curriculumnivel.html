@@ -697,7 +697,7 @@
 
         text += "<div id='search' style='float:left;width: 48%;'>";
             text += "<label for='skill_search'>Buscar: </label>";
-            text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc' onkeyup='buscar()'>";
+            text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc'>";
         text += "</div>";
         
         text += "<div id='newTree" + idsubtopic + "' class='topictree'></div>";
@@ -729,6 +729,15 @@
                     }
                 }
             }
+        });
+
+        var to = false;
+        $('#skill_search').keyup(function () {
+            if (to) clearTimeout(to);
+            to = setTimeout(function () {
+              var v = $('#skill_search').val();
+              $('#newTree'+ classid).jstree(true).search(v);
+            }, 250);
         });
     }
 
