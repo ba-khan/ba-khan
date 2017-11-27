@@ -1199,6 +1199,8 @@
                 histArray.push(drawHistogram(sF, tF, data[unidad], unidad));
                 pieArray.push(drawPiechart(tF, data[unidad], unidad));
                 legendArray.push(drawLegend(tF, data[unidad], unidad));
+            }else{
+                $("#piechart-content").append("<div id='piechart-" + unidad + "' class='piechart'>No hay habilidades asignadas en las clases planificadas en esta unidad.");
             }
         }
     }
