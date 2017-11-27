@@ -453,6 +453,7 @@ def savePlanning(request):
 			else:
 				#'id_tema_clase' es el PK de Class_Subject en este caso.
 				class_sub = Class_Subject.objects.get(id_class_subject=args['id_tema_clase'])
+				current_time = datetime.now()
 
 				p = Planning.objects.create(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subject=class_sub,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 				Planning_Log.objects.create(id_planning=p, date=current_time, field="Creación", old_value="", new_value="")
