@@ -1,3 +1,4 @@
+logs/
 *.pyc
 log-populateTest.txt
 *populate.log

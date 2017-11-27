@@ -453,8 +453,10 @@ def savePlanning(request):
 			else:
 				#'id_tema_clase' es el PK de Class_Subject en este caso.
 				class_sub = Class_Subject.objects.get(id_class_subject=args['id_tema_clase'])
+				current_time = datetime.now()
 
 				p = Planning.objects.create(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subject=class_sub,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
+				Planning_Log.objects.create(id_planning=p, date=current_time, field="Creación", old_value="", new_value="")
 
 				for habilidad in habilidades:
 					arr = habilidad.split(',')
@@ -474,9 +476,9 @@ def savePlanning(request):
 		except Exception as e:
 			if "duplicate key value violates unique constraint" in e:
 				return HttpResponse('La planificacion no se puede editar. El nombre de la clase ya existe.')
-			print "Error en la modificacion de un plan: planificacion/view.py:savePlanning"
+			print "Error en la creacion de un plan: planificacion/view.py:savePlanning"
 			print traceback.print_exc()
-			return HttpResponse('La planificacion no se puede editar, favor revisar los campos ingresados.')
+			return HttpResponse('La planificación no se pudo guardar, asegurese de haber ingresado un nombre a la clase y una fecha.')
 
 @login_required()
 def copyPlanning(request):
@@ -601,7 +603,7 @@ def editPlanning(request):
 			else:
 				print "Error en la modificacion de un plan: planificacion/view.py:editPlanning"
 				print traceback.print_exc()
-				return HttpResponse('La planificacion no se puede editar, favor revisar los campos ingresados.')
+				return HttpResponse('La planificacion no se pudo editar, asegurese de haber ingresado un nombre a la clase y una fecha..')
 
 @login_required()
 def deletePlanning(request):
