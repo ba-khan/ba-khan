@@ -36,6 +36,13 @@
         flex-direction: column;
     }
 
+    .plan-textarea{
+        resize: vertical;
+        width: 92%;
+        padding: 10px;
+        min-height: 140px;
+    }
+
     #newChapter{
     border: 1px solid #C6D1AD;
       border-radius: 5px;
@@ -185,7 +192,7 @@
         border: 1px solid #D9D9D9;
         border-radius: 5px;
         width: 84%;
-        height: 100px;
+        height: 140px;
         max-height: 400px;
         text-align: left;
         padding: 10px;
@@ -533,7 +540,7 @@
                         </div>
                         <div class='class-row'>
                             <label for='newOpening' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Inicio de la clase: </label>
-                            <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='resize: vertical; width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px;'></textarea>
+                            <textarea id='newOpening' class='ui-corner-all simple-input search-input blur-on-esc vaciar plan-textarea'></textarea>
                         </div>
                         <div class='class-row'>
                             <label for='skill_block'>Habilidades:</label>
@@ -554,7 +561,7 @@
 
                         <div class='class-row'>
                             <label for='newClosure' style='float: left; margin-bottom: 6px; width: 200px; text-align: left'>Cierre de la clase: </label>
-                            <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar' style='resize: vertical; width:94%; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; height: 60px'></textarea>
+                            <textarea id='newClosure' class='ui-corner-all simple-input search-input blur-on-esc vaciar plan-textarea'></textarea>
                         </div>
                         <div class='class-row'>
                             <label for='video_block'>Videos:</label>
@@ -685,23 +692,19 @@
 
         var curriculo = JSON.parse('{{ json_data | escapejs }}');
         var topicos = curriculo["topicos"];
-        var text = "";
 
         //Dibuja la caja de descripcion de la Unidad.
         for (var i = 0; i < topicos.length; i++) {
             if (topicos[i]['id'] == unitid){
                 var subtopicos = topicos[i]["subtopico"];
-                text += "<label class='desc_label' style='margin-left: 150px;'>Descripción de la Unidad: </label>";
-                text += "<p class='descripcion'>"+topicos[i]['desc']+"</p>";
-                text += "<br>";
+                $('#header').append("<label class='desc_label' style='margin-left: 150px;'>Descripción de la Unidad: ");
+                $('#header').append("<p class='descripcion'>"+topicos[i]['desc']+"</p><br />");
+                $('#header').append("<label style='float: left'>Horas sugeridas: " + topicos[i]['horas']);
                 break;
             }
         }
 
-        $('#header').append(text);
-        text = "";
-
-        text += "<div style='margin-right: 180px; margin-bottom: 10px'>";
+        var text = "<div style='margin-right: 180px; margin-bottom: 10px'>";
         text += "<label for='oa_select'>Objetivo de Aprendizaje: </label>";
         text += "<select id='oa_select' onchange='filtrarOA(" + unitid + ");' class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px'>";
         text += "<option value='0' onclick='listarClases(" + unitid + ")'>Mostrar Todo</option>";
