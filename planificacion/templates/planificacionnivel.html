@@ -730,12 +730,15 @@
         $(document.getElementById("class-window")).addClass("class-window");
 
         $("#class-container").hide();
-        $("#summary-container").show();
 
         if(firstTimeOpen){
+            loading();
+
             retrieveReport();
             firstTimeOpen = false;
         }
+
+        $("#summary-container").show();
     }
 
     function retrieveReport(){
@@ -744,7 +747,7 @@
             type: "GET",
             data: { "subj_class_id" : {{ class_subject }},
             },
-            success: function(response){
+            success: function(response){           
                 $("#teacher_rpLabel").html("Profesor: " + response["teacher_name"])
                 $("#student_count_rpLabel").html("Número de estudiantes: " + response["nStudents"]);
                 $("#plan_count_rpLabel").html("Número de planes realizados: " + response["nPlans"]);
@@ -756,6 +759,8 @@
                 loadPieChart(response["skills"]);
                 cambiarPiechart(0);
                 loadToolkit();
+
+                $(document).ready(removeLoading());
             },
             error: function(response, error){
                 alert("Error: " + response.length);
