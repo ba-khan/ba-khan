@@ -929,8 +929,8 @@
                 }else{
                     $("#newState").val("False").change();
                 }
-                $("#newOpening").text(plan_list[i]["desc_inicio"]);
-                $("#newClosure").text(plan_list[i]["desc_cierre"]);
+                $("#newOpening").text(plan_list[i]["desc_inicio"].replace(new RegExp("<br />","g"), "\n"));
+                $("#newClosure").text(plan_list[i]["desc_cierre"].replace(new RegExp("<br />","g"), "\n"));
                 $("#newOA").val(plan_list[i]['class_subtopic']).change();
 
                 for (var v = 0; v < plan_list[i]["videos"].length; v++){
