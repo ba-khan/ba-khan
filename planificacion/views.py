@@ -189,6 +189,7 @@ def getPlan(request, class_subj_id):
 			else:
 				plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
 				id_chapter_mineduc = Class_Subject.objects.filter(id_class_subject=class_subj_id).values('curriculum_id')
+				teacher_name = Teacher.objects.filter(class_subject__id_class_subject=class_subj_id).values('name')
 				
 		selected_topic = Topic_Mineduc.objects.filter(id_chapter_id=id_chapter_mineduc[0]['curriculum_id']).order_by('index')
 		current_curriculum = Chapter_Mineduc.objects.filter(id_chapter_mineduc = id_chapter_mineduc[0]['curriculum_id']).values('level','year')
