@@ -31,8 +31,13 @@
     }
 
     #popup{
-        max-height: 250px;
         padding: 20px 10px;
+        height: 320px;
+    }
+
+    .popup-container{
+        margin: 10px 40px;
+        text-align: justify;
     }
 
     .copy-button{
@@ -319,26 +324,32 @@
 </div>
 
 <div id="popup" style="display:none">
-    <div style="max-width:500px;margin-left:50px;">
+    <div class="popup-container">
         <h3 style="text-align: center; color: red">Advertencia</h3>
-        <p>Esta operación creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
+        <p style="text-align: justify">Esta operación creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
     </div>
-    <div style="margin-bottom: 10px; max-width:500px;margin-left:50px;">
-        Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
+    <div class="popup-container">
+        <p style="text-align: justify">Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
         {% if clase.0.additional %}
-            ( {{clase.0.additional}} )
+            ({{clase.0.additional}})
         {% endif %}
-        del año {{ clase.0.year }}.
+        del año {{ clase.0.year }}.<p>
     </div>
-    <div style="margin-bottom: 10px">
-        <select id="owner_class">
-        <option value=-1>Seleccione un curso</option>
-        {% for curso in cursos_usuario %}
-            <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
-        {% endfor %}
-        </select>
-    </div>
-    <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
+    {%if cursos_usuario %}
+        <div style="margin-bottom: 10px">
+            <select id="owner_class">
+            <option value=-1>Seleccione un curso</option>
+            {% for curso in cursos_usuario %}
+                <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
+            {% endfor %}
+            </select>
+        </div>
+        <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
+    {% else %}
+        <div style="text-align: center; color: red">
+            La planificación curricular actual no es compatible con ningun curso asignado a usted.
+        </div>
+    {% endif %}
     <a onclick="hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>
 </div>
 
