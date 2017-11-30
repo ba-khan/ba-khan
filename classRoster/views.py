@@ -277,7 +277,10 @@ def newClass(request):
             additional = newClass["additional"]
             if additional=="":
                 additional = None
-            curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=newClass["curriculum"])
+            if newClass["curriculum"]:
+                curriculum = Chapter_Mineduc.objects.get(id_chapter_mineduc=newClass["curriculum"])
+            else:
+                curriculum = None
             teacher = Teacher.objects.get(name=newClass["teacher"])
             kaid_teacher = teacher.kaid_teacher
             students = newClass.getlist("students[]")
@@ -296,8 +299,8 @@ def newClass(request):
                     student_class = Student_Class.objects.create(id_class_id=id_curso, kaid_student_id=aux.kaid_student)
                 return HttpResponse("Nuevo curso creado")
         except Exception as e:
-            print "Error en: classRoster/view.py:viewClass"
-            print repr(e)
+            print "Error en: classRoster/view.py:newClass"
+            print traceback.print_exc()
             return HttpResponse('El curso no se pudo crear')
 
 ##
@@ -333,7 +336,7 @@ def viewClass(request):
             return HttpResponse(students)
         except Exception as e:
             print "Error en: classRoster/view.py:viewClass"
-            print repr(e)
+            print traceback.print_exc()
             return HttpResponse('El curso no se pudo visualizar')
 
 ##
