@@ -224,7 +224,7 @@
     .class-wide-block{
         float: left;
         width: 760px;
-        height: 100%;
+        height: auto;
         margin: 20px;
     }
 
@@ -307,7 +307,7 @@
 
     .log-table{
         overflow-y: auto;
-        height: 500px;
+        max-height: 500px;
     }
 
     td.mousepointer{
@@ -355,7 +355,7 @@
         fill: white;
     }
 
-    text:first-of-type {
+    .chart text:first-of-type {
         fill: white;
         font-family: sans-serif;
         font-size: 12px;
@@ -367,7 +367,7 @@
         fill: #1C758A;
     }
 
-    text:nth-of-type(2) {
+    .chart text:nth-of-type(2) {
         fill: white;
         font-family: sans-serif;
         font-size: 12px;
@@ -456,6 +456,11 @@
         left: 0;
     }
 
+    .table-cell{
+        text-align: left;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
 </style>
 
 <div style="float: left">
@@ -826,13 +831,13 @@
                 var log_exist = false
                 $("#log-container").html("<h3>Historial de cambios");
                 $("#log-container").append("<table id='log-table' class='log-table'>");
-                $("#log-table").append("<tr><th>Fecha del cambio</th><th>Campo editado</th><th>Valor original</th><th>Valor nuevo</th>");
+                $("#log-table").append("<tr><th style='width: 120px;'>Fecha del cambio</th><th style='width: 120px'>Campo editado</th><th>Valor original</th><th>Valor nuevo</th>");
 
                 for (var l = 0; l < logs.length; l++){
 
                     if(logs[l]["id_planning"] == classid){
                         log_exist = true;
-                        $("#log-table").append("<tr><td>" + logs[l]["date"] + "</td><td>" + logs[l]["field"] + "</td><td>" + logs[l]["old_value"] + "</td><td>" + logs[l]["new_value"] + "</td>");
+                        $("#log-table").append("<tr><td class='table-cell'>" + logs[l]["date"] + "</td><td class='table-cell'>" + logs[l]["field"] + "</td><td class='table-cell'>" + logs[l]["old_value"] + "</td><td class='table-cell'>" + logs[l]["new_value"] + "</td>");
                     }
                 }
                 if(!log_exist) $("#log-container").empty();
