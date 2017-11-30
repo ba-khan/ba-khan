@@ -130,8 +130,13 @@ def getSharedClassList(request):
 
 			#El instituto tiene acceso a todos los cursos, independiente de la configuración de compartir que tengan los profesores en sus cursos.
 			if(request.user.has_perm('bakhanapp.isAdmin')):
-				classes = Class.objects.filter(class_subject__curriculum_id__isnull=False, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
-
+				classes = Class.objects.filter(class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+				#Determina si exiten planes en los cursos.
+				for i in range(len(classes)):
+					if (Planning.objects.filter(class_subject_id=classes[i]['class_subject__id_class_subject'])):
+						classes[i]["planExist"] = True
+					else:
+						classes[i]["planExist"] = False
 			else:
 				#El valor 0 esta asignado a las clases sugeridas por la institución.
 				if teacher == "0":
