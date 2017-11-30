@@ -133,7 +133,7 @@ def getSharedClassList(request):
 				classes = Class.objects.filter(class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
 				#Determina si exiten planes en los cursos.
 				for i in range(len(classes)):
-					if (Planning.objects.filter(class_subject_id=classes[i]['class_subject__id_class_subject'])):
+					if (Planning.objects.filter(class_subject=classes[i]['class_subject__id_class_subject'])):
 						classes[i]["planExist"] = True
 					else:
 						classes[i]["planExist"] = False
