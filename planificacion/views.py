@@ -606,11 +606,17 @@ def editPlanning(request):
 				if (current_plan.class_date != class_date):
 					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Fecha", old_value=str(current_plan.class_date), new_value=str(class_date))
 				if (current_plan.class_subtopic != oa):
-					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Objetivo de Aprendizaje", old_value=str(current_plan.class_subtopic.index), new_value=str(oa.index))
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Objetivo de Aprendizaje", old_value="O.A. " + str(current_plan.class_subtopic.index), new_value="O.A. " + str(oa.index))
 				if (int(current_plan.minutes) != int(args['duracion'])):
-					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Duración", old_value=str(current_plan.minutes) + "minutos", new_value=str(args["duracion"]) + "minutos")
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Duración", old_value=str(current_plan.minutes) + " minutos", new_value=str(args["duracion"]) + " minutos")
 				if (current_plan.status != status):
-					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Estado", old_value=str(current_plan.status), new_value=str(args["estado"]))
+					if (args['estado'] == "False"):
+						old_val = "Realizado"
+						new_val = "No realizado"
+					else:
+						new_val = "Realizado"
+						old_val = "No realizado"
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Estado", old_value=old_val, new_value=new_val)
 
 				Planning.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 
