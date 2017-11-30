@@ -130,8 +130,13 @@ def getSharedClassList(request):
 
 			#El instituto tiene acceso a todos los cursos, independiente de la configuración de compartir que tengan los profesores en sus cursos.
 			if(request.user.has_perm('bakhanapp.isAdmin')):
-				classes = Class.objects.filter(class_subject__curriculum_id__isnull=False, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
-
+				classes = Class.objects.filter(class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+				#Determina si exiten planes en los cursos.
+				for i in range(len(classes)):
+					if (Planning.objects.filter(class_subject_id=classes[i]['class_subject__id_class_subject'])):
+						classes[i]["planExist"] = True
+					else:
+						classes[i]["planExist"] = False
 			else:
 				#El valor 0 esta asignado a las clases sugeridas por la institución.
 				if teacher == "0":
@@ -189,6 +194,7 @@ def getPlan(request, class_subj_id):
 			else:
 				plan_list = Planning.objects.filter(class_subject_id=class_subj_id).order_by('class_date')
 				id_chapter_mineduc = Class_Subject.objects.filter(id_class_subject=class_subj_id).values('curriculum_id')
+				teacher_name = Teacher.objects.filter(class_subject__id_class_subject=class_subj_id).values('name')
 				
 		selected_topic = Topic_Mineduc.objects.filter(id_chapter_id=id_chapter_mineduc[0]['curriculum_id']).order_by('index')
 		current_curriculum = Chapter_Mineduc.objects.filter(id_chapter_mineduc = id_chapter_mineduc[0]['curriculum_id']).values('level','year')
@@ -518,6 +524,35 @@ def copyPlanning(request):
 			return HttpResponse('La planificacion no se puede copiar')
 
 @login_required()
+def copyPlanningToInst(request):
+	if request.method=="POST" and request.user.has_perm('bakhanapp.isAdmin'):
+		try:
+			teacher = request.user.user_profile.kaid
+			args = request.POST
+
+			curriculum = Class_Subject.objects.get(id_class_subject=args['copied_class_id']).curriculum
+			institution = Teacher.objects.get(kaid_teacher=teacher).id_institution
+
+			plan_list = Planning.objects.filter(class_subject=args['copied_class_id'])
+
+			for plan in plan_list:
+				new = Institutional_Plan.objects.create(class_name=plan.class_name, desc_inicio=plan.desc_inicio, desc_cierre=plan.desc_cierre, class_date=plan.class_date, class_subtopic=plan.class_subtopic, minutes=plan.minutes, share_class=False, curriculum=curriculum, institution=institution)
+
+				habilidades = Skill_Planning.objects.filter(id_planning=plan)
+				for habilidad in habilidades:
+					Skill_Institution_Plan.objects.create(id_planning=new, id_subtopic=habilidad.id_subtopic, id_skill=habilidad.id_skill)
+
+				videos = Video_Planning.objects.filter(id_planning=plan)
+				for video in videos:
+					Video_Institution_Plan.objects.create(id_planning=new, id_subtopic=video.id_subtopic, id_video=video.id_video)
+
+			return HttpResponse('Planificación copiada correctamente')
+		except Exception as e:
+			print "Error en el copiado de un plan: planificacion/view.py:copyPlanningInst"
+			print traceback.print_exc()
+			return HttpResponse('La planificacion no se puede copiar')
+
+@login_required()
 def editPlanning(request):
 	if request.method=="POST":
 		try:
@@ -571,11 +606,17 @@ def editPlanning(request):
 				if (current_plan.class_date != class_date):
 					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Fecha", old_value=str(current_plan.class_date), new_value=str(class_date))
 				if (current_plan.class_subtopic != oa):
-					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Objetivo de Aprendizaje", old_value=str(current_plan.class_subtopic.index), new_value=str(oa.index))
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Objetivo de Aprendizaje", old_value="O.A. " + str(current_plan.class_subtopic.index), new_value="O.A. " + str(oa.index))
 				if (int(current_plan.minutes) != int(args['duracion'])):
-					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Duración", old_value=str(current_plan.minutes) + "minutos", new_value=str(args["duracion"]) + "minutos")
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Duración", old_value=str(current_plan.minutes) + " minutos", new_value=str(args["duracion"]) + " minutos")
 				if (current_plan.status != status):
-					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Estado", old_value=str(current_plan.status), new_value=str(args["estado"]))
+					if (args['estado'] == "False"):
+						old_val = "Realizado"
+						new_val = "No realizado"
+					else:
+						new_val = "Realizado"
+						old_val = "No realizado"
+					Planning_Log.objects.create(id_planning=current_plan, date=current_time, field="Estado", old_value=old_val, new_value=new_val)
 
 				Planning.objects.filter(id_planning=args['id']).update(class_name=args['nombre'], desc_inicio=args['desc_inicio'],desc_cierre=args['desc_cierre'],class_date=class_date,class_subtopic=oa,minutes=args['duracion'],share_class=False,status=status)
 

@@ -22,7 +22,13 @@
     }
 
     #popup{
-        height:150px;
+        padding: 20px 10px;
+        height: 320px;
+    }
+
+    .popup-container{
+        margin: 10px 40px;
+        text-align: justify;
     }
 
     #popuptree{
@@ -218,7 +224,7 @@
     .class-wide-block{
         float: left;
         width: 760px;
-        height: 100%;
+        height: auto;
         margin: 20px;
     }
 
@@ -301,7 +307,7 @@
 
     .log-table{
         overflow-y: auto;
-        height: 500px;
+        max-height: 500px;
     }
 
     td.mousepointer{
@@ -349,7 +355,7 @@
         fill: white;
     }
 
-    text:first-of-type {
+    .chart text:first-of-type {
         fill: white;
         font-family: sans-serif;
         font-size: 12px;
@@ -361,7 +367,7 @@
         fill: #1C758A;
     }
 
-    text:nth-of-type(2) {
+    .chart text:nth-of-type(2) {
         fill: white;
         font-family: sans-serif;
         font-size: 12px;
@@ -450,6 +456,11 @@
         left: 0;
     }
 
+    .table-cell{
+        text-align: left;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
 </style>
 
 <div style="float: left">
@@ -457,7 +468,7 @@
 </div>
 
 <div style="float: right">
-    Curriculo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
+    Currículo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
 </div>
 <br>
 <div class="copy-button">
@@ -580,25 +591,21 @@
 </div>
 
 <div id="popup" style="display:none">
-    <div style="max-width:500px;margin-left:50px;">
+    <div class="popup-container">
         <h3 style="text-align: center; color: red">Advertencia</h3>
-        <p>Esta opción creara una copia de la planificación actual y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
+        <p style="text-align: justify">Esta operación creara una copia de la planificación actual y la asociara al plan de un currículo. Esto sobrescribirá y borrara cualquier planificación realizada en el currículo actual. Esta acción no se puede deshacer.</p>
     </div>
-    <div style="margin-bottom: 10px; max-width:500px;margin-left:50px;">
-        Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
+    <div class="popup-container">
+        <p style="text-align: justify">Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
         {% if clase.0.additional %}
-            ( {{clase.0.additional}} )
+            ({{clase.0.additional}})
         {% endif %}
-        del año {{ clase.0.year }}.
+        del año {{ clase.0.year }}.<p>
     </div>
-    <div style="margin-bottom: 10px">
-        <select id="owner_class">
-        <option value=-1>Seleccione un curso</option>
-        {% for curso in cursos_usuario %}
-            <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
-        {% endfor %}
-        </select>
+    <div class="popup-container">
+        <p style="text-align: justify">Esta planificación se copiara currículo ministerial: {{ nivel_curriculo }} {{ anno_curriculo }}.<p>
     </div>
+
     <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
     <a onclick="hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>
 </div>
@@ -824,13 +831,13 @@
                 var log_exist = false
                 $("#log-container").html("<h3>Historial de cambios");
                 $("#log-container").append("<table id='log-table' class='log-table'>");
-                $("#log-table").append("<tr><th>Fecha del cambio</th><th>Campo editado</th><th>Valor original</th><th>Valor nuevo</th>");
+                $("#log-table").append("<tr><th style='width: 120px;'>Fecha del cambio</th><th style='width: 120px'>Campo editado</th><th>Valor original</th><th>Valor nuevo</th>");
 
                 for (var l = 0; l < logs.length; l++){
 
                     if(logs[l]["id_planning"] == classid){
                         log_exist = true;
-                        $("#log-table").append("<tr><td>" + logs[l]["date"] + "</td><td>" + logs[l]["field"] + "</td><td>" + logs[l]["old_value"] + "</td><td>" + logs[l]["new_value"] + "</td>");
+                        $("#log-table").append("<tr><td class='table-cell'>" + logs[l]["date"] + "</td><td class='table-cell'>" + logs[l]["field"] + "</td><td class='table-cell'>" + logs[l]["old_value"] + "</td><td class='table-cell'>" + logs[l]["new_value"] + "</td>");
                     }
                 }
                 if(!log_exist) $("#log-container").empty();
@@ -1412,16 +1419,12 @@
     }
 
     function copyPlan(){
-        class_id = $("#owner_class").val();
         original_id = {{ id }};
-        institution = false;
 
         $.ajax({
-                url: "{% url 'planificacion:copiar_plan' %}",
+                url: "{% url 'planificacion:copiar_plan_inst' %}",
                 type: "POST",
-                data: {owner_class_id: class_id,
-                    copied_class_id: original_id,
-                    is_institution: institution
+                data: {copied_class_id: original_id
                     },
                 success: function(response){
                     $("#popup").empty()

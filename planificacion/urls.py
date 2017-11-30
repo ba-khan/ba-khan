@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^guardar$', views.savePlanning, name='guardar_plan'),
     url(r'^editar$', views.editPlanning, name='editar_plan'),
     url(r'^copiar$', views.copyPlanning, name='copiar_plan'),
+    url(r'^copiar_inst$', views.copyPlanningToInst, name='copiar_plan_inst'),
     url(r'^eliminar$', views.deletePlanning, name='borrar_plan'),
     url(r'^report$', views.getReport, name='obtener_datos'),
     url(r'^nivel/(?P<class_subj_id>[0-9]+)/$', views.getPlan, name='acceder_plan'),
