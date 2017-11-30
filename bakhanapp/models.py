@@ -4,67 +4,6 @@ from django.contrib.auth.models import User
 
 from django.db.models.fields.related import ForeignKey
 
-'''
-class Auth_Group(models.Model):
-    name = models.CharField(unique=True, max_length=80)
-
-    class Meta:
-        db_table = 'auth_group'
-
-
-class Auth_Group_Permissions(models.Model):
-    group = models.ForeignKey(Auth_Group)
-    permission = models.ForeignKey('Auth_Permission')
-
-    class Meta:
-        db_table = 'auth_group_permissions'
-        unique_together = (('group', 'permission'),)
-
-
-class Auth_Permission(models.Model):
-    name = models.CharField(max_length=255)
-    content_type = models.ForeignKey('DjangoContentType')
-    codename = models.CharField(max_length=100)
-
-    class Meta:
-        db_table = 'auth_permission'
-        unique_together = (('content_type', 'codename'),)
-
-
-class Auth_User(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.BooleanField()
-    username = models.CharField(unique=True, max_length=50)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    email = models.CharField(max_length=254)
-    is_staff = models.BooleanField()
-    is_active = models.BooleanField()
-    date_joined = models.DateTimeField()
-
-    class Meta:
-        db_table = 'auth_user'
-
-
-class Auth_User_Groups(models.Model):
-    user = models.ForeignKey(Auth_User)
-    group = models.ForeignKey(Auth_Group)
-
-    class Meta:
-        db_table = 'auth_user_groups'
-        unique_together = (('user', 'group'),)
-
-
-class Auth_User_User_Permissions(models.Model):
-    user = models.ForeignKey(Auth_User)
-    permission = models.ForeignKey(Auth_Permission)
-
-    class Meta:
-        db_table = 'auth_user_user_permissions'
-        unique_together = (('user', 'permission'),)
-
-'''
 class Administrator(models.Model):
     kaid_administrator = models.CharField(primary_key=True, max_length=50)
     name = models.CharField(max_length=50)

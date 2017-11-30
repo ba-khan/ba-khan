@@ -463,7 +463,7 @@
 </div>
 
 <div style="float: right">
-    Curriculo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
+    Currículo asignado: {{ nivel_curriculo }} {{ anno_curriculo }}
 </div>
 <br>
 <div class="copy-button">
@@ -588,7 +588,7 @@
 <div id="popup" style="display:none">
     <div class="popup-container">
         <h3 style="text-align: center; color: red">Advertencia</h3>
-        <p style="text-align: justify">Esta operación creara una copia de la planificación actual y la asociara y sobrescribirá cualquier planificación realizada en el curso seleccionado. Los planes existentes en este curso serán borrados permanentemente. Esta acción no se puede deshacer.</p>
+        <p style="text-align: justify">Esta operación creara una copia de la planificación actual y la asociara al plan de un currículo. Esto sobrescribirá y borrara cualquier planificación realizada en el currículo actual. Esta acción no se puede deshacer.</p>
     </div>
     <div class="popup-container">
         <p style="text-align: justify">Actualmente se esta viendo el plan del curso {{ clase.0.level }} {{ clase.0.letter }} 
@@ -597,21 +597,11 @@
         {% endif %}
         del año {{ clase.0.year }}.<p>
     </div>
-    {%if cursos_usuario %}
-        <div style="margin-bottom: 10px">
-            <select id="owner_class">
-            <option value=-1>Seleccione un curso</option>
-            {% for curso in cursos_usuario %}
-                <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
-            {% endfor %}
-            </select>
-        </div>
-        <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
-    {% else %}
-        <div style="text-align: center; color: red">
-            La planificación curricular actual no es compatible con ningun curso asignado a usted.
-        </div>
-    {% endif %}
+    <div class="popup-container">
+        <p style="text-align: justify">Esta planificación se copiara currículo ministerial: {{ nivel_curriculo }} {{ anno_curriculo }}.<p>
+    </div>
+
+    <a onclick='copyPlan()' class="kui-button kui-button-submit kui-button-primary" style="cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Copiar</a>
     <a onclick="hidePopup()" class="kui-button kui-button-plain kui-button-primary" style="display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px">Cancelar</a>
 </div>
 
@@ -1424,16 +1414,12 @@
     }
 
     function copyPlan(){
-        class_id = $("#owner_class").val();
         original_id = {{ id }};
-        institution = false;
 
         $.ajax({
-                url: "{% url 'planificacion:copiar_plan' %}",
+                url: "{% url 'planificacion:copiar_plan_inst' %}",
                 type: "POST",
-                data: {owner_class_id: class_id,
-                    copied_class_id: original_id,
-                    is_institution: institution
+                data: {copied_class_id: original_id
                     },
                 success: function(response){
                     $("#popup").empty()

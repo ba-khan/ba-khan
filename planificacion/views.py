@@ -524,6 +524,35 @@ def copyPlanning(request):
 			return HttpResponse('La planificacion no se puede copiar')
 
 @login_required()
+def copyPlanningToInst(request):
+	if request.method=="POST" and request.user.has_perm('bakhanapp.isAdmin'):
+		try:
+			teacher = request.user.user_profile.kaid
+			args = request.POST
+
+			curriculum = Class_Subject.objects.get(id_class_subject=args['copied_class_id']).curriculum
+			institution = Teacher.objects.get(kaid_teacher=teacher).id_institution
+
+			plan_list = Planning.objects.filter(class_subject=args['copied_class_id'])
+
+			for plan in plan_list:
+				new = Institutional_Plan.objects.create(class_name=plan.class_name, desc_inicio=plan.desc_inicio, desc_cierre=plan.desc_cierre, class_date=plan.class_date, class_subtopic=plan.class_subtopic, minutes=plan.minutes, share_class=False, curriculum=curriculum, institution=institution)
+
+				habilidades = Skill_Planning.objects.filter(id_planning=plan)
+				for habilidad in habilidades:
+					Skill_Institution_Plan.objects.create(id_planning=new, id_subtopic=habilidad.id_subtopic, id_skill=habilidad.id_skill)
+
+				videos = Video_Planning.objects.filter(id_planning=plan)
+				for video in videos:
+					Video_Institution_Plan.objects.create(id_planning=new, id_subtopic=video.id_subtopic, id_video=video.id_video)
+
+			return HttpResponse('Planificación copiada correctamente')
+		except Exception as e:
+			print "Error en el copiado de un plan: planificacion/view.py:copyPlanningInst"
+			print traceback.print_exc()
+			return HttpResponse('La planificacion no se puede copiar')
+
+@login_required()
 def editPlanning(request):
 	if request.method=="POST":
 		try:
