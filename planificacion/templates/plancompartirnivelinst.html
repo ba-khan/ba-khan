@@ -456,6 +456,12 @@
         left: 0;
     }
 
+    .legend-checkbox{
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+    }
+
     .table-cell{
         text-align: left;
         max-height: 300px;
@@ -861,6 +867,8 @@
         $("#summary-container").show();
 
         if(firstTimeOpen){
+            loading();
+
             retrieveReport();
             firstTimeOpen = false;
         }
@@ -884,9 +892,12 @@
                 loadPieChart(response["skills"]);
                 cambiarPiechart(0);
                 loadToolkit();
+
+                $(document).ready(removeLoading());
             },
             error: function(response, error){
                 alert("Error: " + response.length);
+                $(document).ready(removeLoading());
             }
         });
     }
@@ -1282,7 +1293,7 @@
         tr.append("td").attr("class",'legendPerc')
             .text(function(d){ return getLegend(d,lD);});
 
-        tr.append("td").append("input").attr("class","legend-checkbox-" + index)
+        tr.append("td").append("input").attr("class","legend-checkbox legend-checkbox-" + index)
             .attr("type","checkbox")
             .attr("value", function(d){return d.type})
             .property("checked", function(d){
