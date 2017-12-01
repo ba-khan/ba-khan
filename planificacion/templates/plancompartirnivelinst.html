@@ -489,9 +489,11 @@
                 </script>
             {% endif %}
         {% endfor %}
-        <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
-            Resumen
-        </a></li>
+        {% if not planIsEmpty %}
+            <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
+                Resumen
+            </a></li>
+        {% endif %}
     </ul>
 </div>
 <br>
