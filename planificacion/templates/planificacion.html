@@ -35,18 +35,18 @@
     </div>
     <div style="float: right">
         <label for="shareFilter">Ver planes de: </label>
-        <select id="shareFilter" onchange="openShareClass()" autocomplete="off">
-        <option selected value="-1">No mostrar clases compartidas</option>
-        {% if planExist %}
-             <optgroup label="------------------------"></optgroup>
-            <option value="0">Institución</option>
-        {% endif %}
-        {% for teacher in teachers %}
-            {%if forlopp.first %}
+        <select id="shareFilter" class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px; width: auto;' onchange="openShareClass()" autocomplete="off">
+            <option selected value="-1">No mostrar clases compartidas</option>
+            {% if planExist %}
                  <optgroup label="------------------------"></optgroup>
+                <option value="0">Institución</option>
             {% endif %}
-            <option value="{{ teacher.kaid_teacher }}">{{ teacher.name }}</option>
-        {% endfor %}
+            {% for teacher in teachers %}
+                {%if forlopp.first %}
+                     <optgroup label="------------------------"></optgroup>
+                {% endif %}
+                <option value="{{ teacher.kaid_teacher }}">{{ teacher.name }}</option>
+            {% endfor %}
         </select>
     </div>
 </div>

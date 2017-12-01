@@ -456,6 +456,12 @@
         left: 0;
     }
 
+    .legend-checkbox{
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+    }
+
     .table-cell{
         text-align: left;
         max-height: 300px;
@@ -489,9 +495,11 @@
                 </script>
             {% endif %}
         {% endfor %}
-        <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
-            Resumen
-        </a></li>
+        {% if not planIsEmpty %}
+            <li><a id='tab_resumen' style="cursor: pointer; min-height 55px" href='#' onclick="mostrarResumen(); return false;">
+                Resumen
+            </a></li>
+        {% endif %}
     </ul>
 </div>
 <br>
@@ -718,9 +726,7 @@
         var topicos = curriculo["topicos"];
         var planificacion = JSON.parse('{{ plan | escapejs}}');
         var plan_list = planificacion["plan"];
-        var text = "";
-        text += "<ul>";
-        text += "<li><a id='tab_clase_0' style='cursor: pointer' onclick='cambiarClase(0," + unitid + "); return false;'><i class='plus'></i> Nueva Clase</a></li>";
+        var text = "<ul>";
 
         for (var i = 0; i < topicos.length; i++) {
             if (topicos[i]['id'] == unitid){
@@ -861,6 +867,8 @@
         $("#summary-container").show();
 
         if(firstTimeOpen){
+            loading();
+
             retrieveReport();
             firstTimeOpen = false;
         }
@@ -884,9 +892,12 @@
                 loadPieChart(response["skills"]);
                 cambiarPiechart(0);
                 loadToolkit();
+
+                $(document).ready(removeLoading());
             },
             error: function(response, error){
                 alert("Error: " + response.length);
+                $(document).ready(removeLoading());
             }
         });
     }
@@ -1282,7 +1293,7 @@
         tr.append("td").attr("class",'legendPerc')
             .text(function(d){ return getLegend(d,lD);});
 
-        tr.append("td").append("input").attr("class","legend-checkbox-" + index)
+        tr.append("td").append("input").attr("class","legend-checkbox legend-checkbox-" + index)
             .attr("type","checkbox")
             .attr("value", function(d){return d.type})
             .property("checked", function(d){

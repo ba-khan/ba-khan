@@ -42,7 +42,7 @@
     </div>
     <div style="float: right">
         <label for="shareFilter">Desplegar cursos de: </label>
-        <select id="shareFilter" onchange="openShareClass()" autocomplete="off">
+        <select id="shareFilter" class='ui-corner-all simple-input search-input blur-on-esc approvalName' style='padding-left: 0px; width: auto;' onchange="openShareClass()" autocomplete="off">
             <option selected value="-1">Ningun profesor seleccionado</option>
             {% for teacher in teachers %}
                 <option value="{{ teacher.kaid_teacher }}">{{ teacher.name }}</option>
@@ -233,10 +233,13 @@
                     if (response[i]['class_subject__curriculum'] == ""){
                         $("#shared_classbtn_" + i).css('color','darkred');
                     }else{
+                        console.log("Plan[" + i + "]:" response[i]);
                         if(!response[i]['planExist']){
                             $("#shared_classbtn_" + i).css('color','gray');
                         }
                         var href_value = '{% url "planificacion:acceder_plan_compartido" 0 %}'.replace(/0/, response[i]['class_subject__id_class_subject'].toString());
+                        console.log(href_value);
+                        console.log("--------------");
                         $("#shared_classbtn_" + i).attr('href',href_value);
                         $("#shared_classbtn_" + i).attr('onclick',"loading()");
                     }
