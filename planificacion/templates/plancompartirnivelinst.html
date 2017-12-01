@@ -720,7 +720,7 @@
         var topicos = curriculo["topicos"];
         var planificacion = JSON.parse('{{ plan | escapejs}}');
         var plan_list = planificacion["plan"];
-        var text += "<ul>";
+        var text = "<ul>";
 
         for (var i = 0; i < topicos.length; i++) {
             if (topicos[i]['id'] == unitid){
