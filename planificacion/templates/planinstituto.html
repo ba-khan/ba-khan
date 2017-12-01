@@ -233,7 +233,7 @@
                     if (response[i]['class_subject__curriculum'] == ""){
                         $("#shared_classbtn_" + i).css('color','darkred');
                     }else{
-                        console.log("Plan[" + i + "]:" response[i]);
+                        console.log("Plan[" + i + "]:" + response[i]);
                         if(!response[i]['planExist']){
                             $("#shared_classbtn_" + i).css('color','gray');
                         }
