@@ -232,6 +232,8 @@
                     $("#shared_classlvl_" + temp_i).append('<a id="shared_classbtn_' + i + '" role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" class="kui-button  kui-button-plain kui-button-primary" onclick="loading()" href="' + href_value + '">Curso ' + response[i]['letter']);
                     
                     //Determina el color del boton, rojo implica que no hay un curriculo asociado, gris implica que no hay un plan creado, verde implica un plan existente.
+                    console.log("Plan[" + i + "]: Nivel: " + response[i]["level"] + ", Exist: " + response[i]["planExist"]);
+
                     if (response[i]['class_subject__curriculum'] == ""){
                         $("#shared_classbtn_" + i).css('color','darkred');
                         $("#shared_classbtn_" + i).attr('onclick','');

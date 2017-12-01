@@ -411,8 +411,8 @@ def getPlan(request, class_subj_id):
 			}, context_instance=RequestContext(request))
 	except Exception as e:
 		print "Error en la apertura del plan: planificacion/view.py:getPlan"
-		print traceback.print_exc()
-		return HttpResponseRedirect("/inicio")
+		error = traceback.print_exc() 
+		return HttpResponseRedirect(error)
 
 @login_required()
 def savePlanning(request):
