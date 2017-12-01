@@ -227,23 +227,18 @@
                         $("#shared_classyr_" + response[i]['year']).append('<div id="shared_classlvl_' + temp_i + '">');
                         level_changed = response[i]['level'];
                     }
-                    $("#shared_classlvl_" + temp_i).append('<a id="shared_classbtn_' + i + '" role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" class="kui-button kui-button-plain kui-button-primary">Curso ' + response[i]['letter']);
+
+                    var href_value = '{% url "planificacion:acceder_plan_compartido" 0 %}'.replace(/0/, response[i]['class_subject__id_class_subject'].toString());
+                    $("#shared_classlvl_" + temp_i).append('<a id="shared_classbtn_' + i + '" role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" class="kui-button  kui-button-plain kui-button-primary" onclick="loading()" href="' + href_value + '">Curso ' + response[i]['letter']);
                     
                     //Determina el color del boton, rojo implica que no hay un curriculo asociado, gris implica que no hay un plan creado, verde implica un plan existente.
                     if (response[i]['class_subject__curriculum'] == ""){
                         $("#shared_classbtn_" + i).css('color','darkred');
-                    }else{
-                        console.log("Plan[" + i + "]:" + response[i]);
-                        if(!response[i]['planExist']){
-                            $("#shared_classbtn_" + i).css('color','gray');
-                        }
-                        var href_value = '{% url "planificacion:acceder_plan_compartido" 0 %}'.replace(/0/, response[i]['class_subject__id_class_subject'].toString());
-                        console.log(href_value);
-                        console.log("--------------");
-                        $("#shared_classbtn_" + i).attr('href',href_value);
-                        $("#shared_classbtn_" + i).attr('onclick',"loading()");
+                        $("#shared_classbtn_" + i).attr('onclick','');
+                        $("#shared_classbtn_" + i).attr('href','');
+                    }else if(!response[i]['planExist']){
+                        $("#shared_classbtn_" + i).css('color','gray');
                     }
-
                     if(response[i]["additional"]){
                         $("#shared_classbtn_" + i).append('<br>(' + response[i]["additional"] + ')')
                         
