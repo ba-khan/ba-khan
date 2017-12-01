@@ -233,10 +233,13 @@
                     if (response[i]['class_subject__curriculum'] == ""){
                         $("#shared_classbtn_" + i).css('color','darkred');
                     }else{
+                        console.log("Plan[" + i + "]:" response[i]);
                         if(!response[i]['planExist']){
                             $("#shared_classbtn_" + i).css('color','gray');
                         }
                         var href_value = '{% url "planificacion:acceder_plan_compartido" 0 %}'.replace(/0/, response[i]['class_subject__id_class_subject'].toString());
+                        console.log(href_value);
+                        console.log("--------------");
                         $("#shared_classbtn_" + i).attr('href',href_value);
                         $("#shared_classbtn_" + i).attr('onclick',"loading()");
                     }
