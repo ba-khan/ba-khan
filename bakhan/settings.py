@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'uy=!=x&yfcv)a_bbk19xx_4c1w@x$j)g5=i(u99)1qo$+p4)2e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = False
 #DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -134,7 +134,7 @@ EMAIL_HOST_USER = 'bakhanacademy@gmail.com'
 EMAIL_HOST_PASSWORD = 'a123456789b'
 EMAIL_PORT = 587
 
-
+ADMINS = [('Daniel', 'dan.garro@gmail.com')]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 

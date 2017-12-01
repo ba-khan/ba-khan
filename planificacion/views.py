@@ -128,22 +128,12 @@ def getSharedClassList(request):
 
 			N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
 
-			#El instituto tiene acceso a todos los cursos, independiente de la configuración de compartir que tengan los profesores en sus cursos.
-			if(request.user.has_perm('bakhanapp.isAdmin')):
-				classes = Class.objects.filter(class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
-				#Determina si exiten planes en los cursos.
-				for i in range(len(classes)):
-					if (Planning.objects.filter(class_subject=classes[i]['class_subject__id_class_subject'])):
-						classes[i]["planExist"] = True
-					else:
-						classes[i]["planExist"] = False
+			#El valor 0 esta asignado a las clases sugeridas por la institución.
+			if teacher == "0":
+				classes = Chapter_Mineduc.objects.filter(institutional_plan__share_class=True, institutional_plan__institution=inst_id).values('level', 'year', 'additional', 'id_chapter_mineduc').order_by('-year','level').distinct()
+				
 			else:
-				#El valor 0 esta asignado a las clases sugeridas por la institución.
-				if teacher == "0":
-					classes = Chapter_Mineduc.objects.filter(institutional_plan__share_class=True, institutional_plan__institution=inst_id).values('level', 'year', 'additional', 'id_chapter_mineduc').order_by('-year','level').distinct()
-					
-				else:
-					classes = Class.objects.filter(class_subject__planning__share_class=True, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+				classes = Class.objects.filter(class_subject__planning__share_class=True, class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
 
 			for i in range(len(classes)):
 				classes[i]['level'] = N[int(classes[i]['level'])]
@@ -153,6 +143,34 @@ def getSharedClassList(request):
 			return HttpResponse(json_class, content_type="application/json")
 		except Exception as e:
 			print "Error en la obtencion de las clases compartidas: planificacion/view.py:getSharedClassList"
+			print traceback.print_exc()
+			return HttpResponse('No se pudo obtener la información.')
+
+def getInstSharedClassList(request):
+	request.session.set_expiry(timeSleep)
+	if request.method == "GET":
+		try:
+			teacher = request.GET.get("id", None)
+			inst_id = Teacher.objects.get(kaid_teacher=request.user.user_profile.kaid).id_institution
+
+			N = ['Kinder','Primero Básico','Segundo Básico','Tercero Básico','Cuarto Básico','Quinto Básico','Sexto Básico','Septimo Básico','Octavo Básico','Primero Medio','Segundo Medio','Tercero Medio','Cuarto Medio']
+
+			#El instituto tiene acceso a todos los cursos, independiente de la configuración de compartir que tengan los profesores en sus cursos.
+			classes = Class.objects.filter(class_subject__kaid_teacher=teacher, id_institution=inst_id).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject', 'class_subject__curriculum', 'class_subject__kaid_teacher__name').order_by('-year','level','letter', 'class_subject__id_class_subject').distinct()
+			#Determina si exiten planes en los cursos.
+			for i in range(len(classes)):
+				classes[i]["planExist"] = False
+				if (Planning.objects.filter(class_subject=classes[i]['class_subject__id_class_subject'])):
+					classes[i]["planExist"] = True
+
+			for i in range(len(classes)):
+				classes[i]['level'] = N[int(classes[i]['level'])]
+
+			json_class = json.dumps(list(classes))
+
+			return HttpResponse(json_class, content_type="application/json")
+		except Exception as e:
+			print "Error en la obtencion de las clases compartidas: planificacion/view.py:getInstSharedClassList"
 			print traceback.print_exc()
 			return HttpResponse('No se pudo obtener la información.')
 
@@ -411,8 +429,8 @@ def getPlan(request, class_subj_id):
 			}, context_instance=RequestContext(request))
 	except Exception as e:
 		print "Error en la apertura del plan: planificacion/view.py:getPlan"
-		error = traceback.print_exc() 
-		return HttpResponseRedirect(error)
+		print traceback.print_exc()
+		return HttpResponseRedirect("/inicio")
 
 @login_required()
 def savePlanning(request):

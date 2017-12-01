@@ -201,7 +201,7 @@
 
     function appendSharedContent(id){
         $.ajax({
-            url: "{% url 'planificacion:planes_compartidos' %}",
+            url: "{% url 'planificacion:planes_compartidos_inst' %}",
             type: "GET",
             data: { "id" : id,
             },
