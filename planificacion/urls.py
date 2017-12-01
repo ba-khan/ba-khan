@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^$', views.getClassList, name='curriculum_propuesto'),
     url(r'^config$', views.saveShareConfig, name='editar_config'),
     url(r'^compartido$', views.getSharedClassList, name='planes_compartidos'),
+    url(r'^compartidoInst$', views.getInstSharedClassList, name='planes_compartidos_inst'),
     url(r'^guardar$', views.savePlanning, name='guardar_plan'),
     url(r'^editar$', views.editPlanning, name='editar_plan'),
     url(r'^copiar$', views.copyPlanning, name='copiar_plan'),
