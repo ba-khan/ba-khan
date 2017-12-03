@@ -77,7 +77,7 @@
             {% endifchanged %}
 
             {% if class.class_subject__curriculum %}
-                <a role="button" style="display: inline; float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan' class.class_subject__id_class_subject %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso {{ class.letter }}
+                <a role="button" style="display: inline; {% if class.share == 'Null' %}color: gray;{% endif %} float: left; margin-left: 20px; margin-bottom: 10px; width: 180px" href="{% url 'planificacion:acceder_plan' class.class_subject__id_class_subject %}" onclick="loading()" class="kui-button kui-button-plain kui-button-primary">Curso {{ class.letter }}
                 {% if class.additional %}
                     <br>({{class.additional}})
                 {% endif %}
