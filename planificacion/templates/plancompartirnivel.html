@@ -340,7 +340,11 @@
             <select id="owner_class">
             <option value=-1>Seleccione un curso</option>
             {% for curso in cursos_usuario %}
-                <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }} ({{ curso.additional }})</option>
+                <option value={{ curso.class_subject__id_class_subject }}>{{ curso.level }} {{ curso.letter }} {{ curso.year }}
+                {% if curso.additional %}
+                    ({{ curso.additional }})
+                {% endif %}
+                </option>
             {% endfor %}
             </select>
         </div>
