@@ -561,6 +561,9 @@
     }
 
     function copyPlan(){
+        $('#popup').hide();
+        loading();
+
         class_id = $("#owner_class").val();
         original_id = {{ id }};
         institution = "{{ isInstitution }}";
@@ -573,6 +576,8 @@
                     is_institution: institution
                     },
                 success: function(response){
+                    $(document).ready(removeLoading());
+
                     $("#popup").empty()
                     $("#close").hide();
                     $("#hover").fadeIn();
@@ -586,6 +591,8 @@
                     },500);
                 },
                 error: function(response){
+                    $(document).ready(removeLoading());
+                    
                     $("#popup").empty()
                     $("#hover").fadeIn().css('display', '');
                     $("#popup").fadeIn().css('display', '');
