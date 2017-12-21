@@ -320,8 +320,13 @@ def getPlan(request, class_subj_id):
 
 		#Revisa si la redirección es hacia un plan compartido.
 		if "compartido" in request.path:
+			#Listado de clases del usuario al cual puede copiar el plan el cual esta accediendo.
 			classes = Class.objects.filter(class_subject__curriculum_id=id_chapter_mineduc[0]['curriculum_id'], class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject').order_by('-year','level','letter')
-			class_name = Class.objects.filter(class_subject__id_class_subject=class_subj_id).values('level','letter','year','additional')
+			#Datos de la clase a la que se accede
+			if ("inst" in request.path):
+				class_name = Chapter_Mineduc.objects.filter(id_chapter_mineduc=class_subj_id).values('level','year')
+			else:
+				class_name = Class.objects.filter(class_subject__id_class_subject=class_subj_id).values('level','letter','year','additional')
 
 			for i in range(len(class_name)):
 				class_name[i]['level'] = level_names[int(class_name[i]['level'])]
@@ -331,6 +336,7 @@ def getPlan(request, class_subj_id):
 
 			#Si es institución, accede al plan con acceso al Resumen.
 			if request.user.has_perm('bakhanapp.isAdmin'):
+				#Obtiene historial de cambios.
 				log_data = []
 				for plan in plan_list:
 					logs = Planning_Log.objects.filter(id_planning=plan).values("id_planning", "field", "old_value", "new_value", "date").order_by("date")
