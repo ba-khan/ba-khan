@@ -320,8 +320,15 @@ def getPlan(request, class_subj_id):
 
 		#Revisa si la redirección es hacia un plan compartido.
 		if "compartido" in request.path:
+			#Listado de clases del usuario al cual puede copiar el plan el cual esta accediendo.
 			classes = Class.objects.filter(class_subject__curriculum_id=id_chapter_mineduc[0]['curriculum_id'], class_subject__kaid_teacher=request.user.user_profile.kaid).values('level', 'letter', 'year', 'additional', 'class_subject__id_class_subject').order_by('-year','level','letter')
-			class_name = Class.objects.filter(class_subject__id_class_subject=class_subj_id).values('level','letter','year','additional')
+			#Datos de la clase a la que se accede
+			if ("inst" in request.path):
+				class_name = Chapter_Mineduc.objects.filter(id_chapter_mineduc=class_subj_id).values('level','year')
+				accessInst = True
+			else:
+				class_name = Class.objects.filter(class_subject__id_class_subject=class_subj_id).values('level','letter','year','additional')
+				accessInst = False
 
 			for i in range(len(class_name)):
 				class_name[i]['level'] = level_names[int(class_name[i]['level'])]
@@ -331,6 +338,7 @@ def getPlan(request, class_subj_id):
 
 			#Si es institución, accede al plan con acceso al Resumen.
 			if request.user.has_perm('bakhanapp.isAdmin'):
+				#Obtiene historial de cambios.
 				log_data = []
 				for plan in plan_list:
 					logs = Planning_Log.objects.filter(id_planning=plan).values("id_planning", "field", "old_value", "new_value", "date").order_by("date")
@@ -356,7 +364,8 @@ def getPlan(request, class_subj_id):
 					'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
 					'planIsEmpty':empty_plan,											#Bool si el plan no tiene clases.
 					'json_data':json_data,												#Dump del diccionario de datos Mineduc
-					'isTeacher': isTeacher
+					'isTeacher': isTeacher,
+					'isInstitution': accessInst
 				}, context_instance=RequestContext(request))
 
 			#Si es profesor, solo se accede al listado de clases.
@@ -373,7 +382,8 @@ def getPlan(request, class_subj_id):
 					'anno_curriculo': current_curriculum[0]['year'],					#Año del curriculo
 					'asignatura': current_subject[0]['name_spanish'],					#Asignatura del curriculo
 					'json_data':json_data,												#Dump del diccionario de datos Mineduc
-					'isTeacher': isTeacher
+					'isTeacher': isTeacher,
+					'isInstitution': accessInst
 				}, context_instance=RequestContext(request))
 
 		#Si no es compartido, primero obtiene los datos para el arbol de habilidades/videos de khan.
@@ -514,17 +524,20 @@ def copyPlanning(request):
 			Planning.objects.filter(class_subject=args['owner_class_id']).delete()
 			#Si existe "inst" en el URL, esta copiando desde un plan institucional, se hace la Query en la tabla relacionada.
 			if args["is_institution"] == "True":
-				plan_list = Institutional_Plan.objects.filter(curriculum=args['copied_class_id'])
+				inst_id = Teacher.objects.get(kaid_teacher=request.user.user_profile.kaid).id_institution
+				plan_list = Institutional_Plan.objects.filter(curriculum=args['copied_class_id'], institution=inst_id)
 			else:
 				plan_list = Planning.objects.filter(class_subject=args['copied_class_id'])
 
 			for plan in plan_list:
+				print "X"
 				new = Planning.objects.create(class_name=plan.class_name, desc_inicio=plan.desc_inicio, desc_cierre=plan.desc_cierre, class_date=plan.class_date, class_subject=Class_Subject.objects.get(id_class_subject=args['owner_class_id']), class_subtopic=plan.class_subtopic, minutes=plan.minutes, share_class=False, status=plan.status)
-
+				print "Y"
 				if args["is_institution"] == "True":
 					habilidades = Skill_Institution_Plan.objects.filter(id_planning=plan)
 				else:
 					habilidades = Skill_Planning.objects.filter(id_planning=plan)
+				print "S"
 				for habilidad in habilidades:
 					Skill_Planning.objects.create(id_planning=new, id_subtopic=habilidad.id_subtopic, id_skill=habilidad.id_skill)
 
@@ -532,6 +545,7 @@ def copyPlanning(request):
 					videos = Video_Institution_Plan.objects.filter(id_planning=plan)
 				else:
 					videos = Video_Planning.objects.filter(id_planning=plan)
+				print "V"
 				for video in videos:
 					Video_Planning.objects.create(id_planning=new, id_subtopic=video.id_subtopic, id_video=video.id_video)
 
