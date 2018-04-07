@@ -1724,25 +1724,25 @@
 
         text += "<div id='filtrar' style='float:left;width:48%;'>";
             text += "<label>Filtrar por: </label>";
-            text += "<select id='filtro' class='ui-corner-all simple-input search-input blur-on-esc approvalName skill_search' style='padding-left: 0px; height: 34px' onchange='filterTree(" + classid + "," + unitid + ")'>";
+            text += "<select id='filtro' class='ui-corner-all simple-input search-input blur-on-esc approvalName skill_search' style='padding-left: 0px; height: 32px' onchange='filterTree(" + classid + "," + unitid + ")'>";
                 text += "<option value='all'>Todos</option>";
                 text += "<option value='skills'>Ejercicios</option>";
                 text += "<option value='videos'>Videos</option>";
             text += "</select>";
         text += "</div>";
-        $('#popuptree').append(text);
 
-        text = "<div id='search' style='float:left;width: 48%;'>";
+        text += "<div id='search' style='float:left;width: 48%;'>";
             text += "<label for='skill_search'>Buscar: </label>";
             text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc'>";
         text += "</div>";
         $('#popuptree').append(text);
 
-        text = "<div id='checkbox' style='float:left; vertical-align: middle; width: 40%; height:32px; text-align: left; margin-bottom: 4px; margin-left: 16px'>";
+        text = "<br>";
+        text += "<div id='checkbox' style='float:left; vertical-align: middle; width: 40%; height:32px; text-align: left; margin-bottom: 4px; margin-left: 16px'>";
             text += "<span style='vertical-align: middle'>";
-            text += "<label for='recomendar' style='vertical-align: middle'>";
-            text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 18px; height: 18px; vertical-align: top;'>";
-            text += "Mostrar Recomendados</label>";
+                text += "<label for='recomendar' style='vertical-align: middle'>";
+                text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 18px; height: 18px; vertical-align: top;'>";
+                text += "Mostrar Recomendados</label>";
             text += "</span>";
         text += "</div>";
         $('#popuptree').append(text);
