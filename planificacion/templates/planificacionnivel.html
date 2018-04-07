@@ -28,8 +28,10 @@
     }
 
     #popuptree{
-        height:520px;
+        height: 520px;
         padding-top: 20px;
+        top: 50%;
+        margin-top: -300px;
     }
 
     #flex-div{
@@ -520,7 +522,7 @@
             <div id="class-window" class="flex-div">
                 <div id='form-window' class='form' style='overflow: hidden; display: none'>
                     <form action='' method='post' id='newClass_Form' autocomplete="off">{% csrf_token %}
-                    <h3 id='formTitle'>Crear nueva clase</h3>
+                    <b><h3 id='formTitle'>Crear nueva clase</h3></b>
 
                     <div class='class-row' style='margin-left: 20px;'>
                         <label for='newName'>Nombre de la clase: </label>
@@ -582,7 +584,7 @@
                     </form>
                 </div>
                 <div id='info-window' style='overflow: hidden; display:none'>
-                    <h3 id="labelTitle"></h3>
+                    <B><h3 id="labelTitle"></h3></B>
 
                     <div class='class-block'>
                         <div class='class-row'>
