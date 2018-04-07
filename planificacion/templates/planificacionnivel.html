@@ -28,7 +28,8 @@
     }
 
     #popuptree{
-        height:650px;
+        height:520px;
+        padding-top: 20px;
     }
 
     #flex-div{
@@ -154,12 +155,13 @@
     .topictree{
         overflow: hidden;
         overflow-y:scroll;
-        height: 500px;
+        height: 380px;
         width: 570px;
         font-size: 12px;
         padding: 5px 10px 10px 0px;
         text-align: left;
         margin: 10px;
+        margin-bottom: 0px;
         border: 1px solid #ddd;
     }
 
@@ -1386,8 +1388,8 @@
         var tr = legend.append("tbody").selectAll("tr").data(lD).enter().append("tr");
             
         // create the first column for each segment.
-        tr.append("td").append("svg").attr("width", '16').attr("height", '16').append("rect")
-            .attr("width", '16').attr("height", '16')
+        tr.append("td").append("svg").attr("width", '15').attr("height", '15').append("rect")
+            .attr("width", '15').attr("height", '15')
             .attr("fill",function(d){ return segColor[d.type]; });
             
         // create the second column for each segment.
@@ -1708,7 +1710,7 @@
 
     function openTree(classid, unitid){
         var tree = JSON.parse('{{ json_khan_tree | escapejs }}');
-        var text = "";
+        var text = "<h3>Contenidos Khan Academy</h3>";
 
         var oatext = $("#newOA option:selected").text();
         if (oatext == "undefined") oaid = $("#editOA option:selected").text();
@@ -1726,27 +1728,30 @@
                 text += "<option value='videos'>Videos</option>";
             text += "</select>";
         text += "</div>";
+        $('#popuptree').append(text);
 
-        text += "<div id='search' style='float:left;width: 48%;'>";
+        text = "<div id='search' style='float:left;width: 48%;'>";
             text += "<label for='skill_search'>Buscar: </label>";
             text += "<input id='skill_search' type='text' class='ui-corner-all placeholder simple-input search-input blur-on-esc'>";
         text += "</div>";
+        $('#popuptree').append(text);
 
-        text += "<div id='checkbox' style='float:left; vertical-align: middle; width: 40%; height:32px; text-align: left; margin-bottom: 4px; margin-left: 16px'>";
+        text = "<div id='checkbox' style='float:left; vertical-align: middle; width: 40%; height:32px; text-align: left; margin-bottom: 4px; margin-left: 16px'>";
             text += "<span style='vertical-align: middle'>";
             text += "<label for='recomendar' style='vertical-align: middle'>";
             text += "<input id='recomendar' onchange='filterTree(" + classid + "," + unitid + ")' type='checkbox' style='width: 18px; height: 18px; vertical-align: top;'>";
             text += "Mostrar Recomendados</label>";
             text += "</span>";
         text += "</div>";
+        $('#popuptree').append(text);
 
-        text += "<div style='float:right; width: 47%; height:32px; text-align: right; margin-right: 30px; margin-bottom: 4px'>";
+        text = "<div style='float:right; width: 47%; height:32px; text-align: right; margin-right: 30px; margin-bottom: 4px'>";
             text += "Objetivo de aprendizaje seleccionado" + oatext;
         text += "</div>";
+        $('#popuptree').append(text);
         
-        text += "<div id='newTree" + classid + "' class='topictree'></div>";
+        text = "<div id='newTree" + classid + "' class='topictree'></div>";
 
-        text += "<br>";
         text += "<a onclick='javascript:hideTree()' class='kui-button kui-button-plain kui-button-primary' style='display:inline;cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Cancelar</a>";
         text += "<a onclick='javascript:appendKhanContent(" + classid + ");' class='kui-button kui-button-submit kui-button-primary' style='cursor:pointer; width:80px; height: 35px; padding:8px; margin:10px;'>Guardar</a>";
 
